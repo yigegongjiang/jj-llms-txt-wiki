@@ -60,6 +60,9 @@ pub async fn run(
                 continue;
             }
         };
+        if snapshot.resumed() && verbosity != Verbosity::Quiet {
+            eprintln!("   ↻ resuming interrupted partial");
+        }
         let previous_site = output_root.join(&name);
         let previous_manifest = Manifest::load(&previous_site);
         let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
@@ -329,10 +332,14 @@ mod tests {
             .unwrap()
             .map(|entry| entry.unwrap().file_name())
             .collect();
+        // A committed site leaves no staging/backup directory behind; an
+        // interrupted site's `.sync.` partial is intentionally kept for resume.
         assert!(
-            names
-                .iter()
-                .all(|name| name == ".git" || !name.to_string_lossy().starts_with('.'))
+            names.iter().all(|name| {
+                let name = name.to_string_lossy();
+                !name.contains(".backup.") && !name.starts_with(".good.sync.")
+            }),
+            "unexpected leftovers: {names:?}"
         );
     }
 

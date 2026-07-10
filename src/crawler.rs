@@ -1,5 +1,5 @@
 use std::collections::{HashSet, VecDeque};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
@@ -30,6 +30,7 @@ pub struct CrawlFailure {
 #[derive(Debug, Default)]
 pub struct CrawlReport {
     pub downloaded: usize,
+    pub resumed: usize,
     pub unchanged: usize,
     pub missing: usize,
     pub ignored: usize,
@@ -50,6 +51,7 @@ impl CrawlReport {
 pub enum CrawlEvent {
     Started(String),
     Downloaded(String),
+    Resumed(String),
     Unchanged(String),
     Missing(String),
     Ignored(String),
@@ -133,6 +135,36 @@ pub async fn crawl(
             let Some(item) = queue.pop_front() else {
                 break;
             };
+            // Resume: a work item whose file already exists in the snapshot was
+            // downloaded by an interrupted earlier run and adopted into this one.
+            // Reuse it verbatim and re-discover its links, skipping both the
+            // network request and the rate-limiting gate. A read failure falls
+            // through to a normal fetch, so a corrupt leftover self-heals.
+            if let Some(path) = item.output.as_ref()
+                && let Ok(target) = path.join_under(snapshot_root)
+                && target.is_file()
+                && let Ok(body) = tokio::fs::read_to_string(&target).await
+            {
+                if let Some(validator) = previous_manifest.get(&item.url.to_string()) {
+                    manifest.insert(item.url.to_string(), validator.clone());
+                }
+                observer.event(CrawlEvent::Resumed(item.url.to_string()));
+                report.resumed += 1;
+                let base = item.url.as_url().clone();
+                enqueue_discovered(
+                    &body,
+                    &base,
+                    &entry,
+                    previous_root,
+                    previous_manifest,
+                    &mut seen,
+                    &mut paths,
+                    &mut queue,
+                    &mut report,
+                    observer.as_ref(),
+                );
+                continue;
+            }
             let client = client.clone();
             let gate = Arc::clone(&gate);
             let task_observer = Arc::clone(&observer);
@@ -333,6 +365,10 @@ async fn reuse_previous(
     Ok(body)
 }
 
+/// Write `body` to `path` atomically: stage into a sibling `.part` file, then
+/// rename over the target. A rename is atomic on the same filesystem, so an
+/// interruption never leaves a truncated file at the final path — resume relies
+/// on "file exists ⇒ content complete".
 async fn write_document(root: &Path, path: &LocalPath, body: &str) -> Result<(), String> {
     let target = path.join_under(root)?;
     let parent = target
@@ -341,9 +377,15 @@ async fn write_document(root: &Path, path: &LocalPath, body: &str) -> Result<(),
     tokio::fs::create_dir_all(parent)
         .await
         .map_err(|error| format!("create directory {}: {error}", parent.display()))?;
-    tokio::fs::write(&target, body)
+    let mut temporary = target.clone().into_os_string();
+    temporary.push(".part");
+    let temporary = PathBuf::from(temporary);
+    tokio::fs::write(&temporary, body)
         .await
-        .map_err(|error| format!("write {}: {error}", target.display()))
+        .map_err(|error| format!("write {}: {error}", temporary.display()))?;
+    tokio::fs::rename(&temporary, &target)
+        .await
+        .map_err(|error| format!("finalize {}: {error}", target.display()))
 }
 
 #[cfg(test)]
@@ -584,6 +626,58 @@ mod tests {
             "done"
         );
         assert!(!directory.path().join("llms.txt").exists());
+    }
+
+    #[tokio::test]
+    async fn resumes_existing_files_and_rediscovers_their_links() {
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[a](/a.md) [b](/b.md)"),
+            ),
+            ("/a.md".to_owned(), Response::ok("[c](/c.md)")),
+            ("/b.md".to_owned(), Response::ok("B")),
+            ("/c.md".to_owned(), Response::ok("C")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        // An interrupted earlier run already downloaded a.md; adopt it verbatim.
+        std::fs::write(directory.path().join("a.md"), "[c](/c.md)").unwrap();
+
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            options(2, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        assert_eq!(report.resumed, 1, "a.md is reused from the partial");
+        assert_eq!(
+            report.downloaded, 2,
+            "only b.md and the rediscovered c.md are downloaded"
+        );
+        let paths: Vec<String> = server
+            .requests
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|(path, _)| path.clone())
+            .collect();
+        assert!(
+            !paths.iter().any(|path| path == "/a.md"),
+            "a resumed file must not hit the network"
+        );
+        assert!(
+            paths.iter().any(|path| path == "/c.md"),
+            "links inside a resumed file are still discovered and fetched"
+        );
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("c.md")).unwrap(),
+            "C"
+        );
     }
 
     #[tokio::test]

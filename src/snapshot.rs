@@ -1,12 +1,19 @@
 use std::fs;
 use std::path::{Path, PathBuf};
-use tempfile::{Builder, TempDir};
+use std::time::SystemTime;
+use tempfile::Builder;
 
+/// A staged, in-progress copy of a site's content. Content is written into a
+/// hidden `.{site}.sync.*` working directory next to the final `{site}` target,
+/// then swapped in atomically by [`Snapshot::commit`]. The working directory is
+/// deliberately *not* auto-deleted: if the process is interrupted before commit,
+/// the partial download survives on disk and the next run adopts it (resume).
 pub struct Snapshot {
-    temporary: Option<TempDir>,
+    working: PathBuf,
     target: PathBuf,
     root: PathBuf,
     site: String,
+    resumed: bool,
 }
 
 impl Snapshot {
@@ -26,80 +33,108 @@ impl Snapshot {
                 target.display()
             ));
         }
-        let temporary = Builder::new()
-            .prefix(&format!(".{site}.sync."))
-            .tempdir_in(root)
-            .map_err(|error| format!("create temporary snapshot in {}: {error}", root.display()))?;
+
+        // Adopt an interrupted earlier run: reuse the most recent leftover working
+        // directory as this run's staging area (zero-copy), and garbage-collect any
+        // others so partials never pile up. A single partial only ever grows, so
+        // "most recent" is also the most complete — no progress is lost.
+        let prefix = format!(".{site}.sync.");
+        let mut partials = stale_partials(root, &prefix);
+        partials.sort_by_key(|partial| std::cmp::Reverse(partial.1));
+        let mut partials = partials.into_iter();
+
+        let (working, resumed) = match partials.next() {
+            Some((newest, _)) => (newest, true),
+            None => {
+                let directory = Builder::new()
+                    .prefix(&prefix)
+                    .tempdir_in(root)
+                    .map_err(|error| {
+                        format!("create temporary snapshot in {}: {error}", root.display())
+                    })?
+                    .keep();
+                (directory, false)
+            }
+        };
+        for (stale, _) in partials {
+            let _ = fs::remove_dir_all(&stale);
+        }
+
+        // An adopted partial may hold `.part` temporaries from a mid-write
+        // interrupt. They are not real content and must never reach the committed
+        // snapshot, so drop them before this run writes into the directory.
+        if resumed {
+            sweep_part_files(&working);
+        }
+
         Ok(Self {
-            temporary: Some(temporary),
+            working,
             target,
             root: root.to_path_buf(),
             site: site.to_owned(),
+            resumed,
         })
     }
 
     pub fn path(&self) -> &Path {
-        self.temporary
-            .as_ref()
-            .expect("snapshot temporary directory must exist")
-            .path()
+        &self.working
     }
 
-    pub fn commit(mut self) -> Result<(), String> {
-        let backup = if self.target.exists() {
+    /// Whether this snapshot adopted an interrupted earlier run's partial content.
+    pub fn resumed(&self) -> bool {
+        self.resumed
+    }
+
+    pub fn commit(self) -> Result<(), String> {
+        let Snapshot {
+            working,
+            target,
+            root,
+            site,
+            ..
+        } = self;
+
+        let backup = if target.exists() {
             let placeholder = Builder::new()
-                .prefix(&format!(".{}.backup.", self.site))
-                .tempdir_in(&self.root)
+                .prefix(&format!(".{site}.backup."))
+                .tempdir_in(&root)
                 .map_err(|error| format!("create snapshot backup path: {error}"))?;
             let backup = placeholder.path().to_path_buf();
             placeholder
                 .close()
                 .map_err(|error| format!("prepare snapshot backup path: {error}"))?;
-            fs::rename(&self.target, &backup).map_err(|error| {
-                format!(
-                    "move old snapshot {} to backup: {error}",
-                    self.target.display()
-                )
+            fs::rename(&target, &backup).map_err(|error| {
+                format!("move old snapshot {} to backup: {error}", target.display())
             })?;
             Some(backup)
         } else {
             None
         };
 
-        let temporary = self
-            .temporary
-            .take()
-            .expect("snapshot temporary directory must exist")
-            .keep();
-        if let Err(error) = fs::rename(&temporary, &self.target) {
-            let restore = backup
-                .as_ref()
-                .map(|backup| fs::rename(backup, &self.target));
-            let _ = fs::remove_dir_all(&temporary);
+        if let Err(error) = fs::rename(&working, &target) {
+            let restore = backup.as_ref().map(|backup| fs::rename(backup, &target));
+            let _ = fs::remove_dir_all(&working);
             return match restore {
                 Some(Err(restore_error)) => Err(format!(
                     "commit snapshot {}: {error}; restore old snapshot: {restore_error}",
-                    self.target.display()
+                    target.display()
                 )),
-                _ => Err(format!(
-                    "commit snapshot {}: {error}",
-                    self.target.display()
-                )),
+                _ => Err(format!("commit snapshot {}: {error}", target.display())),
             };
         }
 
         if let Some(backup) = backup
             && let Err(error) = fs::remove_dir_all(&backup)
         {
-            let failed_snapshot = temporary;
-            if let Err(rollback_error) = fs::rename(&self.target, &failed_snapshot) {
+            let failed_snapshot = working;
+            if let Err(rollback_error) = fs::rename(&target, &failed_snapshot) {
                 return Err(format!(
                     "remove old snapshot {}: {error}; begin rollback: {rollback_error}",
                     backup.display()
                 ));
             }
-            if let Err(rollback_error) = fs::rename(&backup, &self.target) {
-                let restore_new = fs::rename(&failed_snapshot, &self.target);
+            if let Err(rollback_error) = fs::rename(&backup, &target) {
+                let restore_new = fs::rename(&failed_snapshot, &target);
                 return match restore_new {
                     Ok(()) => Err(format!(
                         "remove old snapshot {}: {error}; restore old snapshot: {rollback_error}",
@@ -122,6 +157,50 @@ impl Snapshot {
         }
 
         Ok(())
+    }
+}
+
+/// Collect this site's leftover `.{site}.sync.*` working directories under `root`,
+/// each paired with its modification time so the caller can pick the most recent.
+fn stale_partials(root: &Path, prefix: &str) -> Vec<(PathBuf, SystemTime)> {
+    let mut partials = Vec::new();
+    let Ok(entries) = fs::read_dir(root) else {
+        return partials;
+    };
+    for entry in entries.flatten() {
+        let matches = entry
+            .file_name()
+            .to_str()
+            .is_some_and(|name| name.starts_with(prefix));
+        if !matches {
+            continue;
+        }
+        let path = entry.path();
+        if !path.is_dir() {
+            continue;
+        }
+        let mtime = entry
+            .metadata()
+            .and_then(|meta| meta.modified())
+            .unwrap_or(SystemTime::UNIX_EPOCH);
+        partials.push((path, mtime));
+    }
+    partials
+}
+
+/// Recursively delete `*.part` staging files left behind by an interrupted atomic
+/// write, so an adopted partial contains only complete files.
+fn sweep_part_files(dir: &Path) {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            sweep_part_files(&path);
+        } else if path.extension().and_then(|ext| ext.to_str()) == Some("part") {
+            let _ = fs::remove_file(&path);
+        }
     }
 }
 
@@ -171,5 +250,67 @@ mod tests {
         let output = tempdir().unwrap();
         fs::write(output.path().join("docs"), "file").unwrap();
         assert!(Snapshot::new(output.path(), "docs").is_err());
+    }
+
+    #[test]
+    fn adopts_leftover_partial_and_sweeps_part_files() {
+        let output = tempdir().unwrap();
+        let root = output.path();
+
+        let first = Snapshot::new(root, "docs").unwrap();
+        assert!(!first.resumed(), "no leftover to adopt on a fresh run");
+        let partial = first.path().to_path_buf();
+        fs::write(partial.join("done.md"), "done").unwrap();
+        fs::write(partial.join("done.md.part"), "half-written").unwrap();
+        drop(first); // interrupted: working dir is kept, not deleted
+
+        let resumed = Snapshot::new(root, "docs").unwrap();
+        assert!(resumed.resumed(), "second run adopts the leftover");
+        assert_eq!(
+            resumed.path(),
+            partial,
+            "adopts the same directory in place"
+        );
+        assert_eq!(
+            fs::read_to_string(resumed.path().join("done.md")).unwrap(),
+            "done"
+        );
+        assert!(
+            !resumed.path().join("done.md.part").exists(),
+            "stray .part is swept before reuse"
+        );
+    }
+
+    #[test]
+    fn adopts_newest_partial_and_garbage_collects_others() {
+        let output = tempdir().unwrap();
+        let root = output.path();
+
+        let first = Snapshot::new(root, "docs").unwrap();
+        let older = first.path().to_path_buf();
+        fs::write(older.join("first.md"), "1").unwrap();
+        drop(first);
+
+        std::thread::sleep(std::time::Duration::from_millis(20));
+        let newer = root.join(".docs.sync.newer");
+        fs::create_dir(&newer).unwrap();
+        fs::write(newer.join("second.md"), "2").unwrap();
+
+        let adopted = Snapshot::new(root, "docs").unwrap();
+        assert!(adopted.resumed());
+        assert_eq!(adopted.path(), newer, "newest partial is adopted");
+        assert!(!older.exists(), "older partial is garbage-collected");
+        let remaining = fs::read_dir(root)
+            .unwrap()
+            .filter(|entry| {
+                entry
+                    .as_ref()
+                    .unwrap()
+                    .file_name()
+                    .to_string_lossy()
+                    .starts_with(".docs.sync.")
+            })
+            .count();
+        assert_eq!(remaining, 1, "exactly one partial survives");
     }
 }

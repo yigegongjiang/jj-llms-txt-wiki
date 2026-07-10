@@ -29,6 +29,7 @@ impl Repository {
             repository.run(&["init", "--quiet", "--initial-branch=main", "."])?;
         }
         repository.verify_root()?;
+        ensure_gitignore(root)?;
         Ok(repository)
     }
 
@@ -126,6 +127,31 @@ impl Repository {
     }
 }
 
+/// Ensure the data repository ignores snapshot staging directories, so adopted or
+/// leftover `.{site}.sync.*` / `.{site}.backup.*` partials are never committed into
+/// the versioned content. Idempotent: appends only the patterns not already present.
+fn ensure_gitignore(root: &Path) -> Result<(), String> {
+    let path = root.join(".gitignore");
+    let existing = fs::read_to_string(&path).unwrap_or_default();
+    let mut content = existing.clone();
+    let mut changed = false;
+    for pattern in [".*.sync.*", ".*.backup.*"] {
+        if existing.lines().any(|line| line.trim() == pattern) {
+            continue;
+        }
+        if !content.is_empty() && !content.ends_with('\n') {
+            content.push('\n');
+        }
+        content.push_str(pattern);
+        content.push('\n');
+        changed = true;
+    }
+    if changed {
+        fs::write(&path, &content).map_err(|error| format!("write {}: {error}", path.display()))?;
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::Repository;
@@ -166,6 +192,32 @@ mod tests {
         let subject = git(&root, &["log", "-1", "--format=%s"]);
         assert!(subject.starts_with("chore(sync): docs @ "));
         assert!(subject.ends_with('Z'));
+        assert!(git(&root, &["status", "--porcelain"]).is_empty());
+    }
+
+    #[test]
+    fn writes_gitignore_for_snapshot_dirs_idempotently() {
+        let parent = tempdir().unwrap();
+        git(parent.path(), &["init", "--quiet"]);
+        let root = parent.path().join("wiki");
+
+        Repository::prepare(&root).unwrap();
+        let ignore = fs::read_to_string(root.join(".gitignore")).unwrap();
+        assert!(ignore.lines().any(|line| line == ".*.sync.*"));
+        assert!(ignore.lines().any(|line| line == ".*.backup.*"));
+
+        Repository::prepare(&root).unwrap();
+        assert_eq!(
+            fs::read_to_string(root.join(".gitignore")).unwrap(),
+            ignore,
+            "re-preparing must not duplicate ignore patterns"
+        );
+
+        // A leftover partial is ignored, so the work tree stays clean.
+        fs::create_dir_all(root.join(".docs.sync.abc")).unwrap();
+        fs::write(root.join(".docs.sync.abc/x.md"), "x").unwrap();
+        let repository = Repository::prepare(&root).unwrap();
+        repository.record_sync(&["docs".to_owned()]).unwrap();
         assert!(git(&root, &["status", "--porcelain"]).is_empty());
     }
 }

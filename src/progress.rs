@@ -24,6 +24,7 @@ pub enum Verbosity {
 struct Counts {
     started: u64,
     downloaded: u64,
+    resumed: u64,
     unchanged: u64,
     missing: u64,
     ignored: u64,
@@ -44,6 +45,7 @@ pub struct SyncProgress {
     bar: ProgressBar,
     started: AtomicU64,
     downloaded: AtomicU64,
+    resumed: AtomicU64,
     unchanged: AtomicU64,
     missing: AtomicU64,
     ignored: AtomicU64,
@@ -70,6 +72,7 @@ impl SyncProgress {
             bar,
             started: AtomicU64::new(0),
             downloaded: AtomicU64::new(0),
+            resumed: AtomicU64::new(0),
             unchanged: AtomicU64::new(0),
             missing: AtomicU64::new(0),
             ignored: AtomicU64::new(0),
@@ -89,6 +92,7 @@ impl SyncProgress {
         Counts {
             started: self.started.load(Ordering::Relaxed),
             downloaded: self.downloaded.load(Ordering::Relaxed),
+            resumed: self.resumed.load(Ordering::Relaxed),
             unchanged: self.unchanged.load(Ordering::Relaxed),
             missing: self.missing.load(Ordering::Relaxed),
             ignored: self.ignored.load(Ordering::Relaxed),
@@ -133,6 +137,7 @@ impl CrawlObserver for SyncProgress {
                     .set_message(summary_msg(&self.counts(), &short_path(&url)));
             }
             CrawlEvent::Downloaded(url) => self.complete("OK", &self.downloaded, &url),
+            CrawlEvent::Resumed(url) => self.complete("RESUMED", &self.resumed, &url),
             CrawlEvent::Unchanged(url) => self.complete("UNCHANGED", &self.unchanged, &url),
             CrawlEvent::Missing(url) => self.complete("MISS", &self.missing, &url),
             CrawlEvent::Ignored(url) => self.complete("IGNORED", &self.ignored, &url),
@@ -145,8 +150,9 @@ impl CrawlObserver for SyncProgress {
 /// path currently in focus. All values are real and known, so no fake total.
 fn summary_msg(counts: &Counts, path: &str) -> String {
     format!(
-        "dl={} unchanged={} miss={} fail={}  inflight={}  · {path}",
+        "dl={} resume={} unchanged={} miss={} fail={}  inflight={}  · {path}",
         counts.downloaded,
+        counts.resumed,
         counts.unchanged,
         counts.missing,
         counts.failed,
@@ -169,8 +175,9 @@ fn short_path(url: &str) -> String {
 
 pub fn summary_line(site: &str, report: &CrawlReport, status: &str) -> String {
     format!(
-        "{site}: {status}; downloaded={}, unchanged={}, missing={}, ignored={}, failed={}",
+        "{site}: {status}; downloaded={}, resumed={}, unchanged={}, missing={}, ignored={}, failed={}",
         report.downloaded,
+        report.resumed,
         report.unchanged,
         report.missing,
         report.ignored,
@@ -188,6 +195,7 @@ mod tests {
         let counts = Counts {
             started: 8,
             downloaded: 3,
+            resumed: 2,
             unchanged: 1,
             missing: 1,
             ignored: 0,
@@ -195,7 +203,7 @@ mod tests {
         };
         assert_eq!(
             summary_msg(&counts, "/docs/a.md"),
-            "dl=3 unchanged=1 miss=1 fail=1  inflight=2  · /docs/a.md"
+            "dl=3 resume=2 unchanged=1 miss=1 fail=1  inflight=2  · /docs/a.md"
         );
     }
 
@@ -223,6 +231,7 @@ mod tests {
     fn formats_non_tty_summary() {
         let report = CrawlReport {
             downloaded: 2,
+            resumed: 5,
             unchanged: 4,
             missing: 1,
             ignored: 3,
@@ -233,7 +242,7 @@ mod tests {
         };
         assert_eq!(
             summary_line("docs", &report, "failed"),
-            "docs: failed; downloaded=2, unchanged=4, missing=1, ignored=3, failed=1"
+            "docs: failed; downloaded=2, resumed=5, unchanged=4, missing=1, ignored=3, failed=1"
         );
     }
 }

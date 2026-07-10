@@ -7,6 +7,18 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.6.0] - 2026-07-10
+
+### Added
+
+- 同步中断可续传：手动中断或异常退出后，下次同步自动复用已下载的文件，只补未完成部分，不重复下载、不重发已完成请求。
+  - `Snapshot` 收养 `output_root` 下最新 `.{site}.sync.*` 残留为 working（零拷贝）并 GC 其余；working 不再随 Drop 自动删除，中断即保留供续传。`crawl` 抓取前若文件已在快照目录存在则读本地内容重新发现链接并跳过 `fetch`/`RequestGate`，`CrawlReport.resumed` + `CrawlEvent::Resumed` 计数。
+
+### Fixed
+
+- 写文件改为原子操作，中断不再留下写了一半的文件。
+  - `write_document` 写 `<target>.part` 后 `rename`；收养残留时 sweep 陈旧 `.part`；`Repository::prepare` 写数据仓库 `.gitignore` 忽略 `.*.sync.*` / `.*.backup.*`，残留不进版本内容。
+
 ## [0.5.0] - 2026-07-10
 
 ### Added

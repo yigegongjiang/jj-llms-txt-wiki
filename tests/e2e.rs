@@ -319,9 +319,72 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
     }
 
     assert!(!wiki.join(".cache").exists());
-    assert!(fs::read_dir(&wiki).unwrap().all(|entry| {
-        let name = entry.unwrap().file_name();
-        name == ".git" || !name.to_string_lossy().starts_with('.')
-    }));
+    // A failed sync leaves its `.alpha.sync.*` partial on disk for resume, but it
+    // is gitignored, so no backup dir survives and the work tree stays clean.
+    assert!(
+        fs::read_dir(&wiki).unwrap().all(|entry| {
+            let name = entry.unwrap().file_name();
+            !name.to_string_lossy().contains(".backup.")
+        }),
+        "commit backup directory must not survive"
+    );
+    assert!(git(&wiki, &["status", "--porcelain"]).is_empty());
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn real_cli_resumes_an_interrupted_partial() {
+    let srv = server(HashMap::from([
+        (
+            "/llms.txt".to_owned(),
+            Response::ok("[keep](/keep.md) [fresh](/fresh.md)"),
+        ),
+        ("/keep.md".to_owned(), Response::ok("KEEP")),
+        ("/fresh.md".to_owned(), Response::ok("FRESH")),
+    ]))
+    .await;
+    let home = tempdir().unwrap();
+    success(
+        home.path(),
+        &["site", "add", "docs", &format!("{}/llms.txt", srv.origin)],
+    );
+
+    // Simulate an earlier run interrupted after downloading keep.md but before
+    // committing: a leftover `.docs.sync.*` working directory on disk.
+    let wiki = home.path().join("llms-wiki");
+    let leftover = wiki.join(".docs.sync.leftover");
+    fs::create_dir_all(&leftover).unwrap();
+    fs::write(leftover.join("keep.md"), "KEEP").unwrap();
+
+    let sync = success(
+        home.path(),
+        &["sync", "docs", "--concurrency", "2", "--interval", "0ms"],
+    );
+    let stderr = String::from_utf8_lossy(&sync.stderr);
+    assert!(
+        stderr.contains("resuming interrupted partial"),
+        "stderr={stderr}"
+    );
+    assert!(stderr.contains("docs: ok"), "stderr={stderr}");
+
+    let requested = srv.requests.read().unwrap().clone();
+    assert!(
+        !requested.iter().any(|path| path == "/keep.md"),
+        "a resumed file must not be re-fetched: {requested:?}"
+    );
+    assert!(
+        requested.iter().any(|path| path == "/fresh.md"),
+        "the missing file is still downloaded: {requested:?}"
+    );
+
+    assert_eq!(
+        fs::read_to_string(wiki.join("docs/keep.md")).unwrap(),
+        "KEEP"
+    );
+    assert_eq!(
+        fs::read_to_string(wiki.join("docs/fresh.md")).unwrap(),
+        "FRESH"
+    );
+    // The adopted partial was committed, so nothing is left behind.
+    assert!(!leftover.exists());
     assert!(git(&wiki, &["status", "--porcelain"]).is_empty());
 }
