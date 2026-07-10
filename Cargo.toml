@@ -1,0 +1,12 @@
+[package]
+name = "llms-wiki"
+version = "0.1.0"
+edition = "2024"
+description = "Mirror llms.txt Markdown sites locally"
+repository = "https://github.com/yigegongjiang/jj-llms-txt-wiki"
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+strip = true

@@ -2,7 +2,23 @@
 
 从 [`llms.txt`](https://llmstxt.org/) 入口递归抓取同源 Markdown，并按站点和 URL 路径保存到本地。
 
-当前仓库处于产品设计阶段，CLI 尚未实现。
+业务 CLI 尚未实现；当前仅提供用于验证 GitHub Release 链路的 Rust Hello World 骨架。
+
+```bash
+cargo run
+# Hello, world!
+
+cargo run -- version
+# llms-wiki 0.1.0
+```
+
+骨架同时支持 `help`、`update`（别名 `upgrade`）和 `uninstall`。首个 Release 发布后可安装：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/install.sh | bash
+```
+
+Release tag 必须与 `Cargo.toml` 的版本一致；推送 `v*` tag 后，GitHub Actions 会构建 macOS arm64/x64 二进制、生成 `checksums.txt` 并创建 Release。
 
 ## 设计原则
 
