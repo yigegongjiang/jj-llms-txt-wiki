@@ -22,6 +22,8 @@ cargo run -- help      # 打印用法
 cargo test --locked    # 单测通过
 ```
 
+调试站点（可选，在本机的 `~/llms-wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
+
 # 发布
 
 代码变更完成后立即执行（= 需求交付的最后环节）。推送 `v*` tag → `.github/workflows/release.yml` 自动构建并发布 GitHub Release。
@@ -47,7 +49,7 @@ cargo test --locked
 
 ## 2. 写版本
 
-- 版本号：默认递增 PATCH（第三位）；新功能 → MINOR；不兼容改动 → MAJOR。
+- 版本号：默认 MUST 递增 PATCH（第三位）；大功能更新 → MINOR；不兼容改动 → MAJOR。
 - 同步编辑，全部与 tag 一致：
   - `Cargo.toml` 的 `version`
   - `CHANGELOG.md` + `CHANGELOG.dev.md` 追加对应版本条目
@@ -67,6 +69,9 @@ git push origin vX.Y.Z
 ```
 
 tag 推送后 CI：fmt/clippy/test → 构建 macOS arm64/x64 → 生成 `checksums.txt` → 创建 Release。
+发布后自行用 `install.sh` 拉 latest Release 完成本机更新。
+
+调试站点（可选，在本机的 `~/llms-wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
 
 ## 4. 修上版 bug
 
