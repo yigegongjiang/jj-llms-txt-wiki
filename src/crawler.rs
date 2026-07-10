@@ -9,6 +9,7 @@ use url::Url;
 
 use crate::discovery::discover;
 use crate::http::{FetchOutcome, HttpClient};
+use crate::manifest::{Manifest, Validator};
 use crate::url_map::{CanonicalUrl, LocalPath, PathRegistry};
 
 pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
@@ -29,6 +30,7 @@ pub struct CrawlFailure {
 #[derive(Debug, Default)]
 pub struct CrawlReport {
     pub downloaded: usize,
+    pub unchanged: usize,
     pub missing: usize,
     pub ignored: usize,
     pub failures: Vec<CrawlFailure>,
@@ -48,6 +50,7 @@ impl CrawlReport {
 pub enum CrawlEvent {
     Started(String),
     Downloaded(String),
+    Unchanged(String),
     Missing(String),
     Ignored(String),
     Failed(String),
@@ -67,6 +70,7 @@ impl CrawlObserver for NoopObserver {
 struct WorkItem {
     url: CanonicalUrl,
     output: Option<LocalPath>,
+    validator: Option<Validator>,
 }
 
 struct RequestGate {
@@ -95,6 +99,8 @@ impl RequestGate {
 pub async fn crawl(
     entry: Url,
     snapshot_root: &Path,
+    previous_root: Option<&Path>,
+    previous_manifest: &Manifest,
     options: CrawlOptions,
     observer: Arc<dyn CrawlObserver>,
 ) -> Result<CrawlReport, String> {
@@ -116,9 +122,11 @@ pub async fn crawl(
     let mut queue = VecDeque::from([WorkItem {
         url: canonical_entry,
         output: None,
+        validator: None,
     }]);
     let mut tasks = JoinSet::new();
     let mut report = CrawlReport::default();
+    let mut manifest = Manifest::default();
 
     while !queue.is_empty() || !tasks.is_empty() {
         while tasks.len() < options.concurrency {
@@ -131,7 +139,7 @@ pub async fn crawl(
             tasks.spawn(async move {
                 gate.wait().await;
                 task_observer.event(CrawlEvent::Started(item.url.to_string()));
-                let result = client.fetch(&item.url).await;
+                let result = client.fetch(&item.url, item.validator.as_ref()).await;
                 (item, result)
             });
         }
@@ -151,7 +159,11 @@ pub async fn crawl(
         };
 
         match outcome {
-            Ok(FetchOutcome::Document { final_url, body }) => {
+            Ok(FetchOutcome::Document {
+                final_url,
+                body,
+                validator,
+            }) => {
                 if let Some(path) = &item.output {
                     if let Err(error) = write_document(snapshot_root, path, &body).await {
                         observer.event(CrawlEvent::Failed(item.url.to_string()));
@@ -161,28 +173,62 @@ pub async fn crawl(
                         });
                         continue;
                     }
+                    manifest.insert(item.url.to_string(), validator);
                     observer.event(CrawlEvent::Downloaded(item.url.to_string()));
                     report.downloaded += 1;
                 }
 
-                for candidate in discover(&body, &final_url, &entry) {
-                    if !seen.insert(candidate.clone()) {
+                enqueue_discovered(
+                    &body,
+                    &final_url,
+                    &entry,
+                    previous_root,
+                    previous_manifest,
+                    &mut seen,
+                    &mut paths,
+                    &mut queue,
+                    &mut report,
+                    observer.as_ref(),
+                );
+            }
+            Ok(FetchOutcome::NotModified { final_url }) => {
+                let Some(path) = &item.output else {
+                    observer.event(CrawlEvent::Failed(item.url.to_string()));
+                    report.failures.push(CrawlFailure {
+                        url: item.url.to_string(),
+                        message: "unexpected 304 Not Modified for entry document".to_owned(),
+                    });
+                    continue;
+                };
+                let body = match reuse_previous(previous_root, snapshot_root, path).await {
+                    Ok(body) => body,
+                    Err(error) => {
+                        observer.event(CrawlEvent::Failed(item.url.to_string()));
+                        report.failures.push(CrawlFailure {
+                            url: item.url.to_string(),
+                            message: error,
+                        });
                         continue;
                     }
-                    match paths.register(&candidate) {
-                        Ok(output) => queue.push_back(WorkItem {
-                            url: candidate,
-                            output: Some(output),
-                        }),
-                        Err(error) => {
-                            observer.event(CrawlEvent::Failed(candidate.to_string()));
-                            report.failures.push(CrawlFailure {
-                                url: candidate.to_string(),
-                                message: error,
-                            });
-                        }
-                    }
+                };
+                if let Some(validator) = previous_manifest.get(&item.url.to_string()) {
+                    manifest.insert(item.url.to_string(), validator.clone());
                 }
+                observer.event(CrawlEvent::Unchanged(item.url.to_string()));
+                report.unchanged += 1;
+
+                enqueue_discovered(
+                    &body,
+                    &final_url,
+                    &entry,
+                    previous_root,
+                    previous_manifest,
+                    &mut seen,
+                    &mut paths,
+                    &mut queue,
+                    &mut report,
+                    observer.as_ref(),
+                );
             }
             Ok(FetchOutcome::Missing) => {
                 observer.event(CrawlEvent::Missing(item.url.to_string()));
@@ -202,7 +248,89 @@ pub async fn crawl(
         }
     }
 
+    if report.is_success()
+        && let Err(error) = manifest.save(snapshot_root)
+    {
+        report.failures.push(CrawlFailure {
+            url: "manifest".to_owned(),
+            message: error,
+        });
+    }
+
     Ok(report)
+}
+
+/// Discover same-origin Markdown links in `body` and enqueue the unseen ones,
+/// attaching a cached validator when the file can be revalidated conditionally.
+#[allow(clippy::too_many_arguments)]
+fn enqueue_discovered(
+    body: &str,
+    final_url: &Url,
+    entry: &Url,
+    previous_root: Option<&Path>,
+    previous_manifest: &Manifest,
+    seen: &mut HashSet<CanonicalUrl>,
+    paths: &mut PathRegistry,
+    queue: &mut VecDeque<WorkItem>,
+    report: &mut CrawlReport,
+    observer: &dyn CrawlObserver,
+) {
+    for candidate in discover(body, final_url, entry) {
+        if !seen.insert(candidate.clone()) {
+            continue;
+        }
+        match paths.register(&candidate) {
+            Ok(output) => {
+                let validator =
+                    conditional_validator(previous_root, &output, &candidate, previous_manifest);
+                queue.push_back(WorkItem {
+                    url: candidate,
+                    output: Some(output),
+                    validator,
+                });
+            }
+            Err(error) => {
+                observer.event(CrawlEvent::Failed(candidate.to_string()));
+                report.failures.push(CrawlFailure {
+                    url: candidate.to_string(),
+                    message: error,
+                });
+            }
+        }
+    }
+}
+
+/// A cached validator is reusable only when the previously downloaded file still
+/// exists locally, so a 304 can be satisfied by copying it. Missing file → no
+/// validator, forcing a full 200 download.
+fn conditional_validator(
+    previous_root: Option<&Path>,
+    output: &LocalPath,
+    url: &CanonicalUrl,
+    previous_manifest: &Manifest,
+) -> Option<Validator> {
+    let previous_root = previous_root?;
+    let validator = previous_manifest.get(&url.to_string())?;
+    let local = output.join_under(previous_root).ok()?;
+    local.is_file().then(|| validator.clone())
+}
+
+/// Copy the previously downloaded file into the new snapshot and return its body
+/// for link discovery. 304 guarantees the bytes match the remote, so re-running
+/// `discover` on the local copy yields the identical same-origin link set.
+async fn reuse_previous(
+    previous_root: Option<&Path>,
+    snapshot_root: &Path,
+    path: &LocalPath,
+) -> Result<String, String> {
+    let previous_root =
+        previous_root.ok_or_else(|| "304 Not Modified without a previous snapshot".to_owned())?;
+    let source = path.join_under(previous_root)?;
+    let body = tokio::fs::read_to_string(&source)
+        .await
+        .map_err(|error| format!("reuse {}: {error}", source.display()))?;
+    write_document(snapshot_root, path, &body).await?;
+    Ok(body)
 }
 
 async fn write_document(root: &Path, path: &LocalPath, body: &str) -> Result<(), String> {
@@ -220,7 +348,8 @@ async fn write_document(root: &Path, path: &LocalPath, body: &str) -> Result<(),
 
 #[cfg(test)]
 mod tests {
-    use super::{CrawlOptions, NoopObserver, crawl};
+    use super::{CrawlObserver, CrawlOptions, CrawlReport, NoopObserver, crawl};
+    use crate::manifest::{Manifest, Validator};
     use std::collections::HashMap;
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
@@ -231,11 +360,29 @@ mod tests {
     use tokio::task::JoinHandle;
     use url::Url;
 
+    async fn fresh_crawl(
+        entry: Url,
+        snapshot_root: &std::path::Path,
+        options: CrawlOptions,
+        observer: Arc<dyn CrawlObserver>,
+    ) -> Result<CrawlReport, String> {
+        crawl(
+            entry,
+            snapshot_root,
+            None,
+            &Manifest::default(),
+            options,
+            observer,
+        )
+        .await
+    }
+
     #[derive(Clone)]
     struct Response {
         status: u16,
         body: Vec<u8>,
         location: Option<String>,
+        etag: Option<String>,
         delay: Duration,
     }
 
@@ -245,6 +392,7 @@ mod tests {
                 status: 200,
                 body: body.as_bytes().to_vec(),
                 location: None,
+                etag: None,
                 delay: Duration::ZERO,
             }
         }
@@ -254,6 +402,7 @@ mod tests {
                 status,
                 body: Vec::new(),
                 location: None,
+                etag: None,
                 delay: Duration::ZERO,
             }
         }
@@ -263,12 +412,18 @@ mod tests {
                 status: 302,
                 body: Vec::new(),
                 location: Some(location),
+                etag: None,
                 delay: Duration::ZERO,
             }
         }
 
         fn delayed(mut self, delay: Duration) -> Self {
             self.delay = delay;
+            self
+        }
+
+        fn with_etag(mut self, etag: &str) -> Self {
+            self.etag = Some(etag.to_owned());
             self
         }
     }
@@ -317,6 +472,11 @@ mod tests {
                         .and_then(|line| line.split_whitespace().nth(1))
                         .unwrap_or("/")
                         .to_owned();
+                    let if_none_match = request
+                        .lines()
+                        .find(|line| line.to_ascii_lowercase().starts_with("if-none-match:"))
+                        .and_then(|line| line.split_once(':'))
+                        .map(|(_, value)| value.trim().to_owned());
                     requests
                         .lock()
                         .unwrap()
@@ -328,28 +488,45 @@ mod tests {
                         .cloned()
                         .unwrap_or_else(|| Response::status(404));
                     tokio::time::sleep(response.delay).await;
-                    let reason = match response.status {
-                        200 => "OK",
-                        302 => "Found",
-                        404 => "Not Found",
-                        410 => "Gone",
-                        429 => "Too Many Requests",
-                        500 => "Internal Server Error",
-                        _ => "Status",
-                    };
-                    let location = response
-                        .location
-                        .map(|value| format!("Location: {value}\r\n"))
+                    let etag_header = response
+                        .etag
+                        .as_ref()
+                        .map(|value| format!("ETag: {value}\r\n"))
                         .unwrap_or_default();
-                    let head = format!(
-                        "HTTP/1.1 {} {}\r\n{}Content-Length: {}\r\nConnection: close\r\n\r\n",
-                        response.status,
-                        reason,
-                        location,
-                        response.body.len()
+                    let not_modified = matches!(
+                        (&if_none_match, &response.etag),
+                        (Some(inm), Some(etag)) if inm == etag
                     );
-                    let _ = stream.write_all(head.as_bytes()).await;
-                    let _ = stream.write_all(&response.body).await;
+                    if not_modified {
+                        let head = format!(
+                            "HTTP/1.1 304 Not Modified\r\n{etag_header}Connection: close\r\n\r\n"
+                        );
+                        let _ = stream.write_all(head.as_bytes()).await;
+                    } else {
+                        let reason = match response.status {
+                            200 => "OK",
+                            302 => "Found",
+                            404 => "Not Found",
+                            410 => "Gone",
+                            429 => "Too Many Requests",
+                            500 => "Internal Server Error",
+                            _ => "Status",
+                        };
+                        let location = response
+                            .location
+                            .map(|value| format!("Location: {value}\r\n"))
+                            .unwrap_or_default();
+                        let head = format!(
+                            "HTTP/1.1 {} {}\r\n{}{}Content-Length: {}\r\nConnection: close\r\n\r\n",
+                            response.status,
+                            reason,
+                            location,
+                            etag_header,
+                            response.body.len()
+                        );
+                        let _ = stream.write_all(head.as_bytes()).await;
+                        let _ = stream.write_all(&response.body).await;
+                    }
                     active.fetch_sub(1, Ordering::SeqCst);
                 });
             }
@@ -387,7 +564,7 @@ mod tests {
         ]))
         .await;
         let directory = tempdir().unwrap();
-        let report = crawl(
+        let report = fresh_crawl(
             server.url.clone(),
             directory.path(),
             options(2, Duration::ZERO),
@@ -421,7 +598,7 @@ mod tests {
         ]))
         .await;
         let directory = tempdir().unwrap();
-        let report = crawl(
+        let report = fresh_crawl(
             server.url.clone(),
             directory.path(),
             options(2, Duration::from_millis(40)),
@@ -465,7 +642,7 @@ mod tests {
         ]))
         .await;
         let directory = tempdir().unwrap();
-        let report = crawl(
+        let report = fresh_crawl(
             server.url.clone(),
             directory.path(),
             options(2, Duration::ZERO),
@@ -495,6 +672,7 @@ mod tests {
                     status: 200,
                     body: vec![0xff],
                     location: None,
+                    etag: None,
                     delay: Duration::ZERO,
                 },
             ),
@@ -506,7 +684,7 @@ mod tests {
         ]))
         .await;
         let directory = tempdir().unwrap();
-        let report = crawl(
+        let report = fresh_crawl(
             server.url.clone(),
             directory.path(),
             CrawlOptions {
@@ -529,7 +707,7 @@ mod tests {
             Url::parse(&format!("http://{}/llms.txt", closed.local_addr().unwrap())).unwrap();
         drop(closed);
         let directory = tempdir().unwrap();
-        let network = crawl(
+        let network = fresh_crawl(
             closed_url,
             directory.path(),
             options(1, Duration::ZERO),
@@ -545,7 +723,7 @@ mod tests {
         )]))
         .await;
         let directory = tempdir().unwrap();
-        let redirect = crawl(
+        let redirect = fresh_crawl(
             looping.url.clone(),
             directory.path(),
             options(1, Duration::ZERO),
@@ -565,7 +743,7 @@ mod tests {
         .await;
         let directory = tempdir().unwrap();
         std::fs::write(directory.path().join("docs"), "not a directory").unwrap();
-        let file = crawl(
+        let file = fresh_crawl(
             server.url.clone(),
             directory.path(),
             options(1, Duration::ZERO),
@@ -574,5 +752,83 @@ mod tests {
         .await
         .unwrap();
         assert_eq!(file.failed(), 1);
+    }
+
+    #[tokio::test]
+    async fn revalidates_conditionally_reuses_304_and_rewrites_manifest() {
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[a](/docs/a.md) [b](/docs/b.md)"),
+            ),
+            (
+                "/docs/a.md".to_owned(),
+                Response::ok("REMOTE-A-MUST-NOT-DOWNLOAD").with_etag("\"v1\""),
+            ),
+            (
+                "/docs/b.md".to_owned(),
+                Response::ok("fresh-b").with_etag("\"v2\""),
+            ),
+        ]))
+        .await;
+
+        // Previous snapshot on disk: a.md unchanged (etag v1), b.md stale (cached etag differs).
+        let previous = tempdir().unwrap();
+        std::fs::create_dir_all(previous.path().join("docs")).unwrap();
+        std::fs::write(
+            previous.path().join("docs/a.md"),
+            "CACHED-A [c](/docs/c.md)",
+        )
+        .unwrap();
+        std::fs::write(previous.path().join("docs/b.md"), "stale-b").unwrap();
+
+        let a_url = server.url.join("/docs/a.md").unwrap().to_string();
+        let b_url = server.url.join("/docs/b.md").unwrap().to_string();
+        let mut previous_manifest = Manifest::default();
+        previous_manifest.insert(
+            a_url.clone(),
+            Validator {
+                etag: Some("\"v1\"".to_owned()),
+                last_modified: None,
+            },
+        );
+        previous_manifest.insert(
+            b_url.clone(),
+            Validator {
+                etag: Some("\"stale\"".to_owned()),
+                last_modified: None,
+            },
+        );
+
+        let snapshot = tempdir().unwrap();
+        let report = crawl(
+            server.url.clone(),
+            snapshot.path(),
+            Some(previous.path()),
+            &previous_manifest,
+            options(2, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        assert_eq!(report.unchanged, 1, "a.md revalidated via 304");
+        assert_eq!(report.downloaded, 1, "b.md re-downloaded on etag mismatch");
+        // 304 reuses the local copy, never the remote body.
+        assert_eq!(
+            std::fs::read_to_string(snapshot.path().join("docs/a.md")).unwrap(),
+            "CACHED-A [c](/docs/c.md)"
+        );
+        assert_eq!(
+            std::fs::read_to_string(snapshot.path().join("docs/b.md")).unwrap(),
+            "fresh-b"
+        );
+        // Links discovered from the reused local body keep the crawl going: /docs/c.md is 404.
+        assert_eq!(report.missing, 1);
+        // New manifest: a.md keeps v1, b.md updates to the server's v2.
+        let written = Manifest::load(snapshot.path());
+        assert_eq!(written.get(&a_url).unwrap().etag.as_deref(), Some("\"v1\""));
+        assert_eq!(written.get(&b_url).unwrap().etag.as_deref(), Some("\"v2\""));
     }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "llms-wiki"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2024"
 description = "Mirror llms.txt Markdown sites locally"
 repository = "https://github.com/yigegongjiang/jj-llms-txt-wiki"
@@ -14,6 +14,7 @@ jiff = { version = "0.2.32", default-features = false, features = ["std"] }
 percent-encoding = "2.3.2"
 reqwest = { version = "0.13.4", default-features = false, features = ["rustls"] }
 serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
 tempfile = "3.27.0"
 tokio = { version = "1.50.0", features = ["fs", "macros", "rt-multi-thread", "sync", "time"] }
 toml = "1.1.2"

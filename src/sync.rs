@@ -5,6 +5,7 @@ use std::time::Duration;
 use crate::config::Config;
 use crate::crawler::{CrawlOptions, CrawlReport, DEFAULT_TIMEOUT, crawl};
 use crate::git::Repository;
+use crate::manifest::Manifest;
 use crate::progress::SyncProgress;
 use crate::site::parse_entry_url;
 use crate::snapshot::Snapshot;
@@ -53,9 +54,21 @@ pub async fn run(
                 continue;
             }
         };
+        let previous_site = output_root.join(&name);
+        let previous_manifest = Manifest::load(&previous_site);
+        let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
         let progress = Arc::new(SyncProgress::new(&name));
         let observer: Arc<dyn crate::crawler::CrawlObserver> = progress.clone();
-        let report = match crawl(entry, snapshot.path(), options, observer).await {
+        let report = match crawl(
+            entry,
+            snapshot.path(),
+            previous_root,
+            &previous_manifest,
+            options,
+            observer,
+        )
+        .await
+        {
             Ok(report) => report,
             Err(error) => {
                 let report = CrawlReport::default();
@@ -129,9 +142,19 @@ mod tests {
     use tokio::net::TcpListener;
     use tokio::task::JoinHandle;
 
+    type Route = (u16, String, Option<String>);
+
+    fn route(status: u16, body: &str) -> Route {
+        (status, body.to_owned(), None)
+    }
+
+    fn route_etag(body: &str, etag: &str) -> Route {
+        (200, body.to_owned(), Some(etag.to_owned()))
+    }
+
     struct Server {
         origin: String,
-        routes: Arc<RwLock<HashMap<String, (u16, String)>>>,
+        routes: Arc<RwLock<HashMap<String, Route>>>,
         task: JoinHandle<()>,
     }
 
@@ -141,7 +164,7 @@ mod tests {
         }
     }
 
-    async fn server(initial: HashMap<String, (u16, String)>) -> Server {
+    async fn server(initial: HashMap<String, Route>) -> Server {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let address = listener.local_addr().unwrap();
         let routes = Arc::new(RwLock::new(initial));
@@ -163,17 +186,36 @@ mod tests {
                         .next()
                         .and_then(|line| line.split_whitespace().nth(1))
                         .unwrap_or("/");
-                    let (status, body) = routes
+                    let if_none_match = request
+                        .lines()
+                        .find(|line| line.to_ascii_lowercase().starts_with("if-none-match:"))
+                        .and_then(|line| line.split_once(':'))
+                        .map(|(_, value)| value.trim().to_owned());
+                    let (status, body, etag) = routes
                         .read()
                         .unwrap()
                         .get(path)
                         .cloned()
-                        .unwrap_or((404, String::new()));
-                    let reason = if status == 200 { "OK" } else { "Error" };
-                    let response = format!(
-                        "HTTP/1.1 {status} {reason}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
-                        body.len()
+                        .unwrap_or((404, String::new(), None));
+                    let etag_header = etag
+                        .as_ref()
+                        .map(|value| format!("ETag: {value}\r\n"))
+                        .unwrap_or_default();
+                    let not_modified = matches!(
+                        (&if_none_match, &etag),
+                        (Some(inm), Some(tag)) if inm == tag
                     );
+                    let response = if not_modified {
+                        format!(
+                            "HTTP/1.1 304 Not Modified\r\n{etag_header}Connection: close\r\n\r\n"
+                        )
+                    } else {
+                        let reason = if status == 200 { "OK" } else { "Error" };
+                        format!(
+                            "HTTP/1.1 {status} {reason}\r\n{etag_header}Content-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                            body.len()
+                        )
+                    };
                     let _ = stream.write_all(response.as_bytes()).await;
                 });
             }
@@ -220,10 +262,10 @@ mod tests {
     #[tokio::test]
     async fn commits_success_preserves_failure_and_removes_stale_files() {
         let server = server(HashMap::from([
-            ("/good.txt".to_owned(), (200, "[a](/docs/a.md)".to_owned())),
-            ("/bad.txt".to_owned(), (200, "[fail](/fail.md)".to_owned())),
-            ("/docs/a.md".to_owned(), (200, "old-a".to_owned())),
-            ("/fail.md".to_owned(), (500, String::new())),
+            ("/good.txt".to_owned(), route(200, "[a](/docs/a.md)")),
+            ("/bad.txt".to_owned(), route(200, "[fail](/fail.md)")),
+            ("/docs/a.md".to_owned(), route(200, "old-a")),
+            ("/fail.md".to_owned(), route(500, "")),
         ]))
         .await;
         let directory = tempdir().unwrap();
@@ -245,15 +287,16 @@ mod tests {
         assert_eq!(git(&output, &["rev-list", "--count", "HEAD"]), "1");
         assert!(git(&output, &["log", "-1", "--format=%s"]).starts_with("chore(sync): good @ "));
 
-        server.routes.write().unwrap().insert(
-            "/good.txt".to_owned(),
-            (200, "[new](/docs/new.md)".to_owned()),
-        );
         server
             .routes
             .write()
             .unwrap()
-            .insert("/docs/new.md".to_owned(), (200, "new".to_owned()));
+            .insert("/good.txt".to_owned(), route(200, "[new](/docs/new.md)"));
+        server
+            .routes
+            .write()
+            .unwrap()
+            .insert("/docs/new.md".to_owned(), route(200, "new"));
         let config_before = fs::read(&config_path).unwrap();
         run(&config_path, Some("good".to_owned()), Some(1), None)
             .await
@@ -279,8 +322,8 @@ mod tests {
     #[tokio::test]
     async fn invalid_git_repository_prevents_snapshot_changes() {
         let server = server(HashMap::from([
-            ("/good.txt".to_owned(), (200, "[new](/new.md)".to_owned())),
-            ("/new.md".to_owned(), (200, "new".to_owned())),
+            ("/good.txt".to_owned(), route(200, "[new](/new.md)")),
+            ("/new.md".to_owned(), route(200, "new")),
         ]))
         .await;
         let directory = tempdir().unwrap();
@@ -337,5 +380,54 @@ mod tests {
                 .await
                 .is_err()
         );
+    }
+
+    #[tokio::test]
+    async fn second_sync_reuses_unchanged_files_via_conditional_requests() {
+        let server = server(HashMap::from([
+            ("/good.txt".to_owned(), route(200, "[a](/docs/a.md)")),
+            ("/docs/a.md".to_owned(), route_etag("body-a", "\"v1\"")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let output = directory.path().join("wiki");
+        let config_path = directory.path().join("config.toml");
+        let config = Config {
+            output_dir: output.display().to_string(),
+            concurrency: 1,
+            interval_ms: 0,
+            sites: BTreeMap::from([(
+                "good".to_owned(),
+                SiteConfig {
+                    url: format!("{}/good.txt", server.origin),
+                },
+            )]),
+        };
+        config.save(&config_path).unwrap();
+
+        // First sync downloads everything and persists the manifest into the site dir.
+        run(&config_path, Some("good".to_owned()), None, None)
+            .await
+            .unwrap();
+        assert_eq!(
+            fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
+            "body-a"
+        );
+        assert!(output.join("good/.llms-wiki.json").exists());
+
+        // Remote body changes but the ETag does not: the server answers 304, so the
+        // second sync must reuse the local copy and never see "REMOTE-CHANGED".
+        server.routes.write().unwrap().insert(
+            "/docs/a.md".to_owned(),
+            route_etag("REMOTE-CHANGED", "\"v1\""),
+        );
+        run(&config_path, Some("good".to_owned()), None, None)
+            .await
+            .unwrap();
+        assert_eq!(
+            fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
+            "body-a"
+        );
+        assert_eq!(git(&output, &["rev-list", "--count", "HEAD"]), "2");
     }
 }

@@ -5,6 +5,7 @@ pub mod discovery;
 mod git;
 pub mod http;
 mod lifecycle;
+pub mod manifest;
 mod progress;
 mod site;
 mod snapshot;

@@ -38,6 +38,7 @@ impl CrawlObserver for SyncProgress {
         match event {
             CrawlEvent::Started(url) => self.bar.set_message(format!("GET {url}")),
             CrawlEvent::Downloaded(url)
+            | CrawlEvent::Unchanged(url)
             | CrawlEvent::Missing(url)
             | CrawlEvent::Ignored(url)
             | CrawlEvent::Failed(url) => {
@@ -50,8 +51,9 @@ impl CrawlObserver for SyncProgress {
 
 pub fn summary_line(site: &str, report: &CrawlReport, status: &str) -> String {
     format!(
-        "{site}: {status}; downloaded={}, missing={}, ignored={}, failed={}",
+        "{site}: {status}; downloaded={}, unchanged={}, missing={}, ignored={}, failed={}",
         report.downloaded,
+        report.unchanged,
         report.missing,
         report.ignored,
         report.failed()
@@ -67,6 +69,7 @@ mod tests {
     fn formats_non_tty_summary() {
         let report = CrawlReport {
             downloaded: 2,
+            unchanged: 4,
             missing: 1,
             ignored: 3,
             failures: vec![CrawlFailure {
@@ -76,7 +79,7 @@ mod tests {
         };
         assert_eq!(
             summary_line("docs", &report, "failed"),
-            "docs: failed; downloaded=2, missing=1, ignored=3, failed=1"
+            "docs: failed; downloaded=2, unchanged=4, missing=1, ignored=3, failed=1"
         );
     }
 }

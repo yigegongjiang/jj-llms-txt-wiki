@@ -1,14 +1,25 @@
-use reqwest::header::LOCATION;
+use reqwest::StatusCode;
+use reqwest::header::{
+    ETAG, HeaderMap, HeaderName, IF_MODIFIED_SINCE, IF_NONE_MATCH, LAST_MODIFIED, LOCATION,
+};
 use reqwest::redirect::Policy;
 use std::str;
 use std::time::Duration;
 use url::Url;
 
+use crate::manifest::Validator;
 use crate::url_map::{CanonicalUrl, same_origin};
 
 #[derive(Debug)]
 pub enum FetchOutcome {
-    Document { final_url: Url, body: String },
+    Document {
+        final_url: Url,
+        body: String,
+        validator: Validator,
+    },
+    NotModified {
+        final_url: Url,
+    },
     Missing,
     IgnoredRedirect,
 }
@@ -43,17 +54,35 @@ impl HttpClient {
         })
     }
 
-    pub async fn fetch(&self, url: &CanonicalUrl) -> Result<FetchOutcome, String> {
-        let response = self
-            .client
-            .get(url.as_url().clone())
+    pub async fn fetch(
+        &self,
+        url: &CanonicalUrl,
+        validator: Option<&Validator>,
+    ) -> Result<FetchOutcome, String> {
+        let mut request = self.client.get(url.as_url().clone());
+        if let Some(validator) = validator {
+            if let Some(etag) = &validator.etag {
+                request = request.header(IF_NONE_MATCH, etag);
+            }
+            if let Some(last_modified) = &validator.last_modified {
+                request = request.header(IF_MODIFIED_SINCE, last_modified);
+            }
+        }
+        let response = request
             .send()
             .await
             .map_err(|error| format!("GET {url}: {error}"))?;
         let status = response.status();
 
+        if status == StatusCode::NOT_MODIFIED {
+            return Ok(FetchOutcome::NotModified {
+                final_url: response.url().clone(),
+            });
+        }
+
         if status.is_success() {
             let final_url = response.url().clone();
+            let validator = extract_validator(response.headers());
             let bytes = response
                 .bytes()
                 .await
@@ -61,7 +90,11 @@ impl HttpClient {
             let body = str::from_utf8(&bytes)
                 .map_err(|error| format!("response is not UTF-8 for {url}: {error}"))?
                 .to_owned();
-            return Ok(FetchOutcome::Document { final_url, body });
+            return Ok(FetchOutcome::Document {
+                final_url,
+                body,
+                validator,
+            });
         }
 
         if matches!(status.as_u16(), 404 | 410) {
@@ -86,4 +119,19 @@ impl HttpClient {
 
         Err(format!("GET {url}: HTTP {status}"))
     }
+}
+
+fn extract_validator(headers: &HeaderMap) -> Validator {
+    Validator {
+        etag: header_value(headers, ETAG),
+        last_modified: header_value(headers, LAST_MODIFIED),
+    }
+}
+
+fn header_value(headers: &HeaderMap, name: HeaderName) -> Option<String> {
+    headers
+        .get(name)?
+        .to_str()
+        .ok()
+        .map(|value| value.to_owned())
 }
