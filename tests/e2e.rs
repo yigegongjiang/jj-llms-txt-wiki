@@ -145,6 +145,21 @@ fn success(home: &Path, args: &[&str]) -> Output {
     output
 }
 
+fn git(root: &Path, args: &[&str]) -> String {
+    let output = Command::new("git")
+        .current_dir(root)
+        .args(args)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "args={args:?}\nstdout={}\nstderr={}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8(output.stdout).unwrap().trim().to_owned()
+}
+
 fn tree(root: &Path) -> BTreeMap<PathBuf, Vec<u8>> {
     fn visit(root: &Path, current: &Path, files: &mut BTreeMap<PathBuf, Vec<u8>>) {
         if !current.exists() {
@@ -238,6 +253,12 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
     assert!(!wiki.join("alpha/gone.md").exists());
     assert!(!wiki.join("beta").exists());
     assert_eq!(fs::read(&config_path).unwrap(), config_before);
+    assert!(wiki.join(".git").is_dir());
+    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "1");
+    let subject = git(&wiki, &["log", "-1", "--format=%s"]);
+    assert!(subject.starts_with("chore(sync): alpha @ "));
+    assert!(subject.ends_with('Z'));
+    assert!(git(&wiki, &["status", "--porcelain"]).is_empty());
 
     success(
         home.path(),
@@ -247,6 +268,8 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         fs::read_to_string(wiki.join("beta/beta.md")).unwrap(),
         "beta"
     );
+    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "2");
+    assert!(git(&wiki, &["log", "-1", "--format=%s"]).starts_with("chore(sync): alpha,beta @ "));
     let beta_requests = beta.requests.read().unwrap();
     assert!(!beta_requests.iter().any(|path| path == "/target.md"));
     assert!(!beta_requests.iter().any(|path| path == "/foreign.md"));
@@ -269,6 +292,14 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         fs::read_to_string(wiki.join("alpha/docs/new.md")).unwrap(),
         "new-v2"
     );
+    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "3");
+
+    success(home.path(), &["sync", "alpha", "--interval", "0ms"]);
+    assert_eq!(
+        git(&wiki, &["rev-list", "--count", "HEAD"]),
+        "4",
+        "unchanged sync must remain visible in history"
+    );
 
     let stable = tree(&wiki.join("alpha"));
     for (status, path) in [(429, "/busy.md"), (500, "/broken.md")] {
@@ -284,14 +315,13 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         let failed = cli(home.path(), &["sync", "alpha", "--interval", "0ms"]);
         assert!(!failed.status.success());
         assert_eq!(tree(&wiki.join("alpha")), stable);
+        assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "4");
     }
 
     assert!(!wiki.join(".cache").exists());
     assert!(fs::read_dir(&wiki).unwrap().all(|entry| {
-        !entry
-            .unwrap()
-            .file_name()
-            .to_string_lossy()
-            .starts_with('.')
+        let name = entry.unwrap().file_name();
+        name == ".git" || !name.to_string_lossy().starts_with('.')
     }));
+    assert!(git(&wiki, &["status", "--porcelain"]).is_empty());
 }

@@ -40,6 +40,7 @@ llms-wiki uninstall
 - 超时、网络错误、`429`、`5xx`、其他非成功状态、重定向异常、解析或文件错误均使对应站点同步失败。
 - 每个站点独立生成完整临时快照；成功后替换旧目录，失败则清理临时目录并保留旧目录。
 - `sync` 多站点按配置名称排序执行；单站点失败不回滚已成功站点，但命令最终返回非零。
+- 抓取前将 `output_dir` 初始化为独立 Git 仓库；至少一个站点成功后全量暂存并提交，内容不变也保留一次同步记录。
 - 不增加 TUI、AI 调用、持久化 `.cache`、增量更新、跨站点事务或隐式重试。
 
 这些约定只消解 README 中实现所必需的歧义；如果后续调整产品行为，应先更新根 `README.md`，再同步计划和代码。
@@ -67,7 +68,7 @@ llms-wiki uninstall
 - URL 层级输出：阶段 3、5。
 - 递归、去重、同源链接和重定向：阶段 3–4。
 - 并发数和请求间隔：阶段 4。
-- 完整快照、删除远端缺失文件、失败保留旧快照：阶段 5。
+- 完整快照、Git 历史、删除远端缺失文件、失败保留旧快照：阶段 5。
 - 无 `.cache`、临时目录清理：阶段 5。
 - `indicatif` 进度：阶段 5。
 - 安装、自更新、卸载和双架构 Release：阶段 6。
@@ -103,3 +104,5 @@ cargo build --release --locked
 - [`Tokio` semaphore](https://docs.rs/tokio/latest/tokio/sync/struct.Semaphore.html)
 - [`tempfile` temporary directories](https://docs.rs/tempfile/latest/tempfile/)
 - [`indicatif` progress rendering](https://docs.rs/indicatif/latest/indicatif/)
+- [`git init`](https://git-scm.com/docs/git-init) / [`git add`](https://git-scm.com/docs/git-add) / [`git commit`](https://git-scm.com/docs/git-commit)
+- [`Jiff` timestamp](https://docs.rs/jiff/latest/jiff/struct.Timestamp.html)

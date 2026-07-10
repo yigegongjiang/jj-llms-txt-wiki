@@ -7,6 +7,15 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.3.0] - 2026-07-10
+
+### Added
+
+- 输出目录自动初始化为独立 Git 仓库；每次有效同步提交全量变更，信息包含成功站点和 UTC 时间。
+  - `sync` 抓取前验证独立 Git root，成功快照后执行 `git add -A` + 单次 commit。
+- 内容未变化仍记录同步事件；多站点部分失败仍保存成功站点历史。
+  - `--allow-empty` 保留事件；Git 初始化失败前置阻断，部分成功提交后仍返回站点错误。
+
 ## [0.2.1] - 2026-07-10
 
 ### Changed
@@ -43,6 +52,7 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.3.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.3.0
 [0.2.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.2.1
 [0.2.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.2.0
 [0.1.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.1.1

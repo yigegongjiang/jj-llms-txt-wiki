@@ -4,6 +4,7 @@ use std::time::Duration;
 
 use crate::config::Config;
 use crate::crawler::{CrawlOptions, CrawlReport, DEFAULT_TIMEOUT, crawl};
+use crate::git::Repository;
 use crate::progress::SyncProgress;
 use crate::site::parse_entry_url;
 use crate::snapshot::Snapshot;
@@ -28,12 +29,14 @@ pub async fn run(
     } else {
         config.sites.into_iter().collect()
     };
+    let repository = Repository::prepare(&output_root)?;
     let options = CrawlOptions {
         concurrency: concurrency.unwrap_or(config.concurrency),
         interval: interval.unwrap_or(Duration::from_millis(config.interval_ms)),
         timeout: DEFAULT_TIMEOUT,
     };
     let mut failures = Vec::new();
+    let mut successes = Vec::new();
 
     for (name, site) in targets {
         let entry = match parse_entry_url(&site.url) {
@@ -64,7 +67,10 @@ pub async fn run(
 
         if report.is_success() {
             match snapshot.commit() {
-                Ok(()) => progress.finish(&report, true),
+                Ok(()) => {
+                    progress.finish(&report, true);
+                    successes.push(name);
+                }
                 Err(error) => {
                     progress.finish(&report, false);
                     failures.push(format!("{name}: {error}"));
@@ -76,14 +82,21 @@ pub async fn run(
         }
     }
 
-    if failures.is_empty() {
-        Ok(())
+    let git_failure = repository.record_sync(&successes).err();
+
+    let site_failure = if failures.is_empty() {
+        None
     } else {
-        Err(format!(
+        Some(format!(
             "{} site(s) failed: {}",
             failures.len(),
             failures.join("; ")
         ))
+    };
+    match (site_failure, git_failure) {
+        (None, None) => Ok(()),
+        (Some(error), None) | (None, Some(error)) => Err(error),
+        (Some(site_error), Some(git_error)) => Err(format!("{site_error}; {git_error}")),
     }
 }
 
@@ -109,6 +122,7 @@ mod tests {
     use crate::config::{Config, SiteConfig};
     use std::collections::{BTreeMap, HashMap};
     use std::fs;
+    use std::process::Command;
     use std::sync::{Arc, RwLock};
     use tempfile::tempdir;
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
@@ -193,6 +207,16 @@ mod tests {
         }
     }
 
+    fn git(root: &std::path::Path, args: &[&str]) -> String {
+        let output = Command::new("git")
+            .current_dir(root)
+            .args(args)
+            .output()
+            .unwrap();
+        assert!(output.status.success());
+        String::from_utf8(output.stdout).unwrap().trim().to_owned()
+    }
+
     #[tokio::test]
     async fn commits_success_preserves_failure_and_removes_stale_files() {
         let server = server(HashMap::from([
@@ -218,6 +242,8 @@ mod tests {
             fs::read_to_string(output.join("bad/old.md")).unwrap(),
             "preserve"
         );
+        assert_eq!(git(&output, &["rev-list", "--count", "HEAD"]), "1");
+        assert!(git(&output, &["log", "-1", "--format=%s"]).starts_with("chore(sync): good @ "));
 
         server.routes.write().unwrap().insert(
             "/good.txt".to_owned(),
@@ -246,8 +272,46 @@ mod tests {
         assert!(
             names
                 .iter()
-                .all(|name| !name.to_string_lossy().starts_with('.'))
+                .all(|name| name == ".git" || !name.to_string_lossy().starts_with('.'))
         );
+    }
+
+    #[tokio::test]
+    async fn invalid_git_repository_prevents_snapshot_changes() {
+        let server = server(HashMap::from([
+            ("/good.txt".to_owned(), (200, "[new](/new.md)".to_owned())),
+            ("/new.md".to_owned(), (200, "new".to_owned())),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let output = directory.path().join("wiki");
+        fs::create_dir_all(output.join("good")).unwrap();
+        fs::write(output.join("good/old.md"), "old").unwrap();
+        fs::write(output.join(".git"), "invalid").unwrap();
+        let config_path = directory.path().join("config.toml");
+        let config = Config {
+            output_dir: output.display().to_string(),
+            concurrency: 1,
+            interval_ms: 0,
+            sites: BTreeMap::from([(
+                "good".to_owned(),
+                SiteConfig {
+                    url: format!("{}/good.txt", server.origin),
+                },
+            )]),
+        };
+        config.save(&config_path).unwrap();
+
+        assert!(
+            run(&config_path, Some("good".to_owned()), None, None)
+                .await
+                .is_err()
+        );
+        assert_eq!(
+            fs::read_to_string(output.join("good/old.md")).unwrap(),
+            "old"
+        );
+        assert!(!output.join("good/new.md").exists());
     }
 
     #[tokio::test]
