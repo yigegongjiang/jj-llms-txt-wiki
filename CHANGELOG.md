@@ -11,6 +11,17 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.5.0] - 2026-07-10
+
+### Added
+
+- 同步进度更清晰：单行汇总实时显示站点序号、分类计数、在途请求数和耗时。
+- 新增 `-v/--verbose`（逐条打印）与 `-q/--quiet`（仅摘要）控制进度详略。
+
+### Changed
+
+- 默认仅将失败逐条打印，成功保持安静；进度不再输出无标签数字和易截断的完整链接。
+
 ## [0.4.0] - 2026-07-10
 
 ### Added
@@ -47,6 +58,7 @@
 - 提供 `llms-wiki` 命令行骨架，支持 `curl` 一键安装（macOS arm64/x64）。
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
 
+[0.5.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.5.0
 [0.4.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.4.0
 [0.3.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.3.0
 [0.2.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.2.1

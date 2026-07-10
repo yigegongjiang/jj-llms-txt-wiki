@@ -7,6 +7,20 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.5.0] - 2026-07-10
+
+### Added
+
+- 同步进度更清晰：单行汇总实时显示站点序号、分类计数、在途请求数和耗时。
+  - `SyncProgress` 内部 `AtomicU64` 分类计数 + inflight（started−completed），模板 `[i/n] site {spinner} {elapsed} {msg}`，不改 `CrawlEvent`。
+- 新增 `-v/--verbose`（逐条打印）与 `-q/--quiet`（仅摘要）控制进度详略。
+  - `cli.rs` 两 flag `conflicts_with` 互斥 → `progress::Verbosity`；逐条日志 TTY 走 `bar.println`，非 TTY 走 `eprintln` 避免丢失。
+
+### Changed
+
+- 默认仅将失败逐条打印，成功保持安静；进度不再输出无标签数字和易截断的完整链接。
+  - URL 收敛为 origin 相对 `path[?query]`；`--quiet` 用 hidden draw target。
+
 ## [0.4.0] - 2026-07-10
 
 ### Added
@@ -59,6 +73,7 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.5.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.5.0
 [0.4.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.4.0
 [0.3.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.3.0
 [0.2.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.2.1

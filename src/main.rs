@@ -42,7 +42,25 @@ async fn run() -> Result<(), String> {
             site,
             concurrency,
             interval,
-        }) => sync::run(&config::default_path()?, site, concurrency, interval).await,
+            verbose,
+            quiet,
+        }) => {
+            let verbosity = if quiet {
+                progress::Verbosity::Quiet
+            } else if verbose {
+                progress::Verbosity::Verbose
+            } else {
+                progress::Verbosity::Normal
+            };
+            sync::run(
+                &config::default_path()?,
+                site,
+                concurrency,
+                interval,
+                verbosity,
+            )
+            .await
+        }
         Some(Command::Update) => lifecycle::update(),
         Some(Command::Uninstall) => lifecycle::uninstall(),
     }

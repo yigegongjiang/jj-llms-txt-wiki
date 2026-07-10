@@ -6,7 +6,7 @@ use crate::config::Config;
 use crate::crawler::{CrawlOptions, CrawlReport, DEFAULT_TIMEOUT, crawl};
 use crate::git::Repository;
 use crate::manifest::Manifest;
-use crate::progress::SyncProgress;
+use crate::progress::{SyncProgress, Verbosity};
 use crate::site::parse_entry_url;
 use crate::snapshot::Snapshot;
 
@@ -15,6 +15,7 @@ pub async fn run(
     requested_site: Option<String>,
     concurrency: Option<usize>,
     interval: Option<Duration>,
+    verbosity: Verbosity,
 ) -> Result<(), String> {
     let config = Config::load(config_path)?;
     if config.sites.is_empty() {
@@ -38,8 +39,13 @@ pub async fn run(
     };
     let mut failures = Vec::new();
     let mut successes = Vec::new();
+    let total = targets.len();
 
-    for (name, site) in targets {
+    for (index, (name, site)) in targets.into_iter().enumerate() {
+        let position = index + 1;
+        if verbosity != Verbosity::Quiet {
+            eprintln!("── [{position}/{total}] {name} ──");
+        }
         let entry = match parse_entry_url(&site.url) {
             Ok(entry) => entry,
             Err(error) => {
@@ -57,7 +63,7 @@ pub async fn run(
         let previous_site = output_root.join(&name);
         let previous_manifest = Manifest::load(&previous_site);
         let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
-        let progress = Arc::new(SyncProgress::new(&name));
+        let progress = Arc::new(SyncProgress::new(&name, position, total, verbosity));
         let observer: Arc<dyn crate::crawler::CrawlObserver> = progress.clone();
         let report = match crawl(
             entry,
@@ -133,6 +139,7 @@ fn format_report_failure(site: &str, report: &CrawlReport) -> String {
 mod tests {
     use super::run;
     use crate::config::{Config, SiteConfig};
+    use crate::progress::Verbosity;
     use std::collections::{BTreeMap, HashMap};
     use std::fs;
     use std::process::Command;
@@ -275,7 +282,11 @@ mod tests {
         fs::create_dir_all(output.join("bad")).unwrap();
         fs::write(output.join("bad/old.md"), "preserve").unwrap();
 
-        assert!(run(&config_path, None, None, None).await.is_err());
+        assert!(
+            run(&config_path, None, None, None, Verbosity::Quiet)
+                .await
+                .is_err()
+        );
         assert_eq!(
             fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
             "old-a"
@@ -298,9 +309,15 @@ mod tests {
             .unwrap()
             .insert("/docs/new.md".to_owned(), route(200, "new"));
         let config_before = fs::read(&config_path).unwrap();
-        run(&config_path, Some("good".to_owned()), Some(1), None)
-            .await
-            .unwrap();
+        run(
+            &config_path,
+            Some("good".to_owned()),
+            Some(1),
+            None,
+            Verbosity::Quiet,
+        )
+        .await
+        .unwrap();
         assert!(!output.join("good/docs/a.md").exists());
         assert_eq!(
             fs::read_to_string(output.join("good/docs/new.md")).unwrap(),
@@ -346,9 +363,15 @@ mod tests {
         config.save(&config_path).unwrap();
 
         assert!(
-            run(&config_path, Some("good".to_owned()), None, None)
-                .await
-                .is_err()
+            run(
+                &config_path,
+                Some("good".to_owned()),
+                None,
+                None,
+                Verbosity::Quiet
+            )
+            .await
+            .is_err()
         );
         assert_eq!(
             fs::read_to_string(output.join("good/old.md")).unwrap(),
@@ -366,7 +389,11 @@ mod tests {
             ..Config::default()
         };
         empty.save(&config_path).unwrap();
-        assert!(run(&config_path, None, None, None).await.is_err());
+        assert!(
+            run(&config_path, None, None, None, Verbosity::Quiet)
+                .await
+                .is_err()
+        );
 
         empty.sites.insert(
             "known".to_owned(),
@@ -376,9 +403,15 @@ mod tests {
         );
         empty.save(&config_path).unwrap();
         assert!(
-            run(&config_path, Some("unknown".to_owned()), None, None)
-                .await
-                .is_err()
+            run(
+                &config_path,
+                Some("unknown".to_owned()),
+                None,
+                None,
+                Verbosity::Quiet
+            )
+            .await
+            .is_err()
         );
     }
 
@@ -406,9 +439,15 @@ mod tests {
         config.save(&config_path).unwrap();
 
         // First sync downloads everything and persists the manifest into the site dir.
-        run(&config_path, Some("good".to_owned()), None, None)
-            .await
-            .unwrap();
+        run(
+            &config_path,
+            Some("good".to_owned()),
+            None,
+            None,
+            Verbosity::Quiet,
+        )
+        .await
+        .unwrap();
         assert_eq!(
             fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
             "body-a"
@@ -421,9 +460,15 @@ mod tests {
             "/docs/a.md".to_owned(),
             route_etag("REMOTE-CHANGED", "\"v1\""),
         );
-        run(&config_path, Some("good".to_owned()), None, None)
-            .await
-            .unwrap();
+        run(
+            &config_path,
+            Some("good".to_owned()),
+            None,
+            None,
+            Verbosity::Quiet,
+        )
+        .await
+        .unwrap();
         assert_eq!(
             fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
             "body-a"

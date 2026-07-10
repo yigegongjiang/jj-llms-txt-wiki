@@ -57,9 +57,17 @@ llms-wiki sync anthropic
 
 # 同步全部站点，并临时覆盖抓取限制
 llms-wiki sync --concurrency 2 --interval 1s
+
+# 打印每条完成记录（默认仅打印失败）
+llms-wiki sync -v
+
+# 静默进度，仅输出最终摘要
+llms-wiki sync -q
 ```
 
 CLI 参数优先于配置文件，未提供的参数使用配置值或默认值。
+
+同步进度显示在 stderr：单行汇总实时展示站点序号、分类计数（下载 / 未变 / 缺失 / 失败）、在途请求数和耗时。默认仅将失败逐条打印为滚动记录，`-v/--verbose` 打印每条完成记录，`-q/--quiet` 关闭进度只留最终摘要。非终端环境自动隐藏动态刷新，仍输出摘要。
 
 ## 配置
 
