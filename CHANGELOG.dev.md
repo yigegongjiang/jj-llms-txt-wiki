@@ -7,6 +7,17 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.2.0] - 2026-07-10
+
+### Added
+
+- 支持 TOML 配置及多站点添加、排序查看。
+  - `clap` + `serde` + `toml` 实现嵌套 CLI、默认配置、校验及同目录原子写入。
+- 支持递归同步同源 Markdown，并按 URL 层级生成完整本地快照。
+  - Comrak AST + URL 安全映射 + Tokio/reqwest rustls 抓取器递归发现并分类响应。
+- 支持临时覆盖并发数与请求间隔；失败时保留上一份完整快照。
+  - 全局启动节流 + 并发上限 + 同文件系统临时目录替换/回滚 + indicatif 摘要。
+
 ## [0.1.1] - 2026-07-10
 
 ### Changed
@@ -25,5 +36,6 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.2.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.2.0
 [0.1.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.1.1
 [0.1.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.1.0

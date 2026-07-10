@@ -11,15 +11,17 @@ MUST NOT 写发布流程 (→ workflow.md) / LLM 约束 (→ AGENTS.md) / dev �
 
 从 [`llms.txt`](https://llmstxt.org/) 入口递归抓取同源 Markdown，并按站点和 URL 路径保存到本地。
 
-业务 CLI 尚未实现；当前仅提供用于验证 GitHub Release 链路的 Rust Hello World 骨架。
-
 ## 使用
 
-骨架已支持 `help`、`version`、`update`（别名 `upgrade`）和 `uninstall`。首个 Release 发布后可安装（macOS arm64/x64）：
+支持 macOS arm64/x64：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/install.sh | bash
+llms-wiki --version
+llms-wiki --help
 ```
+
+生命周期命令：`version` / `update`（别名 `upgrade`）/ `uninstall`。
 
 ## 设计原则
 

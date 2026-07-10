@@ -12,7 +12,7 @@
 
 # 调试
 
-`cargo run -- <command>` 运行骨架；`cargo test --locked` 跑单测。
+`cargo run -- <command>` 运行 CLI；`cargo test --locked` 跑测试。
 
 验证：
 

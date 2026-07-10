@@ -1,225 +1,60 @@
-use std::env;
-use std::ffi::OsStr;
-use std::fs;
-use std::os::unix::fs::PermissionsExt;
-use std::path::Path;
-use std::process::{self, Command, Stdio};
+mod cli;
+mod config;
+pub mod crawler;
+pub mod discovery;
+pub mod http;
+mod lifecycle;
+mod progress;
+mod site;
+mod snapshot;
+mod sync;
+pub mod url_map;
 
-const NAME: &str = env!("CARGO_PKG_NAME");
-const VERSION: &str = env!("CARGO_PKG_VERSION");
-const REPOSITORY: &str = env!("CARGO_PKG_REPOSITORY");
+use clap::{CommandFactory, Parser};
+use cli::{Cli, Command};
+use std::process::ExitCode;
 
-const USAGE: &str = "Usage: llms-wiki [command]
-
-Commands:
-  (none)                  Print \"Hello, world!\"
-  help, --help, -h        Show this help message
-  version, --version, -v  Show version information
-  update, upgrade         Download the latest release and replace this binary
-  uninstall               Remove this binary from disk";
-
-fn assert_installed(executable: &Path, action: &str) -> Result<(), String> {
-    if executable.file_name() != Some(OsStr::new(NAME)) {
-        return Err(format!("refusing to {action}: not the installed binary"));
-    }
-    Ok(())
-}
-
-fn asset_name() -> Result<String, String> {
-    if env::consts::OS != "macos" {
-        return Err(format!("unsupported OS: {}", env::consts::OS));
-    }
-
-    let architecture = match env::consts::ARCH {
-        "aarch64" => "arm64",
-        "x86_64" => "x64",
-        architecture => return Err(format!("unsupported arch: {architecture}")),
+async fn run() -> Result<(), String> {
+    let cli = match Cli::try_parse() {
+        Ok(cli) => cli,
+        Err(error) => {
+            error.print().map_err(|error| error.to_string())?;
+            return if error.use_stderr() {
+                Err(String::new())
+            } else {
+                Ok(())
+            };
+        }
     };
-    Ok(format!("{NAME}-darwin-{architecture}"))
-}
 
-fn repository_slug() -> Result<&'static str, String> {
-    REPOSITORY
-        .strip_prefix("https://github.com/")
-        .map(|slug| slug.trim_end_matches(".git"))
-        .filter(|slug| slug.split('/').count() == 2)
-        .ok_or_else(|| format!("unsupported repository URL: {REPOSITORY}"))
-}
-
-fn download(url: &str, destination: &Path, optional: bool) -> Result<(), String> {
-    let mut command = Command::new("curl");
-    command.args(["-fL", "--retry", "3", "--silent"]);
-
-    if optional {
-        command.stdout(Stdio::null()).stderr(Stdio::null());
-    } else {
-        command.arg("--show-error");
-    }
-    command.arg("--output").arg(destination).arg(url);
-
-    let status = command
-        .status()
-        .map_err(|error| format!("failed to run curl: {error}"))?;
-    if status.success() {
-        Ok(())
-    } else {
-        Err(format!("GET {url} failed with {status}"))
+    match cli.command {
+        None => Cli::command()
+            .print_help()
+            .map_err(|error| format!("print help: {error}")),
+        Some(Command::Version) => {
+            println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
+            Ok(())
+        }
+        Some(Command::Site { command }) => site::run(command, &config::default_path()?),
+        Some(Command::Sync {
+            site,
+            concurrency,
+            interval,
+        }) => sync::run(&config::default_path()?, site, concurrency, interval).await,
+        Some(Command::Update) => lifecycle::update(),
+        Some(Command::Uninstall) => lifecycle::uninstall(),
     }
 }
 
-fn expected_checksum(contents: &str, asset: &str) -> Option<String> {
-    contents.lines().find_map(|line| {
-        let mut fields = line.split_whitespace();
-        let checksum = fields.next()?;
-        let filename = fields.next()?.trim_start_matches('*');
-        (filename == asset).then(|| checksum.to_ascii_lowercase())
-    })
-}
-
-fn sha256(path: &Path) -> Result<String, String> {
-    let output = Command::new("shasum")
-        .args(["-a", "256"])
-        .arg(path)
-        .output()
-        .map_err(|error| format!("failed to run shasum: {error}"))?;
-    if !output.status.success() {
-        return Err(format!("shasum failed with {}", output.status));
-    }
-
-    String::from_utf8(output.stdout)
-        .map_err(|error| format!("invalid shasum output: {error}"))?
-        .split_whitespace()
-        .next()
-        .map(str::to_ascii_lowercase)
-        .ok_or_else(|| "empty shasum output".to_owned())
-}
-
-fn read_version(executable: &Path) -> Option<String> {
-    let output = Command::new(executable).arg("version").output().ok()?;
-    if !output.status.success() {
-        return None;
-    }
-    String::from_utf8(output.stdout)
-        .ok()?
-        .split_whitespace()
-        .next_back()
-        .map(str::to_owned)
-}
-
-fn update() -> Result<(), String> {
-    let executable = env::current_exe().map_err(|error| format!("current executable: {error}"))?;
-    assert_installed(&executable, "self-update")?;
-
-    let asset = asset_name()?;
-    let base = format!(
-        "https://github.com/{}/releases/latest/download",
-        repository_slug()?
-    );
-    let parent = executable
-        .parent()
-        .ok_or_else(|| "current executable has no parent directory".to_owned())?;
-    let temporary = parent.join(format!(".{NAME}.update.{}", process::id()));
-    let checksum_file = parent.join(format!(".{NAME}.checksums.{}", process::id()));
-
-    println!("==> Updating {NAME} {VERSION} -> latest");
-    let result = (|| {
-        download(&format!("{base}/{asset}"), &temporary, false)?;
-
-        if download(&format!("{base}/checksums.txt"), &checksum_file, true).is_ok() {
-            let contents = fs::read_to_string(&checksum_file)
-                .map_err(|error| format!("read checksums.txt: {error}"))?;
-            if let Some(expected) = expected_checksum(&contents, &asset) {
-                let actual = sha256(&temporary)?;
-                if expected != actual {
-                    return Err("checksum mismatch".to_owned());
-                }
+#[tokio::main]
+async fn main() -> ExitCode {
+    match run().await {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(error) => {
+            if !error.is_empty() {
+                eprintln!("error: {error}");
             }
+            ExitCode::FAILURE
         }
-
-        fs::set_permissions(&temporary, fs::Permissions::from_mode(0o755))
-            .map_err(|error| format!("set executable permission: {error}"))?;
-        fs::rename(&temporary, &executable)
-            .map_err(|error| format!("replace executable: {error}"))?;
-        Ok(())
-    })();
-
-    let _ = fs::remove_file(&temporary);
-    let _ = fs::remove_file(&checksum_file);
-    result?;
-
-    let new_version = read_version(&executable).unwrap_or_else(|| "unknown".to_owned());
-    println!("==> Updated {NAME} {VERSION} -> {new_version}");
-    println!("    {}", executable.display());
-    Ok(())
-}
-
-fn uninstall() -> Result<(), String> {
-    let executable = env::current_exe().map_err(|error| format!("current executable: {error}"))?;
-    assert_installed(&executable, "uninstall")?;
-    fs::remove_file(&executable).map_err(|error| format!("remove executable: {error}"))?;
-    println!("==> Removed: {}", executable.display());
-    Ok(())
-}
-
-fn run() -> i32 {
-    let command = env::args_os().nth(1);
-    match command.as_deref().and_then(OsStr::to_str) {
-        None => {
-            println!("Hello, world!");
-            0
-        }
-        Some("help" | "--help" | "-h") => {
-            println!("{USAGE}");
-            0
-        }
-        Some("version" | "--version" | "-v") => {
-            println!("{NAME} {VERSION}");
-            0
-        }
-        Some("update" | "upgrade") => match update() {
-            Ok(()) => 0,
-            Err(error) => {
-                eprintln!("error: update failed: {error}");
-                1
-            }
-        },
-        Some("uninstall") => match uninstall() {
-            Ok(()) => 0,
-            Err(error) => {
-                eprintln!("error: uninstall failed: {error}");
-                1
-            }
-        },
-        Some(command) => {
-            eprintln!("error: unknown command \"{command}\"\n");
-            eprintln!("{USAGE}");
-            1
-        }
-    }
-}
-
-fn main() {
-    process::exit(run());
-}
-
-#[cfg(test)]
-mod tests {
-    use super::expected_checksum;
-
-    #[test]
-    fn finds_checksum_for_exact_asset() {
-        let checksums = "aaa  llms-wiki-darwin-arm64\nbbb *llms-wiki-darwin-x64\n";
-        assert_eq!(
-            expected_checksum(checksums, "llms-wiki-darwin-x64"),
-            Some("bbb".to_owned())
-        );
-    }
-
-    #[test]
-    fn ignores_other_assets() {
-        assert_eq!(
-            expected_checksum("aaa  llms-wiki-darwin-arm64\n", "other"),
-            None
-        );
     }
 }
