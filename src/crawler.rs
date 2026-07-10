@@ -629,6 +629,48 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn follows_nested_llms_txt_indexes_to_markdown_docs() {
+        // Real-world shape (Cloudflare): the entry llms.txt links only to
+        // per-section llms.txt indexes, each of which links to the actual .md
+        // pages. Both hops must be followed — the entry index alone yields no
+        // .md, so a discovery filter that rejects llms.txt downloads nothing.
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[section](/sub/llms.txt)"),
+            ),
+            (
+                "/sub/llms.txt".to_owned(),
+                Response::ok("[page](/sub/page.md)"),
+            ),
+            ("/sub/page.md".to_owned(), Response::ok("body")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            options(2, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+        assert!(report.is_success());
+        // The nested index is downloaded and re-discovered; its .md follows.
+        assert_eq!(report.downloaded, 2);
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("sub/llms.txt")).unwrap(),
+            "[page](/sub/page.md)"
+        );
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("sub/page.md")).unwrap(),
+            "body"
+        );
+        // The entry document itself is never written to disk.
+        assert!(!directory.path().join("llms.txt").exists());
+    }
+
+    #[tokio::test]
     async fn resumes_existing_files_and_rediscovers_their_links() {
         let server = server(HashMap::from([
             (

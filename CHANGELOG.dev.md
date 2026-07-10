@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.6.1] - 2026-07-10
+
+### Fixed
+
+- 修复站点的 llms.txt 仅链接到下级 llms.txt 索引（如 Cloudflare）时同步一个文件都不下载：现在会跟进 llms.txt 索引并抓取其中的文档。
+  - `is_markdown_url` → `is_syncable_url`，新增放行 `path.ends_with("/llms.txt")`（避免误伤 `foollms.txt`）；`discover` 据此发现嵌套 llms.txt 索引，`crawl` 逐层递归至 `.md`。
+
 ## [0.6.0] - 2026-07-10
 
 ### Added
@@ -85,6 +92,8 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.6.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.1
+[0.6.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.0
 [0.5.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.5.0
 [0.4.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.4.0
 [0.3.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.3.0

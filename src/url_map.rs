@@ -52,9 +52,14 @@ pub fn same_origin(entry: &Url, candidate: &Url) -> bool {
         && entry.port_or_known_default() == candidate.port_or_known_default()
 }
 
-pub fn is_markdown_url(url: &Url) -> bool {
+/// A link worth following: a Markdown document (`.md`/`.markdown`) or a nested
+/// `llms.txt` index. An llms.txt lists its section's pages, so following one is
+/// how discovery reaches the actual docs — e.g. Cloudflare's root llms.txt links
+/// only to per-product llms.txt indexes, which in turn link to the `.md` pages.
+/// The `/llms.txt` suffix (not bare `llms.txt`) avoids matching `foollms.txt`.
+pub fn is_syncable_url(url: &Url) -> bool {
     let path = url.path().to_ascii_lowercase();
-    path.ends_with(".md") || path.ends_with(".markdown")
+    path.ends_with(".md") || path.ends_with(".markdown") || path.ends_with("/llms.txt")
 }
 
 pub fn has_encoded_unsafe_segment(value: &str) -> bool {
@@ -136,7 +141,7 @@ impl PathRegistry {
 #[cfg(test)]
 mod tests {
     use super::{
-        CanonicalUrl, PathRegistry, has_encoded_unsafe_segment, is_markdown_url, local_path,
+        CanonicalUrl, PathRegistry, has_encoded_unsafe_segment, is_syncable_url, local_path,
         same_origin,
     };
     use std::path::{Path, PathBuf};
@@ -156,11 +161,15 @@ mod tests {
     }
 
     #[test]
-    fn recognizes_markdown_extensions_case_insensitively() {
-        assert!(is_markdown_url(&url("https://example.com/a.md")));
-        assert!(is_markdown_url(&url("https://example.com/a.MARKDOWN?q=1")));
-        assert!(!is_markdown_url(&url("https://example.com/a.md/child")));
-        assert!(!is_markdown_url(&url("https://example.com/a.html")));
+    fn recognizes_markdown_and_llms_txt_urls_case_insensitively() {
+        assert!(is_syncable_url(&url("https://example.com/a.md")));
+        assert!(is_syncable_url(&url("https://example.com/a.MARKDOWN?q=1")));
+        assert!(is_syncable_url(&url("https://example.com/llms.txt")));
+        assert!(is_syncable_url(&url("https://example.com/cache/llms.txt")));
+        assert!(is_syncable_url(&url("https://example.com/cache/LLMS.TXT")));
+        assert!(!is_syncable_url(&url("https://example.com/a.md/child")));
+        assert!(!is_syncable_url(&url("https://example.com/a.html")));
+        assert!(!is_syncable_url(&url("https://example.com/foollms.txt")));
     }
 
     #[test]

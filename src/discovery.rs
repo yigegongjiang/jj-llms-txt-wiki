@@ -3,7 +3,7 @@ use comrak::{Arena, Options, parse_document};
 use std::collections::HashSet;
 use url::Url;
 
-use crate::url_map::{CanonicalUrl, has_encoded_unsafe_segment, is_markdown_url, same_origin};
+use crate::url_map::{CanonicalUrl, has_encoded_unsafe_segment, is_syncable_url, same_origin};
 
 pub fn discover(markdown: &str, base: &Url, entry: &Url) -> Vec<CanonicalUrl> {
     let arena = Arena::new();
@@ -29,7 +29,7 @@ pub fn discover(markdown: &str, base: &Url, entry: &Url) -> Vec<CanonicalUrl> {
         let Ok(url) = base.join(&target) else {
             continue;
         };
-        if !same_origin(entry, &url) || !is_markdown_url(&url) {
+        if !same_origin(entry, &url) || !is_syncable_url(&url) {
             continue;
         }
         let canonical = CanonicalUrl::new(url);
@@ -113,6 +113,24 @@ https://example.com/plain.md
             [
                 "https://example.com/a.md?q=1",
                 "https://example.com/a.md?q=2"
+            ]
+        );
+    }
+
+    #[test]
+    fn discovers_nested_llms_txt_indexes() {
+        // Cloudflare's root llms.txt links to per-section llms.txt indexes that
+        // sit alongside the actual .md pages; both must be discovered.
+        let markdown = "[section](/cache/llms.txt) [page](/cache/index.md)";
+        assert_eq!(
+            strings(
+                markdown,
+                "https://example.com/llms.txt",
+                "https://example.com/llms.txt"
+            ),
+            [
+                "https://example.com/cache/index.md",
+                "https://example.com/cache/llms.txt"
             ]
         );
     }
