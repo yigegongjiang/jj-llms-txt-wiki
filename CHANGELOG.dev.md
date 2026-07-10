@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.6.3] - 2026-07-10
+
+### Changed
+
+- 每个站点单独提交一个 commit，并发运行不同站点的同步不再互相锁死；提交前遇到外部工具短暂占用会自动重试。
+  - `Repository::record_sync` → `Repository::record_site`：`git add -- <site> .gitignore` 只提交本站子树；单站流程内跨进程用 `fs2::FileExt::lock_exclusive` 锁 `.git/llms-wiki.commit.lock` 串行化 git 临界区，`git` 子命令遇 `index.lock`/`unable to create *.lock` 时指数退避重试 200/500/1000/2000/4000/8000ms（`is_lock_contention` + `finish_with_retry`）；`src/sync.rs` 在每次 `snapshot.commit` 成功后立即 `record_site`，失败记入错误但内容已落盘，下次覆写即恢复。
+
 ## [0.6.2] - 2026-07-10
 
 ### Changed
@@ -99,6 +106,8 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.6.3]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.3
+[0.6.2]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.2
 [0.6.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.1
 [0.6.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.0
 [0.5.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.5.0

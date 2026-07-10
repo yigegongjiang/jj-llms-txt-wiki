@@ -268,8 +268,18 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         fs::read_to_string(wiki.join("beta/beta.md")).unwrap(),
         "beta"
     );
-    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "2");
-    assert!(git(&wiki, &["log", "-1", "--format=%s"]).starts_with("chore(sync): alpha,beta @ "));
+    // Per-site commits: alpha's earlier commit + this run's alpha + beta = 3.
+    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "3");
+    let subjects = git(&wiki, &["log", "-2", "--format=%s"]);
+    assert!(
+        subjects
+            .lines()
+            .any(|s| s.starts_with("chore(sync): alpha @ "))
+            && subjects
+                .lines()
+                .any(|s| s.starts_with("chore(sync): beta @ ")),
+        "expected per-site commits, got: {subjects}"
+    );
     let beta_requests = beta.requests.read().unwrap();
     assert!(!beta_requests.iter().any(|path| path == "/target.md"));
     assert!(!beta_requests.iter().any(|path| path == "/foreign.md"));
@@ -292,12 +302,12 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         fs::read_to_string(wiki.join("alpha/docs/new.md")).unwrap(),
         "new-v2"
     );
-    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "3");
+    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "4");
 
     success(home.path(), &["sync", "alpha", "--interval", "0ms"]);
     assert_eq!(
         git(&wiki, &["rev-list", "--count", "HEAD"]),
-        "4",
+        "5",
         "unchanged sync must remain visible in history"
     );
 
@@ -315,7 +325,7 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         let failed = cli(home.path(), &["sync", "alpha", "--interval", "0ms"]);
         assert!(!failed.status.success());
         assert_eq!(tree(&wiki.join("alpha")), stable);
-        assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "4");
+        assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "5");
     }
 
     assert!(!wiki.join(".cache").exists());

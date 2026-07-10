@@ -1,11 +1,16 @@
-use std::fs;
+use std::fs::{self, File, OpenOptions};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
+use std::thread;
+use std::time::Duration;
 
+use fs2::FileExt;
 use jiff::Timestamp;
 
 const FALLBACK_NAME: &str = "llms-wiki";
 const FALLBACK_EMAIL: &str = "llms-wiki@localhost";
+const LOCK_FILE: &str = ".git/llms-wiki.commit.lock";
+const RETRY_BACKOFF_MS: &[u64] = &[200, 500, 1000, 2000, 4000, 8000];
 
 pub struct Repository {
     root: PathBuf,
@@ -33,14 +38,45 @@ impl Repository {
         Ok(repository)
     }
 
-    pub fn record_sync(&self, sites: &[String]) -> Result<(), String> {
-        if sites.is_empty() {
-            return Ok(());
+    /// Commit a single site's subtree. Serialized across processes by an OS file
+    /// lock so concurrent `llms-wiki sync <site>` invocations never contend on
+    /// git's `.git/index.lock`. Retries with exponential backoff if any external
+    /// git tool briefly holds the index lock. `.gitignore` is staged alongside
+    /// the site so the repo's initial `.gitignore` lands with the first site
+    /// commit rather than requiring a separate bootstrap step.
+    pub fn record_site(&self, site: &str) -> Result<(), String> {
+        let _guard = self.acquire_commit_lock()?;
+        let mut paths: Vec<&str> = vec![site];
+        if self.root.join(".gitignore").exists() {
+            paths.push(".gitignore");
         }
-
-        self.run(&["add", "--all", "--", "."])?;
+        let mut args: Vec<&str> = vec!["add", "--"];
+        args.extend(paths);
+        self.run_with_retry(&args)?;
         let timestamp = Timestamp::now().strftime("%Y-%m-%dT%H:%M:%SZ");
-        let message = format!("chore(sync): {} @ {timestamp}", sites.join(","));
+        let message = format!("chore(sync): {site} @ {timestamp}");
+        self.commit(&message)
+    }
+
+    fn acquire_commit_lock(&self) -> Result<CommitLock, String> {
+        let path = self.root.join(LOCK_FILE);
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|error| format!("create lock dir {}: {error}", parent.display()))?;
+        }
+        let file = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .truncate(false)
+            .open(&path)
+            .map_err(|error| format!("open lock {}: {error}", path.display()))?;
+        file.lock_exclusive()
+            .map_err(|error| format!("lock {}: {error}", path.display()))?;
+        Ok(CommitLock { file })
+    }
+
+    fn commit(&self, message: &str) -> Result<(), String> {
         let mut command = self.command();
         if !self.has_config("user.name")? {
             command.args(["-c", &format!("user.name={FALLBACK_NAME}")]);
@@ -54,9 +90,9 @@ impl Repository {
             "--allow-empty",
             "--no-gpg-sign",
             "-m",
-            &message,
+            message,
         ]);
-        self.finish("commit sync snapshot", command.output())
+        self.finish_with_retry("commit sync snapshot", || command_output(&mut command))
             .map(drop)
     }
 
@@ -99,6 +135,12 @@ impl Repository {
             .map(drop)
     }
 
+    fn run_with_retry(&self, args: &[&str]) -> Result<(), String> {
+        let label = format!("git {}", args.join(" "));
+        self.finish_with_retry(&label, || self.command().args(args).output())
+            .map(drop)
+    }
+
     fn output(&self, args: &[&str]) -> Result<Output, String> {
         let output = self.command().args(args).output();
         self.finish(&format!("git {}", args.join(" ")), output)
@@ -124,6 +166,46 @@ impl Repository {
             stderr.trim()
         };
         Err(format!("{action} in {}: {detail}", self.root.display()))
+    }
+
+    /// Runs a git command; if it fails with an index/ref lock-contention error
+    /// (external GUI tool briefly holding `.git/index.lock`), retries with
+    /// exponential backoff up to ~15 s. Non-lock errors return immediately.
+    fn finish_with_retry<F>(&self, action: &str, mut run: F) -> Result<Output, String>
+    where
+        F: FnMut() -> std::io::Result<Output>,
+    {
+        let mut last = self.finish(action, run());
+        for &delay_ms in RETRY_BACKOFF_MS {
+            match &last {
+                Ok(_) => return last,
+                Err(error) if is_lock_contention(error) => {
+                    thread::sleep(Duration::from_millis(delay_ms));
+                    last = self.finish(action, run());
+                }
+                Err(_) => return last,
+            }
+        }
+        last
+    }
+}
+
+fn command_output(command: &mut Command) -> std::io::Result<Output> {
+    command.output()
+}
+
+fn is_lock_contention(error: &str) -> bool {
+    let lower = error.to_ascii_lowercase();
+    lower.contains("unable to create") && lower.contains(".lock") || lower.contains("index.lock")
+}
+
+struct CommitLock {
+    file: File,
+}
+
+impl Drop for CommitLock {
+    fn drop(&mut self) {
+        let _ = FileExt::unlock(&self.file);
     }
 }
 
@@ -174,15 +256,16 @@ mod tests {
     }
 
     #[test]
-    fn creates_nested_repository_and_records_unchanged_syncs() {
+    fn creates_nested_repository_and_commits_per_site() {
         let parent = tempdir().unwrap();
         git(parent.path(), &["init", "--quiet"]);
         let root = parent.path().join("wiki");
         let repository = Repository::prepare(&root).unwrap();
-        fs::write(root.join("docs.md"), "v1").unwrap();
+        fs::create_dir_all(root.join("docs")).unwrap();
+        fs::write(root.join("docs/a.md"), "v1").unwrap();
 
-        repository.record_sync(&["docs".to_owned()]).unwrap();
-        repository.record_sync(&["docs".to_owned()]).unwrap();
+        repository.record_site("docs").unwrap();
+        repository.record_site("docs").unwrap();
 
         assert_eq!(git(&root, &["rev-list", "--count", "HEAD"]), "2");
         assert_eq!(
@@ -192,6 +275,54 @@ mod tests {
         let subject = git(&root, &["log", "-1", "--format=%s"]);
         assert!(subject.starts_with("chore(sync): docs @ "));
         assert!(subject.ends_with('Z'));
+        assert!(git(&root, &["status", "--porcelain"]).is_empty());
+    }
+
+    #[test]
+    fn per_site_add_ignores_other_sites_working_state() {
+        let parent = tempdir().unwrap();
+        git(parent.path(), &["init", "--quiet"]);
+        let root = parent.path().join("wiki");
+        let repository = Repository::prepare(&root).unwrap();
+        fs::create_dir_all(root.join("a")).unwrap();
+        fs::create_dir_all(root.join("b")).unwrap();
+        fs::write(root.join("a/a.md"), "a").unwrap();
+        fs::write(root.join("b/b.md"), "b").unwrap();
+
+        // Committing site `a` must not include site `b`, even if `b` has changes on disk.
+        repository.record_site("a").unwrap();
+        let files = git(&root, &["show", "--name-only", "--pretty=", "HEAD"]);
+        assert!(files.contains("a/a.md"), "HEAD missing a/a.md: {files}");
+        assert!(
+            !files.contains("b/"),
+            "HEAD unexpectedly touched b/: {files}"
+        );
+        assert_eq!(git(&root, &["status", "--porcelain"]), "?? b/");
+    }
+
+    #[test]
+    fn recovers_stale_index_lock_via_retry() {
+        let parent = tempdir().unwrap();
+        git(parent.path(), &["init", "--quiet"]);
+        let root = parent.path().join("wiki");
+        let repository = Repository::prepare(&root).unwrap();
+        fs::create_dir_all(root.join("s")).unwrap();
+        fs::write(root.join("s/x.md"), "x").unwrap();
+
+        let lock_path = root.join(".git/index.lock");
+        fs::write(&lock_path, "").unwrap();
+        let clear = std::thread::spawn({
+            let lock_path = lock_path.clone();
+            move || {
+                std::thread::sleep(std::time::Duration::from_millis(400));
+                let _ = fs::remove_file(&lock_path);
+            }
+        });
+
+        repository.record_site("s").unwrap();
+        clear.join().unwrap();
+
+        assert_eq!(git(&root, &["rev-list", "--count", "HEAD"]), "1");
         assert!(git(&root, &["status", "--porcelain"]).is_empty());
     }
 
@@ -213,11 +344,13 @@ mod tests {
             "re-preparing must not duplicate ignore patterns"
         );
 
-        // A leftover partial is ignored, so the work tree stays clean.
+        // A leftover partial is ignored, so the site commit stays clean.
         fs::create_dir_all(root.join(".docs.sync.abc")).unwrap();
         fs::write(root.join(".docs.sync.abc/x.md"), "x").unwrap();
+        fs::create_dir_all(root.join("docs")).unwrap();
+        fs::write(root.join("docs/d.md"), "d").unwrap();
         let repository = Repository::prepare(&root).unwrap();
-        repository.record_sync(&["docs".to_owned()]).unwrap();
+        repository.record_site("docs").unwrap();
         assert!(git(&root, &["status", "--porcelain"]).is_empty());
     }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "llms-wiki"
-version = "0.6.2"
+version = "0.6.3"
 edition = "2024"
 description = "Mirror llms.txt Markdown sites locally"
 repository = "https://github.com/yigegongjiang/jj-llms-txt-wiki"
@@ -8,6 +8,7 @@ repository = "https://github.com/yigegongjiang/jj-llms-txt-wiki"
 [dependencies]
 clap = { version = "4.6.1", features = ["derive"] }
 comrak = { version = "0.53.0", default-features = false }
+fs2 = "0.4.3"
 humantime = "2.3.0"
 indicatif = "0.18.6"
 jiff = { version = "0.2.32", default-features = false, features = ["std"] }

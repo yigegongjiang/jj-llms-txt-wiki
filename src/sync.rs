@@ -38,7 +38,6 @@ pub async fn run(
         timeout: DEFAULT_TIMEOUT,
     };
     let mut failures = Vec::new();
-    let mut successes = Vec::new();
     let total = targets.len();
 
     for (index, (name, site)) in targets.into_iter().enumerate() {
@@ -91,7 +90,12 @@ pub async fn run(
             match snapshot.commit() {
                 Ok(()) => {
                     progress.finish(&report, true);
-                    successes.push(name);
+                    if let Err(error) = repository.record_site(&name) {
+                        // Content is on disk; the next sync's preflight recovery
+                        // will absorb it, so no data is lost — surface the error
+                        // so operators notice.
+                        failures.push(format!("{name}: git: {error}"));
+                    }
                 }
                 Err(error) => {
                     progress.finish(&report, false);
@@ -104,21 +108,14 @@ pub async fn run(
         }
     }
 
-    let git_failure = repository.record_sync(&successes).err();
-
-    let site_failure = if failures.is_empty() {
-        None
+    if failures.is_empty() {
+        Ok(())
     } else {
-        Some(format!(
+        Err(format!(
             "{} site(s) failed: {}",
             failures.len(),
             failures.join("; ")
         ))
-    };
-    match (site_failure, git_failure) {
-        (None, None) => Ok(()),
-        (Some(error), None) | (None, Some(error)) => Err(error),
-        (Some(site_error), Some(git_error)) => Err(format!("{site_error}; {git_error}")),
     }
 }
 
