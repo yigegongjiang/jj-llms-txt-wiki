@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.7.0] - 2026-07-11
+
+### Added
+
+- 同步完成后自动把数据仓库快照推送到源码仓库的 `wiki-data` 分支；无访问权限或未联网时静默跳过，不影响同步结果。
+
 ## [0.6.3] - 2026-07-10
 
 ### Changed
@@ -86,6 +92,7 @@
 - 提供 `llms-wiki` 命令行骨架，支持 `curl` 一键安装（macOS arm64/x64）。
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
 
+[0.7.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.7.0
 [0.6.3]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.3
 [0.6.2]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.2
 [0.6.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.1

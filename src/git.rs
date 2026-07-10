@@ -11,6 +11,9 @@ const FALLBACK_NAME: &str = "llms-wiki";
 const FALLBACK_EMAIL: &str = "llms-wiki@localhost";
 const LOCK_FILE: &str = ".git/llms-wiki.commit.lock";
 const RETRY_BACKOFF_MS: &[u64] = &[200, 500, 1000, 2000, 4000, 8000];
+/// Remote branch that mirrors the data repo's local HEAD. Kept distinct from
+/// the code repo's `main` so both can share a single remote without collision.
+const PUSH_BRANCH: &str = "wiki-data";
 
 pub struct Repository {
     root: PathBuf,
@@ -56,6 +59,38 @@ impl Repository {
         let timestamp = Timestamp::now().strftime("%Y-%m-%dT%H:%M:%SZ");
         let message = format!("chore(sync): {site} @ {timestamp}");
         self.commit(&message)
+    }
+
+    /// Best-effort mirror of the local snapshot HEAD to a distinct branch on
+    /// `url`. Non-interactive: HTTPS without credentials fails immediately
+    /// (`GIT_TERMINAL_PROMPT=0`), SSH declines password / host-key prompts
+    /// (`BatchMode=yes`), and slow-or-stalled HTTPS transfers bail out via
+    /// git's low-speed thresholds. Callers surface any Err as informational —
+    /// contributors and end users without push access should never see the
+    /// sync fail because of this. No `--force`: divergence from the remote
+    /// (recreated data repo, force-reset) intentionally fails so nothing is
+    /// silently overwritten upstream.
+    pub fn push_snapshot(&self, url: &str) -> Result<(), String> {
+        let refspec = format!("HEAD:refs/heads/{PUSH_BRANCH}");
+        let mut command = self.command();
+        command
+            .env("GIT_TERMINAL_PROMPT", "0")
+            .env(
+                "GIT_SSH_COMMAND",
+                "ssh -o BatchMode=yes -o ConnectTimeout=10",
+            )
+            .args([
+                "-c",
+                "http.lowSpeedLimit=1000",
+                "-c",
+                "http.lowSpeedTime=10",
+                "push",
+                "--quiet",
+                url,
+                &refspec,
+            ]);
+        let action = format!("git push {url} {refspec}");
+        self.finish(&action, command.output()).map(drop)
     }
 
     fn acquire_commit_lock(&self) -> Result<CommitLock, String> {
@@ -324,6 +359,61 @@ mod tests {
 
         assert_eq!(git(&root, &["rev-list", "--count", "HEAD"]), "1");
         assert!(git(&root, &["status", "--porcelain"]).is_empty());
+    }
+
+    #[test]
+    fn push_snapshot_pushes_local_head_to_wiki_data_branch() {
+        let parent = tempdir().unwrap();
+        let bare = parent.path().join("remote.git");
+        Command::new("git")
+            .args(["init", "--quiet", "--bare"])
+            .arg(&bare)
+            .status()
+            .unwrap();
+        let root = parent.path().join("wiki");
+        let repository = Repository::prepare(&root).unwrap();
+        fs::create_dir_all(root.join("s")).unwrap();
+        fs::write(root.join("s/a.md"), "a").unwrap();
+        repository.record_site("s").unwrap();
+
+        let url = format!("file://{}", bare.display());
+        repository.push_snapshot(&url).unwrap();
+        assert_eq!(
+            git(&bare, &["rev-parse", "refs/heads/wiki-data"]),
+            git(&root, &["rev-parse", "HEAD"]),
+            "remote wiki-data branch must match local HEAD"
+        );
+
+        // A second push after a further commit fast-forwards the mirror.
+        fs::write(root.join("s/b.md"), "b").unwrap();
+        repository.record_site("s").unwrap();
+        repository.push_snapshot(&url).unwrap();
+        assert_eq!(
+            git(&bare, &["rev-parse", "refs/heads/wiki-data"]),
+            git(&root, &["rev-parse", "HEAD"])
+        );
+
+        // Repeated push with no new commits is a no-op and stays clean.
+        repository.push_snapshot(&url).unwrap();
+    }
+
+    #[test]
+    fn push_snapshot_reports_error_for_unknown_remote() {
+        let parent = tempdir().unwrap();
+        let root = parent.path().join("wiki");
+        let repository = Repository::prepare(&root).unwrap();
+        fs::create_dir_all(root.join("s")).unwrap();
+        fs::write(root.join("s/a.md"), "a").unwrap();
+        repository.record_site("s").unwrap();
+
+        // Local path that isn't a git repository: git push fails immediately.
+        let missing = parent.path().join("missing.git");
+        let url = format!("file://{}", missing.display());
+        let error = repository.push_snapshot(&url).unwrap_err();
+        assert!(
+            error.contains("push"),
+            "error must identify the failing action: {error}"
+        );
     }
 
     #[test]

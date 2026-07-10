@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.7.0] - 2026-07-11
+
+### Added
+
+- 同步完成后自动把数据仓库快照推送到源码仓库的 `wiki-data` 分支；无访问权限或未联网时静默跳过，不影响同步结果。
+  - `Repository::push_snapshot(url)`：以 ad-hoc URL（不给数据仓库落 remote）推 `HEAD:refs/heads/wiki-data`；非交互式（`GIT_TERMINAL_PROMPT=0` + `GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=10"` + `http.lowSpeedLimit=1000` / `http.lowSpeedTime=10`）保证认证 / DNS / 网络异常快速失败不挂起；不加 `--force`，分歧即失败。`sync::run` 新增 `push_url: Option<String>` 参数，仅在至少一个站点提交成功后触发一次；错误经 `eprintln!` 记录为 warning，Quiet 模式下抑制。`src/main.rs::push_snapshot_url` 从 `CARGO_PKG_REPOSITORY` 派生默认 URL（末尾自动补 `.git`），可用运行时 `LLMS_WIKI_PUSH_URL` 覆盖或设空串禁用（`tests/e2e.rs::cli` 统一注入空串隔离测试）。
+
 ## [0.6.3] - 2026-07-10
 
 ### Changed
@@ -106,6 +113,7 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.7.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.7.0
 [0.6.3]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.3
 [0.6.2]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.2
 [0.6.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.1

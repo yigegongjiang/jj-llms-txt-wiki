@@ -129,6 +129,11 @@ async fn server(initial: HashMap<String, Response>) -> Server {
 fn cli(home: &Path, args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_llms-wiki"))
         .args(args)
+        // Suppress the auto-mirror push in every e2e run. Without this the
+        // spawned binary would try to `git push` to the code repo's remote
+        // (baked from `CARGO_PKG_REPOSITORY`), which on CI has a token and
+        // could actually mutate the public repository.
+        .env("LLMS_WIKI_PUSH_URL", "")
         .env("HOME", home)
         .output()
         .unwrap()

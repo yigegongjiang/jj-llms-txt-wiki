@@ -16,6 +16,7 @@ pub async fn run(
     concurrency: Option<usize>,
     interval: Option<Duration>,
     verbosity: Verbosity,
+    push_url: Option<String>,
 ) -> Result<(), String> {
     let config = Config::load(config_path)?;
     if config.sites.is_empty() {
@@ -38,6 +39,7 @@ pub async fn run(
         timeout: DEFAULT_TIMEOUT,
     };
     let mut failures = Vec::new();
+    let mut committed = false;
     let total = targets.len();
 
     for (index, (name, site)) in targets.into_iter().enumerate() {
@@ -90,11 +92,14 @@ pub async fn run(
             match snapshot.commit() {
                 Ok(()) => {
                     progress.finish(&report, true);
-                    if let Err(error) = repository.record_site(&name) {
-                        // Content is on disk; the next sync's preflight recovery
-                        // will absorb it, so no data is lost — surface the error
-                        // so operators notice.
-                        failures.push(format!("{name}: git: {error}"));
+                    match repository.record_site(&name) {
+                        Ok(()) => committed = true,
+                        Err(error) => {
+                            // Content is on disk; the next sync's preflight recovery
+                            // will absorb it, so no data is lost — surface the error
+                            // so operators notice.
+                            failures.push(format!("{name}: git: {error}"));
+                        }
                     }
                 }
                 Err(error) => {
@@ -106,6 +111,18 @@ pub async fn run(
             progress.finish(&report, false);
             failures.push(format_report_failure(&name, &report));
         }
+    }
+
+    // Best-effort mirror — a push failure here (auth / offline / fork without
+    // write access) is expected in most environments and MUST NOT fail the
+    // sync. Quiet mode drops the warning too, matching the "only final
+    // summary" contract.
+    if committed
+        && let Some(url) = push_url.as_deref()
+        && let Err(error) = repository.push_snapshot(url)
+        && verbosity != Verbosity::Quiet
+    {
+        eprintln!("warning: push snapshot skipped: {error}");
     }
 
     if failures.is_empty() {
@@ -283,7 +300,7 @@ mod tests {
         fs::write(output.join("bad/old.md"), "preserve").unwrap();
 
         assert!(
-            run(&config_path, None, None, None, Verbosity::Quiet)
+            run(&config_path, None, None, None, Verbosity::Quiet, None)
                 .await
                 .is_err()
         );
@@ -315,6 +332,7 @@ mod tests {
             Some(1),
             None,
             Verbosity::Quiet,
+            None,
         )
         .await
         .unwrap();
@@ -372,7 +390,8 @@ mod tests {
                 Some("good".to_owned()),
                 None,
                 None,
-                Verbosity::Quiet
+                Verbosity::Quiet,
+                None,
             )
             .await
             .is_err()
@@ -394,7 +413,7 @@ mod tests {
         };
         empty.save(&config_path).unwrap();
         assert!(
-            run(&config_path, None, None, None, Verbosity::Quiet)
+            run(&config_path, None, None, None, Verbosity::Quiet, None)
                 .await
                 .is_err()
         );
@@ -412,7 +431,8 @@ mod tests {
                 Some("unknown".to_owned()),
                 None,
                 None,
-                Verbosity::Quiet
+                Verbosity::Quiet,
+                None,
             )
             .await
             .is_err()
@@ -449,6 +469,7 @@ mod tests {
             None,
             None,
             Verbosity::Quiet,
+            None,
         )
         .await
         .unwrap();
@@ -470,6 +491,7 @@ mod tests {
             None,
             None,
             Verbosity::Quiet,
+            None,
         )
         .await
         .unwrap();
@@ -478,5 +500,85 @@ mod tests {
             "body-a"
         );
         assert_eq!(git(&output, &["rev-list", "--count", "HEAD"]), "2");
+    }
+
+    #[tokio::test]
+    async fn sync_pushes_committed_snapshot_when_url_provided() {
+        let server = server(HashMap::from([
+            ("/good.txt".to_owned(), route(200, "[a](/docs/a.md)")),
+            ("/docs/a.md".to_owned(), route(200, "a")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let output = directory.path().join("wiki");
+        let bare = directory.path().join("remote.git");
+        Command::new("git")
+            .args(["init", "--quiet", "--bare"])
+            .arg(&bare)
+            .status()
+            .unwrap();
+        let config_path = directory.path().join("config.toml");
+        let config = Config {
+            output_dir: output.display().to_string(),
+            concurrency: 1,
+            interval_ms: 0,
+            sites: BTreeMap::from([(
+                "good".to_owned(),
+                SiteConfig {
+                    url: format!("{}/good.txt", server.origin),
+                },
+            )]),
+        };
+        config.save(&config_path).unwrap();
+        let url = format!("file://{}", bare.display());
+
+        run(
+            &config_path,
+            None,
+            None,
+            None,
+            Verbosity::Quiet,
+            Some(url.clone()),
+        )
+        .await
+        .unwrap();
+        assert_eq!(
+            git(&bare, &["rev-parse", "refs/heads/wiki-data"]),
+            git(&output, &["rev-parse", "HEAD"]),
+            "wiki-data on the remote must mirror the local HEAD after sync"
+        );
+    }
+
+    #[tokio::test]
+    async fn sync_ignores_push_failure_and_returns_ok() {
+        let server = server(HashMap::from([
+            ("/good.txt".to_owned(), route(200, "[a](/docs/a.md)")),
+            ("/docs/a.md".to_owned(), route(200, "a")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let output = directory.path().join("wiki");
+        let config_path = directory.path().join("config.toml");
+        let config = Config {
+            output_dir: output.display().to_string(),
+            concurrency: 1,
+            interval_ms: 0,
+            sites: BTreeMap::from([(
+                "good".to_owned(),
+                SiteConfig {
+                    url: format!("{}/good.txt", server.origin),
+                },
+            )]),
+        };
+        config.save(&config_path).unwrap();
+        let missing = directory.path().join("does-not-exist.git");
+        let url = format!("file://{}", missing.display());
+
+        // Unreachable remote must not surface as a sync failure — the local
+        // snapshot commit still lands, and the caller sees Ok.
+        run(&config_path, None, None, None, Verbosity::Quiet, Some(url))
+            .await
+            .unwrap();
+        assert_eq!(git(&output, &["rev-list", "--count", "HEAD"]), "1");
     }
 }
