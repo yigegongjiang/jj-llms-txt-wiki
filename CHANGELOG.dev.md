@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.6.2] - 2026-07-10
+
+### Changed
+
+- 默认并发数 4 → 1000，默认请求间隔 500ms → 50ms；同步更快，节流以请求间隔为准。
+  - `DEFAULT_CONCURRENCY` 4 → 1000、`DEFAULT_INTERVAL_MS` 500 → 50（`src/config.rs`）；`RequestGate` 全局串行化请求启动时刻，故并发上限主要作在途请求数封顶，实际节流由 `interval` 决定。README 配置示例同步更新并新增 `claude-code` / `cloudflare` 站点示例。
+
 ## [0.6.1] - 2026-07-10
 
 ### Fixed

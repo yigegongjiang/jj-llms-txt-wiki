@@ -9,8 +9,8 @@ use tempfile::NamedTempFile;
 use crate::site::{parse_entry_url, validate_name};
 
 pub const DEFAULT_OUTPUT_DIR: &str = "~/llms-wiki";
-pub const DEFAULT_CONCURRENCY: usize = 4;
-pub const DEFAULT_INTERVAL_MS: u64 = 500;
+pub const DEFAULT_CONCURRENCY: usize = 1000;
+pub const DEFAULT_INTERVAL_MS: u64 = 50;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default)]

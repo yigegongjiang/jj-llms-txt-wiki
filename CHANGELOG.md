@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.6.2] - 2026-07-10
+
+### Changed
+
+- 默认并发数 4 → 1000，默认请求间隔 500ms → 50ms；同步更快，节流以请求间隔为准。
+
 ## [0.6.1] - 2026-07-10
 
 ### Fixed

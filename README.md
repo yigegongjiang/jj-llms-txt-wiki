@@ -79,8 +79,14 @@ CLI 参数优先于配置文件，未提供的参数使用配置值或默认值�
 
 ```toml
 output_dir = "~/llms-wiki"
-concurrency = 4
-interval_ms = 500
+concurrency = 1000
+interval_ms = 50
+
+[sites.claude-code]
+url = "https://code.claude.com/docs/llms.txt"
+
+[sites.cloudflare]
+url = "https://developers.cloudflare.com/llms.txt"
 
 [sites.anthropic]
 url = "https://platform.claude.com/llms.txt"
