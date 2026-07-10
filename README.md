@@ -9,7 +9,7 @@ cargo run
 # Hello, world!
 
 cargo run -- version
-# llms-wiki 0.1.0
+# llms-wiki 0.1.1
 ```
 
 骨架同时支持 `help`、`update`（别名 `upgrade`）和 `uninstall`。首个 Release 发布后可安装：
