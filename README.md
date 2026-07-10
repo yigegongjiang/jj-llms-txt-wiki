@@ -1,24 +1,25 @@
+```When Editing
+本文档作用: 工程总览 + 产品唯一事实源 (价值主张 / 使用 / 架构 / 产品规格); plans/ 各阶段据此实现
+MUST NOT 写发布流程 (→ workflow.md) / LLM 约束 (→ AGENTS.md) / dev 命令 (cargo run 等)
+遵循 AGENTS.md 文档编写规范
+- 产品行为变更 MUST 先改本文档, 再同步 plans/ 与代码
+- 章节按需增删, 只留项目真有的; 短并列项用表格; 可执行步骤 fenced + `#` 注释同行
+- NEVER 写「开发」段 (VibeCoding 不向人类解释 dev 命令)
+```
+
 # jj-llms-txt-wiki
 
 从 [`llms.txt`](https://llmstxt.org/) 入口递归抓取同源 Markdown，并按站点和 URL 路径保存到本地。
 
 业务 CLI 尚未实现；当前仅提供用于验证 GitHub Release 链路的 Rust Hello World 骨架。
 
-```bash
-cargo run
-# Hello, world!
+## 使用
 
-cargo run -- version
-# llms-wiki 0.1.1
-```
-
-骨架同时支持 `help`、`update`（别名 `upgrade`）和 `uninstall`。首个 Release 发布后可安装：
+骨架已支持 `help`、`version`、`update`（别名 `upgrade`）和 `uninstall`。首个 Release 发布后可安装（macOS arm64/x64）：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/install.sh | bash
 ```
-
-Release tag 必须与 `Cargo.toml` 的版本一致；推送 `v*` tag 后，GitHub Actions 会构建 macOS arm64/x64 二进制、生成 `checksums.txt` 并创建 Release。
 
 ## 设计原则
 
