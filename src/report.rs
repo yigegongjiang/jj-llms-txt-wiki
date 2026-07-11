@@ -141,6 +141,51 @@ pub fn print_failures(reports: &[SiteReport], log: &Path) {
     );
 }
 
+/// Print the always-on final one-liner — the canonical last line the eye learns
+/// to check. Green `✓ N/N synced` on a clean run; red `✗ … → <log>` otherwise.
+/// Symmetric and unconditional, so a failure can never hide as "looked done"
+/// among many green per-site lines, and the outcome always lands in one fixed
+/// spot. Call this last, after `print_failures`.
+pub fn print_summary(reports: &[SiteReport], log: &Path) {
+    eprintln!();
+    eprintln!("{}", render_summary(reports, log));
+}
+
+/// Build the summary line. Non-`Ok` runs list only the non-zero failure buckets
+/// (`Failed` → "failed", `Aborted` → "error") plus the log pointer, so the user
+/// always has a next step even if the detail block scrolled away.
+fn render_summary(reports: &[SiteReport], log: &Path) -> String {
+    let total = reports.len();
+    let ok = reports.iter().filter(|report| report.is_ok()).count();
+    if ok == total {
+        return style(format!("✓ {ok}/{total} synced"))
+            .for_stderr()
+            .green()
+            .bold()
+            .to_string();
+    }
+    let failed = reports
+        .iter()
+        .filter(|report| matches!(report.outcome, Outcome::Failed(_)))
+        .count();
+    let aborted = reports
+        .iter()
+        .filter(|report| matches!(report.outcome, Outcome::Aborted(_)))
+        .count();
+    let mut parts = vec![format!("{ok} ok")];
+    if failed > 0 {
+        parts.push(format!("{failed} failed"));
+    }
+    if aborted > 0 {
+        parts.push(format!("{aborted} error"));
+    }
+    style(format!("✗ {} → {}", parts.join(" · "), log.display()))
+        .for_stderr()
+        .red()
+        .bold()
+        .to_string()
+}
+
 /// Render the durable log body: a complete, uncolored record of every site's
 /// counts, all failures, and all missing links.
 fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
@@ -189,8 +234,9 @@ fn counts(report: &CrawlReport) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{Outcome, SiteReport, log_path, render_log, write_log};
+    use super::{Outcome, SiteReport, log_path, render_log, render_summary, write_log};
     use crate::crawler::{CrawlFailure, CrawlReport};
+    use std::path::Path;
     use tempfile::tempdir;
 
     fn failed_report() -> CrawlReport {
@@ -235,6 +281,67 @@ mod tests {
         assert!(body.contains("missing (2):"));
         assert!(body.contains("· https://example.com/x.md"));
         assert!(body.contains("dead: ERROR — GET .../llms.txt: connection refused"));
+    }
+
+    #[test]
+    fn summary_is_green_synced_when_every_site_ok() {
+        console::set_colors_enabled_stderr(false);
+        let reports = vec![
+            SiteReport {
+                site: "a".to_owned(),
+                outcome: Outcome::Ok(CrawlReport::default()),
+            },
+            SiteReport {
+                site: "b".to_owned(),
+                outcome: Outcome::Ok(CrawlReport::default()),
+            },
+        ];
+        assert_eq!(
+            render_summary(&reports, Path::new("/w/.llms-wiki/last-run.log")),
+            "✓ 2/2 synced"
+        );
+    }
+
+    #[test]
+    fn summary_counts_failed_and_aborted_and_points_at_log() {
+        console::set_colors_enabled_stderr(false);
+        let reports = vec![
+            SiteReport {
+                site: "a".to_owned(),
+                outcome: Outcome::Ok(CrawlReport::default()),
+            },
+            SiteReport {
+                site: "b".to_owned(),
+                outcome: Outcome::Failed(failed_report()),
+            },
+            SiteReport {
+                site: "c".to_owned(),
+                outcome: Outcome::Aborted("connection refused".to_owned()),
+            },
+        ];
+        assert_eq!(
+            render_summary(&reports, Path::new("/w/.llms-wiki/last-run.log")),
+            "✗ 1 ok · 1 failed · 1 error → /w/.llms-wiki/last-run.log"
+        );
+    }
+
+    #[test]
+    fn summary_omits_zero_buckets() {
+        console::set_colors_enabled_stderr(false);
+        let reports = vec![
+            SiteReport {
+                site: "a".to_owned(),
+                outcome: Outcome::Ok(CrawlReport::default()),
+            },
+            SiteReport {
+                site: "b".to_owned(),
+                outcome: Outcome::Failed(failed_report()),
+            },
+        ];
+        assert_eq!(
+            render_summary(&reports, Path::new("/w/.llms-wiki/last-run.log")),
+            "✗ 1 ok · 1 failed → /w/.llms-wiki/last-run.log"
+        );
     }
 
     #[test]

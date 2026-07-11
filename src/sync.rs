@@ -94,9 +94,16 @@ pub async fn run(
     let timestamp = Timestamp::now().strftime("%Y-%m-%dT%H:%M:%SZ").to_string();
     let log = report::write_log(&output_root, &reports, &timestamp);
 
-    if reports.iter().any(|report| !report.is_ok()) {
+    let failed = reports.iter().any(|report| !report.is_ok());
+    if failed {
         report::print_failures(&reports, &log);
-        // The block above is the user-facing error report; returning an empty
+    }
+    // Unconditional final one-liner: the fixed last line that makes the run's
+    // verdict unmissable, symmetric on success and failure alike.
+    report::print_summary(&reports, &log);
+
+    if failed {
+        // `print_failures` is the user-facing error report; returning an empty
         // string keeps the failure exit code without making main.rs print a
         // second, redundant `error:` line on top of it.
         Err(String::new())

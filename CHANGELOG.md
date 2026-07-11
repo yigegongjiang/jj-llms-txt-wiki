@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.12.1] - 2026-07-12
+
+### Added
+
+- 每次 `sync` 结束固定打印一行末行总账：全部成功显示 `✓ N/N synced`，存在失败显示 `✗ N ok · M failed · K error` 并附日志路径、以非零状态退出，使个别站点失败不再淹没在成功输出中。
+
 ## [0.12.0] - 2026-07-12
 
 ### Added
@@ -134,6 +140,7 @@
 - 提供 `llms-wiki` 命令行骨架，支持 `curl` 一键安装（macOS arm64/x64）。
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
 
+[0.12.1]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.12.1
 [0.12.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.12.0
 [0.10.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.10.0
 [0.9.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.9.0
