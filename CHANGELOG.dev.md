@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.9.0] - 2026-07-12
+
+### Fixed
+
+- 修复入口 `llms.txt` 所在 host 与内容链接 host 不一致的站点（如 `bun.sh` 入口、内容在 `bun.com`）一个文件都下载不了：现在信任入口文档声明的各 origin 并纳入抓取范围。
+  - 弃用「与入口 URL 严格同源」判定。新增 `url_map::AllowedOrigins`（`Arc<Mutex<HashSet<String>>>`，键 = `Url::origin().ascii_serialization()`），种子为入口 origin；`discover` 与 `HttpClient` 重定向策略均改按 `AllowedOrigins::contains` 判定，替换原 `same_origin`（已删）。`crawler::crawl` 在入口文档（`item.url == canonical_entry`）下载后、`enqueue_discovered` 之前（其间无 await）用 `discovery::declared_links` 提取入口内全部 syncable 链接、`allow` 其 origin 一次性扩展并冻结；内容页不再扩展白名单。并发正确性依赖「入口为初始队列唯一项，其处理先于任何内容 fetch 的 spawn」，故冻结先于所有并发读。
+
 ## [0.8.0] - 2026-07-12
 
 ### Added

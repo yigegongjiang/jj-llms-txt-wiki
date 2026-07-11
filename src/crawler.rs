@@ -7,10 +7,10 @@ use tokio::task::JoinSet;
 use tokio::time::{Instant, sleep_until};
 use url::Url;
 
-use crate::discovery::discover;
+use crate::discovery::{declared_links, discover};
 use crate::http::{FetchOutcome, HttpClient};
 use crate::manifest::{Manifest, Validator};
-use crate::url_map::{CanonicalUrl, LocalPath, PathRegistry};
+use crate::url_map::{AllowedOrigins, CanonicalUrl, LocalPath, PathRegistry};
 
 pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 
@@ -116,13 +116,17 @@ pub async fn crawl(
         ));
     }
 
-    let client = HttpClient::new(&entry, options.timeout)?;
+    // Seeded with the entry origin; the entry document expands it once (see the
+    // Document branch below) so a site whose entry host differs from its content
+    // host still crawls. Shared with the HTTP client's redirect policy.
+    let allowed = AllowedOrigins::new(&entry);
+    let client = HttpClient::new(&allowed, options.timeout)?;
     let gate = Arc::new(RequestGate::new(options.interval));
     let canonical_entry = CanonicalUrl::new(entry.clone());
     let mut seen = HashSet::from([canonical_entry.clone()]);
     let mut paths = PathRegistry::default();
     let mut queue = VecDeque::from([WorkItem {
-        url: canonical_entry,
+        url: canonical_entry.clone(),
         output: None,
         validator: None,
     }]);
@@ -155,6 +159,7 @@ pub async fn crawl(
                     &body,
                     &base,
                     &entry,
+                    &allowed,
                     previous_root,
                     previous_manifest,
                     &mut seen,
@@ -210,10 +215,21 @@ pub async fn crawl(
                     report.downloaded += 1;
                 }
 
+                // The entry document is the only one that expands the allow-list,
+                // and it does so here — strictly before the discovery below and
+                // with no await in between — so every content fetch spawned in a
+                // later iteration observes the already-frozen origin set.
+                if item.url == canonical_entry {
+                    for link in declared_links(&body, &final_url) {
+                        allowed.allow(&link);
+                    }
+                }
+
                 enqueue_discovered(
                     &body,
                     &final_url,
                     &entry,
+                    &allowed,
                     previous_root,
                     previous_manifest,
                     &mut seen,
@@ -253,6 +269,7 @@ pub async fn crawl(
                     &body,
                     &final_url,
                     &entry,
+                    &allowed,
                     previous_root,
                     previous_manifest,
                     &mut seen,
@@ -292,13 +309,14 @@ pub async fn crawl(
     Ok(report)
 }
 
-/// Discover same-origin Markdown links in `body` and enqueue the unseen ones,
+/// Discover allowed-origin Markdown links in `body` and enqueue the unseen ones,
 /// attaching a cached validator when the file can be revalidated conditionally.
 #[allow(clippy::too_many_arguments)]
 fn enqueue_discovered(
     body: &str,
     final_url: &Url,
     entry: &Url,
+    allowed: &AllowedOrigins,
     previous_root: Option<&Path>,
     previous_manifest: &Manifest,
     seen: &mut HashSet<CanonicalUrl>,
@@ -307,7 +325,7 @@ fn enqueue_discovered(
     report: &mut CrawlReport,
     observer: &dyn CrawlObserver,
 ) {
-    for candidate in discover(body, final_url, entry) {
+    for candidate in discover(body, final_url, entry, allowed) {
         if !seen.insert(candidate.clone()) {
             continue;
         }
@@ -349,7 +367,7 @@ fn conditional_validator(
 
 /// Copy the previously downloaded file into the new snapshot and return its body
 /// for link discovery. 304 guarantees the bytes match the remote, so re-running
-/// `discover` on the local copy yields the identical same-origin link set.
+/// `discover` on the local copy yields the identical allowed-origin link set.
 async fn reuse_previous(
     previous_root: Option<&Path>,
     snapshot_root: &Path,
@@ -790,6 +808,56 @@ mod tests {
         assert_eq!(report.downloaded, 1);
         assert_eq!(report.ignored, 1);
         assert_eq!(other.requests.lock().unwrap().len(), 0);
+    }
+
+    #[tokio::test]
+    async fn crawls_cross_origin_content_the_entry_declares_but_not_origins_only_content_names() {
+        // Real-world shape (bun): the entry llms.txt is served on one host but
+        // links its `.md` content to a *different* host. The content host must be
+        // crawled, yet a third origin that only a content page references — never
+        // declared by the entry — must stay out of reach.
+        let evil = server(HashMap::from([(
+            "/evil.md".to_owned(),
+            Response::ok("must not fetch"),
+        )]))
+        .await;
+        let evil_md = evil.url.join("/evil.md").unwrap().to_string();
+        let content = server(HashMap::from([
+            (
+                "/docs/page.md".to_owned(),
+                Response::ok(&format!("[deep](/docs/deep.md) [evil]({evil_md})")),
+            ),
+            ("/docs/deep.md".to_owned(), Response::ok("deep")),
+        ]))
+        .await;
+        let content_page = content.url.join("/docs/page.md").unwrap().to_string();
+        let entry = server(HashMap::from([(
+            "/llms.txt".to_owned(),
+            Response::ok(&format!("[content]({content_page})")),
+        )]))
+        .await;
+
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            entry.url.clone(),
+            directory.path(),
+            options(2, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        // The declared content origin is crawled: page.md plus its same-origin deep.md.
+        assert_eq!(report.downloaded, 2);
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("docs/deep.md")).unwrap(),
+            "deep"
+        );
+        // The entry document itself is never written.
+        assert!(!directory.path().join("llms.txt").exists());
+        // A content page cannot expand the allow-list: the third origin is untouched.
+        assert_eq!(evil.requests.lock().unwrap().len(), 0);
     }
 
     #[tokio::test]

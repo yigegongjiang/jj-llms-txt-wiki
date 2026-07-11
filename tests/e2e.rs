@@ -189,11 +189,20 @@ fn tree(root: &Path) -> BTreeMap<PathBuf, Vec<u8>> {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
+    // A truly external origin: the entry never declares it, so a redirect that
+    // lands here must be ignored — this guards against redirect-escape.
+    let foreign = server(HashMap::from([(
+        "/target.md".to_owned(),
+        Response::ok("must-not-follow-redirect"),
+    )]))
+    .await;
+    // beta's host also carries a `/foreign.md` that alpha's entry links to
+    // directly. The entry vouches for that origin, so it is legitimately mirrored
+    // (the bun.sh entry → bun.com content shape).
     let beta = server(HashMap::from([
         ("/llms.txt".to_owned(), Response::ok("[beta](/beta.md)")),
         ("/beta.md".to_owned(), Response::ok("beta")),
-        ("/target.md".to_owned(), Response::ok("must-not-fetch")),
-        ("/foreign.md".to_owned(), Response::ok("must-not-discover")),
+        ("/foreign.md".to_owned(), Response::ok("beta-cross-origin")),
     ]))
     .await;
     let alpha_entry = format!(
@@ -211,7 +220,7 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         ("/final.md".to_owned(), Response::ok("redirected")),
         (
             "/cross.md".to_owned(),
-            Response::redirect(format!("{}/target.md", beta.origin)),
+            Response::redirect(format!("{}/target.md", foreign.origin)),
         ),
         ("/missing.md".to_owned(), Response::status(404)),
         ("/gone.md".to_owned(), Response::status(410)),
@@ -256,6 +265,12 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
     );
     assert!(!wiki.join("alpha/missing.md").exists());
     assert!(!wiki.join("alpha/gone.md").exists());
+    // Cross-origin content the entry explicitly declares is mirrored under alpha,
+    // keyed by URL path (host-agnostic), not under a beta directory.
+    assert_eq!(
+        fs::read_to_string(wiki.join("alpha/foreign.md")).unwrap(),
+        "beta-cross-origin"
+    );
     assert!(!wiki.join("beta").exists());
     assert_eq!(fs::read(&config_path).unwrap(), config_before);
     assert!(wiki.join(".git").is_dir());
@@ -285,10 +300,20 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
                 .any(|s| s.starts_with("chore(sync): beta @ ")),
         "expected per-site commits, got: {subjects}"
     );
+    // The entry-declared cross-origin link on beta's host IS fetched.
     let beta_requests = beta.requests.read().unwrap();
-    assert!(!beta_requests.iter().any(|path| path == "/target.md"));
-    assert!(!beta_requests.iter().any(|path| path == "/foreign.md"));
+    assert!(beta_requests.iter().any(|path| path == "/foreign.md"));
     drop(beta_requests);
+    // A same-origin page redirecting to an origin the entry never declared is
+    // ignored — the foreign target is never requested.
+    assert!(
+        !foreign
+            .requests
+            .read()
+            .unwrap()
+            .iter()
+            .any(|path| path == "/target.md")
+    );
 
     alpha
         .routes

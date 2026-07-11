@@ -3,17 +3,18 @@ use comrak::{Arena, Options, parse_document};
 use std::collections::HashSet;
 use url::Url;
 
-use crate::url_map::{CanonicalUrl, has_encoded_unsafe_segment, is_syncable_url, same_origin};
+use crate::url_map::{AllowedOrigins, CanonicalUrl, has_encoded_unsafe_segment, is_syncable_url};
 
-pub fn discover(markdown: &str, base: &Url, entry: &Url) -> Vec<CanonicalUrl> {
+/// Parse `markdown` and return every syncable link resolved against `base`,
+/// with no origin filtering. Shared by link discovery and origin expansion.
+fn syncable_links(markdown: &str, base: &Url) -> Vec<Url> {
     let arena = Arena::new();
     let mut options = Options::default();
     options.extension.table = true;
     options.extension.strikethrough = true;
     options.extension.tasklist = true;
     let root = parse_document(&arena, markdown, &options);
-    let canonical_entry = CanonicalUrl::new(entry.clone());
-    let mut found = HashSet::new();
+    let mut links = Vec::new();
 
     for node in root.descendants() {
         let target = {
@@ -29,7 +30,33 @@ pub fn discover(markdown: &str, base: &Url, entry: &Url) -> Vec<CanonicalUrl> {
         let Ok(url) = base.join(&target) else {
             continue;
         };
-        if !same_origin(entry, &url) || !is_syncable_url(&url) {
+        if is_syncable_url(&url) {
+            links.push(url);
+        }
+    }
+    links
+}
+
+/// The syncable links declared in `markdown`. Only the entry document feeds
+/// these into [`AllowedOrigins::allow`], trusting the hosts the entry vouches
+/// for (e.g. a `bun.sh` entry declaring `bun.com` content links).
+pub fn declared_links(markdown: &str, base: &Url) -> Vec<Url> {
+    syncable_links(markdown, base)
+}
+
+/// Discover syncable Markdown links whose origin is allowed, minus the entry
+/// itself, sorted and deduplicated.
+pub fn discover(
+    markdown: &str,
+    base: &Url,
+    entry: &Url,
+    allowed: &AllowedOrigins,
+) -> Vec<CanonicalUrl> {
+    let canonical_entry = CanonicalUrl::new(entry.clone());
+    let mut found = HashSet::new();
+
+    for url in syncable_links(markdown, base) {
+        if !allowed.contains(&url) {
             continue;
         }
         let canonical = CanonicalUrl::new(url);
@@ -45,18 +72,18 @@ pub fn discover(markdown: &str, base: &Url, entry: &Url) -> Vec<CanonicalUrl> {
 
 #[cfg(test)]
 mod tests {
-    use super::discover;
+    use super::{declared_links, discover};
+    use crate::url_map::AllowedOrigins;
     use url::Url;
 
     fn strings(markdown: &str, base: &str, entry: &str) -> Vec<String> {
-        discover(
-            markdown,
-            &Url::parse(base).unwrap(),
-            &Url::parse(entry).unwrap(),
-        )
-        .into_iter()
-        .map(|url| url.to_string())
-        .collect()
+        let entry = Url::parse(entry).unwrap();
+        // Default allow-list is just the entry origin, matching a same-origin site.
+        let allowed = AllowedOrigins::new(&entry);
+        discover(markdown, &Url::parse(base).unwrap(), &entry, &allowed)
+            .into_iter()
+            .map(|url| url.to_string())
+            .collect()
     }
 
     #[test]
@@ -133,6 +160,30 @@ https://example.com/plain.md
                 "https://example.com/cache/llms.txt"
             ]
         );
+    }
+
+    #[test]
+    fn admits_cross_origin_links_once_their_origin_is_allowed() {
+        // A bun.sh entry declaring bun.com content: the entry's declared links
+        // seed the allow-list, after which discovery follows them.
+        let markdown = "[a](https://bun.com/docs/a.md) [b](https://other.test/b.md)";
+        let base = Url::parse("https://bun.sh/docs/llms.txt").unwrap();
+        let entry = base.clone();
+        let allowed = AllowedOrigins::new(&entry);
+        for link in declared_links(markdown, &base) {
+            allowed.allow(&link);
+        }
+        // bun.com and other.test were both declared, so both are now allowed.
+        let found: Vec<String> = discover(markdown, &base, &entry, &allowed)
+            .into_iter()
+            .map(|url| url.to_string())
+            .collect();
+        assert_eq!(
+            found,
+            ["https://bun.com/docs/a.md", "https://other.test/b.md"]
+        );
+        // A link to a third origin the entry never declared stays excluded.
+        assert!(!allowed.contains(&Url::parse("https://evil.test/x.md").unwrap()));
     }
 
     #[test]

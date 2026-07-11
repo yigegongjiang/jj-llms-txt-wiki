@@ -1,6 +1,7 @@
 use percent_encoding::percent_decode_str;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::{Component, Path, PathBuf};
+use std::sync::{Arc, Mutex};
 use url::Url;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -46,10 +47,47 @@ impl LocalPath {
     }
 }
 
-pub fn same_origin(entry: &Url, candidate: &Url) -> bool {
-    entry.scheme() == candidate.scheme()
-        && entry.host_str() == candidate.host_str()
-        && entry.port_or_known_default() == candidate.port_or_known_default()
+/// Canonical origin string (`scheme://host[:non-default-port]`) used to compare
+/// origins. `Url::origin().ascii_serialization()` normalizes default ports, so
+/// `https://x:443` and `https://x` collapse to the same key.
+pub fn origin_key(url: &Url) -> String {
+    url.origin().ascii_serialization()
+}
+
+/// The set of origins the crawl is allowed to fetch from.
+///
+/// An `llms.txt` entry is often served on an alias host that differs from the
+/// host its content links point to (e.g. `bun.sh/docs/llms.txt` lists
+/// `bun.com/...md`), so a strict "same origin as the entry URL" rule downloads
+/// nothing. Instead the entry document is trusted to declare its own content
+/// origins: the set is seeded with the entry origin, then expanded once with the
+/// origins of the syncable links inside the entry document, and frozen. Every
+/// discovered link and redirect target must belong to this set — content pages
+/// cannot expand it, so the crawl never escapes the site the entry vouched for.
+///
+/// Cloneable and internally synchronized: the same set backs both link discovery
+/// and the HTTP redirect policy. The one expansion happens while processing the
+/// entry, strictly before any content fetch is spawned, so concurrent reads
+/// always observe the frozen set.
+#[derive(Clone, Debug)]
+pub struct AllowedOrigins {
+    origins: Arc<Mutex<HashSet<String>>>,
+}
+
+impl AllowedOrigins {
+    pub fn new(entry: &Url) -> Self {
+        Self {
+            origins: Arc::new(Mutex::new(HashSet::from([origin_key(entry)]))),
+        }
+    }
+
+    pub fn allow(&self, url: &Url) {
+        self.origins.lock().unwrap().insert(origin_key(url));
+    }
+
+    pub fn contains(&self, url: &Url) -> bool {
+        self.origins.lock().unwrap().contains(&origin_key(url))
+    }
 }
 
 /// A link worth following: a Markdown document (`.md`/`.markdown`) or a nested
@@ -141,8 +179,8 @@ impl PathRegistry {
 #[cfg(test)]
 mod tests {
     use super::{
-        CanonicalUrl, PathRegistry, has_encoded_unsafe_segment, is_syncable_url, local_path,
-        same_origin,
+        AllowedOrigins, CanonicalUrl, PathRegistry, has_encoded_unsafe_segment, is_syncable_url,
+        local_path,
     };
     use std::path::{Path, PathBuf};
     use url::Url;
@@ -152,12 +190,22 @@ mod tests {
     }
 
     #[test]
-    fn compares_effective_origins() {
-        let entry = url("https://example.com/llms.txt");
-        assert!(same_origin(&entry, &url("https://example.com:443/a.md")));
-        assert!(!same_origin(&entry, &url("http://example.com/a.md")));
-        assert!(!same_origin(&entry, &url("https://other.test/a.md")));
-        assert!(!same_origin(&entry, &url("https://example.com:444/a.md")));
+    fn allowed_origins_seed_with_entry_and_normalize_default_port() {
+        let allowed = AllowedOrigins::new(&url("https://example.com/llms.txt"));
+        assert!(allowed.contains(&url("https://example.com:443/a.md")));
+        assert!(!allowed.contains(&url("http://example.com/a.md")));
+        assert!(!allowed.contains(&url("https://other.test/a.md")));
+        assert!(!allowed.contains(&url("https://example.com:444/a.md")));
+    }
+
+    #[test]
+    fn allowed_origins_expand_then_admit_new_origin() {
+        let allowed = AllowedOrigins::new(&url("https://bun.sh/docs/llms.txt"));
+        assert!(!allowed.contains(&url("https://bun.com/docs/a.md")));
+        allowed.allow(&url("https://bun.com/docs/a.md"));
+        assert!(allowed.contains(&url("https://bun.com/docs/other.md")));
+        // The entry origin stays allowed after expansion.
+        assert!(allowed.contains(&url("https://bun.sh/docs/x.md")));
     }
 
     #[test]

@@ -9,7 +9,7 @@ MUST NOT 写发布流程 (→ workflow.md) / LLM 约束 (→ AGENTS.md) / dev �
 
 # jj-llms-txt-wiki
 
-从 [`llms.txt`](https://llmstxt.org/) 入口递归抓取同源 Markdown，并按站点和 URL 路径保存到本地。
+从 [`llms.txt`](https://llmstxt.org/) 入口递归抓取 Markdown，并按站点和 URL 路径保存到本地。
 
 ## 使用
 
@@ -27,7 +27,8 @@ llms-wiki --help
 
 - 不调用 AI 模型，抓取结果完全由 CLI 参数、配置和远端内容决定。
 - 支持多个站点，每个站点使用独立目录。
-- 递归跟踪已下载 Markdown 中引用的同源 Markdown URL，不处理不同源链接和重定向目标。
+- 抓取范围 = 入口文档声明的 origin 白名单（入口自身 origin + 入口内 Markdown 链接的各 origin），入口抓取后冻结；兼容入口 host 与内容 host 不同的站点（如 `bun.sh` 入口指向 `bun.com` 内容）。
+- 递归只跟踪白名单内 origin 的 Markdown URL；内容页只能引用白名单内 origin，不能扩大白名单。白名单外链接和重定向目标一律忽略。
 - 支持限制并发数和请求间隔。
 - 保留 URL 层级，映射为本地子目录。
 - 输出根目录自动维护 Git 历史，每次有效同步均可追溯。
@@ -116,9 +117,9 @@ url = "https://platform.claude.com/llms.txt"
 `sync` 默认同步全部站点；传入站点名称时仅同步指定站点。
 
 1. 读取目标站点的 `llms.txt`（入口始终无条件抓取）。
-2. 提取与入口 URL 同源的 Markdown URL，去重后加入抓取队列；不同源 URL 直接忽略。
+2. 以入口文档中全部 Markdown 链接的 origin 扩展白名单（连同入口自身 origin 冻结）；提取白名单内的 Markdown URL，去重后加入抓取队列，白名单外 URL 直接忽略。
 3. 按并发数和请求间隔下载到临时站点目录；对上次已记录 validator 且本地仍存在的文件发条件请求（`If-None-Match` 优先，`If-Modified-Since` 兜底）。
-4. 从每个已下载 Markdown 中继续提取同源 Markdown URL，将未处理的 URL 加入队列，直至队列为空。
+4. 从每个已下载 Markdown 中继续提取白名单内的 Markdown URL，将未处理的 URL 加入队列，直至队列为空；内容页不再扩展白名单。
 5. 队列清空且不存在未确定的抓取错误后，以本次得到的完整快照替换原站点目录；远端已删除或不再可达的 Markdown 随之从本地移除。
 6. 至少一个站点成功后，对输出根目录执行 `git add -A` 并创建一次提交；即使内容未变化也记录同步事件。
 
@@ -126,7 +127,7 @@ url = "https://platform.claude.com/llms.txt"
 
 输出根目录会在抓取前初始化为独立 Git 仓库。提交信息格式为 `chore(sync): <成功站点> @ <RFC 3339 UTC>`；部分站点失败时先记录成功站点，再以非零状态退出。
 
-抓取仅跟随同源重定向；不同源重定向目标直接忽略，不视为同步错误。
+抓取仅跟随目标落在白名单内的重定向；白名单外重定向目标直接忽略，不视为同步错误。
 
 `404` 和 `410` 视为确定不存在；超时、`429` 和 `5xx` 等错误会使本次同步失败，并保留上一次完整快照。
 

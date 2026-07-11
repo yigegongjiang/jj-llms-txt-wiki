@@ -8,7 +8,7 @@ use std::time::Duration;
 use url::Url;
 
 use crate::manifest::Validator;
-use crate::url_map::{CanonicalUrl, same_origin};
+use crate::url_map::{AllowedOrigins, CanonicalUrl};
 
 #[derive(Debug)]
 pub enum FetchOutcome {
@@ -27,16 +27,16 @@ pub enum FetchOutcome {
 #[derive(Clone)]
 pub struct HttpClient {
     client: reqwest::Client,
-    entry: Url,
+    allowed: AllowedOrigins,
 }
 
 impl HttpClient {
-    pub fn new(entry: &Url, timeout: Duration) -> Result<Self, String> {
-        let redirect_origin = entry.clone();
+    pub fn new(allowed: &AllowedOrigins, timeout: Duration) -> Result<Self, String> {
+        let redirect_allowed = allowed.clone();
         let redirect = Policy::custom(move |attempt| {
             if attempt.previous().len() >= 10 {
                 attempt.error("too many redirects")
-            } else if same_origin(&redirect_origin, attempt.url()) {
+            } else if redirect_allowed.contains(attempt.url()) {
                 attempt.follow()
             } else {
                 attempt.stop()
@@ -50,7 +50,7 @@ impl HttpClient {
             .map_err(|error| format!("build HTTP client: {error}"))?;
         Ok(Self {
             client,
-            entry: entry.clone(),
+            allowed: allowed.clone(),
         })
     }
 
@@ -112,7 +112,7 @@ impl HttpClient {
                 .url()
                 .join(location)
                 .map_err(|error| format!("GET {url}: invalid redirect target: {error}"))?;
-            if !same_origin(&self.entry, &target) {
+            if !self.allowed.contains(&target) {
                 return Ok(FetchOutcome::IgnoredRedirect);
             }
         }
