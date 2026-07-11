@@ -1,3 +1,4 @@
+use console::style;
 use indicatif::{ProgressBar, ProgressDrawTarget, ProgressStyle};
 use std::io::IsTerminal;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -112,7 +113,7 @@ impl SyncProgress {
             Verbosity::Quiet => false,
         };
         if logged {
-            self.log_line(&format!("[{}] {tag:<9} {path}", self.site));
+            self.log_line(&format!("[{}] {} {path}", self.site, styled_tag(tag)));
         }
     }
 
@@ -146,16 +147,42 @@ impl CrawlObserver for SyncProgress {
     }
 }
 
+/// Color the scrollback tag by outcome so the category reads at a glance. The
+/// width padding is applied to the plain text first, then wrapped in style, so
+/// ANSI escapes never shift the column alignment. `.for_stderr()` gates the
+/// escapes on stderr's own tty/`NO_COLOR` state, so piping to a file stays plain.
+fn styled_tag(tag: &str) -> String {
+    let padded = style(format!("{tag:<9}")).for_stderr();
+    match tag {
+        "OK" => padded.green(),
+        "RESUMED" => padded.cyan(),
+        "MISS" => padded.yellow(),
+        "FAIL" => padded.red().bold(),
+        "UNCHANGED" | "IGNORED" => padded.dim(),
+        _ => padded,
+    }
+    .to_string()
+}
+
 /// Dynamic segment of the spinner line: labelled tallies + live inflight + the
 /// path currently in focus. All values are real and known, so no fake total.
+/// `dl` stays green as the primary metric; `fail` lights up red the instant a
+/// failure lands, so a running sync's health is legible without reading digits.
 fn summary_msg(counts: &Counts, path: &str) -> String {
+    let dl = style(format!("dl={}", counts.downloaded))
+        .for_stderr()
+        .green();
+    let fail = style(format!("fail={}", counts.failed)).for_stderr();
+    let fail = if counts.failed > 0 {
+        fail.red().bold()
+    } else {
+        fail
+    };
     format!(
-        "dl={} resume={} unchanged={} miss={} fail={}  inflight={}  · {path}",
-        counts.downloaded,
+        "{dl} resume={} unchanged={} miss={} {fail}  inflight={}  · {path}",
         counts.resumed,
         counts.unchanged,
         counts.missing,
-        counts.failed,
         counts.inflight(),
     )
 }
@@ -173,15 +200,29 @@ fn short_path(url: &str) -> String {
     }
 }
 
+/// Final per-site verdict. The status word and `failed` count carry the "what
+/// now" signal: green `ok` = nothing to do, red `failed` + red `failed=N` = the
+/// last snapshot was kept, retry after inspecting the scrollback failures above.
 pub fn summary_line(site: &str, report: &CrawlReport, status: &str) -> String {
+    let verdict = style(status).for_stderr().bold();
+    let verdict = if status == "ok" {
+        verdict.green()
+    } else {
+        verdict.red()
+    };
+    let downloaded = style(format!("downloaded={}", report.downloaded))
+        .for_stderr()
+        .green();
+    let failed_count = report.failed();
+    let failed = style(format!("failed={failed_count}")).for_stderr();
+    let failed = if failed_count > 0 {
+        failed.red().bold()
+    } else {
+        failed
+    };
     format!(
-        "{site}: {status}; downloaded={}, resumed={}, unchanged={}, missing={}, ignored={}, failed={}",
-        report.downloaded,
-        report.resumed,
-        report.unchanged,
-        report.missing,
-        report.ignored,
-        report.failed()
+        "{site}: {verdict}; {downloaded}, resumed={}, unchanged={}, missing={}, ignored={}, {failed}",
+        report.resumed, report.unchanged, report.missing, report.ignored,
     )
 }
 
@@ -192,6 +233,9 @@ mod tests {
 
     #[test]
     fn summary_msg_labels_counts_and_derives_inflight() {
+        // Pin colors off so the assert checks the plain skeleton regardless of
+        // how the test harness is run (`--nocapture`, `CLICOLOR_FORCE`, …).
+        console::set_colors_enabled_stderr(false);
         let counts = Counts {
             started: 8,
             downloaded: 3,
@@ -229,6 +273,9 @@ mod tests {
 
     #[test]
     fn formats_non_tty_summary() {
+        // Pin colors off so the assert checks the plain skeleton regardless of
+        // how the test harness is run (`--nocapture`, `CLICOLOR_FORCE`, …).
+        console::set_colors_enabled_stderr(false);
         let report = CrawlReport {
             downloaded: 2,
             resumed: 5,

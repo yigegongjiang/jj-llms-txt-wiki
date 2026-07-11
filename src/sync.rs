@@ -1,3 +1,4 @@
+use console::style;
 use std::path::Path;
 use std::sync::Arc;
 use std::time::Duration;
@@ -45,7 +46,13 @@ pub async fn run(
     for (index, (name, site)) in targets.into_iter().enumerate() {
         let position = index + 1;
         if verbosity != Verbosity::Quiet {
-            eprintln!("── [{position}/{total}] {name} ──");
+            eprintln!(
+                "{}",
+                style(format!("── [{position}/{total}] {name} ──"))
+                    .for_stderr()
+                    .cyan()
+                    .bold()
+            );
         }
         let entry = match parse_entry_url(&site.url) {
             Ok(entry) => entry,
@@ -62,7 +69,12 @@ pub async fn run(
             }
         };
         if snapshot.resumed() && verbosity != Verbosity::Quiet {
-            eprintln!("   ↻ resuming interrupted partial");
+            eprintln!(
+                "{}",
+                style("   ↻ resuming interrupted partial")
+                    .for_stderr()
+                    .cyan()
+            );
         }
         let previous_site = output_root.join(&name);
         let previous_manifest = Manifest::load(&previous_site);
@@ -122,7 +134,10 @@ pub async fn run(
         && let Err(error) = repository.push_snapshot(url)
         && verbosity != Verbosity::Quiet
     {
-        eprintln!("warning: push snapshot skipped: {error}");
+        eprintln!(
+            "{}: push snapshot skipped: {error}",
+            style("warning").for_stderr().yellow().bold()
+        );
     }
 
     if failures.is_empty() {

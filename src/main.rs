@@ -14,6 +14,7 @@ pub mod url_map;
 
 use clap::{CommandFactory, Parser};
 use cli::{Cli, Command};
+use console::style;
 use std::process::ExitCode;
 
 async fn run() -> Result<(), String> {
@@ -93,7 +94,7 @@ async fn main() -> ExitCode {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
             if !error.is_empty() {
-                eprintln!("error: {error}");
+                eprintln!("{}: {error}", style("error").for_stderr().red().bold());
             }
             ExitCode::FAILURE
         }

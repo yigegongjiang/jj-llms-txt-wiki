@@ -7,6 +7,15 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.8.0] - 2026-07-12
+
+### Added
+
+- 同步日志按状态着色：下载 / 未变 / 缺失 / 失败等分类和最终结果分色显示，成功与失败一眼可辨。
+  - 复用 `indicatif` 已引入的 `console`（直接声明 `console = "0.16"`，无新增传递依赖）。`src/progress.rs`：`styled_tag` 按 tag 染色滚动记录（OK 绿 / RESUMED 青 / MISS 黄 / FAIL 红粗 / UNCHANGED·IGNORED 暗），先按明文补齐 `{:<9}` 再包色保对齐；`summary_msg` 的 `dl` 常绿、`fail` 仅 >0 转红粗；`summary_line` 的 `ok`/`failed` 状态词与 `downloaded`/`failed=N` 分色。`src/sync.rs` 站点分隔头青粗、续传提示青、push warning 黄；`src/main.rs` 顶层 `error:` 红粗。
+- 输出到管道或文件时自动保持纯文本，不写入颜色码。
+  - 全部走 `console::style(..).for_stderr()`，按 stderr 自身 tty / `NO_COLOR` / `CLICOLOR` 判定；非终端渲染为纯文本。`progress.rs` 两处 `assert_eq!` 精确匹配测试用 `console::set_colors_enabled_stderr(false)` 钉死，`--nocapture`/`CLICOLOR_FORCE` 下不漂移。
+
 ## [0.7.0] - 2026-07-11
 
 ### Added
@@ -113,6 +122,7 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.8.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.8.0
 [0.7.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.7.0
 [0.6.3]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.3
 [0.6.2]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.2
