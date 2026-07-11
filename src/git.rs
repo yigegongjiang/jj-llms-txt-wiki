@@ -244,15 +244,18 @@ impl Drop for CommitLock {
     }
 }
 
-/// Ensure the data repository ignores snapshot staging directories, so adopted or
-/// leftover `.{site}.sync.*` / `.{site}.backup.*` partials are never committed into
-/// the versioned content. Idempotent: appends only the patterns not already present.
+/// Ensure the data repository ignores snapshot staging directories and the run
+/// log, so adopted or leftover `.{site}.sync.*` / `.{site}.backup.*` partials and
+/// the `/.llms-wiki/` report dir are never committed into the versioned content.
+/// The anchored `/.llms-wiki/` matches only the root report dir, never a site's
+/// committed `<site>/.llms-wiki.json` manifest. Idempotent: appends only the
+/// patterns not already present.
 fn ensure_gitignore(root: &Path) -> Result<(), String> {
     let path = root.join(".gitignore");
     let existing = fs::read_to_string(&path).unwrap_or_default();
     let mut content = existing.clone();
     let mut changed = false;
-    for pattern in [".*.sync.*", ".*.backup.*"] {
+    for pattern in [".*.sync.*", ".*.backup.*", "/.llms-wiki/"] {
         if existing.lines().any(|line| line.trim() == pattern) {
             continue;
         }
@@ -426,6 +429,7 @@ mod tests {
         let ignore = fs::read_to_string(root.join(".gitignore")).unwrap();
         assert!(ignore.lines().any(|line| line == ".*.sync.*"));
         assert!(ignore.lines().any(|line| line == ".*.backup.*"));
+        assert!(ignore.lines().any(|line| line == "/.llms-wiki/"));
 
         Repository::prepare(&root).unwrap();
         assert_eq!(

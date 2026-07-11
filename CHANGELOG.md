@@ -11,6 +11,18 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.10.0] - 2026-07-12
+
+### Added
+
+- 同步失败时给出可读的结果报告：按站点列出失败的文件与原因、404/410 缺失数量，并提示重试命令，不再把错误挤成一行。
+- 每次同步把完整结果（各站计数、全部失败原因、缺失链接）写入 `<输出目录>/.llms-wiki/last-run.log`，跑完仍可回看；该文件不进版本库。
+
+### Changed
+
+- 整站失败（如入口不可达）现在直接显示真实原因，不再出现 `failed` 却 `failed=0` 的空结果。
+- 失败报告在 `-q/--quiet` 下仍会显示，错误绝不会被静默吞掉。
+
 ## [0.9.0] - 2026-07-12
 
 ### Fixed
@@ -105,6 +117,7 @@
 - 提供 `llms-wiki` 命令行骨架，支持 `curl` 一键安装（macOS arm64/x64）。
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
 
+[0.10.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.10.0
 [0.9.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.9.0
 [0.8.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.8.0
 [0.7.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.7.0

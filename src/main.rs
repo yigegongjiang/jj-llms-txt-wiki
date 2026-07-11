@@ -7,6 +7,7 @@ pub mod http;
 mod lifecycle;
 pub mod manifest;
 mod progress;
+mod report;
 mod site;
 mod snapshot;
 mod sync;

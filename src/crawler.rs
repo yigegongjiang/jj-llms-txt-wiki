@@ -35,6 +35,9 @@ pub struct CrawlReport {
     pub missing: usize,
     pub ignored: usize,
     pub failures: Vec<CrawlFailure>,
+    /// URLs that answered 404/410. Kept alongside the `missing` count so the
+    /// persisted run log can name the dead links, not just tally them.
+    pub missing_urls: Vec<String>,
 }
 
 impl CrawlReport {
@@ -282,6 +285,7 @@ pub async fn crawl(
             Ok(FetchOutcome::Missing) => {
                 observer.event(CrawlEvent::Missing(item.url.to_string()));
                 report.missing += 1;
+                report.missing_urls.push(item.url.to_string());
             }
             Ok(FetchOutcome::IgnoredRedirect) => {
                 observer.event(CrawlEvent::Ignored(item.url.to_string()));

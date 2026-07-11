@@ -7,6 +7,22 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.10.0] - 2026-07-12
+
+### Added
+
+- 同步失败时给出可读的结果报告：按站点列出失败的文件与原因、404/410 缺失数量，并提示重试命令，不再把错误挤成一行。
+  - 新增 `src/report.rs`：`Outcome`（`Ok`/`Failed(CrawlReport)`/`Aborted(String)`）+ `SiteReport`；`print_failures` 只在有失败时打印聚合块（红粗标题、每站失败逐条 `✗ path — reason`、终端上限 `TERMINAL_FAILURE_CAP=8` 超出提示「N more」、缺失 404/410 计数、末尾 `full log` 路径 + 每失败站 `retry` 命令），无视 verbosity 始终打印（`-q` 也不吞错误）。`src/sync.rs::run` 重构：拆出 `sync_site` 返回 `Outcome`，收集 `Vec<SiteReport>`；失败时 `run` 返回 `Err(String::new())` 保留 FAILURE 退出码但不让 `main.rs` 再叠一行 `error:`。
+- 每次同步把完整结果（各站计数、全部失败原因、缺失链接）写入 `<输出目录>/.llms-wiki/last-run.log`，跑完仍可回看；该文件不进版本库。
+  - `report::write_log` best-effort 覆盖写（`let _ =`，失败不影响同步；覆盖而非追加，避免无界增长）；`render_log` 输出纯文本（无 ANSI）全量记录。`crawler::CrawlReport` 新增 `missing_urls: Vec<String>`（`Missing` 分支 push），供日志逐条列出死链。`git.rs::ensure_gitignore` 追加锚定 `/.llms-wiki/`（只忽略根级报告目录，不误伤已提交的 `<site>/.llms-wiki.json`）。
+
+### Changed
+
+- 整站失败（如入口不可达）现在直接显示真实原因，不再出现 `failed` 却 `failed=0` 的空结果。
+  - `crawl` 返回 `Err` 时改走 `progress.abort()`（仅清 spinner 不打 summary）+ `progress::error_line(site, reason)`（`error — <reason>` 红粗）并归为 `Aborted`；commit/record 失败在 `finish` 前把合成 `CrawlFailure` push 进 report，故 summary 行如实显示 `failed=N`。`progress::short_path` 改 `pub(crate)` 供 report 复用。
+- 失败报告在 `-q/--quiet` 下仍会显示，错误绝不会被静默吞掉。
+  - `print_failures` 独立于 spinner draw target，直接 `eprintln!`；仅逐条 scrollback 受 verbosity 控制。
+
 ## [0.9.0] - 2026-07-12
 
 ### Fixed
@@ -129,6 +145,8 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.10.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.10.0
+[0.9.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.9.0
 [0.8.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.8.0
 [0.7.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.7.0
 [0.6.3]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.6.3

@@ -3,11 +3,14 @@ use std::path::Path;
 use std::sync::Arc;
 use std::time::Duration;
 
+use jiff::Timestamp;
+
 use crate::config::Config;
-use crate::crawler::{CrawlOptions, CrawlReport, DEFAULT_TIMEOUT, crawl};
+use crate::crawler::{CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_TIMEOUT, crawl};
 use crate::git::Repository;
 use crate::manifest::Manifest;
-use crate::progress::{SyncProgress, Verbosity};
+use crate::progress::{SyncProgress, Verbosity, error_line};
+use crate::report::{self, Outcome, SiteReport};
 use crate::site::parse_entry_url;
 use crate::snapshot::Snapshot;
 
@@ -39,9 +42,9 @@ pub async fn run(
         interval: interval.unwrap_or(Duration::from_millis(config.interval_ms)),
         timeout: DEFAULT_TIMEOUT,
     };
-    let mut failures = Vec::new();
-    let mut committed = false;
     let total = targets.len();
+    let mut reports: Vec<SiteReport> = Vec::with_capacity(total);
+    let mut committed = false;
 
     for (index, (name, site)) in targets.into_iter().enumerate() {
         let position = index + 1;
@@ -54,75 +57,24 @@ pub async fn run(
                     .bold()
             );
         }
-        let entry = match parse_entry_url(&site.url) {
-            Ok(entry) => entry,
-            Err(error) => {
-                failures.push(format!("{name}: {error}"));
-                continue;
-            }
-        };
-        let snapshot = match Snapshot::new(&output_root, &name) {
-            Ok(snapshot) => snapshot,
-            Err(error) => {
-                failures.push(format!("{name}: {error}"));
-                continue;
-            }
-        };
-        if snapshot.resumed() && verbosity != Verbosity::Quiet {
-            eprintln!(
-                "{}",
-                style("   ↻ resuming interrupted partial")
-                    .for_stderr()
-                    .cyan()
-            );
-        }
-        let previous_site = output_root.join(&name);
-        let previous_manifest = Manifest::load(&previous_site);
-        let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
-        let progress = Arc::new(SyncProgress::new(&name, position, total, verbosity));
-        let observer: Arc<dyn crate::crawler::CrawlObserver> = progress.clone();
-        let report = match crawl(
-            entry,
-            snapshot.path(),
-            previous_root,
-            &previous_manifest,
+        let outcome = sync_site(
+            &name,
+            &site.url,
+            &output_root,
             options,
-            observer,
+            verbosity,
+            position,
+            total,
+            &repository,
         )
-        .await
-        {
-            Ok(report) => report,
-            Err(error) => {
-                let report = CrawlReport::default();
-                progress.finish(&report, false);
-                failures.push(format!("{name}: {error}"));
-                continue;
-            }
-        };
-
-        if report.is_success() {
-            match snapshot.commit() {
-                Ok(()) => {
-                    progress.finish(&report, true);
-                    match repository.record_site(&name) {
-                        Ok(()) => committed = true,
-                        Err(error) => {
-                            // Content is on disk; the next sync's preflight recovery
-                            // will absorb it, so no data is lost — surface the error
-                            // so operators notice.
-                            failures.push(format!("{name}: git: {error}"));
-                        }
-                    }
-                }
-                Err(error) => {
-                    progress.finish(&report, false);
-                    failures.push(format!("{name}: {error}"));
-                }
-            }
-        } else {
-            progress.finish(&report, false);
-            failures.push(format_report_failure(&name, &report));
+        .await;
+        if matches!(outcome, Outcome::Ok(_)) {
+            committed = true;
         }
+        reports.push(SiteReport {
+            site: name,
+            outcome,
+        });
     }
 
     // Best-effort mirror — a push failure here (auth / offline / fork without
@@ -140,31 +92,115 @@ pub async fn run(
         );
     }
 
-    if failures.is_empty() {
-        Ok(())
+    // Durable record of this run, overwritten each time; the failure block below
+    // points the user at it. Written for successful runs too, so "what happened
+    // last run" always has an answer on disk.
+    let timestamp = Timestamp::now().strftime("%Y-%m-%dT%H:%M:%SZ").to_string();
+    let log = report::write_log(&output_root, &reports, &timestamp);
+
+    if reports.iter().any(|report| !report.is_ok()) {
+        report::print_failures(&reports, &log);
+        // The block above is the user-facing error report; returning an empty
+        // string keeps the failure exit code without making main.rs print a
+        // second, redundant `error:` line on top of it.
+        Err(String::new())
     } else {
-        Err(format!(
-            "{} site(s) failed: {}",
-            failures.len(),
-            failures.join("; ")
-        ))
+        Ok(())
     }
 }
 
-fn format_report_failure(site: &str, report: &CrawlReport) -> String {
-    let details = report
-        .failures
-        .iter()
-        .take(5)
-        .map(|failure| format!("{}: {}", failure.url, failure.message))
-        .collect::<Vec<_>>()
-        .join(", ");
-    let omitted = report.failures.len().saturating_sub(5);
-    if omitted == 0 {
-        format!("{site}: {details}")
-    } else {
-        format!("{site}: {details}, and {omitted} more")
+/// Sync a single site end to end, printing its live verdict line, and return the
+/// outcome for the aggregate report. Whole-site errors (bad entry URL, snapshot
+/// setup, or a crawl that never produced a report) become `Aborted` carrying the
+/// real reason, so the verdict reads `error — <reason>` instead of a misleading
+/// `failed; … failed=0`.
+#[allow(clippy::too_many_arguments)]
+async fn sync_site(
+    name: &str,
+    url: &str,
+    output_root: &Path,
+    options: CrawlOptions,
+    verbosity: Verbosity,
+    position: usize,
+    total: usize,
+    repository: &Repository,
+) -> Outcome {
+    let entry = match parse_entry_url(url) {
+        Ok(entry) => entry,
+        Err(error) => {
+            eprintln!("{}", error_line(name, &error));
+            return Outcome::Aborted(error);
+        }
+    };
+    let snapshot = match Snapshot::new(output_root, name) {
+        Ok(snapshot) => snapshot,
+        Err(error) => {
+            eprintln!("{}", error_line(name, &error));
+            return Outcome::Aborted(error);
+        }
+    };
+    if snapshot.resumed() && verbosity != Verbosity::Quiet {
+        eprintln!(
+            "{}",
+            style("   ↻ resuming interrupted partial")
+                .for_stderr()
+                .cyan()
+        );
     }
+    let previous_site = output_root.join(name);
+    let previous_manifest = Manifest::load(&previous_site);
+    let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
+    let progress = Arc::new(SyncProgress::new(name, position, total, verbosity));
+    let observer: Arc<dyn CrawlObserver> = progress.clone();
+    let mut report = match crawl(
+        entry,
+        snapshot.path(),
+        previous_root,
+        &previous_manifest,
+        options,
+        observer,
+    )
+    .await
+    {
+        Ok(report) => report,
+        Err(error) => {
+            progress.abort();
+            eprintln!("{}", error_line(name, &error));
+            return Outcome::Aborted(error);
+        }
+    };
+
+    if !report.is_success() {
+        progress.finish(&report, false);
+        return Outcome::Failed(report);
+    }
+
+    // Clean crawl: commit the snapshot, then record it in git. A failure in
+    // either step is a real, user-visible failure even though the bytes are on
+    // disk — fold it into the report so the verdict line and the log both carry
+    // it (and never show `failed=0`). Push before `finish` so the summary line
+    // counts it.
+    if let Err(error) = snapshot.commit() {
+        report.failures.push(CrawlFailure {
+            url: format!("(commit {name})"),
+            message: error,
+        });
+        progress.finish(&report, false);
+        return Outcome::Failed(report);
+    }
+    if let Err(error) = repository.record_site(name) {
+        // Content is on disk; the next sync's preflight recovery absorbs it, so
+        // no data is lost — but surface the error so operators notice.
+        report.failures.push(CrawlFailure {
+            url: format!("(git {name})"),
+            message: error,
+        });
+        progress.finish(&report, false);
+        return Outcome::Failed(report);
+    }
+
+    progress.finish(&report, true);
+    Outcome::Ok(report)
 }
 
 #[cfg(test)]

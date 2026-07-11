@@ -89,6 +89,14 @@ impl SyncProgress {
         );
     }
 
+    /// Clear the spinner without printing a summary line. Used when the crawl
+    /// aborts before producing a report (e.g. the entry document itself fails):
+    /// the caller prints an `error_line` carrying the real reason instead of a
+    /// misleading `failed; … failed=0` summary.
+    pub fn abort(&self) {
+        self.bar.finish_and_clear();
+    }
+
     fn counts(&self) -> Counts {
         Counts {
             started: self.started.load(Ordering::Relaxed),
@@ -187,10 +195,18 @@ fn summary_msg(counts: &Counts, path: &str) -> String {
     )
 }
 
+/// Per-site verdict line for a whole-site abort — an entry/snapshot error or a
+/// crawl that never produced a report. Unlike `summary_line` it carries the real
+/// `reason` inline, so the user never sees a bare `failed` with `failed=0`.
+pub fn error_line(site: &str, reason: &str) -> String {
+    let verdict = style("error").for_stderr().red().bold();
+    format!("{site}: {verdict} — {reason}")
+}
+
 /// Shorten a full URL to its origin-relative `path[?query]` so long URLs do not
 /// overflow and flicker the single spinner line. Falls back to the raw string
 /// when the URL cannot be parsed.
-fn short_path(url: &str) -> String {
+pub(crate) fn short_path(url: &str) -> String {
     match Url::parse(url) {
         Ok(parsed) => match parsed.query() {
             Some(query) => format!("{}?{query}", parsed.path()),
@@ -286,6 +302,7 @@ mod tests {
                 url: "https://example.com/a.md".to_owned(),
                 message: "failure".to_owned(),
             }],
+            ..CrawlReport::default()
         };
         assert_eq!(
             summary_line("docs", &report, "failed"),
