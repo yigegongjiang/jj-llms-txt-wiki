@@ -53,7 +53,7 @@ pub enum SiteCommand {
     Add {
         /// Safe local site name
         name: String,
-        /// Absolute HTTP(S) llms.txt URL
+        /// Absolute HTTP(S) llms.txt or llms-full.txt URL
         url: String,
     },
     /// List configured sites
@@ -98,6 +98,7 @@ mod tests {
     #[test]
     fn rejects_unknown_commands() {
         assert!(Cli::try_parse_from(["llms-wiki", "unknown"]).is_err());
+        assert!(Cli::try_parse_from(["llms-wiki", "sync-full", "docs"]).is_err());
     }
 
     #[test]

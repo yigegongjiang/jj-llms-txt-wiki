@@ -7,12 +7,14 @@ use jiff::Timestamp;
 
 use crate::config::Config;
 use crate::crawler::{CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_TIMEOUT, crawl};
+use crate::full;
 use crate::git::Repository;
 use crate::manifest::Manifest;
 use crate::progress::{SyncProgress, error_line};
 use crate::report::{self, Outcome, SiteReport};
 use crate::site::parse_entry_url;
 use crate::snapshot::Snapshot;
+use crate::url_map::EntryKind;
 
 pub async fn run(
     config_path: &Path,
@@ -124,7 +126,12 @@ async fn sync_site(
             return Outcome::Aborted(error);
         }
     };
-    let snapshot = match Snapshot::new(output_root, name) {
+    let kind = EntryKind::from_url(&entry);
+    let snapshot_result = match kind {
+        EntryKind::Index => Snapshot::new(output_root, name),
+        EntryKind::Full => Snapshot::fresh(output_root, name),
+    };
+    let snapshot = match snapshot_result {
         Ok(snapshot) => snapshot,
         Err(error) => {
             eprintln!("{}", error_line(name, &error));
@@ -139,23 +146,31 @@ async fn sync_site(
                 .cyan()
         );
     }
-    let previous_site = output_root.join(name);
-    let previous_manifest = Manifest::load(&previous_site);
-    let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
     let progress = Arc::new(SyncProgress::new(name, position, total));
     let observer: Arc<dyn CrawlObserver> = progress.clone();
-    let mut report = match crawl(
-        entry,
-        snapshot.path(),
-        previous_root,
-        &previous_manifest,
-        options,
-        observer,
-    )
-    .await
-    {
+    let crawl_result = match kind {
+        EntryKind::Index => {
+            let previous_site = output_root.join(name);
+            let previous_manifest = Manifest::load(&previous_site);
+            let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
+            crawl(
+                entry,
+                snapshot.path(),
+                previous_root,
+                &previous_manifest,
+                options,
+                observer,
+            )
+            .await
+        }
+        EntryKind::Full => full::crawl(entry, snapshot.path(), options.timeout, observer).await,
+    };
+    let mut report = match crawl_result {
         Ok(report) => report,
         Err(error) => {
+            if kind == EntryKind::Full {
+                snapshot.discard();
+            }
             progress.abort();
             eprintln!("{}", error_line(name, &error));
             return Outcome::Aborted(error);
@@ -163,6 +178,9 @@ async fn sync_site(
     };
 
     if !report.is_success() {
+        if kind == EntryKind::Full {
+            snapshot.discard();
+        }
         progress.finish(&report, false);
         return Outcome::Failed(report);
     }

@@ -9,7 +9,7 @@ MUST NOT 写发布流程 (→ workflow.md) / LLM 约束 (→ AGENTS.md) / dev �
 
 # jj-llms-txt-wiki
 
-从 [`llms.txt`](https://llmstxt.org/) 入口递归抓取 Markdown，并按站点和 URL 路径保存到本地。
+同步 `llms.txt` / `llms-full.txt` 文档，并按站点和 URL 路径保存到本地。
 
 ## 使用
 
@@ -27,6 +27,7 @@ llms-wiki --help
 
 - 不调用 AI 模型，抓取结果完全由 CLI 参数、配置和远端内容决定。
 - 支持多个站点，每个站点使用独立目录。
+- 根据入口 URL 自动选择链路：`llms.txt` 递归抓取链接；`llms-full.txt` 按内嵌页面 URL 拆分完整内容；用户统一使用 `sync`。
 - 抓取范围 = 入口文档声明的 origin 白名单（入口自身 origin + 入口内 Markdown 链接的各 origin），入口抓取后冻结；兼容入口 host 与内容 host 不同的站点（如 `bun.sh` 入口指向 `bun.com` 内容）。
 - 递归只跟踪白名单内 origin 的 Markdown URL；内容页只能引用白名单内 origin，不能扩大白名单。白名单外链接和重定向目标一律忽略。
 - 支持限制并发数和请求间隔。
@@ -38,7 +39,7 @@ llms-wiki --help
 - 使用 Rust 开发原生 CLI。
 - 使用 `clap` 解析命令，`serde` + `toml` 管理配置，`serde_json` 持久化站点级 sync 元数据。
 - 使用 Tokio 和 `reqwest`（`rustls`）执行异步抓取、并发控制与请求限速。
-- 使用 Comrak 解析 CommonMark/GFM AST，使用 `url` 解析和规范化 URL。
+- 使用 Comrak 解析 `llms.txt` CommonMark/GFM AST，使用确定性行解析器拆分 `llms-full.txt`，使用 `url` 解析和规范化 URL。
 - 首版不实现 TUI，使用 `indicatif` 展示同步进度。
 
 ## CLI
@@ -46,6 +47,7 @@ llms-wiki --help
 ```bash
 # 添加站点
 llms-wiki site add anthropic https://platform.claude.com/llms.txt
+llms-wiki site add deno https://docs.deno.com/llms-full.txt
 
 # 查看站点
 llms-wiki site list
@@ -55,6 +57,7 @@ llms-wiki sync
 
 # 同步指定站点
 llms-wiki sync anthropic
+llms-wiki sync deno
 
 # 同步全部站点，并临时覆盖抓取限制
 llms-wiki sync --concurrency 2 --interval 1s
@@ -85,6 +88,9 @@ url = "https://developers.cloudflare.com/llms.txt"
 
 [sites.anthropic]
 url = "https://platform.claude.com/llms.txt"
+
+[sites.deno]
+url = "https://docs.deno.com/llms-full.txt"
 ```
 
 ## 输出目录
@@ -104,11 +110,13 @@ url = "https://platform.claude.com/llms.txt"
 
 每个站点使用配置名称作为顶层目录，远端 URL 路径映射为其下的文件路径。
 
-站点目录内的 `.llms-wiki.json` 记录各文件的 HTTP validator（`ETag` / `Last-Modified`），供下次同步做条件请求；它随快照原子替换、随仓库提交一同版本化。
+`llms.txt` 站点目录内的 `.llms-wiki.json` 记录各文件的 HTTP validator（`ETag` / `Last-Modified`），供下次同步做条件请求；它随快照原子替换、随仓库提交一同版本化。`llms-full.txt` 每次全量抓取并重建快照，不创建 manifest。
 
 ## 同步行为
 
-`sync` 默认同步全部站点；传入站点名称时仅同步指定站点。
+`sync` 默认同步全部站点；传入站点名称时仅同步指定站点。入口 URL path 末段为 `llms-full.txt`（大小写不敏感）时走聚合链路，其他入口走递归链路；query / fragment 不参与识别。
+
+### `llms.txt`
 
 1. 读取目标站点的 `llms.txt`（入口始终无条件抓取）。
 2. 以入口文档中全部 Markdown 链接的 origin 扩展白名单（连同入口自身 origin 冻结）；提取白名单内的 Markdown URL，去重后加入抓取队列，白名单外 URL 直接忽略。
@@ -118,6 +126,16 @@ url = "https://platform.claude.com/llms.txt"
 6. 至少一个站点成功后，对输出根目录执行 `git add -A` 并创建一次提交；即使内容未变化也记录同步事件。
 
 远端返回 `304 Not Modified` 时跳过 body 下载，复制上次快照的本地文件并沿用其 validator，再从该文件重新提取链接继续递归——字节一致保证链接集合不变。服务器不带 `ETag` / `Last-Modified` 时自然退化为全量下载，无正确性风险。
+
+### `llms-full.txt`
+
+1. 单次抓取入口；并发数和请求间隔不参与该链路。
+2. 识别代码块外的页面头：H1 + 可选 blockquote + 独立 `URL: <absolute HTTP(S) URL>`；其前可有 `---`。
+3. 完整校验所有页头、URL、正文和本地路径；结构损坏、重复 URL 或路径冲突 → 整站失败且不写入旧快照。
+4. 按页面 URL 映射 Markdown 路径：无后缀追加 `.md`，目录 URL 写入 `index.md`，已有 `.md` / `.markdown` 保持不变。
+5. 写入全新临时快照；全部成功后原子替换站点目录并记录 Git 提交。每次从空快照重建，远端已删除页面不会残留。
+
+拆分保留页面标题、描述和正文，仅移除聚合分隔符与 `URL:` 元数据行。缺少可验证页头的聚合格式直接报错，MUST NOT 猜测边界或静默生成错误文件。
 
 输出根目录会在抓取前初始化为独立 Git 仓库。提交信息格式为 `chore(sync): <成功站点> @ <RFC 3339 UTC>`；部分站点失败时先记录成功站点，再以非零状态退出。
 

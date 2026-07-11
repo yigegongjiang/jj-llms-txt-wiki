@@ -76,6 +76,46 @@ impl Snapshot {
         })
     }
 
+    /// Create an empty staging directory and discard interrupted partials.
+    /// Aggregated inputs are complete snapshots, so resuming their old files
+    /// would retain pages removed from the latest bundle.
+    pub fn fresh(root: &Path, site: &str) -> Result<Self, String> {
+        fs::create_dir_all(root)
+            .map_err(|error| format!("create output directory {}: {error}", root.display()))?;
+        if !root.is_dir() {
+            return Err(format!(
+                "output path is not a directory: {}",
+                root.display()
+            ));
+        }
+        let target = root.join(site);
+        if target.exists() && !target.is_dir() {
+            return Err(format!(
+                "site path is not a directory: {}",
+                target.display()
+            ));
+        }
+
+        let prefix = format!(".{site}.sync.");
+        for (partial, _) in stale_partials(root, &prefix) {
+            fs::remove_dir_all(&partial)
+                .map_err(|error| format!("remove stale snapshot {}: {error}", partial.display()))?;
+        }
+        let working = Builder::new()
+            .prefix(&prefix)
+            .tempdir_in(root)
+            .map_err(|error| format!("create temporary snapshot in {}: {error}", root.display()))?
+            .keep();
+
+        Ok(Self {
+            working,
+            target,
+            root: root.to_path_buf(),
+            site: site.to_owned(),
+            resumed: false,
+        })
+    }
+
     pub fn path(&self) -> &Path {
         &self.working
     }
@@ -83,6 +123,10 @@ impl Snapshot {
     /// Whether this snapshot adopted an interrupted earlier run's partial content.
     pub fn resumed(&self) -> bool {
         self.resumed
+    }
+
+    pub fn discard(self) {
+        let _ = fs::remove_dir_all(self.working);
     }
 
     pub fn commit(self) -> Result<(), String> {
@@ -279,6 +323,22 @@ mod tests {
             !resumed.path().join("done.md.part").exists(),
             "stray .part is swept before reuse"
         );
+    }
+
+    #[test]
+    fn fresh_discards_every_leftover_partial() {
+        let output = tempdir().unwrap();
+        let root = output.path();
+        let interrupted = Snapshot::new(root, "docs").unwrap();
+        let old = interrupted.path().to_path_buf();
+        fs::write(old.join("stale.md"), "stale").unwrap();
+        drop(interrupted);
+
+        let fresh = Snapshot::fresh(root, "docs").unwrap();
+        assert!(!fresh.resumed());
+        assert_ne!(fresh.path(), old);
+        assert!(!old.exists());
+        assert!(!fresh.path().join("stale.md").exists());
     }
 
     #[test]

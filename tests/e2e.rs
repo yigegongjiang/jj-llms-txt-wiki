@@ -372,6 +372,139 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn real_cli_syncs_full_bundle_with_fresh_atomic_snapshots() {
+    let first = "# Bundle\n\n> Complete docs\n\n# One\n\nURL: http://placeholder/one\n\nOne body.\n\n---\n\n# Guide\n\n> Guide description\n\nURL: http://placeholder/guide/\n\nGuide v1.\n";
+    let srv = server(HashMap::from([
+        ("/llms-full.txt".to_owned(), Response::ok(first)),
+        ("/llms.txt".to_owned(), Response::ok("[doc](/doc.md)")),
+        ("/doc.md".to_owned(), Response::ok("recursive")),
+    ]))
+    .await;
+    let bundle = first.replace("http://placeholder", &srv.origin);
+    srv.routes
+        .write()
+        .unwrap()
+        .insert("/llms-full.txt".to_owned(), Response::ok(&bundle));
+    let home = tempdir().unwrap();
+    success(
+        home.path(),
+        &[
+            "site",
+            "add",
+            "full",
+            &format!("{}/llms-full.txt", srv.origin),
+        ],
+    );
+    success(
+        home.path(),
+        &["site", "add", "index", &format!("{}/llms.txt", srv.origin)],
+    );
+
+    let wiki = home.path().join("llms-wiki");
+    let stale = wiki.join(".full.sync.stale");
+    fs::create_dir_all(&stale).unwrap();
+    fs::write(stale.join("removed.md"), "stale").unwrap();
+
+    let synced = success(home.path(), &["sync", "full"]);
+    let stderr = String::from_utf8_lossy(&synced.stderr);
+    assert!(stderr.contains("full: ok"), "stderr={stderr}");
+    assert!(stderr.contains("downloaded=2"), "stderr={stderr}");
+    assert_eq!(
+        fs::read_to_string(wiki.join("full/one.md")).unwrap(),
+        "# One\n\nOne body.\n"
+    );
+    assert_eq!(
+        fs::read_to_string(wiki.join("full/guide/index.md")).unwrap(),
+        "# Guide\n\n> Guide description\n\nGuide v1.\n"
+    );
+    assert!(!wiki.join("full/.llms-wiki.json").exists());
+    assert!(
+        !stale.exists(),
+        "full sync must discard interrupted partials"
+    );
+    assert_eq!(
+        srv.requests
+            .read()
+            .unwrap()
+            .iter()
+            .filter(|path| path.as_str() == "/llms-full.txt")
+            .count(),
+        1,
+        "full sync uses one HTTP request"
+    );
+
+    let second = format!(
+        "# Bundle\n\n# Guide\n\nURL: {}/guide/\n\nGuide v2.\n",
+        srv.origin
+    );
+    srv.routes
+        .write()
+        .unwrap()
+        .insert("/llms-full.txt".to_owned(), Response::ok(&second));
+    success(home.path(), &["sync"]);
+    assert!(!wiki.join("full/one.md").exists());
+    assert_eq!(
+        fs::read_to_string(wiki.join("full/guide/index.md")).unwrap(),
+        "# Guide\n\nGuide v2.\n"
+    );
+    assert_eq!(
+        fs::read_to_string(wiki.join("index/doc.md")).unwrap(),
+        "recursive"
+    );
+
+    srv.routes
+        .write()
+        .unwrap()
+        .insert("/bundle.txt".to_owned(), Response::ok(&second));
+    srv.routes.write().unwrap().insert(
+        "/llms-full.txt".to_owned(),
+        Response::redirect("/bundle.txt"),
+    );
+    success(home.path(), &["sync", "full"]);
+    assert!(
+        srv.requests
+            .read()
+            .unwrap()
+            .iter()
+            .any(|path| path == "/bundle.txt")
+    );
+
+    let stable = tree(&wiki.join("full"));
+    let commits = git(&wiki, &["rev-list", "--count", "HEAD"]);
+    let collision = format!(
+        "# One\n\nURL: {}/same?q=1\n\nOne\n\n---\n\n# Two\n\nURL: {}/same?q=2\n\nTwo\n",
+        srv.origin, srv.origin
+    );
+    for response in [
+        Response::ok(&collision),
+        Response::status(404),
+        Response::status(500),
+        Response {
+            status: 200,
+            body: vec![0xff],
+            location: None,
+            delay: Duration::ZERO,
+        },
+    ] {
+        srv.routes
+            .write()
+            .unwrap()
+            .insert("/llms-full.txt".to_owned(), response);
+        let failed = cli(home.path(), &["sync", "full"]);
+        assert!(!failed.status.success());
+        assert_eq!(tree(&wiki.join("full")), stable);
+        assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), commits);
+    }
+    assert!(fs::read_dir(&wiki).unwrap().all(|entry| {
+        !entry
+            .unwrap()
+            .file_name()
+            .to_string_lossy()
+            .starts_with(".full.sync.")
+    }));
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn real_cli_resumes_an_interrupted_partial() {
     let srv = server(HashMap::from([
         (

@@ -47,6 +47,22 @@ impl LocalPath {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum EntryKind {
+    Index,
+    Full,
+}
+
+impl EntryKind {
+    pub fn from_url(url: &Url) -> Self {
+        let is_full = url
+            .path_segments()
+            .and_then(|mut segments| segments.next_back())
+            .is_some_and(|segment| segment.eq_ignore_ascii_case("llms-full.txt"));
+        if is_full { Self::Full } else { Self::Index }
+    }
+}
+
 /// Canonical origin string (`scheme://host[:non-default-port]`) used to compare
 /// origins. `Url::origin().ascii_serialization()` normalizes default ports, so
 /// `https://x:443` and `https://x` collapse to the same key.
@@ -154,6 +170,56 @@ pub fn local_path(url: &Url) -> Result<LocalPath, String> {
     Ok(LocalPath(local))
 }
 
+pub fn full_markdown_path(url: &Url) -> Result<LocalPath, String> {
+    let path = url
+        .path()
+        .strip_prefix('/')
+        .ok_or_else(|| format!("URL path is not absolute: {url}"))?;
+    let directory = path.is_empty() || path.ends_with('/');
+    let path = path.strip_suffix('/').unwrap_or(path);
+    let mut local = PathBuf::new();
+
+    if !path.is_empty() {
+        for segment in path.split('/') {
+            validate_segment(segment, url)?;
+            local.push(segment);
+        }
+    }
+
+    if directory {
+        local.push("index.md");
+    } else {
+        let lower = path.to_ascii_lowercase();
+        if !lower.ends_with(".md") && !lower.ends_with(".markdown") {
+            let file = local
+                .file_name()
+                .and_then(|name| name.to_str())
+                .ok_or_else(|| format!("URL path is not UTF-8: {url}"))?;
+            local.set_file_name(format!("{file}.md"));
+        }
+    }
+
+    Ok(LocalPath(local))
+}
+
+fn validate_segment(segment: &str, url: &Url) -> Result<(), String> {
+    if segment.is_empty() {
+        return Err(format!("URL path contains an empty segment: {url}"));
+    }
+    let decoded = percent_decode_str(segment)
+        .decode_utf8()
+        .map_err(|_| format!("URL path contains invalid UTF-8: {url}"))?;
+    if decoded == "."
+        || decoded == ".."
+        || decoded.contains('/')
+        || decoded.contains('\\')
+        || decoded.contains('\0')
+    {
+        return Err(format!("URL path contains an unsafe segment: {url}"));
+    }
+    Ok(())
+}
+
 #[derive(Debug, Default)]
 pub struct PathRegistry {
     urls: HashMap<LocalPath, CanonicalUrl>,
@@ -162,6 +228,14 @@ pub struct PathRegistry {
 impl PathRegistry {
     pub fn register(&mut self, url: &CanonicalUrl) -> Result<LocalPath, String> {
         let path = local_path(url.as_url())?;
+        self.register_path(url, path)
+    }
+
+    pub fn register_path(
+        &mut self,
+        url: &CanonicalUrl,
+        path: LocalPath,
+    ) -> Result<LocalPath, String> {
         if let Some(existing) = self.urls.get(&path) {
             if existing != url {
                 return Err(format!(
@@ -179,14 +253,30 @@ impl PathRegistry {
 #[cfg(test)]
 mod tests {
     use super::{
-        AllowedOrigins, CanonicalUrl, PathRegistry, has_encoded_unsafe_segment, is_syncable_url,
-        local_path,
+        AllowedOrigins, CanonicalUrl, EntryKind, PathRegistry, full_markdown_path,
+        has_encoded_unsafe_segment, is_syncable_url, local_path,
     };
     use std::path::{Path, PathBuf};
     use url::Url;
 
     fn url(value: &str) -> Url {
         Url::parse(value).unwrap()
+    }
+
+    #[test]
+    fn recognizes_full_entry_by_final_path_segment() {
+        assert_eq!(
+            EntryKind::from_url(&url("https://example.com/LLMS-FULL.TXT?x=1#top")),
+            EntryKind::Full
+        );
+        assert_eq!(
+            EntryKind::from_url(&url("https://example.com/docs/llms.txt")),
+            EntryKind::Index
+        );
+        assert_eq!(
+            EntryKind::from_url(&url("https://example.com/llms-full.txt/child")),
+            EntryKind::Index
+        );
     }
 
     #[test]
@@ -233,6 +323,38 @@ mod tests {
         assert_eq!(
             path.join_under(Path::new("/tmp/site")).unwrap(),
             PathBuf::from("/tmp/site/docs/%E6%97%A5%E6%9C%AC.md")
+        );
+    }
+
+    #[test]
+    fn maps_full_page_urls_to_markdown_files() {
+        for (remote, local) in [
+            ("https://example.com/", "index.md"),
+            ("https://example.com/a/b", "a/b.md"),
+            ("https://example.com/a/b/", "a/b/index.md"),
+            ("https://example.com/a.md", "a.md"),
+            ("https://example.com/a.MARKDOWN", "a.MARKDOWN"),
+            ("https://example.com/a.html", "a.html.md"),
+        ] {
+            assert_eq!(
+                full_markdown_path(&url(remote)).unwrap().as_path(),
+                Path::new(local),
+                "{remote}"
+            );
+        }
+        assert!(full_markdown_path(&url("https://example.com/a//b")).is_err());
+        assert!(full_markdown_path(&url("https://example.com/%2Fetc")).is_err());
+
+        let first = CanonicalUrl::new(url("https://one.test/same"));
+        let second = CanonicalUrl::new(url("https://two.test/same"));
+        let mut registry = PathRegistry::default();
+        registry
+            .register_path(&first, full_markdown_path(first.as_url()).unwrap())
+            .unwrap();
+        assert!(
+            registry
+                .register_path(&second, full_markdown_path(second.as_url()).unwrap())
+                .is_err()
         );
     }
 

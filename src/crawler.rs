@@ -391,7 +391,11 @@ async fn reuse_previous(
 /// rename over the target. A rename is atomic on the same filesystem, so an
 /// interruption never leaves a truncated file at the final path — resume relies
 /// on "file exists ⇒ content complete".
-async fn write_document(root: &Path, path: &LocalPath, body: &str) -> Result<(), String> {
+pub(crate) async fn write_document(
+    root: &Path,
+    path: &LocalPath,
+    body: &str,
+) -> Result<(), String> {
     let target = path.join_under(root)?;
     let parent = target
         .parent()

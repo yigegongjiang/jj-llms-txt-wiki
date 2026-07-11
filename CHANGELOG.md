@@ -11,6 +11,16 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.12.0] - 2026-07-12
+
+### Added
+
+- 支持将 `llms-full.txt` 直接添加为站点入口；仍使用统一 `sync`，自动按内嵌 URL 拆分并保留文档目录层级。
+
+### Changed
+
+- 聚合文件每次从空快照完整重建；格式损坏、URL 重复或路径冲突时保留上一份完整快照。
+
 ## [0.11.0] - 2026-07-12
 
 ### Removed
@@ -124,6 +134,7 @@
 - 提供 `llms-wiki` 命令行骨架，支持 `curl` 一键安装（macOS arm64/x64）。
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
 
+[0.12.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.12.0
 [0.10.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.10.0
 [0.9.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.9.0
 [0.8.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.8.0

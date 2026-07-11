@@ -7,6 +7,18 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.12.0] - 2026-07-12
+
+### Added
+
+- 支持将 `llms-full.txt` 直接添加为站点入口；仍使用统一 `sync`，自动按内嵌 URL 拆分并保留文档目录层级。
+  - `EntryKind` 按入口 path 自动分流；`full::crawl` 单次抓取、识别 H1 + 可选 blockquote + `URL:` 页头、拆分后复用统一报告 / 提交链路。
+
+### Changed
+
+- 聚合文件每次从空快照完整重建；格式损坏、URL 重复或路径冲突时保留上一份完整快照。
+  - `Snapshot::fresh` 丢弃中断 partial；full 路径映射覆盖无后缀 / 目录 / root URL，失败时 discard staging，不替换旧目录。
+
 ## [0.11.0] - 2026-07-12
 
 ### Removed
@@ -154,6 +166,7 @@
 - 内置 `help` / `version` / `update` / `uninstall` 生命周期命令，可自更新与卸载，并校验下载校验和。
   - `update` 下载 latest 资产，比对 `checksums.txt`，`fs::rename` 原子替换二进制。
 
+[0.12.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.12.0
 [0.10.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.10.0
 [0.9.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.9.0
 [0.8.0]: https://github.com/yigegongjiang/jj-llms-txt-wiki/releases/tag/v0.8.0

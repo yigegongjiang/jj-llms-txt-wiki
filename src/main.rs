@@ -2,6 +2,7 @@ mod cli;
 mod config;
 pub mod crawler;
 pub mod discovery;
+mod full;
 mod git;
 pub mod http;
 mod lifecycle;
