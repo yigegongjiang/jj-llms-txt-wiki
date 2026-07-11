@@ -9,7 +9,7 @@ use crate::config::Config;
 use crate::crawler::{CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_TIMEOUT, crawl};
 use crate::git::Repository;
 use crate::manifest::Manifest;
-use crate::progress::{SyncProgress, Verbosity, error_line};
+use crate::progress::{SyncProgress, error_line};
 use crate::report::{self, Outcome, SiteReport};
 use crate::site::parse_entry_url;
 use crate::snapshot::Snapshot;
@@ -19,7 +19,6 @@ pub async fn run(
     requested_site: Option<String>,
     concurrency: Option<usize>,
     interval: Option<Duration>,
-    verbosity: Verbosity,
     push_url: Option<String>,
 ) -> Result<(), String> {
     let config = Config::load(config_path)?;
@@ -48,21 +47,18 @@ pub async fn run(
 
     for (index, (name, site)) in targets.into_iter().enumerate() {
         let position = index + 1;
-        if verbosity != Verbosity::Quiet {
-            eprintln!(
-                "{}",
-                style(format!("── [{position}/{total}] {name} ──"))
-                    .for_stderr()
-                    .cyan()
-                    .bold()
-            );
-        }
+        eprintln!(
+            "{}",
+            style(format!("── [{position}/{total}] {name} ──"))
+                .for_stderr()
+                .cyan()
+                .bold()
+        );
         let outcome = sync_site(
             &name,
             &site.url,
             &output_root,
             options,
-            verbosity,
             position,
             total,
             &repository,
@@ -79,12 +75,10 @@ pub async fn run(
 
     // Best-effort mirror — a push failure here (auth / offline / fork without
     // write access) is expected in most environments and MUST NOT fail the
-    // sync. Quiet mode drops the warning too, matching the "only final
-    // summary" contract.
+    // sync.
     if committed
         && let Some(url) = push_url.as_deref()
         && let Err(error) = repository.push_snapshot(url)
-        && verbosity != Verbosity::Quiet
     {
         eprintln!(
             "{}: push snapshot skipped: {error}",
@@ -114,13 +108,11 @@ pub async fn run(
 /// setup, or a crawl that never produced a report) become `Aborted` carrying the
 /// real reason, so the verdict reads `error — <reason>` instead of a misleading
 /// `failed; … failed=0`.
-#[allow(clippy::too_many_arguments)]
 async fn sync_site(
     name: &str,
     url: &str,
     output_root: &Path,
     options: CrawlOptions,
-    verbosity: Verbosity,
     position: usize,
     total: usize,
     repository: &Repository,
@@ -139,7 +131,7 @@ async fn sync_site(
             return Outcome::Aborted(error);
         }
     };
-    if snapshot.resumed() && verbosity != Verbosity::Quiet {
+    if snapshot.resumed() {
         eprintln!(
             "{}",
             style("   ↻ resuming interrupted partial")
@@ -150,7 +142,7 @@ async fn sync_site(
     let previous_site = output_root.join(name);
     let previous_manifest = Manifest::load(&previous_site);
     let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
-    let progress = Arc::new(SyncProgress::new(name, position, total, verbosity));
+    let progress = Arc::new(SyncProgress::new(name, position, total));
     let observer: Arc<dyn CrawlObserver> = progress.clone();
     let mut report = match crawl(
         entry,
@@ -207,7 +199,6 @@ async fn sync_site(
 mod tests {
     use super::run;
     use crate::config::{Config, SiteConfig};
-    use crate::progress::Verbosity;
     use std::collections::{BTreeMap, HashMap};
     use std::fs;
     use std::process::Command;
@@ -350,11 +341,7 @@ mod tests {
         fs::create_dir_all(output.join("bad")).unwrap();
         fs::write(output.join("bad/old.md"), "preserve").unwrap();
 
-        assert!(
-            run(&config_path, None, None, None, Verbosity::Quiet, None)
-                .await
-                .is_err()
-        );
+        assert!(run(&config_path, None, None, None, None).await.is_err());
         assert_eq!(
             fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
             "old-a"
@@ -377,16 +364,9 @@ mod tests {
             .unwrap()
             .insert("/docs/new.md".to_owned(), route(200, "new"));
         let config_before = fs::read(&config_path).unwrap();
-        run(
-            &config_path,
-            Some("good".to_owned()),
-            Some(1),
-            None,
-            Verbosity::Quiet,
-            None,
-        )
-        .await
-        .unwrap();
+        run(&config_path, Some("good".to_owned()), Some(1), None, None)
+            .await
+            .unwrap();
         assert!(!output.join("good/docs/a.md").exists());
         assert_eq!(
             fs::read_to_string(output.join("good/docs/new.md")).unwrap(),
@@ -436,16 +416,9 @@ mod tests {
         config.save(&config_path).unwrap();
 
         assert!(
-            run(
-                &config_path,
-                Some("good".to_owned()),
-                None,
-                None,
-                Verbosity::Quiet,
-                None,
-            )
-            .await
-            .is_err()
+            run(&config_path, Some("good".to_owned()), None, None, None,)
+                .await
+                .is_err()
         );
         assert_eq!(
             fs::read_to_string(output.join("good/old.md")).unwrap(),
@@ -463,11 +436,7 @@ mod tests {
             ..Config::default()
         };
         empty.save(&config_path).unwrap();
-        assert!(
-            run(&config_path, None, None, None, Verbosity::Quiet, None)
-                .await
-                .is_err()
-        );
+        assert!(run(&config_path, None, None, None, None).await.is_err());
 
         empty.sites.insert(
             "known".to_owned(),
@@ -477,16 +446,9 @@ mod tests {
         );
         empty.save(&config_path).unwrap();
         assert!(
-            run(
-                &config_path,
-                Some("unknown".to_owned()),
-                None,
-                None,
-                Verbosity::Quiet,
-                None,
-            )
-            .await
-            .is_err()
+            run(&config_path, Some("unknown".to_owned()), None, None, None,)
+                .await
+                .is_err()
         );
     }
 
@@ -514,16 +476,9 @@ mod tests {
         config.save(&config_path).unwrap();
 
         // First sync downloads everything and persists the manifest into the site dir.
-        run(
-            &config_path,
-            Some("good".to_owned()),
-            None,
-            None,
-            Verbosity::Quiet,
-            None,
-        )
-        .await
-        .unwrap();
+        run(&config_path, Some("good".to_owned()), None, None, None)
+            .await
+            .unwrap();
         assert_eq!(
             fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
             "body-a"
@@ -536,16 +491,9 @@ mod tests {
             "/docs/a.md".to_owned(),
             route_etag("REMOTE-CHANGED", "\"v1\""),
         );
-        run(
-            &config_path,
-            Some("good".to_owned()),
-            None,
-            None,
-            Verbosity::Quiet,
-            None,
-        )
-        .await
-        .unwrap();
+        run(&config_path, Some("good".to_owned()), None, None, None)
+            .await
+            .unwrap();
         assert_eq!(
             fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
             "body-a"
@@ -583,16 +531,9 @@ mod tests {
         config.save(&config_path).unwrap();
         let url = format!("file://{}", bare.display());
 
-        run(
-            &config_path,
-            None,
-            None,
-            None,
-            Verbosity::Quiet,
-            Some(url.clone()),
-        )
-        .await
-        .unwrap();
+        run(&config_path, None, None, None, Some(url.clone()))
+            .await
+            .unwrap();
         assert_eq!(
             git(&bare, &["rev-parse", "refs/heads/wiki-data"]),
             git(&output, &["rev-parse", "HEAD"]),
@@ -627,7 +568,7 @@ mod tests {
 
         // Unreachable remote must not surface as a sync failure — the local
         // snapshot commit still lands, and the caller sees Ok.
-        run(&config_path, None, None, None, Verbosity::Quiet, Some(url))
+        run(&config_path, None, None, None, Some(url))
             .await
             .unwrap();
         assert_eq!(git(&output, &["rev-list", "--count", "HEAD"]), "1");

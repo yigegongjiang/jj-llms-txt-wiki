@@ -86,7 +86,7 @@ fn sha256(path: &Path) -> Result<String, String> {
 }
 
 fn read_version(executable: &Path) -> Option<String> {
-    let output = Command::new(executable).arg("version").output().ok()?;
+    let output = Command::new(executable).arg("--version").output().ok()?;
     if !output.status.success() {
         return None;
     }

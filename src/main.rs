@@ -35,31 +35,17 @@ async fn run() -> Result<(), String> {
         None => Cli::command()
             .print_help()
             .map_err(|error| format!("print help: {error}")),
-        Some(Command::Version) => {
-            println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
-            Ok(())
-        }
         Some(Command::Site { command }) => site::run(command, &config::default_path()?),
         Some(Command::Sync {
             site,
             concurrency,
             interval,
-            verbose,
-            quiet,
         }) => {
-            let verbosity = if quiet {
-                progress::Verbosity::Quiet
-            } else if verbose {
-                progress::Verbosity::Verbose
-            } else {
-                progress::Verbosity::Normal
-            };
             sync::run(
                 &config::default_path()?,
                 site,
                 concurrency,
                 interval,
-                verbosity,
                 push_snapshot_url(),
             )
             .await

@@ -1,23 +1,11 @@
 use console::style;
-use indicatif::{ProgressBar, ProgressDrawTarget, ProgressStyle};
+use indicatif::{ProgressBar, ProgressStyle};
 use std::io::IsTerminal;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Duration;
 use url::Url;
 
 use crate::crawler::{CrawlEvent, CrawlObserver, CrawlReport};
-
-/// How much per-request detail `sync` prints. The summary line always prints.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub enum Verbosity {
-    /// No spinner, no per-request lines; only the final summary.
-    Quiet,
-    /// Spinner summary line + only failures printed as scrollback.
-    #[default]
-    Normal,
-    /// Spinner summary line + every completed request printed as scrollback.
-    Verbose,
-}
 
 /// Per-category tallies used to render the summary line. `started` drives the
 /// live `inflight` count (started minus everything already completed).
@@ -42,7 +30,6 @@ impl Counts {
 
 pub struct SyncProgress {
     site: String,
-    verbosity: Verbosity,
     bar: ProgressBar,
     started: AtomicU64,
     downloaded: AtomicU64,
@@ -54,13 +41,10 @@ pub struct SyncProgress {
 }
 
 impl SyncProgress {
-    pub fn new(site: &str, index: usize, total: usize, verbosity: Verbosity) -> Self {
+    /// The spinner draws to stderr; indicatif auto-suppresses it when stderr is
+    /// not a terminal, so piped runs stay clean without any flag.
+    pub fn new(site: &str, index: usize, total: usize) -> Self {
         let bar = ProgressBar::new_spinner();
-        bar.set_draw_target(if verbosity == Verbosity::Quiet {
-            ProgressDrawTarget::hidden()
-        } else {
-            ProgressDrawTarget::stderr()
-        });
         bar.set_style(
             ProgressStyle::with_template("{prefix} {spinner:.cyan} {elapsed} {msg}")
                 .expect("static progress template"),
@@ -69,7 +53,6 @@ impl SyncProgress {
         bar.enable_steady_tick(Duration::from_millis(80));
         Self {
             site: site.to_owned(),
-            verbosity,
             bar,
             started: AtomicU64::new(0),
             downloaded: AtomicU64::new(0),
@@ -109,20 +92,22 @@ impl SyncProgress {
         }
     }
 
-    /// Bump one completed-category counter, refresh the summary line, and emit a
-    /// scrollback line per the active verbosity.
-    fn complete(&self, tag: &str, counter: &AtomicU64, url: &str) {
+    /// Bump one completed-category counter and refresh the live summary line.
+    /// Successes stay in the summary only; failures go through [`Self::fail`].
+    fn complete(&self, counter: &AtomicU64, url: &str) {
         counter.fetch_add(1, Ordering::Relaxed);
+        self.bar
+            .set_message(summary_msg(&self.counts(), &short_path(url)));
+    }
+
+    /// Record a failure and print it as scrollback so it survives above the
+    /// cleared spinner.
+    fn fail(&self, url: &str) {
+        self.failed.fetch_add(1, Ordering::Relaxed);
         let path = short_path(url);
         self.bar.set_message(summary_msg(&self.counts(), &path));
-        let logged = match self.verbosity {
-            Verbosity::Verbose => true,
-            Verbosity::Normal => tag == "FAIL",
-            Verbosity::Quiet => false,
-        };
-        if logged {
-            self.log_line(&format!("[{}] {} {path}", self.site, styled_tag(tag)));
-        }
+        let tag = style("FAIL").for_stderr().red().bold();
+        self.log_line(&format!("[{}] {tag} {path}", self.site));
     }
 
     /// Emit a scrollback line. On a TTY, `bar.println` prints it above the live
@@ -145,31 +130,14 @@ impl CrawlObserver for SyncProgress {
                 self.bar
                     .set_message(summary_msg(&self.counts(), &short_path(&url)));
             }
-            CrawlEvent::Downloaded(url) => self.complete("OK", &self.downloaded, &url),
-            CrawlEvent::Resumed(url) => self.complete("RESUMED", &self.resumed, &url),
-            CrawlEvent::Unchanged(url) => self.complete("UNCHANGED", &self.unchanged, &url),
-            CrawlEvent::Missing(url) => self.complete("MISS", &self.missing, &url),
-            CrawlEvent::Ignored(url) => self.complete("IGNORED", &self.ignored, &url),
-            CrawlEvent::Failed(url) => self.complete("FAIL", &self.failed, &url),
+            CrawlEvent::Downloaded(url) => self.complete(&self.downloaded, &url),
+            CrawlEvent::Resumed(url) => self.complete(&self.resumed, &url),
+            CrawlEvent::Unchanged(url) => self.complete(&self.unchanged, &url),
+            CrawlEvent::Missing(url) => self.complete(&self.missing, &url),
+            CrawlEvent::Ignored(url) => self.complete(&self.ignored, &url),
+            CrawlEvent::Failed(url) => self.fail(&url),
         }
     }
-}
-
-/// Color the scrollback tag by outcome so the category reads at a glance. The
-/// width padding is applied to the plain text first, then wrapped in style, so
-/// ANSI escapes never shift the column alignment. `.for_stderr()` gates the
-/// escapes on stderr's own tty/`NO_COLOR` state, so piping to a file stays plain.
-fn styled_tag(tag: &str) -> String {
-    let padded = style(format!("{tag:<9}")).for_stderr();
-    match tag {
-        "OK" => padded.green(),
-        "RESUMED" => padded.cyan(),
-        "MISS" => padded.yellow(),
-        "FAIL" => padded.red().bold(),
-        "UNCHANGED" | "IGNORED" => padded.dim(),
-        _ => padded,
-    }
-    .to_string()
 }
 
 /// Dynamic segment of the spinner line: labelled tallies + live inflight + the

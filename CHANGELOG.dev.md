@@ -7,6 +7,15 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.11.0] - 2026-07-12
+
+### Removed
+
+- 精简 `sync` 参数：移除 `-v/--verbose` 与 `-q/--quiet`。默认已实时显示进度并逐条打印失败，管道 / 重定向下自动隐藏动态刷新，无需额外开关。
+  - 删除 `progress::Verbosity` 枚举与 `SyncProgress.verbosity` 字段；`SyncProgress::new` 去 verbosity 参数，不再显式 `set_draw_target`，恒用 `new_spinner` 默认（draw 到 stderr，indicatif 在非 TTY 自动抑制动画）。`complete` 拆为「仅计数」+ 新 `fail`（失败恒红粗 `FAIL` scrollback），删除 `styled_tag`（其余色标签已无调用点）。`sync::run`/`sync_site` 去 verbosity 参数与三处 `!= Verbosity::Quiet` 判定（站点头 / 续传提示 / push warning 恒打印），`sync_site` 降到 7 参去掉 `#[allow(clippy::too_many_arguments)]`。`cli.rs` 删 `Sync.verbose/quiet` 字段及互斥解析测试。
+- 移除 `version` 子命令，改用标准 `--version`（`-V`）；`llms-wiki version` 不再可用。
+  - 删除 `Command::Version` 及 `main.rs` 对应分支（clap `#[command(version)]` 已提供 `--version`/`-V`，输出同为 `llms-wiki <version>`）。`lifecycle::read_version` 自更新读版本改调 `--version`。
+
 ## [0.10.0] - 2026-07-12
 
 ### Added

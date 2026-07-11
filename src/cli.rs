@@ -25,15 +25,7 @@ pub enum Command {
         /// Minimum delay between request starts
         #[arg(long, value_parser = parse_duration)]
         interval: Option<Duration>,
-        /// Print every completed request, not just failures
-        #[arg(short, long, conflicts_with = "quiet")]
-        verbose: bool,
-        /// Suppress the progress spinner; print only the final summary
-        #[arg(short, long)]
-        quiet: bool,
     },
-    /// Print version information
-    Version,
     /// Download the latest release and replace this binary
     #[command(alias = "upgrade")]
     Update,
@@ -76,12 +68,6 @@ mod tests {
 
     #[test]
     fn parses_lifecycle_commands() {
-        assert!(matches!(
-            Cli::try_parse_from(["llms-wiki", "version"])
-                .expect("version command")
-                .command,
-            Some(Command::Version)
-        ));
         assert!(matches!(
             Cli::try_parse_from(["llms-wiki", "update"])
                 .expect("update command")
@@ -158,35 +144,8 @@ mod tests {
                 site: Some(ref site),
                 concurrency: Some(2),
                 interval: Some(duration),
-                verbose: false,
-                quiet: false,
             }) if site == "docs" && duration == std::time::Duration::from_millis(500)
         ));
         assert!(Cli::try_parse_from(["llms-wiki", "sync", "--concurrency", "0"]).is_err());
-    }
-
-    #[test]
-    fn parses_and_rejects_conflicting_verbosity_flags() {
-        assert!(matches!(
-            Cli::try_parse_from(["llms-wiki", "sync", "-v"])
-                .expect("verbose flag")
-                .command,
-            Some(Command::Sync {
-                verbose: true,
-                quiet: false,
-                ..
-            })
-        ));
-        assert!(matches!(
-            Cli::try_parse_from(["llms-wiki", "sync", "--quiet"])
-                .expect("quiet flag")
-                .command,
-            Some(Command::Sync {
-                verbose: false,
-                quiet: true,
-                ..
-            })
-        ));
-        assert!(Cli::try_parse_from(["llms-wiki", "sync", "-v", "-q"]).is_err());
     }
 }

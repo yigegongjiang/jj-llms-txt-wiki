@@ -11,6 +11,13 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.11.0] - 2026-07-12
+
+### Removed
+
+- 精简 `sync` 参数：移除 `-v/--verbose` 与 `-q/--quiet`。默认已实时显示进度并逐条打印失败，管道 / 重定向下自动隐藏动态刷新，无需额外开关。
+- 移除 `version` 子命令，改用标准 `--version`（`-V`）；`llms-wiki version` 不再可用。
+
 ## [0.10.0] - 2026-07-12
 
 ### Added

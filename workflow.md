@@ -17,9 +17,9 @@
 验证：
 
 ```bash
-cargo run -- version   # 打印 llms-wiki <version>
-cargo run -- help      # 打印用法
-cargo test --locked    # 单测通过
+cargo run -- --version   # 打印 llms-wiki <version>
+cargo run -- --help      # 打印用法
+cargo test --locked      # 单测通过
 ```
 
 调试站点（可选，在本机的 `~/llms-wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
