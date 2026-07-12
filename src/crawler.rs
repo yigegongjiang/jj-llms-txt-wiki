@@ -293,6 +293,19 @@ pub async fn crawl(
                         continue;
                     }
                 };
+                // 304 twin of the resume seam: a pre-cap file that still
+                // revalidates would otherwise be copied forward forever, keeping
+                // its validator and re-304-ing every run. Drop it so the cap holds
+                // on this path too — symmetric with the resume branch above.
+                if body.len() > options.max_document_bytes {
+                    if let Ok(target) = path.join_under(snapshot_root) {
+                        let _ = tokio::fs::remove_file(&target).await;
+                    }
+                    observer.event(CrawlEvent::Oversize(item.url.to_string()));
+                    report.oversize += 1;
+                    report.oversize_urls.push(item.url.to_string());
+                    continue;
+                }
                 if let Some(validator) = previous_manifest.get(&item.url.to_string()) {
                     manifest.insert(item.url.to_string(), validator.clone());
                 }
@@ -1169,5 +1182,61 @@ mod tests {
             !paths.iter().any(|path| path == "/big.md"),
             "a resumed file must not hit the network, even when dropped"
         );
+    }
+
+    #[tokio::test]
+    async fn drops_oversize_on_304_revalidation_without_carrying_it_forward() {
+        let server = server(HashMap::from([
+            ("/llms.txt".to_owned(), Response::ok("[big](/docs/big.md)")),
+            (
+                "/docs/big.md".to_owned(),
+                Response::ok("REMOTE").with_etag("\"v1\""),
+            ),
+        ]))
+        .await;
+
+        // Previous snapshot: an oversized big.md left by a pre-cap run that still
+        // revalidates (etag v1), so the crawl takes the 304 reuse path.
+        let previous = tempdir().unwrap();
+        std::fs::create_dir_all(previous.path().join("docs")).unwrap();
+        std::fs::write(previous.path().join("docs/big.md"), "z".repeat(64)).unwrap();
+
+        let big_url = server.url.join("/docs/big.md").unwrap().to_string();
+        let mut previous_manifest = Manifest::default();
+        previous_manifest.insert(
+            big_url.clone(),
+            Validator {
+                etag: Some("\"v1\"".to_owned()),
+                last_modified: None,
+            },
+        );
+
+        let snapshot = tempdir().unwrap();
+        let report = crawl(
+            server.url.clone(),
+            snapshot.path(),
+            Some(previous.path()),
+            &previous_manifest,
+            capped_options(16),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        assert_eq!(
+            report.oversize, 1,
+            "the revalidated oversize file is dropped"
+        );
+        assert_eq!(report.unchanged, 0);
+        assert_eq!(report.downloaded, 0);
+        assert!(
+            !snapshot.path().join("docs/big.md").exists(),
+            "the oversize file is not carried into the new snapshot"
+        );
+        // Its validator is not re-persisted, so it re-fetches (and re-drops) next
+        // run instead of 304-ing forever.
+        let written = Manifest::load(snapshot.path());
+        assert!(written.get(&big_url).is_none());
     }
 }

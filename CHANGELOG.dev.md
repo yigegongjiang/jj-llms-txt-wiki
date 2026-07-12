@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.13.1] - 2026-07-12
+
+### Fixed
+
+- 超大文件剔除现在也覆盖通过 `304` 条件请求复用的旧文件：升级前已缓存的超大页面不再被无限期保留，会在剔除时一并从快照移除。
+  - `crawler.rs` 的 `NotModified`/`reuse_previous` 分支补上 `> max_document_bytes` 判定（与 resume seam 对称）：命中则删除刚复用写入的目标文件、计 `oversize`、不插 validator、不递归。否则 pre-0.13.0 遗留的大文件会因稳定 304 被永久搬运。新增 `drops_oversize_on_304_revalidation_without_carrying_it_forward` 测试。
+
 ## [0.13.0] - 2026-07-12
 
 ### Added
