@@ -22,6 +22,12 @@ pub enum FetchOutcome {
     },
     Missing,
     IgnoredRedirect,
+    /// The body exceeds the caller's `max_bytes` cap and was dropped without
+    /// being kept. An oversized single Markdown file is almost never real
+    /// documentation, so it is excluded rather than mirrored.
+    Oversize {
+        final_url: Url,
+    },
 }
 
 #[derive(Clone)]
@@ -54,10 +60,14 @@ impl HttpClient {
         })
     }
 
+    /// `max_bytes` caps the accepted body size; `None` disables the cap (used for
+    /// entry documents and `llms-full.txt`, which are legitimately large). A body
+    /// past the cap yields [`FetchOutcome::Oversize`] instead of `Document`.
     pub async fn fetch(
         &self,
         url: &CanonicalUrl,
         validator: Option<&Validator>,
+        max_bytes: Option<usize>,
     ) -> Result<FetchOutcome, String> {
         let mut request = self.client.get(url.as_url().clone());
         if let Some(validator) = validator {
@@ -82,11 +92,28 @@ impl HttpClient {
 
         if status.is_success() {
             let final_url = response.url().clone();
+            // Reject before buffering when the server advertises a Content-Length
+            // past the cap, so a giant document never lands in memory. No
+            // compression feature is enabled, so Content-Length is the exact body
+            // size; the post-buffer check below still catches chunked responses
+            // that omit the header.
+            if let Some(max) = max_bytes
+                && response
+                    .content_length()
+                    .is_some_and(|length| length > max as u64)
+            {
+                return Ok(FetchOutcome::Oversize { final_url });
+            }
             let validator = extract_validator(response.headers());
             let bytes = response
                 .bytes()
                 .await
                 .map_err(|error| format!("read {url}: {error}"))?;
+            if let Some(max) = max_bytes
+                && bytes.len() > max
+            {
+                return Ok(FetchOutcome::Oversize { final_url });
+            }
             let body = str::from_utf8(&bytes)
                 .map_err(|error| format!("response is not UTF-8 for {url}: {error}"))?
                 .to_owned();

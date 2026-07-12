@@ -17,13 +17,19 @@ struct Counts {
     unchanged: u64,
     missing: u64,
     ignored: u64,
+    oversize: u64,
     failed: u64,
 }
 
 impl Counts {
     fn inflight(&self) -> u64 {
         self.started.saturating_sub(
-            self.downloaded + self.unchanged + self.missing + self.ignored + self.failed,
+            self.downloaded
+                + self.unchanged
+                + self.missing
+                + self.ignored
+                + self.oversize
+                + self.failed,
         )
     }
 }
@@ -37,6 +43,7 @@ pub struct SyncProgress {
     unchanged: AtomicU64,
     missing: AtomicU64,
     ignored: AtomicU64,
+    oversize: AtomicU64,
     failed: AtomicU64,
 }
 
@@ -60,6 +67,7 @@ impl SyncProgress {
             unchanged: AtomicU64::new(0),
             missing: AtomicU64::new(0),
             ignored: AtomicU64::new(0),
+            oversize: AtomicU64::new(0),
             failed: AtomicU64::new(0),
         }
     }
@@ -88,6 +96,7 @@ impl SyncProgress {
             unchanged: self.unchanged.load(Ordering::Relaxed),
             missing: self.missing.load(Ordering::Relaxed),
             ignored: self.ignored.load(Ordering::Relaxed),
+            oversize: self.oversize.load(Ordering::Relaxed),
             failed: self.failed.load(Ordering::Relaxed),
         }
     }
@@ -135,6 +144,7 @@ impl CrawlObserver for SyncProgress {
             CrawlEvent::Unchanged(url) => self.complete(&self.unchanged, &url),
             CrawlEvent::Missing(url) => self.complete(&self.missing, &url),
             CrawlEvent::Ignored(url) => self.complete(&self.ignored, &url),
+            CrawlEvent::Oversize(url) => self.complete(&self.oversize, &url),
             CrawlEvent::Failed(url) => self.fail(&url),
         }
     }
@@ -204,8 +214,15 @@ pub fn summary_line(site: &str, report: &CrawlReport, status: &str) -> String {
     } else {
         failed
     };
+    // `oversize` is dropped-bloat, not the norm, so it only earns a slot on the
+    // line when it actually happened — a clean run stays uncluttered.
+    let oversize = if report.oversize > 0 {
+        format!(", oversize={}", report.oversize)
+    } else {
+        String::new()
+    };
     format!(
-        "{site}: {verdict}; {downloaded}, resumed={}, unchanged={}, missing={}, ignored={}, {failed}",
+        "{site}: {verdict}; {downloaded}, resumed={}, unchanged={}, missing={}, ignored={}{oversize}, {failed}",
         report.resumed, report.unchanged, report.missing, report.ignored,
     )
 }
@@ -227,6 +244,7 @@ mod tests {
             unchanged: 1,
             missing: 1,
             ignored: 0,
+            oversize: 0,
             failed: 1,
         };
         assert_eq!(
@@ -275,6 +293,20 @@ mod tests {
         assert_eq!(
             summary_line("docs", &report, "failed"),
             "docs: failed; downloaded=2, resumed=5, unchanged=4, missing=1, ignored=3, failed=1"
+        );
+    }
+
+    #[test]
+    fn summary_line_shows_oversize_only_when_present() {
+        console::set_colors_enabled_stderr(false);
+        let report = CrawlReport {
+            downloaded: 4,
+            oversize: 2,
+            ..CrawlReport::default()
+        };
+        assert_eq!(
+            summary_line("docs", &report, "ok"),
+            "docs: ok; downloaded=4, resumed=0, unchanged=0, missing=0, ignored=0, oversize=2, failed=0"
         );
     }
 }

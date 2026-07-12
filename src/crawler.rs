@@ -14,11 +14,20 @@ use crate::url_map::{AllowedOrigins, CanonicalUrl, LocalPath, PathRegistry};
 
 pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 
+/// Content pages larger than this are almost never real documentation — an
+/// oversized single Markdown file usually means a mis-served aggregate or a
+/// binary blob. Drop them during the crawl instead of mirroring the bloat. The
+/// entry document (`llms.txt` / `llms-full.txt`) is exempt: it carries
+/// `output == None`, so it is never subject to this cap.
+pub const DEFAULT_MAX_DOCUMENT_BYTES: usize = 3 * 1024 * 1024;
+
 #[derive(Clone, Copy, Debug)]
 pub struct CrawlOptions {
     pub concurrency: usize,
     pub interval: Duration,
     pub timeout: Duration,
+    /// Per-document byte cap for content pages; entry documents are exempt.
+    pub max_document_bytes: usize,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -34,10 +43,16 @@ pub struct CrawlReport {
     pub unchanged: usize,
     pub missing: usize,
     pub ignored: usize,
+    /// Content pages dropped for exceeding `max_document_bytes`. Not a failure:
+    /// the crawl still succeeds and the exit code is unaffected.
+    pub oversize: usize,
     pub failures: Vec<CrawlFailure>,
     /// URLs that answered 404/410. Kept alongside the `missing` count so the
     /// persisted run log can name the dead links, not just tally them.
     pub missing_urls: Vec<String>,
+    /// URLs dropped for exceeding the size cap, kept alongside `oversize` so the
+    /// run log can name what was excluded, not just tally it.
+    pub oversize_urls: Vec<String>,
 }
 
 impl CrawlReport {
@@ -58,6 +73,7 @@ pub enum CrawlEvent {
     Unchanged(String),
     Missing(String),
     Ignored(String),
+    Oversize(String),
     Failed(String),
 }
 
@@ -152,6 +168,16 @@ pub async fn crawl(
                 && target.is_file()
                 && let Ok(body) = tokio::fs::read_to_string(&target).await
             {
+                // A leftover partial from a pre-cap run could exceed the limit;
+                // remove it so the guarantee "no content file over the cap reaches
+                // the snapshot" holds even across the resume seam.
+                if body.len() > options.max_document_bytes {
+                    let _ = tokio::fs::remove_file(&target).await;
+                    observer.event(CrawlEvent::Oversize(item.url.to_string()));
+                    report.oversize += 1;
+                    report.oversize_urls.push(item.url.to_string());
+                    continue;
+                }
                 if let Some(validator) = previous_manifest.get(&item.url.to_string()) {
                     manifest.insert(item.url.to_string(), validator.clone());
                 }
@@ -176,10 +202,15 @@ pub async fn crawl(
             let client = client.clone();
             let gate = Arc::clone(&gate);
             let task_observer = Arc::clone(&observer);
+            // The entry document (output == None) is exempt from the cap; only
+            // content pages are subject to it.
+            let max_bytes = item.output.as_ref().map(|_| options.max_document_bytes);
             tasks.spawn(async move {
                 gate.wait().await;
                 task_observer.event(CrawlEvent::Started(item.url.to_string()));
-                let result = client.fetch(&item.url, item.validator.as_ref()).await;
+                let result = client
+                    .fetch(&item.url, item.validator.as_ref(), max_bytes)
+                    .await;
                 (item, result)
             });
         }
@@ -290,6 +321,13 @@ pub async fn crawl(
             Ok(FetchOutcome::IgnoredRedirect) => {
                 observer.event(CrawlEvent::Ignored(item.url.to_string()));
                 report.ignored += 1;
+            }
+            Ok(FetchOutcome::Oversize { .. }) => {
+                // Excluded, not failed: skip the write, the manifest and link
+                // discovery so the bloat leaves no trace and never revalidates.
+                observer.event(CrawlEvent::Oversize(item.url.to_string()));
+                report.oversize += 1;
+                report.oversize_urls.push(item.url.to_string());
             }
             Err(message) => {
                 observer.event(CrawlEvent::Failed(item.url.to_string()));
@@ -612,6 +650,7 @@ mod tests {
             concurrency,
             interval,
             timeout: Duration::from_secs(2),
+            max_document_bytes: super::DEFAULT_MAX_DOCUMENT_BYTES,
         }
     }
 
@@ -903,6 +942,7 @@ mod tests {
                 concurrency: 4,
                 interval: Duration::ZERO,
                 timeout: Duration::from_millis(30),
+                max_document_bytes: super::DEFAULT_MAX_DOCUMENT_BYTES,
             },
             Arc::new(NoopObserver),
         )
@@ -1042,5 +1082,92 @@ mod tests {
         let written = Manifest::load(snapshot.path());
         assert_eq!(written.get(&a_url).unwrap().etag.as_deref(), Some("\"v1\""));
         assert_eq!(written.get(&b_url).unwrap().etag.as_deref(), Some("\"v2\""));
+    }
+
+    fn capped_options(max_document_bytes: usize) -> CrawlOptions {
+        CrawlOptions {
+            concurrency: 2,
+            interval: Duration::ZERO,
+            timeout: Duration::from_secs(2),
+            max_document_bytes,
+        }
+    }
+
+    #[tokio::test]
+    async fn drops_oversize_content_pages_exempts_the_entry_and_continues() {
+        // The entry (33 bytes) is larger than the 16-byte cap yet exempt, so its
+        // links are still discovered; big.md (64 bytes) is dropped, small.md kept.
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[small](/small.md) [big](/big.md)"),
+            ),
+            ("/small.md".to_owned(), Response::ok("tiny")),
+            ("/big.md".to_owned(), Response::ok(&"x".repeat(64))),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            capped_options(16),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+        assert!(
+            report.is_success(),
+            "oversize is an exclusion, not a failure"
+        );
+        assert_eq!(report.downloaded, 1, "only small.md is kept");
+        assert_eq!(report.oversize, 1);
+        assert_eq!(report.oversize_urls.len(), 1);
+        assert!(report.oversize_urls[0].ends_with("/big.md"));
+        assert!(
+            !directory.path().join("big.md").exists(),
+            "the oversized page never lands on disk"
+        );
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("small.md")).unwrap(),
+            "tiny"
+        );
+    }
+
+    #[tokio::test]
+    async fn resume_seam_drops_oversize_leftovers_without_a_network_hit() {
+        let server = server(HashMap::from([
+            ("/llms.txt".to_owned(), Response::ok("[big](/big.md)")),
+            ("/big.md".to_owned(), Response::ok("MUST-NOT-FETCH")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        // A leftover partial from a pre-cap run: an oversized file already on disk.
+        std::fs::write(directory.path().join("big.md"), "y".repeat(64)).unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            capped_options(16),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+        assert!(report.is_success());
+        assert_eq!(report.oversize, 1);
+        assert_eq!(report.resumed, 0, "the leftover is dropped, not resumed");
+        assert!(
+            !directory.path().join("big.md").exists(),
+            "the oversize leftover is removed from the snapshot"
+        );
+        let paths: Vec<String> = server
+            .requests
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|(path, _)| path.clone())
+            .collect();
+        assert!(
+            !paths.iter().any(|path| path == "/big.md"),
+            "a resumed file must not hit the network, even when dropped"
+        );
     }
 }

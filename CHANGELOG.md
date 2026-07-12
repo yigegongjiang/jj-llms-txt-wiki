@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.13.0] - 2026-07-12
+
+### Added
+
+- 递归抓取（`llms.txt`）时，单个内容页超过 3 MiB 视为异常并主动剔除：不写入本地、不参与后续递归，仅计数并记入运行日志；入口文档与 `llms-full.txt` 聚合文件不受此限。
+
 ## [0.12.1] - 2026-07-12
 
 ### Added

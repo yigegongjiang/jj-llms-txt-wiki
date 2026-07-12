@@ -6,7 +6,9 @@ use std::time::Duration;
 use jiff::Timestamp;
 
 use crate::config::Config;
-use crate::crawler::{CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_TIMEOUT, crawl};
+use crate::crawler::{
+    CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_MAX_DOCUMENT_BYTES, DEFAULT_TIMEOUT, crawl,
+};
 use crate::full;
 use crate::git::Repository;
 use crate::manifest::Manifest;
@@ -42,6 +44,7 @@ pub async fn run(
         concurrency: concurrency.unwrap_or(config.concurrency),
         interval: interval.unwrap_or(Duration::from_millis(config.interval_ms)),
         timeout: DEFAULT_TIMEOUT,
+        max_document_bytes: DEFAULT_MAX_DOCUMENT_BYTES,
     };
     let total = targets.len();
     let mut reports: Vec<SiteReport> = Vec::with_capacity(total);

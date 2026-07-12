@@ -198,6 +198,7 @@ fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
         match &report.outcome {
             Outcome::Ok(crawl) => {
                 let _ = writeln!(out, "{}: ok        {}", report.site, counts(crawl));
+                write_oversize(&mut out, crawl);
             }
             Outcome::Failed(crawl) => {
                 let _ = writeln!(
@@ -216,6 +217,7 @@ fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
                         let _ = writeln!(out, "      · {url}");
                     }
                 }
+                write_oversize(&mut out, crawl);
             }
             Outcome::Aborted(reason) => {
                 let _ = writeln!(out, "{}: ERROR — {reason}", report.site);
@@ -227,9 +229,27 @@ fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
 
 fn counts(report: &CrawlReport) -> String {
     format!(
-        "downloaded={}, resumed={}, unchanged={}, missing={}, ignored={}",
-        report.downloaded, report.resumed, report.unchanged, report.missing, report.ignored,
+        "downloaded={}, resumed={}, unchanged={}, missing={}, ignored={}, oversize={}",
+        report.downloaded,
+        report.resumed,
+        report.unchanged,
+        report.missing,
+        report.ignored,
+        report.oversize,
     )
+}
+
+/// Append the dropped-oversized URLs to the durable log. Called for both `Ok` and
+/// `Failed` sites: oversize is an exclusion, not a failure, so it can land on an
+/// otherwise-successful run and still deserves a named record.
+fn write_oversize(out: &mut String, report: &CrawlReport) {
+    if report.oversize_urls.is_empty() {
+        return;
+    }
+    let _ = writeln!(out, "    oversize ({}):", report.oversize_urls.len());
+    for url in &report.oversize_urls {
+        let _ = writeln!(out, "      · {url}");
+    }
 }
 
 #[cfg(test)]
@@ -251,6 +271,8 @@ mod tests {
                 "https://example.com/x.md".to_owned(),
                 "https://example.com/y.md".to_owned(),
             ],
+            oversize: 1,
+            oversize_urls: vec!["https://example.com/huge.md".to_owned()],
             ..CrawlReport::default()
         }
     }
@@ -280,6 +302,8 @@ mod tests {
         assert!(body.contains("HTTP 500"));
         assert!(body.contains("missing (2):"));
         assert!(body.contains("· https://example.com/x.md"));
+        assert!(body.contains("oversize (1):"));
+        assert!(body.contains("· https://example.com/huge.md"));
         assert!(body.contains("dead: ERROR — GET .../llms.txt: connection refused"));
     }
 

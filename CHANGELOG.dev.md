@@ -7,7 +7,12 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
-## [0.12.1] - 2026-07-12
+## [0.13.0] - 2026-07-12
+
+### Added
+
+- 递归抓取（`llms.txt`）时，单个内容页超过 3 MiB 视为异常并主动剔除：不写入本地、不参与后续递归，仅计数并记入运行日志；入口文档与 `llms-full.txt` 聚合文件不受此限。
+  - `CrawlOptions.max_document_bytes`（默认 `DEFAULT_MAX_DOCUMENT_BYTES = 3 MiB`）；`HttpClient::fetch` 新增 `max_bytes: Option<usize>`，先按 `Content-Length` 预检、再对缓冲后的 body 长度兜底，超限返回新 `FetchOutcome::Oversize`（不下载/不下载完 body）。crawler 仅对 content 页（`output.is_some()`）传上限、entry 与 full 传 `None`；新增 `CrawlReport.oversize`/`oversize_urls`、`CrawlEvent::Oversize`，resume 分支同样按上限剔除残留并删文件。progress 计入 `inflight`、末行 `summary_line` 仅在 >0 时显示 `oversize=`，report `counts`/日志列出剔除 URL。
 
 ### Added
 

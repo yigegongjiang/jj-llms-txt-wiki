@@ -51,7 +51,9 @@ pub async fn crawl(
     let client = HttpClient::new(&allowed, timeout)?;
     let canonical_entry = CanonicalUrl::new(entry);
     observer.event(CrawlEvent::Started(canonical_entry.to_string()));
-    let body = match client.fetch(&canonical_entry, None).await {
+    // `None` disables the size cap: an aggregate llms-full.txt is legitimately
+    // large, so the per-document cap (a content-page rule) must not apply here.
+    let body = match client.fetch(&canonical_entry, None, None).await {
         Ok(FetchOutcome::Document { body, .. }) => body,
         Ok(FetchOutcome::Missing) => {
             return Err(format!("llms-full.txt entry is missing: {canonical_entry}"));
@@ -60,6 +62,9 @@ pub async fn crawl(
             return Err(format!(
                 "llms-full.txt entry redirected outside its origin: {canonical_entry}"
             ));
+        }
+        Ok(FetchOutcome::Oversize { .. }) => {
+            return Err("unexpected oversize outcome for llms-full.txt entry".to_owned());
         }
         Ok(FetchOutcome::NotModified { .. }) => {
             return Err("unexpected 304 Not Modified for llms-full.txt entry".to_owned());
