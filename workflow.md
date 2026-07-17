@@ -22,7 +22,7 @@ cargo run -- --help      # 打印用法
 cargo test --locked      # 单测通过
 ```
 
-调试站点（可选，在本机的 `~/jj-llms-txt-wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
+调试站点（可选，在本机的 `~/.config/jj-llms-txt-wiki/wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
 
 # 发布
 
@@ -71,7 +71,7 @@ git push origin vX.Y.Z
 tag 推送后 CI：fmt/clippy/test → 构建 macOS arm64/x64 → 生成 `checksums.txt` → 创建 Release。
 发布后自行用 `install.sh` 拉 latest Release 完成本机更新。
 
-调试站点（可选，在本机的 `~/jj-llms-txt-wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
+调试站点（可选，在本机的 `~/.config/jj-llms-txt-wiki/wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
 
 ## 4. 修上版 bug
 

@@ -11,6 +11,13 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.15.0] - 2026-07-17
+
+### Changed
+
+- 默认 `output_dir` 由 `~/jj-llms-txt-wiki` 改为 `~/.config/jj-llms-txt-wiki/wiki`，与 `config.toml` 同一配置目录、以 `wiki/` 子目录分隔数据。
+- 升级方式：直接把旧数据目录中的站点子目录与 `.git` 移动到新位置即可（不保留旧位置兼容）。
+
 ## [0.14.0] - 2026-07-17
 
 ### Changed

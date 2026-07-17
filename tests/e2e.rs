@@ -253,7 +253,7 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         &["sync", "alpha", "--concurrency", "2", "--interval", "0ms"],
     );
     assert!(String::from_utf8_lossy(&alpha_sync.stderr).contains("alpha: ok"));
-    let wiki = home.path().join("jj-llms-txt-wiki");
+    let wiki = home.path().join(".config/jj-llms-txt-wiki/wiki");
     assert!(wiki.join("alpha/docs/a.md").exists());
     assert_eq!(
         fs::read_to_string(wiki.join("alpha/docs/b.md")).unwrap(),
@@ -400,7 +400,7 @@ async fn real_cli_syncs_full_bundle_with_fresh_atomic_snapshots() {
         &["site", "add", "index", &format!("{}/llms.txt", srv.origin)],
     );
 
-    let wiki = home.path().join("jj-llms-txt-wiki");
+    let wiki = home.path().join(".config/jj-llms-txt-wiki/wiki");
     let stale = wiki.join(".full.sync.stale");
     fs::create_dir_all(&stale).unwrap();
     fs::write(stale.join("removed.md"), "stale").unwrap();
@@ -523,7 +523,7 @@ async fn real_cli_resumes_an_interrupted_partial() {
 
     // Simulate an earlier run interrupted after downloading keep.md but before
     // committing: a leftover `.docs.sync.*` working directory on disk.
-    let wiki = home.path().join("jj-llms-txt-wiki");
+    let wiki = home.path().join(".config/jj-llms-txt-wiki/wiki");
     let leftover = wiki.join(".docs.sync.leftover");
     fs::create_dir_all(&leftover).unwrap();
     fs::write(leftover.join("keep.md"), "KEEP").unwrap();

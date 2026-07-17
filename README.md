@@ -76,7 +76,7 @@ CLI 参数优先于配置文件，未提供的参数使用配置值或默认值�
 ```
 
 ```toml
-output_dir = "~/jj-llms-txt-wiki"
+output_dir = "~/.config/jj-llms-txt-wiki/wiki"
 concurrency = 1000
 interval_ms = 50
 
@@ -95,17 +95,19 @@ url = "https://docs.deno.com/llms-full.txt"
 
 ## 输出目录
 
-`~/jj-llms-txt-wiki/` 是默认站点根目录，可通过 `output_dir` 修改：
+默认站点根目录为 `~/.config/jj-llms-txt-wiki/wiki/`（配置目录下的 `wiki/` 子目录），可通过 `output_dir` 修改：
 
 ```text
-~/jj-llms-txt-wiki/
-├── .git/
-├── anthropic/
-│   ├── .jj-llms-txt-wiki.json
-│   └── docs/
-│       └── api/
-│           └── messages.md
-└── another-site/
+~/.config/jj-llms-txt-wiki/
+├── config.toml
+└── wiki/
+    ├── .git/
+    ├── anthropic/
+    │   ├── .jj-llms-txt-wiki.json
+    │   └── docs/
+    │       └── api/
+    │           └── messages.md
+    └── another-site/
 ```
 
 每个站点使用配置名称作为顶层目录，远端 URL 路径映射为其下的文件路径。

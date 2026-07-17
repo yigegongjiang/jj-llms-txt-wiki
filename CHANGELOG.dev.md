@@ -7,6 +7,14 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.15.0] - 2026-07-17
+
+### Changed
+
+- 默认 `output_dir` 由 `~/jj-llms-txt-wiki` 改为 `~/.config/jj-llms-txt-wiki/wiki`，与 `config.toml` 同一配置目录、以 `wiki/` 子目录分隔数据。
+  - `src/config.rs::DEFAULT_OUTPUT_DIR` 同步为新路径；`tests/e2e.rs` 中所有 `home.path().join("jj-llms-txt-wiki")` 断言改为 `home.path().join(".config/jj-llms-txt-wiki/wiki")`。数据目录与配置目录物理分隔，`git.rs::ensure_gitignore` 无需增补 `config.toml` 忽略项。
+- 升级方式：直接把旧数据目录中的站点子目录与 `.git` 移动到新位置即可（不保留旧位置兼容）。
+
 ## [0.14.0] - 2026-07-17
 
 ### Changed

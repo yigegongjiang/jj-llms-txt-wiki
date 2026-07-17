@@ -8,7 +8,7 @@ use tempfile::NamedTempFile;
 
 use crate::site::{parse_entry_url, validate_name};
 
-pub const DEFAULT_OUTPUT_DIR: &str = "~/jj-llms-txt-wiki";
+pub const DEFAULT_OUTPUT_DIR: &str = "~/.config/jj-llms-txt-wiki/wiki";
 pub const DEFAULT_CONCURRENCY: usize = 1000;
 pub const DEFAULT_INTERVAL_MS: u64 = 50;
 
@@ -143,7 +143,7 @@ mod tests {
         fs::write(&path, "concurrency = 2\n").expect("write partial config");
         let partial = Config::load(&path).expect("partial config");
         assert_eq!(partial.concurrency, 2);
-        assert_eq!(partial.output_dir, "~/jj-llms-txt-wiki");
+        assert_eq!(partial.output_dir, "~/.config/jj-llms-txt-wiki/wiki");
 
         fs::write(
             &path,
