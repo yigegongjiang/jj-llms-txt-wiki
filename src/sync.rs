@@ -511,7 +511,7 @@ mod tests {
             fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
             "body-a"
         );
-        assert!(output.join("good/.llms-wiki.json").exists());
+        assert!(output.join("good/.jj-llms-txt-wiki.json").exists());
 
         // Remote body changes but the ETag does not: the server answers 304, so the
         // second sync must reuse the local copy and never see "REMOTE-CHANGED".

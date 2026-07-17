@@ -7,6 +7,19 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.14.0] - 2026-07-17
+
+### Changed
+
+- CLI 命令由 `llms-wiki` 更名为 `jj-llms-txt-wiki`，配置目录改为 `~/.config/jj-llms-txt-wiki/config.toml`，默认输出目录改为 `~/jj-llms-txt-wiki/`。
+  - `Cargo.toml` 的 `[package].name` 改为 `jj-llms-txt-wiki`；`src/cli.rs` clap `#[command(name = ...)]` 同步；`src/config.rs` 的 `DEFAULT_OUTPUT_DIR`、`default_path` 同步；User-Agent 前缀 (`src/http.rs`) 与 git fallback identity/lock file (`src/git.rs::{FALLBACK_NAME, FALLBACK_EMAIL, LOCK_FILE}`) 同步。`tests/e2e.rs` 改用 `CARGO_BIN_EXE_jj-llms-txt-wiki`。
+- 站点内 manifest 文件由 `.llms-wiki.json` 更名为 `.jj-llms-txt-wiki.json`，运行日志目录由 `.llms-wiki/` 更名为 `.jj-llms-txt-wiki/`。
+  - `src/manifest.rs::MANIFEST_FILE` 与 `src/report.rs::LOG_DIR` 同步更新；`ensure_gitignore` 中新增 `/.jj-llms-txt-wiki/` 忽略项（老仓库 `.gitignore` 里遗留的 `/.llms-wiki/` 保留不删）。
+- 环境变量 `LLMS_WIKI_PUSH_URL` 更名为 `JJ_LLMS_TXT_WIKI_PUSH_URL`。
+  - `src/main.rs::push_snapshot_url` 与 `tests/e2e.rs::cli` 同步。
+- 升级方式：重装 `curl … install.sh | bash` 拉取新二进制；旧配置与数据目录需手动迁移。
+  - `install.sh` 与 `.github/workflows/release.yml` 的 `BIN_NAME` / matrix `asset` / `cp release/…` / `sha256sum` / cargo metadata 过滤同步为新名。
+
 ## [0.13.1] - 2026-07-12
 
 ### Fixed

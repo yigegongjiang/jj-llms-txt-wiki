@@ -8,7 +8,7 @@ use tempfile::NamedTempFile;
 
 use crate::site::{parse_entry_url, validate_name};
 
-pub const DEFAULT_OUTPUT_DIR: &str = "~/llms-wiki";
+pub const DEFAULT_OUTPUT_DIR: &str = "~/jj-llms-txt-wiki";
 pub const DEFAULT_CONCURRENCY: usize = 1000;
 pub const DEFAULT_INTERVAL_MS: u64 = 50;
 
@@ -97,7 +97,7 @@ impl Config {
 
 pub fn default_path() -> Result<PathBuf, String> {
     let home = env::var_os("HOME").ok_or_else(|| "HOME is not set".to_owned())?;
-    Ok(PathBuf::from(home).join(".config/llms-wiki/config.toml"))
+    Ok(PathBuf::from(home).join(".config/jj-llms-txt-wiki/config.toml"))
 }
 
 pub fn expand_home(value: &str, home: Option<&Path>) -> Result<PathBuf, String> {
@@ -143,7 +143,7 @@ mod tests {
         fs::write(&path, "concurrency = 2\n").expect("write partial config");
         let partial = Config::load(&path).expect("partial config");
         assert_eq!(partial.concurrency, 2);
-        assert_eq!(partial.output_dir, "~/llms-wiki");
+        assert_eq!(partial.output_dir, "~/jj-llms-txt-wiki");
 
         fs::write(
             &path,
@@ -221,7 +221,7 @@ mod tests {
             assert!(
                 default_path()
                     .unwrap()
-                    .ends_with(".config/llms-wiki/config.toml")
+                    .ends_with(".config/jj-llms-txt-wiki/config.toml")
             );
         }
     }

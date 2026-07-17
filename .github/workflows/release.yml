@@ -38,10 +38,10 @@ jobs:
         include:
           - runner: macos-15
             target: aarch64-apple-darwin
-            asset: llms-wiki-darwin-arm64
+            asset: jj-llms-txt-wiki-darwin-arm64
           - runner: macos-15-intel
             target: x86_64-apple-darwin
-            asset: llms-wiki-darwin-x64
+            asset: jj-llms-txt-wiki-darwin-x64
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v6
@@ -53,7 +53,7 @@ jobs:
 
       - name: Verify tag matches Cargo package version
         run: |
-          package_version="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "llms-wiki") | .version')"
+          package_version="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "jj-llms-txt-wiki") | .version')"
           if [ "v${package_version}" != "${GITHUB_REF_NAME}" ]; then
             echo "error: tag ${GITHUB_REF_NAME} does not match Cargo package version v${package_version}" >&2
             exit 1
@@ -65,7 +65,7 @@ jobs:
       - name: Prepare release asset
         run: |
           mkdir dist
-          cp "target/${{ matrix.target }}/release/llms-wiki" "dist/${{ matrix.asset }}"
+          cp "target/${{ matrix.target }}/release/jj-llms-txt-wiki" "dist/${{ matrix.asset }}"
           chmod +x "dist/${{ matrix.asset }}"
 
       - uses: actions/upload-artifact@v7
@@ -89,7 +89,7 @@ jobs:
       - name: Generate SHA-256 checksums
         working-directory: dist
         run: |
-          sha256sum llms-wiki-* > checksums.txt
+          sha256sum jj-llms-txt-wiki-* > checksums.txt
           cat checksums.txt
 
       - name: Create GitHub Release

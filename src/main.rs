@@ -56,13 +56,13 @@ async fn run() -> Result<(), String> {
     }
 }
 
-/// Snapshot mirror target: `LLMS_WIKI_PUSH_URL` env var overrides the default
+/// Snapshot mirror target: `JJ_LLMS_TXT_WIKI_PUSH_URL` env var overrides the default
 /// (`CARGO_PKG_REPOSITORY` + `.git`). Empty string disables push explicitly —
 /// used by tests and by anyone who wants to opt out. Forks published under a
 /// different `[package].repository` in `Cargo.toml` auto-target their own
 /// remote; users without push credentials just get a silent, fast failure.
 fn push_snapshot_url() -> Option<String> {
-    if let Ok(value) = std::env::var("LLMS_WIKI_PUSH_URL") {
+    if let Ok(value) = std::env::var("JJ_LLMS_TXT_WIKI_PUSH_URL") {
         return if value.is_empty() { None } else { Some(value) };
     }
     let repository = env!("CARGO_PKG_REPOSITORY");

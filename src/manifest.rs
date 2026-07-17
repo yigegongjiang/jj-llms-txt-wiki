@@ -5,7 +5,7 @@ use std::path::Path;
 
 /// Per-site sync metadata, stored inside the site directory so it is swapped
 /// atomically with content by `Snapshot::commit` and versioned by the data repository.
-pub const MANIFEST_FILE: &str = ".llms-wiki.json";
+pub const MANIFEST_FILE: &str = ".jj-llms-txt-wiki.json";
 
 const MANIFEST_VERSION: u32 = 1;
 
@@ -44,7 +44,7 @@ impl Default for Manifest {
 }
 
 impl Manifest {
-    /// Load `<site_root>/.llms-wiki.json`. Missing or corrupt manifest degrades to
+    /// Load `<site_root>/.jj-llms-txt-wiki.json`. Missing or corrupt manifest degrades to
     /// empty: the cache is self-healing, so the worst case is a full re-download with
     /// no correctness risk (unlike user-authored config, which fails loudly).
     pub fn load(site_root: &Path) -> Self {

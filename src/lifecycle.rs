@@ -159,9 +159,9 @@ mod tests {
 
     #[test]
     fn finds_checksum_for_exact_asset() {
-        let checksums = "aaa  llms-wiki-darwin-arm64\nbbb *llms-wiki-darwin-x64\n";
+        let checksums = "aaa  jj-llms-txt-wiki-darwin-arm64\nbbb *jj-llms-txt-wiki-darwin-x64\n";
         assert_eq!(
-            expected_checksum(checksums, "llms-wiki-darwin-x64"),
+            expected_checksum(checksums, "jj-llms-txt-wiki-darwin-x64"),
             Some("bbb".to_owned())
         );
     }
@@ -169,13 +169,13 @@ mod tests {
     #[test]
     fn ignores_other_assets() {
         assert_eq!(
-            expected_checksum("aaa  llms-wiki-darwin-arm64\n", "other"),
+            expected_checksum("aaa  jj-llms-txt-wiki-darwin-arm64\n", "other"),
             None
         );
     }
 
     #[test]
     fn refuses_non_installed_binary_names() {
-        assert!(assert_installed(Path::new("/tmp/not-llms-wiki"), "uninstall").is_err());
+        assert!(assert_installed(Path::new("/tmp/not-jj-llms-txt-wiki"), "uninstall").is_err());
     }
 }

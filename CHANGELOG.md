@@ -11,6 +11,15 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.14.0] - 2026-07-17
+
+### Changed
+
+- CLI 命令由 `llms-wiki` 更名为 `jj-llms-txt-wiki`，配置目录改为 `~/.config/jj-llms-txt-wiki/config.toml`，默认输出目录改为 `~/jj-llms-txt-wiki/`。
+- 站点内 manifest 文件由 `.llms-wiki.json` 更名为 `.jj-llms-txt-wiki.json`，运行日志目录由 `.llms-wiki/` 更名为 `.jj-llms-txt-wiki/`。
+- 环境变量 `LLMS_WIKI_PUSH_URL` 更名为 `JJ_LLMS_TXT_WIKI_PUSH_URL`。
+- 升级方式：重装 `curl … install.sh | bash` 拉取新二进制；旧配置与数据目录需手动迁移。
+
 ## [0.13.1] - 2026-07-12
 
 ### Fixed

@@ -7,9 +7,9 @@ use std::time::Duration;
 use fs2::FileExt;
 use jiff::Timestamp;
 
-const FALLBACK_NAME: &str = "llms-wiki";
-const FALLBACK_EMAIL: &str = "llms-wiki@localhost";
-const LOCK_FILE: &str = ".git/llms-wiki.commit.lock";
+const FALLBACK_NAME: &str = "jj-llms-txt-wiki";
+const FALLBACK_EMAIL: &str = "jj-llms-txt-wiki@localhost";
+const LOCK_FILE: &str = ".git/jj-llms-txt-wiki.commit.lock";
 const RETRY_BACKOFF_MS: &[u64] = &[200, 500, 1000, 2000, 4000, 8000];
 /// Remote branch that mirrors the data repo's local HEAD. Kept distinct from
 /// the code repo's `main` so both can share a single remote without collision.
@@ -42,7 +42,7 @@ impl Repository {
     }
 
     /// Commit a single site's subtree. Serialized across processes by an OS file
-    /// lock so concurrent `llms-wiki sync <site>` invocations never contend on
+    /// lock so concurrent `jj-llms-txt-wiki sync <site>` invocations never contend on
     /// git's `.git/index.lock`. Retries with exponential backoff if any external
     /// git tool briefly holds the index lock. `.gitignore` is staged alongside
     /// the site so the repo's initial `.gitignore` lands with the first site
@@ -246,16 +246,16 @@ impl Drop for CommitLock {
 
 /// Ensure the data repository ignores snapshot staging directories and the run
 /// log, so adopted or leftover `.{site}.sync.*` / `.{site}.backup.*` partials and
-/// the `/.llms-wiki/` report dir are never committed into the versioned content.
-/// The anchored `/.llms-wiki/` matches only the root report dir, never a site's
-/// committed `<site>/.llms-wiki.json` manifest. Idempotent: appends only the
+/// the `/.jj-llms-txt-wiki/` report dir are never committed into the versioned content.
+/// The anchored `/.jj-llms-txt-wiki/` matches only the root report dir, never a site's
+/// committed `<site>/.jj-llms-txt-wiki.json` manifest. Idempotent: appends only the
 /// patterns not already present.
 fn ensure_gitignore(root: &Path) -> Result<(), String> {
     let path = root.join(".gitignore");
     let existing = fs::read_to_string(&path).unwrap_or_default();
     let mut content = existing.clone();
     let mut changed = false;
-    for pattern in [".*.sync.*", ".*.backup.*", "/.llms-wiki/"] {
+    for pattern in [".*.sync.*", ".*.backup.*", "/.jj-llms-txt-wiki/"] {
         if existing.lines().any(|line| line.trim() == pattern) {
             continue;
         }
@@ -429,7 +429,7 @@ mod tests {
         let ignore = fs::read_to_string(root.join(".gitignore")).unwrap();
         assert!(ignore.lines().any(|line| line == ".*.sync.*"));
         assert!(ignore.lines().any(|line| line == ".*.backup.*"));
-        assert!(ignore.lines().any(|line| line == "/.llms-wiki/"));
+        assert!(ignore.lines().any(|line| line == "/.jj-llms-txt-wiki/"));
 
         Repository::prepare(&root).unwrap();
         assert_eq!(

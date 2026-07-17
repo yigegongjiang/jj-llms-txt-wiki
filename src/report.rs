@@ -14,7 +14,7 @@ use crate::progress::short_path;
 /// Root-relative location of the durable run log. Overwritten every run — an
 /// append-forever log would grow unbounded, which the project forbids. Kept in a
 /// dot-dir so it is trivially gitignored and never mixes with mirrored content.
-const LOG_DIR: &str = ".llms-wiki";
+const LOG_DIR: &str = ".jj-llms-txt-wiki";
 const LOG_FILE: &str = "last-run.log";
 /// Cap per-site failures shown in the terminal; the full list always lands in
 /// the log, whose path the block points at.
@@ -126,7 +126,7 @@ pub fn print_failures(reports: &[SiteReport], log: &Path) {
     let sites: Vec<&str> = failed.iter().map(|report| report.site.as_str()).collect();
     let retry = sites
         .iter()
-        .map(|site| format!("llms-wiki sync {site}"))
+        .map(|site| format!("jj-llms-txt-wiki sync {site}"))
         .collect::<Vec<_>>()
         .join("  ·  ");
     eprintln!();
@@ -190,7 +190,7 @@ fn render_summary(reports: &[SiteReport], log: &Path) -> String {
 /// counts, all failures, and all missing links.
 fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
     let mut out = String::new();
-    let _ = writeln!(out, "llms-wiki sync report — {timestamp}");
+    let _ = writeln!(out, "jj-llms-txt-wiki sync report — {timestamp}");
     let _ = writeln!(out, "output: {}", root.display());
     let _ = writeln!(out);
 
@@ -321,7 +321,7 @@ mod tests {
             },
         ];
         assert_eq!(
-            render_summary(&reports, Path::new("/w/.llms-wiki/last-run.log")),
+            render_summary(&reports, Path::new("/w/.jj-llms-txt-wiki/last-run.log")),
             "✓ 2/2 synced"
         );
     }
@@ -344,8 +344,8 @@ mod tests {
             },
         ];
         assert_eq!(
-            render_summary(&reports, Path::new("/w/.llms-wiki/last-run.log")),
-            "✗ 1 ok · 1 failed · 1 error → /w/.llms-wiki/last-run.log"
+            render_summary(&reports, Path::new("/w/.jj-llms-txt-wiki/last-run.log")),
+            "✗ 1 ok · 1 failed · 1 error → /w/.jj-llms-txt-wiki/last-run.log"
         );
     }
 
@@ -363,8 +363,8 @@ mod tests {
             },
         ];
         assert_eq!(
-            render_summary(&reports, Path::new("/w/.llms-wiki/last-run.log")),
-            "✗ 1 ok · 1 failed → /w/.llms-wiki/last-run.log"
+            render_summary(&reports, Path::new("/w/.jj-llms-txt-wiki/last-run.log")),
+            "✗ 1 ok · 1 failed → /w/.jj-llms-txt-wiki/last-run.log"
         );
     }
 

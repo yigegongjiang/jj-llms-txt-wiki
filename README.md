@@ -17,8 +17,8 @@ MUST NOT 写发布流程 (→ workflow.md) / LLM 约束 (→ AGENTS.md) / dev �
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/install.sh | bash
-llms-wiki --version
-llms-wiki --help
+jj-llms-txt-wiki --version
+jj-llms-txt-wiki --help
 ```
 
 生命周期命令：`update`（别名 `upgrade`）/ `uninstall`；版本用内置 `--version`。
@@ -46,21 +46,21 @@ llms-wiki --help
 
 ```bash
 # 添加站点
-llms-wiki site add anthropic https://platform.claude.com/llms.txt
-llms-wiki site add deno https://docs.deno.com/llms-full.txt
+jj-llms-txt-wiki site add anthropic https://platform.claude.com/llms.txt
+jj-llms-txt-wiki site add deno https://docs.deno.com/llms-full.txt
 
 # 查看站点
-llms-wiki site list
+jj-llms-txt-wiki site list
 
 # 同步全部站点
-llms-wiki sync
+jj-llms-txt-wiki sync
 
 # 同步指定站点
-llms-wiki sync anthropic
-llms-wiki sync deno
+jj-llms-txt-wiki sync anthropic
+jj-llms-txt-wiki sync deno
 
 # 同步全部站点，并临时覆盖抓取限制
-llms-wiki sync --concurrency 2 --interval 1s
+jj-llms-txt-wiki sync --concurrency 2 --interval 1s
 ```
 
 CLI 参数优先于配置文件，未提供的参数使用配置值或默认值。
@@ -72,11 +72,11 @@ CLI 参数优先于配置文件，未提供的参数使用配置值或默认值�
 默认配置文件：
 
 ```text
-~/.config/llms-wiki/config.toml
+~/.config/jj-llms-txt-wiki/config.toml
 ```
 
 ```toml
-output_dir = "~/llms-wiki"
+output_dir = "~/jj-llms-txt-wiki"
 concurrency = 1000
 interval_ms = 50
 
@@ -95,13 +95,13 @@ url = "https://docs.deno.com/llms-full.txt"
 
 ## 输出目录
 
-`~/llms-wiki/` 是默认站点根目录，可通过 `output_dir` 修改：
+`~/jj-llms-txt-wiki/` 是默认站点根目录，可通过 `output_dir` 修改：
 
 ```text
-~/llms-wiki/
+~/jj-llms-txt-wiki/
 ├── .git/
 ├── anthropic/
-│   ├── .llms-wiki.json
+│   ├── .jj-llms-txt-wiki.json
 │   └── docs/
 │       └── api/
 │           └── messages.md
@@ -110,7 +110,7 @@ url = "https://docs.deno.com/llms-full.txt"
 
 每个站点使用配置名称作为顶层目录，远端 URL 路径映射为其下的文件路径。
 
-`llms.txt` 站点目录内的 `.llms-wiki.json` 记录各文件的 HTTP validator（`ETag` / `Last-Modified`），供下次同步做条件请求；它随快照原子替换、随仓库提交一同版本化。`llms-full.txt` 每次全量抓取并重建快照，不创建 manifest。
+`llms.txt` 站点目录内的 `.jj-llms-txt-wiki.json` 记录各文件的 HTTP validator（`ETag` / `Last-Modified`），供下次同步做条件请求；它随快照原子替换、随仓库提交一同版本化。`llms-full.txt` 每次全量抓取并重建快照，不创建 manifest。
 
 ## 同步行为
 

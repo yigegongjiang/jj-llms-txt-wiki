@@ -49,7 +49,7 @@ impl HttpClient {
             }
         });
         let client = reqwest::Client::builder()
-            .user_agent(concat!("llms-wiki/", env!("CARGO_PKG_VERSION")))
+            .user_agent(concat!("jj-llms-txt-wiki/", env!("CARGO_PKG_VERSION")))
             .timeout(timeout)
             .redirect(redirect)
             .build()

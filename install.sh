@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Install the latest llms-wiki binary from GitHub Releases.
+# Install the latest jj-llms-txt-wiki binary from GitHub Releases.
 # Usage: curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/install.sh | bash
 
 set -euo pipefail
 
 REPO="yigegongjiang/jj-llms-txt-wiki"
 INSTALL_DIR="$HOME/.local/bin"
-BIN_NAME="llms-wiki"
+BIN_NAME="jj-llms-txt-wiki"
 
 err() { printf 'error: %s\n' "$*" >&2; exit 1; }
 

@@ -127,13 +127,13 @@ async fn server(initial: HashMap<String, Response>) -> Server {
 }
 
 fn cli(home: &Path, args: &[&str]) -> Output {
-    Command::new(env!("CARGO_BIN_EXE_llms-wiki"))
+    Command::new(env!("CARGO_BIN_EXE_jj-llms-txt-wiki"))
         .args(args)
         // Suppress the auto-mirror push in every e2e run. Without this the
         // spawned binary would try to `git push` to the code repo's remote
         // (baked from `CARGO_PKG_REPOSITORY`), which on CI has a token and
         // could actually mutate the public repository.
-        .env("LLMS_WIKI_PUSH_URL", "")
+        .env("JJ_LLMS_TXT_WIKI_PUSH_URL", "")
         .env("HOME", home)
         .output()
         .unwrap()
@@ -246,14 +246,14 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
     assert!(listed.starts_with("alpha\t"));
     assert!(listed.lines().nth(1).unwrap().starts_with("beta\t"));
 
-    let config_path = home.path().join(".config/llms-wiki/config.toml");
+    let config_path = home.path().join(".config/jj-llms-txt-wiki/config.toml");
     let config_before = fs::read(&config_path).unwrap();
     let alpha_sync = success(
         home.path(),
         &["sync", "alpha", "--concurrency", "2", "--interval", "0ms"],
     );
     assert!(String::from_utf8_lossy(&alpha_sync.stderr).contains("alpha: ok"));
-    let wiki = home.path().join("llms-wiki");
+    let wiki = home.path().join("jj-llms-txt-wiki");
     assert!(wiki.join("alpha/docs/a.md").exists());
     assert_eq!(
         fs::read_to_string(wiki.join("alpha/docs/b.md")).unwrap(),
@@ -400,7 +400,7 @@ async fn real_cli_syncs_full_bundle_with_fresh_atomic_snapshots() {
         &["site", "add", "index", &format!("{}/llms.txt", srv.origin)],
     );
 
-    let wiki = home.path().join("llms-wiki");
+    let wiki = home.path().join("jj-llms-txt-wiki");
     let stale = wiki.join(".full.sync.stale");
     fs::create_dir_all(&stale).unwrap();
     fs::write(stale.join("removed.md"), "stale").unwrap();
@@ -417,7 +417,7 @@ async fn real_cli_syncs_full_bundle_with_fresh_atomic_snapshots() {
         fs::read_to_string(wiki.join("full/guide/index.md")).unwrap(),
         "# Guide\n\n> Guide description\n\nGuide v1.\n"
     );
-    assert!(!wiki.join("full/.llms-wiki.json").exists());
+    assert!(!wiki.join("full/.jj-llms-txt-wiki.json").exists());
     assert!(
         !stale.exists(),
         "full sync must discard interrupted partials"
@@ -523,7 +523,7 @@ async fn real_cli_resumes_an_interrupted_partial() {
 
     // Simulate an earlier run interrupted after downloading keep.md but before
     // committing: a leftover `.docs.sync.*` working directory on disk.
-    let wiki = home.path().join("llms-wiki");
+    let wiki = home.path().join("jj-llms-txt-wiki");
     let leftover = wiki.join(".docs.sync.leftover");
     fs::create_dir_all(&leftover).unwrap();
     fs::write(leftover.join("keep.md"), "KEEP").unwrap();
