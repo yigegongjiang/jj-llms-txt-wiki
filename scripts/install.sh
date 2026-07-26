@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install the latest jj-llms-txt-wiki binary from GitHub Releases.
-# Usage: curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/scripts/install.sh | bash
 
 set -euo pipefail
 

@@ -16,7 +16,7 @@ MUST NOT 写发布流程 (→ workflow.md) / LLM 约束 (→ AGENTS.md) / dev �
 支持 macOS arm64/x64：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yigegongjiang/jj-llms-txt-wiki/main/scripts/install.sh | bash
 jj-llms-txt-wiki --version
 jj-llms-txt-wiki --help
 ```

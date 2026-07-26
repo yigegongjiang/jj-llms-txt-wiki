@@ -9,6 +9,8 @@
 # 可用工具
 
 - `gh` 已登录（GitHub Release / PR）
+- `scripts/install-local.sh`：本地 release 构建 + 装入 `~/.local/bin` + 跑 `--version` 自检
+- `scripts/install.sh`：从 latest GitHub Release 下载校验 sha256 后安装（用户一键安装入口，见 README）
 
 # 调试
 
@@ -20,6 +22,13 @@
 cargo run -- --version   # 打印 jj-llms-txt-wiki <version>
 cargo run -- --help      # 打印用法
 cargo test --locked      # 单测通过
+```
+
+需要真实安装态时（`update` / `uninstall` 会拒绝非安装路径的二进制）用本地安装：
+
+```bash
+./scripts/install-local.sh                      # 装到 ~/.local/bin
+INSTALL_DIR=/tmp/bin ./scripts/install-local.sh # 换目录，避免覆盖已安装版本
 ```
 
 调试站点（可选，在本机的 `~/.config/jj-llms-txt-wiki/wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
@@ -69,7 +78,7 @@ git push origin vX.Y.Z
 ```
 
 tag 推送后 CI：fmt/clippy/test → 构建 macOS arm64/x64 → 生成 `checksums.txt` → 创建 Release。
-发布后自行用 `install.sh` 拉 latest Release 完成本机更新。
+发布后自行用 `scripts/install.sh` 拉 latest Release 完成本机更新。
 
 调试站点（可选，在本机的 `~/.config/jj-llms-txt-wiki/wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
 

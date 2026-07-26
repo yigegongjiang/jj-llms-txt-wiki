@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.17.0] - 2026-07-26
+
+### Changed
+
+- 一键安装命令的地址改为 `…/main/scripts/install.sh`，旧地址不再可用；已安装用户可继续用 `update` 自更新，不受影响。
+
 ## [0.16.0] - 2026-07-26
 
 ### Changed

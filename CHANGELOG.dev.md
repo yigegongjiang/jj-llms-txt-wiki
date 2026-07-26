@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.17.0] - 2026-07-26
+
+### Changed
+
+- 一键安装命令的地址改为 `…/main/scripts/install.sh`，旧地址不再可用；已安装用户可继续用 `update` 自更新，不受影响。
+  - 与 `ai-project-template/cli` 对标：`install.sh` -> `scripts/install.sh`，新增 `scripts/install-local.sh`（`cargo build --release --locked` + 装入 `$INSTALL_DIR`（默认 `~/.local/bin`）+ `--version` 自检），README / workflow.md 同步。
+
 ## [0.16.0] - 2026-07-26
 
 ### Changed
