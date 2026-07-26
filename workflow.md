@@ -9,33 +9,10 @@
 # 可用工具
 
 - `gh` 已登录（GitHub Release / PR）
-- `scripts/install-local.sh`：本地 release 构建 + 装入 `~/.local/bin` + 跑 `--version` 自检
-- `scripts/install.sh`：从 latest GitHub Release 下载校验 sha256 后安装（用户一键安装入口，见 README）
-
-# 调试
-
-`cargo run -- <command>` 运行 CLI；`cargo test --locked` 跑测试。
-
-验证：
-
-```bash
-cargo run -- --version   # 打印 jj-llms-txt-wiki <version>
-cargo run -- --help      # 打印用法
-cargo test --locked      # 单测通过
-```
-
-需要真实安装态时（`update` / `uninstall` 会拒绝非安装路径的二进制）用本地安装：
-
-```bash
-./scripts/install-local.sh                      # 装到 ~/.local/bin
-INSTALL_DIR=/tmp/bin ./scripts/install-local.sh # 换目录，避免覆盖已安装版本
-```
-
-调试站点（可选，在本机的 `~/.config/jj-llms-txt-wiki/wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
 
 # 发布
 
-代码变更完成后立即执行（= 需求交付的最后环节）。推送 `v*` tag → `.github/workflows/release.yml` 自动构建并发布 GitHub Release。
+代码变更完成后立即执行（= 需求交付的最后环节）。交付 = 预部署 + push。推送 `v*` tag → `.github/workflows/release.yml` 自动构建并发布 GitHub Release。
 
 ## TL;DR
 
@@ -43,8 +20,8 @@ INSTALL_DIR=/tmp/bin ./scripts/install-local.sh # 换目录，避免覆盖已安
 
 1. 验证：`cargo fmt --all -- --check` + `clippy` + `test`
 2. 写版本：`Cargo.toml` + `Cargo.lock` + `CHANGELOG.md` + `CHANGELOG.dev.md` 同步（与 tag 一致）
-3. 发布：commit + annotated tag（`-a -m`）+ push `main` + push tag
-4. 修上版 bug：amend + 删 Release + 删 tag + 重打 + force push
+3. 预部署：`./scripts/install-local.sh`
+4. 发布：commit + annotated tag（`-a -m`）+ push `main` + push tag
 
 ## 1. 验证
 
@@ -58,7 +35,7 @@ cargo test --locked
 
 ## 2. 写版本
 
-- 版本号：默认 MUST 递增 PATCH（第三位）；大功能更新 → MINOR；不兼容改动 → MAJOR。
+- 版本号：默认递增 PATCH（第三位）；大功能更新 / 破坏性改动 → MINOR；MAJOR 仅人类主动要求。
 - 同步编辑，全部与 tag 一致：
   - `Cargo.toml` 的 `version`
   - `CHANGELOG.md` + `CHANGELOG.dev.md` 追加对应版本条目
@@ -66,35 +43,24 @@ cargo test --locked
 
 > CI 全程 `--locked`：`Cargo.lock` 未随 `Cargo.toml` 版本同步 → 构建直接失败。
 
-## 3. 发布
+## 3. 预部署
 
+本机完成实际交付：release 构建 + 装入 `~/.local/bin` + `--version` 自检。
+
+```bash
+./scripts/install-local.sh
+```
+
+## 4. 发布
+
+> 先 `git fetch origin --tags`，确认 `main` 无落后、目标 tag 未被占用（多会话并行时可能已被抢先发布）。
 > CI 校验 `v<Cargo version> == tag`，不一致直接失败。
 
 ```bash
-git commit -am "chore(release): prepare vX.Y.Z"
+git commit -m "chore(release): prepare vX.Y.Z" -- Cargo.toml Cargo.lock CHANGELOG.md CHANGELOG.dev.md <其他改动文件>
 git tag -a vX.Y.Z -m "vX.Y.Z"
 git push origin main
 git push origin vX.Y.Z
 ```
 
 tag 推送后 CI：fmt/clippy/test → 构建 macOS arm64/x64 → 生成 `checksums.txt` → 创建 Release。
-发布后自行用 `scripts/install.sh` 拉 latest Release 完成本机更新。
-
-调试站点（可选，在本机的 `~/.config/jj-llms-txt-wiki/wiki` 下调试，不要创建 tmp 目录），调试站点：`llmstxt: https://llmstxt.org/llms.txt`。
-
-## 4. 修上版 bug
-
-上版刚发布即发现明显 bug 时，amend 修复后按同版本号重发：
-
-```bash
-git commit -a --amend --no-edit
-gh release delete vX.Y.Z -y            # 先删已发布 Release
-git tag -d vX.Y.Z
-git push origin :refs/tags/vX.Y.Z
-git tag -a vX.Y.Z -m "vX.Y.Z"
-git push origin main --force-with-lease
-git push origin vX.Y.Z
-```
-
-> `--verify-tag` 遇已存在 Release 会失败，故必先 `gh release delete`。
-> 仅限该版本尚未被用户安装；已扩散则改为递增新 PATCH 重发，MUST NOT force push。
