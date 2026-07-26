@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "entries": {
+    "https://llmstxt.org/ed-commonmark.md": {
+      "etag": "W/\"6a655ddc-af5\"",
+      "last_modified": "Sun, 26 Jul 2026 01:07:40 GMT"
+    },
+    "https://llmstxt.org/index.md": {
+      "etag": "W/\"6a655ddc-2b68\"",
+      "last_modified": "Sun, 26 Jul 2026 01:07:40 GMT"
+    },
+    "https://llmstxt.org/intro.html.md": {
+      "etag": "W/\"6a655ddc-eb8\"",
+      "last_modified": "Sun, 26 Jul 2026 01:07:40 GMT"
+    }
+  }
+}
