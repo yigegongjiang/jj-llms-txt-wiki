@@ -9,8 +9,13 @@ use tempfile::NamedTempFile;
 use crate::site::{parse_entry_url, validate_name};
 
 pub const DEFAULT_OUTPUT_DIR: &str = "~/.config/jj-llms-txt-wiki/wiki";
-pub const DEFAULT_CONCURRENCY: usize = 1000;
-pub const DEFAULT_INTERVAL_MS: u64 = 50;
+/// Download slots. 8 is the established per-domain simultaneity level for
+/// crawlers (Scrapy's `CONCURRENT_REQUESTS_PER_DOMAIN`); sites are synced one at
+/// a time, so all slots hit a single host.
+pub const DEFAULT_CONCURRENCY: usize = 8;
+/// Rest per slot after each finished request. Keeps the default sustained rate
+/// polite (~`concurrency / (latency + 0.1s)`) without idling the slots.
+pub const DEFAULT_INTERVAL_MS: u64 = 100;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default)]

@@ -7,6 +7,24 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.16.0] - 2026-07-26
+
+### Changed
+
+- `concurrency` 现在是真实同时在途的下载任务数：队列有货时始终打满，不再被请求间隔压成串行。
+  - 删除 `crawler.rs::RequestGate`（全局 `Mutex<Instant>` 串行化所有 `fetch` 发起）；`crawl` 主循环改持 `VecDeque<Instant>` 槽位就绪时刻，无共享锁。
+- `interval` 语义改为「单个下载任务完成后该槽位的休息时长」，只影响该槽位，不再是全局发起间隔。
+  - task 返回 `finished_at` -> 主循环 `rest_slot()` 入队 `finished_at + interval`；spawn 时 `pop_front()` 交给 task 在 `fetch` 前 `sleep_until`；`interval == 0` 不入队、零 await。
+- 默认值改为 `concurrency = 8` / `interval_ms = 100`，并新增上限 64；超过上限自动收敛并提示（旧配置里的大数值在新语义下会打爆连接）。
+  - `config.rs::{DEFAULT_CONCURRENCY, DEFAULT_INTERVAL_MS}` 与 `crawler.rs::MAX_CONCURRENCY` 新增；`sync.rs::resolve_concurrency` 收敛并打 warning，clamp 而非报错以兼容旧配置。
+- 同步进度行的在途数改为 `inflight=<在途>/<并发上限>`，可直接看出槽位是否打满。
+  - `SyncProgress::new` 增 `slots` 参数；聚合链路（`EntryKind::Full`）传 1。
+
+### Fixed
+
+- 修复在途请求数偶发超过并发上限的显示错误（如 `inflight=9/8`）。
+  - 新增 `CrawlEvent::Finished`，在 task 内与 `Started` 夹住 `fetch`；`Counts::inflight()` 改为 `started - finished`，不再依赖主循环发出的分类事件。
+
 ## [0.15.0] - 2026-07-17
 
 ### Changed

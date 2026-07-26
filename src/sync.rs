@@ -7,7 +7,8 @@ use jiff::Timestamp;
 
 use crate::config::Config;
 use crate::crawler::{
-    CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_MAX_DOCUMENT_BYTES, DEFAULT_TIMEOUT, crawl,
+    CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_MAX_DOCUMENT_BYTES, DEFAULT_TIMEOUT,
+    MAX_CONCURRENCY, crawl,
 };
 use crate::full;
 use crate::git::Repository;
@@ -41,7 +42,7 @@ pub async fn run(
     };
     let repository = Repository::prepare(&output_root)?;
     let options = CrawlOptions {
-        concurrency: concurrency.unwrap_or(config.concurrency),
+        concurrency: resolve_concurrency(concurrency.unwrap_or(config.concurrency)),
         interval: interval.unwrap_or(Duration::from_millis(config.interval_ms)),
         timeout: DEFAULT_TIMEOUT,
         max_document_bytes: DEFAULT_MAX_DOCUMENT_BYTES,
@@ -115,6 +116,22 @@ pub async fn run(
     }
 }
 
+/// Clamp the requested slot count to [`MAX_CONCURRENCY`], warning when it bites.
+/// Clamping beats rejecting: a config written against the old semantics — where
+/// the value was a soft ceiling behind a global rate gate — must keep syncing,
+/// and a silent clamp would leave the user believing a number the crawler never
+/// honours.
+fn resolve_concurrency(requested: usize) -> usize {
+    if requested > MAX_CONCURRENCY {
+        eprintln!(
+            "{}: concurrency {requested} exceeds the maximum, using {MAX_CONCURRENCY}",
+            style("warning").for_stderr().yellow().bold()
+        );
+        return MAX_CONCURRENCY;
+    }
+    requested
+}
+
 /// Sync a single site end to end, printing its live verdict line, and return the
 /// outcome for the aggregate report. Whole-site errors (bad entry URL, snapshot
 /// setup, or a crawl that never produced a report) become `Aborted` carrying the
@@ -156,7 +173,13 @@ async fn sync_site(
                 .cyan()
         );
     }
-    let progress = Arc::new(SyncProgress::new(name, position, total));
+    // The aggregate chain issues exactly one request, so its live line shows
+    // `inflight=…/1` instead of a slot count that never applies to it.
+    let slots = match kind {
+        EntryKind::Index => options.concurrency,
+        EntryKind::Full => 1,
+    };
+    let progress = Arc::new(SyncProgress::new(name, position, total, slots));
     let observer: Arc<dyn CrawlObserver> = progress.clone();
     let crawl_result = match kind {
         EntryKind::Index => {

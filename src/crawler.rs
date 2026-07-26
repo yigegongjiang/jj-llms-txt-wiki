@@ -2,7 +2,6 @@ use std::collections::{HashSet, VecDeque};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Duration;
-use tokio::sync::Mutex;
 use tokio::task::JoinSet;
 use tokio::time::{Instant, sleep_until};
 use url::Url;
@@ -21,9 +20,20 @@ pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 /// `output == None`, so it is never subject to this cap.
 pub const DEFAULT_MAX_DOCUMENT_BYTES: usize = 3 * 1024 * 1024;
 
+/// Hard ceiling on download slots. Slots are genuinely simultaneous sockets, so
+/// an unbounded value is a stability hazard, not a speed knob: it exhausts file
+/// descriptors on hosts with a low `ulimit -n` and earns `429` from the doc host,
+/// which this crawler treats as a hard sync failure. 64 already saturates any
+/// CDN-backed docs site.
+pub const MAX_CONCURRENCY: usize = 64;
+
 #[derive(Clone, Copy, Debug)]
 pub struct CrawlOptions {
+    /// Download slots. While the queue has work, exactly this many requests are
+    /// in flight — it is a true simultaneity level, not a rate limit.
     pub concurrency: usize,
+    /// How long a slot rests after finishing one request, before it starts the
+    /// next one. Local to the slot: the other slots keep running.
     pub interval: Duration,
     pub timeout: Duration,
     /// Per-document byte cap for content pages; entry documents are exempt.
@@ -67,7 +77,13 @@ impl CrawlReport {
 
 #[derive(Clone, Debug)]
 pub enum CrawlEvent {
+    /// A request went on the wire. Paired with [`CrawlEvent::Finished`] to bracket
+    /// exactly the time a download slot is busy on the network, so an observer's
+    /// in-flight count is the true one — the per-outcome events below land later,
+    /// once the crawl loop has drained and classified the result.
     Started(String),
+    /// The request came back, whatever its outcome.
+    Finished(String),
     Downloaded(String),
     Resumed(String),
     Unchanged(String),
@@ -94,29 +110,6 @@ struct WorkItem {
     validator: Option<Validator>,
 }
 
-struct RequestGate {
-    interval: Duration,
-    next: Mutex<Instant>,
-}
-
-impl RequestGate {
-    fn new(interval: Duration) -> Self {
-        Self {
-            interval,
-            next: Mutex::new(Instant::now()),
-        }
-    }
-
-    async fn wait(&self) {
-        let mut next = self.next.lock().await;
-        let now = Instant::now();
-        if *next > now {
-            sleep_until(*next).await;
-        }
-        *next = Instant::now() + self.interval;
-    }
-}
-
 pub async fn crawl(
     entry: Url,
     snapshot_root: &Path,
@@ -140,7 +133,6 @@ pub async fn crawl(
     // host still crawls. Shared with the HTTP client's redirect policy.
     let allowed = AllowedOrigins::new(&entry);
     let client = HttpClient::new(&allowed, options.timeout)?;
-    let gate = Arc::new(RequestGate::new(options.interval));
     let canonical_entry = CanonicalUrl::new(entry.clone());
     let mut seen = HashSet::from([canonical_entry.clone()]);
     let mut paths = PathRegistry::default();
@@ -152,6 +144,15 @@ pub async fn crawl(
     let mut tasks = JoinSet::new();
     let mut report = CrawlReport::default();
     let mut manifest = Manifest::default();
+    // Rest deadlines of the download slots freed by finished requests, oldest
+    // first. `tasks` holds at most `concurrency` entries, so an occupied slot is
+    // exactly one live task and this queue is the pacing state of the free ones:
+    // a slot that just finished a request may not start its next one before its
+    // deadline. Empty at the start — the first `concurrency` requests fire at
+    // once — and never populated when `interval` is zero. It lives on this task
+    // (the only place that spawns), so no lock is involved and no slot ever
+    // waits on another slot's rest.
+    let mut slot_ready: VecDeque<Instant> = VecDeque::new();
 
     while !queue.is_empty() || !tasks.is_empty() {
         while tasks.len() < options.concurrency {
@@ -200,27 +201,39 @@ pub async fn crawl(
                 continue;
             }
             let client = client.clone();
-            let gate = Arc::clone(&gate);
             let task_observer = Arc::clone(&observer);
             // The entry document (output == None) is exempt from the cap; only
             // content pages are subject to it.
             let max_bytes = item.output.as_ref().map(|_| options.max_document_bytes);
+            // This slot's rest, if it just finished a request. Resting before the
+            // request (not after) keeps `Started` equal to the real in-flight
+            // count and hands the fetch result to the loop the moment it lands,
+            // so discovery never stalls behind another slot's rest.
+            let rest_until = slot_ready.pop_front();
             tasks.spawn(async move {
-                gate.wait().await;
+                if let Some(deadline) = rest_until {
+                    sleep_until(deadline).await;
+                }
                 task_observer.event(CrawlEvent::Started(item.url.to_string()));
                 let result = client
                     .fetch(&item.url, item.validator.as_ref(), max_bytes)
                     .await;
-                (item, result)
+                task_observer.event(CrawlEvent::Finished(item.url.to_string()));
+                // Measured here, not at join time: the rest starts when the
+                // request actually ended, so loop-side bookkeeping is never
+                // charged against it.
+                (item, result, Instant::now())
             });
         }
 
         let Some(joined) = tasks.join_next().await else {
             continue;
         };
-        let (item, outcome) = match joined {
+        let (item, outcome, finished_at) = match joined {
             Ok(value) => value,
             Err(error) => {
+                // The slot still spent a request, so it still rests.
+                rest_slot(&mut slot_ready, Instant::now(), options.interval);
                 report.failures.push(CrawlFailure {
                     url: "internal".to_owned(),
                     message: format!("crawler task failed: {error}"),
@@ -228,6 +241,7 @@ pub async fn crawl(
                 continue;
             }
         };
+        rest_slot(&mut slot_ready, finished_at, options.interval);
 
         match outcome {
             Ok(FetchOutcome::Document {
@@ -362,6 +376,15 @@ pub async fn crawl(
     }
 
     Ok(report)
+}
+
+/// Put the slot freed by a request that finished at `finished_at` on rest until
+/// `finished_at + interval`. A zero interval enqueues nothing, so the
+/// no-rate-limit path never allocates and never awaits.
+fn rest_slot(slot_ready: &mut VecDeque<Instant>, finished_at: Instant, interval: Duration) {
+    if !interval.is_zero() {
+        slot_ready.push_back(finished_at + interval);
+    }
 }
 
 /// Discover allowed-origin Markdown links in `body` and enqueue the unseen ones,
@@ -800,38 +823,133 @@ mod tests {
         );
     }
 
+    /// Entry linking `count` delayed content pages, for the pacing tests below.
+    async fn paced_server(count: usize, delay: Duration) -> Server {
+        let mut routes = HashMap::new();
+        let links: String = (0..count)
+            .map(|index| format!("[p{index}](/p{index}.md) "))
+            .collect();
+        routes.insert("/llms.txt".to_owned(), Response::ok(&links));
+        for index in 0..count {
+            routes.insert(format!("/p{index}.md"), Response::ok("body").delayed(delay));
+        }
+        server(routes).await
+    }
+
+    /// Content request start instants, entry request excluded.
+    fn content_starts(server: &Server) -> Vec<Instant> {
+        let mut starts: Vec<Instant> = server
+            .requests
+            .lock()
+            .unwrap()
+            .iter()
+            .filter(|(path, _)| path != "/llms.txt")
+            .map(|(_, started)| *started)
+            .collect();
+        starts.sort_unstable();
+        starts
+    }
+
     #[tokio::test]
-    async fn enforces_concurrency_and_global_start_interval() {
-        let links = "[a](/a.md) [b](/b.md) [c](/c.md)";
-        let delay = Duration::from_millis(140);
-        let server = server(HashMap::from([
-            ("/llms.txt".to_owned(), Response::ok(links)),
-            ("/a.md".to_owned(), Response::ok("a").delayed(delay)),
-            ("/b.md".to_owned(), Response::ok("b").delayed(delay)),
-            ("/c.md".to_owned(), Response::ok("c").delayed(delay)),
-        ]))
-        .await;
+    async fn saturates_every_download_slot() {
+        // Concurrency is a simultaneity level, not a ceiling that a rate gate is
+        // free to undershoot: with more queued work than slots, the server MUST
+        // observe exactly `concurrency` requests at once.
+        let server = paced_server(8, Duration::from_millis(120)).await;
         let directory = tempdir().unwrap();
         let report = fresh_crawl(
             server.url.clone(),
             directory.path(),
-            options(2, Duration::from_millis(40)),
+            options(4, Duration::from_millis(30)),
             Arc::new(NoopObserver),
         )
         .await
         .unwrap();
         assert!(report.is_success());
-        assert!(server.max_active.load(Ordering::SeqCst) <= 2);
-        let starts: Vec<_> = server
-            .requests
-            .lock()
-            .unwrap()
-            .iter()
-            .map(|(_, started)| *started)
-            .collect();
+        assert_eq!(report.downloaded, 8);
+        assert_eq!(
+            server.max_active.load(Ordering::SeqCst),
+            4,
+            "all four slots must be in flight together"
+        );
+    }
+
+    #[tokio::test]
+    async fn interval_rests_only_the_slot_that_finished() {
+        // The rest is slot-local, never a global start gate: the entry fetch put
+        // its own slot on rest, and the remaining slots MUST still fan out
+        // together even though the interval dwarfs the request latency. Under the
+        // old global gate every start was one interval apart instead.
+        let concurrency = 3;
+        let interval = Duration::from_millis(400);
+        let server = paced_server(3, Duration::from_millis(150)).await;
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            options(concurrency, interval),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+        assert!(report.is_success());
+        assert_eq!(report.downloaded, 3);
+        let starts = content_starts(&server);
+        assert_eq!(starts.len(), 3);
+        let paired = starts[1].duration_since(starts[0]);
+        assert!(
+            paired < interval / 2,
+            "second start came {paired:?} after the first; the interval must not gate other slots"
+        );
+        assert!(
+            server.max_active.load(Ordering::SeqCst) >= concurrency - 1,
+            "every slot except the one resting from the entry fetch must run at once"
+        );
+    }
+
+    #[tokio::test]
+    async fn interval_delays_the_next_request_of_a_slot() {
+        // One slot isolates the rest: consecutive starts are separated by the
+        // request duration plus the full interval.
+        let interval = Duration::from_millis(120);
+        let server = paced_server(3, Duration::ZERO).await;
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            options(1, interval),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+        assert!(report.is_success());
+        assert_eq!(report.downloaded, 3);
+        assert_eq!(server.max_active.load(Ordering::SeqCst), 1);
+        let starts = content_starts(&server);
         for pair in starts.windows(2) {
-            assert!(pair[1].duration_since(pair[0]) >= Duration::from_millis(35));
+            let gap = pair[1].duration_since(pair[0]);
+            assert!(
+                gap >= interval,
+                "slot restarted after {gap:?}, expected at least {interval:?}"
+            );
         }
+    }
+
+    #[tokio::test]
+    async fn zero_interval_keeps_slots_running_without_rest() {
+        let server = paced_server(6, Duration::from_millis(60)).await;
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            options(3, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+        assert!(report.is_success());
+        assert_eq!(report.downloaded, 6);
+        assert_eq!(server.max_active.load(Ordering::SeqCst), 3);
     }
 
     #[tokio::test]

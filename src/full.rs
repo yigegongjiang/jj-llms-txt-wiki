@@ -53,7 +53,9 @@ pub async fn crawl(
     observer.event(CrawlEvent::Started(canonical_entry.to_string()));
     // `None` disables the size cap: an aggregate llms-full.txt is legitimately
     // large, so the per-document cap (a content-page rule) must not apply here.
-    let body = match client.fetch(&canonical_entry, None, None).await {
+    let outcome = client.fetch(&canonical_entry, None, None).await;
+    observer.event(CrawlEvent::Finished(canonical_entry.to_string()));
+    let body = match outcome {
         Ok(FetchOutcome::Document { body, .. }) => body,
         Ok(FetchOutcome::Missing) => {
             return Err(format!("llms-full.txt entry is missing: {canonical_entry}"));

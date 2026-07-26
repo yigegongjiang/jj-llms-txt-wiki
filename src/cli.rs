@@ -24,10 +24,10 @@ pub enum Command {
     Sync {
         /// Site name; omit to synchronize all sites
         site: Option<String>,
-        /// Maximum simultaneous requests
+        /// Download slots kept in flight at once (1-64)
         #[arg(long, value_parser = parse_concurrency)]
         concurrency: Option<usize>,
-        /// Minimum delay between request starts
+        /// Rest a slot takes after each finished request, e.g. 100ms
         #[arg(long, value_parser = parse_duration)]
         interval: Option<Duration>,
     },

@@ -280,9 +280,16 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
     assert!(subject.ends_with('Z'));
     assert!(git(&wiki, &["status", "--porcelain"]).is_empty());
 
-    success(
+    // Slots are real sockets now, so an out-of-range request is clamped with a
+    // warning instead of being honoured or rejected — a config written for the
+    // old global-rate-gate semantics MUST keep syncing.
+    let all_sync = success(
         home.path(),
-        &["sync", "--concurrency", "2", "--interval", "0ms"],
+        &["sync", "--concurrency", "500", "--interval", "0ms"],
+    );
+    assert!(
+        String::from_utf8_lossy(&all_sync.stderr)
+            .contains("concurrency 500 exceeds the maximum, using 64")
     );
     assert_eq!(
         fs::read_to_string(wiki.join("beta/beta.md")).unwrap(),

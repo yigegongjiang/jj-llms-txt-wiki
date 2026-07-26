@@ -7,11 +7,15 @@ use url::Url;
 
 use crate::crawler::{CrawlEvent, CrawlObserver, CrawlReport};
 
-/// Per-category tallies used to render the summary line. `started` drives the
-/// live `inflight` count (started minus everything already completed).
+/// Per-category tallies used to render the summary line. `started` / `finished`
+/// bracket the network and drive the live `inflight` count; the per-outcome
+/// counters are tallies only. Deriving `inflight` from the outcome counters
+/// instead would read high whenever the crawl loop lags behind the finished
+/// requests it has yet to classify — up to `inflight=9/8` on a saturated crawl.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 struct Counts {
     started: u64,
+    finished: u64,
     downloaded: u64,
     resumed: u64,
     unchanged: u64,
@@ -23,21 +27,18 @@ struct Counts {
 
 impl Counts {
     fn inflight(&self) -> u64 {
-        self.started.saturating_sub(
-            self.downloaded
-                + self.unchanged
-                + self.missing
-                + self.ignored
-                + self.oversize
-                + self.failed,
-        )
+        self.started.saturating_sub(self.finished)
     }
 }
 
 pub struct SyncProgress {
     site: String,
     bar: ProgressBar,
+    /// Download slots this crawl runs with, rendered as the `inflight` divisor so
+    /// a saturated crawl is visible at a glance.
+    slots: u64,
     started: AtomicU64,
+    finished: AtomicU64,
     downloaded: AtomicU64,
     resumed: AtomicU64,
     unchanged: AtomicU64,
@@ -50,7 +51,7 @@ pub struct SyncProgress {
 impl SyncProgress {
     /// The spinner draws to stderr; indicatif auto-suppresses it when stderr is
     /// not a terminal, so piped runs stay clean without any flag.
-    pub fn new(site: &str, index: usize, total: usize) -> Self {
+    pub fn new(site: &str, index: usize, total: usize, slots: usize) -> Self {
         let bar = ProgressBar::new_spinner();
         bar.set_style(
             ProgressStyle::with_template("{prefix} {spinner:.cyan} {elapsed} {msg}")
@@ -61,7 +62,9 @@ impl SyncProgress {
         Self {
             site: site.to_owned(),
             bar,
+            slots: slots as u64,
             started: AtomicU64::new(0),
+            finished: AtomicU64::new(0),
             downloaded: AtomicU64::new(0),
             resumed: AtomicU64::new(0),
             unchanged: AtomicU64::new(0),
@@ -91,6 +94,7 @@ impl SyncProgress {
     fn counts(&self) -> Counts {
         Counts {
             started: self.started.load(Ordering::Relaxed),
+            finished: self.finished.load(Ordering::Relaxed),
             downloaded: self.downloaded.load(Ordering::Relaxed),
             resumed: self.resumed.load(Ordering::Relaxed),
             unchanged: self.unchanged.load(Ordering::Relaxed),
@@ -106,7 +110,7 @@ impl SyncProgress {
     fn complete(&self, counter: &AtomicU64, url: &str) {
         counter.fetch_add(1, Ordering::Relaxed);
         self.bar
-            .set_message(summary_msg(&self.counts(), &short_path(url)));
+            .set_message(summary_msg(&self.counts(), self.slots, &short_path(url)));
     }
 
     /// Record a failure and print it as scrollback so it survives above the
@@ -114,7 +118,8 @@ impl SyncProgress {
     fn fail(&self, url: &str) {
         self.failed.fetch_add(1, Ordering::Relaxed);
         let path = short_path(url);
-        self.bar.set_message(summary_msg(&self.counts(), &path));
+        self.bar
+            .set_message(summary_msg(&self.counts(), self.slots, &path));
         let tag = style("FAIL").for_stderr().red().bold();
         self.log_line(&format!("[{}] {tag} {path}", self.site));
     }
@@ -137,7 +142,13 @@ impl CrawlObserver for SyncProgress {
             CrawlEvent::Started(url) => {
                 self.started.fetch_add(1, Ordering::Relaxed);
                 self.bar
-                    .set_message(summary_msg(&self.counts(), &short_path(&url)));
+                    .set_message(summary_msg(&self.counts(), self.slots, &short_path(&url)));
+            }
+            // The slot left the network here. Redrawing waits for the outcome
+            // event that follows immediately, so the line never shows a path
+            // without its verdict.
+            CrawlEvent::Finished(_) => {
+                self.finished.fetch_add(1, Ordering::Relaxed);
             }
             CrawlEvent::Downloaded(url) => self.complete(&self.downloaded, &url),
             CrawlEvent::Resumed(url) => self.complete(&self.resumed, &url),
@@ -150,11 +161,13 @@ impl CrawlObserver for SyncProgress {
     }
 }
 
-/// Dynamic segment of the spinner line: labelled tallies + live inflight + the
-/// path currently in focus. All values are real and known, so no fake total.
-/// `dl` stays green as the primary metric; `fail` lights up red the instant a
-/// failure lands, so a running sync's health is legible without reading digits.
-fn summary_msg(counts: &Counts, path: &str) -> String {
+/// Dynamic segment of the spinner line: labelled tallies, live `inflight/slots`,
+/// and the path currently in focus. All values are real and known, so no fake
+/// total. `dl` stays green as the primary metric; `fail` lights up red the
+/// instant a failure lands, so a running sync's health is legible without reading
+/// digits. `inflight/slots` reads `8/8` on a saturated crawl and drops below the
+/// divisor only while slots rest or the queue runs dry.
+fn summary_msg(counts: &Counts, slots: u64, path: &str) -> String {
     let dl = style(format!("dl={}", counts.downloaded))
         .for_stderr()
         .green();
@@ -165,7 +178,7 @@ fn summary_msg(counts: &Counts, path: &str) -> String {
         fail
     };
     format!(
-        "{dl} resume={} unchanged={} miss={} {fail}  inflight={}  · {path}",
+        "{dl} resume={} unchanged={} miss={} {fail}  inflight={}/{slots}  · {path}",
         counts.resumed,
         counts.unchanged,
         counts.missing,
@@ -239,6 +252,7 @@ mod tests {
         console::set_colors_enabled_stderr(false);
         let counts = Counts {
             started: 8,
+            finished: 6,
             downloaded: 3,
             resumed: 2,
             unchanged: 1,
@@ -248,8 +262,8 @@ mod tests {
             failed: 1,
         };
         assert_eq!(
-            summary_msg(&counts, "/docs/a.md"),
-            "dl=3 resume=2 unchanged=1 miss=1 fail=1  inflight=2  · /docs/a.md"
+            summary_msg(&counts, 4, "/docs/a.md"),
+            "dl=3 resume=2 unchanged=1 miss=1 fail=1  inflight=2/4  · /docs/a.md"
         );
     }
 
@@ -257,7 +271,20 @@ mod tests {
     fn inflight_never_underflows() {
         let counts = Counts {
             started: 1,
-            downloaded: 5,
+            finished: 5,
+            ..Counts::default()
+        };
+        assert_eq!(counts.inflight(), 0);
+    }
+
+    #[test]
+    fn inflight_ignores_the_outcome_classification_backlog() {
+        // 8 requests sent, 8 returned, only 6 classified so far: the wire is idle,
+        // so the line MUST NOT claim 2 are still in flight.
+        let counts = Counts {
+            started: 8,
+            finished: 8,
+            downloaded: 6,
             ..Counts::default()
         };
         assert_eq!(counts.inflight(), 0);
