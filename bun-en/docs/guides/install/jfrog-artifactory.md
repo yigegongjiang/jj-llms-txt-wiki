@@ -1,0 +1,28 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Using bun install with Artifactory
+
+[JFrog Artifactory](https://jfrog.com/artifactory/) is a package management system for npm, Docker, Maven, NuGet, Ruby, Helm, and more. You can use it to host your own private npm registry, along with other types of packages.
+
+To use it with `bun install`, add a `bunfig.toml` file to your project with the following contents:
+
+***
+
+### Configure with bunfig.toml
+
+Replace `MY_SUBDOMAIN` with your JFrog Artifactory subdomain, such as `jarred1234`, and `MY_TOKEN` with your JFrog Artifactory token.
+
+```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+[install.registry]
+url = "https://MY_SUBDOMAIN.jfrog.io/artifactory/api/npm/npm/_auth=MY_TOKEN"
+# You can use an environment variable here
+# url = "$NPM_CONFIG_REGISTRY"
+```
+
+***
+
+### Configure with `$NPM_CONFIG_REGISTRY`
+
+As with npm, you can set the `NPM_CONFIG_REGISTRY` environment variable to configure JFrog Artifactory for `bun install`.

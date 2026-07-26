@@ -1,0 +1,70 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Configuring a monorepo using workspaces
+
+Bun's package manager supports npm `"workspaces"`. Workspaces split a codebase into distinct packages that live in the same repository, can depend on each other, and (when possible) share a `node_modules` directory.
+
+Clone [this sample project](https://github.com/colinhacks/bun-workspaces) to experiment with workspaces.
+
+***
+
+The root `package.json` should not contain `"dependencies"`, `"devDependencies"`, or other dependency fields. Each package should be self-contained and declare its own dependencies. It's conventional to declare `"private": true` to avoid accidentally publishing the root package to `npm`.
+
+```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+{
+  "name": "my-monorepo",
+  "private": true,
+  "workspaces": ["packages/*"]
+}
+```
+
+***
+
+It's common to place all packages in a `packages` directory. The `"workspaces"` field in `package.json` supports glob patterns, so `packages/*` treats each subdirectory of `packages` as a separate *package* (also known as a workspace).
+
+```txt File Tree icon="folder-tree" theme={"theme":{"light":"github-light","dark":"dracula"}}
+.
+├── package.json
+├── node_modules
+└── packages
+    ├── stuff-a
+    │   └── package.json
+    └── stuff-b
+        └── package.json
+```
+
+***
+
+To add dependencies between workspaces, use the `"workspace:*"` syntax. The following adds `stuff-a` as a dependency of `stuff-b`.
+
+```json packages/stuff-b/package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+{
+  "name": "stuff-b",
+  "dependencies": {
+    "stuff-a": "workspace:*" // [!code ++]
+  }
+}
+```
+
+***
+
+Once added, run `bun install` from the project root to install dependencies for all workspaces.
+
+```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+bun install
+```
+
+***
+
+To add npm dependencies to a particular workspace, `cd` to that directory and run `bun add` as you normally would. Bun detects that you are in a workspace and [hoists](/docs/pm/isolated-installs) the dependency as needed.
+
+```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+cd packages/stuff-a
+bun add zod
+```
+
+***
+
+See [`bun install`](/docs/pm/cli/install).
