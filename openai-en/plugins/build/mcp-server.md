@@ -1,0 +1,285 @@
+# Build an MCP server
+
+Add an MCP server when a plugin use case needs live data, authentication,
+controlled actions, or code that runs on infrastructure you operate. The
+server defines the tools available to ChatGPT and Codex. It does not need to
+return custom UI.
+
+Start from the supported goals in your
+[use-case inventory](https://developers.openai.com/plugins/plan/use-case). Each tool should help complete a
+recognizable user goal and should expose only the data and actions required for
+that goal.
+
+Build the tools first. After the server works without custom UI, you can [add
+  UI to the MCP server](https://developers.openai.com/plugins/build/chatgpt-ui) for workflows that need
+  visual interaction.
+
+## Choose an MCP software development kit
+
+The official software development kits provide schema helpers, server scaffolding, and streamable
+HTTP transport:
+
+- [TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk),
+  published as `@modelcontextprotocol/sdk`.
+- [Python SDK](https://github.com/modelcontextprotocol/python-sdk), published
+  as `mcp`.
+
+Install the SDK that matches your server stack:
+
+```bash
+# TypeScript
+npm install @modelcontextprotocol/sdk zod
+
+# Python
+pip install mcp
+```
+
+## Create the server
+
+Create an MCP server with a stable name and version:
+
+```ts
+
+
+const server = new McpServer({
+  name: "acme-projects",
+  version: "1.0.0",
+});
+```
+
+MCP servers can also return an
+[`instructions` field](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle#initialization)
+during initialization. ChatGPT and Codex use these instructions alongside tool
+metadata.
+
+Use server instructions for guidance that applies across tools, such as
+required tool sequences or shared rate limits. Keep the most important details
+in the first 512 characters. Do not repeat every tool description or try to
+change the model's personality.
+
+```ts
+const server = new McpServer(
+  { name: "acme-projects", version: "1.0.0" },
+  {
+    instructions:
+      "Before updating a project, call get_project to confirm its ID and current status.",
+  }
+);
+```
+
+## Define tools from user goals
+
+Create one tool for each distinct action the plugin must support. Prefer
+focused operations such as `list_projects`, `get_project`, and
+`update_project` over one tool with many unrelated modes.
+
+Each tool needs:
+
+- An action-oriented name and human-readable title.
+- A description that explains when to use it.
+- An explicit input schema.
+- An output schema when the tool returns structured data.
+- Accurate safety annotations.
+- A handler that authorizes the request and performs the operation.
+
+The model uses this metadata to decide whether and how to call the tool. Treat
+names, descriptions, schemas, and annotations as part of the plugin's
+user-facing behavior.
+
+```ts
+
+
+server.registerTool(
+  "list_projects",
+  {
+    title: "List projects",
+    description:
+      "Use this when the user wants to find or review projects in their Acme workspace.",
+    inputSchema: {
+      status: z.enum(["active", "archived"]).optional(),
+    },
+    outputSchema: {
+      projects: z.array(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          status: z.string(),
+        })
+      ),
+    },
+    annotations: {
+      readOnlyHint: true,
+      openWorldHint: false,
+      destructiveHint: false,
+    },
+  },
+  async ({ status }) => {
+    const projects = await listProjects({ status });
+
+    return {
+      structuredContent: { projects },
+      content: [
+        {
+          type: "text",
+          text: `Found ${projects.length} projects.`,
+        },
+      ],
+    };
+  }
+);
+```
+
+## Return useful results without UI
+
+A tool result can include:
+
+- `structuredContent`: concise data the model can inspect and use in later
+  calls.
+- `content`: text or other MCP content that helps the model answer the user.
+- `_meta`: client-specific data hidden from the model.
+
+Return enough information for the model to complete the workflow without a
+component. Use stable identifiers in structured results so later tools can
+refer to the same records.
+
+Do not put secrets, access tokens, or unnecessary personal data in tool
+results. Treat `_meta` as hidden from the model, not as a substitute for
+authorization or secure storage.
+
+## Authenticate and authorize requests
+
+Add authentication when a tool reads private data or takes action for a user.
+Enforce authorization in the MCP server for every request; never rely on the
+model to decide whether a user has access.
+
+See [Authenticate users](https://developers.openai.com/plugins/build/auth) for OAuth discovery, security
+schemes, and authorization challenges.
+
+## Tool annotations and elicitation
+
+Set annotations according to actual behavior:
+
+- `readOnlyHint`: `true` only when the tool cannot change state.
+- `destructiveHint`: `true` when a tool can cause irreversible or difficult to
+  reverse outcomes.
+- `openWorldHint`: `true` when a tool can affect public or external systems.
+
+Annotations help ChatGPT and Codex choose appropriate confirmation and safety
+behavior. They do not replace authorization, validation, or confirmation in
+your server.
+
+Use MCP elicitation when the server needs structured information that was not
+provided in the original tool call. Keep elicitation focused on information
+the user can reasonably supply. Do not use it to collect secrets or bypass
+normal authentication.
+
+## Company knowledge compatibility
+
+Company knowledge can use read-only tools from your MCP server. To make a
+plugin eligible as a company knowledge source, implement the standard
+`search` and `fetch` tool input schemas and mark other read-only tools with
+`readOnlyHint: true`.
+
+Return absolute, user-openable URLs for sources that the model should cite. Keep
+internal document identifiers in the result's `id` field. For the required
+schemas and result shapes, see
+[Building MCP servers for ChatGPT and API integrations](https://platform.openai.com/docs/mcp).
+
+## Run and test locally
+
+Expose a streamable HTTP endpoint, typically at `/mcp`, then inspect it with
+[MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector):
+
+```bash
+npx @modelcontextprotocol/inspector
+```
+
+In the Inspector UI, select **Streamable HTTP** and enter
+`http://localhost:3000/mcp`.
+
+Use the inspector to:
+
+1. Confirm that initialization succeeds.
+2. Review server instructions and the advertised tool list.
+3. Call every tool with representative and invalid inputs.
+4. Verify schemas, results, errors, and annotations.
+5. Confirm that authorization is enforced for private data and write actions.
+
+Then connect the server to ChatGPT in
+[developer mode](https://developers.openai.com/plugins/deploy/connect-chatgpt) and run the direct,
+indirect, edge-case, and out-of-scope requests from your use-case inventory.
+
+## Deploy the endpoint
+
+Deploy the MCP server before connecting it in developer mode or submitting the
+plugin. Host the server at a public HTTPS endpoint that:
+
+- Supports the MCP streamable HTTP transport.
+- Responds at a stable URL, typically ending in `/mcp`.
+- Meets the latency and availability needs of the plugin's workflows.
+- Can reach required services and data stores.
+- Preserves authentication and authorization boundaries.
+- Produces logs and metrics for failed initialization and tool calls.
+
+Do not use a temporary tunnel or local endpoint for public submission.
+
+### Choose infrastructure
+
+You can deploy the MCP server to serverless, container, edge, or traditional
+application infrastructure. Choose a platform based on:
+
+- Runtime and dependency support.
+- Streaming response behavior.
+- Cold-start and request latency.
+- Network access to required services.
+- Data residency and compliance requirements.
+- Secret management.
+- Logging, tracing, and alerting.
+- Rollback and versioning support.
+
+If the server also hosts optional UI assets, deploy those assets at stable
+origins allowed by the component's
+[content security policy](https://developers.openai.com/plugins/build/chatgpt-ui#content-security-policy-csp).
+
+### Configure the production endpoint
+
+Before deployment:
+
+1. Set production credentials through the host's secret-management system.
+2. Configure the authorization server and allowed redirect behavior.
+3. Apply timeouts and rate limits to expensive or externally visible tools.
+4. Remove debug responses and unnecessary personal data.
+5. Confirm that logs do not contain access tokens or sensitive tool results.
+
+After deployment, call the production endpoint with
+[MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector). Verify
+initialization, server instructions, tools, schemas, annotations,
+authentication, results, and errors.
+
+### Plan for updates
+
+Keep published tool names and schemas backward compatible. Add fields or tools
+without breaking existing contracts. If metadata changes, refresh the
+developer-mode connection and rerun the evaluation set before submission.
+
+For optional UI, version resource identifiers when HTML, JavaScript, or CSS
+changes in a way that could break a cached component.
+
+## Add optional UI
+
+After tools work end to end, decide whether any use case needs visual
+interaction. A table, map, editable schedule, or comparison view may benefit
+from UI. A lookup, status check, or background action often does not.
+
+Continue with [Add UI to your MCP server](https://developers.openai.com/plugins/build/chatgpt-ui) to
+register an MCP Apps resource and associate it with selected tools.
+
+## Security reminders
+
+- Treat every tool input as untrusted.
+- Validate parameters and enforce authorization on the server.
+- Require confirmation for consequential write actions.
+- Keep secrets and sensitive data out of tool metadata and results.
+- Log enough context to investigate failures without logging credentials or
+  unnecessary personal data.
+- Rate-limit expensive or externally visible actions.
