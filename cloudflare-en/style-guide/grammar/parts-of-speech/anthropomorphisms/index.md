@@ -1,0 +1,29 @@
+---
+description: Avoid anthropomorphisms in documentation.
+title: Anthropomorphisms
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/style-guide/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Anthropomorphisms
+
+Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/anthropomorphisms/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Avoid Anthropomorphisms in product content. Anthropomorphism is attributing human characteristics to inanimate objects. Computers do not think, want, worry, or do other things that are uniquely human.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/anthropomorphisms/#page","headline":"Anthropomorphisms · Cloudflare Style Guide","description":"Avoid anthropomorphisms in documentation.","url":"https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/anthropomorphisms/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

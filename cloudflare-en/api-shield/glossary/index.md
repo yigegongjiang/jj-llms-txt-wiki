@@ -1,0 +1,38 @@
+---
+description: Definitions for terms used across API Shield documentation.
+title: Glossary
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/api-shield/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Glossary
+
+Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/api-shield/glossary/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Review the definitions for terms used across Cloudflare's API Shield documentation.
+
+| Term               | Definition                                                                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| API call           | Also known as an API request. An API call is a message sent to a server asking an API to provide a service or information.                                    |
+| API endpoint       | The API endpoint is the location where API calls or requests are fulfilled. API Shield defines endpoints as a host, method, and path tuple.                   |
+| API schema         | The API schema defines which API requests are valid based on several request properties like target endpoint, path or query variable format, and HTTP method. |
+| session identifier | A session identifier is a unique identifier that a website assigns to identify a specific user for the duration of their visit.                               |
+| source endpoint    | The source endpoint is the endpoint managed by API Shield in Endpoint Management by its routing feature.                                                      |
+| target endpoint    | The target endpoint is the ultimate destination that a request is sent to by API Shield's routing feature.                                                    |
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/api-shield/glossary/#page","headline":"Glossary · Cloudflare API Shield docs","description":"Definitions for terms used across API Shield documentation.","url":"https://developers.cloudflare.com/api-shield/glossary/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

@@ -1,0 +1,43 @@
+---
+description: Troubleshoot Cloudflare error 10058.
+title: Error 10058
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/support/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Error 10058
+
+Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10058/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+## Error 10058: List items incompatible with list type
+
+This error indicates that incompatible items were added to the wrong list type.
+
+### Common causes
+
+This error occurs when you are adding items to a list (either IP list, hostname list, or Bulk Redirect List) and the list items are incompatible with the list type.
+
+### Resolution
+
+Make sure you are adding the items to the correct list:
+
+* Custom lists with IP addresses (IP lists) can only contain IP addresses as list items.
+* Custom lists with hostnames can only contain hostnames as list items.
+* Bulk Redirect Lists can only contain URL redirects as list items.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10058/#page","headline":"Error 10058 · Cloudflare Support docs","description":"Troubleshoot Cloudflare error 10058.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10058/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

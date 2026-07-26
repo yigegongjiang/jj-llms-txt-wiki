@@ -1,0 +1,39 @@
+---
+description: Troubleshoot Cloudflare error 10059.
+title: Error 10059
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/support/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Error 10059
+
+Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10059/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+## Error 10059: Maximum number of repeated URL source paths exceeded
+
+This error indicates that the same URL path is repeated too many times across your Bulk Redirect Lists.
+
+### Common causes
+
+This error occurs when you have more than the maximum number of URL redirects with the same source URL path across all Bulk Redirect Lists in your account, regardless of the URL redirect domain. Possible causes include multiple lists containing the same redirects, overlapping configurations, or mismanagement resulting in duplicated source URL paths.
+
+### Resolution
+
+Review the path of your source URLs so that you do not have more than the maximum number of URL redirects sharing the same URL path in your account, regardless of their domain or the list they belong to. Refer to [URL redirect parameters](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/reference/parameters/) for more information on the current limits.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10059/#page","headline":"Error 10059 · Cloudflare Support docs","description":"Troubleshoot Cloudflare error 10059.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10059/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

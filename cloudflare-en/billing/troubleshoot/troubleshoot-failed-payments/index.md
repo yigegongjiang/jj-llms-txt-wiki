@@ -1,0 +1,97 @@
+---
+description: Fix failed payment and declined card errors.
+title: Resolve a payment failure
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/billing/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Resolve a payment failure
+
+Last updated May 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-failed-payments/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+If a payment fails when purchasing a product, changing a subscription, or paying an invoice, you may see one of the following error messages:
+
+* "The payment has failed. Please contact your bank or use a different payment method."
+* "Payment error: authorization failed for \[“example.com”\]"
+
+You may also receive an email with the subject "\[Cloudflare\]: We could not process your renewal payment" when a recurring subscription charge fails.
+
+## What happens next
+
+If the failed payment relates to a recurring charge for a Cloudflare plan, add-on, or subscription, your account is automatically downgraded to a Free plan after a 5-day grace period. Downgrading to a Free plan does not suspend your website, but you lose any paid features associated with the Pro, Business, or Enterprise plan.
+
+To avoid this, resolve the failed payment and retry using the steps below. If you do not resolve the issue within the 5-day grace period, you must manually re-subscribe to each product. You may also need to [pay an outstanding balance](https://developers.cloudflare.com/billing/manage/pay-invoices-overdue-balances/#pay-an-outstanding-balance) from the grace period.
+
+## Causes
+
+* Your card details are incorrect.
+* Your account has insufficient funds.
+* The 3D Secure (3DS) authentication did not complete.
+* Your bank is rate limiting payments from Cloudflare.
+* Your bank is declining the payment.
+
+## Fix the payment method
+
+### Check your payment details
+
+* Confirm that your billing address matches the address registered with your bank.
+* Confirm that the Card Verification Value (CVC) is correct.
+* If you use PayPal, check your PayPal email address for a verification email and follow the authorization instructions.
+
+### Check account funds
+
+Verify that your payment method has enough funds to cover the charge.
+
+### Complete 3D Secure authentication
+
+Some banks require 3DS authentication for online card transactions. For one-time payments or first-time subscription payments, be ready to complete the 3DS prompt when you attempt payment in the Cloudflare dashboard. Your bank may contact you by SMS or push notification from its mobile application.
+
+For customers of Indian banks, 3DS is mandatory for all transactions according to the Reserve Bank of India (RBI) mandate.
+
+### Contact your bank
+
+Cloudflare's payment system does not know why a payment was declined. Contact your bank to find out the specific reason for the decline.
+
+If you purchased or renewed multiple domains through [Cloudflare Registrar](https://developers.cloudflare.com/registrar/), each domain is charged as a separate transaction. Your credit card company may flag these charges as fraud. Contact your bank to confirm and resolve this.
+
+## Retry the payment
+
+After you check the items above, retry your transaction in the Cloudflare dashboard. If the failed payment was for a renewal, Cloudflare retries automatically five times over five days. Retrying manually in the dashboard gives you instant feedback.
+
+1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account.
+2. Go to **Manage Account** \> **Billing**.  
+[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+3. Go to **Invoices and documents**.
+4. Select **Pay now** next to your invoice. You can also open the invoice PDF and select the payment link.
+5. Follow the on-screen instructions to retry the payment.
+
+## Try a new payment method
+
+If you cannot resolve the issue with your current payment method, try an alternative payment method. Cloudflare accepts credit and debit cards (Visa, Mastercard, American Express, Discover), PayPal, Apple Pay, Google Pay, and Stripe Link. To try another payment method, refer to [Update payment methods](https://developers.cloudflare.com/billing/get-started/update-billing-info/#update-payment-methods).
+
+## Verify the fix
+
+After payment succeeds, allow up to 24 hours for Cloudflare to recognize the payment and return your account to good standing. After that time, retry the purchase, subscription change, or invoice payment that failed.
+
+## Related resources
+
+* [Pay an outstanding balance](https://developers.cloudflare.com/billing/manage/pay-invoices-overdue-balances/) — Resolve unpaid invoices
+* [Update billing information](https://developers.cloudflare.com/billing/get-started/update-billing-info/) — Change your payment method
+* [Error reference](https://developers.cloudflare.com/billing/troubleshoot/error-reference/) — Look up other billing error messages
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-failed-payments/#page","headline":"Resolve a payment failure · Cloudflare Billing docs","description":"Fix failed payment and declined card errors.","url":"https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-failed-payments/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-29","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

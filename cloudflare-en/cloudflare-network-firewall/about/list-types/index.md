@@ -1,0 +1,41 @@
+---
+description: IP list types available for Network Firewall policies.
+title: List types
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/cloudflare-network-firewall/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# List types
+
+Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-network-firewall/about/list-types/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+## Threat intelligence
+
+Cloudflare handles millions of HTTP requests each second and blocks billions of cyber threats each day. Cloudflare uses that data to detect malicious actors on the Internet and turns that information into a list of known malicious IP addresses. Cloudflare also integrates with a number of third-party vendors to augment the coverage.
+
+The threat intelligence feed categories are described in [Managed IP Lists](https://developers.cloudflare.com/waf/tools/lists/managed-lists/#managed-ip-lists). All of these lists are compatible with Cloudflare Network Firewall (formerly Magic Firewall).
+
+## IP lists
+
+Use [IP lists](https://developers.cloudflare.com/waf/tools/lists/custom-lists/#ip-lists) to group services in networks, like web servers, or for lists of known bad IP addresses to make managing good network endpoints easier. IP lists are helpful for users with very expansive firewall rules with many IP lists. By default, you can add up to 10,000 IPs across all lists. Refer to [Use an IP list](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/add-policies/#use-an-ip-list) to check an example of how to use an IP list.
+
+## Geo-blocking
+
+Geo-blocking enables you to selectively allow or block traffic to any country. Refer to [Block a country](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/add-policies/#block-a-country) to check an example of how to block a country.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/about/list-types/#page","headline":"List types · Cloudflare Network Firewall docs","description":"IP list types available for Network Firewall policies.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/about/list-types/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

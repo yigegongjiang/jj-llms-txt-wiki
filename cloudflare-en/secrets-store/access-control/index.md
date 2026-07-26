@@ -1,0 +1,92 @@
+---
+description: Learn about role-based access control with Cloudflare Secrets Store
+title: Secrets Store access control
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/secrets-store/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Secrets Store access control
+
+Last updated Jun 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/secrets-store/access-control/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Secrets Store allows security administrators to have more control by implementing role-based access. For details about roles at Cloudflare, refer to [Fundamentals](https://developers.cloudflare.com/fundamentals/manage-members/).
+
+Availability
+
+While all Cloudflare accounts will have access to the Secrets Store section on the dashboard, only users with the necessary permissions will be able to interact with it, as described below.
+
+Access to a secret is controlled by two independent checks that must both pass:
+
+1. **Authorization** — the caller must have permission to perform the action. The permission comes from either a [user role](#relevant-roles) (when the dashboard authenticates the request) or an [API token permission](#api-token-permissions) (when the request is made with an API token). A given request is evaluated against one or the other, not both.
+2. **Secret scope** — the [scope list](#secret-scopes) on the secret must include the consuming service.
+
+For example, deploying a Worker that binds a secret requires a role or API token that can bind secrets, and a secret whose scope includes `workers`.
+
+## Relevant roles
+
+Refer to the list below for default role definitions.
+
+#### Super Administrator
+
+* Can create, edit, duplicate, delete, and view secrets metadata.
+* Can [add a Secrets Store binding to a Worker](https://developers.cloudflare.com/secrets-store/integrations/workers/).
+* Can [create an association between a secret and an AI gateway](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/).
+
+#### Secrets Store Admin
+
+* Can create, edit, duplicate, delete, and view secrets metadata.
+
+#### Secrets Store Deployer
+
+* Can view secrets metadata but cannot create, edit, duplicate, nor delete secrets.
+* Can [add a Secrets Store binding to a Worker](https://developers.cloudflare.com/secrets-store/integrations/workers/).
+* Can [create an association between a secret and an AI gateway](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/).
+
+#### Secrets Store Reporter
+
+* Can view secrets metadata.
+* Cannot perform any actions (create, edit, duplicate, delete secrets), nor use Secrets Store integrations with other Cloudflare products.
+
+## API token permissions
+
+[API tokens](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) have two Secrets Store permission levels: **Read** and **Edit**. The permission you need depends on what the token is doing, not on whether you intend to modify the secret itself.
+
+* **Account Secrets Store Read**: Allows the caller to view metadata for secrets (for example, listing secrets or fetching the name, ID, scopes, and comments of a secret). This permission does not grant access to the value of a secret, and does not allow binding a secret to another resource.
+* **Account Secrets Store Edit**: Allows the caller to create, edit, duplicate, or delete secrets. **Edit is also required to bind a secret to another Cloudflare resource**, such as adding a Secrets Store binding to a Worker or associating a secret with an AI Gateway. Attaching a secret to a resource is treated as a write against the secret.
+
+Deploying Workers from CI/CD
+
+If you use Wrangler in a CI/CD pipeline (for example, [wrangler-action ↗](https://github.com/cloudflare/wrangler-action) in GitHub Actions) to deploy a Worker that has a [Secrets Store binding](https://developers.cloudflare.com/secrets-store/integrations/workers/), the API token used by the pipeline must have **Account Secrets Store Edit** permission. A token with only **Read** will fail at deploy time with an authorization error such as `failed to fetch secrets store binding due to authorization error - check deploy permissions and secret scopes`.
+
+## Secret scopes
+
+Each secret has a list of **scopes** that determine which Cloudflare services are allowed to consume it. Scopes are set when a secret is created, and can be updated later by editing the secret.
+
+The currently supported scopes are:
+
+* `workers` — allows the secret to be [bound to a Worker](https://developers.cloudflare.com/secrets-store/integrations/workers/).
+* `ai-gateway` — allows the secret to be [associated with an AI Gateway](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/).
+
+A request to bind or associate a secret with a service will be rejected if that service is not in the scope list, even if the caller has the correct role or API token permission. Deploying a Worker with a Secrets Store binding therefore requires both:
+
+* A user role or API token that can bind secrets (Super Administrator or Secrets Store Deployer role, or **Account Secrets Store Edit** API token permission).
+* A scope list on the secret that includes `workers`.
+
+You can set scopes when [creating a secret](https://developers.cloudflare.com/secrets-store/manage-secrets/) using the dashboard, the API (`scopes` field), or Wrangler (`--scopes` flag).
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/secrets-store/access-control/#page","headline":"Secrets Store access control · Cloudflare Secrets Store docs","description":"Learn about role-based access control with Cloudflare Secrets Store","url":"https://developers.cloudflare.com/secrets-store/access-control/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-29","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

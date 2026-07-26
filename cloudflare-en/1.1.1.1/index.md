@@ -1,0 +1,71 @@
+---
+description: Fast, private DNS resolution with Cloudflare 1.1.1.1 public resolver.
+title: 1.1.1.1 (DNS Resolver)
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/1.1.1.1/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# 1.1.1.1 (DNS Resolver)
+
+Last updated Apr 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Speed up your online experience with Cloudflare's public DNS resolver.
+
+Available on all plans
+
+1.1.1.1 is Cloudflare's public [DNS resolver ↗](https://www.cloudflare.com/learning/dns/what-is-dns/). When you type a domain name like `cloudflare.com` into your browser, a DNS resolver translates that name into an IP address (for example, `104.16.123.96`) so your device knows which server to contact.
+
+Most people use the DNS resolver assigned by their Internet Service Provider (ISP). Switching to 1.1.1.1 gives you a faster, more private alternative. Unlike most DNS resolvers, 1.1.1.1 does not sell user data to advertisers.
+
+1.1.1.1 has been measured as the [fastest public DNS resolver ↗](https://www.dnsperf.com/#!dns-resolvers). It runs on Cloudflare's network in [hundreds of cities worldwide ↗](https://www.cloudflare.com/network/) and has access to the addresses of millions of domains on the same servers it runs on.
+
+1.1.1.1 is free. Setting it up takes minutes and does not require any special software.
+
+---
+
+## Features
+
+[1.1.1.1 for Families](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families)
+
+1.1.1.1 for Families adds protection against malware and adult content on top of the standard resolver.
+
+Use 1.1.1.1 for Families
+
+[Encrypted DNS](https://developers.cloudflare.com/1.1.1.1/encryption/)
+
+1.1.1.1 supports DNS over HTTPS (DoH) and DNS over TLS (DoT) to encrypt your DNS queries and prevent eavesdropping. You can also access 1.1.1.1 [as a Tor hidden service](https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-tor/).
+
+Use Encrypted DNS
+
+---
+
+## Related products
+
+[WARP Client](https://developers.cloudflare.com/warp-client/)
+
+Encrypt all traffic from your device, not only DNS queries.
+
+[DNS](https://developers.cloudflare.com/dns/)
+
+Cloudflare's global DNS platform provides speed and resilience. DNS customers also benefit from free DNSSEC, and protection against route leaks and hijacking.
+
+[Cloudflare Spectrum](https://developers.cloudflare.com/spectrum/)
+
+Secure and accelerate your TCP or UDP based applications.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/1.1.1.1/#page","headline":"1.1.1.1 (DNS Resolver) | Cloudflare Docs","description":"Fast, private DNS resolution with Cloudflare 1.1.1.1 public resolver.","url":"https://developers.cloudflare.com/1.1.1.1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

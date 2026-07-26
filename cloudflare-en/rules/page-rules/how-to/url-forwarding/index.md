@@ -1,0 +1,144 @@
+---
+description: Create URL forwarding rules with Page Rules.
+title: URL forwarding with Page Rules
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/rules/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# URL forwarding with Page Rules
+
+Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Page Rules allow you to forward or redirect traffic to a different URL, though they are just one of the [options provided by Cloudflare](https://developers.cloudflare.com/fundamentals/reference/redirects/).
+
+Note
+
+Consider alternative [Rules](https://developers.cloudflare.com/rules/) options due to their enhanced configurability. Refer to the [migration guide](https://developers.cloudflare.com/rules/reference/page-rules-migration/) for details.
+
+For more flexibility and customization, consider using [Snippets](https://developers.cloudflare.com/rules/snippets/).
+
+---
+
+## Redirect with Page Rules
+
+To configure URL forwarding or redirects using Page Rules:
+
+1. In the Cloudflare dashboard, go to the **Page Rules** page.  
+[Go to **Page Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/rules/page-rules)
+2. Select **Create Page Rule**.
+3. Under **If the URL matches**, enter the URL or URL pattern that should match the rule.
+4. In **Pick a Setting**, choose **Forwarding URL** from the drop-down menu.
+5. For **Select status code**, choose _301 - Permanent Redirect_ or _302 - Temporary Redirect_.
+6. Enter the destination URL.
+7. Select **Save and Deploy Page Rule**.
+
+Note
+
+Page Rules require a [proxied DNS record](https://developers.cloudflare.com/dns/proxy-status/) to work. Page Rules will not apply to subdomains that do not exist in DNS or are not being directed to Cloudflare.
+
+---
+
+## Forwarding examples
+
+Imagine you want site visitors to reach your website for a variety of URL patterns. For instance, the page rule URL patterns `*www.example.com/products` and `*example.com/products` match:
+
+```txt
+http://example.com/products
+
+http://www.example.com/products
+
+https://www.example.com/products
+
+https://blog.example.com/products
+
+https://www.blog.example.com/products
+```
+
+but do not match:
+
+```txt
+http://www.example.com/blog/products (extra directory)
+or
+http://www.example.comproducts (no trailing slash)
+```
+
+Once you have created the pattern that matches what you want, select the **Forwarding** toggle. This will display a field where you can enter the address you want requests forwarded to.
+
+```txt
+https://example.com/products
+```
+
+If you enter the address above in the forwarding box and select **Add Rule**, within a few seconds any requests that match the pattern you entered will automatically be forwarded with an `HTTP 302` redirect status code to the new URL.
+
+---
+
+## Advanced forwarding options
+
+If you use a basic redirect, such as forwarding the apex domain (`example.com`) to `www.example.com`, then you lose anything else in the URL.
+
+For example, you could set up the pattern:
+
+```txt
+example.com
+```
+
+And have it forward to:
+
+```txt
+http://www.example.com
+```
+
+However, if someone entered `example.com/some-particular-page.html`, they would be redirected to:
+
+```txt
+www.example.com
+```
+
+Instead of:
+
+```txt
+www.example.com/some-particular-page.html
+```
+
+The solution is to use variables. Each wildcard corresponds to a variable when can be referenced in the forwarding address. The variables are represented by a `$` (dollar sign) followed by a number. To refer to the first wildcard you would use `$1`, to refer to the second wildcard you would use `$2`, and so on.
+
+To fix the forwarding from the apex to `www` in the above example, you could use the same pattern:
+
+```txt
+example.com/*
+```
+
+You would then set up the following URL for traffic to forward to:
+
+```txt
+http://www.example.com/$1
+```
+
+In this case, if someone went to:
+
+```txt
+example.com/some-particular-page.html
+```
+
+They would be redirected to:
+
+```txt
+http://www.example.com/some-particular-page.html
+```
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/#page","headline":"URL forwarding with Page Rules · Cloudflare Rules docs","description":"Create URL forwarding rules with Page Rules.","url":"https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Redirects"]}
+```

@@ -1,0 +1,55 @@
+---
+description: Connect to Cloudflare's Roughtime server.
+title: Get the Roughtime
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/time-services/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Get the Roughtime
+
+Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/time-services/roughtime/usage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+The "Hello, world!" of Roughtime is very simple: the client sends a request over UDP to the server and the server responds with a signed timestamp.
+
+You just need the server's address and public key to run the protocol:
+
+* **Server address**: `roughtime.cloudflare.com:2003` (resolves to an IP address in our [anycast IP range ↗](https://www.cloudflare.com/learning/cdn/glossary/anycast-network/)). You can use either IPv4 or IPv6.
+* **Public key**: `0GD7c3yP8xEc4Zl2zeuN2SlLvDVVocjsPSL8/Rl/7zg=`
+
+To get started, download and run Cloudflare's [Go client ↗](https://github.com/cloudflare/roughtime):
+
+```go
+go install github.com/cloudflare/roughtime/cmd/getroughtime@latest
+getroughtime -ping roughtime.cloudflare.com:2003 -pubkey 0GD7c3yP8xEc4Zl2zeuN2SlLvDVVocjsPSL8/Rl/7zg=
+```
+
+## Beta notice
+
+Cloudflare Roughtime is currently in beta. As such, our root public key may change in the future. We will keep this page up-to-date with the most current public key.
+
+You can also obtain it programmatically using DNS. For example:
+
+```sh
+dig TXT roughtime.cloudflare.com | grep -oP 'TXT\s"\K.*?(?=")'
+```
+
+## Next steps
+
+Beyond just getting the Roughtime from Cloudflare, you may want to use it to [keep your clock in sync](https://developers.cloudflare.com/time-services/roughtime/recipes/).
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/time-services/roughtime/usage/#page","headline":"Get the Roughtime from Cloudflare · Cloudflare Time Services docs","description":"Connect to Cloudflare's Roughtime server.","url":"https://developers.cloudflare.com/time-services/roughtime/usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

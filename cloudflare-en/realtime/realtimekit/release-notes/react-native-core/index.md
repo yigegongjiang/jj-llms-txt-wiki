@@ -1,0 +1,184 @@
+---
+description: Release notes and changelog for the RealtimeKit React Native Core SDK.
+title: React Native Core SDK
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/realtime/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# React Native Core SDK
+
+Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/release-notes/react-native-core/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+[Subscribe to RSS](https://developers.cloudflare.com/realtime/realtimekit/release-notes/react-native-core/index.xml)
+
+## 2026-07-08
+
+**RealtimeKit React Native Core 2.0.0**
+
+**Compatibility:** Works best with RealtimeKit React Native UI Kit 2.0.0 or later.
+
+This is a major breaking release. Review all breaking changes below before upgrading.
+
+**Breaking changes**
+
+* Upgraded to `@cloudflare/realtimekit` v2.0.0.  
+All [breaking changes from Web Core v2.0.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/#2026-06-18-realtimekit-web-core-200) apply, including the complete redesign of the plugin API and removal of all deprecated APIs.
+* Requires React Native 0.84 or above and React 19 or above.
+* Requires Expo 56 or above (for Expo users).
+* Requires iOS 15.1 or above.
+* Requires @cloudflare/react-native-webrtc v137.0.1 or above.
+* Removed `RealtimeKitCore` import in iOS Screenshare setup and added a Podfile installer script to automatically add references to the Screenshare related files. Refer documentation for [iOS Screenshare setup](https://developers.cloudflare.com/realtime/realtimekit/core/local-participant/#screen-share-setup-ios).
+* `initClient` return type changed from `Promise<RealtimeKitClient>` to `Promise<RealtimeKitClient | undefined>`. Code that assumes `initClient` always returns a defined value must add a null check.
+
+**Features**
+
+* `Connected Meetings` support: the `useRealtimeKitClient` hook now automatically listens to `connectedMeetings.meetingChanged` and hot-swaps the active client when switching between connected or breakout meetings.
+* `Background support` for Android (enabled by default):
+  * New exported type `KeepAliveServiceConfig` to configure the Android meeting foreground service notification (title, body text, enable/disable).
+  * New `useRealtimeKitClient({ keepAliveService })` option to customize or disable the Android foreground notification.
+  * New `useRealtimeKitClient({ resetOnLeave })` option to reset client state on room leave.
+
+**Fixes**
+
+* Fixed an issue where the microphone did not work after being toggled if audio permission had not been granted before joining the meeting.
+* Fixed an issue where the in-call notification on Android persisted after the meeting ended.
+* Fixed an issue where screen sharing failed on the first attempt on Android 14 and above.
+* Fixed an issue where stopping screen sharing did not properly clean up event listeners, which could cause screen sharing to malfunction in subsequent sessions.
+
+## 2026-06-18
+
+**RealtimeKit React Native Core 1.1.0**
+
+**Features**
+
+* Added a dedicated error code `0014` for media (WebRTC) connection failures during room join, making it easier to distinguish media failures from socket and signaling failures.
+
+**Enhancements**
+
+* Init and join failures from `initMeeting()` and `meeting.join()` now surface specific error codes and descriptive messages instead of generic errors.
+
+**Fixes**
+
+* Fixed an issue where `ClientError` objects were wrapped inside each other when the SDK retried failed API requests, causing nested error messages and duplicate `onError` callbacks.
+
+## 2026-05-05
+
+**RealtimeKit React Native Core 1.0.0**
+
+**Breaking changes**
+
+* Removed Hive SFU support. Only the Cloudflare SFU is supported going forward.
+* The default base URI is now `realtime.cloudflare.com`. Calling `initMeeting()` with baseURI parameter set to a `dyte.io` base domain now throws an Error.
+* `RealtimeKitClientOptions` is renamed to `RTKClientOptions`.
+
+**Fixes**
+
+* Fixed an issue where sometimes after rejoining a meeting & upon stopping iOS screenshare, the app freezes.
+
+## 2026-03-30
+
+**RealtimeKit React Native Core 0.3.2**
+
+**Fixes**
+
+* Fixed the issue when leaving & rejoining a meeting causes the local media to stop working
+* Fixed iOS screenshare stops broadcasting on Web when calling `meeting.self.disableScreenShare()` but not clicking on 'Stop' on iOS Picker View.
+
+## 2025-11-20
+
+**RealtimeKit React Native Core 0.3.1**
+
+**Fixes**
+
+* Fixed bluetooth not showing in list/dropdown after rejoining meeting
+* Fixed mobile active speaker not working after rejoining meeting
+
+## 2025-11-02
+
+**RealtimeKit React Native Core 0.3.0**
+
+**Breaking changes**
+
+* Starting from version v0.3.0, SDK now supports only React Native 0.77 and above.
+
+**Fixes**
+
+* Fixed 16KB page support in Android >=15
+* Fixed foreground service failed to stop errors in Android
+* Fixed bluetooth issues in iOS Devices
+* Fixed android build issues due to deprecated jCenter in React Native 0.80 or higher
+
+## 2025-10-06
+
+**RealtimeKit React Native Core 0.2.1**
+
+**Fixes**
+
+* Fixed can't install multiple apps with expo sdk
+* Fixed screenshare for Android in Expo with New Architecture enabled
+* Fixed remote audio/video not working in group calls
+
+## 2025-09-14
+
+**RealtimeKit React Native Core 0.2.0**
+
+**Breaking changes**
+
+* Adding a `blob_provider_authority` string resource is now mandatory. Refer to the installation instructions for more details.
+
+**Fixes**
+
+* Fixed audio switch to earpiece when leaving stage in Webinar
+* Fixed types for useRealtimeKitClient options
+* Fixed screenshare for Android in Expo
+
+## 2025-08-05
+
+**RealtimeKit React Native Core 0.1.3**
+
+**Fixes**
+
+* Fixed active speaker not working
+
+## 2025-07-08
+
+**RealtimeKit React Native Core 0.1.2**
+
+**Fixes**
+
+* Fixed screenshare not working for Android 13 and later
+* Fixed audio device switching not working
+* Minor performance improvements
+
+## 2025-06-05
+
+**RealtimeKit React Native Core 0.1.1**
+
+**Fixes**
+
+* Documentation improvements
+
+## 2025-05-29
+
+**RealtimeKit React Native Core 0.1.0**
+
+**Features**
+
+* Initial release
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/realtime/realtimekit/release-notes/react-native-core/#page","headline":"React Native Core SDK · Cloudflare Realtime docs","description":"Release notes and changelog for the RealtimeKit React Native Core SDK.","url":"https://developers.cloudflare.com/realtime/realtimekit/release-notes/react-native-core/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

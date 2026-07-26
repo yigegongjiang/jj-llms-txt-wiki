@@ -1,0 +1,53 @@
+---
+description: Specify D1 Databases to add to your environment as follows:
+title: D1
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/workers/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# D1
+
+Last updated Jan 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/storage/d1/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+* [D1 Reference](https://developers.cloudflare.com/d1/)
+
+## Databases
+
+Specify D1 Databases to add to your environment as follows:
+
+```js
+const mf = new Miniflare({
+	d1Databases: {
+		DB: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+	},
+});
+```
+
+## Working with D1 Databases
+
+For testing, it can be useful to put/get data from D1 storage bound to a Worker. You can do this with the `getD1Database` method:
+
+```js
+const db = await mf.getD1Database("DB");
+const stmt = await db.prepare("<Query>");
+const returnValue = await stmt.run();
+
+return Response.json(returnValue.results);
+```
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/storage/d1/#page","headline":"D1 · Cloudflare Workers docs","description":"Specify D1 Databases to add to your environment as follows:","url":"https://developers.cloudflare.com/workers/testing/miniflare/storage/d1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-01-28","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

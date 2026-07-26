@@ -1,0 +1,66 @@
+---
+description: China data center locations, network IP addresses, and API endpoints.
+title: Infrastructure
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/china-network/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Infrastructure
+
+Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/china-network/reference/infrastructure/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+## China data centers
+
+For up-to-date information, refer to the [Cloudflare China Network ↗](https://www.cloudflare.com/china-network/) page.
+
+### Network IP addresses
+
+Cloudflare publishes a list of IP addresses for JD Cloud data centers, used by Cloudflare when connecting to the origin networks of customers to retrieve assets. These addresses are not the same IP addresses returned to website visitors as part of DNS resolution.
+
+You can obtain the list of JD Cloud data center IP addresses via Cloudflare API. Use the [Cloudflare/JD Cloud IP Details](https://developers.cloudflare.com/api/resources/ips/methods/list/) operation with the `networks=jdcloud` query string parameter:
+
+```bash
+curl "https://api.cloudflare.com/client/v4/ips?networks=jdcloud" \
+	--request GET
+```
+
+```json
+{
+	"result": {
+		"ipv4_cidrs": [
+			// (...)
+		],
+		"ipv6_cidrs": [
+			// (...)
+		],
+		"jdcloud_cidrs": [
+			// (...)
+		],
+		"etag": "<ETAG>"
+	},
+	"success": true,
+	"errors": [],
+	"messages": []
+}
+```
+
+The `jdcloud_cidrs` array lists the IP addresses of JD Cloud data centers.
+
+Cloudflare will add new IP addresses to this list 30 days in advance before connecting from those IP addresses to an origin server. If you are using the China Network on JD Cloud, you should update your firewalls to reflect any IP address changes at least once every 30 days.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/china-network/reference/infrastructure/#page","headline":"Infrastructure · Cloudflare China Network docs","description":"China data center locations, network IP addresses, and API endpoints.","url":"https://developers.cloudflare.com/china-network/reference/infrastructure/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

@@ -1,0 +1,153 @@
+---
+description: Create a Solid application and deploy it to Cloudflare Workers with Workers Assets.
+title: Solid
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/workers/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Solid
+
+Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/solid/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Note
+
+Support for SolidStart projects on Cloudflare Workers is currently in beta.
+
+Already have a Solid Start project?
+
+Run `wrangler deploy` in a project without a Wrangler configuration file and Wrangler will automatically detect Solid Start, generate the necessary configuration, and deploy your project.
+
+npmyarnpnpm
+
+```
+npx wrangler deploy
+```
+
+```
+yarn wrangler deploy
+```
+
+```
+pnpm wrangler deploy
+```
+
+Learn more about [automatic project configuration](https://developers.cloudflare.com/workers/framework-guides/automatic-configuration/).
+
+Solid StartDetected
+
+Generated configuration
+
+wrangler.jsonc
+
+main:.output/server/index.mjs
+
+wrangler.jsonc
+
+assets:directory: .output/public
+
+wrangler.jsonc
+
+compatibility\_flags:nodejs\_compat
+
+wrangler.jsonc
+
+observability:enabled: true
+
+WorkersDeployed
+
+Wrangler handles configuration automatically
+
+In this guide, you will create a new [Solid ↗](https://www.solidjs.com/) application and deploy to Cloudflare Workers (with the new [Workers Assets](https://developers.cloudflare.com/workers/static-assets/)).
+
+## 1\. Set up a new project
+
+Use the [create-cloudflare ↗](https://www.npmjs.com/package/create-cloudflare) CLI (C3) to set up a new project. C3 will create a new project directory, initiate Solid's official setup tool, and provide the option to deploy instantly.
+
+To use `create-cloudflare` to create a new Solid project with Workers Assets, run the following command:
+
+npmyarnpnpm
+
+```
+npm create cloudflare@latest -- my-solid-app --framework=solid --experimental
+```
+
+```
+yarn create cloudflare my-solid-app --framework=solid --experimental
+```
+
+```
+pnpm create cloudflare@latest my-solid-app --framework=solid --experimental
+```
+
+After setting up your project, change your directory by running the following command:
+
+```sh
+cd my-solid-app
+```
+
+## 2\. Develop locally
+
+After you have created your project, run the following command in the project directory to start a local server. This will allow you to preview your project locally during development.
+
+npmyarnpnpm
+
+```
+npm run dev
+```
+
+```
+yarn run dev
+```
+
+```
+pnpm run dev
+```
+
+## 3\. Deploy your Project
+
+Your project can be deployed to a `*.workers.dev` subdomain or a [Custom Domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/), from your own machine or from any CI/CD system, including [Cloudflare's own](https://developers.cloudflare.com/workers/ci-cd/builds/).
+
+The following command will build and deploy your project. If you're using CI, ensure you update your ["deploy command"](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#build-settings) configuration appropriately.
+
+npmyarnpnpm
+
+```
+npm run deploy
+```
+
+```
+yarn run deploy
+```
+
+```
+pnpm run deploy
+```
+
+---
+
+## Bindings
+
+Your Solid application can be fully integrated with the Cloudflare Developer Platform, in both local development and in production, by using product bindings. The [Solid documentation ↗](https://docs.solidjs.com/reference/server-utilities/get-request-event) provides information about how to access platform primitives, including bindings. Specifically, for Cloudflare, you can use [getRequestEvent().nativeEvent.context.cloudflare.env ↗](https://docs.solidjs.com/solid-start/advanced/request-events#nativeevent) to access bindings.
+
+With bindings, your application can be fully integrated with the Cloudflare Developer Platform, giving you access to compute, storage, AI and more.
+
+### [Bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/)
+
+Access to compute, storage, AI and more.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/solid/#page","headline":"Solid · Cloudflare Workers docs","description":"Create a Solid application and deploy it to Cloudflare Workers with Workers Assets.","url":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/solid/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["full-stack"]}
+```

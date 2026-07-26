@@ -1,0 +1,56 @@
+---
+description: Enable automatic browser refresh in Miniflare when your Workers script changes during local development.
+title: Live Reload
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/workers/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Live Reload
+
+Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/developing/live-reload/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Miniflare automatically refreshes your browser when your Worker script changes when `liveReload` is set to `true`.
+
+```js
+const mf = new Miniflare({
+	liveReload: true,
+});
+```
+
+Miniflare will only inject the `<script>` tag required for live-reload at the end of responses with the `Content-Type` header set to `text/html`:
+
+```js
+export default {
+	fetch() {
+		const body = `
+      <!DOCTYPE html>
+      <html>
+      <body>
+        <p>Try update me!</p>
+      </body>
+      </html>
+    `;
+
+		return new Response(body, {
+			headers: { "Content-Type": "text/html; charset=utf-8" },
+		});
+	},
+};
+```
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/developing/live-reload/#page","headline":"Live Reload · Cloudflare Workers docs","description":"Enable automatic browser refresh in Miniflare when your Workers script changes during local development.","url":"https://developers.cloudflare.com/workers/testing/miniflare/developing/live-reload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

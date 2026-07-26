@@ -1,0 +1,93 @@
+---
+description: Review the current limitations of Cloudflare Organizations and troubleshoot common errors.
+title: Limitations and troubleshooting
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/fundamentals/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Limitations and troubleshooting
+
+Last updated Jul 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/organizations/limitations/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Note
+
+Cloudflare Organizations is currently in public beta. Organizations is actively used in production by Enterprise and MSSP/Distributor customers.
+
+The following limitations currently apply to Cloudflare Organizations. For common errors and resolutions, refer to [Troubleshooting](#troubleshooting).
+
+## Account and zone limits
+
+Each Organization supports a maximum of **500 accounts** and **5,000 zones**. This limit applies to both Enterprise and MSSP/Distributor Organizations. These limits may be adjusted as usage patterns are better understood during the beta.
+
+## Enterprise Organizations
+
+| Limitation            | Description                                                                                                                                                                                                                            |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Organization creation | You must be a Super Administrator of an Enterprise account to create an Organization.                                                                                                                                                  |
+| Adding accounts       | You can add accounts of any plan type (Enterprise, PAYGO, or Free) to your Organization. You must have Super Administrator access to the account, and it cannot already belong to another Organization.                                |
+| Account creation      | Self-serve account creation is not available. To add a new account, contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) to create the account, then assign it to your Organization. |
+| Sub-Organizations     | Not available. Enterprise Organizations use a flat, single-tier structure. Use tags to organize accounts by business unit, region, or environment.                                                                                     |
+| Moving accounts       | Accounts cannot be moved between Organizations.                                                                                                                                                                                        |
+| Roles                 | Organization Super Administrator is the only role available. Additional roles (read-only, billing, audit log) will be available in a future release.                                                                                   |
+| Organization deletion | To delete an Organization, use the [API](https://developers.cloudflare.com/api/resources/organizations/methods/delete). Dashboard support is not yet available.                                                                        |
+| Account removal       | Self-service account removal is not yet available. To remove an account from your Organization, contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/).                                |
+
+## MSSP/Distributor Organizations
+
+| Limitation                   | Description                                                                                                                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Organization creation        | MSSP/Distributor Organizations are created by Cloudflare. Contact your account team to set up your Organization.                                                                                        |
+| Adding existing accounts     | Assigning existing accounts is not available for MSSP/Distributor Organizations. Use account creation to add new accounts.                                                                              |
+| Account creation             | MSSP Organizations can self-serve create new customer accounts within their Organization.                                                                                                               |
+| Sub-Organizations            | Distributors can create child MSSP Organizations. MSSP/Distributor Organizations support up to 5 levels of nested sub-organizations.                                                                    |
+| Moving accounts              | Accounts can be moved between MSSP Organizations within the same Distributor Organization.                                                                                                              |
+| Roles                        | Organization Super Administrator is the only role available. Additional roles (read-only, billing, audit log) will be available in a future release.                                                    |
+| Organization deletion        | To delete an Organization, use the [API](https://developers.cloudflare.com/api/resources/organizations/methods/delete). Dashboard support is not yet available.                                         |
+| Account removal              | Self-service account removal is not yet available. To remove an account from your Organization, contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/). |
+| Organization type conversion | Organization type (Enterprise vs MSSP/Distributor) is set at creation and cannot be changed. To switch types, a new Organization must be created.                                                       |
+
+## Troubleshooting
+
+You may encounter the following errors when setting up or managing an Organization.
+
+### Organization creation errors
+
+| Error                                                                                                                                                | Description                                                                                                                                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Organization management is only available on the Enterprise plan at this time.                                                                       | You are not a member of any Enterprise accounts. You must be a Super Administrator of at least one Enterprise account to create an Organization.                                                                                                      |
+| You need a super admin role on an enterprise account to create an Organization.                                                                      | You are not a Super Administrator of an Enterprise account. Check your role under **Manage Account** \> **Members** on your Enterprise account.                                                                                                       |
+| One or more of your enterprise accounts is already part of an Organization.                                                                          | Your accounts are already assigned to an Organization. Contact your company administrator to be invited to the existing Organization.                                                                                                                 |
+| You have reached the maximum number of organizations.                                                                                                | Each user can only create one Organization. If you need to manage a second Organization, contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/).                                                      |
+| An Organization has already been created for accounts associated with your company. Please contact your company administrator.                       | Every company is limited to one Organization for all business units. Contact your company's Cloudflare administrator to be invited to the existing Organization.                                                                                      |
+| You are not eligible to create an Organization because we think there's a problem. Please contact Cloudflare support and we will help you create it. | This rare error may indicate an issue with the internal metadata for one or more of your accounts. Contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) with your account ID and the error message. |
+
+### Member invitation errors
+
+| Error                                                    | Resolution                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Invited member cannot accept the invitation.             | The invited user must have [two-factor authentication (2FA)](https://developers.cloudflare.com/fundamentals/user-profiles/2fa/) or [single sign-on (SSO)](https://developers.cloudflare.com/fundamentals/manage-members/dashboard-sso/) enabled on their Cloudflare user account before they can accept an Organization invitation. This is a per-user requirement, not an account-level setting. Ask the user to enable 2FA or SSO, then resend the invitation. |
+| Member does not have access to accounts after accepting. | Organization membership grants implicit access, which may take a few minutes to propagate. If access does not appear after 5 minutes, ask the member to log out and log back in.                                                                                                                                                                                                                                                                                 |
+
+### Account assignment errors
+
+| Error                                           | Resolution                                                                                                                                                                                                                                         |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Account does not appear in the assignment list. | You must be a Super Administrator of the account. Verify your role under **Manage Account** \> **Members** on that account.                                                                                                                        |
+| Account cannot be assigned.                     | The account may already belong to another Organization. Each account can only belong to one Organization. Contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) if you believe this is incorrect. |
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/organizations/limitations/#page","headline":"Limitations and troubleshooting · Cloudflare Fundamentals docs","description":"Review the current limitations of Cloudflare Organizations and troubleshoot common errors.","url":"https://developers.cloudflare.com/fundamentals/organizations/limitations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

@@ -1,0 +1,39 @@
+---
+description: Troubleshoot Cloudflare error 10048.
+title: Error 10048
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/support/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Error 10048
+
+Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10048/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+## Error 10048: Preserve path suffix requires subpath matching enabled
+
+This error indicates a configuration mismatch where the **Preserve path suffix** option is used without enabling **Subpath matching** in a URL redirect.
+
+### Common causes
+
+This error occurs when you enable the **Preserve path suffix** option in a redirect without enabling the **Subpath matching** option. The **Preserve path suffix** option of a URL redirect is only applicable when the **Subpath matching** option is also enabled.
+
+### Resolution
+
+Enable **Subpath matching** for the URL redirect with **Preserve path suffix** enabled.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10048/#page","headline":"Error 10048 · Cloudflare Support docs","description":"Troubleshoot Cloudflare error 10048.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10048/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

@@ -1,0 +1,67 @@
+---
+description: API reference for rtk-text-composer-view component (Web Components (HTML) Library)
+title: rtk-text-composer-view
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/realtime/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# rtk-text-composer-view
+
+Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/core/rtk-text-composer-view/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+A component which renders a text composer
+
+## Properties
+
+| Property          | Type                            | Required | Default         | Description                                   |
+| ----------------- | ------------------------------- | -------- | --------------- | --------------------------------------------- |
+| disabled          | boolean                         | ✅        | \-              | Disable the text input (default = false)      |
+| iconPack          | IconPack1                       | ❌        | defaultIconPack | Icon pack                                     |
+| keyDownHandler    | (e: KeyboardEvent)              | ✅        | \-              | Keydown event handler function                |
+| maxLength         | number                          | ✅        | \-              | Max length for text input                     |
+| placeholder       | string                          | ✅        | \-              | Placeholder text                              |
+| rateLimitBreached | boolean                         | ✅        | \-              | Boolean to indicate if rate limit is breached |
+| setText           | (text: string, focus?: boolean) | ❌        | \-              | Sets value of the text input                  |
+| t                 | RtkI18n1                        | ❌        | useLanguage()   | Language                                      |
+| value             | string                          | ✅        | \-              | Default value for text input                  |
+
+## Usage Examples
+
+### Basic Usage
+
+```html
+<rtk-text-composer-view></rtk-text-composer-view>
+```
+
+### With Properties
+
+```html
+<rtk-text-composer-view>
+</rtk-text-composer-view>
+```
+
+```html
+<script>
+  const el = document.querySelector("rtk-text-composer-view");
+
+  el.disabled= true;
+  el.maxLength= 42;
+</script>
+```
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/core/rtk-text-composer-view/#page","headline":"rtk-text-composer-view · Cloudflare Realtime docs","description":"API reference for rtk-text-composer-view component (Web Components (HTML) Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/core/rtk-text-composer-view/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

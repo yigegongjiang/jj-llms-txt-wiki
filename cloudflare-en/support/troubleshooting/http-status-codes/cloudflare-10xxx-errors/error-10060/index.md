@@ -1,0 +1,39 @@
+---
+description: Troubleshoot Cloudflare error 10060.
+title: Error 10060
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/support/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Error 10060
+
+Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10060/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+## Error 10060: Missing scheme in redirect target URL
+
+This error indicates that the target URL is missing a scheme.
+
+### Common causes
+
+This error occurs when the target URL of a URL redirect does not include a scheme, which is mandatory. This could have happened due to a typo or the URL was copied from a source that did not include the scheme.
+
+### Resolution
+
+Review the target URL of the URL redirect and ensure that it contains a scheme (for example, `https`). Refer to [Supported URL components in Bulk Redirects](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/reference/url-components/) for details on the required URL components for redirect target URLs.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10060/#page","headline":"Error 10060 · Cloudflare Support docs","description":"Troubleshoot Cloudflare error 10060.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-10xxx-errors/error-10060/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

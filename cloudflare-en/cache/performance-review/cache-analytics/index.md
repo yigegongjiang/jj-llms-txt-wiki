@@ -1,0 +1,79 @@
+---
+description: View cache hit rates and bandwidth savings in Cache Analytics.
+title: Cache Analytics
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/cache/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Cache Analytics
+
+Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/performance-review/cache-analytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Cache Analytics shows how much of your site's traffic is served from Cloudflare's cache versus your origin server. When content is served from cache, visitors get faster page loads and your origin web server handles less traffic. Use Cache Analytics to identify resources that are [missing from cache](https://developers.cloudflare.com/cache/concepts/cache-responses/#miss), [expired](https://developers.cloudflare.com/cache/concepts/cache-responses/#expired) (cached copy is outdated), or [ineligible for caching](https://developers.cloudflare.com/cache/concepts/cache-responses/#noneunknown) (not eligible for caching). You can filter by hostname, review the top URLs that miss cache, and query up to three days of data.
+
+## Availability
+
+|                  | Free | Pro    | Business | Enterprise |
+| ---------------- | ---- | ------ | -------- | ---------- |
+| Availability     | No   | Yes    | Yes      | Yes        |
+| Retention period | N/A  | 7 days | 30 days  | 30 days    |
+
+## Access Cache Analytics
+
+In the Cloudflare dashboard, go to the **Caching** page.
+
+[Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching) 
+
+## Requests vs Data Transfer
+
+You can decide whether to focus on **Requests** or **Data Transfer**:
+
+* **Requests** (default view) helps assess performance. Each cache [MISS](https://developers.cloudflare.com/cache/concepts/cache-responses/#miss) means the request must go to your origin server instead of being served from Cloudflare's cache, which adds latency.
+* **Data Transfer** is useful for cost analysis, since most hosting providers charge for data sent from their servers (egress bandwidth).
+
+You can switch between these views while keeping other analytics filters applied.
+
+For best practices related to Cache Analytics, refer to [Cache performance](https://developers.cloudflare.com/cache/performance-review/cache-performance/).
+
+## Add filters
+
+Create filters to narrow the data to specific traffic segments. Example filters include **Cache status**, **Host**, **Path**, or **Content type**.
+
+To add filters, under **Cache Performance**, select **Add filter**. Select **Apply** when you are done.
+
+## Review cache status
+
+The **Requests summary** graph shows how your traffic changes over time, such as in response to a high-traffic event or a recent configuration change. The Requests summary is based on a sample of requests, not the full dataset. Totals are extrapolated from the sample to represent overall traffic. For more information on how sampling works, refer to [Understanding sampling in Cloudflare Analytics](https://developers.cloudflare.com/analytics/sampling/).
+
+**Served by Cloudflare** indicates content served by Cloudflare that did not require contacting your origin web server. **Served by Origin** indicates traffic served from the origin web server.
+
+Revalidated requests — where Cloudflare checks with your origin to confirm cached content is still current — are counted differently depending on the view. In the **Data Transfer** view, revalidated requests count as **Served by Cloudflare** because the response body is served from cache, not re-downloaded from the origin. In the **Requests** view, revalidated requests count as **Served by Origin** because Cloudflare still contacts the origin server to verify the content.
+
+**Cache status** graphs break down why traffic is served from Cloudflare versus the origin web server, organized by content type.
+
+For a breakdown of cache statuses and their descriptions, refer to [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/).
+
+## Review requests by source
+
+Cache Analytics shows the most frequent values (top N) for several request attributes. Apply filters before reviewing these metrics to focus on specific traffic. For example, filtering to only view traffic with an Expired or Revalidated cache status shows which URLs were primarily responsible for those statuses.
+
+### Empty content types
+
+Finding an **empty** content type in your analytics is common. Responses to redirect status codes (`301`/`302`) typically do not include content, so they have no content type. Similarly, many HTTP error responses, such as `403`, do not return `text/html` and are also reported as empty.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/performance-review/cache-analytics/#page","headline":"Cache Analytics · Cloudflare Cache (CDN) docs","description":"View cache hit rates and bandwidth savings in Cache Analytics.","url":"https://developers.cloudflare.com/cache/performance-review/cache-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

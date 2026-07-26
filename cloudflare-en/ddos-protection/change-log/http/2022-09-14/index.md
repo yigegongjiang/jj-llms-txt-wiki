@@ -1,0 +1,31 @@
+---
+description: HTTP DDoS managed ruleset rule changes for this release.
+title: 2022-09-14
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/ddos-protection/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# 2022-09-14
+
+Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/change-log/http/2022-09-14/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+| Rule ID     | Description                                                                                       | Previous Action    | New Action | Notes                                                                                                              |
+| ----------- | ------------------------------------------------------------------------------------------------- | ------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------ |
+| ...e4fe8e55 | User-Agent-aware DDoS Protection (Available only to Enterprise zones with Advanced DDoS service). | managed\_challenge | log        | This rule is causing false positive in some rare occurrences, we are reverting it back to log by default (opt-in). |
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/change-log/http/2022-09-14/#page","headline":"2022-09-14 · Cloudflare DDoS Protection docs","description":"HTTP DDoS managed ruleset rule changes for this release.","url":"https://developers.cloudflare.com/ddos-protection/change-log/http/2022-09-14/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

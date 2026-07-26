@@ -1,0 +1,60 @@
+---
+description: Bot protection features included in the Cloudflare Pro plan.
+title: Pro
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/bots/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Pro
+
+Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/bots/plans/pro/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+To learn more about features and functionality, select a plan.
+
+[Free](https://developers.cloudflare.com/bots/plans/free/)[Pro](https://developers.cloudflare.com/bots/plans/pro/)[Business](https://developers.cloudflare.com/bots/plans/biz-and-ent/)[Bot Management for Enterprise](https://developers.cloudflare.com/bots/plans/bm-subscription/)
+
+|                           |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Plan name**             | Super Bot Fight Mode                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Availability**          | All Pro customers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Type of bots detected** | Simple bots and headless browsers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Actions**               | Customer chooses whether to allow, block, or challenge                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Analytics**             | Limited analytics available in a **Bot Report**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Control**               | Applied to all traffic across a domain                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Additional features**   | [Block AI bots](https://developers.cloudflare.com/bots/additional-configurations/block-ai-bots/), [AI Labyrinth](https://developers.cloudflare.com/bots/additional-configurations/ai-labyrinth/), [Instruct AI bot traffic with robots.txt](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/), [Definitely automated bots](https://developers.cloudflare.com/bots/concepts/bot-score/#bot-groupings), [Verified bots](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/), [Static resource protection](https://developers.cloudflare.com/bots/additional-configurations/static-resources/), [Optimize for WordPress](https://developers.cloudflare.com/bots/troubleshooting/wordpress-loopback-issue/), [JavaScript Detections](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/javascript-detections/) |
+
+## Bot settings versus custom rules
+
+The following features are handled automatically in **Security Settings** and do not require custom rules:
+
+| Feature                                         | Handled by bot settings | Requires custom rules                                                                     |
+| ----------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------- |
+| Block or challenge definitely automated traffic | Yes                     | Only for path-specific or threshold-tuned rules                                           |
+| Block or challenge likely automated traffic     | Not available on Pro    | Yes, with [Bot Management](https://developers.cloudflare.com/bots/plans/bm-subscription/) |
+| Allow or block verified bots                    | Yes                     | No                                                                                        |
+| Block AI crawlers                               | Yes                     | Only to target individual AI crawlers                                                     |
+| Protect static resources                        | Yes                     | No                                                                                        |
+| Optimize for WordPress                          | Yes                     | No                                                                                        |
+
+For more details on when custom rules are needed, refer to [custom rules](https://developers.cloudflare.com/bots/additional-configurations/custom-rules/).
+
+## How do I get started?
+
+To get started, review our [setup guides](https://developers.cloudflare.com/bots/get-started/). If you have any questions, visit the [community ↗](https://community.cloudflare.com/) to engage with other Cloudflare users.
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/bots/plans/pro/#page","headline":"Plans — Pro · Cloudflare bot solutions docs","description":"Bot protection features included in the Cloudflare Pro plan.","url":"https://developers.cloudflare.com/bots/plans/pro/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

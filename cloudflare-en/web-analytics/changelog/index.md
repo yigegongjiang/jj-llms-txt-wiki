@@ -1,0 +1,103 @@
+---
+description: Track the latest updates and changes to Web Analytics features.
+title: Changelog
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/web-analytics/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# Changelog
+
+Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web-analytics/changelog/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Cloudflare occasionally updates the `beacon.min.js` file to improve Web Analytics functionality. The table below includes a log of what changed in the `beacon.min.js` file and when.
+
+[Subscribe to RSS](https://developers.cloudflare.com/web-analytics/changelog/index.xml)
+
+## 2026-07-13
+
+The beacon script is now injected with `type="module"` to intentionally exclude long EOL'd (End-of-Life'd) browsers like Internet Explorer from loading the script, given they don't support it anyway. [See FAQ entry for more information](https://developers.cloudflare.com/web-analytics/faq/#why-am-i-seeing-syntax-errors-from-the-beacon-script-in-internet-explorer).
+
+## 2026-06-16
+
+Updated Google's web-vitals library to version 5.3.0 and updated the JavaScript build output target to ES2015.
+
+## 2026-05-15
+
+Updated Google's web-vitals library to version 4.2.4 and captured Interaction to Next Paint (INP) sub-part metrics (Input Delay, Processing Duration, Presentation Delay)
+
+## 2024-06-11
+
+Enhanced to include reporting of Server-Timing headers.
+
+## 2024-05-22
+
+Introducing new metric fields, transferSize and decodedBodySize are included.
+
+## 2024-04-17
+
+Introducing new metric fields, deliveryType (dt) and navigationType (nt) are included.
+
+## 2023-10-18
+
+Manages A/B testing tags.
+
+## 2023-07-25
+
+Fixed ETag format in the response header.
+
+## 2023-07-13
+
+Fixed the issue that was causing an illegal invocation error.
+
+## 2023-04-19
+
+Reports additional LCP diagnostic information using web-vitals library's attribution build.
+
+## 2023-04-06
+
+Updated webpack configuration to output code in ECMAScript 3 (ES3) format.
+
+## 2023-03-23
+
+Updated Google's web-vitals library (version 3.1.1) and removed experimental `server-timing` header.
+
+## 2022-10-17
+
+Updated to report new metrics such as time to first byte (TTFB), interaction to next paint (INP), and first contentful paint (FCP). Additionally, it reports `navigator.webdriver`, `server-timing` header (experimental), and protocol info (`nextHopProtocol`).
+
+## 2021-12-14
+
+Improved site filtering.
+
+## 2021-11-16
+
+When using the automatic installation feature of the JavaScript Beacon (available only to customers proxied through Cloudflare - also known as orange-clouded customers), [Subresource Integrity (SRI)](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource%5FIntegrity) is now enabled by default. SRI is a security feature that enables browsers to verify that resources they fetch are delivered without unexpected manipulation.
+
+## 2021-09-01
+
+Improved to report debugging information for Core Web Vitals.
+
+## 2021-05-28
+
+`startsWith` function replaced with `indexOf` function, which prevents rendering if multiple beacon scripts are loaded.
+
+## 2021-05-12
+
+Reporting endpoint changed from `/cdn-cgi/beacon/performance` to `/cdn-cgi/rum` (for Browser Insights only).
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/web-analytics/changelog/#page","headline":"Changelog for beacon.min.js · Cloudflare Web Analytics docs","description":"Track the latest updates and changes to Web Analytics features.","url":"https://developers.cloudflare.com/web-analytics/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

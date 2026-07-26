@@ -1,0 +1,39 @@
+---
+description: Guidelines for planning and writing API documentation.
+title: API docs content strategy
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/style-guide/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# API docs content strategy
+
+Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/api-content-strategy/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+The API docs content strategy aims to:
+
+* Reduce internal and external user frustration
+* Align with industry standards in terms of naming conventions and descriptions
+* Create world-class content that is just as good, or better, than very popular API documentation
+
+By ensuring Cloudflare's API content is straightforward, easy to navigate, and consistent, we can create world-class API content that eliminates user frustration and serves as an example of good API documentation.
+
+* [API content types](https://developers.cloudflare.com/style-guide/api-content-strategy/api-content-types/)
+* [Guidelines for cURL commands](https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/)
+* [Method types & common verbs](https://developers.cloudflare.com/style-guide/api-content-strategy/method-types-and-command-verbs/)
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/api-content-strategy/#page","headline":"API docs content strategy · Cloudflare Style Guide","description":"Guidelines for planning and writing API documentation.","url":"https://developers.cloudflare.com/style-guide/api-content-strategy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

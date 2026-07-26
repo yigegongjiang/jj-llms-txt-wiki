@@ -1,0 +1,62 @@
+---
+description: API reference for RtkAudioDeviceSelector component (Android Library)
+title: RtkAudioDeviceSelector
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/realtime/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+# RtkAudioDeviceSelector
+
+Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/android/audio-device-selector/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+An audio device selector component which can be used to select audio devices.
+
+## Properties
+
+| Property       | Type   | Required | Default | Description       |
+| -------------- | ------ | -------- | ------- | ----------------- |
+| rtk\_ds\_label | string | ❌        | Audio   | Custom label text |
+
+## Methods
+
+| Method            | Parameters                    | Description                               |
+| ----------------- | ----------------------------- | ----------------------------------------- |
+| activate          | meeting: RealtimeKitClient    | Bind the selector to the meeting state    |
+| disableLabel      | \-                            | Disable the label text above the dropdown |
+| applyDesignTokens | designTokens: RtkDesignTokens | Apply custom design tokens for theming    |
+
+## Usage Examples
+
+### Basic Usage
+
+```xml
+<com.cloudflare.realtimekit.ui.view.RtkAudioDeviceSelector
+    android:id="@+id/audioSelector"
+    app:rtk_ds_label="Audio"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content" />
+```
+
+### With Methods
+
+```kotlin
+val audioSelector = findViewById<RtkAudioDeviceSelector>(R.id.audioSelector)
+audioSelector.activate(meeting)
+```
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/android/audio-device-selector/#page","headline":"RtkAudioDeviceSelector · Cloudflare Realtime docs","description":"API reference for RtkAudioDeviceSelector component (Android Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/android/audio-device-selector/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```
