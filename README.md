@@ -126,6 +126,8 @@ url = "https://docs.deno.com/llms-full.txt"
 
 每个站点使用配置名称作为顶层目录，远端 URL 路径映射为其下的文件路径。
 
+同一输出根还可容纳无 `llms.txt` 的站点，由 [scrapers/](./scrapers/README.md) 的抓取脚本写入（如 `sunmi-zh/`）。这类目录不出现在 `config.toml` 的 `[sites.*]` 中；`sync` 只暂存自己同步的站点子树，既不同步、不删除、也不提交它们，其 Git 提交由抓取侧自行负责。
+
 `llms.txt` 站点目录内的 `.jj-llms-txt-wiki.json` 记录各文件的 HTTP validator（`ETag` / `Last-Modified`），供下次同步做条件请求；它随快照原子替换、随仓库提交一同版本化。`llms-full.txt` 每次全量抓取并重建快照，不创建 manifest。
 
 ## 同步行为
@@ -139,7 +141,7 @@ url = "https://docs.deno.com/llms-full.txt"
 3. 按「并发与限速」的槽位模型下载到临时站点目录；对上次已记录 validator 且本地仍存在的文件发条件请求（`If-None-Match` 优先，`If-Modified-Since` 兜底）。单个内容页超过 3 MiB 视为异常，主动剔除（不写盘、不记 validator、不参与递归），并计入 `oversize` 记录到运行日志；入口文档不受此限。
 4. 从每个已下载 Markdown 中继续提取白名单内的 Markdown URL，将未处理的 URL 加入队列，直至队列为空；内容页不再扩展白名单。
 5. 队列清空且不存在未确定的抓取错误后，以本次得到的完整快照替换原站点目录；远端已删除或不再可达的 Markdown 随之从本地移除。
-6. 至少一个站点成功后，对输出根目录执行 `git add -A` 并创建一次提交；即使内容未变化也记录同步事件。
+6. 每个站点成功后，仅暂存该站点子树（连同输出根的 `.gitignore`）并创建一次提交；即使内容未变化也记录同步事件，输出根内的其他文件不受影响。
 
 远端返回 `304 Not Modified` 时跳过 body 下载，复制上次快照的本地文件并沿用其 validator，再从该文件重新提取链接继续递归——字节一致保证链接集合不变。服务器不带 `ETag` / `Last-Modified` 时自然退化为全量下载，无正确性风险。
 
