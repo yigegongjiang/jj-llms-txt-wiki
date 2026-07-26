@@ -1,0 +1,93 @@
+# deno run
+
+> Run a JavaScript or TypeScript program with Deno's runtime
+
+## Usage
+
+Run a local file:
+
+```sh
+deno run main.ts
+```
+
+The `run` subcommand is optional — you can also just use `deno <file>`:
+
+```sh
+deno main.ts
+```
+
+By default, Deno runs programs in a sandbox without access to disk, network or
+ability to spawn subprocesses. This is because the Deno runtime is
+[secure by default](/runtime/fundamentals/security/). You can grant or deny
+required permissions using the
+[`--allow-*` and `--deny-*` flags](/runtime/reference/permissions/).
+
+### Permissions examples
+
+Grant permission to read from disk and listen to network:
+
+```sh
+deno run --allow-read --allow-net server.ts
+```
+
+Grant permission to read allow-listed files from disk:
+
+```sh
+deno run --allow-read=/etc server.ts
+```
+
+Grant all permissions _this is not recommended and should only be used for
+testing_:
+
+```sh
+deno run -A server.ts
+```
+
+If your project requires multiple security flags you should consider using a
+[`deno task`](/runtime/reference/cli/task/) to execute them.
+
+## Watch
+
+To watch for file changes and restart process automatically use the `--watch`
+flag. Deno's built in application watcher will restart your application as soon
+as files are changed.
+
+_Be sure to put the flag before the file name_ eg:
+
+```sh
+deno run --allow-net --watch server.ts
+```
+
+Deno's watcher will notify you of changes in the console, and will warn in the
+console if there are errors while you work.
+
+The same `--watch` flag is also accepted by
+[`deno test`](/runtime/reference/cli/test/),
+[`deno serve`](/runtime/reference/cli/serve/), and
+[`deno bench`](/runtime/reference/cli/bench/).
+
+:::info Deno 2.8
+
+When the watcher restarts the process, Deno sends `SIGTERM` first so `unload`
+event listeners and `process.exit` hooks run, then waits 500ms before the hard
+kill. This gives graceful-shutdown code time to flush resources between
+restarts.
+
+:::
+
+## Running a package.json script
+
+`package.json` scripts can be executed with the
+[`deno task`](/runtime/reference/cli/task/) command.
+
+## Running code from stdin
+
+You can pipe code from stdin and run it immediately:
+
+```sh
+echo "console.log('hello')" | deno run -
+```
+
+## Terminate run
+
+To stop the run command use `ctrl + c`.

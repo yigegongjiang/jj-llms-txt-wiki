@@ -1,0 +1,415 @@
+# Writing an HTTP Server
+
+> A guide to creating HTTP servers in Deno. Learn about the Deno.serve API, request handling, WebSocket support, response streaming, and how to build production-ready HTTP/HTTPS servers with automatic compression.
+
+Deno has a built-in HTTP server API: the
+[`Deno.serve`](https://docs.deno.com/api/deno/~/Deno.serve) function, which
+speaks HTTP/1.1 and HTTP/2 and works with the web-standard `Request` and
+`Response` objects. This page covers writing servers with it, from a first
+handler to routing, static files, TLS, WebSockets, and shutdown.
+
+## A "Hello World" server
+
+The [`Deno.serve`](/api/deno/~/Deno.serve) function takes a handler function
+that will be called for each incoming request, and is expected to return a
+response (or a promise resolving to a response).
+
+Here is an example of a server that returns a "Hello, World!" response for each
+request:
+
+```ts title="server.ts"
+Deno.serve((_req) => {
+  return new Response("Hello, World!");
+});
+```
+
+The handler can also return a `Promise<Response>`, which means it can be an
+`async` function.
+
+To run this server, you can use the `deno run` command:
+
+```sh
+deno run --allow-net server.ts
+```
+
+There are many more examples of using [`Deno.serve`](/api/deno/~/Deno.serve) in
+the [Examples collection](/examples/#network).
+
+## Listening on a specific port
+
+By default [`Deno.serve`](/api/deno/~/Deno.serve) will listen on port `8000`,
+but this can be changed by passing in a port number in options bag as the first
+or second argument:
+
+```js title="server.ts"
+// To listen on port 4242.
+Deno.serve({ port: 4242 }, handler);
+
+// To listen on port 4242 and bind to 0.0.0.0.
+Deno.serve({ port: 4242, hostname: "0.0.0.0" }, handler);
+```
+
+## Inspecting the incoming request
+
+Most servers will not answer with the same response for every request. Instead
+they will change their answer depending on various aspects of the request: the
+HTTP method, the headers, the path, or the body contents.
+
+The request is passed in as the first argument to the handler function. Here is
+an example showing how to extract various parts of the request:
+
+```ts
+Deno.serve(async (req) => {
+  console.log("Method:", req.method);
+
+  const url = new URL(req.url);
+  console.log("Path:", url.pathname);
+  console.log("Query parameters:", url.searchParams);
+
+  console.log("Headers:", req.headers);
+
+  if (req.body) {
+    const body = await req.text();
+    console.log("Body:", body);
+  }
+
+  return new Response("Hello, World!");
+});
+```
+
+:::caution
+
+Be aware that the `req.text()` call can fail if the user hangs up the connection
+before the body is fully received. Make sure to handle this case. Do note this
+can happen in all methods that read from the request body, such as `req.json()`,
+`req.formData()`, `req.arrayBuffer()`, `req.body.getReader().read()`,
+`req.body.pipeTo()`, etc.
+
+:::
+
+## Responding with real data
+
+Most servers do not respond with "Hello, World!" to every request. Instead they
+might respond with different headers, status codes, and body contents (even body
+streams).
+
+Here is an example of returning a response with a 404 status code, a JSON body,
+and a custom header:
+
+```ts title="server.ts"
+Deno.serve((req) => {
+  const body = JSON.stringify({ message: "NOT FOUND" });
+  return new Response(body, {
+    status: 404,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+    },
+  });
+});
+```
+
+## Responding with a stream
+
+Response bodies can also be streams. Here is an example of a response that
+returns a stream of "Hello, World!" repeated every second:
+
+```ts title="server.ts"
+Deno.serve((req) => {
+  let timer: number;
+  const body = new ReadableStream({
+    async start(controller) {
+      timer = setInterval(() => {
+        controller.enqueue("Hello, World!\n");
+      }, 1000);
+    },
+    cancel() {
+      clearInterval(timer);
+    },
+  });
+  return new Response(body.pipeThrough(new TextEncoderStream()), {
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+    },
+  });
+});
+```
+
+:::note
+
+Note the `cancel` function above. This is called when the client hangs up the
+connection. It is important to make sure that you handle this case, otherwise
+the server will keep queuing up messages forever, and eventually run out of
+memory.
+
+:::
+
+Be aware that the response body stream is "cancelled" when the client hangs up
+the connection. Make sure to handle this case. This can surface itself as an
+error in a `write()` call on a [`WritableStream`](/api/web/~/WritableStream)
+object that is attached to the response body
+[`ReadableStream`](/api/web/~/ReadableStream) object (for example through a
+[`TransformStream`](/api/web/~/TransformStream)).
+
+## Routing requests
+
+For a server with more than one endpoint, match the URL with the built-in
+[`URLPattern`](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API)
+web API:
+
+```ts
+const userPattern = new URLPattern({ pathname: "/users/:id" });
+
+Deno.serve((req) => {
+  const match = userPattern.exec(req.url);
+  if (match) {
+    const id = match.pathname.groups.id;
+    return new Response(`User ${id}`);
+  }
+  if (new URL(req.url).pathname === "/") {
+    return new Response("Home");
+  }
+  return new Response("Not found", { status: 404 });
+});
+```
+
+The standard library also ships a small router that maps pattern and method
+pairs to handlers:
+[`route` from `@std/http`](https://jsr.io/@std/http/doc/unstable-route). For
+middleware, larger route trees, or framework conveniences, reach for
+[Oak or Hono](/runtime/fundamentals/web_dev/).
+
+## Serving static files
+
+To serve files from a directory, use
+[`serveDir` from `@std/http`](https://jsr.io/@std/http/doc/file-server):
+
+```ts
+import { serveDir } from "jsr:@std/http/file-server";
+
+Deno.serve((req) => serveDir(req, { fsRoot: "./public" }));
+```
+
+`serveDir` handles content types, range requests, and directory traversal
+protection. Run it with read access to the directory:
+`deno run -N -R server.ts`. For a one-off file server without writing any code,
+the same module doubles as a CLI:
+`deno run -RN jsr:@std/http/file-server ./public`.
+
+## Shutting down gracefully
+
+[`Deno.serve`](/api/deno/~/Deno.serve) returns an
+[`HttpServer`](/api/deno/~/Deno.HttpServer) whose `shutdown()` method stops
+accepting new connections while letting in-flight requests finish. Combine it
+with a signal listener for clean exits in production:
+
+```ts
+const server = Deno.serve((_req) => new Response("Hello"));
+
+Deno.addSignalListener("SIGINT", async () => {
+  console.log("shutting down");
+  await server.shutdown();
+});
+```
+
+You can also pass an [`AbortSignal`](/api/web/~/AbortSignal) via the `signal`
+option to tie the server's lifetime to other logic.
+
+## HTTPS support
+
+To serve HTTPS, pass `cert` and `key` in the options. Both values are the
+PEM-encoded contents of the certificate and private key — not file paths.
+
+```ts title="server.ts"
+Deno.serve({
+  port: 8443,
+  cert: Deno.readTextFileSync("./cert.pem"),
+  key: Deno.readTextFileSync("./key.pem"),
+}, (_req) => new Response("Hello over HTTPS!"));
+```
+
+Run it with network access plus read access to the two files:
+
+```sh
+deno run --allow-net --allow-read=cert.pem,key.pem server.ts
+```
+
+For local development you can generate a short-lived self-signed certificate
+with [OpenSSL](https://www.openssl.org/):
+
+```sh
+openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+  -keyout key.pem -out cert.pem \
+  -subj "/CN=localhost" \
+  -addext "subjectAltName=DNS:localhost"
+```
+
+Then check the server responds. The `-k` flag tells curl to accept a self-signed
+certificate — only use it for local testing:
+
+```console
+$ curl -k https://localhost:8443/
+Hello over HTTPS!
+```
+
+:::note
+
+In production, use a certificate issued by a trusted authority such as
+[Let's Encrypt](https://letsencrypt.org/) instead of a self-signed one. The
+runtime API is the same; only the source of `cert` and `key` changes.
+
+:::
+
+## HTTP/2 support
+
+HTTP/2 support is "automatic" when using the HTTP server APIs with Deno. You
+just need to create your server, and it will handle HTTP/1 or HTTP/2 requests
+seamlessly.
+
+HTTP/2 is also supported over cleartext with prior knowledge.
+
+## Automatic body compression
+
+The HTTP server can automatically compress response bodies, but this is off by
+default. Enable it for a single server with `automaticCompression: true`, or for
+the whole process by setting `DENO_SERVE_AUTOMATIC_COMPRESSION=1`:
+
+```ts
+Deno.serve({ automaticCompression: true }, () => new Response("hello"));
+```
+
+Compression happens within the internals of Deno, so it is fast and efficient.
+Deno supports gzip and brotli. Once enabled, a body is compressed if the
+following conditions are true:
+
+- The request has an
+  [`Accept-Encoding`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
+  header which indicates the requester supports `br` for Brotli or `gzip`. Deno
+  will respect the preference of the
+  [quality value](https://developer.mozilla.org/en-US/docs/Glossary/Quality_values)
+  in the header.
+- The response includes a
+  [`Content-Type`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)
+  which is considered compressible. (The list is derived from
+  [`jshttp/mime-db`](https://github.com/jshttp/mime-db/blob/master/db.json) with
+  the actual list
+  [in the code](https://github.com/denoland/deno/blob/main/ext/http/compressible.rs).)
+- The response body is greater than 64 bytes.
+
+When the response body is compressed, Deno will set the `Content-Encoding`
+header to reflect the encoding, as well as ensure the `Vary` header is adjusted
+or added to indicate which request headers affected the response.
+
+In addition to the logic above, there are a few reasons why a response **won’t**
+be compressed automatically:
+
+- The response contains a `Content-Encoding` header. This indicates your server
+  has done some form of encoding already.
+- The response contains a
+  [`Content-Range`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range)
+  header. This indicates that your server is responding to a range request,
+  where the bytes and ranges are negotiated outside of the control of the
+  internals to Deno.
+- The response has a
+  [`Cache-Control`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
+  header which contains a
+  [`no-transform`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#other)
+  value. This indicates that your server doesn’t want Deno or any downstream
+  proxies to modify the response.
+
+## Request abort signal
+
+For historical reasons [`Deno.serve`](/api/deno/~/Deno.serve) fires the `abort`
+event on a request's [`signal`](/api/web/~/Request/signal) even when the handler
+returns successfully. This trips up some Node proxy libraries (such as
+`http-proxy`) that treat the abort as a real upstream failure. Pass
+`--unstable-no-legacy-abort` to opt into the corrected behavior, where `signal`
+only aborts when the client actually disconnects. Relying on the legacy behavior
+now prints a deprecation warning, since the corrected behavior will become the
+default.
+
+## Serving WebSockets
+
+Deno can upgrade incoming HTTP requests to a WebSocket. This allows you to
+handle WebSocket endpoints on your HTTP servers.
+
+To upgrade an incoming [`Request`](/api/web/~/Request) to a WebSocket you use
+the [`Deno.upgradeWebSocket`](/api/deno/~/Deno.upgradeWebSocket) function. This
+returns an object consisting of a [`Response`](/api/web/~/Response) and a web
+standard [`WebSocket`](/api/web/~/WebSocket) object. The returned response
+should be used to respond to the incoming request.
+
+Because the WebSocket protocol is symmetrical, the `WebSocket` object is
+identical to the one that can be used for client side communication.
+Documentation for it can be found
+[on MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket).
+
+```ts title="server.ts"
+Deno.serve((req) => {
+  if (req.headers.get("upgrade") != "websocket") {
+    return new Response(null, { status: 426 });
+  }
+
+  const { socket, response } = Deno.upgradeWebSocket(req);
+  socket.addEventListener("open", () => {
+    console.log("a client connected!");
+  });
+
+  socket.addEventListener("message", (event) => {
+    if (event.data === "ping") {
+      socket.send("pong");
+    }
+  });
+
+  return response;
+});
+```
+
+The connection the WebSocket was created on can not be used for HTTP traffic
+after a WebSocket upgrade has been performed.
+
+:::note
+
+Note that WebSockets are only supported on HTTP/1.1 for now.
+
+:::
+
+## Default fetch export
+
+Another way to create an HTTP server in Deno is by exporting a default `fetch`
+function. [The fetch API](/api/web/~/fetch) initiates an HTTP request to
+retrieve data from across a network and is built into the Deno runtime.
+
+```ts title="server.ts"
+export default {
+  fetch(request) {
+    const userAgent = request.headers.get("user-agent") || "Unknown";
+    return new Response(`User Agent: ${userAgent}`);
+  },
+} satisfies Deno.ServeDefaultExport;
+```
+
+You can run this file with the `deno serve` command:
+
+```sh
+deno serve server.ts
+```
+
+The server will start and display a message in the console. Open your browser
+and navigate to [http://localhost:8000/](http://localhost:8000/) to see the
+user-agent information.
+
+The
+[`Deno.ServeDefaultExport`](https://docs.deno.com/api/deno/~/Deno.ServeDefaultExport)
+interface defines the structure for default exports that can be used with the
+`deno serve` command. To ensure your code is type-checked properly, make sure to
+add `satisfies Deno.ServeDefaultExport` to the `export default { ... }`.
+
+## Building on these examples
+
+You will likely want to expand on these examples to create more complex servers.
+Everything here is built on web-standard `Request`/`Response`, so it composes
+with routing libraries and frameworks from the ecosystem — for example
+[Oak](https://jsr.io/@oak/oak) or [Hono](https://hono.dev) for middleware and
+routing, or a full framework. See
+[Web development](/runtime/fundamentals/web_dev/) for an overview of building
+web apps with Deno.
