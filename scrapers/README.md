@@ -37,6 +37,15 @@ uv run --project scrapers playwright install chromium   # headless 浏览器 (�
 
 ## 站点
 
+新增站点后注册 qmd 索引（collection 名 = 站点目录名）：
+
+```bash
+qmd collection add ~/.config/jj-llms-txt-wiki/wiki/<site> --name <site>
+qmd embed -c <site>
+```
+
+产物写入 wiki 后自行提交：`git -C <wiki> add -- <site> && git -C <wiki> commit -m "chore(scrape): <site> @ <UTC>"`。
+
 ### docs.sunmi.com -> `sunmi-zh`
 
 商米开发者文档（SPA，AntD Tree 侧栏），306 篇 Markdown。
