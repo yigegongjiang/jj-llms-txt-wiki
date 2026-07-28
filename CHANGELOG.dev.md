@@ -7,6 +7,15 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.18.1] - 2026-07-28
+
+### Fixed
+
+- 本机登录多个 GitHub 账号时，同步结束的快照镜像推送不再因为用错身份被拒而跳过：按推送目标的仓库归属方选取对应账号的凭证，且不读写、不改动本机的活跃账号。
+  - `git.rs`：`push_snapshot` 前置 `resolve_push_credential(url)`（`https_owner` 取 host + 首个 path 段 -> `gh auth token --hostname <host> --user <owner>`，本地 keyring、无网络无 prompt），命中则 `push_snapshot_with` 注入 `-c credential.helper=`（清空 `osxkeychain` / `gh auth git-credential`）+ ad-hoc helper 从 `JJ_LLMS_TXT_WIKI_PUSH_CRED_{USER,TOKEN}` 应答 `get`，`store` / `erase` 静默丢弃。
+  - 不用 `gh auth switch`：改全局活跃账号有并发 sync 互踩与中途被杀无法还原的风险；token 只走子进程环境变量，不进命令行（`ps` 可见）与错误串。
+  - 未解析出账号（SSH / 非 HTTPS / 无 `gh` / 该账号未登录）沿用本机默认凭证，行为不变。
+
 ## [0.18.0] - 2026-07-28
 
 ### Added

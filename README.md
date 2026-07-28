@@ -137,6 +137,12 @@ url = "https://docs.deno.com/llms-full.txt"
 
 `llms.txt` 站点目录内的 `.jj-llms-txt-wiki.json` 记录各文件的 HTTP validator（`ETag` / `Last-Modified`），供下次同步做条件请求；它随快照原子替换、随仓库提交一同版本化。`llms-full.txt` 每次全量抓取并重建快照，不创建 manifest。
 
+### 快照镜像
+
+同步结束后把数据仓库的本地 HEAD 推到源码仓库的 `wiki-data` 分支（目标可用 `JJ_LLMS_TXT_WIKI_PUSH_URL` 覆盖，置空则关闭）。best-effort：无权限 / 未联网 / 与远端历史分叉一律只打 `warning: push snapshot skipped: …`，不影响同步结果与退出码。永不 `--force`，远端已有内容不会被静默覆盖。
+
+推送凭证按目标 URL 归属方选取：HTTPS 目标从 URL 取 host + owner，向 `gh` 索取该账号的 token 并只注入本次 `git push`，不读写、不改动本机的活跃账号——本机登录多个 GitHub 账号时不会用错身份。无 `gh` / 该账号未登录 / SSH 目标 → 沿用本机默认凭证配置。
+
 ## 同步行为
 
 `sync` 默认同步全部站点；传入站点名称时仅同步指定站点。入口 URL path 末段为 `llms-full.txt`（大小写不敏感）时走聚合链路，其他入口走递归链路；query / fragment 不参与识别。

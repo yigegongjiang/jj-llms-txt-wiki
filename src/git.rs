@@ -1,11 +1,12 @@
 use std::fs::{self, File, OpenOptions};
 use std::path::{Path, PathBuf};
-use std::process::{Command, Output};
+use std::process::{Command, Output, Stdio};
 use std::thread;
 use std::time::Duration;
 
 use fs2::FileExt;
 use jiff::Timestamp;
+use url::Url;
 
 const FALLBACK_NAME: &str = "jj-llms-txt-wiki";
 const FALLBACK_EMAIL: &str = "jj-llms-txt-wiki@localhost";
@@ -14,6 +15,16 @@ const RETRY_BACKOFF_MS: &[u64] = &[200, 500, 1000, 2000, 4000, 8000];
 /// Remote branch that mirrors the data repo's local HEAD. Kept distinct from
 /// the code repo's `main` so both can share a single remote without collision.
 const PUSH_BRANCH: &str = "wiki-data";
+/// Environment carrying the resolved mirror-push credential into `git`. Passed
+/// through the environment and never the command line, so the token stays out
+/// of `ps` output and out of every error string this module surfaces.
+const PUSH_CRED_USER_ENV: &str = "JJ_LLMS_TXT_WIKI_PUSH_CRED_USER";
+const PUSH_CRED_TOKEN_ENV: &str = "JJ_LLMS_TXT_WIKI_PUSH_CRED_TOKEN";
+/// `credential.helper` answering git's `get` from those two variables. The
+/// leading `!` makes git run it as a shell snippet; `store` / `erase` are
+/// accepted and ignored, so a mirror push never writes back into the machine's
+/// keychain. Keep the variable names in sync with the two constants above.
+const PUSH_CRED_HELPER: &str = "credential.helper=!f() { if test \"$1\" = get; then printf 'username=%s\\npassword=%s\\n' \"$JJ_LLMS_TXT_WIKI_PUSH_CRED_USER\" \"$JJ_LLMS_TXT_WIKI_PUSH_CRED_TOKEN\"; fi; }; f";
 
 pub struct Repository {
     root: PathBuf,
@@ -71,6 +82,14 @@ impl Repository {
     /// (recreated data repo, force-reset) intentionally fails so nothing is
     /// silently overwritten upstream.
     pub fn push_snapshot(&self, url: &str) -> Result<(), String> {
+        self.push_snapshot_with(url, resolve_push_credential(url).as_ref())
+    }
+
+    fn push_snapshot_with(
+        &self,
+        url: &str,
+        credential: Option<&PushCredential>,
+    ) -> Result<(), String> {
         let refspec = format!("HEAD:refs/heads/{PUSH_BRANCH}");
         let mut command = self.command();
         command
@@ -84,11 +103,18 @@ impl Repository {
                 "http.lowSpeedLimit=1000",
                 "-c",
                 "http.lowSpeedTime=10",
-                "push",
-                "--quiet",
-                url,
-                &refspec,
             ]);
+        if let Some(credential) = credential {
+            command
+                .env(PUSH_CRED_USER_ENV, &credential.login)
+                .env(PUSH_CRED_TOKEN_ENV, &credential.token)
+                // The empty value resets the helper list, dropping the machine's
+                // global helpers (`osxkeychain`, `gh auth git-credential`) which
+                // would otherwise answer first with whichever account happens to
+                // be active — the wrong one on a multi-account machine.
+                .args(["-c", "credential.helper=", "-c", PUSH_CRED_HELPER]);
+        }
+        command.args(["push", "--quiet", url, &refspec]);
         let action = format!("git push {url} {refspec}");
         self.finish(&action, command.output()).map(drop)
     }
@@ -229,6 +255,52 @@ fn command_output(command: &mut Command) -> std::io::Result<Output> {
     command.output()
 }
 
+/// One forge account's credential, used for a single mirror push.
+struct PushCredential {
+    login: String,
+    token: String,
+}
+
+/// Credential of the account that owns `url`, resolved through `gh`. Both the
+/// host and the login are read out of the push URL itself, so nothing is
+/// hardcoded and a fork pointing `[package].repository` at its own repository
+/// mirrors under its own account. `None` — git then uses whatever credential
+/// the machine is configured with, the behaviour before this existed — when the
+/// URL is not HTTPS (SSH remotes carry their own key), the owner cannot be read,
+/// `gh` is absent, or that account is not logged in locally.
+fn resolve_push_credential(url: &str) -> Option<PushCredential> {
+    let (host, login) = https_owner(url)?;
+    let token = gh_auth_token(&host, &login)?;
+    Some(PushCredential { login, token })
+}
+
+fn https_owner(url: &str) -> Option<(String, String)> {
+    let parsed = Url::parse(url).ok()?;
+    if parsed.scheme() != "https" {
+        return None;
+    }
+    let host = parsed.host_str()?.to_string();
+    let login = parsed.path_segments()?.next().filter(|s| !s.is_empty())?;
+    Some((host, login.to_string()))
+}
+
+/// `gh auth token` for one specific account: reads the local keyring / config,
+/// so no network round-trip and no prompt (stdin closed, and this subcommand
+/// never asks). A non-zero exit — `gh` missing, host unknown, account not
+/// logged in — is a normal "cannot resolve", not an error worth surfacing.
+fn gh_auth_token(host: &str, login: &str) -> Option<String> {
+    let output = Command::new("gh")
+        .args(["auth", "token", "--hostname", host, "--user", login])
+        .stdin(Stdio::null())
+        .output()
+        .ok()?;
+    if !output.status.success() {
+        return None;
+    }
+    let token = String::from_utf8(output.stdout).ok()?.trim().to_string();
+    (!token.is_empty()).then_some(token)
+}
+
 fn is_lock_contention(error: &str) -> bool {
     let lower = error.to_ascii_lowercase();
     lower.contains("unable to create") && lower.contains(".lock") || lower.contains("index.lock")
@@ -274,9 +346,12 @@ fn ensure_gitignore(root: &Path) -> Result<(), String> {
 
 #[cfg(test)]
 mod tests {
-    use super::Repository;
+    use super::{
+        PUSH_CRED_HELPER, PUSH_CRED_TOKEN_ENV, PUSH_CRED_USER_ENV, PushCredential, Repository,
+        https_owner,
+    };
     use std::fs;
-    use std::process::Command;
+    use std::process::{Command, Stdio};
     use tempfile::tempdir;
 
     fn git(root: &std::path::Path, args: &[&str]) -> String {
@@ -398,6 +473,96 @@ mod tests {
 
         // Repeated push with no new commits is a no-op and stays clean.
         repository.push_snapshot(&url).unwrap();
+    }
+
+    #[test]
+    fn push_snapshot_accepts_a_resolved_credential() {
+        let parent = tempdir().unwrap();
+        let bare = parent.path().join("remote.git");
+        Command::new("git")
+            .args(["init", "--quiet", "--bare"])
+            .arg(&bare)
+            .status()
+            .unwrap();
+        let root = parent.path().join("wiki");
+        let repository = Repository::prepare(&root).unwrap();
+        fs::create_dir_all(root.join("s")).unwrap();
+        fs::write(root.join("s/a.md"), "a").unwrap();
+        repository.record_site("s").unwrap();
+
+        // The credential config is inert for transports that don't authenticate,
+        // so injecting it must not disturb an otherwise working push.
+        let credential = PushCredential {
+            login: "probe-login".to_string(),
+            token: "probe-token".to_string(),
+        };
+        let url = format!("file://{}", bare.display());
+        repository
+            .push_snapshot_with(&url, Some(&credential))
+            .unwrap();
+        assert_eq!(
+            git(&bare, &["rev-parse", "refs/heads/wiki-data"]),
+            git(&root, &["rev-parse", "HEAD"])
+        );
+    }
+
+    #[test]
+    fn push_credential_helper_overrides_machine_helpers() {
+        // End-to-end through git's credential machinery: the helper snippet must
+        // parse, read both variables, and win over any helper configured on this
+        // machine (`osxkeychain`, `gh auth git-credential`, …).
+        let mut child = Command::new("git")
+            .args([
+                "-c",
+                "credential.helper=",
+                "-c",
+                PUSH_CRED_HELPER,
+                "credential",
+                "fill",
+            ])
+            .env(PUSH_CRED_USER_ENV, "probe-login")
+            .env(PUSH_CRED_TOKEN_ENV, "probe-token")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .spawn()
+            .unwrap();
+        use std::io::Write;
+        child
+            .stdin
+            .take()
+            .unwrap()
+            .write_all(b"protocol=https\nhost=example.invalid\npath=owner/repo.git\n\n")
+            .unwrap();
+        let output = child.wait_with_output().unwrap();
+        let filled = String::from_utf8_lossy(&output.stdout);
+        assert!(output.status.success(), "git credential fill: {filled}");
+        assert!(
+            filled.contains("username=probe-login") && filled.contains("password=probe-token"),
+            "helper must answer from the environment: {filled}"
+        );
+    }
+
+    #[test]
+    fn https_owner_reads_the_account_from_the_url_only() {
+        assert_eq!(
+            https_owner("https://github.com/yigegongjiang/jj-llms-txt-wiki.git"),
+            Some(("github.com".to_string(), "yigegongjiang".to_string()))
+        );
+        // Any HTTPS forge, not just github.com — `gh` decides whether it knows it.
+        assert_eq!(
+            https_owner("https://ghe.example.com/team/repo.git"),
+            Some(("ghe.example.com".to_string(), "team".to_string()))
+        );
+        // SSH remotes carry their own key; local and malformed URLs have no owner.
+        for url in [
+            "git@github.com:owner/repo.git",
+            "ssh://git@github.com/owner/repo.git",
+            "https://github.com/",
+            "file:///tmp/remote.git",
+            "not a url",
+        ] {
+            assert_eq!(https_owner(url), None, "must not resolve an account: {url}");
+        }
     }
 
     #[test]

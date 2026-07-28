@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.18.1] - 2026-07-28
+
+### Fixed
+
+- 本机登录多个 GitHub 账号时，同步结束的快照镜像推送不再因为用错身份被拒而跳过：按推送目标的仓库归属方选取对应账号的凭证，且不读写、不改动本机的活跃账号。
+
 ## [0.18.0] - 2026-07-28
 
 ### Added
