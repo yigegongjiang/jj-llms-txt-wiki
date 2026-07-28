@@ -1,6 +1,6 @@
 [package]
 name = "jj-llms-txt-wiki"
-version = "0.18.1"
+version = "0.18.2"
 edition = "2024"
 description = "Mirror llms.txt and llms-full.txt documentation locally"
 repository = "https://github.com/yigegongjiang/jj-llms-txt-wiki"

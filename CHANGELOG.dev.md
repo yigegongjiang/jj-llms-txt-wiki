@@ -7,6 +7,15 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.18.2] - 2026-07-28
+
+### Fixed
+
+- fork 之后不再需要任何配置：快照镜像的推送目标改为构建时自动取源码仓库的 `origin`，谁 clone 谁构建就推到自己的仓库，不会推向上游。
+  - 新增 `build.rs`：`git remote get-url origin` -> `cargo:rustc-env=JJ_LLMS_TXT_WIKI_ORIGIN`，`cargo:rerun-if-changed=.git/config`；含换行的值直接丢弃（会截断 `cargo:` 指令）。
+  - `main.rs::push_snapshot_url` 改读 `option_env!("JJ_LLMS_TXT_WIKI_ORIGIN")`，无 `.git` 可问（源码 tarball / vendored）时回退 `CARGO_PKG_REPOSITORY`；抽出 `mirror_url()` 只给裸 HTTPS 补 `.git`，SSH remote 原样透传。
+  - `JJ_LLMS_TXT_WIKI_PUSH_URL` 降级为纯关闭开关（`tests/e2e.rs` 依赖它禁用推送），MUST NOT 再作为 fork 的配置路径。
+
 ## [0.18.1] - 2026-07-28
 
 ### Fixed

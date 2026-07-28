@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.18.2] - 2026-07-28
+
+### Fixed
+
+- fork 之后不再需要任何配置：快照镜像的推送目标改为构建时自动取源码仓库的 `origin`，谁 clone 谁构建就推到自己的仓库，不会推向上游。
+
 ## [0.18.1] - 2026-07-28
 
 ### Fixed

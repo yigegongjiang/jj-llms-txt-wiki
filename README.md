@@ -139,9 +139,13 @@ url = "https://docs.deno.com/llms-full.txt"
 
 ### 快照镜像
 
-同步结束后把数据仓库的本地 HEAD 推到源码仓库的 `wiki-data` 分支（目标可用 `JJ_LLMS_TXT_WIKI_PUSH_URL` 覆盖，置空则关闭）。best-effort：无权限 / 未联网 / 与远端历史分叉一律只打 `warning: push snapshot skipped: …`，不影响同步结果与退出码。永不 `--force`，远端已有内容不会被静默覆盖。
+同步结束后把数据仓库的本地 HEAD 推到源码仓库的 `wiki-data` 分支。best-effort：无权限 / 未联网 / 与远端历史分叉一律只打 `warning: push snapshot skipped: …`，不影响同步结果与退出码。永不 `--force`，远端已有内容不会被静默覆盖。
 
-推送凭证按目标 URL 归属方选取：HTTPS 目标从 URL 取 host + owner，向 `gh` 索取该账号的 token 并只注入本次 `git push`，不读写、不改动本机的活跃账号——本机登录多个 GitHub 账号时不会用错身份。无 `gh` / 该账号未登录 / SSH 目标 → 沿用本机默认凭证配置。
+推送目标 = 构建时源码仓库的 `origin`（`build.rs` 编译进二进制），无 `.git` 目录可问时回退 `[package].repository`。fork 零配置即正确：谁 clone 谁构建，就推到自己 clone 的那个仓库，MUST NOT 推到上游。
+
+推送凭证同样从目标 URL 推导：HTTPS 目标取 host + owner，向 `gh` 索取该账号的 token 并只注入本次 `git push`，不读写、不改动本机的活跃账号——本机登录多个 GitHub 账号时不会用错身份。无 `gh` / 该账号未登录 / SSH 目标 → 沿用本机默认凭证（SSH key、`osxkeychain` 等）。
+
+`JJ_LLMS_TXT_WIKI_PUSH_URL` 仅作关闭开关（置空 = 不推送），e2e 测试用它保证测试运行永不触网推送。
 
 ## 同步行为
 
