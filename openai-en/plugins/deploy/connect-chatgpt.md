@@ -1,5 +1,7 @@
 # Connect and test your plugin
 
+> For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
+
 Test each capability before testing the complete installed plugin. If the
 plugin includes an MCP server, start by connecting and evaluating the server in
 developer mode. Then package the plugin with its skills and test the complete
@@ -48,8 +50,7 @@ Developer mode availability can depend on account and workspace policy.
 
 ### Add the MCP server
 
-1. Open **Settings → Plugins** or
-   [plugin settings](https://chatgpt.com/plugins).
+1. Go to [ChatGPT Plugins](https://chatgpt.com/plugins).
 2. Select the plus button.
 3. Enter a user-facing name and description.
 4. Enter the public MCP server URL, including the `/mcp` path.
@@ -93,7 +94,7 @@ After changing tool names, descriptions, schemas, annotations, authentication,
 or UI resources:
 
 1. Deploy or restart the MCP server.
-2. Open the connection in **Settings → Plugins**.
+2. Open the connection at [ChatGPT Plugins](https://chatgpt.com/plugins).
 3. Select **Refresh**.
 4. Confirm that the advertised metadata changed.
 5. Start a new conversation and rerun the affected tests.
