@@ -27,6 +27,18 @@ pub const DEFAULT_MAX_DOCUMENT_BYTES: usize = 3 * 1024 * 1024;
 /// CDN-backed docs site.
 pub const MAX_CONCURRENCY: usize = 64;
 
+/// Degraded pages tolerated on a small site, before the ratio below takes over.
+/// A handful of pages that keep erroring after retries is a normal upstream dead
+/// end — a docs index that still links pages its own server can no longer render
+/// (a `5xx` that is really a `404`). Blocking the snapshot on those would freeze
+/// the whole site forever, since the next run meets the same dead links.
+const DEGRADED_FLOOR: usize = 3;
+/// Above the floor, degraded pages are tolerated up to `processed / this`. A
+/// flood is an outage or a blanket block, not a dead link: publishing then would
+/// commit a snapshot that silently drops real content, so the site fails instead
+/// and its last good snapshot survives.
+const DEGRADED_RATIO: usize = 100;
+
 #[derive(Clone, Copy, Debug)]
 pub struct CrawlOptions {
     /// Download slots. While the queue has work, exactly this many requests are
@@ -57,6 +69,12 @@ pub struct CrawlReport {
     /// the crawl still succeeds and the exit code is unaffected.
     pub oversize: usize,
     pub failures: Vec<CrawlFailure>,
+    /// Content pages that still errored after every retry, kept out of `failures`
+    /// so a dead link upstream does not block the snapshot. Each one either
+    /// carried its previous copy forward or is absent from this snapshot; the
+    /// crawl still succeeds and the exit code is unaffected. Promoted back into
+    /// `failures` wholesale when there are too many (see [`degraded_tolerance`]).
+    pub degraded: Vec<CrawlFailure>,
     /// URLs that answered 404/410. Kept alongside the `missing` count so the
     /// persisted run log can name the dead links, not just tally them.
     pub missing_urls: Vec<String>,
@@ -73,6 +91,23 @@ impl CrawlReport {
     pub fn is_success(&self) -> bool {
         self.failures.is_empty()
     }
+
+    /// URLs this crawl reached a verdict on. `ignored` is excluded: those were
+    /// filtered before any request, so counting them would inflate the degraded
+    /// budget with work that never happened.
+    fn processed(&self) -> usize {
+        self.downloaded
+            + self.resumed
+            + self.unchanged
+            + self.missing
+            + self.oversize
+            + self.degraded.len()
+    }
+}
+
+/// How many degraded pages a crawl of `processed` URLs may publish anyway.
+fn degraded_tolerance(processed: usize) -> usize {
+    DEGRADED_FLOOR.max(processed / DEGRADED_RATIO)
 }
 
 #[derive(Clone, Debug)]
@@ -90,6 +125,7 @@ pub enum CrawlEvent {
     Missing(String),
     Ignored(String),
     Oversize(String),
+    Degraded(String),
     Failed(String),
 }
 
@@ -357,13 +393,59 @@ pub async fn crawl(
                 report.oversize_urls.push(item.url.to_string());
             }
             Err(message) => {
-                observer.event(CrawlEvent::Failed(item.url.to_string()));
-                report.failures.push(CrawlFailure {
+                // The entry document is load-bearing — it freezes the allow-list
+                // and seeds the queue — so losing it still aborts the site.
+                let Some(path) = &item.output else {
+                    observer.event(CrawlEvent::Failed(item.url.to_string()));
+                    report.failures.push(CrawlFailure {
+                        url: item.url.to_string(),
+                        message,
+                    });
+                    continue;
+                };
+                // A content page that survived every retry is a settled verdict.
+                // Carry its previous copy forward when there is one — including
+                // its links, so the discovered set never shrinks and pages
+                // reachable only through it are not deleted from the snapshot —
+                // and degrade rather than fail. `degraded_tolerance` below decides
+                // whether the run as a whole still deserves to publish.
+                if let Some(body) = adopt_previous(
+                    previous_root,
+                    snapshot_root,
+                    path,
+                    options.max_document_bytes,
+                )
+                .await
+                {
+                    if let Some(validator) = previous_manifest.get(&item.url.to_string()) {
+                        manifest.insert(item.url.to_string(), validator.clone());
+                    }
+                    let base = item.url.as_url().clone();
+                    enqueue_discovered(
+                        &body,
+                        &base,
+                        &entry,
+                        &allowed,
+                        previous_root,
+                        previous_manifest,
+                        &mut seen,
+                        &mut paths,
+                        &mut queue,
+                        &mut report,
+                        observer.as_ref(),
+                    );
+                }
+                observer.event(CrawlEvent::Degraded(item.url.to_string()));
+                report.degraded.push(CrawlFailure {
                     url: item.url.to_string(),
                     message,
                 });
             }
         }
+    }
+
+    if report.degraded.len() > degraded_tolerance(report.processed()) {
+        report.failures.append(&mut report.degraded);
     }
 
     if report.is_success()
@@ -459,6 +541,26 @@ async fn reuse_previous(
         .map_err(|error| format!("reuse {}: {error}", source.display()))?;
     write_document(snapshot_root, path, &body).await?;
     Ok(body)
+}
+
+/// Carry a previously downloaded file into the new snapshot for a page whose
+/// fetch failed for good, returning its body for link discovery. Best-effort by
+/// design: no previous snapshot, no previous copy, an unreadable file or one past
+/// the cap all yield `None`, which just means the page is absent from this
+/// snapshot — the caller already counts it as degraded either way.
+async fn adopt_previous(
+    previous_root: Option<&Path>,
+    snapshot_root: &Path,
+    path: &LocalPath,
+    max_bytes: usize,
+) -> Option<String> {
+    let source = path.join_under(previous_root?).ok()?;
+    let body = tokio::fs::read_to_string(&source).await.ok()?;
+    if body.len() > max_bytes {
+        return None;
+    }
+    write_document(snapshot_root, path, &body).await.ok()?;
+    Some(body)
 }
 
 /// Write `body` to `path` atomically: stage into a sibling `.part` file, then
@@ -1079,8 +1181,54 @@ mod tests {
         )
         .await
         .unwrap();
+        // Six settled errors is well past `degraded_tolerance`, so they are
+        // promoted back into hard failures and nothing publishes.
         assert!(!report.is_success());
         assert!(report.failed() >= 6, "{:?}", report.failures);
+        assert!(report.degraded.is_empty());
+    }
+
+    #[test]
+    fn degraded_tolerance_floors_small_sites_and_scales_with_large_ones() {
+        assert_eq!(super::degraded_tolerance(0), 3);
+        assert_eq!(super::degraded_tolerance(300), 3);
+        assert_eq!(super::degraded_tolerance(700), 7);
+    }
+
+    #[tokio::test]
+    async fn spends_the_retry_budget_before_degrading_a_page() {
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[ok](/ok.md) [dead](/dead.md)"),
+            ),
+            ("/ok.md".to_owned(), Response::ok("fine")),
+            ("/dead.md".to_owned(), Response::status(500)),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            options(2, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        // One dead page is inside the tolerance: the crawl succeeds, the page is
+        // simply absent (no previous snapshot to carry forward from).
+        assert!(report.is_success(), "{:?}", report.failures);
+        assert_eq!(report.downloaded, 1);
+        assert_eq!(report.degraded.len(), 1);
+        assert!(!directory.path().join("dead.md").exists());
+
+        let requests = server.requests.lock().unwrap();
+        let attempts = |path: &str| requests.iter().filter(|(seen, _)| seen == path).count();
+        // The 5xx was given every attempt before being written off…
+        assert_eq!(attempts("/dead.md"), crate::http::MAX_ATTEMPTS);
+        // …while a page that answered first time cost exactly one request.
+        assert_eq!(attempts("/ok.md"), 1);
     }
 
     #[tokio::test]

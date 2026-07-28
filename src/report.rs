@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 
 use console::style;
 
-use crate::crawler::CrawlReport;
+use crate::crawler::{CrawlFailure, CrawlReport};
 use crate::progress::short_path;
 
 /// Root-relative location of the durable run log. Overwritten every run — an
@@ -37,6 +37,16 @@ pub struct SiteReport {
 impl SiteReport {
     pub fn is_ok(&self) -> bool {
         matches!(self.outcome, Outcome::Ok(_))
+    }
+
+    /// Pages this site published without: dead links upstream that survived every
+    /// retry. Only meaningful on an `Ok` site — a `Failed` one already promoted
+    /// them into its failures.
+    fn degraded(&self) -> &[CrawlFailure] {
+        match &self.outcome {
+            Outcome::Ok(crawl) | Outcome::Failed(crawl) => &crawl.degraded,
+            Outcome::Aborted(_) => &[],
+        }
     }
 }
 
@@ -141,6 +151,60 @@ pub fn print_failures(reports: &[SiteReport], log: &Path) {
     );
 }
 
+/// Print the degraded block: pages that kept erroring after every retry on sites
+/// that still synced. Yellow and separate from `print_failures`, because the
+/// verdict differs — the snapshot went out, minus these pages (or with their
+/// previous copies carried forward). Nothing is printed when there are none; the
+/// log pointer is left to the summary line, which carries it whenever this block
+/// fires.
+pub fn print_degraded(reports: &[SiteReport]) {
+    let degraded: Vec<&SiteReport> = reports
+        .iter()
+        .filter(|report| !report.degraded().is_empty())
+        .collect();
+    if degraded.is_empty() {
+        return;
+    }
+
+    let total: usize = degraded.iter().map(|report| report.degraded().len()).sum();
+    eprintln!(
+        "\n{}",
+        style(format!(
+            "⚠ {total} page(s) unavailable upstream — snapshot published without them"
+        ))
+        .for_stderr()
+        .yellow()
+        .bold()
+    );
+
+    for report in &degraded {
+        let pages = report.degraded();
+        eprintln!(
+            "  {}",
+            style(format!("{}: {} degraded", report.site, pages.len()))
+                .for_stderr()
+                .bold()
+        );
+        for page in pages.iter().take(TERMINAL_FAILURE_CAP) {
+            eprintln!(
+                "    {} {}  {}",
+                style("⚠").for_stderr().yellow(),
+                short_path(&page.url),
+                style(&page.message).for_stderr().dim()
+            );
+        }
+        let omitted = pages.len().saturating_sub(TERMINAL_FAILURE_CAP);
+        if omitted > 0 {
+            eprintln!(
+                "    {}",
+                style(format!("… {omitted} more (see log)"))
+                    .for_stderr()
+                    .dim()
+            );
+        }
+    }
+}
+
 /// Print the always-on final one-liner — the canonical last line the eye learns
 /// to check. Green `✓ N/N synced` on a clean run; red `✗ … → <log>` otherwise.
 /// Symmetric and unconditional, so a failure can never hide as "looked done"
@@ -158,6 +222,20 @@ fn render_summary(reports: &[SiteReport], log: &Path) -> String {
     let total = reports.len();
     let ok = reports.iter().filter(|report| report.is_ok()).count();
     if ok == total {
+        // Every site published, so the run succeeded and the exit code stays 0 —
+        // but degraded pages turn the line yellow and point at the log, so an
+        // incomplete mirror is never mistaken for a clean one.
+        let degraded: usize = reports.iter().map(|report| report.degraded().len()).sum();
+        if degraded > 0 {
+            return style(format!(
+                "✓ {ok}/{total} synced · {degraded} degraded → {}",
+                log.display()
+            ))
+            .for_stderr()
+            .yellow()
+            .bold()
+            .to_string();
+        }
         return style(format!("✓ {ok}/{total} synced"))
             .for_stderr()
             .green()
@@ -198,6 +276,7 @@ fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
         match &report.outcome {
             Outcome::Ok(crawl) => {
                 let _ = writeln!(out, "{}: ok        {}", report.site, counts(crawl));
+                write_degraded(&mut out, crawl);
                 write_oversize(&mut out, crawl);
             }
             Outcome::Failed(crawl) => {
@@ -217,6 +296,7 @@ fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
                         let _ = writeln!(out, "      · {url}");
                     }
                 }
+                write_degraded(&mut out, crawl);
                 write_oversize(&mut out, crawl);
             }
             Outcome::Aborted(reason) => {
@@ -229,14 +309,28 @@ fn render_log(reports: &[SiteReport], timestamp: &str, root: &Path) -> String {
 
 fn counts(report: &CrawlReport) -> String {
     format!(
-        "downloaded={}, resumed={}, unchanged={}, missing={}, ignored={}, oversize={}",
+        "downloaded={}, resumed={}, unchanged={}, missing={}, ignored={}, oversize={}, degraded={}",
         report.downloaded,
         report.resumed,
         report.unchanged,
         report.missing,
         report.ignored,
         report.oversize,
+        report.degraded.len(),
     )
+}
+
+/// Append the degraded pages with their last error. Written for `Ok` sites too —
+/// that is the whole point: the run succeeded, and this is the only durable
+/// record of what the snapshot is missing.
+fn write_degraded(out: &mut String, report: &CrawlReport) {
+    if report.degraded.is_empty() {
+        return;
+    }
+    let _ = writeln!(out, "    degraded ({}):", report.degraded.len());
+    for page in &report.degraded {
+        let _ = writeln!(out, "      ⚠ {}  —  {}", page.url, page.message);
+    }
 }
 
 /// Append the dropped-oversized URLs to the durable log. Called for both `Ok` and
@@ -365,6 +459,36 @@ mod tests {
         assert_eq!(
             render_summary(&reports, Path::new("/w/.jj-llms-txt-wiki/last-run.log")),
             "✗ 1 ok · 1 failed → /w/.jj-llms-txt-wiki/last-run.log"
+        );
+    }
+
+    #[test]
+    fn degraded_pages_turn_the_summary_yellow_without_failing_the_run() {
+        console::set_colors_enabled_stderr(false);
+        let reports = vec![SiteReport {
+            site: "openai".to_owned(),
+            outcome: Outcome::Ok(CrawlReport {
+                downloaded: 700,
+                degraded: vec![CrawlFailure {
+                    url: "https://example.com/dead.md".to_owned(),
+                    message: "GET https://example.com/dead.md: HTTP 500 Internal Server Error"
+                        .to_owned(),
+                }],
+                ..CrawlReport::default()
+            }),
+        }];
+        // Still `✓` — the snapshot published — but the count and the log pointer
+        // keep the gap visible.
+        assert_eq!(
+            render_summary(&reports, Path::new("/w/.jj-llms-txt-wiki/last-run.log")),
+            "✓ 1/1 synced · 1 degraded → /w/.jj-llms-txt-wiki/last-run.log"
+        );
+        let body = render_log(&reports, "2026-07-28T00:00:00Z", Path::new("/w"));
+        assert!(body.contains("openai: ok"), "{body}");
+        assert!(body.contains("degraded=1"), "{body}");
+        assert!(
+            body.contains("⚠ https://example.com/dead.md  —  GET"),
+            "{body}"
         );
     }
 

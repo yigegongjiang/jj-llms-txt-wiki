@@ -22,6 +22,7 @@ struct Counts {
     missing: u64,
     ignored: u64,
     oversize: u64,
+    degraded: u64,
     failed: u64,
 }
 
@@ -45,6 +46,7 @@ pub struct SyncProgress {
     missing: AtomicU64,
     ignored: AtomicU64,
     oversize: AtomicU64,
+    degraded: AtomicU64,
     failed: AtomicU64,
 }
 
@@ -71,6 +73,7 @@ impl SyncProgress {
             missing: AtomicU64::new(0),
             ignored: AtomicU64::new(0),
             oversize: AtomicU64::new(0),
+            degraded: AtomicU64::new(0),
             failed: AtomicU64::new(0),
         }
     }
@@ -101,6 +104,7 @@ impl SyncProgress {
             missing: self.missing.load(Ordering::Relaxed),
             ignored: self.ignored.load(Ordering::Relaxed),
             oversize: self.oversize.load(Ordering::Relaxed),
+            degraded: self.degraded.load(Ordering::Relaxed),
             failed: self.failed.load(Ordering::Relaxed),
         }
     }
@@ -121,6 +125,17 @@ impl SyncProgress {
         self.bar
             .set_message(summary_msg(&self.counts(), self.slots, &path));
         let tag = style("FAIL").for_stderr().red().bold();
+        self.log_line(&format!("[{}] {tag} {path}", self.site));
+    }
+
+    /// Same treatment as a failure — the page is worth naming in the scrollback —
+    /// but yellow, because the snapshot still publishes.
+    fn degrade(&self, url: &str) {
+        self.degraded.fetch_add(1, Ordering::Relaxed);
+        let path = short_path(url);
+        self.bar
+            .set_message(summary_msg(&self.counts(), self.slots, &path));
+        let tag = style("DEGRADED").for_stderr().yellow().bold();
         self.log_line(&format!("[{}] {tag} {path}", self.site));
     }
 
@@ -156,6 +171,7 @@ impl CrawlObserver for SyncProgress {
             CrawlEvent::Missing(url) => self.complete(&self.missing, &url),
             CrawlEvent::Ignored(url) => self.complete(&self.ignored, &url),
             CrawlEvent::Oversize(url) => self.complete(&self.oversize, &url),
+            CrawlEvent::Degraded(url) => self.degrade(&url),
             CrawlEvent::Failed(url) => self.fail(&url),
         }
     }
@@ -177,8 +193,21 @@ fn summary_msg(counts: &Counts, slots: u64, path: &str) -> String {
     } else {
         fail
     };
+    // Degraded is the exception, not the norm, so it earns a slot on the line
+    // only once it happens — a clean run stays as narrow as before.
+    let degraded = if counts.degraded > 0 {
+        format!(
+            " {}",
+            style(format!("degraded={}", counts.degraded))
+                .for_stderr()
+                .yellow()
+                .bold()
+        )
+    } else {
+        String::new()
+    };
     format!(
-        "{dl} resume={} unchanged={} miss={} {fail}  inflight={}/{slots}  · {path}",
+        "{dl} resume={} unchanged={} miss={} {fail}{degraded}  inflight={}/{slots}  · {path}",
         counts.resumed,
         counts.unchanged,
         counts.missing,
@@ -228,14 +257,26 @@ pub fn summary_line(site: &str, report: &CrawlReport, status: &str) -> String {
         failed
     };
     // `oversize` is dropped-bloat, not the norm, so it only earns a slot on the
-    // line when it actually happened — a clean run stays uncluttered.
+    // line when it actually happened — a clean run stays uncluttered. `degraded`
+    // follows the same rule, in yellow: the site synced, but not completely.
     let oversize = if report.oversize > 0 {
         format!(", oversize={}", report.oversize)
     } else {
         String::new()
     };
+    let degraded = if report.degraded.is_empty() {
+        String::new()
+    } else {
+        format!(
+            ", {}",
+            style(format!("degraded={}", report.degraded.len()))
+                .for_stderr()
+                .yellow()
+                .bold()
+        )
+    };
     format!(
-        "{site}: {verdict}; {downloaded}, resumed={}, unchanged={}, missing={}, ignored={}{oversize}, {failed}",
+        "{site}: {verdict}; {downloaded}, resumed={}, unchanged={}, missing={}, ignored={}{oversize}{degraded}, {failed}",
         report.resumed, report.unchanged, report.missing, report.ignored,
     )
 }
@@ -259,11 +300,28 @@ mod tests {
             missing: 1,
             ignored: 0,
             oversize: 0,
+            degraded: 0,
             failed: 1,
         };
         assert_eq!(
             summary_msg(&counts, 4, "/docs/a.md"),
             "dl=3 resume=2 unchanged=1 miss=1 fail=1  inflight=2/4  · /docs/a.md"
+        );
+    }
+
+    #[test]
+    fn summary_msg_shows_degraded_only_when_present() {
+        console::set_colors_enabled_stderr(false);
+        let counts = Counts {
+            started: 4,
+            finished: 4,
+            downloaded: 3,
+            degraded: 1,
+            ..Counts::default()
+        };
+        assert_eq!(
+            summary_msg(&counts, 4, "/docs/a.md"),
+            "dl=3 resume=0 unchanged=0 miss=0 fail=0 degraded=1  inflight=0/4  · /docs/a.md"
         );
     }
 

@@ -102,6 +102,9 @@ pub async fn run(
     if failed {
         report::print_failures(&reports, &log);
     }
+    // After the failures, so the harder verdict reads first and the softer one
+    // sits closest to the summary line that counts it.
+    report::print_degraded(&reports);
     // Unconditional final one-liner: the fixed last line that makes the run's
     // verdict unmissable, symmetric on success and failure alike.
     report::print_summary(&reports, &log);
@@ -378,11 +381,24 @@ mod tests {
 
     #[tokio::test]
     async fn commits_success_preserves_failure_and_removes_stale_files() {
+        // `bad` errors on more pages than `degraded_tolerance` allows, so the
+        // whole site fails and keeps its previous snapshot — a handful of
+        // erroring pages would instead publish as degraded (covered separately).
         let server = server(HashMap::from([
             ("/good.txt".to_owned(), route(200, "[a](/docs/a.md)")),
-            ("/bad.txt".to_owned(), route(200, "[fail](/fail.md)")),
+            (
+                "/bad.txt".to_owned(),
+                route(
+                    200,
+                    "[1](/f1.md) [2](/f2.md) [3](/f3.md) [4](/f4.md) [5](/f5.md)",
+                ),
+            ),
             ("/docs/a.md".to_owned(), route(200, "old-a")),
-            ("/fail.md".to_owned(), route(500, "")),
+            ("/f1.md".to_owned(), route(500, "")),
+            ("/f2.md".to_owned(), route(500, "")),
+            ("/f3.md".to_owned(), route(500, "")),
+            ("/f4.md".to_owned(), route(500, "")),
+            ("/f5.md".to_owned(), route(500, "")),
         ]))
         .await;
         let directory = tempdir().unwrap();
@@ -438,6 +454,61 @@ mod tests {
             }),
             "unexpected leftovers: {names:?}"
         );
+    }
+
+    #[tokio::test]
+    async fn few_dead_pages_publish_as_degraded_carrying_previous_copies_forward() {
+        let server = server(HashMap::from([
+            (
+                "/good.txt".to_owned(),
+                route(200, "[a](/docs/a.md) [b](/docs/b.md)"),
+            ),
+            ("/docs/a.md".to_owned(), route(200, "a1")),
+            ("/docs/b.md".to_owned(), route(200, "b1 [c](/docs/c.md)")),
+            ("/docs/c.md".to_owned(), route(200, "c1")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let output = directory.path().join("wiki");
+        let config_path = directory.path().join("config.toml");
+        config(&output, &server).save(&config_path).unwrap();
+
+        run(&config_path, Some("good".to_owned()), None, None, None)
+            .await
+            .unwrap();
+
+        // `b` goes dead upstream while `a` moves on. One page is well inside the
+        // tolerance, so the site must still publish.
+        server
+            .routes
+            .write()
+            .unwrap()
+            .insert("/docs/b.md".to_owned(), route(500, ""));
+        server
+            .routes
+            .write()
+            .unwrap()
+            .insert("/docs/a.md".to_owned(), route(200, "a2"));
+        run(&config_path, Some("good".to_owned()), None, None, None)
+            .await
+            .expect("a degraded page must not fail the run");
+
+        assert_eq!(
+            fs::read_to_string(output.join("good/docs/a.md")).unwrap(),
+            "a2"
+        );
+        // The dead page keeps its previous copy instead of vanishing…
+        assert_eq!(
+            fs::read_to_string(output.join("good/docs/b.md")).unwrap(),
+            "b1 [c](/docs/c.md)"
+        );
+        // …and that copy still contributes its links, so `c` — reachable only
+        // through `b` — survives the snapshot swap.
+        assert_eq!(
+            fs::read_to_string(output.join("good/docs/c.md")).unwrap(),
+            "c1"
+        );
+        assert_eq!(git(&output, &["rev-list", "--count", "HEAD"]), "2");
     }
 
     #[tokio::test]

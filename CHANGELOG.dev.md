@@ -7,6 +7,26 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.18.0] - 2026-07-28
+
+### Added
+
+- 超时 / 连接错误 / `429` / `5xx` 现在自动重试（单个地址最多 3 次请求，尊重服务端的 `Retry-After`），偶发抖动不再让整站同步作废。
+  - `http.rs`：`fetch` 拆为重试循环 + `try_fetch`，新增 `FetchError{message, retryable, retry_after}`；`RETRY_BACKOFF = [500ms, 1500ms]`、`MAX_ATTEMPTS`、`MAX_RETRY_AFTER = 10s`（超限忽略服务端请求走本地退避）；传输错误/429/5xx 可重试，其余 4xx / 畸形重定向 / 非 UTF-8 为 permanent。
+
+### Changed
+
+- 少量内容页在重试后仍失败时不再阻塞整站：快照照常发布，这些页面标记为「降级」——有上次的副本就沿用，没有就本次缺失。末行显示黄色 `✓ N/N synced · M degraded`，退出码 0，明细进运行日志。
+  - `CrawlReport.degraded: Vec<CrawlFailure>` + `CrawlEvent::Degraded`；`crawl` 的 `Err` 分支对 `output.is_some()` 的页面走 `adopt_previous()`（复制旧副本 + 沿用 validator + 继续 `enqueue_discovered`），入口文档（`output == None`）仍进 `failures`。
+  - `report.rs::print_degraded` / `write_degraded`，`render_summary` 全成功且有降级时改黄并附日志路径；`progress.rs` 增 `degraded` 计数与黄色 `DEGRADED` 滚动行。
+- 失败页超过 `max(3, 已处理页数 / 100)` 才判定为上游故障，整站失败并保留上一次完整快照（原先一页失败即如此）。
+  - `crawler.rs::degraded_tolerance(processed)`（`DEGRADED_FLOOR = 3` / `DEGRADED_RATIO = 100`）；超阈值时 `failures.append(&mut degraded)`，`processed()` 不计 `ignored`。
+
+### Fixed
+
+- 上游文档索引链接着自己已经渲染不出的页面（例如把 `404` 错报成 `500`）时，站点不再永久卡在「同步失败」而始终无法更新。
+  - 实例：`developers.openai.com` 的 `/api/docs/models/text-moderation-{latest,stable}.md` 返回 `500`（响应体为 `404.html`），使 `openai-en` 每次同步都失败、正式快照长期停滞在残留的 `.sync.*` 续传目录之外。
+
 ## [0.17.0] - 2026-07-26
 
 ### Changed

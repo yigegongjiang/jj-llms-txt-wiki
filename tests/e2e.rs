@@ -348,22 +348,48 @@ async fn real_cli_covers_sites_recursive_sync_and_snapshot_rollback() {
         "unchanged sync must remain visible in history"
     );
 
+    // One page still erroring after its retries is a dead link upstream, not an
+    // outage: it degrades, and the rest of the site publishes as usual.
+    alpha.routes.write().unwrap().insert(
+        "/llms.txt".to_owned(),
+        Response::ok("[new](/docs/new.md) [broken](/broken.md)"),
+    );
+    alpha
+        .routes
+        .write()
+        .unwrap()
+        .insert("/broken.md".to_owned(), Response::status(500));
+    let degraded = cli(home.path(), &["sync", "alpha", "--interval", "0ms"]);
+    let stderr = String::from_utf8_lossy(&degraded.stderr);
+    assert!(degraded.status.success(), "stderr={stderr}");
+    assert!(stderr.contains("1 degraded"), "stderr={stderr}");
+    assert!(wiki.join("alpha/docs/new.md").exists());
+    assert!(!wiki.join("alpha/broken.md").exists());
+    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "6");
+
+    // Past the tolerance the same errors read as an outage: the site fails whole
+    // and its last good snapshot survives untouched.
     let stable = tree(&wiki.join("alpha"));
-    for (status, path) in [(429, "/busy.md"), (500, "/broken.md")] {
-        alpha.routes.write().unwrap().insert(
-            "/llms.txt".to_owned(),
-            Response::ok(&format!("[failure]({path})")),
-        );
+    alpha.routes.write().unwrap().insert(
+        "/llms.txt".to_owned(),
+        Response::ok("[1](/b1.md) [2](/b2.md) [3](/b3.md) [4](/b4.md)"),
+    );
+    for (status, path) in [
+        (429, "/b1.md"),
+        (429, "/b2.md"),
+        (500, "/b3.md"),
+        (503, "/b4.md"),
+    ] {
         alpha
             .routes
             .write()
             .unwrap()
             .insert(path.to_owned(), Response::status(status));
-        let failed = cli(home.path(), &["sync", "alpha", "--interval", "0ms"]);
-        assert!(!failed.status.success());
-        assert_eq!(tree(&wiki.join("alpha")), stable);
-        assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "5");
     }
+    let failed = cli(home.path(), &["sync", "alpha", "--interval", "0ms"]);
+    assert!(!failed.status.success());
+    assert_eq!(tree(&wiki.join("alpha")), stable);
+    assert_eq!(git(&wiki, &["rev-list", "--count", "HEAD"]), "6");
 
     assert!(!wiki.join(".cache").exists());
     // A failed sync leaves its `.alpha.sync.*` partial on disk for resume, but it
