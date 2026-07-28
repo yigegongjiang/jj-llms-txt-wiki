@@ -242,7 +242,7 @@ Add the stream binding, a Durable Object to hold the WebSocket connection, and a
   "name": "bluesky-pipeline",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-24",
+  "compatibility_date": "2026-07-28",
   "pipelines": [
     {
       "binding": "BSKY_STREAM",
@@ -277,7 +277,7 @@ Add the stream binding, a Durable Object to hold the WebSocket connection, and a
 name = "bluesky-pipeline"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[pipelines]]
 binding = "BSKY_STREAM"

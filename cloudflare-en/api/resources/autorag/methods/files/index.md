@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/autorag/rags/{id}/files`
 
-Files
+Lists files indexed by an AutoRAG.
 
 ### Path Parameters
 

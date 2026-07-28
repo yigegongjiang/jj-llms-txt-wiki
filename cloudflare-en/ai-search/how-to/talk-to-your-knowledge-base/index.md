@@ -91,7 +91,7 @@ Add an [AI Search binding](https://developers.cloudflare.com/ai-search/api/searc
 	"name": "voice-knowledge-base",
 	"main": "src/server.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"ai": {
 		"binding": "AI",
@@ -125,7 +125,7 @@ Add an [AI Search binding](https://developers.cloudflare.com/ai-search/api/searc
 name = "voice-knowledge-base"
 main = "src/server.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [ai]

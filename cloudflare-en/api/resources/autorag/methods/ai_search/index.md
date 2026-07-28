@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/autorag/rags/{id}/ai-search`
 
-AI Search
+Runs an AI Search query against an AutoRAG.
 
 ### Path Parameters
 

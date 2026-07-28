@@ -77,7 +77,7 @@ Add both bindings to your [Wrangler configuration file](https://developers.cloud
   "name": "fetch-and-index",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-24",
+  "compatibility_date": "2026-07-28",
   "browser": {
     "binding": "BROWSER",
     "remote": true
@@ -96,7 +96,7 @@ Add both bindings to your [Wrangler configuration file](https://developers.cloud
 name = "fetch-and-index"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [browser]
 binding = "BROWSER"

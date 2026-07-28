@@ -63,7 +63,7 @@ The command will output the binding name and KV namespace ID, for example
   "name": "my-worker",
   "workers_dev": true,
   // Set this to today's date
-  "compatibility_date": "2026-07-24",
+  "compatibility_date": "2026-07-28",
   "main": "index.js",
   "kv_namespaces": [
     {
@@ -83,7 +83,7 @@ The command will output the binding name and KV namespace ID, for example
 name = "my-worker"
 workers_dev = true
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 main = "index.js"
 
 [[kv_namespaces]]

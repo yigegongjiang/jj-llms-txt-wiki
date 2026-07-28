@@ -16,6 +16,24 @@ List all custom Certificate Signing Requests (CSRs) for an account or zone.
 
 ### Query Parameters
 
+- `direction: optional "asc" or "desc"`
+
+  The direction to sort by.
+
+  - `"asc"`
+
+  - `"desc"`
+
+- `order: optional "name" or "account_tag" or "created_at"`
+
+  The field to sort the returned custom CSRs by.
+
+  - `"name"`
+
+  - `"account_tag"`
+
+  - `"created_at"`
+
 - `page: optional number`
 
   Page number of paginated results.

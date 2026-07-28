@@ -2,7 +2,7 @@
 
 **get** `/zones/{zone_id}/rate_limits`
 
-Fetches the rate limits for a zone.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 

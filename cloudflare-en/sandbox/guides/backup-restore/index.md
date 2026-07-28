@@ -30,7 +30,7 @@ npx wrangler r2 bucket create my-backup-bucket
 	"name": "my-sandbox-worker",  
 	"main": "src/index.ts",  
 	// Set this to today's date  
-	"compatibility_date": "2026-07-24",  
+	"compatibility_date": "2026-07-28",  
 	"compatibility_flags": ["nodejs_compat"],  
 	"containers": [  
 		{  
@@ -68,7 +68,7 @@ npx wrangler r2 bucket create my-backup-bucket
 name = "my-sandbox-worker"  
 main = "src/index.ts"  
 # Set this to today's date  
-compatibility_date = "2026-07-24"  
+compatibility_date = "2026-07-28"  
 compatibility_flags = [ "nodejs_compat" ]  
 [[containers]]  
 class_name = "Sandbox"  

@@ -2,7 +2,7 @@
 
 **patch** `/zones/{zone_id}/waiting_rooms/settings`
 
-Partially updates zone-level Waiting Room settings using PATCH semantics.
+Patch zone-level Waiting Room settings.
 
 ### Path Parameters
 

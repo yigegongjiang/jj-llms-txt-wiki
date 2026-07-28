@@ -414,11 +414,11 @@ Permanently delete an AI Search instance and all its indexed data.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 

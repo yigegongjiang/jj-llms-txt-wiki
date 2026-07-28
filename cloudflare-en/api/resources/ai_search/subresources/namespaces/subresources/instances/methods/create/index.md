@@ -394,11 +394,11 @@ Create a new AI Search instance with the given configuration.
 
       - `use_browser_rendering: optional boolean`
 
-    - `parse_type: optional "sitemap" or "crawl"`
+    - `parse_type: optional "sitemap" or "discover"`
 
       - `"sitemap"`
 
-      - `"crawl"`
+      - `"discover"`
 
 - `sync_interval: optional 900 or 1800 or 3600 or 5 more`
 
@@ -832,11 +832,11 @@ Create a new AI Search instance with the given configuration.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 

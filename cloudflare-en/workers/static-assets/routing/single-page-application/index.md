@@ -26,7 +26,7 @@ In order to deploy a Single Page Application to Workers, you must configure the 
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"assets": {
 		"directory": "./dist/",
 		"not_found_handling": "single-page-application"
@@ -37,7 +37,7 @@ In order to deploy a Single Page Application to Workers, you must configure the 
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [assets]
 directory = "./dist/"
@@ -162,7 +162,7 @@ Advanced routing control is supported in:
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"main": "./src/index.ts",
 	"assets": {
 		"directory": "./dist/",
@@ -176,7 +176,7 @@ Advanced routing control is supported in:
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 main = "./src/index.ts"
 
 [assets]

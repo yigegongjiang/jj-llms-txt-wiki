@@ -81,7 +81,7 @@ Refer to the [API reference](https://developers.cloudflare.com/workers/vite-plug
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "cloudflare-vite-get-started",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"main": "./src/index.ts"
 }
 ```
@@ -90,7 +90,7 @@ Refer to the [API reference](https://developers.cloudflare.com/workers/vite-plug
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "cloudflare-vite-get-started"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 main = "./src/index.ts"
 ```
 

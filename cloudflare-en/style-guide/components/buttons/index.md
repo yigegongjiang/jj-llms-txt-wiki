@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/buttons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `LinkButton` component is used `119` times on `61` pages.
+The `LinkButton` component is used `120` times on `61` pages.
 
 See all examples of pages that use LinkButton
 
-Used **119** times.
+Used **120** times.
 
 **Pages**
 
@@ -78,8 +78,8 @@ Used **119** times.
 * [/workers/configuration/sites/](https://developers.cloudflare.com/workers/configuration/sites/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/configuration/sites/index.mdx)
 * [/workers/](https://developers.cloudflare.com/workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/index.mdx)
 * [/workers/playground/](https://developers.cloudflare.com/workers/playground/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/playground.mdx)
-* [/workers/testing/](https://developers.cloudflare.com/workers/testing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/index.mdx)
 * [/workers/testing/miniflare/](https://developers.cloudflare.com/workers/testing/miniflare/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/miniflare/index.mdx)
+* [/workers/testing/test-harness/](https://developers.cloudflare.com/workers/testing/test-harness/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/index.mdx)
 * [/workers/testing/vitest-integration/](https://developers.cloudflare.com/workers/testing/vitest-integration/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/vitest-integration/index.mdx)
 * [/workflows/](https://developers.cloudflare.com/workflows/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workflows/index.mdx)
 

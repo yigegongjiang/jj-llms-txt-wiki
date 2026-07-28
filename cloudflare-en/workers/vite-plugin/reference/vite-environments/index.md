@@ -35,7 +35,7 @@ In the following example we have a Worker named `my-worker` that is associated w
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"main": "./src/index.ts"
 }
 ```
@@ -44,7 +44,7 @@ In the following example we have a Worker named `my-worker` that is associated w
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 main = "./src/index.ts"
 ```
 

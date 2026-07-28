@@ -97,14 +97,14 @@ To enable both built-in runtime APIs and polyfills for your Worker or Pages proj
 		"nodejs_compat"
 	],
 	// Set this to today's date
-	"compatibility_date": "2026-07-24"
+	"compatibility_date": "2026-07-28"
 }
 ```
 
 ```toml
 compatibility_flags = [ "nodejs_compat" ]
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 ```
 
 ## 3\. Connect Hyperdrive to a database

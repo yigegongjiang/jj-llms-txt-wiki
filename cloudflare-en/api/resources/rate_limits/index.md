@@ -4,7 +4,7 @@
 
 **get** `/zones/{zone_id}/rate_limits`
 
-Fetches the rate limits for a zone.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 
@@ -288,7 +288,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits \
 
 **get** `/zones/{zone_id}/rate_limits/{rate_limit_id}`
 
-Fetches the details of a rate limit.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 
@@ -540,7 +540,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits/$RATE_LIMIT
 
 **post** `/zones/{zone_id}/rate_limits`
 
-Creates a new rate limit for a zone. Refer to the object definition for a list of required attributes.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 
@@ -898,7 +898,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits \
 
 **put** `/zones/{zone_id}/rate_limits/{rate_limit_id}`
 
-Updates an existing rate limit.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 
@@ -1261,7 +1261,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits/$RATE_LIMIT
 
 **delete** `/zones/{zone_id}/rate_limits/{rate_limit_id}`
 
-Deletes an existing rate limit.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 

@@ -69,7 +69,7 @@ export default {
 	async fetch(request, env) {
 		// Load a worker.
 		const worker = env.LOADER.load({
-			compatibilityDate: "2026-07-24",
+			compatibilityDate: "2026-07-28",
 
 			mainModule: "src/index.js",
 			modules: {
@@ -148,7 +148,7 @@ const worker = env.LOADER.get("hello-v1", async () => {
 
 	// Return the same format as `env.LOADER.load()` accepts.
 	return {
-		compatibilityDate: "2026-07-24",
+		compatibilityDate: "2026-07-28",
 		mainModule: "index.js",
 		modules: { "index.js": code },
 		globalOutbound: null,
@@ -186,7 +186,7 @@ To run Python code in a Dynamic Worker, you must include the `python_workers` co
 
 ```js
 const worker = env.LOADER.load({
-	compatibilityDate: "2026-07-24",
+	compatibilityDate: "2026-07-28",
 	compatibilityFlags: ["python_workers"],
 	mainModule: "worker.py",
 	modules: {
@@ -242,7 +242,7 @@ const worker = env.LOADER.get("my-worker", async () => {
 		},
 	});
 
-	return { mainModule, modules, compatibilityDate: "2026-07-24" };
+	return { mainModule, modules, compatibilityDate: "2026-07-28" };
 });
 ```
 

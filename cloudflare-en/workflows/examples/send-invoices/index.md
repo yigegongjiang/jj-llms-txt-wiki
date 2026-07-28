@@ -208,7 +208,7 @@ And finally [Wrangler configuration file](https://developers.cloudflare.com/work
 	"name": "cart-invoices",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
@@ -232,7 +232,7 @@ And finally [Wrangler configuration file](https://developers.cloudflare.com/work
 name = "cart-invoices"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[workflows]]

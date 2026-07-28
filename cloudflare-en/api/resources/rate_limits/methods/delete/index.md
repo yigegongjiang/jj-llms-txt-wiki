@@ -2,7 +2,7 @@
 
 **delete** `/zones/{zone_id}/rate_limits/{rate_limit_id}`
 
-Deletes an existing rate limit.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 

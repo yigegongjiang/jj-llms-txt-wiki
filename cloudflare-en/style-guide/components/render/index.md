@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/render/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Render` component is used `4091` times on `1961` pages.
+The `Render` component is used `4090` times on `1960` pages.
 
 See all examples of pages that use Render
 
-Used **4091** times.
+Used **4090** times.
 
 **Pages**
 
@@ -1815,7 +1815,6 @@ Used **4091** times.
 * [/workers/static-assets/redirects/](https://developers.cloudflare.com/workers/static-assets/redirects/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/redirects.mdx)
 * [/workers/static-assets/routing/single-page-application/](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/routing/single-page-application.mdx)
 * [/workers/static-assets/routing/static-site-generation/](https://developers.cloudflare.com/workers/static-assets/routing/static-site-generation/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/routing/static-site-generation.mdx)
-* [/workers/testing/](https://developers.cloudflare.com/workers/testing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/index.mdx)
 * [/workers/tutorials/build-a-jamstack-app/](https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/tutorials/build-a-jamstack-app.mdx)
 * [/workers/tutorials/build-a-qr-code-generator/](https://developers.cloudflare.com/workers/tutorials/build-a-qr-code-generator/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/tutorials/build-a-qr-code-generator.mdx)
 * [/workers/tutorials/build-a-slackbot/](https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/tutorials/build-a-slackbot.mdx)

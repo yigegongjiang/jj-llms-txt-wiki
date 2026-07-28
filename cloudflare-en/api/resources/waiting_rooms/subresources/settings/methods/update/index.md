@@ -2,7 +2,7 @@
 
 **put** `/zones/{zone_id}/waiting_rooms/settings`
 
-Fully updates zone-level Waiting Room settings, replacing the existing configuration.
+Replace zone-level Waiting Room settings.
 
 ### Path Parameters
 

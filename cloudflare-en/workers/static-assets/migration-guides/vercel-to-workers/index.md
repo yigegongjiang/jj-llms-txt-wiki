@@ -42,7 +42,7 @@ For a **static site**, you will need to add the following to your wrangler file.
 {
 	"name": "<your-project-name>",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"assets": {
 		"directory": "<your-build-directory>",
 	},
@@ -52,7 +52,7 @@ For a **static site**, you will need to add the following to your wrangler file.
 ```toml
 name = "<your-project-name>"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [assets]
 directory = "<your-build-directory>"
@@ -64,7 +64,7 @@ For a **single page application**, you will need to add the following to your wr
 {
 	"name": "<your-project-name>",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"assets": {
 		"directory": "<your-build-directory>",
 		"not_found_handling": "single-page-application",
@@ -75,7 +75,7 @@ For a **single page application**, you will need to add the following to your wr
 ```toml
 name = "<your-project-name>"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [assets]
 directory = "<your-build-directory>"

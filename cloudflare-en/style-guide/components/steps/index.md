@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/steps/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Steps` component is used `733` times on `301` pages.
+The `Steps` component is used `737` times on `304` pages.
 
 See all examples of pages that use Steps
 
-Used **733** times.
+Used **737** times.
 
 **Pages**
 
@@ -28,10 +28,13 @@ Used **733** times.
 * [/agent-setup/cursor/](https://developers.cloudflare.com/agent-setup/cursor/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/cursor.mdx)
 * [/agent-setup/github-copilot/](https://developers.cloudflare.com/agent-setup/github-copilot/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/github-copilot.mdx)
 * [/agent-setup/opencode/](https://developers.cloudflare.com/agent-setup/opencode/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/opencode.mdx)
+* [/agent-setup/visual-studio-code/detailed-walkthrough/](https://developers.cloudflare.com/agent-setup/visual-studio-code/detailed-walkthrough/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/visual-studio-code/detailed-walkthrough.mdx)
+* [/agent-setup/visual-studio-code/](https://developers.cloudflare.com/agent-setup/visual-studio-code/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/visual-studio-code/index.mdx)
 * [/agent-setup/windsurf/](https://developers.cloudflare.com/agent-setup/windsurf/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/windsurf.mdx)
 * [/agents/model-context-protocol/guides/build-codemode-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/build-codemode-mcp-server.mdx)
 * [/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server.mdx)
 * [/agents/model-context-protocol/guides/connect-mcp-client/](https://developers.cloudflare.com/agents/model-context-protocol/guides/connect-mcp-client/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/connect-mcp-client.mdx)
+* [/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2/](https://developers.cloudflare.com/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2.mdx)
 * [/agents/tools/codemode/ai-sdk/](https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/ai-sdk.mdx)
 * [/agents/tools/codemode/browser/](https://developers.cloudflare.com/agents/tools/codemode/browser/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/browser.mdx)
 * [/agents/tools/codemode/durable-runtime/](https://developers.cloudflare.com/agents/tools/codemode/durable-runtime/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/durable-runtime.mdx)

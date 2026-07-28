@@ -42,7 +42,7 @@ Set `not_found_handling` to `"single-page-application"` so that every route retu
 	"name": "my-spa",
 	"main": "src/worker.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"assets": {
 		"directory": "./dist",
@@ -57,7 +57,7 @@ Set `not_found_handling` to `"single-page-application"` so that every route retu
 name = "my-spa"
 main = "src/worker.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [assets]
@@ -208,7 +208,7 @@ Because the SPA is not in Workers Static Assets, you do not need an `assets` blo
 	"name": "my-spa-proxy",
 	"main": "src/worker.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"vars": {
 		"SPA_ORIGIN": "https://my-spa.example-hosting.com",
@@ -221,7 +221,7 @@ Because the SPA is not in Workers Static Assets, you do not need an `assets` blo
 name = "my-spa-proxy"
 main = "src/worker.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [vars]

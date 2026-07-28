@@ -40,7 +40,7 @@ Add the binding in your Wrangler config:
   "name": "artifacts-worker",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-24",
+  "compatibility_date": "2026-07-28",
   "artifacts": [
     {
       "binding": "ARTIFACTS",
@@ -54,7 +54,7 @@ Add the binding in your Wrangler config:
 name = "artifacts-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[artifacts]]
 binding = "ARTIFACTS"

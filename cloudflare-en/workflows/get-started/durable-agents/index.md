@@ -404,7 +404,7 @@ export class ResearchAgent extends Agent<Env, State> {
 	"name": "durable-ai-agent",  
 	"main": "src/index.ts",  
 	// Set this to today's date  
-	"compatibility_date": "2026-07-24",  
+	"compatibility_date": "2026-07-28",  
 	"observability": {  
 		"enabled": true  
 	},  
@@ -436,7 +436,7 @@ export class ResearchAgent extends Agent<Env, State> {
 name = "durable-ai-agent"  
 main = "src/index.ts"  
 # Set this to today's date  
-compatibility_date = "2026-07-24"  
+compatibility_date = "2026-07-28"  
 [observability]  
 enabled = true  
 [[durable_objects.bindings]]  

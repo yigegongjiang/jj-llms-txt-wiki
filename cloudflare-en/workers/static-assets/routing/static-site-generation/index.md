@@ -26,7 +26,7 @@ In order to deploy a Static Site Generation application to Workers, you must con
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"assets": {
 		"directory": "./dist/",
 		"not_found_handling": "404-page",
@@ -38,7 +38,7 @@ In order to deploy a Static Site Generation application to Workers, you must con
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [assets]
 directory = "./dist/"

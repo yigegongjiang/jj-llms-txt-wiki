@@ -2,7 +2,7 @@
 
 **patch** `/accounts/{account_id}/autorag/rags/{id}/sync`
 
-Sync
+Starts synchronization for an AutoRAG.
 
 ### Path Parameters
 

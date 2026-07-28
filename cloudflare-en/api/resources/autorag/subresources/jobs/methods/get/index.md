@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/autorag/rags/{id}/jobs/{job_id}`
 
-Get a Job Details
+Returns details for an AutoRAG job.
 
 ### Path Parameters
 

@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/autorag/rags/{id}/search`
 
-Search
+Searches an AutoRAG.
 
 ### Path Parameters
 

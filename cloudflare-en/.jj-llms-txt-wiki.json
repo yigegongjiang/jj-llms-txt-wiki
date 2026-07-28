@@ -11,10 +11,10 @@
       "etag": "\"af2f18f9278b553c1f2dbee96546aee5\""
     },
     "https://developers.cloudflare.com/agent-setup/llms.txt": {
-      "etag": "\"a4514b8cbe025904d97f4e552f9706bb\""
+      "etag": "\"668a9aa48769004dec672fef7f357fca\""
     },
     "https://developers.cloudflare.com/agents/llms.txt": {
-      "etag": "\"c74ce3f06df037ba32c71040475518fe\""
+      "etag": "\"6ff2dd1fc9d8a1c9a883321926ceb959\""
     },
     "https://developers.cloudflare.com/ai-crawl-control/llms.txt": {
       "etag": "\"bc1540955ddca65081b241cbae5c6990\""
@@ -35,490 +35,238 @@
       "etag": "\"4dcdbdcc7be88d6bb245ec69e00ad45a\""
     },
     "https://developers.cloudflare.com/api/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 07:07:35 GMT"
+      "last_modified": "Tue, 28 Jul 2026 05:14:34 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/abuse_reports/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 01:15:24 GMT"
+    "https://developers.cloudflare.com/api/resources/accounts/subresources/logs/subresources/audit/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:13:23 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/abuse_reports/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:03:44 GMT"
+    "https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/create/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:24:01 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/accounts/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 08:09:01 GMT"
+    "https://developers.cloudflare.com/api/resources/argo/subresources/smart_routing/methods/edit/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 01:48:14 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 12:34:01 GMT"
+    "https://developers.cloudflare.com/api/resources/audit_logs/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:34 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:43:02 GMT"
+    "https://developers.cloudflare.com/api/resources/brand_protection/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 01:03:34 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:50:14 GMT"
+    "https://developers.cloudflare.com/api/resources/browser_rendering/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 01:05:09 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:03:34 GMT"
+    "https://developers.cloudflare.com/api/resources/certificate_authorities/subresources/hostname_associations/methods/update/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:34 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/verify/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:47:51 GMT"
+    "https://developers.cloudflare.com/api/resources/client_certificates/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 01:58:26 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/subresources/permission_groups/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:03:31 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/subresources/permission_groups/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 12:34:13 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ai/methods/run/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 07:51:50 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ai/subresources/models/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:56:10 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ai_gateway/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 18:36:17 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ai_gateway/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 16:04:23 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ai_search/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:52:20 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ai_search/subresources/instances/methods/read/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 10:29:34 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ai_search/subresources/namespaces/subresources/instances/subresources/items/methods/upload/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:51:23 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/bot_management/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 00:05:07 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/bot_management/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 10:14:02 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/cache/methods/purge/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:57:54 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/d1/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 18:49:14 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/delete/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 17:39:57 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/export/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 17:37:07 GMT"
+    "https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:48:23 GMT"
     },
     "https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/query/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:42:19 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/update/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 00:43:02 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/d1/subresources/database/subresources/time_travel/methods/restore/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 17:38:06 GMT"
+      "last_modified": "Tue, 28 Jul 2026 02:53:03 GMT"
     },
     "https://developers.cloudflare.com/api/resources/dns/subresources/dnssec/methods/edit/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:27:14 GMT"
+      "last_modified": "Mon, 27 Jul 2026 20:17:30 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/batch/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:25:56 GMT"
+    "https://developers.cloudflare.com/api/resources/dns/subresources/dnssec/methods/get/index.md": {
+      "last_modified": "Mon, 27 Jul 2026 20:44:44 GMT"
     },
     "https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:41:44 GMT"
+      "last_modified": "Tue, 28 Jul 2026 03:01:26 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/edit/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:26:51 GMT"
+    "https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/delete/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 03:02:39 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:27:20 GMT"
+    "https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/edit/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:23:11 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/update/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 09:11:46 GMT"
+    "https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:23:26 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/durable_objects/subresources/namespaces/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 08:07:46 GMT"
+    "https://developers.cloudflare.com/api/resources/images/subresources/v1/subresources/keys/methods/delete/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:23:52 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/email_routing/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 08:54:12 GMT"
+    "https://developers.cloudflare.com/api/resources/images/subresources/v1/subresources/keys/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:23:38 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/email_routing/methods/enable/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:23:48 GMT"
+    "https://developers.cloudflare.com/api/resources/images/subresources/v1/subresources/keys/methods/update/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:23:39 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/email_routing/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:20:23 GMT"
+    "https://developers.cloudflare.com/api/resources/images/subresources/v2/subresources/direct_uploads/methods/create/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:23:10 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/email_routing/subresources/rules/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 21:31:15 GMT"
+    "https://developers.cloudflare.com/api/resources/mtls_certificates/methods/create/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:07:24 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/email_routing/subresources/rules/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:21:19 GMT"
+    "https://developers.cloudflare.com/api/resources/mtls_certificates/methods/delete/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:22 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/email_routing/subresources/rules/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:32:54 GMT"
+    "https://developers.cloudflare.com/api/resources/mtls_certificates/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:22 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/email_security/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:06:40 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/email_sending/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:20:57 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/email_sending/methods/send/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 07:33:45 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/email_sending/subresources/subdomains/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 09:23:09 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/email_sending/subresources/subdomains/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:07:03 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/email_sending/subresources/subdomains/subresources/dns/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 09:23:10 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/firewall/subresources/access_rules/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 03:21:22 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/load_balancers/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 03:28:30 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/moq/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:39:21 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/moq/subresources/relays/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:39:22 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/moq/subresources/relays/subresources/tokens/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:39:22 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/pages/subresources/projects/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:42:48 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/pages/subresources/projects/methods/edit/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:01:59 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/pages/subresources/projects/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 03:58:43 GMT"
+    "https://developers.cloudflare.com/api/resources/origin_tls_client_auth/subresources/settings/methods/get/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:46:30 GMT"
     },
     "https://developers.cloudflare.com/api/resources/pages/subresources/projects/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 01:15:45 GMT"
+      "last_modified": "Tue, 28 Jul 2026 01:56:29 GMT"
     },
     "https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:50:18 GMT"
+      "last_modified": "Mon, 27 Jul 2026 19:34:33 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/rollback/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 10:52:39 GMT"
+    "https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:37:05 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/domains/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:57:27 GMT"
+    "https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/retry/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 00:14:41 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/queues/subresources/consumers/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 22:54:44 GMT"
+    "https://developers.cloudflare.com/api/resources/radar/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 03:01:34 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/queues/subresources/consumers/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 22:56:42 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/queues/subresources/messages/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 21:29:18 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/queues/subresources/messages/methods/ack/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 17:28:38 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/queues/subresources/messages/methods/pull/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 17:28:38 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/queues/subresources/purge/methods/start/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:26:54 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 01:57:10 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/subresources/buckets/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:42:04 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/subresources/buckets/methods/delete/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:46:01 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/subresources/buckets/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 09:42:05 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/subresources/buckets/subresources/domains/subresources/custom/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:12:11 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/subresources/buckets/subresources/domains/subresources/custom/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 12:10:06 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/subresources/buckets/subresources/lifecycle/methods/update/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 05:40:44 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/r2/subresources/temporary_credentials/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 07:36:00 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/radar/subresources/annotations/subresources/outages/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 10:32:04 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/radar/subresources/ranking/methods/top/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:25:23 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/radar/subresources/ranking/subresources/domain/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:25:23 GMT"
+    "https://developers.cloudflare.com/api/resources/radar/subresources/ranking/subresources/domain/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 00:58:55 GMT"
     },
     "https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:06:58 GMT"
+      "last_modified": "Tue, 28 Jul 2026 01:03:21 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/realtime_kit/subresources/presets/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 12:57:55 GMT"
+    "https://developers.cloudflare.com/api/resources/rulesets/subresources/phases/methods/get/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:46:05 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/realtime_kit/subresources/presets/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:50:17 GMT"
+    "https://developers.cloudflare.com/api/resources/ssl/subresources/certificate_packs/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:01:52 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/registrar/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:20:16 GMT"
+    "https://developers.cloudflare.com/api/resources/ssl/subresources/verification/methods/get/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:46:05 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/registrar/subresources/registrations/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 12:50:53 GMT"
+    "https://developers.cloudflare.com/api/resources/stream/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:09:13 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/rulesets/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:43:51 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/rulesets/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:43:51 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/rulesets/methods/update/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:43:52 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/rulesets/subresources/rules/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:03:36 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/rulesets/subresources/rules/methods/delete/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:43:51 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/rulesets/subresources/rules/methods/edit/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:11:10 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/secrets_store/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:24:31 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/spectrum/subresources/apps/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 19:16:05 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/ssl/subresources/universal/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 08:50:20 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/turnstile/subresources/widgets/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:36:28 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/user/subresources/tokens/methods/update/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 08:07:50 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/user/subresources/tokens/methods/verify/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:32:24 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/user/subresources/tokens/subresources/permission_groups/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 01:56:57 GMT"
+    "https://developers.cloudflare.com/api/resources/stream/subresources/token/methods/create/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:28:25 GMT"
     },
     "https://developers.cloudflare.com/api/resources/user/subresources/tokens/subresources/permission_groups/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 01:56:57 GMT"
+      "last_modified": "Tue, 28 Jul 2026 04:46:53 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/domains/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:39:47 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/domains/methods/delete/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 07:45:31 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/domains/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:41:09 GMT"
+    "https://developers.cloudflare.com/api/resources/workers/subresources/beta/subresources/workers/subresources/versions/methods/delete/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:57:29 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/domains/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:41:08 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/domains/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:04:18 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/observability/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:03:43 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/observability/subresources/telemetry/methods/keys/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:22:24 GMT"
+      "last_modified": "Tue, 28 Jul 2026 01:56:30 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/observability/subresources/telemetry/methods/query/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:04:31 GMT"
+      "last_modified": "Tue, 28 Jul 2026 06:23:11 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/routes/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:32:03 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/routes/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:39:28 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 06:47:42 GMT"
+    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 01:56:21 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/update/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 08:08:45 GMT"
+      "last_modified": "Tue, 28 Jul 2026 04:22:00 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/schedules/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:06:49 GMT"
+    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/deployments/methods/create/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:53 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/script_and_version_settings/methods/edit/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 23:43:15 GMT"
+    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/deployments/methods/get/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:37 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/script_and_version_settings/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:40:35 GMT"
+    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/deployments/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:53 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/secrets/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:24:40 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/secrets/methods/bulk_update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:24:53 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/secrets/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:24:41 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/secrets/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:18:04 GMT"
+      "last_modified": "Tue, 28 Jul 2026 05:11:48 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/settings/methods/edit/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:16:46 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/settings/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:40:24 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/subdomain/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:59:21 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/subdomain/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:59:13 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/subdomain/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:39:52 GMT"
+      "last_modified": "Tue, 28 Jul 2026 05:14:20 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:47:49 GMT"
+      "last_modified": "Tue, 28 Jul 2026 02:57:16 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:24:27 GMT"
+      "last_modified": "Tue, 28 Jul 2026 05:13:24 GMT"
+    },
+    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/get/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:12:39 GMT"
+    },
+    "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:11:22 GMT"
     },
     "https://developers.cloudflare.com/api/resources/workers/subresources/subdomains/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:48:49 GMT"
+      "last_modified": "Tue, 28 Jul 2026 01:22:41 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/workers_builds/subresources/repos/subresources/connections/methods/delete/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 07:07:57 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers_builds/subresources/triggers/methods/create/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 08:14:33 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers_builds/subresources/triggers/methods/delete/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 07:07:57 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workers_builds/subresources/triggers/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 07:07:57 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/workflows/subresources/instances/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 12:27:17 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/ai_controls/subresources/mcp/subresources/portals/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 07:48:09 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/ai_controls/subresources/mcp/subresources/servers/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 07:48:17 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/ai_controls/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:31:08 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:00:53 GMT"
+      "last_modified": "Tue, 28 Jul 2026 06:40:36 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/delete/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:48:12 GMT"
+      "last_modified": "Tue, 28 Jul 2026 00:14:23 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:44:41 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/revoke_tokens/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:47:18 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:46:05 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:52:58 GMT"
+      "last_modified": "Tue, 28 Jul 2026 01:29:41 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/subresources/policies/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:36:42 GMT"
+      "last_modified": "Mon, 27 Jul 2026 20:52:30 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/subresources/policies/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 09:55:13 GMT"
+      "last_modified": "Tue, 28 Jul 2026 04:46:30 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/subresources/policies/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 17:21:34 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/logs/subresources/access_requests/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 07:25:33 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/certificates/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:46:05 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/policies/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:24:57 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/policies/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:38:49 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/policies/methods/get/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:20:09 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/policies/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:19:59 GMT"
+      "last_modified": "Tue, 28 Jul 2026 06:52:38 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/service_tokens/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 09:38:04 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/service_tokens/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 09:55:14 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/service_tokens/methods/rotate/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:23:27 GMT"
+      "last_modified": "Tue, 28 Jul 2026 04:25:33 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/users/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:45:33 GMT"
+      "last_modified": "Tue, 28 Jul 2026 05:32:29 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/devices/subresources/policies/subresources/custom/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:27:21 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/devices/subresources/settings/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:27:22 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/gateway/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:49:06 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/gateway/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:27:31 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/users/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:32:44 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/gateway/subresources/rules/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 08:27:11 GMT"
+      "last_modified": "Tue, 28 Jul 2026 05:42:02 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/identity_providers/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 13:24:39 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/gateway/subresources/rules/methods/reset_expiration/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:42:33 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/identity_providers/methods/delete/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:53:15 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/networks/subresources/routes/methods/create/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:48:26 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/identity_providers/methods/list/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:18:44 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/networks/subresources/routes/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:48:26 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/identity_providers/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:21:34 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/seats/methods/edit/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:33:10 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/organizations/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 17:18:33 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/organizations/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 02:40:11 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/organizations/methods/revoke_users/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:54:13 GMT"
-    },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/organizations/methods/update/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 15:44:06 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 03:31:27 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/subresources/cloudflared/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:02:04 GMT"
+      "last_modified": "Tue, 28 Jul 2026 06:26:53 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/subresources/cloudflared/methods/create/index.md": {
-      "last_modified": "Sat, 25 Jul 2026 14:45:40 GMT"
+    "https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/subresources/cloudflared/subresources/connections/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 03:31:55 GMT"
+    },
+    "https://developers.cloudflare.com/api/resources/zones/methods/get/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:01:50 GMT"
     },
     "https://developers.cloudflare.com/api/resources/zones/methods/list/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:27:20 GMT"
+      "last_modified": "Tue, 28 Jul 2026 03:41:31 GMT"
     },
-    "https://developers.cloudflare.com/api/resources/zones/subresources/settings/methods/get/index.md": {
-      "last_modified": "Sun, 26 Jul 2026 04:26:13 GMT"
+    "https://developers.cloudflare.com/api/resources/zones/subresources/activation_check/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 04:02:08 GMT"
+    },
+    "https://developers.cloudflare.com/api/resources/zones/subresources/activation_check/methods/trigger/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 05:04:57 GMT"
+    },
+    "https://developers.cloudflare.com/api/resources/zones/subresources/settings/methods/list/index.md": {
+      "last_modified": "Tue, 28 Jul 2026 02:34:28 GMT"
     },
     "https://developers.cloudflare.com/argo-smart-routing/llms.txt": {
       "etag": "\"246cacf9921c3cca89b8750221e128cb\""
@@ -794,7 +542,7 @@
       "etag": "\"fc8da4aa637dc369ae8cabcc88465a44\""
     },
     "https://developers.cloudflare.com/workers/llms.txt": {
-      "etag": "\"80875fac4cf7900a3ba2fca65266020a\""
+      "etag": "\"a3e7c5eb061bebe7c5495023363b1b2f\""
     },
     "https://developers.cloudflare.com/workflows/llms.txt": {
       "etag": "\"ce3d8b8c23cad5832cb62faf104a3fe0\""

@@ -48,7 +48,7 @@ Update `wrangler.jsonc` to include a Workers AI binding and a Durable Object for
 {
 	"name": "voice-agent",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"main": "src/server.ts",
 	"ai": {
@@ -74,7 +74,7 @@ Update `wrangler.jsonc` to include a Workers AI binding and a Durable Object for
 ```toml
 name = "voice-agent"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 main = "src/server.ts"
 

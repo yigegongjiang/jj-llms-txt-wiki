@@ -54,7 +54,7 @@ export default {
 	"name": "container-starter",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"containers": [
 		{
 			"class_name": "MyContainer",
@@ -83,7 +83,7 @@ export default {
 name = "container-starter"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[containers]]
 class_name = "MyContainer"

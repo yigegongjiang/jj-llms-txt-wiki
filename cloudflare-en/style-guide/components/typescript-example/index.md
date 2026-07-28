@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/typescript-example/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `TypeScriptExample` component is used `1360` times on `271` pages.
+The `TypeScriptExample` component is used `1383` times on `280` pages.
 
 See all examples of pages that use TypeScriptExample
 
-Used **1360** times.
+Used **1383** times.
 
 **Pages**
 
@@ -60,6 +60,7 @@ Used **1360** times.
 * [/agents/model-context-protocol/guides/build-codemode-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/build-codemode-mcp-server.mdx)
 * [/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server.mdx)
 * [/agents/model-context-protocol/guides/connect-mcp-client/](https://developers.cloudflare.com/agents/model-context-protocol/guides/connect-mcp-client/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/connect-mcp-client.mdx)
+* [/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2/](https://developers.cloudflare.com/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2.mdx)
 * [/agents/model-context-protocol/guides/oauth-mcp-client/](https://developers.cloudflare.com/agents/model-context-protocol/guides/oauth-mcp-client/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/oauth-mcp-client.mdx)
 * [/agents/model-context-protocol/guides/securing-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/securing-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/securing-mcp-server.mdx)
 * [/agents/model-context-protocol/protocol/tools/](https://developers.cloudflare.com/agents/model-context-protocol/protocol/tools/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/protocol/tools.mdx)
@@ -231,10 +232,16 @@ Used **1360** times.
 * [/workers/static-assets/migration-guides/migrate-from-pages/](https://developers.cloudflare.com/workers/static-assets/migration-guides/migrate-from-pages/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/migration-guides/migrate-from-pages.mdx)
 * [/workers/static-assets/routing/single-page-application/](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/routing/single-page-application.mdx)
 * [/workers/static-assets/routing/worker-script/](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/routing/worker-script.mdx)
+* [/workers/testing/test-harness/configure/](https://developers.cloudflare.com/workers/testing/test-harness/configure/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/configure.mdx)
+* [/workers/testing/test-harness/get-started/](https://developers.cloudflare.com/workers/testing/test-harness/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/get-started.mdx)
+* [/workers/testing/test-harness/integrations/](https://developers.cloudflare.com/workers/testing/test-harness/integrations/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/integrations.mdx)
+* [/workers/testing/test-harness/interact-with-workers/](https://developers.cloudflare.com/workers/testing/test-harness/interact-with-workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/interact-with-workers.mdx)
+* [/workers/testing/test-harness/prepare-test-state/](https://developers.cloudflare.com/workers/testing/test-harness/prepare-test-state/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/prepare-test-state.mdx)
 * [/workers/testing/vitest-integration/write-your-first-test/](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/vitest-integration/write-your-first-test.mdx)
 * [/workers/versions-and-deployments/gradual-deployments/version-affinity/](https://developers.cloudflare.com/workers/versions-and-deployments/gradual-deployments/version-affinity/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/versions-and-deployments/gradual-deployments/version-affinity.mdx)
 * [/workers/versions-and-deployments/version-overrides/](https://developers.cloudflare.com/workers/versions-and-deployments/version-overrides/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/versions-and-deployments/version-overrides.mdx)
 * [/workers/vite-plugin/reference/api/](https://developers.cloudflare.com/workers/vite-plugin/reference/api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/vite-plugin/reference/api.mdx)
+* [/workers/wrangler/api/](https://developers.cloudflare.com/workers/wrangler/api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/wrangler/api.mdx)
 * [/workflows/build/call-workflows-from-pages/](https://developers.cloudflare.com/workflows/build/call-workflows-from-pages/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workflows/build/call-workflows-from-pages.mdx)
 * [/workflows/build/events-and-parameters/](https://developers.cloudflare.com/workflows/build/events-and-parameters/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workflows/build/events-and-parameters.mdx)
 * [/workflows/build/rules-of-workflows/](https://developers.cloudflare.com/workflows/build/rules-of-workflows/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workflows/build/rules-of-workflows.mdx)

@@ -218,7 +218,7 @@ In your Wrangler file, change the default checking frequency (once per hour) to 
 	"name": "hijack-alerts",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"triggers": {
 		"crons": [
 			"*/5 * * * *"
@@ -232,7 +232,7 @@ In your Wrangler file, change the default checking frequency (once per hour) to 
 name = "hijack-alerts"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [triggers]
 crons = [ "*/5 * * * *" ]

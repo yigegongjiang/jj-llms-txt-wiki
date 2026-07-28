@@ -4,7 +4,7 @@
 
 **post** `/accounts/{account_id}/autorag/rags/{id}/ai-search`
 
-AI Search
+Runs an AI Search query against an AutoRAG.
 
 ### Path Parameters
 
@@ -234,7 +234,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/autorag/rags/$ID/
 
 **post** `/accounts/{account_id}/autorag/rags/{id}/search`
 
-Search
+Searches an AutoRAG.
 
 ### Path Parameters
 
@@ -403,7 +403,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/autorag/rags/$ID/
 
 **patch** `/accounts/{account_id}/autorag/rags/{id}/sync`
 
-Sync
+Starts synchronization for an AutoRAG.
 
 ### Path Parameters
 
@@ -444,7 +444,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/autorag/rags/$ID/
 
 **get** `/accounts/{account_id}/autorag/rags/{id}/files`
 
-Files
+Lists files indexed by an AutoRAG.
 
 ### Path Parameters
 
@@ -599,7 +599,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/autorag/rags/$ID/
 
 **get** `/accounts/{account_id}/autorag/rags/{id}/jobs`
 
-List Jobs
+Lists jobs for an AutoRAG.
 
 ### Path Parameters
 
@@ -682,7 +682,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/autorag/rags/$ID/
 
 **get** `/accounts/{account_id}/autorag/rags/{id}/jobs/{job_id}`
 
-Get a Job Details
+Returns details for an AutoRAG job.
 
 ### Path Parameters
 
@@ -743,7 +743,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/autorag/rags/$ID/
 
 **get** `/accounts/{account_id}/autorag/rags/{id}/jobs/{job_id}/logs`
 
-List Job Logs
+Lists logs for an AutoRAG job.
 
 ### Path Parameters
 

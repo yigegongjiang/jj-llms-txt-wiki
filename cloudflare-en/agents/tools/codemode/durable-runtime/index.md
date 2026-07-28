@@ -45,7 +45,7 @@ bun add @cloudflare/codemode
 {  
   "$schema": "./node_modules/wrangler/config-schema.json",  
   // Set this to today's date  
-  "compatibility_date": "2026-07-24",  
+  "compatibility_date": "2026-07-28",  
   "compatibility_flags": [  
     "nodejs_compat"  
   ],  
@@ -58,7 +58,7 @@ bun add @cloudflare/codemode
 ```  
 ```toml  
 # Set this to today's date  
-compatibility_date = "2026-07-24"  
+compatibility_date = "2026-07-28"  
 compatibility_flags = ["nodejs_compat"]  
 [[worker_loaders]]  
 binding = "LOADER"  

@@ -220,7 +220,7 @@ export default {
 				modules: {
 					"index.js": { js: serverCode },
 				},
-				compatibilityDate: "2026-07-24",
+				compatibilityDate: "2026-07-28",
 				env: {
 					ASSETS: ctx.exports.AssetBinding({
 						props: { projectId },

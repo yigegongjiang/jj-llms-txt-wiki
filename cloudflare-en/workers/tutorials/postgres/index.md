@@ -73,14 +73,14 @@ To enable both built-in runtime APIs and polyfills for your Worker or Pages proj
 		"nodejs_compat"
 	],
 	// Set this to today's date
-	"compatibility_date": "2026-07-24"
+	"compatibility_date": "2026-07-28"
 }
 ```
 
 ```toml
 compatibility_flags = [ "nodejs_compat" ]
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 ```
 
 ## 2\. Add the PostgreSQL connection library
@@ -401,7 +401,7 @@ This command outputs the Hyperdrive configuration `id` that will be used for you
 	"name": "hyperdrive-example",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
@@ -420,7 +420,7 @@ This command outputs the Hyperdrive configuration `id` that will be used for you
 name = "hyperdrive-example"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[hyperdrive]]

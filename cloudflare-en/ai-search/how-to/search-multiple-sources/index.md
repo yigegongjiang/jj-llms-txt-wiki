@@ -75,7 +75,7 @@ Add an [AI Search namespace binding](https://developers.cloudflare.com/ai-search
   "name": "multi-source-search",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-24",
+  "compatibility_date": "2026-07-28",
   "ai_search_namespaces": [
     {
       "binding": "AI_SEARCH",
@@ -90,7 +90,7 @@ Add an [AI Search namespace binding](https://developers.cloudflare.com/ai-search
 name = "multi-source-search"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[ai_search_namespaces]]
 binding = "AI_SEARCH"

@@ -84,7 +84,7 @@ Your Worker Loader needs two [bindings](https://developers.cloudflare.com/worker
   "name": "my-worker-loader",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-24",
+  "compatibility_date": "2026-07-28",
   "worker_loaders": [
     {
       "binding": "LOADER"
@@ -104,7 +104,7 @@ Your Worker Loader needs two [bindings](https://developers.cloudflare.com/worker
 name = "my-worker-loader"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[worker_loaders]]
 binding = "LOADER"

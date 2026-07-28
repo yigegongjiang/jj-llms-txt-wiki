@@ -254,7 +254,7 @@ Create or update your [Wrangler configuration file](https://developers.cloudflar
 	"name": "my-static-site",
 	"main": "./src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"assets": {
 		"directory": "./public",
 		"binding": "ASSETS",
@@ -267,7 +267,7 @@ Create or update your [Wrangler configuration file](https://developers.cloudflar
 name = "my-static-site"
 main = "./src/index.js"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [assets]
 directory = "./public"

@@ -67,7 +67,7 @@ Update your Wrangler configuration file:
 	"name": "private-api-gateway",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"vpc_services": [
 		{
 			"binding": "INTERNAL_API",
@@ -83,7 +83,7 @@ Update your Wrangler configuration file:
 name = "private-api-gateway"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[vpc_services]]
 binding = "INTERNAL_API"

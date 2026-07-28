@@ -4,7 +4,7 @@
 
 **get** `/zones/{zone_id}/waiting_rooms/settings`
 
-Gets the zone-level Waiting Room settings that apply as defaults to all waiting rooms on the zone.
+Get zone-level Waiting Room settings.
 
 ### Path Parameters
 
@@ -43,7 +43,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/settings 
 
 **put** `/zones/{zone_id}/waiting_rooms/settings`
 
-Fully updates zone-level Waiting Room settings, replacing the existing configuration.
+Replace zone-level Waiting Room settings.
 
 ### Path Parameters
 
@@ -95,7 +95,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/settings 
 
 **patch** `/zones/{zone_id}/waiting_rooms/settings`
 
-Partially updates zone-level Waiting Room settings using PATCH semantics.
+Patch zone-level Waiting Room settings.
 
 ### Path Parameters
 

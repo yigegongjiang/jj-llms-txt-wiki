@@ -288,7 +288,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 
 ## Testing
 
-- [Testing](https://developers.cloudflare.com/workers/testing/index.md): Compare testing options for Cloudflare Workers, including Vitest integration, Miniflare, and unstable_startWorker.
+- [Testing](https://developers.cloudflare.com/workers/testing/index.md): Choose testing tools for Cloudflare Workers, including createTestHarness and the Vitest integration.
 - [Miniflare](https://developers.cloudflare.com/workers/testing/miniflare/index.md): Simulate and test Cloudflare Workers locally with Miniflare, a fully-local development simulator.
 - [Compatibility Dates](https://developers.cloudflare.com/workers/testing/miniflare/core/compatibility/index.md): Configure compatibility dates and flags in Miniflare to match Cloudflare Workers runtime behavior.
 - [Fetch Events](https://developers.cloudflare.com/workers/testing/miniflare/core/fetch/index.md): Dispatch and test HTTP fetch events in Miniflare for Cloudflare Workers.
@@ -309,6 +309,12 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [KV](https://developers.cloudflare.com/workers/testing/miniflare/storage/kv/index.md)
 - [R2](https://developers.cloudflare.com/workers/testing/miniflare/storage/r2/index.md)
 - [Writing tests](https://developers.cloudflare.com/workers/testing/miniflare/writing-tests/index.md): Write integration tests against Workers using Miniflare.
+- [Integration test harness](https://developers.cloudflare.com/workers/testing/test-harness/index.md): Write integration tests for Cloudflare Workers with the createTestHarness API in Wrangler.
+- [Configure the test harness](https://developers.cloudflare.com/workers/testing/test-harness/configure/index.md): Configure Workers, test values, and lifecycle options for createTestHarness.
+- [Get started](https://developers.cloudflare.com/workers/testing/test-harness/get-started/index.md): Write your first integration test for a Cloudflare Worker with createTestHarness.
+- [Integrations](https://developers.cloudflare.com/workers/testing/test-harness/integrations/index.md): Use createTestHarness with Mock Service Worker and Playwright.
+- [Interact with Workers](https://developers.cloudflare.com/workers/testing/test-harness/interact-with-workers/index.md): Test routes, dispatch events, control Workflows, and assert logged behavior with createTestHarness.
+- [Prepare test state](https://developers.cloudflare.com/workers/testing/test-harness/prepare-test-state/index.md): Seed local storage and replace dependencies in createTestHarness tests.
 - [Wrangler's unstable_startWorker()](https://developers.cloudflare.com/workers/testing/unstable_startworker/index.md): Write integration tests using Wrangler's `unstable_startWorker()` API
 - [Vitest integration](https://developers.cloudflare.com/workers/testing/vitest-integration/index.md): Run unit and integration tests for Cloudflare Workers inside the Workers runtime using the Vitest integration.
 - [Configuration](https://developers.cloudflare.com/workers/testing/vitest-integration/configuration/index.md): Vitest configuration specific to the Workers integration.
@@ -316,7 +322,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Isolation and concurrency](https://developers.cloudflare.com/workers/testing/vitest-integration/isolation-and-concurrency/index.md): Review how the Workers Vitest integration runs your tests, how it isolates tests from each other, and how it imports modules.
 - [Known issues](https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/index.md): Explore the known issues associated with the Workers Vitest integration.
 - [Migrate from Miniflare 2's test environments](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/index.md): Migrate from [Miniflare 2](https://github.com/cloudflare/miniflare?tab=readme-ov-file) to the Workers Vitest integration.
-- [Migrate from unstable_dev](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-unstable-dev/index.md): Migrate from the [`unstable_dev`](/workers/wrangler/api/#unstable_dev) API to writing tests with the Workers Vitest integration.
+- [Migrate from unstable_dev](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-unstable-dev/index.md): Migrate from the unstable_dev API to writing tests with the Workers Vitest integration.
 - [Migrate from Vitest 3 to Vitest 4](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-vitest-3-to-vitest-4/index.md): Migrate the Workers Vitest integration from v0.12.x (Vitest 3) to v0.13.x (Vitest 4), covering configuration and test file changes.
 - [Recipes and examples](https://developers.cloudflare.com/workers/testing/vitest-integration/recipes/index.md): Examples that demonstrate how to write unit and integration tests with the Workers Vitest integration.
 - [Test APIs](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/index.md): Runtime helpers for writing tests, exported from `cloudflare:workers` and `cloudflare:test`.

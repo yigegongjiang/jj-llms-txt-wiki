@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/api-request/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `APIRequest` component is used `617` times on `244` pages.
+The `APIRequest` component is used `618` times on `244` pages.
 
 See all examples of pages that use APIRequest
 
-Used **617** times.
+Used **618** times.
 
 **Pages**
 

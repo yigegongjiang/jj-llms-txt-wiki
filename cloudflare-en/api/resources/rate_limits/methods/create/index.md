@@ -2,7 +2,7 @@
 
 **post** `/zones/{zone_id}/rate_limits`
 
-Creates a new rate limit for a zone. Refer to the object definition for a list of required attributes.
+**Deprecated**: This endpoint returns 410 Gone. Please use the Rulesets API instead.
 
 ### Path Parameters
 

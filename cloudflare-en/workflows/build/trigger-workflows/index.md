@@ -45,7 +45,7 @@ To bind to a Workflow from your Workers code, you need to define a [binding](htt
 	"name": "workflows-tutorial",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"workflows": [
 		{
 			// The name of the Workflow
@@ -66,7 +66,7 @@ To bind to a Workflow from your Workers code, you need to define a [binding](htt
 name = "workflows-tutorial"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[workflows]]
 name = "workflows-tutorial"
@@ -86,7 +86,7 @@ If you want to create Workflow instances on a recurring interval, add a `schedul
 	"name": "workflows-tutorial",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"workflows": [
 		{
 			"name": "workflows-tutorial",
@@ -103,7 +103,7 @@ If you want to create Workflow instances on a recurring interval, add a `schedul
 name = "workflows-tutorial"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[workflows]]
 name = "workflows-tutorial"

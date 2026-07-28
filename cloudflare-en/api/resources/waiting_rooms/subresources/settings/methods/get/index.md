@@ -2,7 +2,7 @@
 
 **get** `/zones/{zone_id}/waiting_rooms/settings`
 
-Gets the zone-level Waiting Room settings that apply as defaults to all waiting rooms on the zone.
+Get zone-level Waiting Room settings.
 
 ### Path Parameters
 

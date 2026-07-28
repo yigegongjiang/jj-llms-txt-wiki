@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/package-managers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `PackageManagers` component is used `437` times on `220` pages.
+The `PackageManagers` component is used `445` times on `224` pages.
 
 See all examples of pages that use PackageManagers
 
-Used **437** times.
+Used **445** times.
 
 **Pages**
 
@@ -28,9 +28,11 @@ Used **437** times.
 * [/agents/getting-started/add-to-existing-project/](https://developers.cloudflare.com/agents/getting-started/add-to-existing-project/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/getting-started/add-to-existing-project.mdx)
 * [/agents/getting-started/quick-start/](https://developers.cloudflare.com/agents/getting-started/quick-start/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/getting-started/quick-start.mdx)
 * [/agents/harnesses/think/](https://developers.cloudflare.com/agents/harnesses/think/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/harnesses/think/index.mdx)
+* [/agents/model-context-protocol/apis/handler-api/](https://developers.cloudflare.com/agents/model-context-protocol/apis/handler-api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/apis/handler-api.mdx)
 * [/agents/model-context-protocol/guides/build-codemode-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/build-codemode-mcp-server.mdx)
 * [/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server.mdx)
 * [/agents/model-context-protocol/guides/connect-mcp-client/](https://developers.cloudflare.com/agents/model-context-protocol/guides/connect-mcp-client/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/connect-mcp-client.mdx)
+* [/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2/](https://developers.cloudflare.com/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/migrate-to-mcp-sdk-v2.mdx)
 * [/agents/model-context-protocol/guides/remote-mcp-server/](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/model-context-protocol/guides/remote-mcp-server.mdx)
 * [/agents/runtime/communication/chat-sdk/](https://developers.cloudflare.com/agents/runtime/communication/chat-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/communication/chat-sdk.mdx)
 * [/agents/runtime/lifecycle/sessions/](https://developers.cloudflare.com/agents/runtime/lifecycle/sessions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/lifecycle/sessions.mdx)
@@ -193,6 +195,7 @@ Used **437** times.
 * [/workers/static-assets/migration-guides/migrate-from-pages/](https://developers.cloudflare.com/workers/static-assets/migration-guides/migrate-from-pages/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/migration-guides/migrate-from-pages.mdx)
 * [/workers/testing/miniflare/get-started/](https://developers.cloudflare.com/workers/testing/miniflare/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/miniflare/get-started.mdx)
 * [/workers/testing/miniflare/writing-tests/](https://developers.cloudflare.com/workers/testing/miniflare/writing-tests/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/miniflare/writing-tests.mdx)
+* [/workers/testing/test-harness/configure/](https://developers.cloudflare.com/workers/testing/test-harness/configure/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/configure.mdx)
 * [/workers/testing/vitest-integration/migration-guides/migrate-from-vitest-3-to-vitest-4/](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-vitest-3-to-vitest-4/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/vitest-integration/migration-guides/migrate-from-vitest-3-to-vitest-4.mdx)
 * [/workers/testing/vitest-integration/write-your-first-test/](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/vitest-integration/write-your-first-test.mdx)
 * [/workers/tutorials/build-a-jamstack-app/](https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/tutorials/build-a-jamstack-app.mdx)

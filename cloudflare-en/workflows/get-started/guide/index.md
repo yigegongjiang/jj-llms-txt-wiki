@@ -129,7 +129,7 @@ For more guidance on how to define your Workflow logic, refer to [Rules of Workf
 	"name": "my-workflow",  
 	"main": "src/index.ts",  
 	// Set this to today's date  
-	"compatibility_date": "2026-07-24",  
+	"compatibility_date": "2026-07-28",  
 	"observability": {  
 		"enabled": true  
 	},  
@@ -147,7 +147,7 @@ For more guidance on how to define your Workflow logic, refer to [Rules of Workf
 name = "my-workflow"  
 main = "src/index.ts"  
 # Set this to today's date  
-compatibility_date = "2026-07-24"  
+compatibility_date = "2026-07-28"  
 [observability]  
 enabled = true  
 [[workflows]]  
@@ -163,7 +163,7 @@ If you want the same Workflow to run automatically on a recurring interval, add 
   "name": "my-workflow",  
   "main": "src/index.ts",  
   // Set this to today's date  
-  "compatibility_date": "2026-07-24",  
+  "compatibility_date": "2026-07-28",  
   "workflows": [  
     {  
       "name": "my-workflow",  
@@ -179,7 +179,7 @@ If you want the same Workflow to run automatically on a recurring interval, add 
 name = "my-workflow"  
 main = "src/index.ts"  
 # Set this to today's date  
-compatibility_date = "2026-07-24"  
+compatibility_date = "2026-07-28"  
 [[workflows]]  
 name = "my-workflow"  
 binding = "MY_WORKFLOW"  

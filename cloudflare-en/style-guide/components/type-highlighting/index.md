@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/type-highlighting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Type` component is used `1448` times on `75` pages.
+The `Type` component is used `1475` times on `75` pages.
 
 See all examples of pages that use Type
 
-Used **1448** times.
+Used **1475** times.
 
 **Pages**
 

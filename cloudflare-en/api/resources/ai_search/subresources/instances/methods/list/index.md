@@ -264,11 +264,11 @@ List all AI Search instances in the account.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: string`
 

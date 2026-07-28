@@ -12,8 +12,10 @@ Install an agent of your choice, connect skills and MCP servers, and start deplo
 
 - [LM Studio Bionic + Cloudflare](https://developers.cloudflare.com/agent-setup/bionic/index.md): Use LM Studio Bionic with Cloudflare projects, local codebases, and local or cloud-hosted open-source models.
 - [Claude Code + Cloudflare](https://developers.cloudflare.com/agent-setup/claude-code/index.md): Terminal-based coding agent that understands your codebase, runs commands, edits files, and manages git. Made by Anthropic.
-- [Codex + Cloudflare](https://developers.cloudflare.com/agent-setup/codex/index.md): Lightweight open-source terminal agent that reads and writes files, runs commands, and browses the web in a sandbox. Made by OpenAI.
+- [Codex + Cloudflare](https://developers.cloudflare.com/agent-setup/codex/index.md): OpenAI coding agent available as a terminal CLI and desktop app. It reads and writes files, runs commands, and browses the web in a sandbox.
 - [Cursor + Cloudflare](https://developers.cloudflare.com/agent-setup/cursor/index.md): AI-first IDE built on VS Code with multi-file Composer edits and background agents. Made by Cursor.
 - [GitHub Copilot + Cloudflare](https://developers.cloudflare.com/agent-setup/github-copilot/index.md): Editor extension and CLI with agent mode, workspace context, and native PR integration. Made by GitHub.
 - [OpenCode + Cloudflare](https://developers.cloudflare.com/agent-setup/opencode/index.md): Open-source terminal agent with a rich TUI that works with 75+ LLMs. Made by Anomaly.
+- [Visual Studio Code + Cloudflare](https://developers.cloudflare.com/agent-setup/visual-studio-code/index.md): Free, open-source code editor with native Model Context Protocol (MCP) client support and Copilot Chat integration. Made by Microsoft.
+- [Visual Studio Code detailed walkthrough](https://developers.cloudflare.com/agent-setup/visual-studio-code/detailed-walkthrough/index.md): A screenshot-by-screenshot guide to connecting Visual Studio Code to the Cloudflare API through the Cloudflare MCP server, then creating, verifying, and deleting a DNS record with natural language.
 - [Windsurf + Cloudflare](https://developers.cloudflare.com/agent-setup/windsurf/index.md): Agentic IDE with Cascade context and Flows for multi-step tasks. Made by Cognition.

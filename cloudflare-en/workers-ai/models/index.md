@@ -16,7 +16,7 @@ Check out the [unified AI model catalog](https://developers.cloudflare.com/ai/mo
 
 Task TypesCapabilitiesAuthorsNewest first
 
-We found 81 models
+We found 81 modelsClear filters
 
 No models found
 

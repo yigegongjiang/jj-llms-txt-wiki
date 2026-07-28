@@ -134,7 +134,7 @@ Your final Wrangler file should look similar to the example below.
 	"name": "resend-rate-limit-queue",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
@@ -162,7 +162,7 @@ Your final Wrangler file should look similar to the example below.
 name = "resend-rate-limit-queue"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[queues.producers]]

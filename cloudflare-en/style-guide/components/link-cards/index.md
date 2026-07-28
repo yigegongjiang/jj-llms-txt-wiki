@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/link-cards/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `LinkCard` component is used `414` times on `120` pages.
+The `LinkCard` component is used `417` times on `121` pages.
 
 See all examples of pages that use LinkCard
 
-Used **414** times.
+Used **417** times.
 
 **Pages**
 
@@ -131,6 +131,7 @@ Used **414** times.
 * [/workers/observability/](https://developers.cloudflare.com/workers/observability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/observability/index.mdx)
 * [/workers/platform/claim-deployments/](https://developers.cloudflare.com/workers/platform/claim-deployments/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/platform/claim-deployments.mdx)
 * [/workers/static-assets/](https://developers.cloudflare.com/workers/static-assets/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/static-assets/index.mdx)
+* [/workers/testing/test-harness/](https://developers.cloudflare.com/workers/testing/test-harness/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/test-harness/index.mdx)
 * [/workflows/get-started/durable-agents/](https://developers.cloudflare.com/workflows/get-started/durable-agents/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workflows/get-started/durable-agents.mdx)
 * [/workflows/get-started/guide/](https://developers.cloudflare.com/workflows/get-started/guide/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workflows/get-started/guide.mdx)
 * [/workflows/videos/](https://developers.cloudflare.com/workflows/videos/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workflows/videos.mdx)

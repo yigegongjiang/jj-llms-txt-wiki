@@ -39,7 +39,7 @@ The command above will output the ID of your Hyperdrive. Set this ID in the [Wra
 		"nodejs_compat"
 	],
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"hyperdrive": [
 		{
 			"binding": "HYPERDRIVE",
@@ -52,7 +52,7 @@ The command above will output the ID of your Hyperdrive. Set this ID in the [Wra
 ```toml
 compatibility_flags = [ "nodejs_compat" ]
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[hyperdrive]]
 binding = "HYPERDRIVE"

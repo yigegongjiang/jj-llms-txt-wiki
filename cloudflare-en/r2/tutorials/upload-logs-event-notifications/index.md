@@ -88,7 +88,7 @@ In your Worker project's \[[Wrangler configuration file](https://developers.clou
 	"name": "event-notification-writer",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
@@ -115,7 +115,7 @@ In your Worker project's \[[Wrangler configuration file](https://developers.clou
 name = "event-notification-writer"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[queues.consumers]]

@@ -77,7 +77,7 @@ This binding enables your application to interact with Cloudflare resources such
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "staff-directory",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24"
+	"compatibility_date": "2026-07-28"
 }
 ```
 
@@ -85,7 +85,7 @@ This binding enables your application to interact with Cloudflare resources such
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "staff-directory"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 ```
 
 Next, add the database binding details to your Wrangler file. This involves specifying a binding name (in this case, `DB`), which will be used to reference the database within your application, along with the `database_name` and `database_id` provided when you created the database:
@@ -451,7 +451,7 @@ After successful login, confirm that your Wrangler file is configured similarly 
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "staff-directory",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"r2_buckets": [
 		{
 			"binding": "MY_BUCKET",
@@ -472,7 +472,7 @@ After successful login, confirm that your Wrangler file is configured similarly 
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "staff-directory"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[r2_buckets]]
 binding = "MY_BUCKET"

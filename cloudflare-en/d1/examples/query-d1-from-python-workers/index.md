@@ -69,7 +69,7 @@ In your Wrangler file, create a new `[[d1_databases]]` configuration block and s
 		"python_workers"
 	],
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"d1_databases": [
 		{
 			"binding": "DB", // This will be how you refer to your database in your Worker
@@ -86,7 +86,7 @@ name = "python-and-d1"
 main = "src/entry.py"
 compatibility_flags = [ "python_workers" ]
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[d1_databases]]
 binding = "DB"

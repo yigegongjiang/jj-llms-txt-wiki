@@ -85,7 +85,7 @@ cd risky-users
 	"$schema": "./node_modules/wrangler/config-schema.json",  
 	"name": "risky-users",  
 	// Set this to today's date  
-	"compatibility_date": "2026-07-24",  
+	"compatibility_date": "2026-07-28",  
 	"main": "src/index.js",  
 	"workers_dev": false,  
 	"account_id": "<ACCOUNT-ID>",  
@@ -102,7 +102,7 @@ cd risky-users
 "$schema" = "./node_modules/wrangler/config-schema.json"  
 name = "risky-users"  
 # Set this to today's date  
-compatibility_date = "2026-07-24"  
+compatibility_date = "2026-07-28"  
 main = "src/index.js"  
 workers_dev = false  
 account_id = "<ACCOUNT-ID>"  

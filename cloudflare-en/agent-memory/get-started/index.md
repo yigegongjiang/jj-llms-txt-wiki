@@ -117,7 +117,7 @@ Add an `agent_memory` binding to your Wrangler configuration. If you use the Age
   "name": "memory-agent",
   "main": "src/server.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-24",
+  "compatibility_date": "2026-07-28",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -153,7 +153,7 @@ Add an `agent_memory` binding to your Wrangler configuration. If you use the Age
 name = "memory-agent"
 main = "src/server.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 compatibility_flags = ["nodejs_compat"]
 
 [ai]

@@ -1572,11 +1572,11 @@ List all AI Search instances in the account.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: string`
 
@@ -2170,11 +2170,11 @@ Create a new AI Search instance with the given configuration.
 
       - `use_browser_rendering: optional boolean`
 
-    - `parse_type: optional "sitemap" or "crawl"`
+    - `parse_type: optional "sitemap" or "discover"`
 
       - `"sitemap"`
 
-      - `"crawl"`
+      - `"discover"`
 
 - `sync_interval: optional 900 or 1800 or 3600 or 5 more`
 
@@ -2608,11 +2608,11 @@ Create a new AI Search instance with the given configuration.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -3206,11 +3206,11 @@ Retrieve the configuration and status of an AI Search instance.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -3774,11 +3774,11 @@ Update the configuration of an AI Search instance.
 
       - `use_browser_rendering: optional boolean`
 
-    - `parse_type: optional "sitemap" or "crawl"`
+    - `parse_type: optional "sitemap" or "discover"`
 
       - `"sitemap"`
 
-      - `"crawl"`
+      - `"discover"`
 
 - `summarization: optional boolean`
 
@@ -4276,11 +4276,11 @@ Update the configuration of an AI Search instance.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -4871,11 +4871,11 @@ Permanently delete an AI Search instance and all its indexed data.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -6145,11 +6145,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/namespa
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: string`
 
@@ -6593,11 +6593,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/namespa
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -7033,11 +7033,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/namespa
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -7473,11 +7473,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/namespa
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -7913,11 +7913,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/namespa
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -10109,11 +10109,11 @@ List all AI Search instances in the account.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: string`
 
@@ -10705,11 +10705,11 @@ Create a new AI Search instance with the given configuration.
 
       - `use_browser_rendering: optional boolean`
 
-    - `parse_type: optional "sitemap" or "crawl"`
+    - `parse_type: optional "sitemap" or "discover"`
 
       - `"sitemap"`
 
-      - `"crawl"`
+      - `"discover"`
 
 - `sync_interval: optional 900 or 1800 or 3600 or 5 more`
 
@@ -11143,11 +11143,11 @@ Create a new AI Search instance with the given configuration.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -11739,11 +11739,11 @@ Retrieve the configuration and status of an AI Search instance.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -12305,11 +12305,11 @@ Update the configuration of an AI Search instance.
 
       - `use_browser_rendering: optional boolean`
 
-    - `parse_type: optional "sitemap" or "crawl"`
+    - `parse_type: optional "sitemap" or "discover"`
 
       - `"sitemap"`
 
-      - `"crawl"`
+      - `"discover"`
 
 - `summarization: optional boolean`
 
@@ -12807,11 +12807,11 @@ Update the configuration of an AI Search instance.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -13400,11 +13400,11 @@ Permanently delete an AI Search instance and all its indexed data.
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -14668,11 +14668,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/instanc
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: string`
 
@@ -15116,11 +15116,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/instanc
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -15556,11 +15556,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/instanc
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -15996,11 +15996,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/instanc
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 
@@ -16436,11 +16436,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/instanc
 
         - `use_browser_rendering: optional boolean`
 
-      - `parse_type: optional "sitemap" or "crawl"`
+      - `parse_type: optional "sitemap" or "discover"`
 
         - `"sitemap"`
 
-        - `"crawl"`
+        - `"discover"`
 
   - `status: optional string`
 

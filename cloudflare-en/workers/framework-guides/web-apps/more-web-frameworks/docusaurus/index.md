@@ -94,7 +94,7 @@ In your project root, create a Wrangler configuration file with the following co
 		"name": "my-docusaurus-app",  
 		// Update to today's date  
 		// Set this to today's date  
-		"compatibility_date": "2026-07-24",  
+		"compatibility_date": "2026-07-28",  
 		"assets": {  
 			"directory": "./build"  
 		}  
@@ -103,7 +103,7 @@ In your project root, create a Wrangler configuration file with the following co
 ```toml  
 name = "my-docusaurus-app"  
 # Set this to today's date  
-compatibility_date = "2026-07-24"  
+compatibility_date = "2026-07-28"  
 [assets]  
 directory = "./build"  
 ```  

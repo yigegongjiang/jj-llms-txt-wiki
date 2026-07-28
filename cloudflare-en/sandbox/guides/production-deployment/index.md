@@ -63,7 +63,7 @@ Add a wildcard route to your Wrangler configuration:
 	"name": "my-sandbox-app",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-24",
+	"compatibility_date": "2026-07-28",
 	"routes": [
 		{
 			"pattern": "*.yourdomain.com/*",
@@ -78,7 +78,7 @@ Add a wildcard route to your Wrangler configuration:
 name = "my-sandbox-app"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-24"
+compatibility_date = "2026-07-28"
 
 [[routes]]
 pattern = "*.yourdomain.com/*"
