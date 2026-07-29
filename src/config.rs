@@ -1,12 +1,15 @@
-use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use serde::ser::SerializeMap;
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
+use std::collections::{BTreeMap, HashSet};
 use std::env;
 use std::fs;
 use std::io::{ErrorKind, Write};
 use std::path::{Path, PathBuf};
 use tempfile::NamedTempFile;
+use url::Url;
 
 use crate::site::{parse_entry_url, validate_name};
+use crate::url_map::{CanonicalUrl, EntryKind};
 
 pub const DEFAULT_OUTPUT_DIR: &str = "~/.config/jj-llms-txt-wiki/wiki";
 /// Download slots. 8 is the established per-domain simultaneity level for
@@ -37,9 +40,94 @@ impl Default for Config {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+/// A site's entry documents. One site can declare several entries — docs hosts
+/// commonly split one product family across per-section `llms.txt` /
+/// `llms-full.txt` paths — and they all land in the same site directory.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SiteConfig {
-    pub url: String,
+    pub urls: Vec<String>,
+}
+
+impl SiteConfig {
+    pub fn new(urls: Vec<String>) -> Self {
+        Self { urls }
+    }
+
+    /// Parse every entry URL and report the chain they all share.
+    ///
+    /// Rejects a mix of `llms.txt` and `llms-full.txt` entries: the two chains
+    /// disagree on snapshot strategy — the index chain resumes an interrupted
+    /// partial and revalidates against a manifest, the aggregate chain rebuilds
+    /// from empty every run — and a site can only have one snapshot. Also rejects
+    /// duplicate entries, which would make the aggregate chain parse the same
+    /// bundle twice and report every one of its pages as a duplicate.
+    pub fn entries(&self) -> Result<(Vec<Url>, EntryKind), String> {
+        let mut parsed = Vec::with_capacity(self.urls.len());
+        let mut seen = HashSet::new();
+        for url in &self.urls {
+            let entry = parse_entry_url(url).map_err(|error| format!("invalid url: {error}"))?;
+            if !seen.insert(CanonicalUrl::new(entry.clone())) {
+                return Err(format!("duplicate url: {url}"));
+            }
+            parsed.push(entry);
+        }
+        let Some(first) = parsed.first() else {
+            return Err("must declare at least one url".to_owned());
+        };
+        let kind = EntryKind::from_url(first);
+        for entry in &parsed[1..] {
+            if EntryKind::from_url(entry) != kind {
+                return Err(format!(
+                    "mixes llms.txt and llms-full.txt entries ({first} and {entry}); \
+                     one site must use a single kind"
+                ));
+            }
+        }
+        Ok((parsed, kind))
+    }
+}
+
+/// Accepts both spellings so a config written before multi-entry support keeps
+/// loading verbatim: `url = "…"` for one entry, `urls = […]` for several. Both at
+/// once is rejected rather than merged — two places declaring the same thing has
+/// no obviously right precedence, and silently picking one would hide the typo.
+impl<'de> Deserialize<'de> for SiteConfig {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        #[derive(Deserialize)]
+        #[serde(deny_unknown_fields)]
+        struct Raw {
+            #[serde(default)]
+            url: Option<String>,
+            #[serde(default)]
+            urls: Option<Vec<String>>,
+        }
+
+        let raw = Raw::deserialize(deserializer)?;
+        let urls = match (raw.url, raw.urls) {
+            (Some(_), Some(_)) => {
+                return Err(de::Error::custom(
+                    "site declares both url and urls; keep one",
+                ));
+            }
+            (Some(url), None) => vec![url],
+            (None, Some(urls)) => urls,
+            (None, None) => return Err(de::Error::missing_field("url")),
+        };
+        Ok(Self { urls })
+    }
+}
+
+/// Writes back the narrower spelling a single-entry site came in as, so adding
+/// multi-entry support does not rewrite every existing site on the next `save`.
+impl Serialize for SiteConfig {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let mut map = serializer.serialize_map(Some(1))?;
+        match self.urls.as_slice() {
+            [single] => map.serialize_entry("url", single)?,
+            many => map.serialize_entry("urls", many)?,
+        }
+        map.end()
+    }
 }
 
 impl Config {
@@ -65,8 +153,8 @@ impl Config {
         self.output_path()?;
         for (name, site) in &self.sites {
             validate_name(name)?;
-            parse_entry_url(&site.url)
-                .map_err(|error| format!("site {name} has invalid url: {error}"))?;
+            site.entries()
+                .map_err(|error| format!("site {name} {error}"))?;
         }
         Ok(())
     }
@@ -161,6 +249,74 @@ mod tests {
     }
 
     #[test]
+    fn loads_single_and_multi_entry_sites() {
+        let directory = tempdir().expect("tempdir");
+        let path = directory.path().join("config.toml");
+        fs::write(
+            &path,
+            "[sites.one]\nurl = \"https://example.com/llms.txt\"\n\
+             [sites.many]\nurls = [\n  \"https://example.com/workers/llms.txt\",\n  \"https://example.com/pages/llms.txt\",\n]\n",
+        )
+        .expect("write config");
+        let config = Config::load(&path).expect("multi-entry config");
+        assert_eq!(config.sites["one"].urls.len(), 1);
+        assert_eq!(config.sites["many"].urls.len(), 2);
+    }
+
+    #[test]
+    fn rejects_unusable_site_entry_declarations() {
+        let directory = tempdir().expect("tempdir");
+        let path = directory.path().join("config.toml");
+        for site in [
+            // Both spellings at once: no obviously right precedence.
+            "url = \"https://example.com/llms.txt\"\nurls = [\"https://example.com/a/llms.txt\"]\n",
+            // A typo must surface, not silently leave the site with no entry.
+            "urlz = [\"https://example.com/llms.txt\"]\n",
+            "urls = []\n",
+            "urls = [\"https://example.com/llms.txt\", \"https://example.com/llms.txt\"]\n",
+            // The two chains disagree on snapshot strategy.
+            "urls = [\"https://example.com/llms.txt\", \"https://example.com/llms-full.txt\"]\n",
+            "urls = [\"/relative/llms.txt\"]\n",
+        ] {
+            fs::write(&path, format!("[sites.docs]\n{site}")).expect("write config");
+            assert!(Config::load(&path).is_err(), "{site}");
+        }
+    }
+
+    #[test]
+    fn round_trips_each_entry_spelling_unchanged() {
+        let directory = tempdir().expect("tempdir");
+        let path = directory.path().join("config.toml");
+        let mut sites = BTreeMap::new();
+        sites.insert(
+            "one".to_owned(),
+            SiteConfig::new(vec!["https://example.com/llms.txt".to_owned()]),
+        );
+        sites.insert(
+            "many".to_owned(),
+            SiteConfig::new(vec![
+                "https://example.com/workers/llms.txt".to_owned(),
+                "https://example.com/pages/llms.txt".to_owned(),
+            ]),
+        );
+        let config = Config {
+            sites,
+            ..Config::default()
+        };
+        config.save(&path).expect("save config");
+
+        let written = fs::read_to_string(&path).expect("read config");
+        // A single-entry site keeps the original spelling, so enabling multi-entry
+        // support does not rewrite every existing site on the next save.
+        assert!(
+            written.contains("url = \"https://example.com/llms.txt\""),
+            "{written}"
+        );
+        assert!(written.contains("urls = ["), "{written}");
+        assert_eq!(Config::load(&path).unwrap(), config);
+    }
+
+    #[test]
     fn rejects_invalid_toml_and_zero_concurrency() {
         let directory = tempdir().expect("tempdir");
         let path = directory.path().join("config.toml");
@@ -194,9 +350,7 @@ mod tests {
         let mut sites = BTreeMap::new();
         sites.insert(
             "docs".to_owned(),
-            SiteConfig {
-                url: "https://example.com/llms.txt".to_owned(),
-            },
+            SiteConfig::new(vec!["https://example.com/llms.txt".to_owned()]),
         );
         let config = Config {
             sites,

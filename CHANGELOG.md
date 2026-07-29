@@ -11,6 +11,17 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.20.0] - 2026-07-29
+
+### Added
+
+- 单个站点现在可以配置多个入口 URL（配置里写 `urls = [...]`，或 `site add <名称> <URL> <URL> …`），适合把一个文档站按 section 拆开的多份 `llms.txt` / `llms-full.txt` 合并到同一个目录。
+- 同一站点的入口必须同类型（不能把 `llms.txt` 和 `llms-full.txt` 混在一起），入口 URL 不能重复；配置里字段名拼错会直接报错，不再静默把站点变成零入口。
+
+### Changed
+
+- 原有的 `url = "…"` 单入口写法完全不变，升级后无需改动任何配置。
+
 ## [0.19.0] - 2026-07-29
 
 ### Added

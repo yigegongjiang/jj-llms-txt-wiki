@@ -147,7 +147,7 @@ struct WorkItem {
 }
 
 pub async fn crawl(
-    entry: Url,
+    entries: &[Url],
     snapshot_root: &Path,
     previous_root: Option<&Path>,
     previous_manifest: &Manifest,
@@ -157,6 +157,9 @@ pub async fn crawl(
     if options.concurrency == 0 {
         return Err("concurrency must be greater than 0".to_owned());
     }
+    if entries.is_empty() {
+        return Err("crawl needs at least one entry URL".to_owned());
+    }
     if !snapshot_root.is_absolute() {
         return Err(format!(
             "snapshot root must be absolute: {}",
@@ -164,19 +167,36 @@ pub async fn crawl(
         ));
     }
 
-    // Seeded with the entry origin; the entry document expands it once (see the
-    // Document branch below) so a site whose entry host differs from its content
-    // host still crawls. Shared with the HTTP client's redirect policy.
-    let allowed = AllowedOrigins::new(&entry);
+    // Seeded with every entry's origin; each entry document expands it once (see
+    // the Document branch below) so a site whose entry host differs from its
+    // content host still crawls. Shared with the HTTP client's redirect policy.
+    let allowed = AllowedOrigins::from_entries(entries);
     let client = HttpClient::new(&allowed, options.timeout)?;
-    let canonical_entry = CanonicalUrl::new(entry.clone());
-    let mut seen = HashSet::from([canonical_entry.clone()]);
+    let mut seen = HashSet::new();
+    let mut entry_set = HashSet::new();
+    let mut queue = VecDeque::new();
+    for entry in entries {
+        let canonical = CanonicalUrl::new(entry.clone());
+        if !seen.insert(canonical.clone()) {
+            continue;
+        }
+        entry_set.insert(canonical.clone());
+        queue.push_back(WorkItem {
+            url: canonical,
+            output: None,
+            validator: None,
+        });
+    }
+    // While any entry document is still unresolved the allow-list can still grow,
+    // so content pages discovered by an entry that already landed wait here rather
+    // than going on the wire: a page fetched before the last entry expanded the
+    // list would silently drop its links to origins only that entry vouches for,
+    // and which entry lands first is a network race. Drained below, once the entry
+    // batch has fully drained — with a single entry there is nothing to wait for,
+    // so the deferral never engages and the crawl behaves exactly as before.
+    let mut deferred: VecDeque<WorkItem> = VecDeque::new();
+    let mut entries_open = entry_set.len() > 1;
     let mut paths = PathRegistry::default();
-    let mut queue = VecDeque::from([WorkItem {
-        url: canonical_entry.clone(),
-        output: None,
-        validator: None,
-    }]);
     let mut tasks = JoinSet::new();
     let mut report = CrawlReport::default();
     let mut manifest = Manifest::default();
@@ -190,7 +210,16 @@ pub async fn crawl(
     // waits on another slot's rest.
     let mut slot_ready: VecDeque<Instant> = VecDeque::new();
 
-    while !queue.is_empty() || !tasks.is_empty() {
+    while !queue.is_empty() || !tasks.is_empty() || !deferred.is_empty() {
+        // Nothing queued and nothing in flight means every entry document has
+        // reached a verdict, so the allow-list is frozen and the content pages they
+        // discovered can be released. Phrased as a drain condition rather than an
+        // entry counter so a task that dies without returning its item (a panicked
+        // fetch) cannot strand the deferred pages.
+        if queue.is_empty() && tasks.is_empty() {
+            queue.append(&mut deferred);
+            entries_open = false;
+        }
         while tasks.len() < options.concurrency {
             let Some(item) = queue.pop_front() else {
                 break;
@@ -224,13 +253,13 @@ pub async fn crawl(
                 enqueue_discovered(
                     &body,
                     &base,
-                    &entry,
+                    &entry_set,
                     &allowed,
                     previous_root,
                     previous_manifest,
                     &mut seen,
                     &mut paths,
-                    &mut queue,
+                    sink(entries_open, &mut queue, &mut deferred),
                     &mut report,
                     observer.as_ref(),
                 );
@@ -299,11 +328,12 @@ pub async fn crawl(
                     report.downloaded += 1;
                 }
 
-                // The entry document is the only one that expands the allow-list,
-                // and it does so here — strictly before the discovery below and
-                // with no await in between — so every content fetch spawned in a
-                // later iteration observes the already-frozen origin set.
-                if item.url == canonical_entry {
+                // Entry documents are the only ones that expand the allow-list, and
+                // they do so here — strictly before the discovery below and with no
+                // await in between. Content pages spawned in a later iteration
+                // therefore observe the frozen set: the deferral above holds them
+                // back until the last entry has passed through here.
+                if entry_set.contains(&item.url) {
                     for link in declared_links(&body, &final_url) {
                         allowed.allow(&link);
                     }
@@ -312,13 +342,13 @@ pub async fn crawl(
                 enqueue_discovered(
                     &body,
                     &final_url,
-                    &entry,
+                    &entry_set,
                     &allowed,
                     previous_root,
                     previous_manifest,
                     &mut seen,
                     &mut paths,
-                    &mut queue,
+                    sink(entries_open, &mut queue, &mut deferred),
                     &mut report,
                     observer.as_ref(),
                 );
@@ -365,13 +395,13 @@ pub async fn crawl(
                 enqueue_discovered(
                     &body,
                     &final_url,
-                    &entry,
+                    &entry_set,
                     &allowed,
                     previous_root,
                     previous_manifest,
                     &mut seen,
                     &mut paths,
-                    &mut queue,
+                    sink(entries_open, &mut queue, &mut deferred),
                     &mut report,
                     observer.as_ref(),
                 );
@@ -424,13 +454,13 @@ pub async fn crawl(
                     enqueue_discovered(
                         &body,
                         &base,
-                        &entry,
+                        &entry_set,
                         &allowed,
                         previous_root,
                         previous_manifest,
                         &mut seen,
                         &mut paths,
-                        &mut queue,
+                        sink(entries_open, &mut queue, &mut deferred),
                         &mut report,
                         observer.as_ref(),
                     );
@@ -460,6 +490,16 @@ pub async fn crawl(
     Ok(report)
 }
 
+/// Where newly discovered content pages go: held back in `deferred` while entry
+/// documents are still landing, straight into `queue` once the allow-list is frozen.
+fn sink<'a>(
+    entries_open: bool,
+    queue: &'a mut VecDeque<WorkItem>,
+    deferred: &'a mut VecDeque<WorkItem>,
+) -> &'a mut VecDeque<WorkItem> {
+    if entries_open { deferred } else { queue }
+}
+
 /// Put the slot freed by a request that finished at `finished_at` on rest until
 /// `finished_at + interval`. A zero interval enqueues nothing, so the
 /// no-rate-limit path never allocates and never awaits.
@@ -475,7 +515,7 @@ fn rest_slot(slot_ready: &mut VecDeque<Instant>, finished_at: Instant, interval:
 fn enqueue_discovered(
     body: &str,
     final_url: &Url,
-    entry: &Url,
+    entries: &HashSet<CanonicalUrl>,
     allowed: &AllowedOrigins,
     previous_root: Option<&Path>,
     previous_manifest: &Manifest,
@@ -485,7 +525,7 @@ fn enqueue_discovered(
     report: &mut CrawlReport,
     observer: &dyn CrawlObserver,
 ) {
-    for candidate in discover(body, final_url, entry, allowed) {
+    for candidate in discover(body, final_url, entries, allowed) {
         if !seen.insert(candidate.clone()) {
             continue;
         }
@@ -610,8 +650,17 @@ mod tests {
         options: CrawlOptions,
         observer: Arc<dyn CrawlObserver>,
     ) -> Result<CrawlReport, String> {
+        fresh_crawl_all(&[entry], snapshot_root, options, observer).await
+    }
+
+    async fn fresh_crawl_all(
+        entries: &[Url],
+        snapshot_root: &std::path::Path,
+        options: CrawlOptions,
+        observer: Arc<dyn CrawlObserver>,
+    ) -> Result<CrawlReport, String> {
         crawl(
-            entry,
+            entries,
             snapshot_root,
             None,
             &Manifest::default(),
@@ -1141,6 +1190,106 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn crawls_every_entry_of_a_site_into_one_snapshot() {
+        // The common multi-entry shape: one docs host splitting its sections across
+        // per-section index paths, with the sections cross-linking each other.
+        let server = server(HashMap::from([
+            (
+                "/workers/llms.txt".to_owned(),
+                Response::ok("[a](/workers/a.md) [pages](/pages/llms.txt)"),
+            ),
+            (
+                "/pages/llms.txt".to_owned(),
+                Response::ok("[b](/pages/b.md)"),
+            ),
+            ("/workers/a.md".to_owned(), Response::ok("a")),
+            ("/pages/b.md".to_owned(), Response::ok("b")),
+        ]))
+        .await;
+        let workers = server.url.join("/workers/llms.txt").unwrap();
+        let pages = server.url.join("/pages/llms.txt").unwrap();
+
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl_all(
+            // The repeated entry is dropped, not fetched twice.
+            &[workers.clone(), pages.clone(), workers.clone()],
+            directory.path(),
+            options(4, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        assert_eq!(report.downloaded, 2);
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("workers/a.md")).unwrap(),
+            "a"
+        );
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("pages/b.md")).unwrap(),
+            "b"
+        );
+        // Cross-linked siblings are entries, not content: neither is written, and
+        // the duplicate entry never reached the wire a second time.
+        assert!(!directory.path().join("pages/llms.txt").exists());
+        assert!(!directory.path().join("workers/llms.txt").exists());
+        let requests = server.requests.lock().unwrap();
+        assert_eq!(
+            requests
+                .iter()
+                .filter(|(path, _)| path == "/workers/llms.txt")
+                .count(),
+            1
+        );
+    }
+
+    #[tokio::test]
+    async fn holds_content_pages_until_every_entry_expanded_the_allow_list() {
+        // The entry that vouches for the third origin answers last. Its sibling's
+        // content page links there, so releasing that page before the slow entry
+        // landed would drop the link — and which entry answers first is a network
+        // race, so the crawl must not depend on it.
+        let third = server(HashMap::from([
+            ("/seed.md".to_owned(), Response::ok("seed")),
+            ("/x.md".to_owned(), Response::ok("x")),
+        ]))
+        .await;
+        let seed = third.url.join("/seed.md").unwrap().to_string();
+        let cross = third.url.join("/x.md").unwrap().to_string();
+        let fast = server(HashMap::from([
+            ("/llms.txt".to_owned(), Response::ok("[a](/a.md)")),
+            ("/a.md".to_owned(), Response::ok(&format!("[x]({cross})"))),
+        ]))
+        .await;
+        let slow = server(HashMap::from([(
+            "/llms.txt".to_owned(),
+            Response::ok(&format!("[seed]({seed})")).delayed(Duration::from_millis(150)),
+        )]))
+        .await;
+
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl_all(
+            &[fast.url.clone(), slow.url.clone()],
+            directory.path(),
+            options(4, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        // a.md, the slow entry's own seed.md, and the cross-origin x.md that only
+        // the slow entry's declaration made reachable.
+        assert_eq!(report.downloaded, 3, "{report:?}");
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("x.md")).unwrap(),
+            "x"
+        );
+        assert_eq!(report.ignored, 0);
+    }
+
+    #[tokio::test]
     async fn reports_http_utf8_timeout_and_path_collision_failures() {
         let server = server(HashMap::from([
             (
@@ -1333,7 +1482,7 @@ mod tests {
 
         let snapshot = tempdir().unwrap();
         let report = crawl(
-            server.url.clone(),
+            std::slice::from_ref(&server.url),
             snapshot.path(),
             Some(previous.path()),
             &previous_manifest,
@@ -1479,7 +1628,7 @@ mod tests {
 
         let snapshot = tempdir().unwrap();
         let report = crawl(
-            server.url.clone(),
+            std::slice::from_ref(&server.url),
             snapshot.path(),
             Some(previous.path()),
             &previous_manifest,

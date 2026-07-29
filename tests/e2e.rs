@@ -538,6 +538,130 @@ async fn real_cli_syncs_full_bundle_with_fresh_atomic_snapshots() {
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn real_cli_syncs_multi_entry_sites_on_both_chains() {
+    let one = "# A\n\nURL: http://placeholder/a\n\nA body.\n";
+    let two = "# B\n\nURL: http://placeholder/b\n\nB body.\n";
+    let srv = server(HashMap::from([
+        (
+            "/workers/llms.txt".to_owned(),
+            Response::ok("[a](/workers/a.md) [pages](/pages/llms.txt)"),
+        ),
+        (
+            "/pages/llms.txt".to_owned(),
+            Response::ok("[b](/pages/b.md)"),
+        ),
+        ("/workers/a.md".to_owned(), Response::ok("a")),
+        ("/pages/b.md".to_owned(), Response::ok("b")),
+    ]))
+    .await;
+    for (path, bundle) in [("/one/llms-full.txt", one), ("/two/llms-full.txt", two)] {
+        let body = bundle.replace("http://placeholder", &srv.origin);
+        srv.routes
+            .write()
+            .unwrap()
+            .insert(path.to_owned(), Response::ok(&body));
+    }
+
+    let home = tempdir().unwrap();
+    let added = success(
+        home.path(),
+        &[
+            "site",
+            "add",
+            "index",
+            &format!("{}/workers/llms.txt", srv.origin),
+            &format!("{}/pages/llms.txt", srv.origin),
+        ],
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&added.stdout).trim(),
+        format!(
+            "index\t{}/workers/llms.txt {}/pages/llms.txt",
+            srv.origin, srv.origin
+        )
+    );
+    success(
+        home.path(),
+        &[
+            "site",
+            "add",
+            "full",
+            &format!("{}/one/llms-full.txt", srv.origin),
+            &format!("{}/two/llms-full.txt", srv.origin),
+        ],
+    );
+    // One site cannot straddle the two chains — they disagree on snapshot strategy.
+    let mixed = cli(
+        home.path(),
+        &[
+            "site",
+            "add",
+            "mixed",
+            &format!("{}/workers/llms.txt", srv.origin),
+            &format!("{}/one/llms-full.txt", srv.origin),
+        ],
+    );
+    assert!(!mixed.status.success());
+    assert!(
+        String::from_utf8_lossy(&mixed.stderr).contains("mixes llms.txt and llms-full.txt"),
+        "stderr={}",
+        String::from_utf8_lossy(&mixed.stderr)
+    );
+
+    let config =
+        fs::read_to_string(home.path().join(".config/jj-llms-txt-wiki/config.toml")).unwrap();
+    assert!(config.contains("urls = ["), "config={config}");
+    assert!(!config.contains("[sites.mixed]"), "config={config}");
+
+    let synced = success(home.path(), &["sync"]);
+    let stderr = String::from_utf8_lossy(&synced.stderr);
+    assert!(stderr.contains("index: ok"), "stderr={stderr}");
+    assert!(stderr.contains("full: ok"), "stderr={stderr}");
+
+    let wiki = home.path().join(".config/jj-llms-txt-wiki/wiki");
+    // Index chain: every entry's content lands in the one site directory, and a
+    // sibling entry linked as content is still treated as an entry (never written).
+    assert_eq!(
+        fs::read_to_string(wiki.join("index/workers/a.md")).unwrap(),
+        "a"
+    );
+    assert_eq!(
+        fs::read_to_string(wiki.join("index/pages/b.md")).unwrap(),
+        "b"
+    );
+    assert!(!wiki.join("index/pages/llms.txt").exists());
+    // Aggregate chain: both bundles merge into one snapshot.
+    assert_eq!(
+        fs::read_to_string(wiki.join("full/a.md")).unwrap(),
+        "# A\n\nA body.\n"
+    );
+    assert_eq!(
+        fs::read_to_string(wiki.join("full/b.md")).unwrap(),
+        "# B\n\nB body.\n"
+    );
+
+    // A page carried by two bundles has no defensible winner: fail the site and
+    // keep the last good snapshot rather than silently letting one overwrite the other.
+    let stable = tree(&wiki.join("full"));
+    let clash = two
+        .replace("/b", "/a")
+        .replace("http://placeholder", &srv.origin);
+    srv.routes
+        .write()
+        .unwrap()
+        .insert("/two/llms-full.txt".to_owned(), Response::ok(&clash));
+    let failed = cli(home.path(), &["sync", "full"]);
+    assert!(!failed.status.success());
+    assert!(
+        String::from_utf8_lossy(&failed.stderr).contains("duplicate page"),
+        "stderr={}",
+        String::from_utf8_lossy(&failed.stderr)
+    );
+    assert_eq!(tree(&wiki.join("full")), stable);
+    assert!(git(&wiki, &["status", "--porcelain"]).is_empty());
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn real_cli_resumes_an_interrupted_partial() {
     let srv = server(HashMap::from([
         (

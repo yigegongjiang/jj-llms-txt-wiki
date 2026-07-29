@@ -44,15 +44,16 @@ pub fn declared_links(markdown: &str, base: &Url) -> Vec<Url> {
     syncable_links(markdown, base)
 }
 
-/// Discover syncable Markdown links whose origin is allowed, minus the entry
-/// itself, sorted and deduplicated.
+/// Discover syncable Markdown links whose origin is allowed, minus the site's own
+/// entry documents, sorted and deduplicated. Every entry is excluded, not just the
+/// one being parsed: sibling entries are crawled as entries in their own right, so
+/// a cross-link between them must not also enqueue one as a content page.
 pub fn discover(
     markdown: &str,
     base: &Url,
-    entry: &Url,
+    entries: &HashSet<CanonicalUrl>,
     allowed: &AllowedOrigins,
 ) -> Vec<CanonicalUrl> {
-    let canonical_entry = CanonicalUrl::new(entry.clone());
     let mut found = HashSet::new();
 
     for url in syncable_links(markdown, base) {
@@ -60,7 +61,7 @@ pub fn discover(
             continue;
         }
         let canonical = CanonicalUrl::new(url);
-        if canonical != canonical_entry {
+        if !entries.contains(&canonical) {
             found.insert(canonical);
         }
     }
@@ -73,17 +74,42 @@ pub fn discover(
 #[cfg(test)]
 mod tests {
     use super::{declared_links, discover};
-    use crate::url_map::AllowedOrigins;
+    use crate::url_map::{AllowedOrigins, CanonicalUrl};
+    use std::collections::HashSet;
     use url::Url;
 
     fn strings(markdown: &str, base: &str, entry: &str) -> Vec<String> {
-        let entry = Url::parse(entry).unwrap();
-        // Default allow-list is just the entry origin, matching a same-origin site.
-        let allowed = AllowedOrigins::new(&entry);
-        discover(markdown, &Url::parse(base).unwrap(), &entry, &allowed)
+        entry_strings(markdown, base, &[entry])
+    }
+
+    fn entry_strings(markdown: &str, base: &str, entries: &[&str]) -> Vec<String> {
+        let parsed: Vec<Url> = entries.iter().map(|url| Url::parse(url).unwrap()).collect();
+        // Default allow-list is just the entry origins, matching a same-origin site.
+        let allowed = AllowedOrigins::from_entries(&parsed);
+        let entry_set: HashSet<CanonicalUrl> = parsed.into_iter().map(CanonicalUrl::new).collect();
+        discover(markdown, &Url::parse(base).unwrap(), &entry_set, &allowed)
             .into_iter()
             .map(|url| url.to_string())
             .collect()
+    }
+
+    #[test]
+    fn excludes_every_entry_of_a_multi_entry_site() {
+        // Sibling section indexes cross-link each other; each is crawled as an
+        // entry, so neither may also be enqueued as a content page.
+        let markdown =
+            "[workers](/workers/llms.txt) [pages](/pages/llms.txt) [page](/workers/a.md)";
+        assert_eq!(
+            entry_strings(
+                markdown,
+                "https://example.com/workers/llms.txt",
+                &[
+                    "https://example.com/workers/llms.txt",
+                    "https://example.com/pages/llms.txt",
+                ]
+            ),
+            ["https://example.com/workers/a.md"]
+        );
     }
 
     #[test]
@@ -174,7 +200,8 @@ https://example.com/plain.md
             allowed.allow(&link);
         }
         // bun.com and other.test were both declared, so both are now allowed.
-        let found: Vec<String> = discover(markdown, &base, &entry, &allowed)
+        let entry_set = HashSet::from([CanonicalUrl::new(entry)]);
+        let found: Vec<String> = discover(markdown, &base, &entry_set, &allowed)
             .into_iter()
             .map(|url| url.to_string())
             .collect();

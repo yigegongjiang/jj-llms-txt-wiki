@@ -7,6 +7,23 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.20.0] - 2026-07-29
+
+### Added
+
+- 单个站点现在可以配置多个入口 URL（配置里写 `urls = [...]`，或 `site add <名称> <URL> <URL> …`），适合把一个文档站按 section 拆开的多份 `llms.txt` / `llms-full.txt` 合并到同一个目录。
+  - `SiteConfig` 从 `url: String` 改为 `urls: Vec<String>` + 手写 serde：反序列化接受 `url` / `urls` 二者之一（`deny_unknown_fields`），序列化按元素数写回 `url`（1 个）或 `urls`（多个），存量配置零改写。
+  - `crawler::crawl` / `full::crawl` 签名收 `entries: &[Url]` 单次调用：`seen` / `PathRegistry` / `Manifest` / `CrawlReport` 跨入口共享，重叠 URL 不重复下载，`degraded_tolerance` 语义不变；`AllowedOrigins::from_entries` 并集 seed 全部入口 origin。
+  - 新增入口 barrier：`deferred` 队列扣住内容页直到 `queue` + `tasks` 双空（= 全部入口已定案），避免先落地的入口的内容页在白名单未完整时丢链接（单入口不启用，零回归）；`discover` 收 `entries: &HashSet<CanonicalUrl>`，入口互链不入内容队列。
+  - 聚合链路逐包 fetch + 立即写盘（峰值内存只受单包约束），`PathRegistry` 跨包共享检冲突，另用 `claimed` map 捕获跨包同一页面 URL（registry 对同一 URL 幂等，会静默互相覆盖）。
+- 同一站点的入口必须同类型（不能把 `llms.txt` 和 `llms-full.txt` 混在一起），入口 URL 不能重复；配置里字段名拼错会直接报错，不再静默把站点变成零入口。
+  - `SiteConfig::entries()` 在 `Config::validate` / `site add` 阶段统一校验并返回 `(Vec<Url>, EntryKind)`；混用两条链路无解 —— `Snapshot::new`（续传 + manifest）与 `Snapshot::fresh`（每次重建）互斥。
+
+### Changed
+
+- 原有的 `url = "…"` 单入口写法完全不变，升级后无需改动任何配置。
+  - `site add` 的 `url: String` 改为 `urls: Vec<String>`（clap `num_args = 1..`），`site list` / `site add` 输出多入口以空格分隔（字段分隔符仍是 tab）。
+
 ## [0.19.0] - 2026-07-29
 
 ### Added

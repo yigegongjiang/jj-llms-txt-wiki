@@ -27,32 +27,35 @@ pub fn parse_entry_url(value: &str) -> Result<Url, String> {
     Ok(url)
 }
 
-pub fn add(config: &mut Config, name: &str, url: &str) -> Result<(), String> {
+pub fn add(config: &mut Config, name: &str, urls: &[String]) -> Result<(), String> {
     validate_name(name)?;
-    parse_entry_url(url)?;
+    let site = SiteConfig::new(urls.to_vec());
+    site.entries()?;
     if config.sites.contains_key(name) {
         return Err(format!("site already exists: {name}"));
     }
-    config.sites.insert(
-        name.to_owned(),
-        SiteConfig {
-            url: url.to_owned(),
-        },
-    );
+    config.sites.insert(name.to_owned(), site);
     Ok(())
+}
+
+/// Entry URLs on one line, space separated — the separator `site list` has always
+/// used between fields is a tab, so keeping it out of the URL column leaves the
+/// output splittable by field.
+fn format_urls(urls: &[String]) -> String {
+    urls.join(" ")
 }
 
 pub fn run(command: SiteCommand, config_path: &Path) -> Result<(), String> {
     let mut config = Config::load(config_path)?;
     match command {
-        SiteCommand::Add { name, url } => {
-            add(&mut config, &name, &url)?;
+        SiteCommand::Add { name, urls } => {
+            add(&mut config, &name, &urls)?;
             config.save(config_path)?;
-            println!("{name}\t{url}");
+            println!("{name}\t{}", format_urls(&urls));
         }
         SiteCommand::List => {
             for (name, site) in config.sites {
-                println!("{name}\t{}", site.url);
+                println!("{name}\t{}", format_urls(&site.urls));
             }
         }
     }
@@ -83,12 +86,52 @@ mod tests {
         }
     }
 
+    fn urls(values: &[&str]) -> Vec<String> {
+        values.iter().map(|value| (*value).to_owned()).collect()
+    }
+
     #[test]
     fn adds_once_without_overwriting() {
         let mut config = Config::default();
-        add(&mut config, "docs", "https://example.com/llms.txt").unwrap();
+        add(
+            &mut config,
+            "docs",
+            &urls(&["https://example.com/llms.txt"]),
+        )
+        .unwrap();
         let before = config.clone();
-        assert!(add(&mut config, "docs", "https://other.test/llms.txt").is_err());
+        assert!(add(&mut config, "docs", &urls(&["https://other.test/llms.txt"])).is_err());
         assert_eq!(config, before);
+    }
+
+    #[test]
+    fn adds_several_entries_and_rejects_unusable_sets() {
+        let mut config = Config::default();
+        add(
+            &mut config,
+            "docs",
+            &urls(&[
+                "https://example.com/workers/llms.txt",
+                "https://example.com/pages/llms.txt",
+            ]),
+        )
+        .unwrap();
+        assert_eq!(config.sites["docs"].urls.len(), 2);
+
+        // Mixed chains, duplicates and an empty set are all unusable.
+        for set in [
+            vec![
+                "https://example.com/llms.txt",
+                "https://example.com/llms-full.txt",
+            ],
+            vec![
+                "https://example.com/llms.txt",
+                "https://example.com/llms.txt",
+            ],
+            vec![],
+        ] {
+            assert!(add(&mut config, "other", &urls(&set)).is_err(), "{set:?}");
+            assert!(!config.sites.contains_key("other"), "{set:?}");
+        }
     }
 }

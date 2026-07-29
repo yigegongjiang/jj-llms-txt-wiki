@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use jiff::Timestamp;
 
-use crate::config::Config;
+use crate::config::{Config, SiteConfig};
 use crate::crawler::{
     CrawlFailure, CrawlObserver, CrawlOptions, DEFAULT_MAX_DOCUMENT_BYTES, DEFAULT_TIMEOUT,
     MAX_CONCURRENCY, crawl,
@@ -15,7 +15,6 @@ use crate::git::Repository;
 use crate::manifest::Manifest;
 use crate::progress::{SyncProgress, error_line};
 use crate::report::{self, Outcome, SiteReport};
-use crate::site::parse_entry_url;
 use crate::snapshot::Snapshot;
 use crate::url_map::EntryKind;
 
@@ -62,7 +61,7 @@ pub async fn run(
         );
         let outcome = sync_site(
             &name,
-            &site.url,
+            &site,
             &output_root,
             options,
             position,
@@ -142,21 +141,22 @@ fn resolve_concurrency(requested: usize) -> usize {
 /// `failed; … failed=0`.
 async fn sync_site(
     name: &str,
-    url: &str,
+    site: &SiteConfig,
     output_root: &Path,
     options: CrawlOptions,
     position: usize,
     total: usize,
     repository: &Repository,
 ) -> Outcome {
-    let entry = match parse_entry_url(url) {
-        Ok(entry) => entry,
+    // Already validated when the config loaded; re-derived here because the
+    // entries and their shared chain are what the crawl needs.
+    let (entries, kind) = match site.entries() {
+        Ok(parsed) => parsed,
         Err(error) => {
             eprintln!("{}", error_line(name, &error));
             return Outcome::Aborted(error);
         }
     };
-    let kind = EntryKind::from_url(&entry);
     let snapshot_result = match kind {
         EntryKind::Index => Snapshot::new(output_root, name),
         EntryKind::Full => Snapshot::fresh(output_root, name),
@@ -176,7 +176,7 @@ async fn sync_site(
                 .cyan()
         );
     }
-    // The aggregate chain issues exactly one request, so its live line shows
+    // The aggregate chain fetches its bundles one at a time, so its live line shows
     // `inflight=…/1` instead of a slot count that never applies to it.
     let slots = match kind {
         EntryKind::Index => options.concurrency,
@@ -190,7 +190,7 @@ async fn sync_site(
             let previous_manifest = Manifest::load(&previous_site);
             let previous_root = previous_site.is_dir().then_some(previous_site.as_path());
             crawl(
-                entry,
+                &entries,
                 snapshot.path(),
                 previous_root,
                 &previous_manifest,
@@ -199,7 +199,7 @@ async fn sync_site(
             )
             .await
         }
-        EntryKind::Full => full::crawl(entry, snapshot.path(), options.timeout, observer).await,
+        EntryKind::Full => full::crawl(&entries, snapshot.path(), options.timeout, observer).await,
     };
     let mut report = match crawl_result {
         Ok(report) => report,
@@ -355,15 +355,11 @@ mod tests {
             sites: BTreeMap::from([
                 (
                     "bad".to_owned(),
-                    SiteConfig {
-                        url: format!("{}/bad.txt", server.origin),
-                    },
+                    SiteConfig::new(vec![format!("{}/bad.txt", server.origin)]),
                 ),
                 (
                     "good".to_owned(),
-                    SiteConfig {
-                        url: format!("{}/good.txt", server.origin),
-                    },
+                    SiteConfig::new(vec![format!("{}/good.txt", server.origin)]),
                 ),
             ]),
         }
@@ -530,9 +526,7 @@ mod tests {
             interval_ms: 0,
             sites: BTreeMap::from([(
                 "good".to_owned(),
-                SiteConfig {
-                    url: format!("{}/good.txt", server.origin),
-                },
+                SiteConfig::new(vec![format!("{}/good.txt", server.origin)]),
             )]),
         };
         config.save(&config_path).unwrap();
@@ -562,9 +556,7 @@ mod tests {
 
         empty.sites.insert(
             "known".to_owned(),
-            SiteConfig {
-                url: "http://127.0.0.1:9/llms.txt".to_owned(),
-            },
+            SiteConfig::new(vec!["http://127.0.0.1:9/llms.txt".to_owned()]),
         );
         empty.save(&config_path).unwrap();
         assert!(
@@ -590,9 +582,7 @@ mod tests {
             interval_ms: 0,
             sites: BTreeMap::from([(
                 "good".to_owned(),
-                SiteConfig {
-                    url: format!("{}/good.txt", server.origin),
-                },
+                SiteConfig::new(vec![format!("{}/good.txt", server.origin)]),
             )]),
         };
         config.save(&config_path).unwrap();
@@ -645,9 +635,7 @@ mod tests {
             interval_ms: 0,
             sites: BTreeMap::from([(
                 "good".to_owned(),
-                SiteConfig {
-                    url: format!("{}/good.txt", server.origin),
-                },
+                SiteConfig::new(vec![format!("{}/good.txt", server.origin)]),
             )]),
         };
         config.save(&config_path).unwrap();
@@ -679,9 +667,7 @@ mod tests {
             interval_ms: 0,
             sites: BTreeMap::from([(
                 "good".to_owned(),
-                SiteConfig {
-                    url: format!("{}/good.txt", server.origin),
-                },
+                SiteConfig::new(vec![format!("{}/good.txt", server.origin)]),
             )]),
         };
         config.save(&config_path).unwrap();

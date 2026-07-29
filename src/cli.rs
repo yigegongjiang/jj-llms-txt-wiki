@@ -58,8 +58,10 @@ pub enum SiteCommand {
     Add {
         /// Safe local site name
         name: String,
-        /// Absolute HTTP(S) llms.txt or llms-full.txt URL
-        url: String,
+        /// One or more absolute HTTP(S) llms.txt or llms-full.txt URLs, all of the
+        /// same kind
+        #[arg(required = true, num_args = 1..)]
+        urls: Vec<String>,
     },
     /// List configured sites
     List,

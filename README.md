@@ -26,7 +26,7 @@ jj-llms-txt-wiki --help
 ## 设计原则
 
 - 不调用 AI 模型，抓取结果完全由 CLI 参数、配置和远端内容决定。
-- 支持多个站点，每个站点使用独立目录。
+- 支持多个站点，每个站点使用独立目录；单个站点可声明多个入口 URL，共享同一目录与同一份快照。
 - 根据入口 URL 自动选择链路：`llms.txt` 递归抓取链接；`llms-full.txt` 按内嵌页面 URL 拆分完整内容；用户统一使用 `sync`。
 - 抓取范围 = 入口文档声明的 origin 白名单（入口自身 origin + 入口内 Markdown 链接的各 origin），入口抓取后冻结；兼容入口 host 与内容 host 不同的站点（如 `bun.sh` 入口指向 `bun.com` 内容）。
 - 递归只跟踪白名单内 origin 的 Markdown URL；内容页只能引用白名单内 origin，不能扩大白名单。白名单外链接和重定向目标一律忽略。
@@ -49,7 +49,10 @@ jj-llms-txt-wiki --help
 jj-llms-txt-wiki site add anthropic https://platform.claude.com/llms.txt
 jj-llms-txt-wiki site add deno https://docs.deno.com/llms-full.txt
 
-# 查看站点
+# 添加多入口站点（同站点的多个 section 索引 / 多个聚合包）
+jj-llms-txt-wiki site add cloudflare https://developers.cloudflare.com/workers/llms.txt https://developers.cloudflare.com/pages/llms.txt
+
+# 查看站点（多入口以空格分隔）
 jj-llms-txt-wiki site list
 
 # 同步全部站点
@@ -98,7 +101,24 @@ url = "https://platform.claude.com/llms.txt"
 
 [sites.deno]
 url = "https://docs.deno.com/llms-full.txt"
+
+[sites.multi]
+urls = [
+  "https://example.com/workers/llms.txt",
+  "https://example.com/pages/llms.txt",
+]
 ```
+
+### 站点入口
+
+单入口写 `url`，多入口写 `urls` 数组；两者只能出现一个，字段名拼错直接报错（MUST NOT 静默把站点变成零入口）。`site add` 接受多个 URL，`site list` 以空格分隔展示。
+
+多入口约束：
+
+- 同一站点的入口 MUST 同类型（全 `llms.txt` 或全 `llms-full.txt`）；两条链路的快照策略互斥（递归链路续传 + manifest 条件请求，聚合链路每次从空重建）。
+- 入口 URL MUST NOT 重复。
+- 入口 domain MAY 相同或不同；白名单 = 全部入口 origin 的并集，再由各入口文档各自扩展。
+- 所有入口的内容合并进同一站点目录，按 URL path 映射（与 host 无关）；不同入口的两个 URL 映射到同一本地路径 = 路径冲突 = 整站失败。
 
 ## 并发与限速
 
@@ -149,12 +169,12 @@ url = "https://docs.deno.com/llms-full.txt"
 
 ## 同步行为
 
-`sync` 默认同步全部站点；传入站点名称时仅同步指定站点。入口 URL path 末段为 `llms-full.txt`（大小写不敏感）时走聚合链路，其他入口走递归链路；query / fragment 不参与识别。
+`sync` 默认同步全部站点；传入站点名称时仅同步指定站点。入口 URL path 末段为 `llms-full.txt`（大小写不敏感）时走聚合链路，其他入口走递归链路；query / fragment 不参与识别。多入口站点的入口同类型，链路唯一。
 
 ### `llms.txt`
 
-1. 读取目标站点的 `llms.txt`（入口始终无条件抓取）。
-2. 以入口文档中全部 Markdown 链接的 origin 扩展白名单（连同入口自身 origin 冻结）；提取白名单内的 Markdown URL，去重后加入抓取队列，白名单外 URL 直接忽略。
+1. 读取目标站点的全部 `llms.txt` 入口（入口始终无条件抓取）。
+2. 以各入口文档中全部 Markdown 链接的 origin 扩展白名单（连同全部入口自身 origin 冻结）；提取白名单内的 Markdown URL，去重后加入抓取队列，白名单外 URL 直接忽略。多入口时全部入口抓完才放行内容页——否则先落地的入口的内容页会在白名单尚未完整时丢链接，且结果随网络时序漂移。入口之间互相链接不算内容页，MUST NOT 写盘。
 3. 按「并发与限速」的槽位模型下载到临时站点目录；对上次已记录 validator 且本地仍存在的文件发条件请求（`If-None-Match` 优先，`If-Modified-Since` 兜底）。单个内容页超过 3 MiB 视为异常，主动剔除（不写盘、不记 validator、不参与递归），并计入 `oversize` 记录到运行日志；入口文档不受此限。
 4. 从每个已下载 Markdown 中继续提取白名单内的 Markdown URL，将未处理的 URL 加入队列，直至队列为空；内容页不再扩展白名单。
 5. 队列清空且不存在未确定的抓取错误后，以本次得到的完整快照替换原站点目录；远端已删除或不再可达的 Markdown 随之从本地移除。
@@ -164,11 +184,11 @@ url = "https://docs.deno.com/llms-full.txt"
 
 ### `llms-full.txt`
 
-1. 单次抓取入口；只有一个请求，并发数和请求间隔不参与该链路。
+1. 逐个抓取入口，一次一个请求；并发数和请求间隔不参与该链路（聚合文件体积大，串行使峰值内存只受单个包约束）。
 2. 识别代码块外的页面头，两种格式二选一（见下）。
-3. 完整校验所有页头、URL、正文和本地路径；结构损坏、重复 URL 或路径冲突 → 整站失败且不写入旧快照。
+3. 完整校验所有页头、URL、正文和本地路径；结构损坏、重复 URL（含跨入口同一页面 URL）或路径冲突（含跨入口）→ 整站失败且不写入旧快照。
 4. 按页面 URL 映射 Markdown 路径：无后缀追加 `.md`，目录 URL 写入 `index.md`，已有 `.md` / `.markdown` 保持不变。
-5. 写入全新临时快照；全部成功后原子替换站点目录并记录 Git 提交。每次从空快照重建，远端已删除页面不会残留。
+5. 写入全新临时快照；全部成功后原子替换站点目录并记录 Git 提交。每次从空快照重建，远端已删除页面不会残留。多入口的全部页面合并进同一份快照。
 
 #### 页头格式
 
@@ -193,7 +213,7 @@ url = "https://docs.deno.com/llms-full.txt"
 
 重试耗尽后：
 
-- 入口文档失败 → 整站中止，保留上一次完整快照（白名单由入口冻结，缺它无法抓取）
+- 入口文档失败 → 整站中止，保留上一次完整快照（白名单由入口冻结，缺它无法抓取）；多入口时任一入口失败即中止
 - 内容页失败 → 计入 `degraded`，不阻塞快照：上次快照存在该文件则复制过来并沿用其 validator，同时从该副本继续提取链接（保证链接集合不收缩、仅经它可达的页面不被误删）；不存在则本次快照不含该页
 
 `degraded` 页数 ≤ `max(3, 已处理页数 / 100)` → 快照照常发布并提交，退出码 0，末行黄色标注、逐条写入运行日志；超过阈值判定为上游故障或整体封禁（此时发布会静默删除真实内容），全部转为失败、整站保留上一次完整快照。

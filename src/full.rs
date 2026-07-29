@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
 use std::sync::Arc;
 use std::time::Duration;
@@ -50,11 +50,14 @@ struct PageHeader {
 }
 
 pub async fn crawl(
-    entry: Url,
+    entries: &[Url],
     snapshot_root: &Path,
     timeout: Duration,
     observer: Arc<dyn CrawlObserver>,
 ) -> Result<CrawlReport, String> {
+    if entries.is_empty() {
+        return Err("crawl needs at least one entry URL".to_owned());
+    }
     if !snapshot_root.is_absolute() {
         return Err(format!(
             "snapshot root must be absolute: {}",
@@ -62,58 +65,105 @@ pub async fn crawl(
         ));
     }
 
-    let allowed = AllowedOrigins::new(&entry);
+    let allowed = AllowedOrigins::from_entries(entries);
     let client = HttpClient::new(&allowed, timeout)?;
-    let canonical_entry = CanonicalUrl::new(entry);
-    observer.event(CrawlEvent::Started(canonical_entry.to_string()));
-    // `None` disables the size cap: an aggregate llms-full.txt is legitimately
-    // large, so the per-document cap (a content-page rule) must not apply here.
-    let outcome = client.fetch(&canonical_entry, None, None).await;
-    observer.event(CrawlEvent::Finished(canonical_entry.to_string()));
-    let body = match outcome {
-        Ok(FetchOutcome::Document { body, .. }) => body,
-        Ok(FetchOutcome::Missing) => {
-            return Err(format!("llms-full.txt entry is missing: {canonical_entry}"));
-        }
-        Ok(FetchOutcome::IgnoredRedirect) => {
+    let mut report = CrawlReport::default();
+    // Shared across bundles so two pages from different bundles that map to the
+    // same local file are still caught as a collision.
+    let mut registry = PathRegistry::default();
+    // Which bundle claimed each page URL. The registry cannot answer this:
+    // re-registering the identical URL is idempotent there, so two bundles both
+    // carrying one page would silently overwrite each other on disk.
+    let mut claimed: HashMap<CanonicalUrl, CanonicalUrl> = HashMap::new();
+
+    // Bundles are fetched and written one at a time: an aggregate file is
+    // legitimately large, and holding every bundle's pages in memory to write them
+    // together would scale peak usage with the entry count for no benefit. A later
+    // bundle failing still leaves the old snapshot intact — this writes into a
+    // staging directory the caller discards on error, never into the live site.
+    for entry in entries {
+        let canonical_entry = CanonicalUrl::new(entry.clone());
+        observer.event(CrawlEvent::Started(canonical_entry.to_string()));
+        // `None` disables the size cap: an aggregate llms-full.txt is legitimately
+        // large, so the per-document cap (a content-page rule) must not apply here.
+        let outcome = client.fetch(&canonical_entry, None, None).await;
+        observer.event(CrawlEvent::Finished(canonical_entry.to_string()));
+        let body = match outcome {
+            Ok(FetchOutcome::Document { body, .. }) => body,
+            Ok(FetchOutcome::Missing) => {
+                return Err(format!("llms-full.txt entry is missing: {canonical_entry}"));
+            }
+            Ok(FetchOutcome::IgnoredRedirect) => {
+                return Err(format!(
+                    "llms-full.txt entry redirected outside its origin: {canonical_entry}"
+                ));
+            }
+            Ok(FetchOutcome::Oversize { .. }) => {
+                return Err("unexpected oversize outcome for llms-full.txt entry".to_owned());
+            }
+            Ok(FetchOutcome::NotModified { .. }) => {
+                return Err("unexpected 304 Not Modified for llms-full.txt entry".to_owned());
+            }
+            Err(error) => return Err(error),
+        };
+
+        // A docs host that has no aggregate at this path commonly answers `200` with
+        // its rendered HTML page instead of a `404`. Naming that outright beats
+        // reporting a parse failure, which reads like a format bug in a real bundle
+        // — the difference matters when a site declares dozens of entries.
+        if looks_like_html(&body) {
             return Err(format!(
-                "llms-full.txt entry redirected outside its origin: {canonical_entry}"
+                "{canonical_entry} served an HTML page, not an llms-full.txt aggregate"
             ));
         }
-        Ok(FetchOutcome::Oversize { .. }) => {
-            return Err("unexpected oversize outcome for llms-full.txt entry".to_owned());
+        let pages = split(&body).map_err(|error| format!("{canonical_entry}: {error}"))?;
+        let mut outputs = Vec::with_capacity(pages.len());
+        for page in pages {
+            let canonical = CanonicalUrl::new(page.url);
+            if let Some(owner) = claimed.get(&canonical) {
+                return Err(if owner == &canonical_entry {
+                    format!("duplicate page {canonical} declared twice by {canonical_entry}")
+                } else {
+                    format!(
+                        "duplicate page {canonical}: declared by both {owner} and {canonical_entry}"
+                    )
+                });
+            }
+            let path = full_markdown_path(canonical.as_url())?;
+            let path = registry.register_path(&canonical, path)?;
+            claimed.insert(canonical.clone(), canonical_entry.clone());
+            outputs.push((canonical, path, page.markdown));
         }
-        Ok(FetchOutcome::NotModified { .. }) => {
-            return Err("unexpected 304 Not Modified for llms-full.txt entry".to_owned());
-        }
-        Err(error) => return Err(error),
-    };
 
-    let pages = split(&body)?;
-    let mut registry = PathRegistry::default();
-    let mut outputs = Vec::with_capacity(pages.len());
-    for page in pages {
-        let canonical = CanonicalUrl::new(page.url);
-        let path = full_markdown_path(canonical.as_url())?;
-        let path = registry.register_path(&canonical, path)?;
-        outputs.push((canonical, path, page.markdown));
+        for (url, path, markdown) in &outputs {
+            if let Err(error) = write_document(snapshot_root, path, markdown).await {
+                observer.event(CrawlEvent::Failed(url.to_string()));
+                report.failures.push(CrawlFailure {
+                    url: url.to_string(),
+                    message: error,
+                });
+                return Ok(report);
+            }
+        }
+
+        report.downloaded += outputs.len();
+        observer.event(CrawlEvent::Downloaded(canonical_entry.to_string()));
     }
 
-    let mut report = CrawlReport::default();
-    for (url, path, markdown) in &outputs {
-        if let Err(error) = write_document(snapshot_root, path, markdown).await {
-            observer.event(CrawlEvent::Failed(url.to_string()));
-            report.failures.push(CrawlFailure {
-                url: url.to_string(),
-                message: error,
-            });
-            return Ok(report);
-        }
-    }
-
-    report.downloaded = outputs.len();
-    observer.event(CrawlEvent::Downloaded(canonical_entry.to_string()));
     Ok(report)
+}
+
+/// Whether the body is an HTML document rather than Markdown. Only the leading
+/// doctype / root tag counts: a real bundle may quote HTML anywhere further in.
+fn looks_like_html(body: &str) -> bool {
+    // Taken by `chars`, not bytes: a body starting mid-codepoint must not panic.
+    let head: String = body
+        .trim_start()
+        .chars()
+        .take(16)
+        .collect::<String>()
+        .to_ascii_lowercase();
+    head.starts_with("<!doctype html") || head.starts_with("<html")
 }
 
 fn split(body: &str) -> Result<Vec<FullPage>, String> {
@@ -447,6 +497,25 @@ mod tests {
         assert!(pages[0].markdown.contains("\nURL:\n"));
         assert!(pages[0].markdown.contains("URL: https://evil.test/fake"));
         assert!(pages[0].markdown.contains("After"));
+    }
+
+    #[test]
+    fn detects_html_pages_served_in_place_of_a_bundle() {
+        for body in [
+            "<!doctype html>\n<html>…",
+            "\n  <!DOCTYPE HTML>\n",
+            "<html class=\"\">",
+        ] {
+            assert!(super::looks_like_html(body), "{body}");
+        }
+        // A bundle whose Markdown merely contains HTML is still a bundle.
+        for body in [
+            "# One\n\nURL: https://example.com/one\n\n<div>inline</div>\n",
+            "",
+            "文档",
+        ] {
+            assert!(!super::looks_like_html(body), "{body}");
+        }
     }
 
     #[test]

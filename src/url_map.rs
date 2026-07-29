@@ -92,8 +92,15 @@ pub struct AllowedOrigins {
 
 impl AllowedOrigins {
     pub fn new(entry: &Url) -> Self {
+        Self::from_entries(std::slice::from_ref(entry))
+    }
+
+    /// Seeded with every entry's origin. A multi-entry site pools its entries'
+    /// origins into one set, so an entry may link content served from a host only
+    /// one of its siblings declares.
+    pub fn from_entries(entries: &[Url]) -> Self {
         Self {
-            origins: Arc::new(Mutex::new(HashSet::from([origin_key(entry)]))),
+            origins: Arc::new(Mutex::new(entries.iter().map(origin_key).collect())),
         }
     }
 
