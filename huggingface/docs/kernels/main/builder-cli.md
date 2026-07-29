@@ -1,0 +1,350 @@
+# CLI reference for kernel-builder
+
+This document contains the help content for the `kernel-builder` command-line program.
+
+**Command Overview:**
+
+* [`kernel-builder`↴](#kernel-builder)
+* [`kernel-builder completions`↴](#kernel-builder-completions)
+* [`kernel-builder init`↴](#kernel-builder-init)
+* [`kernel-builder build`↴](#kernel-builder-build)
+* [`kernel-builder build-and-copy`↴](#kernel-builder-build-and-copy)
+* [`kernel-builder build-and-upload`↴](#kernel-builder-build-and-upload)
+* [`kernel-builder upload`↴](#kernel-builder-upload)
+* [`kernel-builder check-config`↴](#kernel-builder-check-config)
+* [`kernel-builder check-abi`↴](#kernel-builder-check-abi)
+* [`kernel-builder check-builds`↴](#kernel-builder-check-builds)
+* [`kernel-builder create-pyproject`↴](#kernel-builder-create-pyproject)
+* [`kernel-builder devshell`↴](#kernel-builder-devshell)
+* [`kernel-builder list-variants`↴](#kernel-builder-list-variants)
+* [`kernel-builder hash`↴](#kernel-builder-hash)
+* [`kernel-builder testshell`↴](#kernel-builder-testshell)
+* [`kernel-builder update-build`↴](#kernel-builder-update-build)
+* [`kernel-builder skills`↴](#kernel-builder-skills)
+* [`kernel-builder skills add`↴](#kernel-builder-skills-add)
+* [`kernel-builder clean-pyproject`↴](#kernel-builder-clean-pyproject)
+
+## `kernel-builder`
+
+Build Hugging Face Hub kernels
+
+**Usage:** `kernel-builder <COMMAND>`
+
+###### **Subcommands:**
+
+* `completions` — Generate shell completions
+* `init` — Initialize a new kernel project from template
+* `build` — Build the kernel locally (alias for build-and-copy)
+* `build-and-copy` — Build the kernel and copy artifacts locally
+* `build-and-upload` — Build the kernel and upload to Hugging Face Hub
+* `upload` — Upload kernel build artifacts to the Hugging Face Hub
+* `check-config` — Validate the build.toml file
+* `check-abi` — Check the ABI compatibility of a kernel extension
+* `check-builds` — Validate kernel builds
+* `create-pyproject` — Generate CMake files for a kernel extension build
+* `devshell` — Spawn a kernel development shell
+* `list-variants` — List build variants
+* `hash` — Hash the builds of a kernel
+* `testshell` — Spawn a kernel test shell
+* `update-build` — Update a `build.toml` to the current format
+* `skills` — Install skills for AI coding assistants (Claude, Codex, OpenCode)
+* `clean-pyproject` — Clean generated artifacts
+
+## `kernel-builder completions`
+
+Generate shell completions
+
+**Usage:** `kernel-builder completions <SHELL>`
+
+###### **Arguments:**
+
+* `<SHELL>`
+
+  Possible values: `bash`, `elvish`, `fish`, `powershell`, `zsh`
+
+## `kernel-builder init`
+
+Initialize a new kernel project from template
+
+**Usage:** `kernel-builder init [OPTIONS] [PATH]`
+
+###### **Arguments:**
+
+* `<PATH>` — Directory to initialize (defaults to current directory)
+
+###### **Options:**
+
+* `--license <LICENSE>` — The kernel's license
+
+  Default value: `Apache-2.0`
+* `--name <OWNER/REPO>` — Name of the kernel repo (e.g. `drbh/my-kernel`)
+* `--backends <BACKENDS>` — Backends to enable (`all`, `cpu`, `cuda`, `metal`, `neuron`, `rocm`, `xpu`)
+
+* `--overwrite` — Overwrite existing scaffold files (preserves other files)
+
+## `kernel-builder build`
+
+Build the kernel locally (alias for build-and-copy)
+
+**Usage:** `kernel-builder build [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>` — Directory of the kernel project (defaults to current directory)
+
+###### **Options:**
+
+* `--variant <VARIANT>` — Build a specific variant
+* `--max-jobs <MAX_JOBS>` — Maximum number of parallel Nix build jobs
+* `--cores <CORES>` — Number of CPU cores to use for each build job
+* `-L`, `--print-build-logs` — Print full build logs on standard error
+
+## `kernel-builder build-and-copy`
+
+Build the kernel and copy artifacts locally
+
+**Usage:** `kernel-builder build-and-copy [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>` — Directory of the kernel project (defaults to current directory)
+
+###### **Options:**
+
+* `--max-jobs <MAX_JOBS>` — Maximum number of parallel Nix build jobs
+* `--cores <CORES>` — Number of CPU cores to use for each build job
+* `-L`, `--print-build-logs` — Print full build logs on standard error
+
+## `kernel-builder build-and-upload`
+
+Build the kernel and upload to Hugging Face Hub
+
+**Usage:** `kernel-builder build-and-upload [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>` — Directory of the kernel project (defaults to current directory)
+
+###### **Options:**
+
+* `--variant <VARIANT>` — Build a specific variant
+* `--max-jobs <MAX_JOBS>` — Maximum number of parallel Nix build jobs
+* `--cores <CORES>` — Number of CPU cores to use for each build job
+* `-L`, `--print-build-logs` — Print full build logs on standard error
+* `--repo-id <REPO_ID>` — Repository ID on the Hugging Face Hub (e.g. `user/my-kernel`)
+* `--branch <BRANCH>` — Upload to a specific branch (defaults to `v{version}` from metadata)
+* `--private` — Create the repository as private
+* `--repo-type <REPO_TYPE>` — Repository type on Hugging Face Hub (`kernel` by default, or `model` for legacy repos)
+
+  Default value: `kernel`
+
+  Possible values: `model`, `kernel`
+
+* `--create-pr` — Open a pull request with the changes rather than committing them directly (does not require write access to the repository)
+* `--output-json <PATH>` — Write a machine-readable JSON summary of the upload to this path
+* `-q`, `--quiet` — Suppress progress output
+
+## `kernel-builder upload`
+
+Upload kernel build artifacts to the Hugging Face Hub
+
+**Usage:** `kernel-builder upload [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>` — Directory of the kernel build (defaults to current directory)
+
+###### **Options:**
+
+* `--repo-id <REPO_ID>` — Repository ID on the Hugging Face Hub (e.g. `user/my-kernel`). Defaults to `general.hub.repo-id` from `build.toml`
+* `--branch <BRANCH>` — Upload to a specific branch (defaults to `v{version}` from metadata)
+* `--private` — Create the repository as private
+* `--repo-type <REPO_TYPE>` — Repository type on Hugging Face Hub (`kernel` by default, or `model` for legacy repos)
+
+  Default value: `kernel`
+
+  Possible values: `model`, `kernel`
+
+* `--create-pr` — Open a pull request with the changes rather than committing them directly (does not require write access to the repository)
+* `--output-json <PATH>` — Write a machine-readable JSON summary of the upload to this path
+* `-q`, `--quiet` — Suppress progress output
+
+## `kernel-builder check-config`
+
+Validate the build.toml file
+
+**Usage:** `kernel-builder check-config [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+
+## `kernel-builder check-abi`
+
+Check the ABI compatibility of a kernel extension
+
+**Usage:** `kernel-builder check-abi [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>` — Directory with kernels
+
+###### **Options:**
+
+* `-m`, `--manylinux <VERSION>` — Manylinux version
+
+  Default value: `manylinux_2_28`
+* `--macos <VERSION>` — macOS version
+
+  Default value: `15.0`
+* `-p`, `--python-abi <VERSION>` — Python ABI version
+
+  Default value: `3.9`
+* `--torch-stable-abi <VERSION>` — Torch stable ABI version
+
+## `kernel-builder check-builds`
+
+Validate kernel builds
+
+**Usage:** `kernel-builder check-builds [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+
+## `kernel-builder create-pyproject`
+
+Generate CMake files for a kernel extension build
+
+**Usage:** `kernel-builder create-pyproject [OPTIONS] [KERNEL_DIR] [TARGET_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+* `<TARGET_DIR>` — The directory to write the generated files to (directory of `BUILD_TOML` when absent)
+
+###### **Options:**
+
+* `-f`, `--force` — Force-overwrite existing files
+* `--unique-id <UNIQUE_ID>` — This is an optional unique identifier that is suffixed to the kernel name to avoid name collisions. (e.g. Git SHA)
+* `--kernel-sha <KERNEL_SHA>` — Full commit SHA of the kernel source, recorded in the build metadata. When absent, it is detected from the kernel's git repository (used by Nix builds where the source has no `.git`)
+* `--kernel-dirty` — Mark the kernel source as having uncommitted changes in the build metadata. Only meaningful together with `--kernel-sha`
+
+## `kernel-builder devshell`
+
+Spawn a kernel development shell
+
+**Usage:** `kernel-builder devshell [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+
+###### **Options:**
+
+* `--variant <VARIANT>` — Use a specific variant
+* `--max-jobs <MAX_JOBS>` — Maximum number of parallel Nix build jobs
+* `--cores <CORES>` — Number of CPU cores to use for each build job
+* `-L`, `--print-build-logs` — Print full build logs on standard error
+
+## `kernel-builder list-variants`
+
+List build variants
+
+**Usage:** `kernel-builder list-variants [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+
+###### **Options:**
+
+* `--arch` — Only list variants for the current architecture
+
+## `kernel-builder hash`
+
+Hash the builds of a kernel
+
+**Usage:** `kernel-builder hash [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+
+## `kernel-builder testshell`
+
+Spawn a kernel test shell
+
+**Usage:** `kernel-builder testshell [OPTIONS] [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+
+###### **Options:**
+
+* `--variant <VARIANT>` — Use a specific variant
+* `--max-jobs <MAX_JOBS>` — Maximum number of parallel Nix build jobs
+* `--cores <CORES>` — Number of CPU cores to use for each build job
+* `-L`, `--print-build-logs` — Print full build logs on standard error
+
+## `kernel-builder update-build`
+
+Update a `build.toml` to the current format
+
+**Usage:** `kernel-builder update-build [KERNEL_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+
+## `kernel-builder skills`
+
+Install skills for AI coding assistants (Claude, Codex, OpenCode)
+
+**Usage:** `kernel-builder skills <COMMAND>`
+
+###### **Subcommands:**
+
+* `add` — Install a kernels skill for an AI assistant
+
+## `kernel-builder skills add`
+
+Install a kernels skill for an AI assistant
+
+**Usage:** `kernel-builder skills add [OPTIONS]`
+
+###### **Options:**
+
+* `--skill <SKILL>` — Skill to install
+
+  Default value: `cuda-kernels`
+
+  Possible values: `cuda-kernels`, `cpu-kernels`, `rocm-kernels`, `triton-kernels`, `xpu-kernels`
+
+* `--claude` — Install for Claude
+* `--codex` — Install for Codex
+* `--opencode` — Install for OpenCode
+* `-g`, `--global` — Install globally (user-level) instead of in the current project directory
+* `--dest <DEST>` — Install into a custom destination (path to skills directory)
+* `--force` — Overwrite existing skills in the destination
+
+## `kernel-builder clean-pyproject`
+
+Clean generated artifacts
+
+**Usage:** `kernel-builder clean-pyproject [OPTIONS] [KERNEL_DIR] [TARGET_DIR]`
+
+###### **Arguments:**
+
+* `<KERNEL_DIR>`
+* `<TARGET_DIR>` — The directory to clean from (directory of `BUILD_TOML` when absent)
+
+###### **Options:**
+
+* `-d`, `--dry-run` — Show what would be deleted without actually deleting
+* `-f`, `--force` — Force deletion without confirmation
+* `--ops-id <OPS_ID>` — This is an optional unique identifier that is suffixed to the kernel name to avoid name collisions. (e.g. Git SHA)
+
+    This document was generated automatically by
+    clap-markdown.

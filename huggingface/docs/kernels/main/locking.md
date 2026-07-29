@@ -1,0 +1,78 @@
+# Lock kernel versions
+
+Projects that use `setuptools` can lock the kernel versions that should be
+used. First specify the accepted versions in `pyproject.toml` and make
+sure that `kernels` is a build dependency:
+
+```toml
+[build-system]
+requires = ["kernels", "setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.kernels.dependencies]
+"kernels-community/activation" = 1
+```
+
+Then run `kernels lock .` in the project directory. This generates a `kernels.lock` file with
+the locked revisions. The locked revision will be used when loading a kernel with
+[get_locked_kernel()](/docs/kernels/main/en/api/kernels#kernels.get_locked_kernel):
+
+```python
+from kernels import get_locked_kernel
+
+activation = get_locked_kernel("kernels-community/activation")
+```
+
+**Note:** the lock file is included in the package metadata, so it will only be visible
+to `kernels` after doing an (editable or regular) installation of your project.
+
+## Locked kernel layers
+
+Locking is also supported for kernel layers. To use locked layers, register them
+with the [LockedLayerRepository](/docs/kernels/main/en/api/layers#kernels.LockedLayerRepository) class:
+
+```python
+kernel_layer_mapping = {
+    "SiluAndMul": {
+        "cuda": LockedLayerRepository(
+            repo_id="kernels-community/activation",
+            layer_name="SiluAndMul",
+        )
+    }
+}
+
+register_kernel_mapping(kernel_layer_mapping)
+```
+
+Similarly, you can use the [LockedFuncRepository](/docs/kernels/main/en/api/layers#kernels.LockedFuncRepository) class to lock kernel function
+versions:
+
+```python
+kernel_layer_mapping = {
+    "silu_and_mul": {
+        "cuda": LockedFuncRepository(
+            repo_id="kernels-community/activation",
+            func_name="silu_and_mul",
+        )
+    }
+}
+
+register_kernel_mapping(kernel_layer_mapping)
+```
+
+## Pre-downloading locked kernels
+
+Locked kernels can be pre-downloaded by running `kernels download .` in your
+project directory. This will download the kernels to your local Hugging Face
+Hub cache.
+
+The pre-downloaded kernels are used by the [get_locked_kernel()](/docs/kernels/main/en/api/kernels#kernels.get_locked_kernel) function.
+[get_locked_kernel()](/docs/kernels/main/en/api/kernels#kernels.get_locked_kernel) will download a kernel when it is not pre-downloaded. If you
+want kernel loading to error when a kernel is not pre-downloaded, you can use
+the [load_kernel()](/docs/kernels/main/en/api/kernels#kernels.load_kernel) function instead:
+
+```python
+from kernels import load_kernel
+
+activation = load_kernel("kernels-community/activation")
+```

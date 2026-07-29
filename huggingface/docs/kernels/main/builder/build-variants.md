@@ -1,0 +1,80 @@
+# Build variants
+
+A kernel can be compliant for a specific compute framework (e.g. CUDA) or
+architecture (e.g. x86_64). For compliance with a compute framework and
+architecture combination, all the build variants listed below must be
+available. This list will be updated as new PyTorch versions are released.
+
+## CPU aarch64-darwin
+
+- `torch211-cpu-aarch64-darwin`
+- `torch212-cpu-aarch64-darwin`
+- `torch213-cpu-aarch64-darwin`
+
+## Metal aarch64-darwin
+
+- `torch211-metal-aarch64-darwin`
+- `torch212-metal-aarch64-darwin`
+- `torch213-metal-aarch64-darwin`
+
+## CPU aarch64-linux
+
+- `torch211-cxx11-cpu-aarch64-linux`
+- `torch212-cxx11-cpu-aarch64-linux`
+- `torch213-cxx11-cpu-aarch64-linux`
+
+## CUDA aarch64-linux
+
+- `torch211-cxx11-cu126-aarch64-linux`
+- `torch211-cxx11-cu128-aarch64-linux`
+- `torch211-cxx11-cu130-aarch64-linux`
+- `torch212-cxx11-cu126-aarch64-linux`
+- `torch212-cxx11-cu130-aarch64-linux`
+- `torch212-cxx11-cu132-aarch64-linux`
+- `torch213-cxx11-cu126-aarch64-linux`
+- `torch213-cxx11-cu130-aarch64-linux`
+- `torch213-cxx11-cu132-aarch64-linux`
+
+## CPU x86_64-linux
+
+- `torch211-cxx11-cpu-x86_64-linux`
+- `torch212-cxx11-cpu-x86_64-linux`
+- `torch213-cxx11-cpu-x86_64-linux`
+
+## CUDA x86_64-linux
+
+- `torch211-cxx11-cu126-x86_64-linux`
+- `torch211-cxx11-cu128-x86_64-linux`
+- `torch211-cxx11-cu130-x86_64-linux`
+- `torch212-cxx11-cu126-x86_64-linux`
+- `torch212-cxx11-cu130-x86_64-linux`
+- `torch212-cxx11-cu132-x86_64-linux`
+- `torch213-cxx11-cu126-x86_64-linux`
+- `torch213-cxx11-cu130-x86_64-linux`
+- `torch213-cxx11-cu132-x86_64-linux`
+
+## ROCm x86_64-linux
+
+- `torch211-cxx11-rocm71-x86_64-linux`
+- `torch211-cxx11-rocm72-x86_64-linux`
+- `torch212-cxx11-rocm71-x86_64-linux`
+- `torch212-cxx11-rocm72-x86_64-linux`
+- `torch213-cxx11-rocm71-x86_64-linux`
+- `torch213-cxx11-rocm72-x86_64-linux`
+
+## XPU x86_64-linux
+
+- `torch211-cxx11-xpu20253-x86_64-linux`
+- `torch212-cxx11-xpu20253-x86_64-linux`
+- `torch213-cxx11-xpu20260-x86_64-linux`
+
+## Python-only kernels
+
+Kernels that are in pure Python (e.g. Triton kernels) only need to provide
+one or more of the following variants:
+
+- `torch-cpu`
+- `torch-cuda`
+- `torch-metal`
+- `torch-rocm`
+- `torch-xpu`

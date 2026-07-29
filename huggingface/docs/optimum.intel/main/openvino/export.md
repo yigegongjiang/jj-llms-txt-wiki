@@ -1,0 +1,279 @@
+# Export your model
+
+To export a [model](https://huggingface.co/docs/optimum/main/en/intel/openvino/models) hosted on the [Hub](https://huggingface.co/models) you can use our [space](https://huggingface.co/spaces/echarlaix/openvino-export). After conversion, a repository will be pushed under your namespace, this repository can be either public or private.
+
+## Using the CLI
+
+To export your model to the [OpenVINO IR](https://docs.openvino.ai/2024/documentation/openvino-ir-format.html) format with the CLI :
+
+```bash
+optimum-cli export openvino --model meta-llama/Meta-Llama-3-8B ov_model/
+```
+
+To export a private model or a model that requires access, you can either run `huggingface-cli login` to log in permanently, or set the environment variable `HF_TOKEN` to a [token](https://huggingface.co/settings/tokens) with access to the model. See the [authentication documentation](https://huggingface.co/docs/huggingface_hub/quick-start#authentication) for more information.
+
+The model argument can either be the model ID of a model hosted on the [Hub](https://huggingface.co/models) or a path to a model hosted locally. For local models, you need to specify the task for which the model should be loaded before export, among the list of the [supported tasks](https://huggingface.co/docs/optimum/main/en/exporters/task_manager).
+
+```bash
+optimum-cli export openvino --model local_llama --task text-generation-with-past ov_model/
+```
+
+Check out the help for more options:
+
+```text
+usage: optimum-cli export openvino [-h] -m MODEL [--task TASK] [--framework {pt}] [--trust-remote-code]
+                                   [--weight-format {fp32,fp16,int8,int4,mxfp4,nf4,cb4}]
+                                   [--quant-mode {int8,f8e4m3,f8e5m2,cb4_f8e4m3,int4_f8e4m3,int4_f8e5m2}]
+                                   [--library {transformers,diffusers,timm,sentence_transformers,open_clip}]
+                                   [--cache_dir CACHE_DIR] [--pad-token-id PAD_TOKEN_ID] [--ratio RATIO] [--sym]
+                                   [--group-size GROUP_SIZE] [--backup-precision {none,int8_sym,int8_asym}]
+                                   [--dataset DATASET] [--all-layers] [--awq] [--scale-estimation] [--gptq]
+                                   [--lora-correction] [--sensitivity-metric SENSITIVITY_METRIC]
+                                   [--quantization-statistics-path QUANTIZATION_STATISTICS_PATH]
+                                   [--num-samples NUM_SAMPLES] [--disable-stateful] [--disable-convert-tokenizer]
+                                   [--smooth-quant-alpha SMOOTH_QUANT_ALPHA]
+                                   output
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Required arguments:
+  -m MODEL, --model MODEL
+                        Model ID on huggingface.co or path on disk to load model from.
+  output                Path indicating the directory where to store the generated OV model.
+
+Optional arguments:
+  --task TASK           The task to export the model for. If not specified, the task will be auto-inferred based on
+                        the model. Available tasks depend on the model, but are among: ['image-to-image',
+                        'image-segmentation', 'inpainting', 'sentence-similarity', 'text-to-audio', 'image-to-text',
+                        'automatic-speech-recognition', 'token-classification', 'text-to-image', 'audio-classification',
+                        'feature-extraction', 'semantic-segmentation', 'masked-im', 'audio-xvector',
+                        'audio-frame-classification', 'text2text-generation', 'multiple-choice', 'depth-estimation',
+                        'image-classification', 'fill-mask', 'zero-shot-object-detection', 'object-detection',
+                        'question-answering', 'zero-shot-image-classification', 'mask-generation', 'text-generation',
+                        'text-classification']. For decoder models, use 'xxx-with-past' to export the model using past
+                        key values in the decoder.
+  --framework {pt}   The framework to use for the export. Defaults to 'pt' for PyTorch.
+  --trust-remote-code   Allows to use custom code for the modeling hosted in the model repository. This option should
+                        only be set for repositories you trust and in which you have read the code, as it will execute
+                        on your local machine arbitrary code present in the model repository.
+  --weight-format {fp32,fp16,int8,int4,mxfp4,nf4,cb4}
+                        The weight format of the exported model. Option 'cb4' represents a codebook with 16
+                        fixed fp8 values in E4M3 format.
+  --quant-mode {int8,f8e4m3,f8e5m2,cb4_f8e4m3,int4_f8e4m3,int4_f8e5m2}
+                        Quantization precision mode. This is used for applying full model quantization including
+                        activations.
+  --library {transformers,diffusers,timm,sentence_transformers,open_clip}
+                        The library used to load the model before export. If not provided, will attempt to infer the
+                        local checkpoint's library
+  --cache_dir CACHE_DIR
+                        The path to a directory in which the downloaded model should be cached if the standard cache
+                        should not be used.
+  --pad-token-id PAD_TOKEN_ID
+                        This is needed by some models, for some tasks. If not provided, will attempt to use the
+                        tokenizer to guess it.
+  --ratio RATIO         A parameter used when applying 4-bit quantization to control the ratio between 4-bit and 8-bit
+                        quantization. If set to 0.8, 80% of the layers will be quantized to int4 while 20% will be
+                        quantized to int8. This helps to achieve better accuracy at the sacrifice of the model size
+                        and inference latency. Default value is 1.0. Note: If dataset is provided, and the ratio is
+                        less than 1.0, then data-aware mixed precision assignment will be applied.
+  --sym                 Whether to apply symmetric quantization. This argument is related to integer-typed
+                        --weight-format and --quant-mode options. In case of full or mixed quantization (--quant-mode)
+                        symmetric quantization will be applied to weights in any case, so only activation quantization
+                        will be affected by --sym argument. For weight-only quantization (--weight-format) --sym
+                        argument does not affect backup precision. Examples: (1) --weight-format int8 --sym => int8
+                        symmetric quantization of weights; (2) --weight-format int4 => int4 asymmetric quantization of
+                        weights; (3) --weight-format int4 --sym --backup-precision int8_asym => int4 symmetric
+                        quantization of weights with int8 asymmetric backup precision; (4) --quant-mode int8 --sym =>
+                        weights and activations are quantized to int8 symmetric data type; (5) --quant-mode int8 =>
+                        activations are quantized to int8 asymmetric data type, weights -- to int8 symmetric data type;
+                        (6) --quant-mode int4_f8e5m2 --sym => activations are quantized to f8e5m2 data type, weights --
+                        to int4 symmetric data type.
+  --group-size GROUP_SIZE
+                        The group size to use for quantization. Recommended value is 128 and -1 uses per-column
+                        quantization.
+  --group-size-fallback {error,ignore,adjust}
+                        Specifies how to handle operations that do not support the given group size. Possible values are:
+                        `error`: raise an error if the given group size is not supported by a node, this is the default
+                        behavior;
+                        `ignore`: skip nodes that cannot be compressed with the given group size;
+                        `adjust`: adjust the group size to the maximum supported value for each problematic node, if
+                        there is no valid value greater than or equal to 32, then the node is quantized to the backup
+                        precision which is int8_asym by default.
+  --backup-precision {none,int8_sym,int8_asym}
+                        Defines a backup precision for mixed-precision weight compression. Only valid for 4-bit weight
+                        formats. If not provided, backup precision is int8_asym. 'none' stands for original floating-
+                        point precision of the model weights, in this case weights are retained in their original
+                        precision without any quantization. 'int8_sym' stands for 8-bit integer symmetric quantization
+                        without zero point. 'int8_asym' stands for 8-bit integer asymmetric quantization with zero
+                        points per each quantization group.
+  --dataset DATASET     The dataset used for data-aware compression or quantization with NNCF. Can be a dataset name
+                        (e.g., 'wikitext2') or a string with options (e.g., 'wikitext2:seq_len=128'). The only currently
+                        supported option is `seq_len` which represents a length of an input sample sequence (sentence).
+                        For language models you can use the one from the list
+                        ['auto','wikitext2','c4','c4-new','gsm8k']. With 'auto' the dataset will be collected from model's
+                        generations. For diffusion models it should be on of ['conceptual_captions',
+                        'laion/220k-GPT4Vision-captions-from-LIVIS','laion/filtered-wit']. For visual language models
+                        the dataset must be set to 'contextual'. Note: if none of the data-aware compression algorithms
+                        are selected and ratio parameter is omitted or equals 1.0, the dataset argument will not have an
+                        effect on the resulting model. Note: for text generation task, datasets with English texts such
+                        as 'wikitext2','gsm8k','c4' or 'c4-new' usually work fine even for non-English models.
+  --all-layers          Whether embeddings and last MatMul layers should be compressed to INT4. If not provided an
+                        weight compression is applied, they are compressed to INT8.
+  --awq                 Whether to apply AWQ algorithm. AWQ improves generation quality of INT4-compressed LLMs. If
+                        dataset is provided, a data-aware activation-based version of the algorithm will be executed,
+                        which requires additional time. Otherwise, data-free AWQ will be applied which relies on
+                        per-column magnitudes of weights instead of activations. Note: it is possible that there will
+                        be no matching patterns in the model to apply AWQ, in such case it will be skipped.
+  --scale-estimation    Indicates whether to apply a scale estimation algorithm that minimizes the L2 error between
+                        the original and compressed layers. Providing a dataset is required to run scale estimation.
+                        Please note, that applying scale estimation takes additional memory and time.
+  --gptq                Indicates whether to apply GPTQ algorithm that optimizes compressed weights in a layer-wise
+                        fashion to minimize the difference between activations of a compressed and original layer.
+                        Please note, that applying GPTQ takes additional memory and time.
+  --lora-correction     Indicates whether to apply LoRA Correction algorithm. When enabled, this algorithm introduces
+                        low-rank adaptation layers in the model that can recover accuracy after weight compression at
+                        some cost of inference latency. Please note, that applying LoRA Correction algorithm takes
+                        additional memory and time.
+  --sensitivity-metric SENSITIVITY_METRIC
+                        The sensitivity metric for assigning quantization precision to layers. It can be one of the
+                        following: ['weight_quantization_error', 'hessian_input_activation',
+                        'mean_activation_variance', 'max_activation_variance', 'mean_activation_magnitude'].
+  --quantization-statistics-path QUANTIZATION_STATISTICS_PATH
+                        Directory path to dump/load data-aware weight-only quantization statistics. This is useful when
+                        running data-aware quantization multiple times on the same model and dataset to avoid
+                        recomputing statistics. This option is applicable exclusively for weight-only quantization.
+                        Please note that the statistics depend on the dataset, so if you change the dataset, you should
+                        also change the statistics path to avoid confusion.
+  --num-samples NUM_SAMPLES
+                        The maximum number of samples to take from the dataset for quantization.
+  --disable-stateful    Disable stateful converted models, stateless models will be generated instead. Stateful models
+                        are produced by default when this key is not used. In stateful models all kv-cache inputs and
+                        outputs are hidden in the model and are not exposed as model inputs and outputs. If --disable-
+                        stateful option is used, it may result in sub-optimal inference performance. Use it when you
+                        intentionally want to use a stateless model, for example, to be compatible with existing
+                        OpenVINO native inference code that expects KV-cache inputs and outputs in the model.
+  --disable-convert-tokenizer
+                        Do not add converted tokenizer and detokenizer OpenVINO models.
+  --smooth-quant-alpha SMOOTH_QUANT_ALPHA
+                        SmoothQuant alpha parameter that improves the distribution of activations before MatMul layers
+                        and reduces quantization error. Valid only when activations quantization is enabled.
+```
+
+You can also apply fp16, 8-bit or 4-bit weight-only quantization on the Linear, Convolutional and Embedding layers when exporting your model by setting `--weight-format` to respectively `fp16`, `int8` or `int4`.
+
+Export with INT8 weights compression:
+```bash
+optimum-cli export openvino --model meta-llama/Meta-Llama-3-8B --weight-format int8 ov_model/
+```
+
+Export with INT4 weights compression:
+```bash
+optimum-cli export openvino --model meta-llama/Meta-Llama-3-8B --weight-format int4 ov_model/
+```
+
+Export with INT4 weights compression and data-free AWQ algorithm:
+```bash
+optimum-cli export openvino --model meta-llama/Meta-Llama-3-8B --weight-format int4 --awq ov_model/
+```
+
+Export with INT4 weights compression and data-aware AWQ and Scale Estimation algorithms:
+```bash
+optimum-cli export openvino --model meta-llama/Meta-Llama-3-8B \
+    --weight-format int4 --awq --scale-estimation --dataset wikitext2 ov_model/
+```
+
+For more information on the quantization parameters checkout the [documentation](inference#weight-only-quantization)
+
+Models larger than 1 billion parameters are exported to the OpenVINO format with 8-bit weights by default. You can disable it with `--weight-format fp32`.
+
+Besides weight-only quantization, you can also apply full model quantization including activations by setting `--quant-mode` to preferred precision. This will quantize both weights and activations of Linear, Convolutional and some other layers to selected mode. Please see example below.
+
+```bash
+optimum-cli export openvino -m openai/whisper-large-v3-turbo --quant-mode int8 --dataset librispeech --num-samples 32 --smooth-quant-alpha 0.9 ./whisper-large-v3-turbo
+```
+
+#### Default quantization configs
+
+For some models we maintain a set of default quantization configs ([link](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/configuration.py)). To apply a default 4-bit weight-only quantization one should provide `--weight-format int4` without any additional arguments. For int8 weight & activation quantization it should be `--quant-mode int8`. For example:
+
+```bash
+optimum-cli export openvino -m microsoft/Phi-4-mini-instruct --weight-format int4 ./Phi-4-mini-instruct
+```
+
+or
+
+```bash
+optimum-cli export openvino -m openai/clip-vit-base-patch16 --quant-mode int8 ./clip-vit-base-patch16
+```
+
+### Decoder models
+
+For models with a decoder, we enable the re-use of past keys and values by default. This allows to avoid recomputing the same intermediate activations at each generation step. To export the model without, you will need to remove the `-with-past` suffix when specifying the task.
+
+| With K-V cache                           | Without K-V cache                    |
+|------------------------------------------|--------------------------------------|
+| `text-generation-with-past`              | `text-generation`                    |
+| `text2text-generation-with-past`         | `text2text-generation`               |
+| `automatic-speech-recognition-with-past` | `automatic-speech-recognition`       |
+
+### Diffusion models
+
+When Stable Diffusion models are exported to the OpenVINO format, they are decomposed into different components that are later combined during inference:
+
+* Text encoder(s)
+* U-Net
+* VAE encoder
+* VAE decoder
+
+To export your Stable Diffusion XL model to the OpenVINO IR format with the CLI you can do as follows:
+
+```bash
+optimum-cli export openvino --model stabilityai/stable-diffusion-xl-base-1.0 ov_sdxl/
+```
+
+You can also apply hybrid quantization during model export. For example:
+```bash
+optimum-cli export openvino --model stabilityai/stable-diffusion-xl-base-1.0 \
+    --weight-format int8 --dataset conceptual_captions ov_sdxl/
+```
+
+For more information about hybrid quantization, take a look at this jupyter [notebook](https://github.com/huggingface/optimum-intel/blob/main/notebooks/openvino/stable_diffusion_hybrid_quantization.ipynb).
+
+## When loading your model
+
+You can also load your PyTorch checkpoint and convert it to the OpenVINO format on-the-fly, by setting `export=True` when loading your model.
+
+To easily save the resulting model, you can use the `save_pretrained()` method, which will save both the BIN and XML files describing the graph. It is useful to save the tokenizer to the same directory, to enable easy loading of the tokenizer for the model.
+
+```diff
+- from transformers import AutoModelForCausalLM
++ from optimum.intel import OVModelForCausalLM
+  from transformers import AutoTokenizer
+
+  model_id = "meta-llama/Meta-Llama-3-8B"
+- model = AutoModelForCausalLM.from_pretrained(model_id)
++ model = OVModelForCausalLM.from_pretrained(model_id, export=True)
+  tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+  save_directory = "ov_model"
+  model.save_pretrained(save_directory)
+  tokenizer.save_pretrained(save_directory)
+```
+
+## After loading your model
+
+```python
+from transformers import AutoModelForCausalLM
+from optimum.exporters.openvino import export_from_model
+
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3-8B")
+export_from_model(model, output="ov_model", task="text-generation-with-past")
+```
+
+Once the model is exported, you can now [load your OpenVINO model](inference) by replacing the `AutoModelForXxx` class with the corresponding `OVModelForXxx` class.
+
+## Troubleshooting
+
+Some models do not work with the latest transformers release. You may see an error message with a maximum supported version. To export these models, install a transformers version that supports the model, for example `pip install transformers==4.53.3`.
+The supported transformers versions compatible with each optimum-intel release are listed on the [Github releases page](https://github.com/huggingface/optimum-intel/releases/).

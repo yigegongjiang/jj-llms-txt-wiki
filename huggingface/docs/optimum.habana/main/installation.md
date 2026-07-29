@@ -1,0 +1,20 @@
+# Installation
+
+To install Optimum for Intel® Gaudi® AI accelerator, you first need to install Intel Gaudi Software and the Intel Gaudi
+AI accelerator drivers by following the official [installation guide](https://docs.habana.ai/en/latest/Installation_Guide/index.html).
+Then, Optimum for Intel Gaudi can be installed using `pip` as follows:
+
+```bash
+python -m pip install --upgrade-strategy eager optimum[habana]
+```
+
+To use Microsoft® DeepSpeed with Intel Gaudi devices, you also need to run the following command:
+
+```bash
+python -m pip install git+https://github.com/HabanaAI/DeepSpeed.git@1.22.0
+```
+
+To ensure that you are installing the correct Intel Gaudi Software, please run the `hl-smi` command to confirm the software version
+being used in the system and apply the same version when running the DeepSpeed installation; please review the Intel Gaudi
+[Support Matrix](https://docs.habana.ai/en/latest/Support_Matrix/Support_Matrix.html) and ensure that you are using an appropriate
+version of DeepSpeed.

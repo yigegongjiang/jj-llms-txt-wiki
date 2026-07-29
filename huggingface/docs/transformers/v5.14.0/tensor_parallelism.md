@@ -1,0 +1,85 @@
+# Tensor parallelism
+
+Tensor parallelism (TP) splits weight matrices column-wise or row-wise across GPUs. Each GPU holds a shard, computes a partial result, and synchronizes with an all-reduce to produce the full output.
+
+TP relies on frequent cross-GPU communication. It works best on hardware with fast intra-node links such as NVLink.
+
+```text
+    ┌─────────────────────────────┐
+    │       X  (replicated)       │
+    └────┬──────────┬─────────┬───┘
+         │          │         │
+    ┌────▼───┐ ┌────▼───┐ ┌───▼────┐
+    │ ▓▓▓ W₀ │ │ ░░░ W₁ │ │ ███ W₂ │
+    │  X@W₀  │ │  X@W₁  │ │  X@W₂  │
+    └────┬───┘ └────┬───┘ └───┬────┘
+         └──────────┼─────────┘
+               Y₀+Y₁+Y₂
+    ┌────────────────────────────┐
+    │          Y (full)          │
+    └────────────────────────────┘
+```
+
+Transformers supports TP for architectures whose config defines `base_model_tp_plan`. Check that field first to see whether a model supports native TP.
+
+```py
+from transformers import AutoConfig
+
+config = AutoConfig.from_pretrained("Qwen/Qwen3-0.6B")
+print(config.base_model_tp_plan is not None)
+print(config.base_model_tp_plan)
+```
+
+If a model supports TP, set `tp_plan="auto"` in [from_pretrained()](/docs/transformers/v5.14.0/en/main_classes/model#transformers.PreTrainedModel.from_pretrained). Transformers initializes the device mesh and shards the supported layers for you.
+
+> [!WARNING]
+> Don't use `device_map` with `tp_plan`. The two conflict at the weight-loading level. `device_map` places whole modules on specific GPUs, while `tp_plan` shards those same parameters across all GPUs.
+
+```py
+import torch
+
+from transformers import AutoModelForCausalLM
+
+model = AutoModelForCausalLM.from_pretrained(
+    "Qwen/Qwen3-0.6B",
+    dtype=torch.bfloat16,
+    tp_plan="auto",
+)
+```
+
+[Trainer](/docs/transformers/v5.14.0/en/main_classes/trainer#transformers.Trainer) detects `tp_plan`, reads `tp_size` from the model, and creates a `ParallelismConfig` automatically.
+
+Launch training on one node with 4 GPUs.
+
+```shell
+torchrun --nproc-per-node 4 train_tp.py
+```
+
+## ParallelismConfig
+
+Pass `ParallelismConfig` explicitly when combining TP with other parallelism techniques like [FSDP](./fsdp).
+
+```py
+import torch
+
+from accelerate import ParallelismConfig
+from transformers import AutoModelForCausalLM, TrainingArguments
+
+model = AutoModelForCausalLM.from_pretrained(
+    "Qwen/Qwen3-0.6B",
+    dtype=torch.bfloat16,
+    tp_plan="auto",
+)
+
+parallelism_config = ParallelismConfig(tp_size=4)
+
+args = TrainingArguments(
+    ...,
+    parallelism_config=parallelism_config,
+)
+```
+
+## Next steps
+
+- Read the [Tensor Parallelism](https://huggingface.co/spaces/nanotron/ultrascale-playbook?section=tensor_parallelism) chapter from The Ultra-Scale Playbook for more details about how it works.
+- Read the [tensor parallelism inference guide](./perf_infer_gpu_multi) to learn more about partitioning strategies, manual TP plans, and implementation details.

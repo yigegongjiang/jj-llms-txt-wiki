@@ -1,0 +1,179 @@
+# Supported models
+
+🤗 Optimum handles the export of models to OpenVINO in the `exporters.openvino` module. It provides classes, functions, and a command line interface to perform the export easily.
+Here is the list of the supported architectures :
+
+## [Transformers](https://huggingface.co/docs/transformers/index)
+
+- AFMoE (aka Arcee Trinity)
+- ALBERT
+- Aquila
+- Aquila 2
+- Arcee
+- Arctic
+- Audio Spectrogram Transformer
+- Baichuan 2
+- BART
+- BEiT
+- BERT
+- BigBirdPegasus
+- BioGPT
+- BitNet
+- BlenderBot
+- Blenderbot Small
+- BLOOM
+- CLIP
+- CamemBERT
+- ChatGLM (ChatGLM2, ChatGLM3, GLM4)
+- CodeGen
+- CodeGen2
+- Cohere
+- Cohere2
+- ConvBERT
+- ConvNeXt
+- DBRX
+- Data2VecAudio
+- Data2VecText
+- Data2VecVision
+- DeBERTa
+- DeBERTa-v2
+- DeciLM
+- DeiT
+- DeepSeek
+- DeepSeek-V2
+- DeepSeek-V3
+- DistilBERT
+- ERNIE 4.5
+- ELECTRA
+- Encoder Decoder
+- ESM
+- EXAONE
+- EXAONE 4
+- Falcon
+- Falcon-Mamba
+- FlauBERT
+- GLM-4
+- GLM-Edge
+- GPT-2
+- GPT-BigCode
+- GPT-J
+- GPT-Neo
+- GPT-NeoX
+- GPT-NeoX-Japanese
+- GPT-OSS
+- Gemma
+- Gemma 2
+- Gemma 3
+- GOT-OCR 2.0
+- Granite
+- Granite 4.0
+- GraniteMoE
+- HuBERT
+- HunYuan V1 Dense
+- I-BERT
+- Idefics3
+- InternLM
+- InternLM2
+- InternVL2
+- Jais
+- LeViT
+- LFM2
+- LLaMA
+- LLaMA 4
+- LLaVa
+- LLaVa-NeXT
+- LLaVa-NeXT-Video
+- LLaVa-Qwen2 (NanoLLaVa)
+- LongT5
+- M2M-100
+- MAIRA-2
+- Mamba
+- mBART
+- MPNet
+- MPT
+- mT5
+- MarianMT
+- MiniCPM
+- MiniCPM3
+- MiniCPM-o
+- MiniCPM-V
+- Mistral
+- Mixtral
+- MobileBERT
+- MobileNet v1
+- MobileNet v2
+- MobileViT
+- Nystromformer
+- OLMo
+- OLMo 2
+- OPT
+- Orion
+- Pegasus
+- Perceiver
+- Persimmon
+- Phi
+- Phi-3
+- Phi-3.5-MoE
+- Phi-3 Vision
+- Phi-4 Multimodal
+- Pix2Struct
+- PoolFormer
+- Qwen
+- Qwen2 (Qwen1.5, Qwen2.5)
+- Qwen2MoE
+- Qwen2-VL
+- Qwen2.5-VL
+- Qwen3
+- Qwen3MoE
+- Qwen3-VL
+- Qwen3-Next
+- RemBERT
+- ResNet
+- RoBERTa
+- RoFormer
+- SAM
+- SEW
+- SEW-D
+- SegFormer
+- SigLIP
+- SmolVLM (SmolVLM2)
+- SpeechT5 (text-to-speech)
+- SqueezeBERT
+- StableLM
+- StarCoder2
+- Swin
+- T5
+- TrOCR
+- UniSpeech
+- UniSpeech-SAT
+- Vision Encoder Decoder
+- ViT
+- Wav2Vec2
+- Wav2Vec2-Conformer
+- WavLM
+- Whisper
+- XGLM
+- XLM
+- XLM-RoBERTa
+- XVERSE
+- Zamba2
+
+## [Diffusers](https://huggingface.co/docs/diffusers/index)
+- Stable Diffusion
+- Stable Diffusion XL
+- Latent Consistency
+- Stable Diffusion 3
+- Flux
+- Sana
+- SanaSprint
+- LTX
+
+## [Timm](https://huggingface.co/docs/timm/index)
+- PiT
+- ViT
+
+## [Sentence Transformers](https://github.com/UKPLab/sentence-transformers)
+- All Transformer and CLIP-based models.
+
+## [OpenCLIP](https://github.com/mlfoundations/open_clip)
+- All CLIP-based models

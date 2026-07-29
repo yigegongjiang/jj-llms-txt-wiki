@@ -1,0 +1,52 @@
+### Template
+
+If you want to update the content related to novita's description, please edit the template file under `https://github.com/huggingface/hub-docs/tree/main/scripts/inference-providers/templates/providers/novita.handlebars`.
+
+### Logos
+
+If you want to update novita's logo, upload a file by opening a PR on https://huggingface.co/datasets/huggingface/documentation-images/tree/main/inference-providers/logos. Ping @wauplin and @celinah on the PR to let them know you uploaded a new logo.
+Logos must be in .png format and be named `novita-light.png` and `novita-dark.png`. Visit https://huggingface.co/settings/theme to switch between light and dark mode and check that the logos are displayed correctly.
+
+### Generation script
+
+For more details, check out the `generate.ts` script: https://github.com/huggingface/hub-docs/blob/main/scripts/inference-providers/scripts/generate.ts.
+--->
+
+# Novita
+
+> [!TIP]
+> All supported Novita models can be found [here](https://huggingface.co/models?inference_provider=novita&sort=trending)
+
+    
+        
+        
+    
+
+    
+        
+        
+    
+
+[Novita](https://novita.ai) is the go-to inference platform for AI developers seeking a low-cost, reliable, and simple solution for shipping AI models.
+
+Offering 200+ APIs (LLMs, image, video, audio) with fully managed deployment — enterprise-grade, scalable, and maintenance-free.
+
+## Supported tasks
+
+### Chat Completion (LLM)
+
+Find out more about Chat Completion (LLM) [here](../tasks/chat-completion).
+
+<InferenceSnippet
+    pipeline=text-generation
+    providersMapping={ {"novita":{"modelId":"zai-org/GLM-5.2","providerModelId":"zai-org/glm-5.2"} } }
+conversational />
+
+### Chat Completion (VLM)
+
+Find out more about Chat Completion (VLM) [here](../tasks/chat-completion).
+
+<InferenceSnippet
+    pipeline=image-text-to-text
+    providersMapping={ {"novita":{"modelId":"moonshotai/Kimi-K2.7-Code","providerModelId":"moonshotai/kimi-k2.7-code"} } }
+conversational />

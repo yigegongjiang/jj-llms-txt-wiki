@@ -1,0 +1,597 @@
+# Quickstart
+
+In this quickstart, you'll learn how to use the dataset viewer's REST API to:
+
+- Check whether a dataset on the Hub is functional.
+- Return the subsets and splits of a dataset.
+- Preview the first 100 rows of a dataset.
+- Download slices of rows of a dataset.
+- Search a word in a dataset.
+- Filter rows based on a query string.
+- Access the dataset as parquet files.
+- Get the dataset size (in number of rows or bytes).
+- Get statistics about the dataset.
+
+## API endpoints
+
+Each feature is served through an endpoint summarized in the table below:
+
+| Endpoint                    | Method | Description                                             | Query parameters                                                                                                                                                                                                                                  |
+|-----------------------------|--------|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [/is-valid](./valid)        | GET    | Check whether a specific dataset is valid.              | `dataset`: name of the dataset                                                                                                                                                                                                                    |
+| [/splits](./splits)         | GET    | Get the list of subsets and splits of a dataset. | `dataset`: name of the dataset                                                                                                                                                                                                                    |
+| [/first-rows](./first_rows) | GET    | Get the first rows of a dataset split.                  | - `dataset`: name of the dataset- `config`: name of the config- `split`: name of the split                                                                                                                                                |
+| [/rows](./rows)             | GET    | Get a slice of rows of a dataset split.                 | - `dataset`: name of the dataset- `config`: name of the config- `split`: name of the split- `offset`: offset of the slice- `length`: length of the slice (maximum 100)                                                            |
+| [/search](./search)         | GET    | Search text in a dataset split.                         | - `dataset`: name of the dataset- `config`: name of the config- `split`: name of the split- `query`: text to search for                                                                                                           |
+| [/filter](./filter)         | GET    | Filter rows in a dataset split.                         | - `dataset`: name of the dataset- `config`: name of the config- `split`: name of the split- `where`: filter query- `orderby`: order-by clause- `offset`: offset of the slice- `length`: length of the slice (maximum 100) |
+| [/parquet](./parquet)       | GET    | Get the list of parquet files of a dataset.             | `dataset`: name of the dataset                                                                                                                                                                                                                    |
+| [/size](./size)             | GET    | Get the size of a dataset.                              | `dataset`: name of the dataset                                                                                                                                                                                                                    |
+| [/statistics](./statistics) | GET    | Get statistics about a dataset split.                   | - `dataset`: name of the dataset- `config`: name of the config- `split`: name of the split                                                                                                                                                |
+| [/croissant](./croissant)   | GET    | Get Croissant metadata about a dataset.                 | - `dataset`: name of the dataset                                                                                                                                                                                                                  |
+
+There is no installation or setup required to use the dataset viewer API.
+
+  Sign up for a Hugging Face account{" "}
+  if you don't already have one! While you can use the dataset viewer API without a
+  Hugging Face account, you won't be able to access{" "}
+  gated datasets{" "}
+  like{" "}
+  
+    CommonVoice
+  {" "}
+  and ImageNet without
+  providing a user token{" "}
+  which you can find in your user settings.
+
+Feel free to try out the API in [Postman](https://www.postman.com/huggingface/workspace/hugging-face-apis/documentation/23242779-d068584e-96d1-4d92-a703-7cb12cbd8053), [ReDoc](https://redocly.github.io/redoc/?url=https://datasets-server.huggingface.co/openapi.json) or [RapidAPI](https://rapidapi.com/hugging-face-hugging-face-default/api/hugging-face-datasets-api/). This quickstart will show you how to query the endpoints programmatically.
+
+The base URL of the REST API is:
+
+```
+https://datasets-server.huggingface.co
+```
+
+## Private and gated datasets
+
+For [private](https://huggingface.co/docs/hub/repositories-settings#private-repositories) and [gated](https://huggingface.co/docs/hub/datasets-gated) datasets, you'll need to provide your user token in `headers` of your query. Otherwise, you'll get an error message to retry with authentication.
+
+The dataset viewer supports private datasets owned by a [PRO user](https://huggingface.co/pricing) or an [Enterprise Hub organization](https://huggingface.co/enterprise).
+
+```python
+import requests
+headers = {"Authorization": f"Bearer {API_TOKEN}"}
+API_URL = "https://datasets-server.huggingface.co/is-valid?dataset=allenai/WildChat-nontoxic"
+def query():
+    response = requests.get(API_URL, headers=headers)
+    return response.json()
+data = query()
+```
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/is-valid?dataset=allenai/WildChat-nontoxic",
+        {
+            headers: { Authorization: `Bearer ${API_TOKEN}` },
+            method: "GET",
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/is-valid?dataset=allenai/WildChat-nontoxic \
+        -X GET \
+        -H "Authorization: Bearer ${API_TOKEN}"
+```
+
+You'll see the following error if you're trying to access a gated dataset without providing your user token:
+
+```py
+print(data)
+{'error': 'The dataset does not exist, or is not accessible without authentication (private or gated). Please check the spelling of the dataset name or retry with authentication.'}
+```
+
+## Check dataset validity
+
+To check whether a specific dataset is valid, for example, [Rotten Tomatoes](https://huggingface.co/datasets/cornell-movie-review-data/rotten_tomatoes), use the `/is-valid` endpoint:
+
+```python
+import requests
+API_URL = "https://datasets-server.huggingface.co/is-valid?dataset=cornell-movie-review-data/rotten_tomatoes"
+def query():
+    response = requests.get(API_URL)
+    return response.json()
+data = query()
+```
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/is-valid?dataset=cornell-movie-review-data/rotten_tomatoes",
+        {
+            method: "GET"
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/is-valid?dataset=cornell-movie-review-data/rotten_tomatoes \
+        -X GET
+```
+
+This returns whether the dataset provides a preview (see /first-rows), the viewer (see /rows), the search (see /search) and the filter (see /filter), and statistics (see /statistics):
+
+```json
+{ "preview": true, "viewer": true, "search": true, "filter": true, "statistics": true }
+```
+
+## List configurations and splits
+
+The `/splits` endpoint returns a JSON list of the splits in a dataset:
+
+```python
+import requests
+API_URL = "https://datasets-server.huggingface.co/splits?dataset=cornell-movie-review-data/rotten_tomatoes"
+def query():
+    response = requests.get(API_URL)
+    return response.json()
+data = query()
+```
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/splits?dataset=cornell-movie-review-data/rotten_tomatoes",
+        {
+            method: "GET"
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/splits?dataset=cornell-movie-review-data/rotten_tomatoes \
+        -X GET
+```
+
+This returns the available subsets and splits in the dataset:
+
+```json
+{
+  "splits": [
+    { "dataset": "cornell-movie-review-data/rotten_tomatoes", "config": "default", "split": "train" },
+    {
+      "dataset": "cornell-movie-review-data/rotten_tomatoes",
+      "config": "default",
+      "split": "validation"
+    },
+    { "dataset": "cornell-movie-review-data/rotten_tomatoes", "config": "default", "split": "test" }
+  ],
+  "pending": [],
+  "failed": []
+}
+```
+
+## Preview a dataset
+
+The `/first-rows` endpoint returns a JSON list of the first 100 rows of a dataset. It also returns the types of data features ("columns" data types). You should specify the dataset name, subset name (you can find out the subset name from the `/splits` endpoint), and split name of the dataset you'd like to preview:
+
+```python
+import requests
+API_URL = "https://datasets-server.huggingface.co/first-rows?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train"
+def query():
+    response = requests.get(API_URL)
+    return response.json()
+data = query()
+```
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/first-rows?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train",
+        {
+            method: "GET"
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/first-rows?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train \
+        -X GET
+```
+
+This returns the first 100 rows of the dataset:
+
+```json
+{
+  "dataset": "cornell-movie-review-data/rotten_tomatoes",
+  "config": "default",
+  "split": "train",
+  "features": [
+    {
+      "feature_idx": 0,
+      "name": "text",
+      "type": { "dtype": "string", "_type": "Value" }
+    },
+    {
+      "feature_idx": 1,
+      "name": "label",
+      "type": { "names": ["neg", "pos"], "_type": "ClassLabel" }
+    }
+  ],
+  "rows": [
+    {
+      "row_idx": 0,
+      "row": {
+        "text": "the rock is destined to be the 21st century's new \" conan \" and that he's going to make a splash even greater than arnold schwarzenegger , jean-claud van damme or steven segal .",
+        "label": 1
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 1,
+      "row": {
+        "text": "the gorgeously elaborate continuation of \" the lord of the rings \" trilogy is so huge that a column of words cannot adequately describe co-writer/director peter jackson's expanded vision of j . r . r . tolkien's middle-earth .",
+        "label": 1
+      },
+      "truncated_cells": []
+    },
+    ...,
+    ...
+  ]
+}
+```
+
+## Download slices of a dataset
+
+The `/rows` endpoint returns a JSON list of a slice of rows of a dataset at any given location (offset).
+It also returns the types of data features ("columns" data types).
+You should specify the dataset name, subset name (you can find out the subset name from the `/splits` endpoint), the split name and the offset and length of the slice you'd like to download:
+
+```python
+import requests
+API_URL = "https://datasets-server.huggingface.co/rows?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train&offset=150&length=10"
+def query():
+    response = requests.get(API_URL)
+    return response.json()
+data = query()
+```
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/rows?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train&offset=150&length=10",
+        {
+            method: "GET"
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/rows?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train&offset=150&length=10 \
+        -X GET
+```
+
+You can download slices of 100 rows maximum at a time.
+
+The response looks like:
+
+```json
+{
+  "features": [
+    {
+      "feature_idx": 0,
+      "name": "text",
+      "type": { "dtype": "string", "_type": "Value" }
+    },
+    {
+      "feature_idx": 1,
+      "name": "label",
+      "type": { "names": ["neg", "pos"], "_type": "ClassLabel" }
+    }
+  ],
+  "rows": [
+    {
+      "row_idx": 150,
+      "row": {
+        "text": "enormously likable , partly because it is aware of its own grasp of the absurd .",
+        "label": 1
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 151,
+      "row": {
+        "text": "here's a british flick gleefully unconcerned with plausibility , yet just as determined to entertain you .",
+        "label": 1
+      },
+      "truncated_cells": []
+    },
+    ...,
+    ...
+  ],
+  "num_rows_total": 8530,
+  "num_rows_per_page": 100,
+  "partial": false
+}
+```
+
+## Search text in a dataset
+
+The `/search` endpoint returns a JSON list of a slice of rows of a dataset that match a text query. The text is searched in the columns of type `string`, even if the values are nested in a dictionary.
+It also returns the types of data features ("columns" data types). The response format is the same as the /rows endpoint.
+You should specify the dataset name, subset name (you can find out the subset name from the `/splits` endpoint), the split name and the search query you'd like to find in the text columns:
+
+```python
+import requests
+API_URL = "https://datasets-server.huggingface.co/search?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train&query=cat"
+def query():
+    response = requests.get(API_URL)
+    return response.json()
+data = query()
+```
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/search?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train&query=cat",
+        {
+            method: "GET"
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/search?dataset=cornell-movie-review-data/rotten_tomatoes&config=default&split=train&query=cat \
+        -X GET
+```
+
+You can get slices of 100 rows maximum at a time, and you can ask for other slices using the `offset` and `length` parameters, as for the `/rows` endpoint.
+
+The response looks like:
+
+```json
+{
+  "features": [
+    {
+      "feature_idx": 0,
+      "name": "text",
+      "type": { "dtype": "string", "_type": "Value" }
+    },
+    {
+      "feature_idx": 1,
+      "name": "label",
+      "type": { "dtype": "int64", "_type": "Value" }
+    }
+  ],
+  "rows": [
+    {
+      "row_idx": 9,
+      "row": {
+        "text": "take care of my cat offers a refreshingly different slice of asian cinema .",
+        "label": 1
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 472,
+      "row": {
+        "text": "[ \" take care of my cat \" ] is an honestly nice little film that takes us on an examination of young adult life in urban south korea through the hearts and minds of the five principals .",
+        "label": 1
+      },
+      "truncated_cells": []
+    },
+    ...,
+    ...
+  ],
+  "num_rows_total": 12,
+  "num_rows_per_page": 100,
+  "partial": false
+}
+```
+
+## Access Parquet files
+
+The dataset viewer converts every dataset on the Hub to the [Parquet](https://parquet.apache.org/) format. The `/parquet` endpoint returns a JSON list of the Parquet URLs for a dataset:
+
+```python
+import requests
+API_URL = "https://datasets-server.huggingface.co/parquet?dataset=cornell-movie-review-data/rotten_tomatoes"
+def query():
+    response = requests.get(API_URL)
+    return response.json()
+data = query()
+```
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/parquet?dataset=cornell-movie-review-data/rotten_tomatoes",
+        {
+            method: "GET"
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/parquet?dataset=cornell-movie-review-data/rotten_tomatoes \
+        -X GET
+```
+
+This returns a URL to the Parquet file for each split:
+
+```json
+{
+  "parquet_files": [
+    {
+      "dataset": "cornell-movie-review-data/rotten_tomatoes",
+      "config": "default",
+      "split": "test",
+      "url": "https://huggingface.co/datasets/cornell-movie-review-data/rotten_tomatoes/resolve/refs%2Fconvert%2Fparquet/default/test/0000.parquet",
+      "filename": "0000.parquet",
+      "size": 92206
+    },
+    {
+      "dataset": "cornell-movie-review-data/rotten_tomatoes",
+      "config": "default",
+      "split": "train",
+      "url": "https://huggingface.co/datasets/cornell-movie-review-data/rotten_tomatoes/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet",
+      "filename": "0000.parquet",
+      "size": 698845
+    },
+    {
+      "dataset": "cornell-movie-review-data/rotten_tomatoes",
+      "config": "default",
+      "split": "validation",
+      "url": "https://huggingface.co/datasets/cornell-movie-review-data/rotten_tomatoes/resolve/refs%2Fconvert%2Fparquet/default/validation/0000.parquet",
+      "filename": "0000.parquet",
+      "size": 90001
+    }
+  ],
+  "pending": [],
+  "failed": [],
+  "partial": false
+}
+```
+
+## Get the size of the dataset
+
+The `/size` endpoint returns a JSON with the size (number of rows and size in bytes) of the dataset, and for every subset and split:
+
+```python
+import requests
+API_URL = "https://datasets-server.huggingface.co/size?dataset=cornell-movie-review-data/rotten_tomatoes"
+def query():
+    response = requests.get(API_URL)
+    return response.json()
+data = query()
+````
+
+```js
+import fetch from "node-fetch";
+async function query(data) {
+    const response = await fetch(
+        "https://datasets-server.huggingface.co/size?dataset=cornell-movie-review-data/rotten_tomatoes",
+        {
+            method: "GET"
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+query().then((response) => {
+    console.log(JSON.stringify(response));
+});
+```
+
+```curl
+curl https://datasets-server.huggingface.co/size?dataset=cornell-movie-review-data/rotten_tomatoes \
+        -X GET
+```
+
+This returns the size of the dataset, and for every subset and split:
+
+```json
+{
+  "size": {
+    "dataset": {
+      "dataset": "cornell-movie-review-data/rotten_tomatoes",
+      "num_bytes_original_files": 487770,
+      "num_bytes_parquet_files": 881052,
+      "num_bytes_memory": 1345449,
+      "num_rows": 10662
+    },
+    "configs": [
+      {
+        "dataset": "cornell-movie-review-data/rotten_tomatoes",
+        "config": "default",
+        "num_bytes_original_files": 487770,
+        "num_bytes_parquet_files": 881052,
+        "num_bytes_memory": 1345449,
+        "num_rows": 10662,
+        "num_columns": 2
+      }
+    ],
+    "splits": [
+      {
+        "dataset": "cornell-movie-review-data/rotten_tomatoes",
+        "config": "default",
+        "split": "train",
+        "num_bytes_parquet_files": 698845,
+        "num_bytes_memory": 1074806,
+        "num_rows": 8530,
+        "num_columns": 2
+      },
+      {
+        "dataset": "cornell-movie-review-data/rotten_tomatoes",
+        "config": "default",
+        "split": "validation",
+        "num_bytes_parquet_files": 90001,
+        "num_bytes_memory": 134675,
+        "num_rows": 1066,
+        "num_columns": 2
+      },
+      {
+        "dataset": "cornell-movie-review-data/rotten_tomatoes",
+        "config": "default",
+        "split": "test",
+        "num_bytes_parquet_files": 92206,
+        "num_bytes_memory": 135968,
+        "num_rows": 1066,
+        "num_columns": 2
+      }
+    ]
+  },
+  "pending": [],
+  "failed": [],
+  "partial": false
+}
+```

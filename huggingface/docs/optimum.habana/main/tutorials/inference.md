@@ -1,0 +1,63 @@
+# Run Inference
+
+This section shows how to run inference-only workloads on Intel Gaudi accelerator.
+
+An effective quick start would be to review the inference examples provided in the Optimum for Intel Gaudi
+[here].
+
+You can also explore the 
+[examples in the Optimum for Intel Gaudi repository]((/examples)).
+While the examples folder includes both training and inference, the inference-specific content
+provides valuable guidance for optimizing and running workloads on Intel Gaudi accelerators.
+
+For more advanced information about how to speed up inference, check out [this guide](../usage_guides/accelerate_inference).
+
+## With GaudiTrainer
+
+You can find below a template to perform inference with a `GaudiTrainer` instance where we want to compute the accuracy over the given dataset:
+
+```python
+import evaluate
+
+metric = evaluate.load("accuracy")
+
+# You can define your custom compute_metrics function. It takes an `EvalPrediction` object (a namedtuple with a
+# predictions and label_ids field) and has to return a dictionary string to float.
+def my_compute_metrics(p):
+    return metric.compute(predictions=np.argmax(p.predictions, axis=1), references=p.label_ids)
+
+# Trainer initialization
+trainer = GaudiTrainer(
+        model=my_model,
+        gaudi_config=my_gaudi_config,
+        args=my_args,
+        train_dataset=None,
+        eval_dataset=eval_dataset,
+        compute_metrics=my_compute_metrics,
+        tokenizer=my_tokenizer,
+        data_collator=my_data_collator,
+    )
+
+# Run inference
+metrics = trainer.evaluate()
+```
+
+The variable `my_args` should contain some inference-specific arguments, you can take a look [here](https://huggingface.co/docs/transformers/main/en/main_classes/trainer#transformers.TrainingArguments.set_evaluate) to see the arguments that can be interesting to set for inference.
+
+## In our Examples
+
+All [our examples](/examples) contain instructions for running inference with a given model on a given dataset.
+The reasoning is the same for every example: run the example script with `--do_eval` and `--per_device_eval_batch_size` and without `--do_train`.
+A simple template is the following:
+```bash
+PT_HPU_LAZY_MODE=1 python path_to_the_example_script \
+  --model_name_or_path my_model_name \
+  --gaudi_config_name my_gaudi_config_name \
+  --dataset_name my_dataset_name \
+  --do_eval \
+  --per_device_eval_batch_size my_batch_size \
+  --output_dir path_to_my_output_dir \
+  --use_habana \
+  --use_lazy_mode \
+  --use_hpu_graphs_for_inference
+```

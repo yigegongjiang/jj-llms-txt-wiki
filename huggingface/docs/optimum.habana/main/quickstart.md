@@ -1,0 +1,265 @@
+# Quickstart
+
+Running your AI workloads on Intel® Gaudi® accelerators can be accomplished in just a few simple steps.
+In this quick guide, we show how to run inference with GPT-2 model on Intel Gaudi 2 accelerators using the 🤗 Optimum for Intel Gaudi library.
+
+Optimum for Intel Gaudi library is optimized for running various AI workloads on Intel Gaudi accelerators and it contains fully documented
+inference, training and fine-tuning examples. Please refer to the [Optimum for Intel Gaudi GitHub](https://github.com/huggingface/optimum-habana)
+page for more information.
+
+## Accessing Intel Gaudi AI Accelerator
+To access an Intel Gaudi AI accelerator node in the Intel® Tiber™ AI Cloud, you will go to
+[Intel Tiber AI Cloud](https://console.cloud.intel.com/hardware) and access the hardware instances to select the Intel Gaudi AI accelerator
+platform for deep learning and follow the steps to start and connect to the node.
+
+## Docker Setup
+
+Now that you have access to the node, you will use the latest Intel Gaudi AI Accelerator docker image by executing the docker run command which will
+automatically download and run the docker. At the time of writing this guide, latest Gaudi docker version was 1.22.0:
+
+```bash
+release=1.22.0
+os=ubuntu22.04
+torch=2.7.1
+docker_image=vault.habana.ai/gaudi-docker/$release/$os/habanalabs/pytorch-installer-$torch:latest
+```
+
+Visit Intel Gaudi AI Accelerator Release Notes
+page to get the latest Intel Gaudi AI accelerator software release version. Alternatively, check
+https://vault.habana.ai/ui/native/gaudi-docker
+for the list of all released Intel® Gaudi® AI accelerator docker images.
+
+Execute docker run command:
+```bash
+docker run -itd \
+    --name Gaudi_Docker \
+    --runtime=habana \
+    -e HABANA_VISIBLE_DEVICES=all \
+    -e OMPI_MCA_btl_vader_single_copy_mechanism=none \
+    --cap-add=sys_nice \
+    --net=host \
+    --ipc=host \
+    ${docker_image}
+```
+
+## Optimum for Intel Gaudi Setup
+
+Check latest release of Optimum for Intel Gaudi [here](https://github.com/huggingface/optimum-habana/releases).
+At the time of writing this guide, latest Optimum for Intel Gaudi release version was v1.19.1, which is paired with Intel Gaudi Software release
+version 1.22.0.  Install Optimum for Intel Gaudi as follows:
+
+```bash
+git clone -b v1.19.1 https://github.com/huggingface/optimum-habana
+pip install ./optimum-habana
+```
+
+All available examples are under [optimum-habana/examples](/examples).
+
+Here is [text-generation](/examples/text-generation) example,
+to run Llama-2 7B text generation example on Gaudi, complete the prerequisite setup:
+```bash
+cd ~/optimum-habana/examples/text-generation
+pip install -r requirements.txt
+```
+
+To be able to run gated models like [Llama-2 7B](https://huggingface.co/meta-llama/Llama-2-7b-hf), you should:
+- Have a 🤗 account
+- Agree to the terms of use of the model in its [model card](https://huggingface.co/meta-llama/Llama-2-7b-hf)
+- Set your token as explained [here](https://huggingface.co/docs/hub/security-tokens)
+- Login to your account using the HF CLI: run `huggingface-cli login` before launching your script
+
+## Single Device Inference
+
+Run single Gaudi device (HPU) inference with Llama-2 7B model:
+```bash
+PT_HPU_LAZY_MODE=1 python run_generation.py \
+    --model_name_or_path meta-llama/Llama-2-7b-hf \
+    --use_hpu_graphs \
+    --use_kv_cache \
+    --max_new_tokens 100 \
+    --do_sample \
+    --prompt "Here is my prompt"
+```
+
+The list of all possible arguments can be obtained running the script with --help
+
+## Multi-Device Inference
+
+With a multi-device Gaudi system, such as one with 8 HPUs, you can perform distributed inference using libraries like
+Microsoft® DeepSpeed. Gaudi-specific fork of the library is maintained by Intel at
+[https://github.com/HabanaAI/DeepSpeed](https://github.com/HabanaAI/DeepSpeed).
+
+To install the library compatible with the same Gaudi software release stack, use:
+```bash
+pip install git+https://github.com/HabanaAI/DeepSpeed.git@1.22.0
+```
+
+With DeepSpeed successfully installed we can now run a distributed GPT-2 inference on an 8 HPU system as follows:
+```bash
+number_of_devices=8 \
+PT_HPU_LAZY_MODE=1 python ../gaudi_spawn.py --use_deepspeed --world_size ${number_of_devices} \
+run_generation.py \
+    --model_name_or_path meta-llama/Llama-2-7b-hf \
+    --use_hpu_graphs \
+    --use_kv_cache \
+    --max_new_tokens=100 \
+    --do_sample \
+    --prompt="Here is my prompt"
+```
+
+## Training on Gaudi
+
+🤗 Optimum for Intel Gaudi contains a number of examples demonstrating single and multi Gaudi device training/fine-tuning.
+
+For example, a number of language models can be trained with the scripts provided
+[language modeling examples section](/examples/language-modeling).
+
+As an illustration, let us run GPT-2 single and multi card training examples on Gaudi.
+
+Install prerequisites with:
+```bash
+cd ~/optimum-habana/examples/language-modeling
+pip install -r requirements.txt
+```
+
+To train GPT-2 model on a single card, use:
+```bash
+PT_HPU_LAZY_MODE=1 python run_clm.py \
+    --model_name_or_path gpt2 \
+    --dataset_name wikitext \
+    --dataset_config_name wikitext-2-raw-v1 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 4 \
+    --do_train \
+    --do_eval \
+    --output_dir /tmp/test-clm \
+    --gaudi_config_name Habana/gpt2 \
+    --use_habana \
+    --use_lazy_mode \
+    --use_hpu_graphs_for_inference \
+    --throughput_warmup_steps 3
+```
+
+To train GPT-2 model using multi-card Gaudi system:
+```bash
+number_of_devices=8 \
+PT_HPU_LAZY_MODE=1 python ../gaudi_spawn.py --use_deepspeed --world_size ${number_of_devices} \
+run_clm.py \
+    --model_name_or_path gpt2 \
+    --dataset_name wikitext \
+    --dataset_config_name wikitext-2-raw-v1 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 4 \
+    --do_train \
+    --do_eval \
+    --output_dir /tmp/test-clm \
+    --gaudi_config_name Habana/gpt2 \
+    --use_habana \
+    --use_lazy_mode \
+    --use_hpu_graphs_for_inference \
+    --gradient_checkpointing \
+    --use_cache False \
+    --throughput_warmup_steps 3
+```
+
+## Diffusion Workloads
+
+🤗 Optimum for Intel Gaudi also features HPU-optimized support for the 🤗 Diffusers library.
+Thus, you can deploy Stable Diffusion and similar diffusion models on Gaudi and enable
+text-to-image generation and other diffusion-based workloads.
+
+Before running Stable Diffusion inference example on Gaudi, complete the prerequisite setup:
+```bash
+cd ~/optimum-habana/examples/stable-diffusion
+pip install -r requirements.txt
+```
+
+Here is an example of running Stable Diffusion text to image inference on Gaudi:
+```bash
+PT_HPU_LAZY_MODE=1 python text_to_image_generation.py \
+    --model_name_or_path CompVis/stable-diffusion-v1-4 \
+    --prompts "An image of a squirrel in Picasso style" \
+    --num_images_per_prompt 10 \
+    --batch_size 1 \
+    --image_save_dir /tmp/stable_diffusion_images \
+    --use_habana \
+    --use_hpu_graphs \
+    --gaudi_config Habana/stable-diffusion \
+    --bf16
+```
+
+Also, here is an example of modifying a basic 🤗 Diffusers Stable Diffusion pipeline call to work with Gaudi
+using the Optimum for Intel Gaudi library:
+```diff
+- from diffusers import DDIMScheduler, StableDiffusionPipeline
++ from optimum.habana.diffusers import GaudiDDIMScheduler, GaudiStableDiffusionPipeline
+
+model_name = "CompVis/stable-diffusion-v1-4"
+
+- scheduler = DDIMScheduler.from_pretrained(model_name, subfolder="scheduler")
++ scheduler = GaudiDDIMScheduler.from_pretrained(model_name, subfolder="scheduler")
+
+- pipeline = StableDiffusionPipeline.from_pretrained(
++ pipeline = GaudiStableDiffusionPipeline.from_pretrained(
+    model_name,
+    scheduler=scheduler,
++   use_habana=True,
++   use_hpu_graphs=True,
++   gaudi_config="Habana/stable-diffusion",
+)
+
+outputs = pipeline(
+    ["An image of a squirrel in Picasso style"],
+    num_images_per_prompt=16,
++   batch_size=4,
+)
+```
+
+In addition, sample scripts for fine-tuning diffusion models are given in
+[Stable Diffusion training section](/examples/stable-diffusion/training).
+
+A more comprehensive list of examples in Optimum for Intel Gaudi is given next.
+
+## Ready-to-Use Examples
+
+Now that you have run a full inference case, you can go back to the
+[Optimum for Intel Gaudi validated models](https://github.com/huggingface/optimum-habana?tab=readme-ov-file#validated-models)
+to see more options for running inference.
+
+Here are examples for various modalities and tasks that can be used out of the box:
+
+- **Text**
+  - [language modeling](/examples/language-modeling)
+  - [multi node training](/examples/multi-node-training)
+  - [protein folding](/examples/protein-folding)
+  - [question answering](/examples/question-answering)
+  - [sentence transformers training](/examples/sentence-transformers-training)
+  - [summarization](/examples/summarization)
+  - [table detection](/examples/table-detection)
+  - [text classification](/examples/text-classification)
+  - [text feature extraction](/examples/text-feature-extraction)
+  - [text generation](/examples/text-generation)
+  - [translation](/examples/translation)
+  - [trl](/examples/trl)
+
+- **Audio**
+  - [audio classification](/examples/audio-classification)
+  - [speech recognition](/examples/speech-recognition)
+  - [text to speech](/examples/text-to-speech)
+
+- **Images**
+  - [object detection](/examples/object-detection)
+  - [object segementation](/examples/object-segementation)
+  - [image classification](/examples/image-classification)
+  - [image to text](/examples/image-to-text)
+  - [contrastive image text](/examples/contrastive-image-text)
+  - [stable diffusion](/examples/stable-diffusion)
+  - [visual question answering](/examples/visual-question-answering)
+  - [zero-shot object detection](/examples/zero-shot-object-detection)
+
+- **Video**
+  - [stable-video-diffusion](/examples/stable-diffusion)
+  - [video-classification](/examples/video-classification)
+
+To learn more about how to adapt 🤗 Transformers or Diffusers scripts for Intel Gaudi, check out
+[Script Adaptation](https://huggingface.co/docs/optimum/habana/usage_guides/script_adaptation) guide.

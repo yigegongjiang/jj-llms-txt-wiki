@@ -1,0 +1,298 @@
+# Export a model to Neuron
+
+## Summary
+
+Exporting a PyTorch model to Neuron model is as simple as
+
+```bash
+optimum-cli export neuron \
+  --model bert-base-uncased \
+  --sequence_length 128 \
+  --batch_size 1 \
+  bert_neuron/
+```
+
+Check out the help for more options:
+
+```bash
+optimum-cli export neuron --help
+```
+
+## Why compile to Neuron model?
+
+AWS provides two generations of the Trainium/Inferentia accelerator built for machine learning inference with higher throughput, lower latency but lower cost: [inf2 (NeuronCore-v2)](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/general/arch/neuron-hardware/inf2-arch.html).
+
+In production environments, to deploy 🤗 [Transformers](https://huggingface.co/docs/transformers/index) models on Neuron devices, you need to compile your models and export them to a serialized format before inference. Through Ahead-Of-Time (AOT) compilation with Neuron Compiler( [neuronx-cc](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/release-notes/compiler/neuronx-cc/index.html) or [neuron-cc](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/release-notes/compiler/neuron-cc/neuron-cc.html) ), your models will be converted to serialized and optimized [TorchScript modules](https://pytorch.org/docs/stable/generated/torch.jit.ScriptModule.html).
+
+Although pre-compilation avoids overhead during the inference, a compiled Neuron model has some limitations:
+* The input shapes and data types used during the compilation cannot be changed.
+* Neuron models are specialized for each hardware and SDK version, which means:
+  * Models compiled with Neuron can no longer be executed in non-Neuron environment.
+  * Models compiled for trn2 (NeuronCore-v3) are not compatible with inf2 (NeuronCore-v2), and vice versa.
+  * Models compiled for an SDK version are (generally) not compatible with another SDK version.
+
+In this guide, we'll show you how to export your models to serialized models optimized for Neuron devices.
+
+🤗 Optimum provides support for the Neuron export by leveraging configuration objects.
+These configuration objects come ready made for a number of model architectures, and are designed to be easily extendable to other architectures.
+
+**To check the supported architectures, go to the [configuration reference page](../package_reference/configuration).**
+
+## Exporting a model to Neuron using the CLI
+
+To export a 🤗 Transformers model to Neuron, you'll first need to install some extra dependencies:
+
+**For Inf2**
+
+```bash
+pip install optimum-neuron[neuronx]
+```
+
+The Optimum Neuron export can be used through Optimum command-line:
+
+```bash
+optimum-cli export neuron --help
+```
+
+### Exporting standard (non-LLM) models
+
+Most models present on the Hugging Face hub can be straightforwardly exported using torch trace, then converted to serialized and optimized TorchScript modules.
+
+**NEFF**: Neuron Executable File Format which is a binary executable on Neuron devices.
+
+When exporting a model, two sets of export arguments must be passed:
+
+- `compiler_args` are optional arguments for the compiler, these arguments usually control how the compiler makes tradeoff between the inference performance (latency and throughput) and the accuracy,
+- `input_shapes` are mandatory static shape information that you need to send to the neuron compiler.
+
+Please type the following command to see all export parameters:
+
+```bash
+optimum-cli export neuron -h
+```
+
+Exporting a standard NLP model can be done as follows:
+
+```bash
+optimum-cli export neuron --model distilbert-base-uncased-distilled-squad \
+                          --batch_size 1 --sequence_length 16 \
+                          --auto_cast matmul --auto_cast_type fp16 \
+                          distilbert_base_uncased_squad_neuron/
+```
+
+Here the model was exported with a static input shape of `(1, 16)`, and with compiler arguments specifying
+that matmul operation must be performed with `float16` precision for faster inference.
+
+You can also compile the model on a CPU-only instance. In this case, specify the target instance type by passing `--instance_type` from `{inf2, trn1, trn1n, trn2}`.
+
+If you are using a `NeuronModelForXXX` class to export the model on a CPU-only instance, you must define an environment variable `NEURON_PLATFORM_TARGET_OVERRIDE` before importing anything from the `neuronx_distributed` library, and specify the target instance type. For example:
+
+```python
+import os
+os.environ["NEURON_PLATFORM_TARGET_OVERRIDE"] = "inf2"
+```
+
+After export, you should see the following logs which validate the model on Neuron devices by comparing with PyTorch model on CPU:
+
+```bash
+Validating Neuron model...
+        -[✓] Neuron model output names match reference model (last_hidden_state)
+        - Validating Neuron Model output "last_hidden_state":
+                -[✓] (1, 16, 32) matches (1, 16, 32)
+                -[✓] all values close (atol: 0.0001)
+The Neuronx export succeeded and the exported model was saved at: distilbert_base_uncased_squad_neuron/
+```
+
+This exports a neuron-compiled TorchScript module of the checkpoint defined by the `--model` argument.
+
+As you can see, the task was automatically detected. This was possible because the model was on the Hub. For local models, providing the `--task` argument is needed or it will default to the model architecture without any task specific head:
+
+```bash
+optimum-cli export neuron --model local_path --task question-answering --batch_size 1 --sequence_length 16 --dynamic-batch-size distilbert_base_uncased_squad_neuron/
+```
+
+Note that providing the `--task` argument for a model on the Hub will disable the automatic task detection. The resulting `model.neuron` file, can then be loaded and run on Neuron devices.
+
+For each model architecture, you can find the list of supported tasks via the `~exporters.tasks.TasksManager`. For example, for DistilBERT, for the Neuron export, we have:
+
+```python
+>>> from optimum.exporters.tasks import TasksManager
+>>> from optimum.exporters.neuron.model_configs import *  # Register neuron specific configs to the TasksManager
+
+>>> distilbert_tasks = list(TasksManager.get_supported_tasks_for_model_type("distilbert", "neuron").keys())
+>>> print(distilbert_tasks)
+['feature-extraction', 'fill-mask', 'multiple-choice', 'question-answering', 'text-classification', 'token-classification']
+```
+
+You can then pass one of these tasks to the `--task` argument in the `optimum-cli export neuron` command, as mentioned above.
+
+Once exported, the neuron model can be used for inference directly with the `NeuronModelForXXX` class:
+
+```python
+>>> from transformers import AutoTokenizer
+>>> from optimum.neuron import NeuronModelForSequenceClassification
+
+>>> tokenizer = AutoTokenizer.from_pretrained("./distilbert-base-uncased-finetuned-sst-2-english_neuron/")
+>>> model = NeuronModelForSequenceClassification.from_pretrained("./distilbert-base-uncased-finetuned-sst-2-english_neuron/")
+
+>>> inputs = tokenizer("Hamilton is considered to be the best musical of human history.", return_tensors="pt")
+>>> logits = model(**inputs).logits
+>>> print(model.config.id2label[logits.argmax().item()])
+'POSITIVE'
+```
+
+As you see, there is no need to pass the neuron arguments used during the export as they are
+saved in a `config.json` file, and will be restored automatically by `NeuronModelForXXX` class.
+
+Be careful, inputs are always padded to the shapes used for the compilation, and the padding brings computation overhead.
+Adjust the static shapes to be higher than the shape of the inputs that you will feed into the model during the inference, but not much more.
+
+### Exporting Stable Diffusion to Neuron
+
+With the Optimum CLI you can compile components in the Stable Diffusion pipeline to gain acceleration on neuron devices during the inference.
+
+So far, we support the export of following components in the pipeline:
+
+* CLIP text encoder
+* U-Net
+* VAE encoder
+* VAE decoder
+
+"These blocks are chosen because they represent the bulk of the compute in the pipeline, and performance benchmarking has shown that running them on Neuron yields significant performance benefit."
+
+Besides, don't hesitate to tweak the compilation configuration to find the best tradeoff between performance v.s accuracy in your use case. By default, we suggest casting FP32 matrix multiplication operations to BF16 which offers good performance with moderate sacrifice of the accuracy. Check out the guide from [AWS Neuron documentation](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/general/appnotes/neuronx-cc/neuronx-cc-training-mixed-precision.html#neuronx-cc-training-mixed-precision) to better understand the options for your compilation.
+
+Exporting a stable diffusion checkpoint can be done using the CLI:
+
+```bash
+optimum-cli export neuron --model stabilityai/stable-diffusion-2-1-base \
+  --task stable-diffusion \
+  --batch_size 1 \
+  --height 512 `# height in pixels of generated image, eg. 512, 768` \
+  --width 512 `# width in pixels of generated image, eg. 512, 768` \
+  --num_images_per_prompt 4 `# number of images to generate per prompt, defaults to 1` \
+  --auto_cast matmul `# cast only matrix multiplication operations` \
+  --auto_cast_type bf16 `# cast operations from FP32 to BF16` \
+  sd_neuron/
+```
+
+### Exporting Stable Diffusion XL to Neuron
+
+Similar to Stable Diffusion, you will be able to use Optimum CLI to compile components in the SDXL pipeline for inference on neuron devices.
+
+We support the export of following components in the pipeline to boost the speed:
+
+* Text encoder
+* Second text encoder
+* U-Net (a three times larger UNet than the one in Stable Diffusion pipeline)
+* VAE encoder
+* VAE decoder
+
+"Stable Diffusion XL works especially well with images between 768 and 1024."
+
+Exporting a SDXL checkpoint can be done using the CLI:
+
+```bash
+optimum-cli export neuron --model stabilityai/stable-diffusion-xl-base-1.0 \
+  --task stable-diffusion-xl \
+  --batch_size 1 \
+  --height 1024 `# height in pixels of generated image, eg. 768, 1024` \
+  --width 1024 `# width in pixels of generated image, eg. 768, 1024` \
+  --num_images_per_prompt 4 `# number of images to generate per prompt, defaults to 1` \
+  --auto_cast matmul `# cast only matrix multiplication operations` \
+  --auto_cast_type bf16 `# cast operations from FP32 to BF16` \
+  sd_neuron/
+```
+
+### Exporting LLMs to Neuron
+
+Just like the standard NLP models, you need to specify static parameters when exporting an LLM model:
+
+- `batch_size` is the number of input sequences that the model will accept. Defaults to 1,
+- `sequence_length` is the maximum number of tokens in an input sequence. Defaults to `max_position_embeddings` (`n_positions` for older models).
+- `tensor_parallel_size` is the number of neuron cores used when instantiating the model. Each neuron core has 16 Gb of memory, which means that
+bigger models need to be split on multiple cores. Defaults to 1,
+
+```bash
+optimum-cli export neuron --model meta-llama/Llama-3.2-1B \
+  --batch_size 1 \
+  --sequence_length 4096 \
+  --tensor_parallel_size 2 \
+  llama3_neuron/
+```
+
+The export of LLM models can take much longer than standard models (sometimes more than one hour).
+
+As explained before, the neuron model parameters are static.
+This means in particular that during inference:
+
+- the `batch_size` of the inputs should be lower to the `batch_size` used during export,
+- the `length` of the input sequences should be lower than the `sequence_length` used during export,
+- the maximum number of tokens (input + generated) cannot exceed the `sequence_length` used during export.
+
+Once exported, neuron llm models can simply be reloaded using the `NeuronModelForCausalLM` class.
+As with the original transformers models, use `generate()` instead of `forward()` to generate text sequences.
+
+```diff
+from transformers import AutoTokenizer
+-from transformers import AutoModelForCausalLM
++from optimum.neuron import NeuronModelForCausalLM
+
+# Instantiate and convert to Neuron a PyTorch checkpoint
+-model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B")
++model = NeuronModelForCausalLM.from_pretrained("./llama3-neuron")
+
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B")
+tokenizer.pad_token_id = tokenizer.eos_token_id
+
+tokens = tokenizer("I really wish ", return_tensors="pt")
+with torch.inference_mode():
+    sample_output = model.generate(
+        **tokens,
+        do_sample=True,
+        max_new_tokens=256,
+        temperature=0.7,
+    )
+    outputs = [tokenizer.decode(tok) for tok in sample_output]
+    print(outputs)
+```
+
+The generation is highly configurable. Please refer to https://huggingface.co/docs/transformers/generation_strategies for details.
+
+Please be aware that:
+
+- for each model architecture, default values are provided for all parameters, but values passed to the `generate` method will take precedence,
+- the generation parameters can be stored in a `generation_config.json` file. When such a file is present in model directory,
+it will be parsed to set the default parameters (the values passed to the `generate` method still take precedence).
+
+## Exporting neuron models using NeuronX docker images
+
+The NeuronX vLLM image includes not only NeuronX runtime, but also all packages and tools required to export Neuron models.
+
+Use the following command to export a model to Neuron using a vLLM image:
+
+```
+docker run --entrypoint optimum-cli \
+       -v $(pwd)/data:/data \
+       --privileged \
+       ghcr.io/huggingface/optimum-neuron-vllm:latest \
+       export neuron \
+       --model / \
+       --batch_size 1 \
+       --sequence_length 4096 \
+       --tensor_parallel_size 2 \
+       /data/
+```
+
+The exported model will be saved under `./data/`.
+
+## Exporting options and Docker / SageMaker environment variables
+
+You must make sure that the options used for compilation match the options used for deployment.
+
+```
+SM_ON_MODEL = model
+SM_ON_BATCH_SIZE = batch_size
+SM_ON_SEQUENCE_LENGTH = sequence_length
+SM_ON_TENSOR_PARALLEL_SIZE = tensor_parallel_size
+```

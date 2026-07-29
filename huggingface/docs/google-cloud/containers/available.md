@@ -1,0 +1,31 @@
+# Available DLCs on Google Cloud
+
+Below you can find a listing of all the Deep Learning Containers (DLCs) available on Google Cloud.
+
+The listing below **only contains the latest version of each one of the Hugging Face DLCs**, the full listing of the available published containers in Google Cloud can be found either in the [Google Cloud Deep Learning Containers Documentation](https://cloud.google.com/deep-learning-containers/docs/choosing-container#hugging-face), in the [Google Cloud Artifact Registry](https://console.cloud.google.com/artifacts/docker/deeplearning-platform-release/us/gcr.io) or via the `gcloud container images list --repository="us-docker.pkg.dev/deeplearning-platform-release/gcr.io" | grep "huggingface-"` command.
+
+## Text Generation Inference (TGI)
+
+| Container URI                                                                                                           | Path                                                                                                                                        | Accelerator |
+| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-text-generation-inference-cu124.2-4.ubuntu2204.py311 | [text-generation-inference-gpu.2.4.0](https://github.com/huggingface/Google-Cloud-Containers/tree/main/containers/tgi/gpu/2.4.0/Dockerfile) | GPU         |
+
+## Text Embeddings Inference (TEI)
+
+| Container URI                                                                                                     | Path                                                                                                                                        | Accelerator |
+| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-text-embeddings-inference-cu122.1-6.ubuntu2204 | [text-embeddings-inference-gpu.1.6.0](https://github.com/huggingface/Google-Cloud-Containers/tree/main/containers/tei/gpu/1.6.0/Dockerfile) | GPU         |
+| us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-text-embeddings-inference-cpu.1-6              | [text-embeddings-inference-cpu.1.6.0](https://github.com/huggingface/Google-Cloud-Containers/tree/main/containers/tei/cpu/1.6.0/Dockerfile) | CPU         |
+
+## PyTorch Inference
+
+| Container URI                                                                                                                     | Path                                                                                                                                                                                                              | Accelerator |
+| --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-pytorch-inference-cu121.2-3.transformers.4-48.ubuntu2204.py311 | [huggingface-pytorch-inference-gpu.2.3.1.transformers.4.48.0.py311](https://github.com/huggingface/Google-Cloud-Containers/tree/main/containers/pytorch/inference/gpu/2.3.1/transformers/4.48.0/py311/Dockerfile) | GPU         |
+| us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-pytorch-inference-cpu.2-3.transformers.4-48.ubuntu2204.py311   | [huggingface-pytorch-inference-cpu.2.3.1.transformers.4.48.0.py311](https://github.com/huggingface/Google-Cloud-Containers/tree/main/containers/pytorch/inference/cpu/2.3.1/transformers/4.48.0/py311/Dockerfile) | CPU         |
+
+## PyTorch Training
+
+| Container URI                                                                                                                    | Path                                                                                                                                                                                                            | Accelerator |
+| -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-pytorch-training-cu121.2-3.transformers.4-48.ubuntu2204.py311 | [huggingface-pytorch-training-gpu.2.3.1.transformers.4.48.0.py311](https://github.com/huggingface/Google-Cloud-Containers/tree/main/containers/pytorch/training/gpu/2.3.1/transformers/4.48.0/py311/Dockerfile) | GPU         |
