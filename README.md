@@ -167,6 +167,8 @@ urls = [
 
 `JJ_LLMS_TXT_WIKI_PUSH_URL` 仅作关闭开关（置空 = 不推送），e2e 测试用它保证测试运行永不触网推送。
 
+镜像内容是第三方公开文档，正常文本会被 GitHub secret scanning 误判为 API key 而拒绝推送（如 HuggingFace 的 `Mistral3ForConditionalGeneration` 恰为 32 位字母数字，命中 Mistral key 模式）。源码仓库的 `.github/secret_scanning.yml` 用 `paths-ignore` 排除 `*.md` / `*.txt` / `*.json`；该文件只在默认分支生效，作用于全仓库所有分支的 push，源码扩展名不在排除内。
+
 ## 同步行为
 
 `sync` 默认同步全部站点；传入站点名称时仅同步指定站点。入口 URL path 末段为 `llms-full.txt`（大小写不敏感）时走聚合链路，其他入口走递归链路；query / fragment 不参与识别。多入口站点的入口同类型，链路唯一。
