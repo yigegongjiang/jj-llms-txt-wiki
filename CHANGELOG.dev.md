@@ -7,6 +7,15 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.19.0] - 2026-07-29
+
+### Added
+
+- 新增对「标题 + 下一行裸 URL」这类聚合文档的支持（如 HuggingFace 各文档站），此前会因找不到 `URL:` 标记而整站失败；现在一次请求即可拆出全部页面，比逐页下载快得多。
+  - `full.rs::split` 抽出 `collect_headers`：`Marker`（原 `URL:` 标记）优先，一个都没有才回退 `Bare`（heading + 紧邻裸 URL 行），同一文件不混用，已工作的聚合站行为零变化。
+  - `collect_bare_headers` 只接受 `dominant_level()` 选出的众数标题级别，过滤正文里偶发的「小节标题 + 链接行」；URL 校验 / 去重收敛到 `accept_page_url`。
+  - `Bare` 页头是分隔符不是内容：输出丢弃标题行与 URL 行（正文自带标题），正文为空时回退 `# <title>`；`is_h1` 泛化为 `heading_level`。
+
 ## [0.18.2] - 2026-07-28
 
 ### Fixed

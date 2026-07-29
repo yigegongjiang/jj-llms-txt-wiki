@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.19.0] - 2026-07-29
+
+### Added
+
+- 新增对「标题 + 下一行裸 URL」这类聚合文档的支持（如 HuggingFace 各文档站），此前会因找不到 `URL:` 标记而整站失败；现在一次请求即可拆出全部页面，比逐页下载快得多。
+
 ## [0.18.2] - 2026-07-28
 
 ### Fixed

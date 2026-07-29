@@ -27,11 +27,26 @@ struct Line<'a> {
     code: bool,
 }
 
+/// How a page header declares its URL. A bundle uses exactly one variant; the
+/// marker form wins when both could match, so adding the bare form cannot change
+/// how an already-working bundle is split.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum HeaderKind {
+    /// `URL: <url>` on its own line, below an H1 and an optional quote block.
+    /// Heading and quote block are page content and stay in the output.
+    Marker,
+    /// A bare URL on the line immediately below a heading (HuggingFace style).
+    /// The heading is a bundle-level separator, not page content — every page
+    /// body carries its own title — so it is dropped from the output.
+    Bare,
+}
+
 struct PageHeader {
     heading: usize,
     url_line: usize,
     boundary: usize,
     url: Url,
+    kind: HeaderKind,
 }
 
 pub async fn crawl(
@@ -103,14 +118,62 @@ pub async fn crawl(
 
 fn split(body: &str) -> Result<Vec<FullPage>, String> {
     let lines = scan_lines(body);
+    let headers = collect_headers(&lines)?;
+    if headers.is_empty() {
+        return Err("llms-full.txt contains no valid page headers".to_owned());
+    }
+
+    let mut pages = Vec::with_capacity(headers.len());
+    for (index, header) in headers.iter().enumerate() {
+        let heading = lines[header.heading];
+        let url_line = lines[header.url_line];
+        let end = headers
+            .get(index + 1)
+            .map_or(body.len(), |next| next.boundary);
+        let page_body = trim_newlines(&body[url_line.end..end]);
+        let markdown = match header.kind {
+            HeaderKind::Marker => {
+                let head = body[heading.start..url_line.start].trim_end();
+                if page_body.is_empty() {
+                    format!("{head}\n")
+                } else {
+                    format!("{head}\n\n{page_body}\n")
+                }
+            }
+            // The separator heading is dropped, so a page with no body would
+            // otherwise become an empty file — fall back to its title as an H1.
+            HeaderKind::Bare if page_body.is_empty() => {
+                format!("# {}\n", heading_title(heading.text).unwrap_or_default())
+            }
+            HeaderKind::Bare => format!("{page_body}\n"),
+        };
+        pages.push(FullPage {
+            url: header.url.clone(),
+            markdown,
+        });
+    }
+    Ok(pages)
+}
+
+/// Pick the bundle's header variant and collect its pages. Marker headers win:
+/// a bundle that declares even one `URL:` marker is split exactly as before, so
+/// the bare-URL form can never reinterpret an already-working bundle.
+fn collect_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String> {
+    let markers = collect_marker_headers(lines)?;
+    if markers.is_empty() {
+        return collect_bare_headers(lines);
+    }
+    Ok(markers)
+}
+
+fn collect_marker_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String> {
     let mut seen_urls = HashSet::new();
     let mut headers = Vec::new();
-
     for (heading, line) in lines.iter().enumerate() {
-        if line.code || !is_h1(line.text) {
+        if line.code || heading_level(line.text) != Some(1) {
             continue;
         }
-        let Some(url_line) = header_url_line(&lines, heading) else {
+        let Some(url_line) = header_url_line(lines, heading) else {
             continue;
         };
         let raw = url_marker(lines[url_line].text).expect("header URL marker");
@@ -120,56 +183,91 @@ fn split(body: &str) -> Result<Vec<FullPage>, String> {
                 lines[url_line].number
             ));
         }
-        if has_encoded_unsafe_segment(raw) {
-            return Err(format!(
-                "unsafe page URL at line {}: {raw}",
-                lines[url_line].number
-            ));
-        }
-        let url = parse_entry_url(raw).map_err(|error| {
-            format!(
-                "invalid page URL at line {}: {error}",
-                lines[url_line].number
-            )
-        })?;
-        let canonical = CanonicalUrl::new(url.clone());
-        if !seen_urls.insert(canonical) {
-            return Err(format!(
-                "duplicate page URL at line {}: {url}",
-                lines[url_line].number
-            ));
-        }
+        let url = accept_page_url(raw, lines[url_line].number, &mut seen_urls)?;
         headers.push(PageHeader {
             heading,
             url_line,
-            boundary: page_boundary(&lines, heading),
+            boundary: page_boundary(lines, heading),
             url,
+            kind: HeaderKind::Marker,
         });
     }
+    Ok(headers)
+}
 
-    if headers.is_empty() {
-        return Err("llms-full.txt contains no valid page headers".to_owned());
-    }
-    let mut pages = Vec::with_capacity(headers.len());
-    for (index, header) in headers.iter().enumerate() {
-        let heading = lines[header.heading];
-        let url_line = lines[header.url_line];
-        let end = headers
-            .get(index + 1)
-            .map_or(body.len(), |next| next.boundary);
-        let head = body[heading.start..url_line.start].trim_end();
-        let page_body = trim_newlines(&body[url_line.end..end]);
-        let markdown = if page_body.is_empty() {
-            format!("{head}\n")
-        } else {
-            format!("{head}\n\n{page_body}\n")
-        };
-        pages.push(FullPage {
-            url: header.url.clone(),
-            markdown,
+/// Headers of the form `### Title` immediately followed by a bare URL line.
+///
+/// The pattern is loose enough to appear by accident inside prose, so only the
+/// dominant heading level is accepted: a bundle separates its pages at one fixed
+/// level, and a stray `#### Ref` + link in body text is a different one. That
+/// leaves same-level accidents, which then have to carry a page-shaped URL and
+/// stay unique across the bundle — cheap enough to keep a rare false page from
+/// stealing a slice of its neighbour.
+fn collect_bare_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String> {
+    let candidates: Vec<(usize, usize)> = lines
+        .iter()
+        .enumerate()
+        .filter_map(|(heading, line)| {
+            if line.code {
+                return None;
+            }
+            let level = heading_level(line.text)?;
+            let next = lines.get(heading + 1)?;
+            (!next.code && bare_url(next.text).is_some()).then_some((heading, level))
+        })
+        .collect();
+    let Some(level) = dominant_level(&candidates) else {
+        return Ok(Vec::new());
+    };
+
+    let mut seen_urls = HashSet::new();
+    let mut headers = Vec::new();
+    for (heading, _) in candidates.iter().filter(|(_, found)| *found == level) {
+        let url_line = heading + 1;
+        let raw = bare_url(lines[url_line].text).expect("bare header URL");
+        let url = accept_page_url(raw, lines[url_line].number, &mut seen_urls)?;
+        headers.push(PageHeader {
+            heading: *heading,
+            url_line,
+            boundary: page_boundary(lines, *heading),
+            url,
+            kind: HeaderKind::Bare,
         });
     }
-    Ok(pages)
+    Ok(headers)
+}
+
+/// The heading level carrying the most header candidates; ties go to whichever
+/// level appears first, so the choice never depends on iteration order.
+fn dominant_level(candidates: &[(usize, usize)]) -> Option<usize> {
+    let mut counts = [0usize; 7];
+    for (_, level) in candidates {
+        counts[*level] += 1;
+    }
+    let most = *counts.iter().max()?;
+    if most == 0 {
+        return None;
+    }
+    candidates
+        .iter()
+        .map(|(_, level)| *level)
+        .find(|level| counts[*level] == most)
+}
+
+fn accept_page_url(
+    raw: &str,
+    line: usize,
+    seen: &mut HashSet<CanonicalUrl>,
+) -> Result<Url, String> {
+    if has_encoded_unsafe_segment(raw) {
+        return Err(format!("unsafe page URL at line {line}: {raw}"));
+    }
+    let url = parse_entry_url(raw)
+        .map_err(|error| format!("invalid page URL at line {line}: {error}"))?;
+    if !seen.insert(CanonicalUrl::new(url.clone())) {
+        return Err(format!("duplicate page URL at line {line}: {url}"));
+    }
+    Ok(url)
 }
 
 fn scan_lines(body: &str) -> Vec<Line<'_>> {
@@ -264,13 +362,43 @@ fn page_boundary(lines: &[Line<'_>], heading: usize) -> usize {
     }
 }
 
-fn is_h1(line: &str) -> bool {
-    let Some(line) = markdown_content(line) else {
-        return false;
-    };
-    line.strip_prefix("# ")
-        .or_else(|| line.strip_prefix("#\t"))
-        .is_some_and(|title| !title.trim().is_empty())
+/// ATX heading level (1-6) of a line with a non-empty title, else `None`.
+fn heading_level(line: &str) -> Option<usize> {
+    let content = markdown_content(line)?;
+    let level = content.bytes().take_while(|byte| *byte == b'#').count();
+    if level == 0 || level > 6 {
+        return None;
+    }
+    let title = content.get(level..)?;
+    let title = title
+        .strip_prefix(' ')
+        .or_else(|| title.strip_prefix('\t'))?;
+    (!title.trim().is_empty()).then_some(level)
+}
+
+fn heading_title(line: &str) -> Option<&str> {
+    let content = markdown_content(line)?;
+    let level = heading_level(line)?;
+    Some(content[level..].trim())
+}
+
+/// A line that is nothing but an absolute HTTP(S) URL. Anything alongside it —
+/// prose, Markdown link syntax, a trailing note — disqualifies the line, which
+/// is what keeps ordinary body text from reading as a page header.
+fn bare_url(line: &str) -> Option<&str> {
+    let value = markdown_content(line)?.trim();
+    if value.contains(char::is_whitespace) {
+        return None;
+    }
+    ["http://", "https://"]
+        .iter()
+        .any(|scheme| {
+            value.len() > scheme.len()
+                && value
+                    .get(..scheme.len())
+                    .is_some_and(|prefix| prefix.eq_ignore_ascii_case(scheme))
+        })
+        .then_some(value)
 }
 
 fn url_marker(line: &str) -> Option<&str> {
@@ -338,6 +466,66 @@ mod tests {
     #[test]
     fn accepts_title_only_pages() {
         let pages = split("# Empty\n\nURL: https://example.com/empty\n").unwrap();
+        assert_eq!(pages[0].markdown, "# Empty\n");
+    }
+
+    /// HuggingFace style: an llms.txt-shaped index, then pages separated by a
+    /// heading plus a bare URL. The separator heading is dropped — each body
+    /// carries its own title — and the leading index is not a page.
+    #[test]
+    fn splits_bare_url_headers_and_drops_separators() {
+        let pages = split(concat!(
+            "# Bundle\n\n## Docs\n\n- [One](https://example.com/one.md)\n\n",
+            "### One\nhttps://example.com/one.md\n\n# One\n\nBody one.\n\n",
+            "### Two\nhttps://example.com/two.md\n\n# Two\n\nBody two.\n",
+        ))
+        .unwrap();
+        assert_eq!(pages.len(), 2);
+        assert_eq!(pages[0].url.as_str(), "https://example.com/one.md");
+        assert_eq!(pages[0].markdown, "# One\n\nBody one.\n");
+        assert_eq!(pages[1].markdown, "# Two\n\nBody two.\n");
+    }
+
+    #[test]
+    fn marker_headers_win_over_bare_urls() {
+        let pages = split(
+            "# One\n\nURL: https://example.com/one\n\n### Link\nhttps://example.com/two\n\nBody.\n",
+        )
+        .unwrap();
+        assert_eq!(pages.len(), 1);
+        assert!(pages[0].markdown.contains("https://example.com/two"));
+    }
+
+    /// Only the dominant heading level separates pages: a lone `#### Ref` plus a
+    /// link inside body text is prose, not a page.
+    #[test]
+    fn bare_url_headers_ignore_off_level_and_non_url_lines() {
+        let pages = split(concat!(
+            "### One\nhttps://example.com/one.md\n\n#### Ref\nhttps://example.com/paper\n\nBody.\n\n",
+            "### Two\nhttps://example.com/two.md\n\n## See\n[link](https://example.com/x)\n\nEnd.\n",
+        ))
+        .unwrap();
+        assert_eq!(pages.len(), 2);
+        assert!(pages[0].markdown.contains("#### Ref"));
+        assert!(pages[1].markdown.contains("[link](https://example.com/x)"));
+    }
+
+    #[test]
+    fn bare_url_headers_reject_unsafe_and_duplicate_urls() {
+        for body in [
+            "### One\nhttps://example.com/one.md\n\n### Same\nhttps://example.com/one.md#part\n",
+            "### One\nhttps://example.com/%2e%2e/one.md\n",
+            "### One\nfile:///tmp/one.md\n\n### Two\nfile:///tmp/two.md\n",
+            "### None\nnot-a-url\n",
+            "```text\n### Fake\nhttps://evil.test/fake.md\n```\n",
+        ] {
+            assert!(split(body).is_err(), "{body}");
+        }
+    }
+
+    #[test]
+    fn bare_url_pages_keep_their_title_when_empty() {
+        let pages = split("### Empty\nhttps://example.com/empty.md\n").unwrap();
         assert_eq!(pages[0].markdown, "# Empty\n");
     }
 }
