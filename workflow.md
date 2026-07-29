@@ -21,7 +21,7 @@
 1. 验证：`cargo fmt --all -- --check` + `clippy` + `test`
 2. 写版本：`Cargo.toml` + `Cargo.lock` + `CHANGELOG.md` + `CHANGELOG.dev.md` 同步（与 tag 一致）
 3. 预部署：`./scripts/install-local.sh`
-4. 发布：commit + annotated tag（`-a -m`）+ push `main` + push tag
+4. 发布：commit + annotated tag（`-a -m`）+ push `main` + push tag → push 成功即结束，不验证 CI
 
 ## 1. 验证
 
@@ -63,4 +63,4 @@ git push origin main
 git push origin vX.Y.Z
 ```
 
-tag 推送后 CI：fmt/clippy/test → 构建 macOS arm64/x64 → 生成 `checksums.txt` → 创建 Release。
+push 成功即交付结束，直接收尾。后续 CI（fmt/clippy/test → 构建 macOS arm64/x64 → `checksums.txt` → 创建 Release）由 GitHub 自动完成，不查结果、不等待、不轮询（不用 `gh run watch` / `gh run list` / Release 页面确认）。
