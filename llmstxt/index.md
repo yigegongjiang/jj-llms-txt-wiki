@@ -1,20 +1,34 @@
-# The /llms.txt file
+# The /llms.txt file, v2
 Jeremy Howard
 2024-09-03
 
 ## Background
 
-Large language models increasingly rely on website information, but face
-a critical limitation: context windows are too small to handle most
-websites in their entirety. Converting complex HTML pages with
-navigation, ads, and JavaScript into LLM-friendly plain text is both
-difficult and imprecise.
+Agents now use websites constantly: a coding agent fetches a library’s
+documentation to get an API call right, and a chat assistant with search
+reads pages to answer questions about a product. When this proposal was
+first written in 2024, this was largely a prediction. Today it is
+routine.
 
-While websites serve both human readers and LLMs, the latter benefit
-from more concise, expert-level information gathered in a single,
-accessible location. This is particularly important for use cases like
-development environments, where LLMs need quick access to programming
-documentation and APIs.
+But web pages are built for people. An HTML page wraps its information
+in navigation, ads, and JavaScript, and converting it back into clean
+text is difficult and imprecise. Context windows, while larger than they
+were, are still too small for most websites in their entirety, and every
+wasted token costs time and money. Agents are best served by concise,
+expert-level information gathered in a single, accessible location.
+
+This is v2 of the proposal, updated based on what I learned from two
+years of adoption: thousands of sites publish an llms.txt file,
+[documentation platforms generate one
+automatically](https://www.mintlify.com/docs/ai/llmstxt), and Chrome’s
+Lighthouse [audits sites for
+one](https://developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt)
+as part of its agentic browsing checks. The AI labs themselves publish
+llms.txt files for their own developer docs:
+[OpenAI](https://developers.openai.com/llms.txt),
+[Anthropic](https://docs.anthropic.com/llms.txt), and
+[Gemini](https://ai.google.dev/gemini-api/docs/llms.txt). The
+[Changes](changes.qmd) page describes what changed since v1, and why.
 
 ## Proposal
 
@@ -25,48 +39,54 @@ alt="llms.txt logo" />
 </figure>
 
 We propose adding a `/llms.txt` markdown file to websites to provide
-LLM-friendly content. This file offers brief background information,
-guidance, and links to detailed markdown files.
+LLM-friendly content. The file can be placed at the site root, or at any
+path within it, covering the pages under that path. This file offers
+brief background information, guidance, and links to detailed markdown
+files.
 
 llms.txt markdown is human and LLM readable, but is also in a precise
 format allowing fixed processing methods (i.e. classical programming
 techniques such as parsers and regex).
 
-We furthermore propose that pages on websites that have information that
-might be useful for LLMs to read provide a clean markdown version of
-those pages at the same URL as the original page, but with `.md`
-appended. (URLs without file names should append `index.html.md`
-instead.)
+We furthermore propose that pages with information that agents might
+need provide a clean markdown version of those pages at the same URL as
+the original page, either with `.md` appended (`page.html.md`) or with
+the extension replaced by `.md` (`page.md`). (URLs without file names
+should append `index.html.md` or `index.md` instead.)
+
+To help clients find these files, we recommend using standard link
+relations: `rel="alternate" type="text/markdown"` points to the markdown
+version of a page, and `rel="describedby"` points to the llms.txt file
+that covers it. (An llms.txt file describes all pages under its path, so
+`/docs/llms.txt` covers everything in `/docs/`.) These links can be
+provided as HTML `<link>` elements, or as an HTTP `Link:` response
+header. The header form also works for non-HTML resources, such as the
+markdown files themselves, and can be added in web server or CDN
+configuration without modifying any pages. For example:
+
+    Link: </docs/page.html.md>; rel="alternate"; type="text/markdown", </docs/llms.txt>; rel="describedby"
 
 The [FastHTML project](https://fastht.ml) follows these two proposals
 for its documentation. For instance, here is the [FastHTML docs
-llms.txt](https://www.fastht.ml/docs/llms.txt). And here is an example
-of a [regular HTML docs
-page](https://www.fastht.ml/docs/tutorials/by_example.html), along with
-exact same URL but with [a .md
+llms.txt](https://www.fastht.ml/docs/llms.txt), placed at `/docs/` to
+cover just the documentation pages. And here is an example of a [regular
+HTML docs page](https://www.fastht.ml/docs/tutorials/by_example.html),
+along with exact same URL but with [a .md
 extension](https://www.fastht.ml/docs/tutorials/by_example.html.md).
 
-This proposal does not include any particular recommendation for how to
-process the llms.txt file, since it will depend on the application. For
-example, the FastHTML project opted to automatically expand the llms.txt
-to two markdown files with the contents of the linked URLs, using an
-XML-based structure suitable for use in LLMs such as Claude. The two
-files are: [llms-ctx.txt](https://fastht.ml/docs/llms-ctx.txt), which
-does not include the optional URLs, and
-[llms-ctx-full.txt](https://fastht.ml/docs/llms-ctx-full.txt), which
-does include them. They are created using the
-[`llms_txt2ctx`](https://llmstxt.org/intro.html#cli) command line
-application, and the FastHTML documentation includes information for
-users about how to use them.
+Agents are expected to view or search `llms.txt` to find the information
+they need, then follow the relevant links. The links in an llms.txt file
+should therefore point to LLM-friendly content, such as the markdown
+versions of pages described above. The file itself stays small enough to
+fit in context. The detail lives behind the links, and is fetched only
+when needed.
 
-The versatility of llms.txt files means they can serve many purposes -
-from helping developers find their way around software documentation, to
-giving businesses a way to outline their structure, or even breaking
-down complex legislation for stakeholders. They’re just as useful for
-personal websites where they can help answer questions about someone’s
-CV, for e-commerce sites to explain products and policies, or for
-schools and universities to provide quick access to their course
-information and resources.
+llms.txt files are used most heavily for software documentation, where
+coding agents follow them to find API references and tutorials. The same
+structure works anywhere agents need a guided path into a site’s
+content: a business outlining its structure and policies, a personal
+site answering questions about someone’s CV, or a school providing
+access to course information.
 
 Note that all [nbdev](https://nbdev.fast.ai/) projects now create .md
 versions of all pages by default. All Answer.AI and fast.ai software
@@ -89,9 +109,11 @@ language models and agents. Having said that, the information in
 llms.txt follows a specific format and can be read using standard
 programmatic-based tools.
 
-The llms.txt file spec is for files located in the root path `/llms.txt`
-of a website (or, optionally, in a subpath). A file following the spec
-contains the following sections as markdown, in the specific order:
+The llms.txt file spec is for files named `llms.txt`, at the root path
+`/llms.txt` of a website or at any subpath (e.g. `/docs/llms.txt`). A
+file covers the URLs under its path, and where more than one file
+applies, agents should use the most specific one. A file following the
+spec contains the following sections as markdown, in the specific order:
 
 - An optional byte-order mark (BOM)
 - An H1 with the name of the project or site. This is the only required
@@ -125,9 +147,8 @@ Optional details go here
 - [Link title](https://link_url)
 ```
 
-Note that the “Optional” section has a special meaning—if it’s included,
-the URLs provided there can be skipped if a shorter context is needed.
-Use it for secondary information which can often be skipped.
+The “Optional” section is used, by convention, for secondary
+information: links an agent can skip when a shorter context is needed.
 
 ## Existing standards
 
@@ -138,19 +159,26 @@ allowed content. The file can also reference structured data markup used
 on the site, helping LLMs understand how to interpret this information
 in context.
 
-The approach of standardising on a path for the file follows the
-approach of `/robots.txt` and `/sitemap.xml`. robots.txt and `llms.txt`
-have different purposes—robots.txt is generally used to let automated
-tools know what access to a site is considered acceptable, such as for
-search indexing bots. On the other hand, `llms.txt` information will
-often be used on demand when a user explicitly requests information
-about a topic, such as when including a coding library’s documentation
-in a project, or when asking a chat bot with search functionality for
-information. Our expectation is that `llms.txt` will mainly be useful
-for *inference*, i.e. at the time a user is seeking assistance, as
-opposed to for *training*. However, perhaps if `llms.txt` usage becomes
-widespread, future training runs could take advantage of the information
-in `llms.txt` files too.
+The approach of using a standard filename follows `/robots.txt` and
+`/sitemap.xml` at the site root. And just as `index.html` gives any path
+a conventional location for its human-readable entry point, `llms.txt`
+gives any path a conventional location for its LLM-readable overview.
+robots.txt and `llms.txt` have different purposes. robots.txt lets
+automated tools know what access to a site is considered acceptable,
+such as for search indexing bots. llms.txt information is instead used
+on demand, when an agent needs information about a topic while assisting
+a user. Our expectation was that llms.txt would mainly be useful for
+*inference* rather than *training*, and that is how it has been used,
+though training runs could take advantage of the information too.
+
+An alternative would be the Well-Known URIs standard (RFC 8615), which
+reserves the `/.well-known/` prefix for metadata files like this one.
+But well-known URIs exist only at the origin root, and many authors
+control only a path on a shared host: a GitHub Pages project site, for
+example, can publish files in its own directory but can never add one to
+the host’s `/.well-known/`. Like `index.html`, an `llms.txt` describes
+the path where it sits, something a single root location cannot express.
+And anyone who can publish content at a path can provide one.
 
 sitemap.xml is a list of all the indexable human-readable information
 available on a site. This isn’t a substitute for `llms.txt` since it:
@@ -197,9 +225,8 @@ To create effective `llms.txt` files, consider these guidelines:
 - Use concise, clear language.
 - When linking to resources, include brief, informative descriptions.
 - Avoid ambiguous terms or unexplained jargon.
-- Run a tool that expands your `llms.txt` file into an LLM context file
-  and test a number of language models to see if they can answer
-  questions about your content.
+- Test your file by asking an agent questions about your content, giving
+  it only your llms.txt as a starting point.
 
 ## Directories
 
@@ -208,14 +235,28 @@ the web:
 
 - [llmstxt.site](https://llmstxt.site/)
 - [directory.llmstxt.cloud](https://directory.llmstxt.cloud/)
+- [llmstxthub.com](https://llmstxthub.com/)
 
 ## Integrations
 
-Various tools and plugins are available to help integrate the llms.txt
-specification into your workflow:
+Many documentation platforms and CMSs can generate an llms.txt file
+automatically:
 
-- [`llms_txt2ctx`](https://llmstxt.org/intro.html#cli) - CLI and Python
-  module for parsing llms.txt files and generating LLM context
+- [Mintlify](https://www.mintlify.com/docs/ai/llmstxt) - Docs platform
+  that generates llms.txt and markdown page versions for every site it
+  hosts
+- [GitBook](https://www.gitbook.com/blog/what-is-llms-txt) - Serves an
+  llms.txt file for published docs sites
+- [Yoast SEO](https://yoast.com/features/llms-txt/) - WordPress plugin
+  that generates and maintains an llms.txt file
+- [AIOSEO](https://aioseo.com/features/llms-txt/) - WordPress plugin
+  with an llms.txt generator
+- [Wix](https://support.wix.com/en/article/understanding-your-sites-llmstxt-file) -
+  Generates an llms.txt file for every Wix site
+
+And various libraries and plugins are available to integrate the
+llms.txt specification into your workflow:
+
 - [JavaScript Implementation](./llmstxt-js.html) - Sample JavaScript
   implementation
 - [`vitepress-plugin-llms`](https://github.com/okineadev/vitepress-plugin-llms) -
@@ -233,6 +274,8 @@ specification into your workflow:
   PagePilot is a VS Code Chat participant that automatically loads
   external context (documentation, APIs, README files) to provide
   enhanced responses.
+- [`server-llm-txt`](https://github.com/mcp-get/community-servers/tree/main/src/server-llm-txt) -
+  MCP server that lets agents fetch and search llms.txt files
 
 ## Next steps
 
