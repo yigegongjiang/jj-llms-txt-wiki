@@ -1,18 +1,14 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # bun outdated
 
 > Check for outdated dependencies
 
 `bun outdated` displays a table of the dependencies in your project that have newer versions available.
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 | Package                        | Current | Update    | Latest     |
 | ------------------------------ | ------- | --------- | ---------- |
 | @sinclair/typebox              | 0.34.15 | 0.34.16   | 0.34.16    |
@@ -31,19 +27,19 @@ bun outdated
 
 The output table shows three version columns:
 
-* **Current**: The version currently installed
-* **Update**: The latest version that satisfies your package.json version range
-* **Latest**: The latest version published to the registry
+- **Current**: The version currently installed
+- **Update**: The latest version that satisfies your package.json version range
+- **Latest**: The latest version published to the registry
 
 ### Dependency Filters
 
 To check a specific dependency, pass its name as a positional argument:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated eslint-plugin-security
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 | Package                        | Current | Update | Latest    |
 | ------------------------------ | ------- | ------ | --------- |
 | eslint-plugin-security (dev)   | 2.1.1   | 2.1.1  | 3.0.1     |
@@ -52,11 +48,11 @@ bun outdated eslint-plugin-security
 
 Glob patterns work too:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated 'eslint*'
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 | Package                        | Current | Update | Latest     |
 | ------------------------------ | ------- | ------ | ---------- |
 | eslint (dev)                   | 8.57.1  | 8.57.1 | 9.20.0     |
@@ -66,11 +62,11 @@ bun outdated 'eslint*'
 
 For example, to check for outdated `@types/*` packages:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated '@types/*'
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 | Package            | Current | Update | Latest |
 | ------------------ | ------- | ------ | ------ |
 | @types/bun (dev)   | 1.3.0   | 1.3.3  | 1.3.3 |
@@ -78,11 +74,11 @@ bun outdated '@types/*'
 
 Or to exclude all `@types/*` packages:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated '!@types/*'
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 | Package                        | Current | Update    | Latest     |
 | ------------------------------ | ------- | --------- | ---------- |
 | @sinclair/typebox              | 0.34.15 | 0.34.16   | 0.34.16    |
@@ -99,11 +95,11 @@ bun outdated '!@types/*'
 
 Use the `--filter` flag to check for outdated dependencies in a different workspace package:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated --filter='@monorepo/types'
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 | Package            | Current | Update | Latest |
 | ------------------ | ------- | ------ | ------ |
 | tsup (dev)         | 8.3.5   | 8.3.6  | 8.3.6  |
@@ -112,11 +108,11 @@ bun outdated --filter='@monorepo/types'
 
 `--filter` accepts glob patterns to match multiple workspaces:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated --filter='@monorepo/{types,cli}'
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 | Package                        | Current | Update | Latest     |
 | ------------------------------ | ------- | ------ | ---------- |
 | eslint (dev)                   | 8.57.1  | 8.57.1 | 9.20.0     |
@@ -129,13 +125,13 @@ bun outdated --filter='@monorepo/{types,cli}'
 
 ### Catalog Dependencies
 
-`bun outdated` also checks [catalog](/docs/pm/catalogs) dependencies defined in `package.json`:
+`bun outdated` also checks [catalog](/pm/catalogs) dependencies defined in `package.json`:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun outdated -r
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 ┌────────────────────┬─────────┬─────────┬─────────┬────────────────────────────────┐
 │ Package            │ Current │ Update  │ Latest  │ Workspace                      │
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
@@ -149,7 +145,7 @@ bun outdated -r
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
 │ axios              │ 0.21.0  │ 0.21.0  │ 1.12.2  │ catalog (@test/app)            │
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
-│ lodash             │ 4.17.15 │ 4.17.15 │ 4.17.21 │ catalog (@test/app, @test/app) │
+│ lodash             │ 4.17.15 │ 4.17.15 │ 4.17.21 │ catalog (@test/app)            │
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
 │ react              │ 17.0.0  │ 17.0.0  │ 19.1.1  │ catalog (@test/app)            │
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
@@ -173,11 +169,11 @@ bun outdated -r
 └────────────────────┴─────────┴─────────┴─────────┴────────────────────────────────┘
 ```
 
-***
+---
 
 ## CLI Usage
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun outdated <filter>
 ```
 
@@ -197,6 +193,10 @@ bun outdated <filter>
 
 <ParamField path="-F, --filter" type="string">
   Display outdated dependencies for each matching workspace
+</ParamField>
+
+<ParamField path="-r, --recursive" type="boolean">
+  Check outdated packages in all workspaces
 </ParamField>
 
 ### Output & Logging
@@ -282,7 +282,7 @@ bun outdated <filter>
 ### Caching
 
 <ParamField path="--cache-dir" type="string">
-  Store & load cached data from a specific directory path
+  Store &amp; load cached data from a specific directory path
 </ParamField>
 
 <ParamField path="--no-cache" type="boolean">
@@ -292,11 +292,11 @@ bun outdated <filter>
 ### Execution Behavior
 
 <ParamField path="--dry-run" type="boolean">
-  Don't install anything
+  Perform a dry run without making changes
 </ParamField>
 
 <ParamField path="-f, --force" type="boolean">
-  Always request the latest versions from the registry & reinstall all dependencies
+  Always request the latest versions from the registry &amp; reinstall all dependencies
 </ParamField>
 
 <ParamField path="--no-verify" type="boolean">
@@ -304,12 +304,12 @@ bun outdated <filter>
 </ParamField>
 
 <ParamField path="--ignore-scripts" type="boolean">
-  Skip lifecycle scripts in the project's <code>package.json</code> (dependency scripts are never run)
+  Skip lifecycle scripts for all packages, including the project's <code>package.json</code> and trusted dependencies
 </ParamField>
 
-<ParamField path="--backend" type="string" default="clonefile">
-  Platform-specific optimizations for installing dependencies. Possible values: <code>clonefile</code> (default),{" "}
-  <code>hardlink</code>, <code>symlink</code>, <code>copyfile</code>
+<ParamField path="--backend" type="string">
+  Platform-specific optimizations for installing dependencies. Possible values: <code>clonefile</code> (default on
+  macOS), <code>hardlink</code> (default on Linux and Windows), <code>symlink</code>, <code>copyfile</code>
 </ParamField>
 
 <ParamField path="--concurrent-scripts" type="number">

@@ -1,14 +1,10 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Build a React app with Bun
 
 Bun has built-in support for `.jsx` and `.tsx` files. React works with Bun.
 
 Create a new React app with `bun init --react`. This gives you a template with a React app and an API server together in one full-stack app.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 # Create a new React app
 bun init --react
 
@@ -22,7 +18,7 @@ bun run build
 bun start
 ```
 
-***
+---
 
 ### Hot Reloading
 
@@ -36,7 +32,7 @@ Run `bun start` to start the API server and frontend together in one process.
 
 Run `bun run build` to build the app as a static site. This creates a `dist` directory with the built app and its assets.
 
-```txt File Tree icon="folder-tree" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt File Tree icon="folder-tree"
 ├── src/
 │   ├── index.ts        # Server entry point with API routes
 │   ├── frontend.tsx    # React app entry point with HMR
@@ -47,6 +43,7 @@ Run `bun run build` to build the app as a static site. This creates a `dist` dir
 │   └── *.svg           # Static assets
 ├── package.json        # Dependencies and scripts
 ├── tsconfig.json       # TypeScript configuration
+├── bun-env.d.ts        # Type declarations for .svg and .css imports
 ├── bunfig.toml         # Bun configuration
 └── bun.lock            # Lock file
 ```

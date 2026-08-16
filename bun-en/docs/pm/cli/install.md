@@ -1,14 +1,10 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # bun install
 
 > Install packages with Bun's fast package manager
 
 ## Basic Usage
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install react
 bun install react@19.1.1 # specific version
 bun install react@latest # specific tag
@@ -17,38 +13,40 @@ bun install react@latest # specific tag
 The `bun` CLI contains a Node.js-compatible package manager designed to be a dramatically faster replacement for `npm`, `yarn`, and `pnpm`. It's a standalone tool that works in existing Node.js projects; if your project has a `package.json`, you can use `bun install`.
 
 <Note>
-  **⚡️ 25x faster** — Switch from `npm install` to `bun install` in any Node.js project to make your installations up to 25x faster.
 
-  <Frame>
-    ![Bun installation speed
-    comparison](https://user-images.githubusercontent.com/709451/147004342-571b6123-17a9-49a2-8bfd-dcfc5204047e.png)
-  </Frame>
+**⚡️ 25x faster** — Switch from `npm install` to `bun install` in any Node.js project to make your installations up to 25x faster.
+
+<Frame>
+  ![Bun installation speed
+  comparison](https://user-images.githubusercontent.com/709451/147004342-571b6123-17a9-49a2-8bfd-dcfc5204047e.png)
+</Frame>
+
 </Note>
 
 To install all dependencies of a project:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install
 ```
 
 `bun install`:
 
-* **Installs** all `dependencies`, `devDependencies`, and `optionalDependencies`. Bun installs `peerDependencies` by default.
-* **Runs** your project's `{pre|post}install` and `{pre|post}prepare` scripts at the appropriate time. For security reasons Bun *does not execute* lifecycle scripts of installed dependencies.
-* **Writes** a `bun.lock` lockfile to the project root.
+- **Installs** all `dependencies`, `devDependencies`, and `optionalDependencies`. Bun installs `peerDependencies` by default.
+- **Runs** your project's `{pre|post}install` and `{pre|post}prepare` scripts at the appropriate time. For security reasons Bun _does not execute_ lifecycle scripts of installed dependencies unless they are [trusted](/pm/lifecycle).
+- **Writes** a `bun.lock` lockfile to the project root.
 
-***
+---
 
 ## Logging
 
 To modify logging verbosity:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --verbose # debug logging
 bun install --silent  # no logging
 ```
 
-***
+---
 
 ## Lifecycle scripts
 
@@ -56,7 +54,7 @@ Unlike other npm clients, Bun does not execute arbitrary lifecycle scripts like 
 
 To tell Bun to allow lifecycle scripts for a particular package, add the package to `trustedDependencies` in your package.json.
 
-```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```json package.json icon="file-json"
 {
   "name": "my-app",
   "version": "1.0.0",
@@ -68,24 +66,24 @@ Then re-install the package. Bun reads this field and runs lifecycle scripts for
 
 Lifecycle scripts run in parallel during installation. To adjust the maximum number of concurrent scripts, use the `--concurrent-scripts` flag. The default is two times the reported cpu count or GOMAXPROCS.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --concurrent-scripts 5
 ```
 
 Bun automatically optimizes postinstall scripts for popular packages (like `esbuild` and `sharp`) by determining which scripts need to run. To disable these optimizations:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 BUN_FEATURE_FLAG_DISABLE_NATIVE_DEPENDENCY_LINKER=1 bun install
 BUN_FEATURE_FLAG_DISABLE_IGNORE_SCRIPTS=1 bun install
 ```
 
-***
+---
 
 ## Workspaces
 
-Bun supports `"workspaces"` in package.json. See [workspaces](/docs/pm/workspaces).
+Bun supports `"workspaces"` in package.json. See [workspaces](/pm/workspaces).
 
-```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```json package.json icon="file-json"
 {
   "name": "my-app",
   "version": "1.0.0",
@@ -96,13 +94,13 @@ Bun supports `"workspaces"` in package.json. See [workspaces](/docs/pm/workspace
 }
 ```
 
-***
+---
 
 ## Installing dependencies for specific packages
 
 In a monorepo, you can install the dependencies for a subset of packages using the `--filter` flag.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 # Install dependencies for all workspaces except `pkg-c`
 bun install --filter '!pkg-c'
 
@@ -110,15 +108,16 @@ bun install --filter '!pkg-c'
 bun install --filter './packages/pkg-a'
 ```
 
-See [filtering](/docs/pm/filter#bun-install-and-bun-outdated).
+See [filtering](/pm/filter#bun-install-and-bun-outdated).
 
-***
+---
 
 ## Overrides and resolutions
 
-Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. Both specify a version range for *metadependencies*, the dependencies of your dependencies. See [overrides and resolutions](/docs/pm/overrides).
+Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. Both specify a version range for _metadependencies_, the dependencies of your dependencies. See [overrides and resolutions](/pm/overrides).
 
-```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+{/* prettier-ignore */}
+```json package.json icon="file-json"
 {
   "name": "my-app",
   "dependencies": {
@@ -130,18 +129,18 @@ Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. B
 }
 ```
 
-***
+---
 
 ## Global packages
 
 To install a package globally, use the `-g`/`--global` flag. Use it to install command-line tools.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --global cowsay # or `bun install -g cowsay`
 cowsay "Bun!"
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
  ______
 < Bun! >
  ------
@@ -152,31 +151,39 @@ cowsay "Bun!"
                 ||     ||
 ```
 
-***
+---
 
 ## Production mode
 
 To install in production mode (without `devDependencies`):
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --production
 ```
 
+`--production` implies `--frozen-lockfile`. It only controls what gets installed. `devDependencies` already in `node_modules` from an earlier install stay there. Use [`bun prune --production`](/pm/cli/prune) to remove them.
+
 For reproducible installs, use `--frozen-lockfile`. Bun installs the exact versions specified in the lockfile and does not update it. If your `package.json` disagrees with `bun.lock`, Bun exits with an error.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --frozen-lockfile
 ```
 
-See [lockfile](/docs/pm/lockfile) for more on `bun.lock`.
+Bun does not enable `--frozen-lockfile` automatically in CI; pass the flag or use `bun ci`. If there is no lockfile at all, `--frozen-lockfile` installs from `package.json` without writing one.
 
-***
+`--frozen-lockfile` works on a pruned monorepo checkout (e.g. `turbo prune` output, or a Docker context with only some workspace folders copied in). If a workspace listed in `bun.lock` is missing its `package.json` on disk, Bun skips it with a `note:` and does not install its exclusive dependencies. If a remaining workspace depends on a skipped one, the install fails.
+
+To validate the lockfile without installing, use `bun install --frozen-lockfile --dry-run`.
+
+See [lockfile](/pm/lockfile) for more on `bun.lock`.
+
+---
 
 ## Omitting dependencies
 
 To omit dev, peer, or optional dependencies, use the `--omit` flag.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 # Exclude "devDependencies" from the installation. This will apply to the
 # root package and workspaces if they exist. Transitive dependencies will
 # not have "devDependencies".
@@ -186,23 +193,23 @@ bun install --omit dev
 bun install --omit=dev --omit=peer --omit=optional
 ```
 
-***
+---
 
 ## Dry run
 
 To perform a dry run, without installing anything:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --dry-run
 ```
 
-***
+---
 
 ## Non-npm dependencies
 
-Bun supports installing dependencies from Git, GitHub, and local or remotely-hosted tarballs. See [`bun add`](/docs/pm/cli/add).
+Bun supports installing dependencies from Git, GitHub, and local or remotely-hosted tarballs. See [`bun add`](/pm/cli/add).
 
-```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```json package.json icon="file-json"
 {
   "dependencies": {
     "dayjs": "git+https://github.com/iamkun/dayjs.git",
@@ -215,7 +222,7 @@ Bun supports installing dependencies from Git, GitHub, and local or remotely-hos
 }
 ```
 
-***
+---
 
 ## Installation strategies
 
@@ -225,15 +232,15 @@ Bun supports two package installation strategies that determine how dependencies
 
 The traditional npm/Yarn approach that flattens dependencies into a shared `node_modules` directory:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --linker hoisted
 ```
 
 ### Isolated installs
 
-A pnpm-like approach that creates strict dependency isolation to prevent [phantom dependencies](/docs/pm/isolated-installs), packages that can be imported without being declared in `package.json`:
+A pnpm-like approach that creates strict dependency isolation to prevent [phantom dependencies](/pm/isolated-installs), packages you can import without declaring them in `package.json`:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --linker isolated
 ```
 
@@ -243,26 +250,26 @@ Isolated installs create a central package store in `node_modules/.bun/` with sy
 
 The default linker strategy depends on whether you're starting fresh or have an existing project:
 
-* **New workspaces/monorepos**: `isolated` (prevents phantom dependencies)
-* **New single-package projects**: `hoisted` (traditional npm behavior)
-* **Existing projects (made pre-v1.3.2)**: `hoisted` (preserves backward compatibility)
+- **New workspaces/monorepos**: `isolated` (prevents phantom dependencies)
+- **New single-package projects**: `hoisted` (traditional npm behavior)
+- **Existing projects (made pre-v1.3.2)**: `hoisted` (preserves backward compatibility)
 
-The default is controlled by a `configVersion` field in your lockfile. For a detailed explanation, see [isolated installs](/docs/pm/isolated-installs).
+A `configVersion` field in your lockfile controls the default. For a detailed explanation, see [isolated installs](/pm/isolated-installs).
 
-***
+---
 
 ## Minimum release age
 
 To protect against supply chain attacks where malicious packages are quickly published, you can configure a minimum age requirement for npm packages. Bun filters out package versions published more recently than the specified threshold (in seconds) during installation.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 # Only install package versions published at least 3 days ago
 bun add @types/bun --minimum-release-age 259200 # seconds
 ```
 
 You can also configure this in `bunfig.toml`:
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install]
 # Only install package versions published at least 3 days ago
 minimumReleaseAge = 259200 # seconds
@@ -273,17 +280,17 @@ minimumReleaseAgeExcludes = ["@types/node", "typescript"]
 
 When the minimum age filter is active:
 
-* It only affects new package resolution; existing packages in `bun.lock` remain unchanged
-* All dependencies (direct and transitive) are filtered to meet the age requirement when resolved
-* When versions are blocked by the age gate, a stability check detects rapid bugfix patterns
-  * If multiple versions were published close together just outside your age gate, Bun extends the filter to skip those potentially unstable versions and selects an older, more mature version
-  * The check searches up to 7 days past the age gate; if releases are still rapid beyond that, Bun ignores the stability check
-  * Exact version requests (like `package@1.1.1`) still respect the age gate but bypass the stability check
-* Versions without a `time` field are treated as passing the age check (the npm registry should always provide timestamps)
+- It only affects new package resolution; existing packages in `bun.lock` remain unchanged
+- Bun filters all dependencies (direct and transitive) to meet the age requirement when resolving them
+- When the age gate blocks versions, a stability check detects rapid bugfix patterns
+  - If multiple versions were published close together just outside your age gate, Bun extends the filter to skip those potentially unstable versions and selects an older, more mature version
+  - The check searches up to 7 days past the age gate; if releases are still rapid beyond that, Bun ignores the stability check
+  - Exact version requests (like `package@1.1.1`) still respect the age gate but bypass the stability check
+- Bun treats versions without a `time` field as passing the age check (the npm registry should always provide timestamps)
 
-For more advanced security scanning, including integration with services and custom filtering, see the [Security Scanner API](/docs/pm/security-scanner-api).
+For more advanced security scanning, including integration with services and custom filtering, see the [Security Scanner API](/pm/security-scanner-api).
 
-***
+---
 
 ## Configuration
 
@@ -294,11 +301,11 @@ On `bun install`, `bun remove`, and `bun add`, Bun looks for `bunfig.toml` in:
 1. `$XDG_CONFIG_HOME/.bunfig.toml` or `$HOME/.bunfig.toml`
 2. `./bunfig.toml`
 
-If both are found, the results are merged together.
+If Bun finds both, it loads both. Keys set in the project's `bunfig.toml` override the same keys in the global file.
 
 Configuring with `bunfig.toml` is optional. These are the default values:
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install]
 
 # whether to install optionalDependencies
@@ -341,16 +348,16 @@ minimumReleaseAgeExcludes = ["@types/node", "typescript"]
 
 Environment variables take priority over `bunfig.toml`.
 
-| Name                               | Description                                                                             |
-| ---------------------------------- | --------------------------------------------------------------------------------------- |
-| `BUN_CONFIG_REGISTRY`              | Set an npm registry (default: [https://registry.npmjs.org](https://registry.npmjs.org)) |
-| `BUN_CONFIG_TOKEN`                 | Set an auth token for the default registry                                              |
-| `BUN_CONFIG_YARN_LOCKFILE`         | Save a Yarn v1-style yarn.lock                                                          |
-| `BUN_CONFIG_SKIP_SAVE_LOCKFILE`    | Don’t save a lockfile                                                                   |
-| `BUN_CONFIG_SKIP_LOAD_LOCKFILE`    | Don’t load a lockfile                                                                   |
-| `BUN_CONFIG_SKIP_INSTALL_PACKAGES` | Don’t install any packages                                                              |
+| Name                               | Description                                               |
+| ---------------------------------- | --------------------------------------------------------- |
+| `BUN_CONFIG_REGISTRY`              | Set an npm registry (default: https://registry.npmjs.org) |
+| `BUN_CONFIG_TOKEN`                 | Set an auth token for the default registry                |
+| `BUN_CONFIG_YARN_LOCKFILE`         | Save a Yarn v1-style yarn.lock                            |
+| `BUN_CONFIG_SKIP_SAVE_LOCKFILE`    | Don’t save a lockfile                                     |
+| `BUN_CONFIG_SKIP_LOAD_LOCKFILE`    | Don’t load a lockfile                                     |
+| `BUN_CONFIG_SKIP_INSTALL_PACKAGES` | Don’t install any packages                                |
 
-Bun uses the fastest installation method available on the target platform: `clonefile` on macOS and `hardlink` on Linux. You can change the installation method with the `--backend` flag. When unavailable or on error, `clonefile` and `hardlink` fall back to a platform-specific implementation of copying files.
+Bun uses the fastest installation method available on the target platform: `clonefile` on macOS and `hardlink` on Linux and Windows. You can change the installation method with the `--backend` flag. When unavailable or on error, `clonefile` and `hardlink` fall back to a platform-specific implementation of copying files.
 
 Bun stores installed packages from npm in `~/.bun/install/cache/${name}@${version}`. If the semver version has a `build` or a `pre` tag, Bun replaces it with a hash of that value. This reduces the chances of errors from long file paths, but complicates figuring out where a package was installed on disk.
 
@@ -358,13 +365,13 @@ When the `node_modules` folder exists, Bun decides whether to install a package 
 
 When a `bun.lock` doesn’t exist or `package.json` has changed dependencies, Bun downloads and extracts tarballs eagerly while resolving.
 
-When a `bun.lock` exists and `package.json` hasn’t changed, Bun downloads missing dependencies lazily. If the package with a matching `name` and `version` already exists in the expected location within `node_modules`, Bun won’t attempt to download the tarball.
+When a `bun.lock` exists and `package.json` hasn’t changed, Bun downloads missing dependencies lazily. If the package with a matching `name` and `version` already exists in the expected location within `node_modules`, Bun doesn’t attempt to download the tarball.
 
 ## CI/CD
 
 Use the official [`oven-sh/setup-bun`](https://github.com/oven-sh/setup-bun) action to install `bun` in a GitHub Actions pipeline:
 
-```yaml .github/workflows/release.yml icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```yaml .github/workflows/release.yml icon="file-code"
 name: bun-types
 jobs:
   build:
@@ -383,7 +390,7 @@ jobs:
 
 For CI/CD environments that want to enforce reproducible builds, use `bun ci` to fail the build if the package.json is out of sync with the lockfile:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun ci
 ```
 
@@ -391,7 +398,7 @@ bun ci
 
 In your workflow, run `bun ci` instead of `bun install`:
 
-```yaml .github/workflows/release.yml icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```yaml .github/workflows/release.yml icon="file-code"
 name: bun-types
 jobs:
   build:
@@ -410,13 +417,13 @@ jobs:
 
 ## Platform-specific dependencies?
 
-Bun stores normalized `cpu` and `os` values from npm in the lockfile, along with the resolved packages. It skips downloading, extracting, and installing packages disabled for the current target at runtime. This means the lockfile won't change between platforms/architectures even if the packages ultimately installed do change.
+Bun stores normalized `cpu` and `os` values from npm in the lockfile, along with the resolved packages. It skips downloading, extracting, and installing packages disabled for the current target at runtime. This means the lockfile doesn't change between platforms/architectures even if the packages ultimately installed do change.
 
 ### `--cpu` and `--os` flags
 
 You can override the target platform for package selection:
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 bun install --cpu=x64 --os=linux
 ```
 
@@ -434,13 +441,13 @@ Bun handles peer dependencies like Yarn: `bun install` installs them automatical
 
 `bun.lock` is Bun’s lockfile format. See [our blog post about the text lockfile](https://bun.com/blog/bun-lock-text-lockfile).
 
-Prior to Bun 1.2, the lockfile was binary and called `bun.lockb`. To upgrade an old lockfile to the new format, run `bun install --save-text-lockfile --frozen-lockfile --lockfile-only`, then delete `bun.lockb`.
+Before Bun 1.2, the lockfile was binary and called `bun.lockb`. To upgrade an old lockfile to the new format, run `bun install --save-text-lockfile --frozen-lockfile --lockfile-only`, then delete `bun.lockb`.
 
 ## Cache
 
 To delete the cache:
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 bun pm cache rm
 # or
 rm -rf ~/.bun/install/cache
@@ -450,39 +457,39 @@ rm -rf ~/.bun/install/cache
 
 For performance, `bun install` uses different system calls to install dependencies depending on the platform. You can force a specific backend with the `--backend` flag.
 
-**`hardlink`** is the default backend on Linux. Benchmarking showed it to be the fastest on Linux.
+**`hardlink`** is the default backend on Linux and Windows. Benchmarking showed it to be the fastest on Linux.
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 rm -rf node_modules
 bun install --backend hardlink
 ```
 
 **`clonefile`** is the default backend on macOS. Benchmarking showed it to be the fastest on macOS. It is only available on macOS.
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 rm -rf node_modules
 bun install --backend clonefile
 ```
 
-**`clonefile_each_dir`** is similar to `clonefile`, except it clones each file individually per directory. It is only available on macOS and tends to perform slower than `clonefile`. Unlike `clonefile`, this does not recursively clone subdirectories in one system call.
+**`clonefile_each_dir`** is similar to `clonefile`, except it clones each file individually per directory. It is only available on macOS and tends to perform slower than `clonefile`. Unlike `clonefile`, `clonefile_each_dir` does not recursively clone subdirectories in one system call.
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 rm -rf node_modules
 bun install --backend clonefile_each_dir
 ```
 
 **`copyfile`** is the fallback used when any of the above fail, and is the slowest. On macOS, it uses `fcopyfile()`; on Linux, it uses `copy_file_range()`.
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 rm -rf node_modules
 bun install --backend copyfile
 ```
 
-**`symlink`** is typically only used for `file:` dependencies (and eventually `link:`) internally. To prevent infinite loops, it skips symlinking the `node_modules` folder.
+**`symlink`** is typically only used for `file:` dependencies internally. To prevent infinite loops, it skips symlinking the `node_modules` folder.
 
-If you install with `--backend=symlink`, Node.js won't resolve node\_modules of dependencies unless each dependency has its own node\_modules folder or you pass `--preserve-symlinks` to `node` or `bun`. See [Node.js documentation on `--preserve-symlinks`](https://nodejs.org/api/cli.html#--preserve-symlinks).
+If you install with `--backend=symlink`, Node.js won't resolve node_modules of dependencies unless each dependency has its own node_modules folder or you pass `--preserve-symlinks` to `node` or `bun`. See [Node.js documentation on `--preserve-symlinks`](https://nodejs.org/api/cli.html#--preserve-symlinks).
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 rm -rf node_modules
 bun install --backend symlink
 bun --preserve-symlinks ./my-file.js
@@ -492,15 +499,15 @@ node --preserve-symlinks ./my-file.js # https://nodejs.org/api/cli.html#--preser
 ## npm registry metadata
 
 Bun uses a binary format for caching npm registry responses. This loads much faster than JSON and tends to be smaller on disk.
-These files live in `~/.bun/install/cache/*.npm`. The filename pattern is `${hash(packageName)}.npm`. It’s a hash so that extra directories don’t need to be created for scoped packages.
+These files live in `~/.bun/install/cache/*.npm`. The filename pattern is `${hash(packageName)}.npm`. It’s a hash so that Bun doesn’t need to create extra directories for scoped packages.
 
 Bun's usage of `Cache-Control` ignores `Age`. This improves performance, but means Bun may be about 5 minutes behind the latest package version metadata from npm.
 
 ## pnpm migration
 
-Bun migrates projects from pnpm automatically. When a `pnpm-lock.yaml` file is detected and no `bun.lock` file exists, Bun converts the lockfile to `bun.lock` during installation. The original `pnpm-lock.yaml` file remains unmodified.
+Bun migrates projects from pnpm automatically. When Bun detects a `pnpm-lock.yaml` file and no `bun.lock` file exists, it converts the lockfile to `bun.lock` during installation. The original `pnpm-lock.yaml` file remains unmodified.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install
 ```
 
@@ -510,16 +517,20 @@ The migration process handles:
 
 ### Lockfile Migration
 
-* Converts `pnpm-lock.yaml` to `bun.lock` format
-* Preserves package versions and resolution information
-* Maintains dependency relationships and peer dependencies
-* Handles patched dependencies with integrity hashes
+- Converts `pnpm-lock.yaml` (lockfile versions 7–9, including pnpm 11's multi-document files) to `bun.lock`
+- Preserves resolved versions and integrity hashes
+- Preserves peer dependency ranges and `peerDependenciesMeta`, so the next `bun install` leaves the migrated lockfile unchanged
+- Migrates git, GitHub, tarball URL, `file:`, and `npm:` alias dependencies, including transitive ones
+- Resolves pnpm named registries (`name@registry:version`) via `namedRegistries` in `pnpm-workspace.yaml`
+- Converts injected workspace packages (`dependenciesMeta.*.injected`) to ordinary workspace dependencies
+- Handles patched dependencies, matching pnpm's hash-only `patchedDependencies` entries to the patch files
+- Skips `runtime:` entries (pnpm-managed Node.js versions) with a warning
 
 ### Workspace Configuration
 
 When a `pnpm-workspace.yaml` file exists, Bun migrates workspace settings to your root `package.json`:
 
-```yaml pnpm-workspace.yaml icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```yaml pnpm-workspace.yaml icon="file-code"
 packages:
   - "apps/*"
   - "packages/*"
@@ -536,7 +547,7 @@ catalogs:
 
 Bun moves the workspace packages list and catalogs to the `workspaces` field in `package.json`:
 
-```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```json package.json icon="file-json"
 {
   "workspaces": {
     "packages": ["apps/*", "packages/*"],
@@ -556,9 +567,9 @@ Bun moves the workspace packages list and catalogs to the `workspaces` field in 
 
 ### Catalog Dependencies
 
-Dependencies using pnpm's `catalog:` protocol are preserved:
+Bun preserves dependencies that use pnpm's `catalog:` protocol:
 
-```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```json package.json icon="file-json"
 {
   "dependencies": {
     "react": "catalog:",
@@ -571,23 +582,26 @@ Dependencies using pnpm's `catalog:` protocol are preserved:
 
 Bun migrates the following pnpm configuration from both `pnpm-lock.yaml` and `pnpm-workspace.yaml`:
 
-* **Overrides**: Moved from `pnpm.overrides` to root-level `overrides` in `package.json`
-* **Patched Dependencies**: Moved from `pnpm.patchedDependencies` to root-level `patchedDependencies` in `package.json`
-* **Workspace Overrides**: Applied from `pnpm-workspace.yaml` to root `package.json`
+- **Overrides**: Moved from `pnpm.overrides` to root-level `overrides` in `package.json`
+- **Patched Dependencies**: Moved from `pnpm.patchedDependencies` to root-level `patchedDependencies` in `package.json`
+- **Workspace Overrides**: Applied from `pnpm-workspace.yaml` to root `package.json`
 
-### Requirements
+### Requirements and limitations
 
-* Requires pnpm lockfile version 7 or higher
-* Workspace packages must have a `name` field in their `package.json`
-* All catalog entries referenced by dependencies must exist in the catalogs definition
+- Requires pnpm lockfile version 7 or higher
+- Workspace packages must have a `name` field in their `package.json`
+- All catalog entries referenced by dependencies must exist in the catalogs definition
+- Every workspace in `pnpm-lock.yaml` must have its `package.json` on disk (in Docker, copy them in before `bun install`)
+- Relative `link:` dependencies and git dependencies with a sub-directory (`resolution.path`) are not supported
+- If migration fails for any of these reasons, Bun prints why and resolves from scratch instead
 
 After migration, you can safely remove `pnpm-lock.yaml` and `pnpm-workspace.yaml` files.
 
-***
+---
 
 ## CLI Usage
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun install <name>@<version>
 ```
 
@@ -676,7 +690,7 @@ bun install <name>@<version>
 ### Installation Process Control
 
 <ParamField path="--dry-run" type="boolean">
-  Don't install anything
+  Perform a dry run without making changes
 </ParamField>
 
 <ParamField path="--force" type="boolean">
@@ -750,7 +764,7 @@ bun install <name>@<version>
 ### Lifecycle Script Management
 
 <ParamField path="--ignore-scripts" type="boolean">
-  Skip lifecycle scripts in the project's package.json (dependency scripts are never run)
+  Skip lifecycle scripts for all packages, including the project's package.json and trusted dependencies
 </ParamField>
 
 ### Help Information

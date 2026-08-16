@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Hot reloading
 
 > Hot Module Replacement (HMR) for Bun's development server
@@ -14,7 +10,7 @@ Hot Module Replacement (HMR) updates modules in a running application without a 
 
 Bun implements a client-side HMR API modeled after [Vite's `import.meta.hot` API](https://vite.dev/guide/api-hmr). You can check for it with `if (import.meta.hot)`, which tree-shakes it in production.
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 if (import.meta.hot) {
   // HMR APIs are available.
 }
@@ -22,7 +18,7 @@ if (import.meta.hot) {
 
 This check is often unnecessary, since Bun dead-code-eliminates calls to all of the HMR APIs in production builds.
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 // This entire function call is removed in production.
 import.meta.hot.dispose(() => {
   console.log("dispose");
@@ -30,52 +26,53 @@ import.meta.hot.dispose(() => {
 ```
 
 <Warning>
-  For this to work, Bun forces these APIs to be called without indirection. That means the following do not work:
+For this dead-code elimination to work, Bun forces these APIs to be called without indirection. That means the following do not work:
 
-  ```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  // INVALID: Assigning `hot` to a variable
-  const hot = import.meta.hot;
-  hot.accept();
+```ts title="index.ts" icon="/icons/typescript.svg"
+// INVALID: Assigning `hot` to a variable
+const hot = import.meta.hot;
+hot.accept();
 
-  // INVALID: Assigning `import.meta` to a variable
-  const meta = import.meta;
-  meta.hot.accept();
-  console.log(meta.hot.data);
+// INVALID: Assigning `import.meta` to a variable
+const meta = import.meta;
+meta.hot.accept();
+console.log(meta.hot.data);
 
-  // INVALID: Passing to a function
-  doSomething(import.meta.hot.dispose);
+// INVALID: Passing to a function
+doSomething(import.meta.hot.dispose);
 
-  // OK: The full phrase "import.meta.hot.<API>" must be called directly:
-  import.meta.hot.accept();
+// OK: The full phrase "import.meta.hot.<API>" must be called directly:
+import.meta.hot.accept();
 
-  // OK: `data` can be passed to functions:
-  doSomething(import.meta.hot.data);
-  ```
+// OK: `data` can be passed to functions:
+doSomething(import.meta.hot.data);
+```
+
 </Warning>
 
 <Note>
-  The HMR API is still a work in progress. Some features are missing. To disable HMR in `Bun.serve`, set the development option to `{ hmr: false }`.
+The HMR API is still a work in progress. Some features are missing. To disable HMR in `Bun.serve`, set the development option to `{ hmr: false }`.
 </Note>
 
 ## API Methods
 
 | Method             | Status | Notes                                                                 |
 | ------------------ | ------ | --------------------------------------------------------------------- |
-| `hot.accept()`     | ✅      | Indicate that a hot update can be replaced gracefully.                |
-| `hot.data`         | ✅      | Persist data between module evaluations.                              |
-| `hot.dispose()`    | ✅      | Add a callback function to run when a module is about to be replaced. |
-| `hot.invalidate()` | ❌      |                                                                       |
-| `hot.on()`         | ✅      | Attach an event listener.                                             |
-| `hot.off()`        | ✅      | Remove an event listener from `on`.                                   |
-| `hot.send()`       | ❌      |                                                                       |
+| `hot.accept()`     | ✅     | Indicate that a hot update can be replaced gracefully.                |
+| `hot.data`         | ✅     | Persist data between module evaluations.                              |
+| `hot.dispose()`    | ✅     | Add a callback function to run when a module is about to be replaced. |
+| `hot.invalidate()` | ❌     |                                                                       |
+| `hot.on()`         | ✅     | Attach an event listener.                                             |
+| `hot.off()`        | ✅     | Remove an event listener from `on`.                                   |
+| `hot.send()`       | ❌     |                                                                       |
 | `hot.prune()`      | 🚧     | Callback is currently never called.                                   |
-| `hot.decline()`    | ✅      | No-op to match Vite's `import.meta.hot`.                              |
+| `hot.decline()`    | ✅     | No-op to match Vite's `import.meta.hot`.                              |
 
 ## import.meta.hot.accept()
 
-The `accept()` method indicates that a module can be hot-replaced. Called without arguments, it means this module can be replaced by re-evaluating the file. After a hot update, Bun automatically patches the module's importers.
+The `accept()` method indicates that a module can be hot-replaced. Called without arguments, it means Bun can replace this module by re-evaluating the file. After a hot update, Bun automatically patches the module's importers.
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 // index.ts
 import { getCount } from "./foo.ts";
 
@@ -88,21 +85,21 @@ export function getNegativeCount() {
 }
 ```
 
-This creates a hot-reloading boundary for all of the files that `index.ts` imports. Whenever `foo.ts` or any of its dependencies are saved, the update bubbles up to `index.ts`, which re-evaluates. Files that import `index.ts` are then patched to import the new version of `getNegativeCount()`. If only `index.ts` is updated, only that one file is re-evaluated, and the counter in `foo.ts` is reused.
+This call creates a hot-reloading boundary for all of the files that `index.ts` imports. Whenever you save `foo.ts` or any of its dependencies, the update bubbles up to `index.ts`, which re-evaluates. Bun then patches the files that import `index.ts` to import the new version of `getNegativeCount()`. If you update only `index.ts`, Bun re-evaluates only that one file, and the counter in `foo.ts` is reused.
 
 Combine this with `import.meta.hot.data` to transfer state from the previous module to the new one.
 
 <Info>
   When no modules call `import.meta.hot.accept()` (and there isn't React Fast Refresh or a plugin calling it for you),
-  the page reloads when the file updates, and a console warning shows which files were invalidated. This warning is safe
-  to ignore if it makes more sense to rely on full page reloads.
+  the page reloads when the file updates. A console warning shows which files were invalidated. This warning is safe to
+  ignore if it makes more sense to rely on full page reloads.
 </Info>
 
 ### With callback
 
 When passed a callback, `import.meta.hot.accept` works as it does in Vite. Instead of patching the importers of this module, it calls the callback with the new module.
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 export const count = 0;
 
 import.meta.hot.accept(newModule => {
@@ -113,14 +110,14 @@ import.meta.hot.accept(newModule => {
 });
 ```
 
-<Tip>Prefer `import.meta.hot.accept()` without an argument; it usually makes your code easier to understand.</Tip>
+<Tip>Prefer `import.meta.hot.accept()` without an argument; it usually makes your code clearer.</Tip>
 
 ### Accepting other modules
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 import { count } from "./foo";
 
-import.meta.hot.accept("./foo", () => {
+import.meta.hot.accept("./foo", newModule => {
   if (!newModule) return;
 
   console.log("updated: count is now ", count);
@@ -131,7 +128,7 @@ Indicates that a dependency's module can be accepted. When the dependency is upd
 
 ### With multiple dependencies
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 import.meta.hot.accept(["./foo", "./bar"], newModules => {
   // newModules is an array where each item corresponds to the updated module
   // or undefined if that module had a syntax error
@@ -144,7 +141,7 @@ This variant accepts an array of dependencies. The callback receives the updated
 
 `import.meta.hot.data` carries state from the previous version of a module to the new one across a hot replacement. Writing to `import.meta.hot.data` also marks the module as self-accepting (equivalent to calling `import.meta.hot.accept()`).
 
-```tsx title="index.tsx" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```tsx title="index.tsx" icon="/icons/typescript.svg"
 import { createRoot } from "react-dom/client";
 import { App } from "./app";
 
@@ -152,21 +149,20 @@ const root = (import.meta.hot.data.root ??= createRoot(elem));
 root.render(<App />); // re-use an existing root
 ```
 
-In production, `data` is inlined to be `{}`, meaning it cannot be used as a state holder.
+In production, Bun inlines `data` as `{}`, so you cannot use it as a state holder.
 
 <Tip>
-  This pattern is recommended for stateful modules because Bun can minify `{}.prop ??= value` into `value` in
-  production.
+  We recommend this pattern for stateful modules because Bun can minify `{}.prop ??= value` into `value` in production.
 </Tip>
 
 ## import.meta.hot.dispose()
 
-Attaches an on-dispose callback. This is called:
+Attaches an on-dispose callback. Bun calls it:
 
-* Just before the module is replaced with another copy (before the next is loaded)
-* After the module is detached (removing all imports to this module, see `import.meta.hot.prune()`)
+- Just before the module is replaced with another copy (before the next is loaded)
+- After the module is detached (removing all imports to this module, see `import.meta.hot.prune()`)
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 const sideEffect = setupSideEffect();
 
 import.meta.hot.dispose(() => {
@@ -174,17 +170,17 @@ import.meta.hot.dispose(() => {
 });
 ```
 
-<Warning>This callback is not called on route navigation or when the browser tab closes.</Warning>
+<Warning>Bun does not call this callback on route navigation or when the browser tab closes.</Warning>
 
-Returning a promise delays module replacement until the module is disposed. All dispose callbacks are called in parallel.
+Returning a promise delays module replacement until the module is disposed. Bun calls all dispose callbacks in parallel.
 
 ## import.meta.hot.prune()
 
-Attaches an on-prune callback. This is called when all imports to this module are removed, but the module was previously loaded.
+Attaches an on-prune callback. Bun calls it when all imports to this module are removed, but the module was previously loaded.
 
 Use it to clean up resources that were created when the module was loaded. Unlike `import.meta.hot.dispose()`, it pairs better with `accept` and `data` for managing stateful resources. A full example managing a WebSocket:
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 import { something } from "./something";
 
 // Initialize or re-use a WebSocket connection
@@ -197,21 +193,21 @@ import.meta.hot.prune(() => {
 ```
 
 <Info>
-  If `dispose` was used instead, the WebSocket would close and re-open on every hot update. Both versions of the code
-  prevent page reloads when imported files are updated.
+  If you used `dispose` instead, the WebSocket would close and re-open on every hot update. Both versions of the code
+  prevent page reloads when you update imported files.
 </Info>
 
 ## import.meta.hot.on() and off()
 
 Use `on()` and `off()` to listen for events from the HMR runtime. Event names carry a prefix so that plugins do not conflict with each other.
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 import.meta.hot.on("bun:beforeUpdate", () => {
   console.log("before a hot update");
 });
 ```
 
-When a file is replaced, all of its event listeners are automatically removed.
+When a file is replaced, Bun automatically removes all of its event listeners.
 
 ### Built-in events
 

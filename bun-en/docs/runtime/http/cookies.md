@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Cookies
 
 > Work with cookies in HTTP requests and responses using Bun's built-in Cookie API.
@@ -12,7 +8,7 @@ Bun has a built-in API for working with cookies in HTTP requests and responses. 
 
 Read cookies from incoming requests using the `cookies` property on the `BunRequest` object:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   routes: {
     "/profile": req => {
@@ -34,7 +30,7 @@ Bun.serve({
 
 To set cookies, use the `set` method on the `CookieMap` from the `BunRequest` object.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   routes: {
     "/login": req => {
@@ -62,7 +58,7 @@ Bun.serve({
 
 To delete a cookie, use the `delete` method on the `request.cookies` (`CookieMap`) object:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   routes: {
     "/logout": req => {

@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # bun pm
 
 > Package manager utilities
@@ -12,7 +8,7 @@ The `bun pm` command group is a set of utilities for working with Bun's package 
 
 To create a tarball of the current workspace:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm pack
 ```
 
@@ -22,37 +18,37 @@ bun pm pack
 
 Basic usage:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm pack
 # Creates my-package-1.0.0.tgz in current directory
 ```
 
 Quiet mode for scripting:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 TARBALL=$(bun pm pack --quiet)
 echo "Created: $TARBALL"
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 Created: my-package-1.0.0.tgz
 ```
 
 Custom destination:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm pack --destination ./dist
 # Saves tarball in ./dist/ directory
 ```
 
 ## Options
 
-* `--dry-run`: Perform all tasks except writing the tarball to disk. Shows what would be included.
-* `--destination <dir>`: The directory to save the tarball in.
-* `--filename <name>`: An exact file name for the tarball.
-* `--ignore-scripts`: Skip running pre/postpack and prepare scripts.
-* `--gzip-level <0-9>`: Set the gzip compression level, from 0 to 9 (default 9).
-* `--quiet`: Print only the tarball filename, suppressing the rest of the output. Useful in scripts.
+- `--dry-run`: Perform all tasks except writing the tarball to disk. Shows what would be included.
+- `--destination <dir>`: The directory to save the tarball in.
+- `--filename <name>`: An exact file name for the tarball.
+- `--ignore-scripts`: Skip running pre/postpack and prepare scripts.
+- `--gzip-level <0-9>`: Set the gzip compression level, from 0 to 9 (default 9).
+- `--quiet`: Print only the tarball filename, suppressing the rest of the output. Useful in scripts.
 
 > **Note:** `--filename` and `--destination` cannot be used at the same time.
 
@@ -60,11 +56,11 @@ bun pm pack --destination ./dist
 
 **Default output:**
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm pack
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 bun pack v1.2.19
 
 packed 131B package.json
@@ -80,11 +76,11 @@ Packed size: 249B
 
 **Quiet output:**
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm pack --quiet
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 my-package-1.0.0.tgz
 ```
 
@@ -92,21 +88,21 @@ my-package-1.0.0.tgz
 
 To print the path to the `bin` directory for the local project:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm bin
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 /path/to/current/project/node_modules/.bin
 ```
 
 To print the path to the global `bin` directory:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm bin -g
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 <$HOME>/.bun/bin
 ```
 
@@ -114,13 +110,13 @@ bun pm bin -g
 
 To print a list of installed dependencies in the current project and their resolved versions, excluding their dependencies:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm ls
 # or
 bun list
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 /path/to/project node_modules (135)
 ├── eslint@8.38.0
 ├── react@18.2.0
@@ -131,13 +127,13 @@ bun list
 
 To print all installed dependencies, including nth-order dependencies:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm ls --all
 # or
 bun list --all
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 /path/to/project node_modules (135)
 ├── @eslint-community/eslint-utils@4.4.0
 ├── @eslint-community/regexpp@4.5.0
@@ -153,24 +149,79 @@ bun list --all
 ├── ...
 ```
 
-To print only trusted dependencies (those allowed to run [lifecycle scripts](/docs/pm/lifecycle)). When `trustedDependencies` is set in `package.json`, Bun shows the packages from that list; otherwise it shows packages from its [default trusted dependencies](https://github.com/oven-sh/bun/blob/main/src/install/default-trusted-dependencies.txt) list.
+To print only trusted dependencies (those allowed to run [lifecycle scripts](/pm/lifecycle)). When `trustedDependencies` is set in `package.json`, Bun shows the packages from that list; otherwise it shows packages from its [default trusted dependencies](https://github.com/oven-sh/bun/blob/main/src/install/default-trusted-dependencies.txt) list.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm ls --trusted
 # or
 bun list --trusted
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 /path/to/project node_modules (135)
 └── esbuild@0.21.5
 ```
+
+## licenses
+
+List every installed package grouped by license, as read from each package's `package.json` in `node_modules`. Bun lists packages without a `license` field under `Unknown`. Bun marks packages only reachable through `devDependencies` with `(dev)`.
+
+```bash terminal icon="terminal"
+bun pm licenses
+# or
+bun pm licenses ls
+```
+
+```txt
+MIT (2)
+├── path-parse@1.0.6
+└── resolve@1.9.0
+
+Unknown (4)
+├── a-dep@1.0.1 (dev)
+├── no-deps@1.0.0
+├── no-deps@1.0.1
+└── one-dep@1.0.0
+```
+
+| Flag                           | Description                                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------- |
+| `--json`                       | Print a JSON object keyed by license                                            |
+| `--long`                       | Also print each package's `author`, `description`, and `homepage`               |
+| `--prod`, `-p`                 | Skip `devDependencies` (same as `--omit=dev`)                                   |
+| `--dev`, `-D`                  | Only list what `devDependencies` pull in                                        |
+| `--omit=<dev\|optional\|peer>` | Skip a dependency type, as with `bun install`                                   |
+| `--filter <pattern>`, `-F`     | Only list dependencies of the matching workspaces ([filter syntax](/pm/filter)) |
+
+```bash terminal icon="terminal"
+bun pm licenses --json --prod
+```
+
+```json
+{
+  "MIT": [
+    {
+      "name": "path-parse",
+      "versions": ["1.0.6"],
+      "paths": ["/home/me/app/node_modules/path-parse"],
+      "license": "MIT",
+      "homepage": "https://github.com/jbgutierrez/path-parse#readme",
+      "author": "Javier Blanco <http://jbgutierrez.info>",
+      "description": "Node.js path.parse() ponyfill"
+    }
+  ]
+}
+```
+
+From a workspace root, Bun lists every workspace's dependencies. From inside a workspace package, Bun lists only that package's dependencies. Use [`bun why`](/pm/cli/why) to find out what pulls in an unexpected package.
+
+Requires both `bun.lock` and `node_modules`. Bun skips packages that are in the lockfile but missing from `node_modules` (e.g. after `bun install --production`) and prints a warning.
 
 ## whoami
 
 Print your npm username. Requires you to be logged in (`bunx npm login`) with credentials in either `bunfig.toml` or `.npmrc`:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm whoami
 ```
 
@@ -178,19 +229,19 @@ bun pm whoami
 
 To generate and print the hash of the current lockfile:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm hash
 ```
 
 To print the string used to hash the lockfile:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm hash-string
 ```
 
 To print the hash stored in the current lockfile:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm hash-print
 ```
 
@@ -198,13 +249,13 @@ bun pm hash-print
 
 To print the path to Bun's global module cache:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm cache
 ```
 
 To clear Bun's global module cache:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm cache rm
 ```
 
@@ -212,7 +263,7 @@ bun pm cache rm
 
 To migrate another package manager's lockfile without installing anything:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm migrate
 ```
 
@@ -220,11 +271,11 @@ bun pm migrate
 
 To print current untrusted dependencies with scripts:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm untrusted
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 ./node_modules/@biomejs/biome @1.8.3
  » [postinstall]: node scripts/postinstall.js
 
@@ -235,19 +286,19 @@ These dependencies had their lifecycle scripts blocked during install.
 
 To run scripts for untrusted dependencies and add to `trustedDependencies`:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm trust <names>
 ```
 
 Options for the `trust` command:
 
-* `--all`: Trust all untrusted dependencies.
+- `--all`: Trust all untrusted dependencies.
 
 ## default-trusted
 
 To print the default trusted dependencies list:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm default-trusted
 ```
 
@@ -257,11 +308,11 @@ See the [current list on GitHub](https://github.com/oven-sh/bun/blob/main/src/in
 
 To display current package version and help:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm version
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 bun pm version v1.3.3 (ca7428e9)
 Current package version: v1.0.0
 
@@ -291,11 +342,11 @@ Examples:
 
 To bump the version in `package.json`:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun pm version patch
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 v1.0.1
 ```
 
@@ -307,7 +358,7 @@ Manage `package.json` data with get, set, delete, and fix operations.
 
 All commands support dot and bracket notation:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 scripts.build              # dot notation
 contributors[0]            # array access
 workspaces.0               # dot with numeric index
@@ -316,7 +367,7 @@ scripts[test:watch]        # bracket for special chars
 
 Examples:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 # get
 bun pm pkg get name                               # single property
 bun pm pkg get name version                       # multiple properties

@@ -1,20 +1,16 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Fetch
 
 > Send HTTP requests with Bun's fetch API
 
 Bun implements the WHATWG `fetch` standard, with some extensions to meet the needs of server-side JavaScript.
 
-Bun also implements `node:http`, but `fetch` is generally recommended instead.
+Bun also implements `node:http`, but we generally recommend `fetch` instead.
 
 ## Sending an HTTP request
 
 To send an HTTP request, use `fetch`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com");
 
 console.log(response.status); // => 200
@@ -24,13 +20,13 @@ const text = await response.text(); // or response.json(), response.formData(), 
 
 `fetch` also works with HTTPS URLs.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("https://example.com");
 ```
 
 You can also pass `fetch` a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const request = new Request("http://example.com", {
   method: "POST",
   body: "Hello, world!",
@@ -43,7 +39,7 @@ const response = await fetch(request);
 
 To send a POST request, pass an object with the `method` property set to `"POST"`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com", {
   method: "POST",
   body: "Hello, world!",
@@ -56,7 +52,7 @@ const response = await fetch("http://example.com", {
 
 To proxy a request, pass an object with the `proxy` property set to a URL string, a `URL` instance, or to an object whose `url` is a string or a `URL`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com", {
   proxy: "http://proxy.com",
 });
@@ -64,7 +60,7 @@ const response = await fetch("http://example.com", {
 
 To send custom headers to the proxy server, pass an object instead:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com", {
   proxy: {
     url: "http://proxy.com",
@@ -76,13 +72,13 @@ const response = await fetch("http://example.com", {
 });
 ```
 
-The `headers` are sent directly to the proxy in `CONNECT` requests (for HTTPS targets) or in the proxy request (for HTTP targets). If you provide a `Proxy-Authorization` header, it overrides any credentials in the proxy URL.
+Bun sends the `headers` directly to the proxy in `CONNECT` requests (for HTTPS targets) or in the proxy request (for HTTP targets). If you provide a `Proxy-Authorization` header, it overrides any credentials in the proxy URL.
 
 ### Custom headers
 
 To set custom headers, pass an object with the `headers` property set to an object.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com", {
   headers: {
     "X-Custom-Header": "value",
@@ -92,7 +88,7 @@ const response = await fetch("http://example.com", {
 
 You can also set headers using the [Headers](https://developer.mozilla.org/en-US/docs/Web/API/Headers) object.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const headers = new Headers();
 headers.append("X-Custom-Header", "value");
 
@@ -105,18 +101,18 @@ const response = await fetch("http://example.com", {
 
 To read the response body, use one of the following methods:
 
-* `response.text(): Promise<string>`: Returns a promise that resolves with the response body as a string.
-* `response.json(): Promise<any>`: Returns a promise that resolves with the response body as a JSON object.
-* `response.formData(): Promise<FormData>`: Returns a promise that resolves with the response body as a `FormData` object.
-* `response.bytes(): Promise<Uint8Array>`: Returns a promise that resolves with the response body as a `Uint8Array`.
-* `response.arrayBuffer(): Promise<ArrayBuffer>`: Returns a promise that resolves with the response body as an `ArrayBuffer`.
-* `response.blob(): Promise<Blob>`: Returns a promise that resolves with the response body as a `Blob`.
+- `response.text(): Promise<string>`: Returns a promise that resolves with the response body as a string.
+- `response.json(): Promise<any>`: Returns a promise that resolves with the response body as a JSON object.
+- `response.formData(): Promise<FormData>`: Returns a promise that resolves with the response body as a `FormData` object.
+- `response.bytes(): Promise<Uint8Array>`: Returns a promise that resolves with the response body as a `Uint8Array`.
+- `response.arrayBuffer(): Promise<ArrayBuffer>`: Returns a promise that resolves with the response body as an `ArrayBuffer`.
+- `response.blob(): Promise<Blob>`: Returns a promise that resolves with the response body as a `Blob`.
 
 #### Streaming response bodies
 
 You can use async iterators to stream the response body.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com");
 
 for await (const chunk of response.body) {
@@ -126,7 +122,7 @@ for await (const chunk of response.body) {
 
 You can also access the `ReadableStream` directly.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com");
 
 const stream = response.body;
@@ -139,7 +135,7 @@ const { value, done } = await reader.read();
 
 You can also stream data in request bodies using a `ReadableStream`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream({
   start(controller) {
     controller.enqueue("Hello");
@@ -157,21 +153,21 @@ const response = await fetch("http://example.com", {
 
 When using streams with HTTP(S):
 
-* The data is streamed directly to the network without buffering the entire body in memory
-* If the connection is lost, the stream is canceled
-* The `Content-Length` header is not automatically set unless the stream has a known size
+- Bun streams the data directly to the network without buffering the entire body in memory
+- If the connection is lost, Bun cancels the stream
+- Bun sets the `Content-Length` header automatically only when the stream has a known size
 
 When using streams with S3:
 
-* For PUT/POST requests, Bun automatically uses multipart upload
-* The stream is consumed in chunks and uploaded in parallel
-* Progress can be monitored through the S3 options
+- For PUT/POST requests, Bun automatically uses multipart upload
+- Bun consumes the stream in chunks and uploads the chunks in parallel
+- You can monitor progress through the S3 options
 
 ### Fetching a URL with a timeout
 
 To fetch a URL with a timeout, use `AbortSignal.timeout`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com", {
   signal: AbortSignal.timeout(1000),
 });
@@ -181,7 +177,7 @@ const response = await fetch("http://example.com", {
 
 To cancel a request, use an `AbortController`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const controller = new AbortController();
 
 const response = await fetch("http://example.com", {
@@ -195,7 +191,7 @@ controller.abort();
 
 To fetch a URL using a Unix domain socket, use the `unix: string` option:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("https://hostname/a/path", {
   unix: "/var/run/path/to/unix.sock",
   method: "POST",
@@ -210,7 +206,7 @@ const response = await fetch("https://hostname/a/path", {
 
 To use a client certificate, use the `tls` option:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 await fetch("https://example.com", {
   tls: {
     key: Bun.file("/path/to/key.pem"),
@@ -224,7 +220,7 @@ await fetch("https://example.com", {
 
 To customize TLS validation, use the `checkServerIdentity` option in `tls`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 await fetch("https://example.com", {
   tls: {
     checkServerIdentity: (hostname, peerCertificate) => {
@@ -240,7 +236,7 @@ This option is similar to the one in Node's `tls` module.
 
 To disable TLS validation, set `rejectUnauthorized` to `false`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 await fetch("https://example.com", {
   tls: {
     rejectUnauthorized: false,
@@ -254,7 +250,7 @@ This avoids SSL errors with self-signed certificates, but it disables TLS valida
 
 In addition to the standard fetch options, Bun provides several extensions:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com", {
   // Control automatic response decompression (default: true)
   // Supports gzip, deflate, brotli (br), and zstd
@@ -276,7 +272,7 @@ Beyond HTTP(S), Bun's fetch supports several additional protocols:
 
 Bun supports fetching from S3 buckets directly.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // Using environment variables for credentials
 const response = await fetch("s3://my-bucket/path/to/object");
 
@@ -292,20 +288,20 @@ const response = await fetch("s3://my-bucket/path/to/object", {
 
 Only PUT and POST methods support request bodies when using S3. For uploads, Bun automatically uses multipart upload for streaming bodies.
 
-See the [S3](/docs/runtime/s3) documentation.
+See the [S3](/runtime/s3) documentation.
 
 #### File URLs - `file://`
 
 You can fetch local files using the `file:` protocol:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("file:///path/to/file.txt");
 const text = await response.text();
 ```
 
-On Windows, paths are automatically normalized:
+On Windows, Bun normalizes paths automatically:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // Both work on Windows
 const response = await fetch("file:///C:/path/to/file.txt");
 const response2 = await fetch("file:///c:/path\\to/file.txt");
@@ -315,7 +311,7 @@ const response2 = await fetch("file:///c:/path\\to/file.txt");
 
 Bun supports the `data:` URL scheme:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==");
 const text = await response.text(); // "Hello, World!"
 ```
@@ -324,7 +320,7 @@ const text = await response.text(); // "Hello, World!"
 
 You can fetch blobs using URLs created by `URL.createObjectURL()`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const blob = new Blob(["Hello, World!"], { type: "text/plain" });
 const url = URL.createObjectURL(blob);
 const response = await fetch(url);
@@ -334,23 +330,23 @@ const response = await fetch(url);
 
 Bun's fetch implementation includes several specific error cases:
 
-* Using a request body with GET/HEAD methods throws an error (which is expected for the fetch API)
-* Using the `proxy` and `unix` options together throws an error
-* TLS certificate validation failures when `rejectUnauthorized` is true (or undefined)
-* S3 operations may throw specific errors related to authentication or permissions
+- Using a request body with GET/HEAD methods throws an error (which is expected for the fetch API)
+- Using the `proxy` and `unix` options together throws an error
+- TLS certificate validation failures when `rejectUnauthorized` is true (or undefined)
+- S3 operations may throw specific errors related to authentication or permissions
 
 ### Content-Type handling
 
 Bun automatically sets the `Content-Type` header for request bodies when not explicitly provided:
 
-* For `Blob` objects, uses the blob's `type`
-* For `FormData`, sets appropriate multipart boundary
+- For `Blob` objects, uses the blob's `type`
+- For `FormData`, sets appropriate multipart boundary
 
 ## Debugging
 
 For debugging, pass `verbose: true` to `fetch`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = await fetch("http://example.com", {
   verbose: true,
 });
@@ -358,7 +354,7 @@ const response = await fetch("http://example.com", {
 
 This prints the request and response headers to your terminal:
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 [fetch] > HTTP/1.1 GET http://example.com/
 [fetch] > Connection: keep-alive
 [fetch] > User-Agent: Bun/1.3.3
@@ -393,7 +389,7 @@ Bun provides APIs to optimize each of these steps.
 
 Use `dns.prefetch` when you know you'll connect to a host soon and want to avoid the initial DNS lookup.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { dns } from "bun";
 
 dns.prefetch("bun.com");
@@ -403,13 +399,13 @@ dns.prefetch("bun.com");
 
 By default, Bun caches and deduplicates DNS queries in-memory for up to 30 seconds. `dns.getCacheStats()` returns the cache stats.
 
-See [DNS caching](/docs/runtime/networking/dns).
+See [DNS caching](/runtime/networking/dns).
 
 ### Preconnect to a host
 
 `fetch.preconnect` starts the DNS lookup, TCP socket connection, and TLS handshake for a host before you're ready to send a request to it.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { fetch } from "bun";
 
 fetch.preconnect("https://bun.com");
@@ -421,7 +417,7 @@ Calling `fetch` immediately after `fetch.preconnect` does not make your request 
 
 To preconnect to a host at startup, pass `--fetch-preconnect`:
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun --fetch-preconnect https://bun.com ./my-script.ts
 ```
 
@@ -435,14 +431,14 @@ Bun automatically reuses connections to the same host. This is called **connecti
 
 By default, Bun limits the number of simultaneous `fetch` requests to 256, for two reasons:
 
-* It improves overall system stability. Operating systems have an upper limit on the number of simultaneous open TCP sockets, usually in the low thousands. Nearing this limit causes your entire computer to behave strangely. Applications hang and crash.
-* It encourages HTTP Keep-Alive connection reuse. For short-lived HTTP requests, the slowest step is often the initial connection setup. Reusing connections can save a lot of time.
+- It improves overall system stability. Operating systems have an upper limit on the number of simultaneous open TCP sockets, usually in the low thousands. Nearing this limit causes your entire computer to behave strangely. Applications hang and crash.
+- It encourages HTTP Keep-Alive connection reuse. For short-lived HTTP requests, the slowest step is often the initial connection setup. Reusing connections can save a lot of time.
 
-When the limit is exceeded, requests are queued and sent as soon as the next request ends.
+When the limit is exceeded, Bun queues requests and sends them as soon as the next request ends.
 
 To raise the limit, set the `BUN_CONFIG_MAX_HTTP_REQUESTS` environment variable:
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 BUN_CONFIG_MAX_HTTP_REQUESTS=512 bun ./my-script.ts
 ```
 
@@ -452,16 +448,16 @@ The max value for this limit is 65,535. The maximum port number is 65,535, so it
 
 The fastest way to read the response body is to use one of these methods:
 
-* `response.text(): Promise<string>`
-* `response.json(): Promise<any>`
-* `response.formData(): Promise<FormData>`
-* `response.bytes(): Promise<Uint8Array>`
-* `response.arrayBuffer(): Promise<ArrayBuffer>`
-* `response.blob(): Promise<Blob>`
+- `response.text(): Promise<string>`
+- `response.json(): Promise<any>`
+- `response.formData(): Promise<FormData>`
+- `response.bytes(): Promise<Uint8Array>`
+- `response.arrayBuffer(): Promise<ArrayBuffer>`
+- `response.blob(): Promise<Blob>`
 
 You can also use `Bun.write` to write the response body to a file on disk:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { write } from "bun";
 
 await write("output.txt", response);
@@ -469,13 +465,13 @@ await write("output.txt", response);
 
 ### Implementation details
 
-* Connection pooling is enabled by default but can be disabled per-request with `keepalive: false` or the `"Connection: close"` header.
-* Large file uploads are optimized using the operating system's `sendfile` syscall under specific conditions:
-  * The file must be larger than 32KB
-  * The request must not be using a proxy
-  * On macOS, only regular files (not pipes, sockets, or devices) can use `sendfile`
-  * When these conditions aren't met, or when using S3/streaming uploads, Bun falls back to reading the file into memory
-  * This optimization is particularly effective for HTTP (not HTTPS) requests where the file can be sent directly from the kernel to the network stack
-* S3 operations automatically handle signing requests and merging authentication headers
+- Connection pooling is enabled by default. You can disable it per-request with `keepalive: false` or the `"Connection: close"` header.
+- Bun optimizes large file uploads using the operating system's `sendfile` syscall under specific conditions:
+  - The file must be larger than 32KB
+  - The request must not be using a proxy or the `compress` option
+  - On macOS, only regular files (not pipes, sockets, or devices) can use `sendfile`
+  - When these conditions aren't met, or when using S3/streaming uploads, Bun falls back to reading the file into memory
+  - Bun only uses this optimization for HTTP (not HTTPS) requests, where the file can be sent directly from the kernel to the network stack; Bun does not use it on Windows
+- S3 operations automatically handle signing requests and merging authentication headers
 
 Many of these features are Bun-specific extensions to the standard fetch API.

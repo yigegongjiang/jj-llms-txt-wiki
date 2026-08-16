@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Bindgen
 
 > Bindgen for Bun
@@ -15,14 +11,14 @@ code.
 There are other code generators and systems that achieve similar purposes;
 the following will all eventually be phased out in favor of this one:
 
-* "Classes generator", converting `*.classes.ts` for custom classes.
-* "JS2Native", allowing ad-hoc calls from `src/js` to native code.
+- "Classes generator", converting `*.classes.ts` for custom classes.
+- "JS2Native", allowing ad-hoc calls from `src/js` to native code.
 
 ## Creating JS Functions in Rust
 
 Given a file implementing a function, such as `add`:
 
-```rust src/jsc/bindgen_test.rs theme={"theme":{"light":"github-light","dark":"dracula"}}
+```rust src/jsc/bindgen_test.rs
 use crate::{JSGlobalObject, JsResult};
 use crate::r#gen::bindgen_test as generated;
 
@@ -33,7 +29,7 @@ pub fn add(global: &JSGlobalObject, a: i32, b: i32) -> JsResult<i32> {
             // Binding functions can propagate out-of-memory and JS exceptions
             // directly; other failures (like this integer overflow) must be
             // converted into a thrown error. Remember to be descriptive.
-            Err(global.throw_pretty(format_args!("Integer overflow while adding")))
+            Err(global.throw(format_args!("Integer overflow while adding")))
         }
     }
 }
@@ -42,7 +38,7 @@ pub fn add(global: &JSGlobalObject, a: i32, b: i32) -> JsResult<i32> {
 Then describe the API schema using a `.bind.ts` file. The binding file goes
 next to the Rust file.
 
-```ts src/jsc/bindgen_test.bind.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts src/jsc/bindgen_test.bind.ts icon="/icons/typescript.svg"
 import { fn, t } from "bindgen";
 
 export const add = fn({
@@ -57,7 +53,7 @@ export const add = fn({
 
 This function declaration is equivalent to:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 /**
  * Throws if zero arguments are provided.
  * Wraps out of range numbers using modulo.
@@ -66,12 +62,14 @@ declare function add(a: number, b: number = -1): number;
 ```
 
 The code generator emits a C++ thunk that validates and coerces the JS
-arguments, then calls the Rust implementation. On the Rust side the generated
-module is reachable as `crate::r#gen::<basename>` (for `bindgen_test.bind.ts`,
-that's `crate::r#gen::bindgen_test`). To construct a `JSFunction` wrapping the
+arguments, then calls the Rust implementation. On the Rust side bindgen emits
+nothing: the matching module is hand-written in
+`src/jsc/bindings/GeneratedBindings.rs` and is reachable as
+`crate::r#gen::<basename>` (for `bindgen_test.bind.ts`, that's
+`crate::r#gen::bindgen_test`). To construct a `JSFunction` wrapping the
 native implementation, use `generated::create_add_callback(global)`:
 
-```rust theme={"theme":{"light":"github-light","dark":"dracula"}}
+```rust
 use crate::r#gen::bindgen_test as generated;
 
 let js_fn: JSValue = generated::create_add_callback(global);
@@ -80,8 +78,8 @@ let js_fn: JSValue = generated::create_add_callback(global);
 In JS files in `src/js/`, `$bindgenFn("bindgen_test.bind.ts", "add")` returns
 a handle to the implementation.
 
-Exported bindgen functions are snake\_cased on the Rust side
-(`requiredAndOptionalArg` → `required_and_optional_arg`), and the generated
+Exported bindgen functions are snake_cased on the Rust side
+(`requiredAndOptionalArg` → `required_and_optional_arg`). The hand-written
 callback constructor follows the same convention
 (`create_required_and_optional_arg_callback`).
 
@@ -97,15 +95,15 @@ freed after the function returns.
 
 TLDRs from the WebIDL spec:
 
-* ByteString can only contain valid latin1 characters. It is not safe to assume `bun_core::String` is already in 8-bit format, but it is extremely likely.
-* USVString does not contain invalid surrogate pairs, so its text can be represented correctly in UTF-8.
-* DOMString is the loosest but also the most recommended strategy.
+- ByteString can only contain valid latin1 characters. It is not safe to assume `bun_core::String` is already in 8-bit format, but it is extremely likely.
+- USVString does not contain invalid surrogate pairs, so its text can be represented correctly in UTF-8.
+- DOMString is the loosest but also the most recommended strategy.
 
 ## Function Variants
 
 The `variants` key declares multiple variants (also known as overloads) of a function.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { fn, t } from "bindgen";
 
 export const action = fn({
@@ -128,7 +126,7 @@ export const action = fn({
 
 Each variant gets a numbered Rust function:
 
-```rust theme={"theme":{"light":"github-light","dark":"dracula"}}
+```rust
 pub fn action1(a: i32) -> i32 {
     a
 }
@@ -148,11 +146,10 @@ A `dictionary` describes a JavaScript object, typically a function input. For fu
 
 An example of `stringEnum` from `fmt_jsc.bind.ts` / `bun:internal-for-testing`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 export const Formatter = t.stringEnum("highlight-javascript", "highlight-javascript-redacted", "escape-powershell");
 
 export const fmtString = fn({
-  implNamespace: "js_bindings",
   args: {
     global: t.globalObject,
     code: t.UTF8String,
@@ -167,33 +164,25 @@ On the Rust side, the enum is mirrored as a `#[repr(u8)]` enum. Bindgen
 `enum class`, so discriminants must match the generated header's order, not
 the `.bind.ts` declaration order:
 
-```rust theme={"theme":{"light":"github-light","dark":"dracula"}}
-pub mod js_bindings {
-    #[repr(u8)]
-    #[derive(Copy, Clone, Eq, PartialEq)]
-    pub enum Formatter {
-        EscapePowershell = 0,
-        HighlightJavascript = 1,
-        HighlightJavascriptRedacted = 2,
-    }
+```rust
+#[repr(u8)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub enum Formatter {
+    EscapePowershell = 0,
+    HighlightJavascript = 1,
+    HighlightJavascriptRedacted = 2,
+}
 
-    pub fn fmt_string(
-        global: &JSGlobalObject,
-        code: &[u8],
-        formatter_id: Formatter,
-    ) -> JsResult<bun_core::String> {
-        // ...
-    }
+pub fn fmt_string(
+    global: &JSGlobalObject,
+    code: &[u8],
+    formatter_id: Formatter,
+) -> JsResult<bun_core::String> {
+    // ...
 }
 ```
 
 WebIDL strongly encourages kebab-case for enumeration values, to be consistent with existing Web APIs.
-
-## `implNamespace`
-
-Setting `implNamespace: "foo"` on a `fn({...})` routes the generated call to
-`crate::<basename>::foo::fn_name` instead of `crate::<basename>::fn_name`. Use
-this to group related binding implementations under a submodule.
 
 ## `t.oneOf`
 
@@ -202,15 +191,15 @@ A `oneOf` is a union of two or more types. It is represented as a Rust
 
 ## Attributes
 
-Attributes can be chained onto `t.*` types. On all types:
+You can chain attributes onto `t.*` types. On all types:
 
-* `.required`, in dictionary parameters only
-* `.optional`, in function arguments only
-* `.default(T)`
+- `.required`, in dictionary parameters only
+- `.optional`, in function arguments only
+- `.default(T)`
 
 When a value is `.optional`, it is lowered to a Rust `Option<T>`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 export const requiredAndOptionalArg = fn({
   args: {
     a: t.boolean,
@@ -222,21 +211,21 @@ export const requiredAndOptionalArg = fn({
 });
 ```
 
-```rust theme={"theme":{"light":"github-light","dark":"dracula"}}
+```rust
 pub fn required_and_optional_arg(a: bool, b: Option<usize>, c: i32, d: Option<u8>) -> i32 {
     // ...
 }
 ```
 
 Depending on the type, more attributes are available. See the type definitions
-in auto-complete for details. Only one of these three attributes can be
-applied, and it must be applied last.
+in auto-complete for details. You can apply only one of these three attributes,
+and you must apply it last.
 
 ### Integer Attributes
 
 Integer types take `clamp` or `enforceRange` to customize overflow behavior:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { fn, t } from "bindgen";
 
 export const add = fn({
@@ -264,7 +253,7 @@ are much stricter about the input they accept. For example, Node's numerical
 validator checks `typeof value === 'number'`, while WebIDL uses `ToNumber` for
 lossy conversion.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { fn, t } from "bindgen";
 
 export const add = fn({

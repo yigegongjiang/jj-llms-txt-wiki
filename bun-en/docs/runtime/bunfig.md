@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # bunfig.toml
 
 > Configure Bun's behavior using its configuration file bunfig.toml
@@ -14,12 +10,12 @@ Bun relies on pre-existing configuration files like `package.json` and `tsconfig
 
 Put `bunfig.toml` in your project root, alongside your `package.json`.
 
-To configure Bun globally, you can also create a `.bunfig.toml` file at one of the following paths:
+To configure Bun's package manager globally, you can also create a `.bunfig.toml` file at one of the following paths:
 
-* `$HOME/.bunfig.toml`
-* `$XDG_CONFIG_HOME/.bunfig.toml`
+- `$HOME/.bunfig.toml`
+- `$XDG_CONFIG_HOME/.bunfig.toml`
 
-If Bun finds both a global and a local `bunfig`, it shallow-merges them, with local overriding global. CLI flags override `bunfig` settings where applicable.
+Only package manager commands (`bun install`, `bun add`, `bun remove`, `bun update`, `bun pm`, `bunx`, and so on) read the global file. If Bun finds both a global and a local `bunfig`, it shallow-merges them, with local overriding global. CLI flags override `bunfig` settings where applicable.
 
 ## Runtime
 
@@ -29,7 +25,7 @@ Top-level fields in `bunfig.toml` configure Bun's runtime behavior.
 
 An array of scripts/plugins to execute before running a file or script.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 # scripts to run before `bun run`-ing a file or script
 # register plugins by adding them to this list
 preload = ["./preload.ts"]
@@ -39,7 +35,7 @@ preload = ["./preload.ts"]
 
 Configure how Bun handles JSX. You can also set these fields in the `compilerOptions` of your `tsconfig.json`, but `bunfig.toml` supports them for non-TypeScript projects.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 jsx = "react"
 jsxFactory = "h"
 jsxFragment = "Fragment"
@@ -48,16 +44,16 @@ jsxImportSource = "react"
 
 Refer to the tsconfig docs for more information on these fields.
 
-* [`jsx`](https://www.typescriptlang.org/tsconfig#jsx)
-* [`jsxFactory`](https://www.typescriptlang.org/tsconfig#jsxFactory)
-* [`jsxFragment`](https://www.typescriptlang.org/tsconfig#jsxFragment)
-* [`jsxImportSource`](https://www.typescriptlang.org/tsconfig#jsxImportSource)
+- [`jsx`](https://www.typescriptlang.org/tsconfig#jsx)
+- [`jsxFactory`](https://www.typescriptlang.org/tsconfig#jsxFactory)
+- [`jsxFragment`](https://www.typescriptlang.org/tsconfig#jsxFragment)
+- [`jsxImportSource`](https://www.typescriptlang.org/tsconfig#jsxImportSource)
 
 ### `smol`
 
 Enable `smol` mode. This reduces memory usage at the cost of performance.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 # Reduce memory usage at the cost of performance
 smol = true
 ```
@@ -66,7 +62,7 @@ smol = true
 
 Set the log level: `"debug"`, `"warn"`, or `"error"`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 logLevel = "debug" # "debug" | "warn" | "error"
 ```
 
@@ -74,7 +70,7 @@ logLevel = "debug" # "debug" | "warn" | "error"
 
 The `define` field replaces global identifiers with constant expressions wherever they appear. The expression should be a JSON string.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [define]
 # Replace any usage of "process.env.bagel" with the string `lox`.
 # The values are parsed as JSON, except single-quoted strings are supported and `'undefined'` becomes `undefined` in JS.
@@ -84,9 +80,9 @@ The `define` field replaces global identifiers with constant expressions whereve
 
 ### `loader`
 
-Configure how Bun maps file extensions to [loaders](/docs/bundler/loaders). Use this to load file types Bun doesn't support natively.
+Configure how Bun maps file extensions to [loaders](/bundler/loaders). Use this to load file types Bun doesn't support natively.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [loader]
 # when a .bagel file is imported, treat it like a tsx file
 ".bagel" = "tsx"
@@ -94,27 +90,27 @@ Configure how Bun maps file extensions to [loaders](/docs/bundler/loaders). Use 
 
 Bun supports the following loaders:
 
-* `jsx`
-* `js`
-* `ts`
-* `tsx`
-* `css`
-* `file`
-* `json`
-* `toml`
-* `wasm`
-* `napi`
-* `base64`
-* `dataurl`
-* `text`
+- `jsx`
+- `js`
+- `ts`
+- `tsx`
+- `css`
+- `file`
+- `json`
+- `toml`
+- `wasm`
+- `napi`
+- `base64`
+- `dataurl`
+- `text`
 
 ### `telemetry`
 
-The `telemetry` field enables or disables analytics. By default, telemetry is enabled. This is equivalent to the `DO_NOT_TRACK` environment variable.
+The `telemetry` field enables or disables analytics. By default, telemetry is enabled. This setting is equivalent to the `DO_NOT_TRACK` environment variable.
 
 We do not currently collect telemetry; this setting only controls anonymous crash reports. We plan to collect information like which Bun APIs are used most or how long `bun build` takes.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 telemetry = false
 ```
 
@@ -122,21 +118,21 @@ telemetry = false
 
 Configure automatic `.env` file loading. Bun loads `.env` files by default. To disable this behavior:
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 # Disable automatic .env file loading
 env = false
 ```
 
 You can also use object syntax with the `file` property:
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [env]
 file = false
 ```
 
 Use this in production or CI/CD pipelines where you want to rely solely on system environment variables.
 
-Files passed explicitly with `--env-file` are still loaded even when default loading is disabled.
+Bun still loads files passed explicitly with `--env-file` even when default loading is disabled.
 
 ### `console`
 
@@ -146,7 +142,7 @@ Configure console output behavior.
 
 Set the default depth for `console.log()` object inspection. Default `2`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [console]
 depth = 3
 ```
@@ -159,9 +155,9 @@ The `[serve]` section configures `Bun.serve` and `bun run` when serving HTTP.
 
 ### `serve.port`
 
-The default port for `Bun.serve` to listen on. Default `3000`. Can also be set with the `BUN_PORT` or `PORT` environment variables, or the `--port` flag.
+The default port for `Bun.serve` to listen on. Default `3000`. You can also set it with the `BUN_PORT` or `PORT` environment variables, or the `--port` flag.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [serve]
 port = 3000
 ```
@@ -170,7 +166,7 @@ port = 3000
 
 The `[test]` section of `bunfig.toml` configures the test runner.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 # configuration goes here
 ```
@@ -179,7 +175,7 @@ The `[test]` section of `bunfig.toml` configures the test runner.
 
 The root directory to run tests from. Default `.`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 root = "./__tests__"
 ```
@@ -188,16 +184,16 @@ root = "./__tests__"
 
 Same as the top-level `preload` field, but only applies to `bun test`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 preload = ["./setup.ts"]
 ```
 
 ### `test.pathIgnorePatterns`
 
-Exclude files and directories from test discovery using glob patterns. Matched directories are pruned during scanning, so their contents are never traversed. Use this when your project contains submodules or vendored code with `*.test.ts` files that you don't want `bun test` to pick up.
+Exclude files and directories from test discovery using glob patterns. The test runner prunes matched directories during scanning, so it never traverses their contents. Use this when your project contains submodules or vendored code with `*.test.ts` files that you don't want `bun test` to pick up.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 pathIgnorePatterns = ["vendor/**", "submodules/**", "fixtures/**"]
 ```
@@ -208,7 +204,7 @@ Equivalent CLI flag: `--path-ignore-patterns`. CLI flags override the `bunfig.to
 
 Same as the top-level `smol` field, but only applies to `bun test`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 smol = true
 ```
@@ -217,7 +213,7 @@ smol = true
 
 Enables coverage reporting. Default `false`. Use `--coverage` to override.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 coverage = false
 ```
@@ -226,7 +222,7 @@ coverage = false
 
 The coverage threshold. By default, no threshold is set. If your test suite does not meet it, `bun test` exits with a non-zero exit code.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 
 # to require 90% line-level and function-level coverage
@@ -235,7 +231,7 @@ coverageThreshold = 0.9
 
 You can set separate thresholds for line, function, and statement coverage.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 coverageThreshold = { lines = 0.7, functions = 0.8, statements = 0.9 }
 ```
@@ -244,7 +240,7 @@ coverageThreshold = { lines = 0.7, functions = 0.8, statements = 0.9 }
 
 Whether to skip test files when computing coverage statistics. Default `false`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 coverageSkipTestFiles = false
 ```
@@ -253,7 +249,7 @@ coverageSkipTestFiles = false
 
 Whether to report coverage against transpiled output instead of remapping line numbers through sourcemaps back to the original source. Default `false`. Primarily useful for debugging.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 coverageIgnoreSourcemaps = false
 ```
@@ -262,7 +258,7 @@ coverageIgnoreSourcemaps = false
 
 Exclude files from coverage reports using glob patterns. Accepts a single pattern or an array of patterns.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 # Single pattern
 coveragePathIgnorePatterns = "**/*.spec.ts"
@@ -278,9 +274,9 @@ coveragePathIgnorePatterns = [
 
 ### `test.coverageReporter`
 
-By default, coverage reports are printed to the console. For persistent reports that CI and other tools can read, use `lcov`.
+By default, the test runner prints coverage reports to the console. For persistent reports that CI and other tools can read, use `lcov`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 coverageReporter  = ["text", "lcov"]  # default ["text"]
 ```
@@ -289,7 +285,7 @@ coverageReporter  = ["text", "lcov"]  # default ["text"]
 
 Set the path where coverage reports are saved. This only applies to persistent reporters like `lcov`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 coverageDir = "path/to/somewhere"  # default "coverage"
 ```
@@ -298,7 +294,7 @@ coverageDir = "path/to/somewhere"  # default "coverage"
 
 Run tests in random order. Default `false`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 randomize = true
 ```
@@ -311,7 +307,7 @@ The `--randomize` CLI flag overrides this setting.
 
 Set the random seed for test randomization. This option requires `randomize` to be `true`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 randomize = true
 seed = 2444615283
@@ -325,7 +321,7 @@ The `--seed` CLI flag overrides this setting.
 
 Re-run each test file a specified number of times. Default `0` (run once).
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 rerunEach = 3
 ```
@@ -336,9 +332,9 @@ The `--rerun-each` CLI flag overrides this setting.
 
 ### `test.retry`
 
-Default retry count for all tests. Failed tests are retried up to this many times. Per-test `{ retry: N }` overrides this value. Default `0` (no retries).
+Default retry count for all tests. The test runner retries failed tests up to this many times. Per-test `{ retry: N }` overrides this value. Default `0` (no retries).
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 retry = 3
 ```
@@ -349,7 +345,7 @@ The `--retry` CLI flag overrides this setting.
 
 Test files matching this glob pattern run all of their tests concurrently, as if you passed the `--concurrent` flag.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 concurrentTestGlob = "**/concurrent-*.test.ts"
 ```
@@ -360,9 +356,9 @@ The `--concurrent` CLI flag overrides this setting.
 
 ### `test.onlyFailures`
 
-When enabled, only failed tests are displayed in the output, which reduces noise in large test suites. Default `false`.
+When enabled, the output shows only failed tests, which reduces noise in large test suites. Default `false`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test]
 onlyFailures = true
 ```
@@ -377,7 +373,7 @@ Configure the test reporter settings.
 
 Enable the dots reporter, which prints one dot per test. Default `false`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test.reporter]
 dots = true
 ```
@@ -386,7 +382,7 @@ dots = true
 
 Enable JUnit XML reporting and specify the output file path.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [test.reporter]
 junit = "test-results.xml"
 ```
@@ -397,7 +393,7 @@ CI systems and other tools can consume the report.
 
 The `[install]` section configures the behavior of `bun install`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 # configuration here
 ```
@@ -406,7 +402,7 @@ The `[install]` section configures the behavior of `bun install`.
 
 Whether to install optional dependencies. Default `true`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 optional = true
 ```
@@ -415,7 +411,7 @@ optional = true
 
 Whether to install development dependencies. Default `true`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 dev = true
 ```
@@ -424,7 +420,7 @@ dev = true
 
 Whether to install peer dependencies. Default `true`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 peer = true
 ```
@@ -433,9 +429,9 @@ peer = true
 
 Whether `bun install` runs in "production mode". Default `false`.
 
-In production mode, `"devDependencies"` are not installed. The `--production` CLI flag overrides this setting.
+In production mode, Bun does not install `"devDependencies"` and freezes the lockfile (same as [`install.frozenLockfile`](#install-frozenlockfile)). Use the `--production` CLI flag to enable it for a single install. Since production mode freezes the lockfile, `bun add`, `bun remove`, and `bun update` fail while it is set.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 production = false
 ```
@@ -444,9 +440,9 @@ production = false
 
 Whether to set an exact version in `package.json`. Default `false`.
 
-By default Bun uses caret ranges; if the `latest` version of a package is `2.4.1`, Bun writes `^2.4.1` to your `package.json`, which accepts any version from `2.4.1` up to (but not including) `3.0.0`.
+By default Bun uses caret ranges. If the `latest` version of a package is `2.4.1`, Bun writes `^2.4.1` to your `package.json`. That range accepts any version from `2.4.1` up to (but not including) `3.0.0`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 exact = false
 ```
@@ -455,9 +451,9 @@ exact = false
 
 Whether to skip lifecycle scripts during install. Default `false`. Equivalent to the `--ignore-scripts` flag.
 
-When `true`, Bun does not run any `preinstall` / `install` / `postinstall` / `prepare` scripts, both for your project and for packages in `trustedDependencies`. See [Lifecycle scripts](/docs/pm/lifecycle).
+When `true`, Bun does not run any `preinstall` / `install` / `postinstall` / `prepare` scripts, both for your project and for packages in `trustedDependencies`. See [Lifecycle scripts](/pm/lifecycle).
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 ignoreScripts = false
 ```
@@ -466,7 +462,7 @@ ignoreScripts = false
 
 The maximum number of concurrent lifecycle scripts to run at once. Defaults to two times the number of CPU cores. Equivalent to the `--concurrent-scripts` flag.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 concurrentScripts = 5
 ```
@@ -477,16 +473,16 @@ If `false`, `bun install` generates a binary `bun.lockb` instead of a text-based
 
 Default `true` (since Bun v1.2).
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 saveTextLockfile = false
 ```
 
 ### `install.auto`
 
-Configure Bun's [auto-install](/docs/runtime/auto-install) behavior. Default `"auto"` — when no `node_modules` folder is found, Bun installs dependencies on the fly during execution.
+Configure Bun's [auto-install](/runtime/auto-install) behavior. Default `"auto"` — when no `node_modules` folder is found, Bun installs dependencies on the fly during execution.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 auto = "auto"
 ```
@@ -504,7 +500,7 @@ Valid values are:
 
 Configure how Bun resolves package versions against the npm registry when running scripts. Default `"online"`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 prefer = "online"
 ```
@@ -521,16 +517,16 @@ Valid values are:
 
 When `true`, `bun install` does not update `bun.lock`. Default `false`. If `package.json` and the existing `bun.lock` disagree, the install errors.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 frozenLockfile = false
 ```
 
 ### `install.dryRun`
 
-Whether `bun install` actually installs dependencies. Default `false`. When `true`, it's equivalent to passing `--dry-run` to all `bun install` commands.
+Whether `bun install` resolves dependencies without installing them. Default `false`. When `true`, it's equivalent to passing `--dry-run` to all `bun install` commands.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 dryRun = false
 ```
@@ -541,7 +537,7 @@ The directory where Bun puts globally installed packages.
 
 Environment variable: `BUN_INSTALL_GLOBAL_DIR`
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 # where `bun install --global` installs packages
 globalDir = "~/.bun/install/global"
@@ -553,7 +549,7 @@ The directory where Bun links the binaries of globally installed packages.
 
 Environment variable: `BUN_INSTALL_BIN`
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 # where globally-installed package bins are linked
 globalBinDir = "~/.bun/bin"
@@ -563,7 +559,7 @@ globalBinDir = "~/.bun/bin"
 
 The default registry is `https://registry.npmjs.org/`. To change it:
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 # set default registry as a string
 registry = "https://registry.npmjs.org"
@@ -577,7 +573,7 @@ registry = "https://username:password@registry.npmjs.org"
 
 Whether to link workspace packages from the monorepo root to their respective `node_modules` directories. Default `true`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 linkWorkspacePackages = true
 ```
@@ -586,7 +582,7 @@ linkWorkspacePackages = true
 
 To configure a registry for a particular scope (for example, `@myorg/<package>`), use `install.scopes`. You can reference environment variables with `$variable` notation.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install.scopes]
 # registry as string
 myorg = "https://username:password@registry.myorg.com/"
@@ -603,7 +599,7 @@ myorg = { token = "$npm_token", url = "https://registry.myorg.com/" }
 
 To configure a CA certificate, set `install.ca` to the certificate string or `install.cafile` to the path of a certificate file.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 # The CA certificate as a string
 ca = "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----"
@@ -616,7 +612,7 @@ cafile = "path/to/cafile"
 
 To configure the cache behavior:
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install.cache]
 
 # the directory to use for the cache
@@ -634,14 +630,14 @@ disableManifest = false
 
 Whether to generate a lockfile on `bun install`. Default `true`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install.lockfile]
 save = true
 ```
 
-Whether to generate a non-Bun lockfile alongside `bun.lock`. (A `bun.lock` is always created.) `"yarn"` is the only supported value.
+Whether to generate a non-Bun lockfile alongside `bun.lock`. (Bun always creates a `bun.lock`.) `"yarn"` is the only supported value.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install.lockfile]
 print = "yarn"
 ```
@@ -650,9 +646,9 @@ print = "yarn"
 
 Configure the linker strategy: how `bun install` lays out dependencies in `node_modules`. Defaults to `"isolated"` for new workspaces, `"hoisted"` for new single-package projects and existing projects (made pre-v1.3.2).
 
-See [Isolated installs](/docs/pm/isolated-installs).
+See [Isolated installs](/pm/isolated-installs).
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 linker = "hoisted"
 ```
@@ -666,38 +662,49 @@ Valid values are:
 
 ### `install.globalStore`
 
-When using the `"isolated"` linker, share package installations across projects in a global virtual store at `<cache>/links/` and link `node_modules/.bun/<pkg>@<ver>` into it instead of materializing each package into the project. Makes warm installs after `rm -rf node_modules` an order of magnitude faster. Default `false`. Can also be set with the `BUN_INSTALL_GLOBAL_STORE` environment variable.
+When using the `"isolated"` linker, share package installations across projects in a global virtual store at `<cache>/links/`. Bun links `node_modules/.bun/<pkg>@<ver>` into the store instead of materializing each package into the project. Makes warm installs after `rm -rf node_modules` an order of magnitude faster. Default `false`. You can also set it with the `BUN_INSTALL_GLOBAL_STORE` environment variable.
 
-See [Global virtual store](/docs/pm/global-store).
+See [Global virtual store](/pm/global-store).
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 globalStore = true
 ```
 
 ### `install.publicHoistPattern`
 
-When using the `"isolated"` linker, packages matching these glob patterns are hoisted to the root `node_modules` directory so they can be resolved by any package in the project. Default `[]`. Similar to pnpm's `public-hoist-pattern`.
+When using the `"isolated"` linker, Bun hoists packages matching these glob patterns to the root `node_modules` directory so any package in the project can resolve them. Default `[]`. Similar to pnpm's `public-hoist-pattern`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 publicHoistPattern = ["*eslint*", "*prettier*"]
 ```
 
 ### `install.hoistPattern`
 
-When using the `"isolated"` linker, packages matching these glob patterns are hoisted to the virtual store root (`node_modules/.bun`) so they can be resolved by other packages in the virtual store. Default `[]`. Similar to pnpm's `hoist-pattern`.
+When using the `"isolated"` linker, Bun hoists packages matching these glob patterns to a fallback directory inside the virtual store (`node_modules/.bun/node_modules`) so other packages in the virtual store can resolve them. By default Bun hoists every package there, equivalent to `["*"]`. Similar to pnpm's `hoist-pattern`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 hoistPattern = ["*"]
+```
+
+### `install.hoist`
+
+When using the `"isolated"` linker, Bun creates `node_modules/.bun/node_modules`. This fallback directory contains a symlink to every installed package, or only to the packages matching `install.hoistPattern` when one is set. The directory sits on the upward resolution path of every package in the store, so a package can still resolve dependencies it never declared ("phantom dependencies"). Set `hoist = false` to skip creating this directory entirely. An undeclared import from a store package then fails unless the imported package is linked at the project root `node_modules` (a direct dependency, a `publicHoistPattern` match, or a workspace package). The root `node_modules` stays on the resolution path because `.bun` lives inside it. The project's own `node_modules` symlinks are unchanged. Default `true`. Equivalent to pnpm's `hoist` setting, including this root-`node_modules` caveat; takes precedence over `install.hoistPattern`.
+
+This setting only applies to the `"isolated"` linker. Hoisted installs are unaffected: there the flat `node_modules` tree is the layout itself, not something this switch controls.
+
+```toml title="bunfig.toml" icon="settings"
+[install]
+hoist = false
 ```
 
 ### `install.logLevel`
 
 Set the log level for `bun install`. This can be one of `"debug"`, `"warn"`, or `"error"`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 logLevel = "warn"
 ```
@@ -708,7 +715,7 @@ Configure a security scanner to scan packages for vulnerabilities before install
 
 First, install a security scanner from npm:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun add -d @oven/bun-security-scanner
 ```
 
@@ -720,37 +727,37 @@ bun add -d @oven/bun-security-scanner
 
 Then configure it in your `bunfig.toml`:
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install.security]
 scanner = "@oven/bun-security-scanner" # example name, replace with your scanner's package
 ```
 
 When a security scanner is configured:
 
-* Auto-install is automatically disabled for security
-* Packages are scanned before installation
-* Installation is cancelled if fatal issues are found
-* Security warnings are displayed during installation
+- Auto-install is automatically disabled for security
+- Packages are scanned before installation
+- Installation is cancelled if fatal issues are found
+- Security warnings are displayed during installation
 
-Learn more about [using and writing security scanners](/docs/pm/security-scanner-api).
+Learn more about [using and writing security scanners](/pm/security-scanner-api).
 
 ### `install.minimumReleaseAge`
 
-Configure a minimum age (in seconds) for npm package versions. Package versions published more recently than this threshold are filtered out during installation. Default `null` (disabled).
+Configure a minimum age (in seconds) for npm package versions. During installation, Bun filters out package versions published more recently than this threshold. Default `null` (disabled).
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 # Only install package versions published at least 3 days ago
 minimumReleaseAge = 259200
 ```
 
-See [Minimum release age](/docs/pm/cli/install#minimum-release-age).
+See [Minimum release age](/pm/cli/install#minimum-release-age).
 
 ### `install.minimumReleaseAgeExcludes`
 
 An array of package names that are exempt from the `minimumReleaseAge` check. Default `[]`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [install]
 minimumReleaseAge = 259200
 # These packages will bypass the 3-day minimum age requirement
@@ -769,7 +776,7 @@ The shell used to run `package.json` scripts with `bun run` or `bun`. Defaults t
 
 To always use the system shell instead of Bun's shell (the default everywhere except Windows):
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [run]
 # default outside of Windows
 shell = "system"
@@ -777,7 +784,7 @@ shell = "system"
 
 To always use Bun's shell instead of the system shell:
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [run]
 # default on Windows
 shell = "bun"
@@ -785,13 +792,13 @@ shell = "bun"
 
 ### `run.bun` - auto alias `node` to `bun`
 
-When `true`, this prepends `$PATH` with a `node` symlink that points to the `bun` binary for all scripts or executables invoked by `bun run` or `bun`.
+When `true`, Bun prepends `$PATH` with a `node` symlink that points to the `bun` binary for all scripts or executables invoked by `bun run` or `bun`.
 
-A script that runs `node` runs `bun` instead, with no changes to the script. This works recursively, so a script that runs another script that runs `node` also runs `bun`, and it applies to shebangs that point to `node`.
+A script that runs `node` runs `bun` instead, with no changes to the script. This works recursively, so a script that runs another script that runs `node` also runs `bun`. The alias also applies to shebangs that point to `node`.
 
 By default, this is enabled if `node` is not already in your `$PATH`.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [run]
 # equivalent to `bun --bun` for all `bun run` commands
 bun = true
@@ -799,14 +806,14 @@ bun = true
 
 You can test this by running:
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun --bun which node # /path/to/bun
 bun which node # /path/to/node
 ```
 
 This option is equivalent to prefixing all `bun run` commands with `--bun`:
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun --bun run dev
 bun --bun dev
 bun run --bun dev
@@ -818,35 +825,35 @@ Set to `false` to disable the `node` symlink.
 
 When `true`, `bun run` and `bun` don't print the command being run.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [run]
 silent = true
 ```
 
-Without this option, the command being run is printed to the console:
+Without this option, Bun prints the command being run to the console:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun run dev
 echo "Running \"dev\"..."
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 Running "dev"...
 ```
 
-With this option, the command being run is not printed:
+With this option, Bun does not print the command being run:
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun run dev
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 Running "dev"...
 ```
 
 This is equivalent to passing `--silent` to all `bun run` commands:
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun --silent run dev
 bun --silent dev
 bun run --silent dev
@@ -856,7 +863,7 @@ bun run --silent dev
 
 The number of lines of script output shown per script when using `--filter`. Default `10`. Set to `0` to show all lines. Equivalent to the `--elide-lines` flag.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [run]
 elide-lines = 10
 ```
@@ -865,11 +872,11 @@ elide-lines = 10
 
 When `true`, Bun watches the process that spawned it and exits as soon as that parent goes away, even if the parent was force-killed and never got a chance to forward a signal. On its own exit, Bun also terminates every descendant process so nothing it spawned outlives it. Useful when Bun is launched by a supervisor (Electron, a CI runner, a thin shim) that may be force-killed.
 
-On Linux this uses `prctl(PR_SET_PDEATHSIG)` and a `/proc` descendant walk; on macOS, `EVFILT_PROC`/`NOTE_EXIT` on the event loop's kqueue and a libproc descendant walk; on Windows, a thread-pool wait on the parent's process handle and a kill-on-close Job Object.
+On Linux, Bun uses `prctl(PR_SET_PDEATHSIG)` and a `/proc` descendant walk. On macOS, it uses `EVFILT_PROC`/`NOTE_EXIT` on the event loop's kqueue and a libproc descendant walk. On Windows, it uses a thread-pool wait on the parent's process handle and a kill-on-close Job Object.
 
 Equivalent to the `--no-orphans` CLI flag or the `BUN_FEATURE_FLAG_NO_ORPHANS=1` environment variable.
 
-```toml title="bunfig.toml" icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml title="bunfig.toml" icon="settings"
 [run]
 noOrphans = true
 ```

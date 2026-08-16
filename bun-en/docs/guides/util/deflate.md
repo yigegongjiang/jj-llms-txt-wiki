@@ -1,20 +1,16 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Compress and decompress data with DEFLATE
 
 Use `Bun.deflateSync()` to compress a `Uint8Array` with DEFLATE.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const data = Buffer.from("Hello, world!");
-const compressed = Bun.deflateSync("Hello, world!");
+const compressed = Bun.deflateSync(data);
 // => Uint8Array
 
 const decompressed = Bun.inflateSync(compressed);
 // => Uint8Array
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils).
+See [Utils](/runtime/utils).

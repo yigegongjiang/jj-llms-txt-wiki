@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Metrics
 
 > Monitor server activity with built-in metrics
@@ -10,7 +6,7 @@
 
 Monitor server activity with built-in counters:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const server = Bun.serve({
   fetch(req, server) {
     return new Response(
@@ -24,7 +20,7 @@ const server = Bun.serve({
 
 Get the number of subscribers for a WebSocket topic:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const server = Bun.serve({
   fetch(req, server) {
     const chatUsers = server.subscriberCount("chat");

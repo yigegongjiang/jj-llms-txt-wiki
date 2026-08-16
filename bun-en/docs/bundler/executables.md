@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Single-file executable
 
 > Generate standalone executables from TypeScript or JavaScript files with Bun
@@ -10,13 +6,12 @@ Bun's bundler implements a `--compile` flag for generating a standalone binary f
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash terminal icon="terminal"
     bun build ./cli.ts --compile --outfile mycli
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./cli.ts"],
       compile: {
@@ -27,23 +22,23 @@ Bun's bundler implements a `--compile` flag for generating a standalone binary f
   </Tab>
 </Tabs>
 
-```ts cli.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts cli.ts icon="/icons/typescript.svg"
 console.log("Hello world!");
 ```
 
-This bundles `cli.ts` into an executable you can run directly:
+Bun bundles `cli.ts` into an executable you can run directly:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 ./mycli
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 Hello world!
 ```
 
-All imported files and packages are bundled into the executable, along with a copy of the Bun runtime. All built-in Bun and Node.js APIs are supported.
+Bun bundles all imported files and packages into the executable, along with a copy of the Bun runtime. All built-in Bun and Node.js APIs are supported.
 
-***
+---
 
 ## Cross-compile to other platforms
 
@@ -53,7 +48,7 @@ To build for Linux x64 (most servers):
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --target=bun-linux-x64 ./index.ts --outfile myapp
 
     # To support CPUs from before 2013, use the baseline version (nehalem)
@@ -63,10 +58,10 @@ To build for Linux x64 (most servers):
     # modern is faster, but baseline is more compatible.
     bun build --compile --target=bun-linux-x64-modern ./index.ts --outfile myapp
     ```
-  </Tab>
 
+  </Tab>
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     // Standard Linux x64
     await Bun.build({
       entrypoints: ["./index.ts"],
@@ -94,6 +89,7 @@ To build for Linux x64 (most servers):
       },
     });
     ```
+
   </Tab>
 </Tabs>
 
@@ -101,14 +97,13 @@ To build for Linux ARM64 (for example, Graviton or Raspberry Pi):
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     # Note: the default architecture is x64 if no architecture is specified.
     bun build --compile --target=bun-linux-arm64 ./index.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./index.ts"],
       compile: {
@@ -124,7 +119,7 @@ To build for Windows x64:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --target=bun-windows-x64 ./path/to/my/app.ts --outfile myapp
 
     # To support CPUs from before 2013, use the baseline version (nehalem)
@@ -135,10 +130,10 @@ To build for Windows x64:
 
     # note: if no .exe extension is provided, Bun adds it automatically for Windows executables
     ```
-  </Tab>
 
+  </Tab>
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     // Standard Windows x64
     await Bun.build({
       entrypoints: ["./path/to/my/app.ts"],
@@ -157,6 +152,7 @@ To build for Windows x64:
       },
     });
     ```
+
   </Tab>
 </Tabs>
 
@@ -164,15 +160,15 @@ To build for Windows arm64:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --target=bun-windows-arm64 ./path/to/my/app.ts --outfile myapp
 
     # note: if no .exe extension is provided, Bun adds it automatically for Windows executables
     ```
-  </Tab>
 
+  </Tab>
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./path/to/my/app.ts"],
       compile: {
@@ -181,6 +177,7 @@ To build for Windows arm64:
       },
     });
     ```
+
   </Tab>
 </Tabs>
 
@@ -188,13 +185,12 @@ To build for macOS arm64:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --target=bun-darwin-arm64 ./path/to/my/app.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./path/to/my/app.ts"],
       compile: {
@@ -210,13 +206,12 @@ To build for macOS x64:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --target=bun-darwin-x64 ./path/to/my/app.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./path/to/my/app.ts"],
       compile: {
@@ -234,14 +229,14 @@ The segments of the `--target` value can appear in any order, as long as they're
 
 | --target             | Operating System | Architecture | Modern | Baseline | Libc  |
 | -------------------- | ---------------- | ------------ | ------ | -------- | ----- |
-| bun-linux-x64        | Linux            | x64          | ✅      | ✅        | glibc |
-| bun-linux-arm64      | Linux            | arm64        | ✅      | N/A      | glibc |
-| bun-windows-x64      | Windows          | x64          | ✅      | ✅        | -     |
-| bun-windows-arm64    | Windows          | arm64        | ✅      | N/A      | -     |
-| bun-darwin-x64       | macOS            | x64          | ✅      | ✅        | -     |
-| bun-darwin-arm64     | macOS            | arm64        | ✅      | N/A      | -     |
-| bun-linux-x64-musl   | Linux            | x64          | ✅      | ✅        | musl  |
-| bun-linux-arm64-musl | Linux            | arm64        | ✅      | N/A      | musl  |
+| bun-linux-x64        | Linux            | x64          | ✅     | ✅       | glibc |
+| bun-linux-arm64      | Linux            | arm64        | ✅     | N/A      | glibc |
+| bun-windows-x64      | Windows          | x64          | ✅     | ✅       | -     |
+| bun-windows-arm64    | Windows          | arm64        | ✅     | N/A      | -     |
+| bun-darwin-x64       | macOS            | x64          | ✅     | ✅       | -     |
+| bun-darwin-arm64     | macOS            | arm64        | ✅     | N/A      | -     |
+| bun-linux-x64-musl   | Linux            | x64          | ✅     | ✅       | musl  |
+| bun-linux-arm64-musl | Linux            | arm64        | ✅     | N/A      | musl  |
 
 <Warning>
   On x64 platforms, Bun uses SIMD optimizations that require a CPU with AVX2 instructions. The `-baseline` build of Bun
@@ -250,7 +245,7 @@ The segments of the `--target` value can appear in any order, as long as they're
   `"Illegal instruction"` errors, you might need to use the baseline version.
 </Warning>
 
-***
+---
 
 ## Build-time constants
 
@@ -258,13 +253,12 @@ Use the `--define` flag to inject build-time constants into your executable, suc
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --define BUILD_VERSION='"1.2.3"' --define BUILD_TIME='"2024-01-15T10:30:00Z"' src/cli.ts --outfile mycli
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./src/cli.ts"],
       compile: {
@@ -281,9 +275,9 @@ Use the `--define` flag to inject build-time constants into your executable, suc
 
 Bun inlines these constants into the binary at build time, so they cost nothing at runtime and enable dead code elimination.
 
-<Note>For more examples and patterns, see the [Build-time constants guide](/docs/guides/runtime/build-time-constants).</Note>
+<Note>For more examples and patterns, see the [Build-time constants guide](/guides/runtime/build-time-constants).</Note>
 
-***
+---
 
 ## Deploying to production
 
@@ -297,13 +291,12 @@ When deploying to production, we recommend the following:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --minify --sourcemap ./path/to/my/app.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./path/to/my/app.ts"],
       compile: {
@@ -322,13 +315,12 @@ To improve startup time, enable bytecode compilation:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --minify --sourcemap --bytecode ./path/to/my/app.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./path/to/my/app.ts"],
       compile: {
@@ -348,7 +340,7 @@ Using bytecode compilation, `tsc` starts 2x faster:
   ![Bytecode performance comparison](https://github.com/user-attachments/assets/dc8913db-01d2-48f8-a8ef-ac4e984f9763)
 </Frame>
 
-Bytecode compilation moves parsing overhead for large input files from runtime to bundle time. Your app starts faster, in exchange for making the `bun build` command a little slower. It doesn't obscure source code.
+Bytecode compilation moves parsing overhead for large input files from runtime to bundle time. Your app starts faster, in exchange for making the `bun build` command a little slower. Bytecode compilation doesn't obscure source code.
 
 <Note>Bytecode compilation supports both `cjs` and `esm` formats when used with `--compile`.</Note>
 
@@ -360,7 +352,7 @@ The `--sourcemap` argument embeds a sourcemap compressed with zstd, so that erro
 
 The `--bytecode` argument enables bytecode compilation. Every time you run JavaScript code in Bun, JavaScriptCore (the engine) compiles your source code into bytecode. `--bytecode` moves that parsing work from runtime to bundle time, which shortens startup.
 
-***
+---
 
 ## Embedding runtime arguments
 
@@ -368,13 +360,12 @@ The `--bytecode` argument enables bytecode compilation. Every time you run JavaS
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     bun build --compile --compile-exec-argv="--smol --user-agent=MyBot" ./app.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./app.ts"],
       compile: {
@@ -386,7 +377,7 @@ The `--bytecode` argument enables bytecode compilation. Every time you run JavaS
   </Tab>
 </Tabs>
 
-```ts app.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts app.ts icon="/icons/typescript.svg"
 // In the compiled app
 console.log(process.execArgv); // ["--smol", "--user-agent=MyBot"]
 ```
@@ -395,7 +386,7 @@ console.log(process.execArgv); // ["--smol", "--user-agent=MyBot"]
 
 Standalone executables read the `BUN_OPTIONS` environment variable, so you can pass runtime flags without recompiling:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 # Enable CPU profiling on a compiled executable
 BUN_OPTIONS="--cpu-prof" ./myapp
 
@@ -406,14 +397,14 @@ BUN_OPTIONS="--heap-prof-md" ./myapp
 BUN_OPTIONS="--smol --cpu-prof-md" ./myapp
 ```
 
-***
+---
 
 ## Automatic config loading
 
 Standalone executables can automatically load configuration files from the directory where they are run. By default:
 
-* **`tsconfig.json`** and **`package.json`** loading is **disabled** — these are typically only needed at development time, and the bundler already uses them when compiling
-* **`.env`** and **`bunfig.toml`** loading is **enabled** — these often contain runtime configuration that may vary per deployment
+- **`tsconfig.json`** and **`package.json`** loading is **disabled** — these are typically only needed at development time, and the bundler already uses them when compiling
+- **`.env`** and **`bunfig.toml`** loading is **enabled** — these often contain runtime configuration that may vary per deployment
 
 <Note>
   In a future version of Bun, `.env` and `bunfig.toml` may also be disabled by default for more deterministic behavior.
@@ -423,7 +414,7 @@ Standalone executables can automatically load configuration files from the direc
 
 If your executable needs to read `tsconfig.json` or `package.json` at runtime, opt in with these flags:
 
-```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash icon="terminal" terminal
 # Enable runtime loading of tsconfig.json
 bun build --compile --compile-autoload-tsconfig ./app.ts --outfile myapp
 
@@ -440,7 +431,7 @@ To disable `.env` or `bunfig.toml` loading for deterministic execution:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash icon="terminal" terminal
     # Disable .env loading
     bun build --compile --no-compile-autoload-dotenv ./app.ts --outfile myapp
 
@@ -450,10 +441,10 @@ To disable `.env` or `bunfig.toml` loading for deterministic execution:
     # Disable all config loading
     bun build --compile --no-compile-autoload-dotenv --no-compile-autoload-bunfig ./app.ts --outfile myapp
     ```
-  </Tab>
 
+  </Tab>
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./app.ts"],
       compile: {
@@ -468,10 +459,11 @@ To disable `.env` or `bunfig.toml` loading for deterministic execution:
       },
     });
     ```
+
   </Tab>
 </Tabs>
 
-***
+---
 
 ## Act as the Bun CLI
 
@@ -481,42 +473,42 @@ Set the `BUN_BE_BUN=1` environment variable to run a standalone executable as if
 
 For example, consider an executable compiled from this script:
 
-```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash icon="terminal" terminal
 echo "console.log(\"you shouldn't see this\");" > such-bun.js
 bun build --compile ./such-bun.js
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 [3ms] bundle 1 modules
 [89ms] compile such-bun
 ```
 
 Normally, running `./such-bun` with arguments executes the script.
 
-```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash icon="terminal" terminal
 # Executable runs its own entrypoint by default
 ./such-bun install
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 you shouldn't see this
 ```
 
-However, with the `BUN_BE_BUN=1` environment variable, it acts like the `bun` binary:
+However, with the `BUN_BE_BUN=1` environment variable, the executable acts like the `bun` binary:
 
-```bash icon="terminal" terminal theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash icon="terminal" terminal
 # With the env var, the executable acts like the `bun` CLI
 BUN_BE_BUN=1 ./such-bun install
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 bun install v1.2.16-canary.1 (1d1db811)
 Checked 63 installs across 64 packages (no changes) [5.00ms]
 ```
 
 CLI tools built on top of Bun can use this to install packages, bundle dependencies, or run other files without downloading a separate binary or installing Bun.
 
-***
+---
 
 ## Full-stack executables
 
@@ -525,56 +517,57 @@ CLI tools built on top of Bun can use this to install packages, bundle dependenc
 The `--compile` flag can create a standalone executable that contains both server and client code, which suits full-stack applications. When you import an HTML file in your server code, Bun bundles the frontend assets (JavaScript, CSS, and so on) and embeds them into the executable.
 
 <CodeGroup>
-  ```ts server.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  import { serve } from "bun";
-  import index from "./index.html";
 
-  const server = serve({
-    routes: {
-      "/": index,
-      "/api/hello": { GET: () => Response.json({ message: "Hello from API" }) },
-    },
-  });
+```ts server.ts icon="/icons/typescript.svg"
+import { serve } from "bun";
+import index from "./index.html";
 
-  console.log(`Server running at http://localhost:${server.port}`);
-  ```
+const server = serve({
+  routes: {
+    "/": index,
+    "/api/hello": { GET: () => Response.json({ message: "Hello from API" }) },
+  },
+});
 
-  ```html index.html icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>My App</title>
-      <link rel="stylesheet" href="./styles.css" />
-    </head>
-    <body>
-      <h1>Hello World</h1>
-      <script src="./app.ts"></script>
-    </body>
-  </html>
-  ```
+console.log(`Server running at http://localhost:${server.port}`);
+```
 
-  ```ts app.ts icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  console.log("Hello from the client!");
-  ```
+```html index.html icon="file-code"
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My App</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <h1>Hello World</h1>
+    <script src="./app.ts"></script>
+  </body>
+</html>
+```
 
-  ```css styles.css icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  body {
-    background-color: #f0f0f0;
-  }
-  ```
+```ts app.ts icon="file-code"
+console.log("Hello from the client!");
+```
+
+```css styles.css icon="file-code"
+body {
+  background-color: #f0f0f0;
+}
+```
+
 </CodeGroup>
 
 To build this into a single executable:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash terminal icon="terminal"
     bun build --compile ./server.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./server.ts"],
       compile: {
@@ -587,22 +580,22 @@ To build this into a single executable:
 
 This creates a self-contained binary that includes:
 
-* Your server code
-* The Bun runtime
-* All frontend assets (HTML, CSS, JavaScript)
-* Any npm packages used by your server
+- Your server code
+- The Bun runtime
+- All frontend assets (HTML, CSS, JavaScript)
+- Any npm packages used by your server
 
 The result is a single file you can deploy anywhere without installing Node.js, Bun, or any dependencies:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 ./myapp
 ```
 
-Bun serves the frontend assets with the correct MIME types and cache headers. The HTML import is replaced with a manifest object that `Bun.serve` uses to serve the pre-bundled assets.
+Bun serves the frontend assets with the correct MIME types and cache headers. Bun replaces the HTML import with a manifest object that `Bun.serve` uses to serve the pre-bundled assets.
 
-For more on building full-stack applications, see the [full-stack guide](/docs/bundler/fullstack).
+For more on building full-stack applications, see the [full-stack guide](/bundler/fullstack).
 
-***
+---
 
 ## Worker
 
@@ -610,13 +603,12 @@ To use workers in a standalone executable, add the worker's entrypoint to the bu
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash terminal icon="terminal"
     bun build --compile ./index.ts ./my-worker.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./index.ts", "./my-worker.ts"],
       compile: {
@@ -629,7 +621,7 @@ To use workers in a standalone executable, add the worker's entrypoint to the bu
 
 Then, reference the worker in your code:
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 console.log("Hello from Bun!");
 
 // Any of these will work:
@@ -638,21 +630,21 @@ new Worker(new URL("./my-worker.ts", import.meta.url));
 new Worker(new URL("./my-worker.ts", import.meta.url).href);
 ```
 
-When you add multiple entrypoints to a standalone executable, each is bundled separately into the executable.
+When you add multiple entrypoints to a standalone executable, Bun bundles each one separately into the executable.
 
-We may eventually detect statically-known paths in `new Worker(path)` and bundle them automatically, but for now you need to list the worker file as an entrypoint, as in the earlier example.
+We may eventually detect statically-known paths in `new Worker(path)` and bundle them automatically. For now, you need to list the worker file as an entrypoint, as in the earlier example.
 
 If you use a relative path to a file not included in the standalone executable, Bun loads that path from disk relative to the process's current working directory, and errors if it doesn't exist.
 
-***
+---
 
 ## SQLite
 
 You can use `bun:sqlite` imports with `bun build --compile`.
 
-By default, the database is resolved relative to the current working directory of the process.
+By default, Bun resolves the database relative to the current working directory of the process.
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import db from "./my.db" with { type: "sqlite" };
 
 console.log(db.query("select * from users LIMIT 1").get());
@@ -660,12 +652,12 @@ console.log(db.query("select * from users LIMIT 1").get());
 
 That means if the executable is at `/usr/bin/hello` and the user's terminal is in `/home/me/Desktop`, Bun looks for `/home/me/Desktop/my.db`.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 cd /home/me/Desktop
 ./hello
 ```
 
-***
+---
 
 ## Embed assets & files
 
@@ -675,7 +667,7 @@ Standalone executables can embed files directly into the binary, so a single exe
 
 Use the `with { type: "file" }` [import attribute](https://github.com/tc39/proposal-import-attributes) to embed a file:
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import icon from "./icon.png" with { type: "file" };
 
 console.log(icon);
@@ -695,7 +687,7 @@ You can then read this embedded file using `Bun.file()` or Node.js `fs` APIs.
 
 `Bun.file()` is the recommended way to read embedded files:
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import icon from "./icon.png" with { type: "file" };
 import { file } from "bun";
 
@@ -718,7 +710,7 @@ export default {
 
 Embedded files work with the Node.js file system APIs:
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import icon from "./icon.png" with { type: "file" };
 import config from "./config.json" with { type: "file" };
 import { readFileSync, promises as fs } from "node:fs";
@@ -739,7 +731,7 @@ console.log(`Icon size: ${stats.size} bytes`);
 
 #### Embedding a JSON config file
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import configPath from "./default-config.json" with { type: "file" };
 import { file } from "bun";
 
@@ -755,16 +747,16 @@ const config = { ...defaultConfig, ...userConfig };
 
 #### Serving static assets in an HTTP server
 
-Use `static` routes in `Bun.serve()` for efficient static file serving:
+Use static routes in `Bun.serve()` for efficient static file serving:
 
-```ts server.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts server.ts icon="/icons/typescript.svg"
 import favicon from "./favicon.ico" with { type: "file" };
 import logo from "./logo.png" with { type: "file" };
 import styles from "./styles.css" with { type: "file" };
 import { file, serve } from "bun";
 
 serve({
-  static: {
+  routes: {
     "/favicon.ico": file(favicon),
     "/logo.png": file(logo),
     "/styles.css": file(styles),
@@ -779,7 +771,7 @@ Bun automatically handles Content-Type headers and caching for static routes.
 
 #### Embedding templates
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import templatePath from "./email-template.html" with { type: "file" };
 import { file } from "bun";
 
@@ -793,7 +785,7 @@ async function sendWelcomeEmail(user: { name: string; email: string }) {
 
 #### Embedding binary files
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import wasmPath from "./processor.wasm" with { type: "file" };
 import fontPath from "./font.ttf" with { type: "file" };
 import { file } from "bun";
@@ -812,7 +804,7 @@ To embed a SQLite database into the compiled executable, set `type: "sqlite"` in
 
 The database file must already exist on disk. Then, import it in your code:
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import myEmbeddedDb from "./my.db" with { type: "sqlite", embed: "true" };
 
 console.log(myEmbeddedDb.query("select * from users LIMIT 1").get());
@@ -820,80 +812,79 @@ console.log(myEmbeddedDb.query("select * from users LIMIT 1").get());
 
 Finally, compile it into a standalone executable:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun build --compile ./index.ts --outfile mycli
 ```
 
 <Note>
   The database file must exist on disk when you run `bun build --compile`. The `embed: "true"` attribute tells the
-  bundler to include the database contents inside the compiled executable. When running normally with `bun run`, the
-  database file is loaded from disk just like a regular SQLite import.
+  bundler to include the database contents inside the compiled executable. When running normally with `bun run`, Bun
+  loads the database file from disk like a regular SQLite import.
 </Note>
 
-In the compiled executable, the embedded database is read-write, but all changes are lost when the executable exits (since it's stored in memory).
+In the compiled executable, the embedded database is read-write. Because the database is stored in memory, all changes are lost when the executable exits.
 
 ### Embed N-API Addons
 
 You can embed `.node` files into executables.
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 const addon = require("./addon.node");
 
 console.log(addon.hello());
 ```
 
-If you're using `@mapbox/node-pre-gyp` or similar tools, the `.node` file must be required directly or it won't bundle correctly.
+If you're using `@mapbox/node-pre-gyp` or similar tools, require the `.node` file directly, or it won't bundle correctly.
 
 ### Embed directories
 
-To embed a directory with `bun build --compile`, include file patterns in your build:
+Use `--asset` (or `compile.assets` in the JavaScript API) to embed a file or directory tree into the executable under its original relative path. The embedded files live under `import.meta.dir` at runtime and are reachable via `node:fs` (`existsSync`, `statSync`, `readdirSync`, `readFileSync`) and `Bun.file()`.
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
-    bun build --compile ./index.ts ./public/**/*.png
+    ```bash terminal icon="terminal"
+    bun build --compile ./index.ts --asset ./public --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-    import { Glob } from "bun";
-
-    // Expand glob pattern to file list
-    const glob = new Glob("./public/**/*.png");
-    const pngFiles = Array.from(glob.scanSync("."));
-
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
-      entrypoints: ["./index.ts", ...pngFiles],
+      entrypoints: ["./index.ts"],
       compile: {
         outfile: "./myapp",
+        assets: ["./public"],
       },
     });
     ```
   </Tab>
 </Tabs>
 
-Then, you can reference the files in your code:
+```ts index.ts icon="/icons/typescript.svg"
+import fs from "node:fs";
+import path from "node:path";
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-import icon from "./public/assets/icon.png" with { type: "file" };
-import { file } from "bun";
+const publicDir = path.join(import.meta.dir, "public");
 
-export default {
-  fetch(req) {
-    // Embedded files can be streamed from Response objects
-    return new Response(file(icon));
-  },
-};
+for (const entry of fs.readdirSync(publicDir, { withFileTypes: true })) {
+  console.log(entry.name, entry.isDirectory() ? "(dir)" : fs.statSync(path.join(publicDir, entry.name)).size);
+}
+
+const html = await Bun.file(path.join(publicDir, "index.html")).text();
 ```
 
-This is a workaround, and we expect to replace it with a more direct API.
+Pass `--asset` multiple times to embed several directories (for example `--asset ./client --asset ./prerendered` for a SvelteKit build). Bun embeds only regular files; it skips symlinks and empty subdirectories inside the tree.
+
+You can also embed individual files via the `with { type: "file" }` import attribute or by adding them as extra entry points. Bun renames imported assets according to `--asset-naming` (default `[name]-[hash].[ext]`):
+
+```ts
+import icon from "./public/assets/icon.png" with { type: "file" };
+```
 
 ### Detecting standalone mode at runtime
 
 Use `Bun.isStandaloneExecutable` to check whether the current process is running from a compiled binary:
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 if (Bun.isStandaloneExecutable) {
   // Running from `bun build --compile` output
 } else {
@@ -907,7 +898,7 @@ Unlike `Bun.embeddedFiles.length > 0`, this check does not allocate `Blob` objec
 
 `Bun.embeddedFiles` exposes all embedded files as `Blob` objects:
 
-```ts index.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts index.ts icon="/icons/typescript.svg"
 import "./icon.png" with { type: "file" };
 import "./data.json" with { type: "file" };
 import "./template.html" with { type: "file" };
@@ -925,28 +916,29 @@ for (const blob of embeddedFiles) {
 
 Each item in `Bun.embeddedFiles` is a `Blob` with a `name` property:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 embeddedFiles: ReadonlyArray<Blob>;
 ```
 
-Use it to serve every embedded asset through `static` routes:
+Use it to serve every embedded asset through static routes:
 
-```ts server.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts server.ts icon="/icons/typescript.svg"
 import "./public/favicon.ico" with { type: "file" };
 import "./public/logo.png" with { type: "file" };
 import "./public/styles.css" with { type: "file" };
 import { embeddedFiles, serve } from "bun";
 
 // Build static routes from all embedded files
-const staticRoutes: Record<string, Blob> = {};
+const staticRoutes: Record<string, Response> = {};
 for (const blob of embeddedFiles) {
   // Remove hash from filename: "icon-a1b2c3d4.png" -> "icon.png"
-  const name = blob.name.replace(/-[a-f0-9]+\./, ".");
-  staticRoutes[`/${name}`] = blob;
+  const name = blob.name.replace(/-[a-z0-9]+\./, ".");
+  // embeddedFiles are plain Blobs, which routes does not accept directly
+  staticRoutes[`/${name}`] = new Response(blob);
 }
 
 serve({
-  static: staticRoutes,
+  routes: staticRoutes,
   fetch(req) {
     return new Response("Not found", { status: 404 });
   },
@@ -959,17 +951,16 @@ serve({
 
 #### Content hash
 
-By default, embedded files have a content hash appended to their name, which helps with cache invalidation when you serve them from a URL or CDN. To keep the original name instead, configure asset naming:
+By default, Bun appends a content hash to the name of each embedded file, which helps with cache invalidation when you serve the files from a URL or CDN. To keep the original name instead, configure asset naming:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash terminal icon="terminal"
     bun build --compile --asset-naming="[name].[ext]" ./index.ts
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./index.ts"],
       compile: {
@@ -983,7 +974,7 @@ By default, embedded files have a content hash appended to their name, which hel
   </Tab>
 </Tabs>
 
-***
+---
 
 ## Minification
 
@@ -991,13 +982,12 @@ To trim down the size of the executable, enable minification:
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash terminal icon="terminal"
     bun build --compile --minify ./index.ts --outfile myapp
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./index.ts"],
       compile: {
@@ -1019,12 +1009,13 @@ To trim down the size of the executable, enable minification:
       },
     });
     ```
+
   </Tab>
 </Tabs>
 
 This uses Bun's minifier to reduce the code size. Overall though, Bun's binary is still way too big and we need to make it smaller.
 
-***
+---
 
 ## Windows-specific flags
 
@@ -1032,17 +1023,17 @@ When compiling a standalone executable on Windows, platform-specific options cus
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash terminal icon="terminal"
     # Custom icon
     bun build --compile --windows-icon=path/to/icon.ico ./app.ts --outfile myapp
 
     # Hide console window (for GUI apps)
     bun build --compile --windows-hide-console ./app.ts --outfile myapp
     ```
-  </Tab>
 
+  </Tab>
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./app.ts"],
       compile: {
@@ -1065,29 +1056,31 @@ When compiling a standalone executable on Windows, platform-specific options cus
 
 Available Windows options:
 
-* `icon` - Path to `.ico` file for the executable icon
-* `hideConsole` - Disable the background terminal (for GUI apps)
-* `title` - Application title in file properties
-* `publisher` - Publisher name in file properties
-* `version` - Version string in file properties
-* `description` - Description in file properties
-* `copyright` - Copyright notice in file properties
+- `icon` - Path to `.ico` file for the executable icon
+- `hideConsole` - Disable the background terminal (for GUI apps)
+- `title` - Application title in file properties
+- `publisher` - Publisher name in file properties
+- `version` - Version string in file properties
+- `description` - Description in file properties
+- `copyright` - Copyright notice in file properties
 
-<Warning>These flags cannot be used when cross-compiling because they depend on Windows APIs.</Warning>
+<Warning>
+  Except for `hideConsole`, you can't use these flags when cross-compiling because they depend on Windows APIs.
+</Warning>
 
-***
+---
 
 ## Code signing on macOS
 
 To codesign a standalone executable on macOS (which fixes Gatekeeper warnings), use the `codesign` command.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 codesign --deep --force -vvvv --sign "XXXXXXXXXX" ./myapp
 ```
 
 We recommend including an `entitlements.plist` file with JIT permissions.
 
-```xml icon="xml" title="info.plist" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```xml icon="xml" title="entitlements.plist"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -1108,13 +1101,13 @@ We recommend including an `entitlements.plist` file with JIT permissions.
 
 To codesign with JIT support, pass the `--entitlements` flag to `codesign`.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 codesign --deep --force -vvvv --sign "XXXXXXXXXX" --entitlements entitlements.plist ./myapp
 ```
 
 After codesigning, verify the executable:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 codesign -vvv --verify ./myapp
 ./myapp: valid on disk
 ./myapp: satisfies its Designated Requirement
@@ -1122,7 +1115,7 @@ codesign -vvv --verify ./myapp
 
 <Warning>Codesign support requires Bun v1.2.4 or newer.</Warning>
 
-***
+---
 
 ## Code splitting
 
@@ -1130,13 +1123,12 @@ Standalone executables support code splitting. Use `--compile` with `--splitting
 
 <Tabs>
   <Tab title="CLI">
-    ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```bash terminal icon="terminal"
     bun build --compile --splitting ./src/entry.ts --outfile ./build/entry
     ```
   </Tab>
-
   <Tab title="JavaScript">
-    ```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+    ```ts build.ts icon="/icons/typescript.svg"
     await Bun.build({
       entrypoints: ["./src/entry.ts"],
       compile: true,
@@ -1148,35 +1140,37 @@ Standalone executables support code splitting. Use `--compile` with `--splitting
 </Tabs>
 
 <CodeGroup>
-  ```ts src/entry.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  console.log("Entrypoint loaded");
-  const lazy = await import("./lazy.ts");
-  lazy.hello();
-  ```
 
-  ```ts src/lazy.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  export function hello() {
-    console.log("Lazy module loaded");
-  }
-  ```
+```ts src/entry.ts icon="/icons/typescript.svg"
+console.log("Entrypoint loaded");
+const lazy = await import("./lazy.ts");
+lazy.hello();
+```
+
+```ts src/lazy.ts icon="/icons/typescript.svg"
+export function hello() {
+  console.log("Lazy module loaded");
+}
+```
+
 </CodeGroup>
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 ./build/entry
 ```
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 Entrypoint loaded
 Lazy module loaded
 ```
 
-***
+---
 
 ## Using plugins
 
 Plugins work with standalone executables; use them to transform files during the build:
 
-```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts build.ts icon="/icons/typescript.svg"
 import type { BunPlugin } from "bun";
 
 const envPlugin: BunPlugin = {
@@ -1205,34 +1199,34 @@ await Bun.build({
 
 Example use case - embedding environment config at build time:
 
-```ts cli.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts cli.ts icon="/icons/typescript.svg"
 import config from "./config.env.json";
 
 console.log(`Running in ${config.environment} mode`);
 console.log(`API endpoint: ${config.apiUrl}`);
 ```
 
-Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. See the [plugin documentation](/docs/bundler/plugins).
+Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. See the [plugin documentation](/bundler/plugins).
 
-***
+---
 
 ## Unsupported CLI arguments
 
 The `--compile` flag does not support the following flags:
 
-* `--outdir` — use `outfile` instead.
-* `--public-path`
-* `--target=node`
-* `--target=browser` (without HTML entrypoints — see [Standalone HTML](/docs/bundler/standalone-html) for `--compile --target=browser` with `.html` files)
-* `--no-bundle` - Bun always bundles everything into the executable.
+- `--outdir` — use `outfile` instead.
+- `--public-path`
+- `--target=node`
+- `--target=browser` (without HTML entrypoints — see [Standalone HTML](/bundler/standalone-html) for `--compile --target=browser` with `.html` files)
+- `--no-bundle` - Bun always bundles everything into the executable.
 
-***
+---
 
 ## API reference
 
 The `compile` option in `Bun.build()` accepts three forms:
 
-```ts title="types" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="types" icon="/icons/typescript.svg"
 interface BuildConfig {
   entrypoints: string[];
   compile: boolean | Bun.Build.CompileTarget | CompileBuildOptions;
@@ -1242,7 +1236,9 @@ interface BuildConfig {
 interface CompileBuildOptions {
   target?: Bun.Build.CompileTarget; // Cross-compilation target
   outfile?: string; // Output executable path
+  assets?: string[]; // Files/directories to embed under import.meta.dir
   execArgv?: string[]; // Runtime arguments (process.execArgv)
+  executablePath?: string; // Bun executable to use instead of downloading one for target
   autoloadTsconfig?: boolean; // Load tsconfig.json (default: false)
   autoloadPackageJson?: boolean; // Load package.json (default: false)
   autoloadDotenv?: boolean; // Load .env files (default: true)
@@ -1261,7 +1257,7 @@ interface CompileBuildOptions {
 
 Usage forms:
 
-```ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts icon="/icons/typescript.svg"
 // Simple boolean - compile for current platform (uses entrypoint name as output)
 compile: true
 
@@ -1277,7 +1273,7 @@ compile: {
 
 ### Supported targets
 
-```ts title="Bun.Build.CompileTarget" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="Bun.Build.CompileTarget" icon="/icons/typescript.svg"
 type CompileTarget =
   | "bun-darwin-x64"
   | "bun-darwin-x64-baseline"
@@ -1287,6 +1283,7 @@ type CompileTarget =
   | "bun-linux-x64-modern"
   | "bun-linux-arm64"
   | "bun-linux-x64-musl"
+  | "bun-linux-x64-baseline-musl"
   | "bun-linux-arm64-musl"
   | "bun-windows-x64"
   | "bun-windows-x64-baseline"
@@ -1296,7 +1293,7 @@ type CompileTarget =
 
 ### Complete example
 
-```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts build.ts icon="/icons/typescript.svg"
 import type { BunPlugin } from "bun";
 
 const myPlugin: BunPlugin = {

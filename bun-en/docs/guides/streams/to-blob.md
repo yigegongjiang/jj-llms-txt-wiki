@@ -1,16 +1,14 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Convert a ReadableStream to a Blob
 
-`Bun.readableStreamToBlob` reads the contents of a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) into a `Blob`.
+Bun provides several conveniences for reading the contents of a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) into other formats. To read a stream into a `Blob`, call its `blob()` method.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream();
-const blob = await Bun.readableStreamToBlob(stream);
+const blob = await stream.blob();
 ```
 
-***
+`Bun.readableStreamToBlob(stream)` does the same thing, but is deprecated in favor of `stream.blob()`.
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+---
+
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

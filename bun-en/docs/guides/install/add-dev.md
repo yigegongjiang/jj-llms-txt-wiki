@@ -1,28 +1,24 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Add a development dependency
 
 To add an npm package as a development dependency, use `bun add --development`.
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun add zod --dev
 bun add zod -d # shorthand
 ```
 
-***
+---
 
 This adds the package to `devDependencies` in `package.json`.
 
-```json theme={"theme":{"light":"github-light","dark":"dracula"}}
+```json
 {
   "devDependencies": {
-    "zod": "^3.0.0" // [!code ++]
+    "zod": "^4.0.0" // [!code ++]
   }
 }
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

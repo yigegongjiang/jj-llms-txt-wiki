@@ -1,12 +1,8 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Spy on methods in `bun test`
 
 Use the `spyOn` utility to track method calls with Bun's test runner.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { test, expect, spyOn } from "bun:test";
 
 const leo = {
@@ -19,11 +15,12 @@ const leo = {
 const spy = spyOn(leo, "sayHi");
 ```
 
-***
+---
 
 Once you've created the spy, use it in `expect` assertions about method calls.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+{/* prettier-ignore */}
+```ts
 import { test, expect, spyOn } from "bun:test";
 
 const leo = {
@@ -43,6 +40,6 @@ test("turtles", () => { // [!code ++]
 }); // [!code ++]
 ```
 
-***
+---
 
-See [Mocks](/docs/test/mocks).
+See [Mocks](/test/mocks).

@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Building Windows
 
 > Building Bun on Windows
@@ -14,7 +10,7 @@ Use [PowerShell 7 (`pwsh.exe`)](https://learn.microsoft.com/en-us/powershell/scr
 
 By default, running unverified scripts is blocked.
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
 ```
 
@@ -22,7 +18,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
 
 Bun v1.1 or later. The build uses Bun to run its own code generators.
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 irm bun.sh/install.ps1 | iex
 ```
 
@@ -30,25 +26,25 @@ irm bun.sh/install.ps1 | iex
 
 Install Visual Studio with the graphical wizard or through WinGet:
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 winget install "Visual Studio Community 2022" --override "--add Microsoft.VisualStudio.Workload.NativeDesktop Microsoft.VisualStudio.Component.Git " -s msstore
 ```
 
 After Visual Studio, you need the following:
 
-* LLVM 21.1.8
-* Go
-* Rust (via rustup)
-* NASM
-* Perl
-* Ruby
-* Node.js
+- LLVM 21.1.8
+- Go
+- Rust (via rustup)
+- NASM
+- Perl
+- Ruby
+- Node.js
 
 <Note>rustup installs the Rust nightly toolchain pinned in `rust-toolchain.toml` on the first build.</Note>
 
 Use [Scoop](https://scoop.sh) to install these remaining tools.
 
-```ps1 Scoop (x64) theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1 Scoop (x64)
 irm https://get.scoop.sh | iex
 scoop install nodejs-lts go rustup nasm ruby perl ccache
 # scoop seems to be buggy if you install llvm and the rest at the same time
@@ -57,7 +53,7 @@ scoop install llvm@21.1.8
 
 For Windows ARM64, download LLVM 21.1.8 directly from GitHub releases (first version with ARM64 Windows builds):
 
-```ps1 ARM64 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1 ARM64
 # Download and install LLVM for ARM64
 Invoke-WebRequest -Uri "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/LLVM-21.1.8-woa64.exe" -OutFile "$env:TEMP\LLVM-21.1.8-woa64.exe"
 Start-Process -FilePath "$env:TEMP\LLVM-21.1.8-woa64.exe" -ArgumentList "/S" -Wait
@@ -71,7 +67,7 @@ Start-Process -FilePath "$env:TEMP\LLVM-21.1.8-woa64.exe" -ArgumentList "/S" -Wa
 
 To build WebKit locally (optional, x64 only), install these packages:
 
-```ps1 Scoop theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1 Scoop
 scoop install make cygwin python
 ```
 
@@ -79,13 +75,13 @@ scoop install make cygwin python
 
 From here on out, **use a PowerShell terminal with `.\scripts\vs-shell.ps1` sourced**. Load the script by running it:
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 .\scripts\vs-shell.ps1
 ```
 
 To verify, check for an MSVC-only command such as `mt.exe`:
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 Get-Command mt
 ```
 
@@ -96,7 +92,7 @@ Get-Command mt
 
 ## Building
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 bun run build
 
 # after the initial `bun run build` you can use the following to build
@@ -105,7 +101,7 @@ ninja -Cbuild/debug
 
 A successful build writes `bun-debug.exe` to the `build/debug` folder.
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 .\build\debug\bun-debug.exe --revision
 ```
 
@@ -113,13 +109,13 @@ Add this folder to `$Env:PATH`: open the Start menu, type "Path", and use the en
 
 ## Extra paths
 
-* WebKit is extracted to `build/debug/cache/webkit/`
+- The build extracts WebKit to `$Env:BUN_INSTALL\build-cache\webkit-<version>-debug` (`webkit-<version>-arm64-debug` on ARM64); `BUN_INSTALL` defaults to `~\.bun`
 
 ## Tests
 
-Run the test suite with `bun test <path>` or with the wrapper script `bun node:test <path>`. The `bun node:test` command runs every test file in a separate instance of `bun.exe`, so a crash in the test runner does not stop the entire suite.
+Run the test suite with `bun-debug test <path>` or with the wrapper script `bun run test <path>`. The `bun run test` command runs every test file in a separate instance of `bun-debug.exe`, so a crash in the test runner does not stop the entire suite.
 
-```ps1 theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ps1
 # Run the entire test suite with reporter
 # the package.json script "test" uses "build/debug/bun-debug.exe" by default
 bun run test
@@ -141,7 +137,7 @@ You cannot overwrite `bun-debug.exe` while it is open. You likely have a running
 
 ## Cross-compiling from Linux
 
-You can also build Windows binaries (both x64 and arm64) on a Linux host. The build uses the host LLVM's `clang-cl`, `lld-link`, `llvm-lib` and `llvm-rc` (part of every LLVM distribution), plus an "xwin splat" of the MSVC CRT/STL and Windows SDK for headers and import libraries.
+You can also build Windows binaries (both x64 and arm64) on a Linux host. The build uses the host LLVM's `clang-cl`, `lld-link`, `llvm-lib` and `llvm-rc` (part of every LLVM distribution). For headers and import libraries, the build also uses an "xwin splat" of the MSVC CRT/STL and Windows SDK.
 
 ### Prerequisites
 
@@ -150,7 +146,7 @@ You can also build Windows binaries (both x64 and arm64) on a Linux host. The bu
 3. Rust std for the Windows targets (`rust-toolchain.toml` lists them; `rustup target add x86_64-pc-windows-msvc aarch64-pc-windows-msvc` if missing).
 4. A Windows sysroot: an [xwin](https://github.com/Jake-Shadle/xwin) splat of the MSVC CRT, Windows SDK, and ATL laid out like a Visual Studio install. Downloading these components means accepting Microsoft's license terms for them.
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 cargo install xwin # or download a release binary
 xwin --accept-license --arch x86_64,aarch64 --sdk-version 10.0.26100 --crt-version 14.44.17.14 --include-atl splat \
   --use-winsysroot-style --preserve-ms-arch-notation --include-debug-libs \
@@ -162,11 +158,11 @@ ln -s include "/opt/winsysroot/Windows Kits/10/Include"
 ln -s lib "/opt/winsysroot/Windows Kits/10/Lib"
 ```
 
-The build looks for the sysroot at `/opt/winsysroot` (or `/opt/xwin`) automatically; elsewhere, set `WINDOWS_SYSROOT=<path>` or pass `--winsysroot=<path>` (a user-writable path also lets configure manage the aliases for you). Configure validates the splat at the start of every cross build. CI agents bake the same splat into their images (`.buildkite/Dockerfile`, `scripts/bootstrap.sh`); when an agent doesn't have one, the build fetches it into its cache dir at configure time.
+The build looks for the sysroot at `/opt/winsysroot` (or `/opt/xwin`) automatically. If the sysroot is elsewhere, set `WINDOWS_SYSROOT=<path>` or pass `--winsysroot=<path>`. A user-writable path also lets configure manage the aliases for you. Configure validates the splat at the start of every cross build. CI agents bake the same splat into their images (`.buildkite/Dockerfile`, `scripts/bootstrap.sh`); when an agent doesn't have one, the build fetches it into its cache dir at configure time.
 
 ### Building
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 # Debug builds
 bun run build --profile=windows-x64
 bun run build --profile=windows-arm64
@@ -178,14 +174,21 @@ bun run build --profile=windows-arm64-release
 
 Output lands in `build/debug-windows-x64/bun-debug.exe`, `build/release-windows-aarch64/bun-profile.exe` + `bun.exe`, and so on. Equivalent raw flags: `bun run build --os=windows --arch=aarch64`.
 
-Cross-compiled executables are not run on the host (the `--revision` smoke test is skipped), so test them on a Windows machine or under Wine.
+The build does not run cross-compiled executables on the host (it skips the `--revision` smoke test), so test them on a Windows machine or under Wine.
 
 ### LTO
 
 x64 release cross builds support ThinLTO with cross-language (Rust↔C++) LTO. It's opt-in:
 
-```bash theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash
 bun run build --profile=windows-x64-release --lto=on
 ```
 
-`--lto=on` compiles Bun's C/C++ with `-flto=thin`, makes rustc emit LLVM bitcode (`-Clinker-plugin-lto`), pulls the `bun-webkit-windows-amd64-lto` ThinLTO prebuilt, and links everything with rustc's bundled `lld-link` (its LLVM is new enough to read both compilers' bitcode). There is no LTO for arm64 (no `-lto` WebKit prebuilt: LLVM's CodeView emitter can't handle ARM64 NEON tuple registers during LTO codegen) or for `--baseline`.
+`--lto=on` does the following:
+
+- compiles Bun's C/C++ with `-flto=thin`
+- makes rustc emit LLVM bitcode (`-Clinker-plugin-lto`)
+- pulls the `bun-webkit-windows-amd64-lto` ThinLTO prebuilt
+- links everything with rustc's bundled `lld-link` (its LLVM is new enough to read both compilers' bitcode)
+
+There is no LTO for arm64, because there is no `-lto` WebKit prebuilt: LLVM's CodeView emitter can't handle ARM64 NEON tuple registers during LTO codegen. There is also no LTO for `--baseline`.

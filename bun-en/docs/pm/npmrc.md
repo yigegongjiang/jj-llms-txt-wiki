@@ -1,17 +1,25 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # .npmrc support
 
 Bun loads configuration options from [`.npmrc`](https://docs.npmjs.com/cli/v10/configuring-npm/npmrc) files, so you can reuse your existing registry and scope configuration.
 
+Configuration is loaded in this order, with later sources overriding earlier ones:
+
+1. `~/.npmrc` (or `$XDG_CONFIG_HOME/.npmrc`)
+2. `./.npmrc`
+3. `bunfig.toml` (global, then project)
+4. `BUN_CONFIG_REGISTRY` / `NPM_CONFIG_REGISTRY` and `BUN_CONFIG_TOKEN` / `NPM_CONFIG_TOKEN` environment variables
+5. Command-line flags such as `--registry`
+
+Bun matches credentials in `.npmrc` (`//<registry>/:_authToken`, etc.) to registries by host and path, even if you set the registry URL itself in `bunfig.toml`.
+
+Values may reference environment variables. Bun replaces `${NAME}` with the variable's value, or leaves it as-is if the variable is unset. `${NAME?}` becomes an empty string if unset.
+
 <Note>
-  We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/docs/runtime/bunfig) format, which supports more
+  We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/runtime/bunfig) format, which supports more
   options, including Bun-specific ones.
 </Note>
 
-***
+---
 
 ## Supported options
 
@@ -21,13 +29,13 @@ Bun resolves packages from the default registry, which is `npm`'s official regis
 
 To change it, set the `registry` option in `.npmrc`:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 registry=http://localhost:4873/
 ```
 
-The equivalent `bunfig.toml` option is [`install.registry`](/docs/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is [`install.registry`](/runtime/bunfig#install-registry):
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 install.registry = "http://localhost:4873/"
 ```
 
@@ -35,13 +43,13 @@ install.registry = "http://localhost:4873/"
 
 `@<scope>:registry` sets the registry for a specific scope:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 @myorg:registry=http://localhost:4873/
 ```
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/runtime/bunfig#install-scopes):
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install.scopes]
 myorg = "http://localhost:4873/"
 ```
@@ -50,7 +58,7 @@ myorg = "http://localhost:4873/"
 
 `//<registry_url>/:<key>=<value>` sets options for a specific registry:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 # set an auth token for the registry
 # ${...} is a placeholder for environment variables
 //http://localhost:4873/:_authToken=${NPM_TOKEN}
@@ -67,32 +75,33 @@ myorg = "http://localhost:4873/"
 //http://localhost:4873/:_auth=${NPM_AUTH}
 ```
 
-The following options are supported:
+Bun supports the following options:
 
-* `_authToken`
-* `username`
-* `_password` (base64 encoded password)
-* `_auth` (base64 encoded username:password, for example `btoa(username + ":" + password)`)
-* `email`
+- `_authToken`
+- `username`
+- `_password` (base64 encoded password)
+- `_auth` (base64 encoded username:password, for example `btoa(username + ":" + password)`)
+- `email`
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/runtime/bunfig#install-scopes):
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install.scopes]
+# unlike _password in .npmrc, password is not base64 encoded; Bun encodes it for you
 myorg = { url = "http://localhost:4873/", username = "myusername", password = "$NPM_PASSWORD" }
 ```
 
 ### `link-workspace-packages`: Control workspace package installation
 
-Controls how workspace packages are installed when available locally:
+Controls how Bun installs workspace packages when they are available locally:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 link-workspace-packages=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.linkWorkspacePackages`](/docs/runtime/bunfig#install-linkworkspacepackages):
+The equivalent `bunfig.toml` option is [`install.linkWorkspacePackages`](/runtime/bunfig#install-linkworkspacepackages):
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install]
 linkWorkspacePackages = true
 ```
@@ -101,13 +110,13 @@ linkWorkspacePackages = true
 
 Always saves exact versions without the `^` prefix:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 save-exact=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.exact`](/docs/runtime/bunfig#install-exact):
+The equivalent `bunfig.toml` option is [`install.exact`](/runtime/bunfig#install-exact):
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install]
 exact = true
 ```
@@ -116,7 +125,7 @@ exact = true
 
 Prevents running lifecycle scripts during installation:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 ignore-scripts=true
 ```
 
@@ -124,15 +133,15 @@ This is equivalent to using the `--ignore-scripts` flag with `bun install`.
 
 ### `dry-run`: Preview changes without installing
 
-Shows what would be installed without installing anything:
+Shows what Bun would install without installing anything:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 dry-run=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.dryRun`](/docs/runtime/bunfig#install-dryrun):
+The equivalent `bunfig.toml` option is [`install.dryRun`](/runtime/bunfig#install-dryrun):
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install]
 dryRun = true
 ```
@@ -141,7 +150,7 @@ dryRun = true
 
 Set the cache directory path, or disable caching:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 # set a custom cache directory
 cache=/path/to/cache
 
@@ -149,9 +158,9 @@ cache=/path/to/cache
 cache=false
 ```
 
-The equivalent `bunfig.toml` option is [`install.cache`](/docs/runtime/bunfig#install-cache):
+The equivalent `bunfig.toml` option is [`install.cache`](/runtime/bunfig#install-cache):
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 [install.cache]
 # set a custom cache directory
 dir = "/path/to/cache"
@@ -164,7 +173,7 @@ disable = true
 
 Configure custom CA certificates for registry connections:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 # single CA certificate
 ca="-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----"
 
@@ -178,9 +187,9 @@ cafile=/path/to/ca-bundle.crt
 
 ### `omit` and `include`: Control dependency types
 
-Control which dependency types are installed:
+Control which dependency types Bun installs:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 # omit dev dependencies
 omit=dev
 
@@ -196,11 +205,11 @@ Valid values: `dev`, `peer`, `optional`
 
 ### `install-strategy` and `node-linker`: Installation strategy
 
-Control how packages are laid out in `node_modules`. For compatibility with other package managers, Bun accepts both npm's `install-strategy` and pnpm/yarn's `node-linker`. See [isolated installs](/docs/pm/isolated-installs) for how the hoisted and isolated layouts differ.
+Control how Bun lays out packages in `node_modules`. For compatibility with other package managers, Bun accepts both npm's `install-strategy` and pnpm/yarn's `node-linker`. See [isolated installs](/pm/isolated-installs) for how the hoisted and isolated layouts differ.
 
 **npm's `install-strategy`:**
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 # flat node_modules structure (default)
 install-strategy=hoisted
 
@@ -212,14 +221,14 @@ install-strategy=linked
 
 `node-linker` controls the installation mode. Bun accepts values from both pnpm and yarn:
 
-| Value          | Description                                      | Accepted by |
-| -------------- | ------------------------------------------------ | ----------- |
-| `isolated`     | Symlinked structure with isolated dependencies   | pnpm        |
-| `hoisted`      | Flat node\_modules structure                     | pnpm        |
-| `pnpm`         | Symlinked structure (same as `isolated`)         | yarn        |
-| `node-modules` | Flat node\_modules structure (same as `hoisted`) | yarn        |
+| Value          | Description                                     | Accepted by |
+| -------------- | ----------------------------------------------- | ----------- |
+| `isolated`     | Symlinked structure with isolated dependencies  | pnpm        |
+| `hoisted`      | Flat node_modules structure                     | pnpm        |
+| `pnpm`         | Symlinked structure (same as `isolated`)        | yarn        |
+| `node-modules` | Flat node_modules structure (same as `hoisted`) | yarn        |
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 # symlinked/isolated mode
 node-linker=isolated
 node-linker=pnpm
@@ -231,9 +240,9 @@ node-linker=node-modules
 
 ### `public-hoist-pattern` and `hoist-pattern`: Control hoisting
 
-Control which packages are hoisted to the root `node_modules`:
+Control which packages Bun hoists to the root `node_modules`:
 
-```ini .npmrc icon="npm" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .npmrc icon="npm"
 # packages matching this pattern will be hoisted to the root
 public-hoist-pattern=*eslint*
 
@@ -243,4 +252,9 @@ public-hoist-pattern[]=*prettier*
 
 # control general hoisting behavior
 hoist-pattern=*
+
+# isolated linker only: disable the node_modules/.bun/node_modules fallback,
+# so store packages only resolve declared deps (plus the root node_modules).
+# Hoisted installs ignore this setting.
+hoist=false
 ```

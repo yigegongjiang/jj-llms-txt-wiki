@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Binary Data
 
 > Working with binary data in JavaScript
@@ -17,22 +13,22 @@ This cheat sheet doubles as a table of contents; click a class in the left colum
 | [`DataView`](#dataview)     | A class that provides a `get/set` API for writing some number of bytes to an `ArrayBuffer` at a particular byte offset. Often used for reading or writing binary protocols.                    |
 | [`Blob`](#blob)             | A readonly blob of binary data usually representing a file. Has a MIME `type`, a `size`, and methods for converting to `ArrayBuffer`, `ReadableStream`, and string.                            |
 | [`File`](#file)             | A subclass of `Blob` that represents a file. Has a `name` and `lastModified` timestamp. Node.js v20 has experimental support.                                                                  |
-| [`BunFile`](#bunfile)       | *Bun only*. A subclass of `Blob` that represents a lazily-loaded file on disk. Created with `Bun.file(path)`.                                                                                  |
+| [`BunFile`](#bunfile)       | _Bun only_. A subclass of `Blob` that represents a lazily-loaded file on disk. Created with `Bun.file(path)`.                                                                                  |
 
-***
+---
 
 ## `ArrayBuffer` and views
 
-JavaScript had no language-native way to store and manipulate binary data until ECMAScript v5 (2009) introduced a range of mechanisms for it. The most fundamental building block is `ArrayBuffer`, a data structure that represents a sequence of bytes in memory.
+JavaScript had no language-native way to store and manipulate binary data until ECMAScript 2015 (ES6) introduced a range of mechanisms for it. The most fundamental building block is `ArrayBuffer`, a data structure that represents a sequence of bytes in memory.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // this buffer can store 8 bytes
 const buf = new ArrayBuffer(8);
 ```
 
 Despite the name, it isn't an array and supports none of the array methods and operators you might expect. You can't read or write values from an `ArrayBuffer` directly; all you can do is check its size and create "slices" from it.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const buf = new ArrayBuffer(8);
 buf.byteLength; // => 8
 
@@ -40,7 +36,7 @@ const slice = buf.slice(0, 4); // returns new ArrayBuffer
 slice.byteLength; // => 4
 ```
 
-To read or write the data, you need a "view": a class that *wraps* an `ArrayBuffer` instance and lets you read and manipulate the underlying data. There are two types of views: *typed arrays* and `DataView`.
+To read or write the data, you need a "view": a class that _wraps_ an `ArrayBuffer` instance and lets you read and manipulate the underlying data. There are two types of views: _typed arrays_ and `DataView`.
 
 ### `DataView`
 
@@ -48,7 +44,7 @@ The `DataView` class is a lower-level interface for reading and manipulating the
 
 The following creates a `DataView` and sets the first byte to 3.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const buf = new ArrayBuffer(4);
 // [0b00000000, 0b00000000, 0b00000000, 0b00000000]
 
@@ -60,23 +56,23 @@ dv.getUint8(0); // => 3
 
 Next, write a `Uint16` at byte offset `1`. This requires two bytes. The value `513` is `2 * 256 + 1`; in bytes, that's `00000010 00000001`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 dv.setUint16(1, 513);
 // [0b00000011, 0b00000010, 0b00000001, 0b00000000]
 
 console.log(dv.getUint16(1)); // => 513
 ```
 
-The first three bytes of the underlying `ArrayBuffer` now have values. Even though the second and third bytes were written with `setUint16()`, you can still read each component byte with `getUint8()`.
+The first three bytes of the underlying `ArrayBuffer` now have values. Even though you wrote the second and third bytes with `setUint16()`, you can still read each component byte with `getUint8()`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 console.log(dv.getUint8(1)); // => 2
 console.log(dv.getUint8(2)); // => 1
 ```
 
 Writing a value that needs more space than the underlying `ArrayBuffer` has throws an error. The following writes a `Float64` (which requires 8 bytes) at byte offset `0`, but the buffer is only four bytes long.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 dv.setFloat64(0, 3.1415);
 // ^ RangeError: Out of bounds access
 ```
@@ -102,11 +98,11 @@ Typed arrays are a family of classes that provide an `Array`-like interface for 
 
 <Note>
   It's common to refer to this family of classes collectively by their shared superclass `TypedArray`. This class is
-  *internal* to JavaScript; you can't directly create instances of it, and `TypedArray` is not defined in the global
+  _internal_ to JavaScript; you can't directly create instances of it, and `TypedArray` is not defined in the global
   scope. Think of it as an `interface` or an abstract class.
 </Note>
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const buffer = new ArrayBuffer(3);
 const arr = new Uint8Array(buffer);
 
@@ -130,14 +126,14 @@ The typed array classes, and how each interprets the bytes in an `ArrayBuffer`:
 | [`Int8Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array)                 | Every one (1) byte is interpreted as a signed 8-bit integer. Range -128 to 127.                                                                                            |
 | [`Int16Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array)               | Every two (2) bytes are interpreted as a signed 16-bit integer. Range -32768 to 32767.                                                                                     |
 | [`Int32Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array)               | Every four (4) bytes are interpreted as a signed 32-bit integer. Range -2147483648 to 2147483647.                                                                          |
-| [`Float16Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float16Array)           | Every two (2) bytes are interpreted as a 16-bit floating point number. Range -6.104e5 to 6.55e4.                                                                           |
+| [`Float16Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float16Array)           | Every two (2) bytes are interpreted as a 16-bit floating point number. Range -6.55e4 to 6.55e4.                                                                            |
 | [`Float32Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array)           | Every four (4) bytes are interpreted as a 32-bit floating point number. Range -3.4e38 to 3.4e38.                                                                           |
 | [`Float64Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array)           | Every eight (8) bytes are interpreted as a 64-bit floating point number. Range -1.7e308 to 1.7e308.                                                                        |
 | [`BigInt64Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt64Array)         | Every eight (8) bytes are interpreted as a signed `BigInt`. Range -9223372036854775808 to 9223372036854775807 (though `BigInt` is capable of representing larger numbers). |
 | [`BigUint64Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigUint64Array)       | Every eight (8) bytes are interpreted as an unsigned `BigInt`. Range 0 to 18446744073709551615 (though `BigInt` is capable of representing larger numbers).                |
 | [`Uint8ClampedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray) | Same as `Uint8Array`, but automatically "clamps" to the range 0-255 when assigning a value to an element.                                                                  |
 
-The following table shows how the same bytes in an `ArrayBuffer` are interpreted by different typed array classes.
+The following table shows how different typed array classes interpret the same bytes in an `ArrayBuffer`.
 
 |                  | Byte 0              | Byte 1     | Byte 2              | Byte 3     | Byte 4               | Byte 5     | Byte 6               | Byte 7     |
 | ---------------- | ------------------- | ---------- | ------------------- | ---------- | -------------------- | ---------- | -------------------- | ---------- |
@@ -149,7 +145,7 @@ The following table shows how the same bytes in an `ArrayBuffer` are interpreted
 
 To create a typed array from a pre-defined `ArrayBuffer`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // create typed array from ArrayBuffer
 const buf = new ArrayBuffer(10);
 const arr = new Uint8Array(buf);
@@ -163,7 +159,7 @@ console.log(arr); // => Uint8Array(10) [ 30, 60, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
 Instantiating a `Uint32Array` from this same `ArrayBuffer` throws an error.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const buf = new ArrayBuffer(10);
 const arr = new Uint32Array(buf);
 //          ^  RangeError: ArrayBuffer length minus the byteOffset
@@ -172,9 +168,9 @@ const arr = new Uint32Array(buf);
 
 A `Uint32` value requires four bytes (32 bits). Because the `ArrayBuffer` is 10 bytes long, there's no way to cleanly divide its contents into 4-byte chunks.
 
-To fix this, create a typed array over a particular "slice" of the `ArrayBuffer`. The following `Uint32Array` only "views" the *first* 8 bytes of the underlying `ArrayBuffer`: a `byteOffset` of `0` and a `length` of `2`, the number of `Uint32` values the array holds.
+To fix this, create a typed array over a particular "slice" of the `ArrayBuffer`. The following `Uint32Array` only "views" the _first_ 8 bytes of the underlying `ArrayBuffer`: a `byteOffset` of `0` and a `length` of `2`, the number of `Uint32` values the array holds.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // create typed array from ArrayBuffer slice
 const buf = new ArrayBuffer(10);
 const arr = new Uint32Array(buf, 0, 2);
@@ -190,32 +186,32 @@ arr.length; // 2
 
 You don't need to create an `ArrayBuffer` instance first; pass a length to the typed array constructor instead:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const arr2 = new Uint8Array(5);
 
 // all elements are initialized to zero
 // => Uint8Array(5) [0, 0, 0, 0, 0]
 ```
 
-Typed arrays can also be instantiated directly from an array of numbers, or another typed array:
+You can also instantiate typed arrays directly from an array of numbers, or another typed array:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // from an array of numbers
 const arr1 = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7]);
 arr1[0]; // => 0;
 arr1[7]; // => 7;
 
 // from another typed array
-const arr2 = new Uint8Array(arr);
+const arr2 = new Uint8Array(arr1);
 ```
 
 Typed arrays provide the same methods as regular arrays, with a few exceptions. For example, `push` and `pop` are not available, because they would require resizing the underlying `ArrayBuffer`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const arr = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7]);
 
 // supports common array methods
-arr.filter(n => n > 128); // Uint8Array(1) [255]
+arr.filter(n => n > 5); // Uint8Array(2) [6, 7]
 arr.map(n => n * 2); // Uint8Array(8) [0, 2, 4, 6, 8, 10, 12, 14]
 arr.reduce((acc, n) => acc + n, 0); // 28
 arr.forEach(n => console.log(n)); // 0 1 2 3 4 5 6 7
@@ -233,7 +229,7 @@ See the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScr
 
 In Bun, it has methods for converting between byte arrays and their base64 or hex string representations.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new Uint8Array([1, 2, 3, 4, 5]).toBase64(); // "AQIDBAU="
 Uint8Array.fromBase64("AQIDBAU="); // Uint8Array(5) [1, 2, 3, 4, 5]
 
@@ -241,9 +237,9 @@ new Uint8Array([255, 254, 253, 252, 251]).toHex(); // "fffefdfcfb"
 Uint8Array.fromHex("fffefdfcfb"); // Uint8Array(5) [255, 254, 253, 252, 251]
 ```
 
-It is the return value of [`TextEncoder#encode`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder), and the input type of [`TextDecoder#decode`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder), two utility classes that translate between strings and various binary encodings, most notably `"utf-8"`.
+It is the return value of [`TextEncoder#encode`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder) and the input type of [`TextDecoder#decode`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder). These two utility classes translate between strings and various binary encodings, most notably `"utf-8"`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const encoder = new TextEncoder();
 const bytes = encoder.encode("hello world");
 // => Uint8Array(11) [ 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100 ]
@@ -257,7 +253,7 @@ const text = decoder.decode(bytes);
 
 Bun implements `Buffer`, a Node.js API for working with binary data that pre-dates the introduction of typed arrays in the JavaScript spec. It has since been re-implemented as a subclass of `Uint8Array`. It provides a wide range of methods, including several Array-like and `DataView`-like methods.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const buf = Buffer.from("hello world");
 // => Buffer(11) [ 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100 ]
 
@@ -277,7 +273,7 @@ See the [Node.js documentation](https://nodejs.org/api/buffer.html).
 
 You rarely create `Blob` instances directly; they usually come from an external source (like an `<input type="file">` element in the browser) or a library. That said, you can create a `Blob` from one or more string or binary "blob parts".
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const blob = new Blob(["<html>Hello</html>"], {
   type: "text/html",
 });
@@ -286,9 +282,9 @@ blob.type; // => text/html
 blob.size; // => 18
 ```
 
-These parts can be `string`, `ArrayBuffer`, `TypedArray`, `DataView`, or other `Blob` instances. The parts are concatenated in the order they're given.
+These parts can be `string`, `ArrayBuffer`, `TypedArray`, `DataView`, or other `Blob` instances. The constructor concatenates the parts in the order you give them.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const blob = new Blob([
   "<html>",
   new Blob(["<body>"]),
@@ -299,7 +295,7 @@ const blob = new Blob([
 
 Read the contents of a `Blob` asynchronously in various formats.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 await blob.text(); // => <html><body>hello</body></html>
 await blob.bytes(); // => Uint8Array (copies contents)
 await blob.arrayBuffer(); // => ArrayBuffer (copies contents)
@@ -310,7 +306,7 @@ blob.stream(); // => ReadableStream
 
 `BunFile` is a subclass of `Blob` that represents a lazily-loaded file on disk. Like `File`, it adds a `name` and `lastModified` property. Unlike `File`, it does not require the file to be loaded into memory.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const file = Bun.file("index.txt");
 // => BunFile
 ```
@@ -319,7 +315,7 @@ const file = Bun.file("index.txt");
 
 [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) is a subclass of `Blob` that adds a `name` and `lastModified` property. It's commonly used in the browser to represent files uploaded with an `<input type="file">` element. Node.js and Bun implement `File`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // on browser!
 // <input type="file" id="file" />
 
@@ -327,7 +323,7 @@ const files = document.getElementById("file").files;
 // => File[]
 ```
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const file = new File(["<html>Hello</html>"], "index.html", {
   type: "text/html",
 });
@@ -335,13 +331,13 @@ const file = new File(["<html>Hello</html>"], "index.html", {
 
 See the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/API/Blob).
 
-***
+---
 
 ## Streams
 
 Streams let you work with binary data without loading it all into memory at once. They're commonly used for reading and writing files, sending and receiving network requests, and processing large amounts of data.
 
-Bun implements the Web APIs [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) and [`WritableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream).
+Bun implements the Web APIs [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) and [`WritableStream`](https://developer.mozilla.org/en-US/docs/Web/API/WritableStream).
 
 <Note>
   Bun also implements the `node:stream` module, including
@@ -353,7 +349,7 @@ Bun implements the Web APIs [`ReadableStream`](https://developer.mozilla.org/en-
 
 To create a readable stream:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream({
   start(controller) {
     controller.enqueue("hello");
@@ -365,7 +361,7 @@ const stream = new ReadableStream({
 
 Read the stream chunk-by-chunk with `for await`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 for await (const chunk of stream) {
   console.log(chunk);
 }
@@ -374,9 +370,9 @@ for await (const chunk of stream) {
 // => "world"
 ```
 
-For more on streams in Bun, see [Streams](/docs/runtime/streams).
+For more on streams in Bun, see [Streams](/runtime/streams).
 
-***
+---
 
 ## Conversion
 
@@ -384,23 +380,23 @@ Use this section as a reference for converting one binary format to another.
 
 ### From `ArrayBuffer`
 
-Since `ArrayBuffer` stores the data that underlies other binary structures like `TypedArray`, the following snippets are not *converting* from `ArrayBuffer` to another format. Instead, they *create* a new instance using the underlying data.
+Since `ArrayBuffer` stores the data that underlies other binary structures like `TypedArray`, the following snippets are not _converting_ from `ArrayBuffer` to another format. Instead, they _create_ a new instance using the underlying data.
 
 #### To `TypedArray`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new Uint8Array(buf);
 ```
 
 #### To `DataView`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new DataView(buf);
 ```
 
 #### To `Buffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // create Buffer over entire ArrayBuffer
 Buffer.from(buf);
 
@@ -412,19 +408,19 @@ Buffer.from(buf, 0, 10);
 
 As UTF-8:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new TextDecoder().decode(buf);
 ```
 
 #### To `number[]`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Array.from(new Uint8Array(buf));
 ```
 
 #### To `Blob`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new Blob([buf], { type: "text/plain" });
 ```
 
@@ -432,7 +428,7 @@ new Blob([buf], { type: "text/plain" });
 
 The following snippet creates a `ReadableStream` and enqueues the entire `ArrayBuffer` as a single chunk.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new ReadableStream({
   start(controller) {
     controller.enqueue(buf);
@@ -442,30 +438,31 @@ new ReadableStream({
 ```
 
 <Accordion title="With chunking">
-  To stream the `ArrayBuffer` in chunks, use a `Uint8Array` view and enqueue each chunk.
+To stream the `ArrayBuffer` in chunks, use a `Uint8Array` view and enqueue each chunk.
 
-  ```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
-  const view = new Uint8Array(buf);
-  const chunkSize = 1024;
+```ts
+const view = new Uint8Array(buf);
+const chunkSize = 1024;
 
-  new ReadableStream({
-    start(controller) {
-      for (let i = 0; i < view.length; i += chunkSize) {
-        controller.enqueue(view.slice(i, i + chunkSize));
-      }
-      controller.close();
-    },
-  });
-  ```
+new ReadableStream({
+  start(controller) {
+    for (let i = 0; i < view.length; i += chunkSize) {
+      controller.enqueue(view.slice(i, i + chunkSize));
+    }
+    controller.close();
+  },
+});
+```
+
 </Accordion>
 
 ### From `TypedArray`
 
 #### To `ArrayBuffer`
 
-The `buffer` property is the underlying `ArrayBuffer`. A `TypedArray` can be a view of a *slice* of that buffer, so the sizes may differ.
+The `buffer` property is the underlying `ArrayBuffer`. A `TypedArray` can be a view of a _slice_ of that buffer, so the sizes may differ.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 arr.buffer;
 ```
 
@@ -473,13 +470,13 @@ arr.buffer;
 
 To create a `DataView` over the same byte range as the `TypedArray`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
 ```
 
 #### To `Buffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Buffer.from(arr);
 ```
 
@@ -487,26 +484,26 @@ Buffer.from(arr);
 
 As UTF-8:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new TextDecoder().decode(arr);
 ```
 
 #### To `number[]`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Array.from(arr);
 ```
 
 #### To `Blob`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
-// only if arr is a view of its entire backing TypedArray
+```ts
+// only if arr is a view of its entire backing ArrayBuffer
 new Blob([arr.buffer], { type: "text/plain" });
 ```
 
 #### To `ReadableStream`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new ReadableStream({
   start(controller) {
     controller.enqueue(arr);
@@ -516,25 +513,27 @@ new ReadableStream({
 ```
 
 <Accordion title="With chunking">
-  To stream the `ArrayBuffer` in chunks, split the `TypedArray` into chunks and enqueue each one individually.
 
-  ```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
-  new ReadableStream({
-    start(controller) {
-      for (let i = 0; i < arr.length; i += chunkSize) {
-        controller.enqueue(arr.slice(i, i + chunkSize));
-      }
-      controller.close();
-    },
-  });
-  ```
+To stream the `ArrayBuffer` in chunks, split the `TypedArray` into chunks and enqueue each one individually.
+
+```ts
+new ReadableStream({
+  start(controller) {
+    for (let i = 0; i < arr.length; i += chunkSize) {
+      controller.enqueue(arr.slice(i, i + chunkSize));
+    }
+    controller.close();
+  },
+});
+```
+
 </Accordion>
 
 ### From `DataView`
 
 #### To `ArrayBuffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 view.buffer;
 ```
 
@@ -542,7 +541,7 @@ view.buffer;
 
 Only works if the `byteLength` of the `DataView` is a multiple of the `BYTES_PER_ELEMENT` of the `TypedArray` subclass.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
 new Uint16Array(view.buffer, view.byteOffset, view.byteLength / 2);
 new Uint32Array(view.buffer, view.byteOffset, view.byteLength / 4);
@@ -551,7 +550,7 @@ new Uint32Array(view.buffer, view.byteOffset, view.byteLength / 4);
 
 #### To `Buffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Buffer.from(view.buffer, view.byteOffset, view.byteLength);
 ```
 
@@ -559,65 +558,68 @@ Buffer.from(view.buffer, view.byteOffset, view.byteLength);
 
 As UTF-8:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new TextDecoder().decode(view);
 ```
 
 #### To `number[]`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
-Array.from(view);
+```ts
+Array.from(new Uint8Array(view.buffer, view.byteOffset, view.byteLength));
 ```
 
 #### To `Blob`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
-new Blob([view.buffer], { type: "text/plain" });
+```ts
+new Blob([view], { type: "text/plain" });
 ```
 
 #### To `ReadableStream`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new ReadableStream({
   start(controller) {
-    controller.enqueue(view.buffer);
+    controller.enqueue(new Uint8Array(view.buffer, view.byteOffset, view.byteLength));
     controller.close();
   },
 });
 ```
 
 <Accordion title="With chunking">
-  To stream the `ArrayBuffer` in chunks, split the `DataView` into chunks and enqueue each one individually.
+To stream the `ArrayBuffer` in chunks, split the `DataView` into chunks and enqueue each one individually.
 
-  ```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
-  new ReadableStream({
-    start(controller) {
-      for (let i = 0; i < view.byteLength; i += chunkSize) {
-        controller.enqueue(view.buffer.slice(i, i + chunkSize));
-      }
-      controller.close();
-    },
-  });
-  ```
+```ts
+const bytes = new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+
+new ReadableStream({
+  start(controller) {
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      controller.enqueue(bytes.slice(i, i + chunkSize));
+    }
+    controller.close();
+  },
+});
+```
+
 </Accordion>
 
 ### From `Buffer`
 
 #### To `ArrayBuffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 buf.buffer;
 ```
 
 #### To `TypedArray`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new Uint8Array(buf);
 ```
 
 #### To `DataView`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
 ```
 
@@ -625,37 +627,37 @@ new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
 
 As UTF-8:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 buf.toString();
 ```
 
 As base64:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 buf.toString("base64");
 ```
 
 As hex:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 buf.toString("hex");
 ```
 
 #### To `number[]`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Array.from(buf);
 ```
 
 #### To `Blob`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new Blob([buf], { type: "text/plain" });
 ```
 
 #### To `ReadableStream`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new ReadableStream({
   start(controller) {
     controller.enqueue(buf);
@@ -665,43 +667,44 @@ new ReadableStream({
 ```
 
 <Accordion title="With chunking">
-  To stream the `ArrayBuffer` in chunks, split the `Buffer` into chunks and enqueue each one individually.
+To stream the `ArrayBuffer` in chunks, split the `Buffer` into chunks and enqueue each one individually.
 
-  ```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
-  new ReadableStream({
-    start(controller) {
-      for (let i = 0; i < buf.length; i += chunkSize) {
-        controller.enqueue(buf.slice(i, i + chunkSize));
-      }
-      controller.close();
-    },
-  });
-  ```
+```ts
+new ReadableStream({
+  start(controller) {
+    for (let i = 0; i < buf.length; i += chunkSize) {
+      controller.enqueue(buf.slice(i, i + chunkSize));
+    }
+    controller.close();
+  },
+});
+```
+
 </Accordion>
 
 ### From `Blob`
 
 #### To `ArrayBuffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 await blob.arrayBuffer();
 ```
 
 #### To `TypedArray`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 await blob.bytes();
 ```
 
 #### To `DataView`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new DataView(await blob.arrayBuffer());
 ```
 
 #### To `Buffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Buffer.from(await blob.arrayBuffer());
 ```
 
@@ -709,19 +712,19 @@ Buffer.from(await blob.arrayBuffer());
 
 As UTF-8:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 await blob.text();
 ```
 
 #### To `number[]`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Array.from(await blob.bytes());
 ```
 
 #### To `ReadableStream`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 blob.stream();
 ```
 
@@ -729,7 +732,7 @@ blob.stream();
 
 [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) is a common intermediate for converting a `ReadableStream` to other formats.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 stream; // ReadableStream
 
 const buffer = new Response(stream).arrayBuffer();
@@ -739,7 +742,7 @@ But this approach is verbose and adds unnecessary overhead. Bun implements optim
 
 #### To `ArrayBuffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Response
 new Response(stream).arrayBuffer();
 
@@ -749,7 +752,7 @@ Bun.readableStreamToArrayBuffer(stream);
 
 #### To `Uint8Array`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Response
 new Response(stream).bytes();
 
@@ -759,42 +762,42 @@ Bun.readableStreamToBytes(stream);
 
 #### To `TypedArray`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Response
 const buf = await new Response(stream).arrayBuffer();
 new Int8Array(buf);
 
 // with Bun function
-new Int8Array(Bun.readableStreamToArrayBuffer(stream));
+new Int8Array(await Bun.readableStreamToArrayBuffer(stream));
 ```
 
 #### To `DataView`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Response
 const buf = await new Response(stream).arrayBuffer();
 new DataView(buf);
 
 // with Bun function
-new DataView(Bun.readableStreamToArrayBuffer(stream));
+new DataView(await Bun.readableStreamToArrayBuffer(stream));
 ```
 
 #### To `Buffer`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Response
 const buf = await new Response(stream).arrayBuffer();
 Buffer.from(buf);
 
 // with Bun function
-Buffer.from(Bun.readableStreamToArrayBuffer(stream));
+Buffer.from(await Bun.readableStreamToArrayBuffer(stream));
 ```
 
 #### To `string`
 
 As UTF-8:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Response
 await new Response(stream).text();
 
@@ -804,32 +807,32 @@ await Bun.readableStreamToText(stream);
 
 #### To `number[]`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Response
 const arr = await new Response(stream).bytes();
 Array.from(arr);
 
 // with Bun function
-Array.from(new Uint8Array(Bun.readableStreamToArrayBuffer(stream)));
+Array.from(new Uint8Array(await Bun.readableStreamToArrayBuffer(stream)));
 ```
 
 Bun provides a utility for resolving a `ReadableStream` to an array of its chunks. Each chunk may be a string, typed array, or `ArrayBuffer`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // with Bun function
 Bun.readableStreamToArray(stream);
 ```
 
 #### To `Blob`
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 new Response(stream).blob();
 ```
 
 #### To `ReadableStream`
 
-To split a `ReadableStream` into two streams that can be consumed independently:
+To split a `ReadableStream` into two streams that you can consume independently:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const [a, b] = stream.tee();
 ```

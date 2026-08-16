@@ -1,14 +1,10 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Error Handling
 
 > Learn how to handle errors in Bun's development server
 
 To activate development mode, set `development: true`.
 
-```ts title="server.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="server.ts" icon="/icons/typescript.svg"
 Bun.serve({
   development: true, // [!code ++]
   fetch(req) {
@@ -19,15 +15,13 @@ Bun.serve({
 
 In development mode, Bun surfaces errors in-browser with a built-in error page.
 
-<Frame>
-  <img src="https://mintcdn.com/bun-1dd33a4e/PY1574V41bdK8wNs/images/exception_page.png?fit=max&auto=format&n=PY1574V41bdK8wNs&q=85&s=26f9bec162e97288f1f0d736773b2b6e" alt="Bun's built-in 500 page" width="800" height="579" data-path="images/exception_page.png" />
-</Frame>
+<Frame>![Bun's built-in 500 page](/images/exception_page.png)</Frame>
 
 ### `error` callback
 
 To handle server-side errors, implement an `error` handler. Return a `Response` to serve to the client when an error occurs. In `development` mode, this response replaces Bun's default error page.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   fetch(req) {
     throw new Error("woops!");
@@ -42,4 +36,4 @@ Bun.serve({
 });
 ```
 
-<Info>[Learn more about debugging in Bun](/docs/runtime/debugger)</Info>
+<Info>[Learn more about debugging in Bun](/runtime/debugger)</Info>

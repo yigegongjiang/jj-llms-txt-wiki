@@ -1,20 +1,16 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # HTMLRewriter
 
 > Use Bun's HTMLRewriter to transform HTML documents with CSS selectors
 
 HTMLRewriter transforms HTML documents with CSS selectors. It works with `Response`, `string`, and `ArrayBuffer` inputs. Bun's implementation is based on Cloudflare's [lol-html](https://github.com/cloudflare/lol-html).
 
-***
+---
 
 ## Usage
 
 A common use case is rewriting URLs in HTML content:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // Replace all images with a rickroll
 const rewriter = new HTMLRewriter().on("img", {
   element(img) {
@@ -49,7 +45,8 @@ console.log(result);
 
 The rewriter replaces every image with a thumbnail of Rick Astley and wraps each `<img>` in a link, producing a diff like this:
 
-```html theme={"theme":{"light":"github-light","dark":"dracula"}}
+{/* prettier-ignore */}
+```html
 <html>
   <body>
     <img src="/cat.jpg" /> <!-- [!code --] -->
@@ -74,7 +71,7 @@ Clicking any image now leads to [a very famous video](https://www.youtube.com/wa
 
 HTMLRewriter can transform HTML from several input types:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // From Response
 rewriter.transform(new Response("<div>content</div>"));
 
@@ -97,7 +94,7 @@ The Cloudflare Workers implementation of HTMLRewriter only supports `Response` o
 
 The `on(selector, handlers)` method registers handlers for HTML elements that match a CSS selector. The handlers run for each matching element during parsing:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 rewriter.on("div.content", {
   // Handle elements
   element(element) {
@@ -115,22 +112,65 @@ rewriter.on("div.content", {
 });
 ```
 
-Handlers can be asynchronous and return a Promise. Async operations block the transformation until they complete:
+Handlers can be asynchronous and return a Promise. The transformation pauses on
+that element until the Promise settles, so handlers still run one at a time, in
+document order:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 rewriter.on("div", {
   async element(element) {
-    await Bun.sleep(1000);
-    element.setInnerContent("<span>replace</span>", { html: true });
+    const fragment = await fetch("https://example.com/fragment").then(r => r.text());
+    element.setInnerContent(fragment, { html: true });
   },
 });
 ```
+
+`transform(response)` returns immediately. The rewrite continues in the
+background, and you read the result off the returned `Response`. Reading it
+paces the rewrite: a streamed input (a file, a `fetch()` response, a
+`ReadableStream`) is pulled through only as fast as the returned body is
+consumed, so a slow reader does not accumulate the whole document in memory. If
+nothing reads the body, the rewrite still runs every handler to the end of the
+document and buffers the output until it is read. Because the rewrite outlives
+`transform()`, an error thrown by an async handler (or a Promise it returns that
+rejects) rejects the response body instead of throwing from `transform()`:
+
+```ts
+try {
+  const output = await rewriter.transform(new Response(html)).text();
+} catch (error) {
+  console.error("a handler failed:", error);
+}
+```
+
+`transform()` on a `string` or `ArrayBuffer` has to return its result
+synchronously, so it cannot wait for a handler that needs the event loop to turn
+(a timer, I/O, a `fetch`). Such a handler makes `transform()` throw a
+`TypeError`, and the rewrite fails without running any further handlers:
+
+```ts
+new HTMLRewriter()
+  .on("div", {
+    async element(element) {
+      await Bun.sleep(1000); // needs a timer
+    },
+  })
+  .transform("<div></div>");
+// TypeError: HTMLRewriter.transform() cannot synchronously return a string
+// because a content handler returned a Promise that did not resolve within a
+// microtask. Pass a Response instead and await its body
+```
+
+A handler whose Promise settles within a microtask checkpoint still works with
+`transform(string)`. Anything that does not need the event loop qualifies,
+including `process.nextTick` and already-resolved Promises. Pass a `Response`
+whenever a handler might await real work.
 
 ### CSS Selector Support
 
 The `on()` method supports a wide range of CSS selectors:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // Tag selectors
 rewriter.on("p", handler);
 
@@ -168,9 +208,9 @@ rewriter.on("*", handler);
 
 ### Element Operations
 
-All element modification methods return the element instance, so calls can be chained:
+All element modification methods return the element instance, so you can chain calls:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 rewriter.on("div", {
   element(el) {
     // Attributes
@@ -225,7 +265,7 @@ rewriter.on("div", {
 
 Text chunks represent portions of text content and report their position in the text node:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 rewriter.on("p", {
   text(text) {
     // Content
@@ -249,7 +289,7 @@ rewriter.on("p", {
 
 Comments support similar methods to text nodes:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 rewriter.on("*", {
   comments(comment) {
     // Content
@@ -273,7 +313,7 @@ rewriter.on("*", {
 
 The `onDocument(handlers)` method registers handlers for events at the document level rather than within specific elements:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 rewriter.onDocument({
   // Handle doctype
   doctype(doctype) {
@@ -298,37 +338,56 @@ rewriter.onDocument({
 
 ### Response Handling
 
-When transforming a Response:
+When transforming a Response, HTMLRewriter:
 
-* The status code, headers, and other response properties are preserved
-* The body is transformed while maintaining streaming capabilities
-* Content-encoding (like gzip) is handled automatically
-* The original response body is marked as used after transformation
-* Headers are cloned to the new response
+- Preserves the status code, headers, and other response properties
+- Transforms the body while maintaining streaming capabilities
+- Handles content-encoding (like gzip) automatically
+- Marks the original response body as used after transformation
+- Clones headers to the new response
 
 ## Error Handling
 
-HTMLRewriter operations can throw errors in several cases:
+The overload you called decides which channel an error takes. Timing never
+does. `transform()` itself throws for:
 
-* Invalid selector syntax in `on()` method
-* Invalid HTML content in transformation methods
-* Stream errors when processing Response bodies
-* Memory allocation failures
-* Invalid input types (for example, passing a Symbol)
-* Body already used errors
+- Invalid selector syntax in the `on()` method
+- Invalid input types (for example, passing a Symbol)
+- Body already used errors, and input bodies that have already failed or aborted
+- Anything a content handler raises on a `string` / `ArrayBuffer` input, since
+  those have to produce their result before `transform()` returns. The same goes
+  for a handler that needs the event loop (see [Element Handlers](#element-handlers))
 
-Catch and handle these errors:
-
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 try {
-  const result = rewriter.transform(input);
-  // Process result
+  const result = rewriter.transform("<div></div>");
 } catch (error) {
   console.error("HTMLRewriter error:", error);
 }
 ```
 
-***
+For a `Response` input, `transform()` returns before the rewrite finishes, so
+everything the rewrite discovers surfaces on the output body instead:
+
+- An error thrown by a content handler, or a rejected Promise one returned
+- Malformed or truncated input
+- Stream errors reading the input body
+- Memory allocation failures
+
+```ts
+try {
+  const output = await rewriter.transform(new Response(html)).text();
+} catch (error) {
+  console.error("the rewrite failed:", error);
+}
+```
+
+If a handler creates a Promise but neither returns nor awaits it, a rejection
+from that Promise reaches neither channel. Like any detached rejection, it goes
+to the process-global `unhandledRejection` path. Earlier versions of Bun could
+surface it from `transform()` itself.
+
+---
 
 ## See also
 

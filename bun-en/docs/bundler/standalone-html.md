@@ -1,14 +1,10 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Standalone HTML
 
 > Bundle a single-page app into a single self-contained .html file with no external dependencies
 
-Bun can bundle your entire frontend into a **single `.html` file** with zero external dependencies. JavaScript, TypeScript, JSX, CSS, images, fonts, videos, WASM — everything gets inlined into one file.
+Bun can bundle your entire frontend into a **single `.html` file** with zero external dependencies. JavaScript, TypeScript, JSX, CSS, images, fonts, videos, WASM: Bun inlines everything into one file.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun build --compile --target=browser ./index.html --outdir=dist
 ```
 
@@ -18,59 +14,61 @@ The output is a self-contained HTML document: no relative paths, no external fil
 
 The output is a single `.html` file you can put anywhere:
 
-* **Upload it to S3** or any static file host — no directory structure to maintain, one file
-* **Double-click it from your desktop** — it opens in the browser and works offline, no localhost server needed
-* **Embed it in your webview** — no relative files to deal with
-* **Insert it in an `<iframe>`** — embed interactive content in another page with a single file URL
-* **Serve it from anywhere** — any HTTP server, CDN, or file share
+- **Upload it to S3** or any static file host — no directory structure to maintain, one file
+- **Double-click it from your desktop** — it opens in the browser and works offline, no localhost server needed
+- **Embed it in your webview** — no relative files to deal with
+- **Insert it in an `<iframe>`** — embed interactive content in another page with a single file URL
+- **Serve it from anywhere** — any HTTP server, CDN, or file share
 
 There's nothing to install, no `node_modules` to deploy, no build artifacts to coordinate, no relative paths to think about.
 
 ## Truly one file
 
-Normally, distributing a web page means managing a folder of assets — the HTML, the JavaScript bundles, the CSS files, the images. Move the HTML without the rest and everything breaks. Browsers have tried to solve this before: Safari's `.webarchive` and `.mhtml` are supposed to save a page as a single file, but in practice they unpack into a folder of loose files on your computer — defeating the purpose.
+Normally, distributing a web page means managing a folder of assets — the HTML, the JavaScript bundles, the CSS files, the images. Move the HTML without the rest and everything breaks. Browsers have tried to solve this before. Safari's `.webarchive` and Chrome's `.mhtml` save a page as a single file. In practice, only some browsers can open them, which defeats the purpose.
 
-Standalone HTML output is a plain `.html` file: not an archive, not a folder. Every image, every font, every line of CSS and JavaScript is embedded directly in the HTML using standard `<style>` tags, `<script>` tags, and `data:` URIs. Any browser can open it and any server can host it.
+Standalone HTML output is a plain `.html` file: not an archive, not a folder. Bun embeds every image, every font, and every line of CSS and JavaScript directly in the HTML using standard `<style>` tags, `<script>` tags, and `data:` URIs. Any browser can open it and any server can host it.
 
 You can distribute the page the same way you'd distribute a PDF: a single file you can move, copy, upload, or share without worrying about broken paths or missing assets.
 
 ## Quick start
 
 <CodeGroup>
-  ```html index.html icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  <!doctype html>
-  <html>
-    <head>
-      <link rel="stylesheet" href="./styles.css" />
-    </head>
-    <body>
-      <div id="root"></div>
-      <script src="./app.tsx"></script>
-    </body>
-  </html>
-  ```
 
-  ```tsx app.tsx icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  import React from "react";
-  import { createRoot } from "react-dom/client";
+```html index.html icon="file-code"
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="./app.tsx"></script>
+  </body>
+</html>
+```
 
-  function App() {
-    return <h1>Hello from a single HTML file!</h1>;
-  }
+```tsx app.tsx icon="/icons/typescript.svg"
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-  createRoot(document.getElementById("root")!).render(<App />);
-  ```
+function App() {
+  return <h1>Hello from a single HTML file!</h1>;
+}
 
-  ```css styles.css icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  body {
-    margin: 0;
-    font-family: system-ui, sans-serif;
-    background: #f5f5f5;
-  }
-  ```
+createRoot(document.getElementById("root")!).render(<App />);
+```
+
+```css styles.css icon="file-code"
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f5f5f5;
+}
+```
+
 </CodeGroup>
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun build --compile --target=browser ./index.html --outdir=dist
 ```
 
@@ -99,110 +97,114 @@ Bun inlines every local asset it finds in your HTML: anything with a relative pa
 | CSS `url("./font.woff2")`                        | CSS `url(data:font/woff2;base64,...)`                                    |
 | JS `import "./styles.css"`                       | Merged into the `<style>` tag                                            |
 
-Images, fonts, WASM binaries, videos, audio files, SVGs — any file referenced by a relative path gets base64-encoded into a `data:` URI and embedded directly in the HTML. Bun detects the MIME type from the file extension.
+Images, fonts, WASM binaries, videos, audio files, SVGs: Bun base64-encodes any file referenced by a relative path into a `data:` URI and embeds it directly in the HTML. Bun detects the MIME type from the file extension.
 
-External URLs (like CDN links or absolute URLs) are left untouched.
+Bun leaves external URLs (like CDN links or absolute URLs) untouched.
 
 ## Using with React
 
 React apps need no extra configuration: Bun transpiles JSX and resolves npm packages.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install react react-dom
 ```
 
 <CodeGroup>
-  ```html index.html icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  <!doctype html>
-  <html>
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>My App</title>
-      <link rel="stylesheet" href="./styles.css" />
-    </head>
-    <body>
-      <div id="root"></div>
-      <script src="./app.tsx"></script>
-    </body>
-  </html>
-  ```
 
-  ```tsx app.tsx icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  import React, { useState } from "react";
-  import { createRoot } from "react-dom/client";
-  import { Counter } from "./components/Counter.tsx";
+```html index.html icon="file-code"
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My App</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="./app.tsx"></script>
+  </body>
+</html>
+```
 
-  function App() {
-    return (
-      <main>
-        <h1>Single-file React App</h1>
-        <Counter />
-      </main>
-    );
-  }
+```tsx app.tsx icon="/icons/typescript.svg"
+import React, { useState } from "react";
+import { createRoot } from "react-dom/client";
+import { Counter } from "./components/Counter.tsx";
 
-  createRoot(document.getElementById("root")!).render(<App />);
-  ```
+function App() {
+  return (
+    <main>
+      <h1>Single-file React App</h1>
+      <Counter />
+    </main>
+  );
+}
 
-  ```tsx components/Counter.tsx icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  import React, { useState } from "react";
+createRoot(document.getElementById("root")!).render(<App />);
+```
 
-  export function Counter() {
-    const [count, setCount] = useState(0);
-    return <button onClick={() => setCount(count + 1)}>Count: {count}</button>;
-  }
-  ```
+```tsx components/Counter.tsx icon="/icons/typescript.svg"
+import React, { useState } from "react";
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>Count: {count}</button>;
+}
+```
+
 </CodeGroup>
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun build --compile --target=browser ./index.html --outdir=dist
 ```
 
-All of React, your components, and your CSS are bundled into `dist/index.html`. Upload that one file anywhere and it works.
+Bun bundles all of React, your components, and your CSS into `dist/index.html`. Upload that one file anywhere and it works.
 
 ## Using with Tailwind CSS
 
 Install the plugin and reference Tailwind in your HTML or CSS:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --dev bun-plugin-tailwind
 ```
 
 <CodeGroup>
-  ```html index.html icon="file-code" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  <!doctype html>
-  <html>
-    <head>
-      <link rel="stylesheet" href="tailwindcss" />
-    </head>
-    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-      <div id="root"></div>
-      <script src="./app.tsx"></script>
-    </body>
-  </html>
-  ```
 
-  ```tsx app.tsx icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  import React from "react";
-  import { createRoot } from "react-dom/client";
+```html index.html icon="file-code"
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="tailwindcss" />
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div id="root"></div>
+    <script src="./app.tsx"></script>
+  </body>
+</html>
+```
 
-  function App() {
-    return (
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md">
-        <h1 className="text-2xl font-bold text-gray-800">Hello Tailwind</h1>
-        <p className="text-gray-600 mt-2">This is a single HTML file.</p>
-      </div>
-    );
-  }
+```tsx app.tsx icon="/icons/typescript.svg"
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-  createRoot(document.getElementById("root")!).render(<App />);
-  ```
+function App() {
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-8 max-w-md">
+      <h1 className="text-2xl font-bold text-gray-800">Hello Tailwind</h1>
+      <p className="text-gray-600 mt-2">This is a single HTML file.</p>
+    </div>
+  );
+}
+
+createRoot(document.getElementById("root")!).render(<App />);
+```
+
 </CodeGroup>
 
 Build with the plugin using the JavaScript API:
 
-```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts build.ts icon="/icons/typescript.svg"
 await Bun.build({
   entrypoints: ["./index.html"],
   compile: true,
@@ -212,11 +214,11 @@ await Bun.build({
 });
 ```
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun run build.ts
 ```
 
-The generated Tailwind CSS is inlined directly into the HTML file as a `<style>` tag.
+Bun inlines the generated Tailwind CSS directly into the HTML file as a `<style>` tag.
 
 ## How it works
 
@@ -234,13 +236,13 @@ When you pass `--compile --target=browser` with an HTML entrypoint, Bun:
 
 Add `--minify` to minify the JavaScript and CSS:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun build --compile --target=browser --minify ./index.html --outdir=dist
 ```
 
 Or with the JavaScript API:
 
-```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts build.ts icon="/icons/typescript.svg"
 await Bun.build({
   entrypoints: ["./index.html"],
   compile: true,
@@ -254,7 +256,7 @@ await Bun.build({
 
 Use `Bun.build()` to produce standalone HTML programmatically:
 
-```ts build.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts build.ts icon="/icons/typescript.svg"
 const result = await Bun.build({
   entrypoints: ["./index.html"],
   compile: true,
@@ -273,9 +275,9 @@ if (!result.success) {
 }
 ```
 
-When `outdir` is omitted, the output is available as a `BuildArtifact` in `result.outputs`:
+When you omit `outdir`, the output is available as a `BuildArtifact` in `result.outputs`:
 
-```ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts icon="/icons/typescript.svg"
 const result = await Bun.build({
   entrypoints: ["./index.html"],
   compile: true,
@@ -290,7 +292,7 @@ await Bun.write("output.html", html);
 
 You can pass multiple HTML files as entrypoints. Each produces its own standalone HTML file:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun build --compile --target=browser ./index.html ./about.html --outdir=dist
 ```
 
@@ -298,7 +300,7 @@ bun build --compile --target=browser ./index.html ./about.html --outdir=dist
 
 Use `--env` to inline environment variables into the bundled JavaScript:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 API_URL=https://api.example.com bun build --compile --target=browser --env=inline ./index.html --outdir=dist
 ```
 
@@ -306,6 +308,6 @@ Bun replaces references to `process.env.API_URL` in your JavaScript with the lit
 
 ## Limitations
 
-* **Code splitting** is not supported — `--splitting` cannot be used with `--compile --target=browser`
-* **Large assets** increase file size since they're base64-encoded (33% overhead vs the raw binary)
-* **External URLs** (CDN links, absolute URLs) are left as-is — only relative paths are inlined
+- **Code splitting** is not supported — `--splitting` cannot be used with `--compile --target=browser`
+- **Large assets** increase file size since they're base64-encoded (33% overhead vs the raw binary)
+- **External URLs** (CDN links, absolute URLs) stay as-is: Bun inlines only relative paths

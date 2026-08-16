@@ -1,14 +1,10 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # CSRF Protection
 
 > Generate and verify CSRF tokens with Bun's built-in API
 
-`Bun.CSRF` generates and verifies [CSRF (Cross-Site Request Forgery)](https://owasp.org/www-community/attacks/csrf) tokens. Tokens are signed with HMAC and include an expiration timestamp.
+`Bun.CSRF` generates and verifies [CSRF (Cross-Site Request Forgery)](https://owasp.org/www-community/attacks/csrf) tokens. Bun signs tokens with HMAC. Each token includes an issue timestamp and an expiry duration.
 
-```ts title="csrf.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="csrf.ts" icon="/icons/typescript.svg"
 // Generate a token bound to the requester's session
 const token = Bun.CSRF.generate("my-secret", { sessionId: "user-session-id" });
 
@@ -19,35 +15,36 @@ console.log(isValid); // true
 
 <Callout type="warning">
   Always pass a `sessionId` (the requester's session identifier or user ID) to both `generate()` and `verify()`. Without
-  it, a token is only bound to the secret — any token the server has ever issued validates for every user, so an
-  attacker can obtain a token in their own session and replay it in a forged cross-site request from a victim's browser.
+  it, a token is only bound to the secret, so any token the server has ever issued validates for every user. An attacker
+  can therefore obtain a token in their own session and replay it in a forged cross-site request from a victim's
+  browser.
 </Callout>
 
-***
+---
 
 ## `Bun.CSRF.generate()`
 
-Generate a CSRF token. The token contains a cryptographic nonce, a timestamp, and an HMAC signature, encoded as a string.
+Generate a CSRF token. The token contains a cryptographic nonce, an issue timestamp, the `expiresIn` duration, and an HMAC signature, encoded as a string.
 
-```ts title="generate.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="generate.ts" icon="/icons/typescript.svg"
 const token = Bun.CSRF.generate("my-secret-key");
 ```
 
 **Parameters:**
 
-* `secret` (string, optional) — The secret key used to sign the token. If not provided, Bun generates a random in-memory default secret (unique per thread).
-* `options` (object, optional):
+- `secret` (string, optional) — The secret key used to sign the token. If not provided, Bun generates a random in-memory default secret (unique per thread).
+- `options` (object, optional):
 
-| Option      | Type     | Default       | Description                                                                                                                                                  |
-| ----------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `expiresIn` | `number` | `86400000`    | Milliseconds until the token expires. Defaults to 24 hours.                                                                                                  |
-| `encoding`  | `string` | `"base64url"` | Token encoding format: `"base64"`, `"base64url"`, or `"hex"`.                                                                                                |
-| `algorithm` | `string` | `"sha256"`    | HMAC algorithm: `"sha256"`, `"sha384"`, `"sha512"`, `"sha512-256"`, `"blake2b256"`, or `"blake2b512"`.                                                       |
-| `sessionId` | `string` | (none)        | Binds the token to the requesting principal (session ID, user ID, or equivalent). The token only verifies when the same `sessionId` is passed to `verify()`. |
+| Option      | Type     | Default       | Description                                                                                                                                                 |
+| ----------- | -------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `expiresIn` | `number` | `86400000`    | Milliseconds until the token expires. Defaults to 24 hours.                                                                                                 |
+| `encoding`  | `string` | `"base64url"` | Token encoding format: `"base64"`, `"base64url"`, or `"hex"`.                                                                                               |
+| `algorithm` | `string` | `"sha256"`    | HMAC algorithm: `"sha256"`, `"sha384"`, `"sha512"`, `"sha512-256"`, `"blake2b256"`, or `"blake2b512"`.                                                      |
+| `sessionId` | `string` | (none)        | Binds the token to the requesting principal (session ID, user ID, or equivalent). The token only verifies when you pass the same `sessionId` to `verify()`. |
 
 **Returns:** `string` — the encoded token.
 
-```ts title="generate-options.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="generate-options.ts" icon="/icons/typescript.svg"
 // Token bound to the requester's session that expires in 1 hour, encoded as hex
 const token = Bun.CSRF.generate("my-secret", {
   sessionId: "user-session-id",
@@ -62,32 +59,32 @@ const token2 = Bun.CSRF.generate("my-secret", {
 });
 ```
 
-***
+---
 
 ## `Bun.CSRF.verify()`
 
 Verify a CSRF token. Returns `true` if the token is valid and has not expired, `false` otherwise.
 
-```ts title="verify.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="verify.ts" icon="/icons/typescript.svg"
 const isValid = Bun.CSRF.verify(token, { secret: "my-secret-key" });
 ```
 
 **Parameters:**
 
-* `token` (string, required) — The token to verify.
-* `options` (object, optional):
+- `token` (string, required) — The token to verify.
+- `options` (object, optional):
 
-| Option      | Type     | Default       | Description                                                                                                                                                                                                          |
-| ----------- | -------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `secret`    | `string` | (auto)        | The secret used to sign the token. If not provided, uses the same in-memory default as `generate()`.                                                                                                                 |
-| `maxAge`    | `number` | `86400000`    | Maximum token age in milliseconds, independent of the token's own `expiresIn`.                                                                                                                                       |
-| `encoding`  | `string` | `"base64url"` | Must match the encoding used during `generate()`.                                                                                                                                                                    |
-| `algorithm` | `string` | `"sha256"`    | Must match the algorithm used during `generate()`.                                                                                                                                                                   |
-| `sessionId` | `string` | (none)        | Must match the `sessionId` used during `generate()`. A token bound to one principal fails verification for any other principal, and a token generated without a `sessionId` fails verification when one is supplied. |
+| Option      | Type     | Default       | Description                                                                                                                                                                                                     |
+| ----------- | -------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `secret`    | `string` | (auto)        | The secret used to sign the token. If not provided, uses the same in-memory default as `generate()`.                                                                                                            |
+| `maxAge`    | `number` | `86400000`    | Maximum token age in milliseconds, independent of the token's own `expiresIn`.                                                                                                                                  |
+| `encoding`  | `string` | `"base64url"` | Must match the encoding used during `generate()`.                                                                                                                                                               |
+| `algorithm` | `string` | `"sha256"`    | Must match the algorithm used during `generate()`.                                                                                                                                                              |
+| `sessionId` | `string` | (none)        | Must match the `sessionId` used during `generate()`. A token bound to one principal fails verification for any other principal. A token generated without a `sessionId` fails verification when you supply one. |
 
 **Returns:** `boolean`
 
-```ts title="verify-options.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="verify-options.ts" icon="/icons/typescript.svg"
 // Verify a token bound to the requester's session
 const isValid = Bun.CSRF.verify(token, {
   secret: "my-secret",
@@ -102,13 +99,13 @@ const isValid2 = Bun.CSRF.verify(token, {
 });
 ```
 
-***
+---
 
 ## Using with `Bun.serve()`
 
 A typical pattern is to generate a token when rendering a form, embed it in a hidden field, and verify it when the form is submitted. Pass the requester's session identifier as `sessionId` to both calls so the token only works for the user it was issued to.
 
-```ts title="server.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="server.ts" icon="/icons/typescript.svg"
 const SECRET = process.env.CSRF_SECRET || "my-secret";
 
 // Resolve the requester's session identifier from a session cookie. Returns
@@ -161,13 +158,13 @@ const server = Bun.serve({
 console.log(`Listening on ${server.url}`);
 ```
 
-***
+---
 
 ## Default secret
 
-If you omit the `secret` parameter in both `generate()` and `verify()`, Bun uses a random secret generated once per thread. This is convenient for single-threaded applications, but tokens won't verify across servers or workers, or after a restart.
+If you omit the `secret` parameter in both `generate()` and `verify()`, Bun uses a random secret generated once per thread. The default secret is convenient for single-threaded applications, but tokens don't verify across servers or workers, or after a restart.
 
-```ts title="default-secret.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="default-secret.ts" icon="/icons/typescript.svg"
 // Both calls use the same per-thread default secret within this runtime context.
 const token = Bun.CSRF.generate();
 const isValid = Bun.CSRF.verify(token); // true
@@ -175,11 +172,11 @@ const isValid = Bun.CSRF.verify(token); // true
 
 For production use, always provide an explicit secret shared across your infrastructure.
 
-***
+---
 
 ## TypeScript
 
-```ts title="types.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="types.ts" icon="/icons/typescript.svg"
 type CSRFAlgorithm = "blake2b256" | "blake2b512" | "sha256" | "sha384" | "sha512" | "sha512-256";
 
 interface CSRFGenerateOptions {

@@ -1,12 +1,8 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # TypeScript 6 and 7
 
 > How to configure Bun's type definitions for TypeScript 6.0 and 7.0, which no longer auto-discover @types packages. Fix 'Cannot find name Bun' and other missing type errors after upgrading TypeScript.
 
-TypeScript 6.0 changed how type definitions are discovered. If you've upgraded TypeScript and your editor no longer recognizes `Bun`, `Request`, or other globals from `@types/bun`, here's how to fix it.
+TypeScript 6.0 changed how it discovers type definitions. If you've upgraded TypeScript and your editor no longer recognizes `Bun`, `Request`, or other globals from `@types/bun`, here's how to fix it.
 
 ## What changed
 
@@ -16,7 +12,7 @@ Starting in TypeScript 6.0, the `types` field in `compilerOptions` defaults to a
 
 In your `tsconfig.json`, add `"types": ["bun"]` to `compilerOptions`:
 
-```jsonc tsconfig.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```jsonc tsconfig.json icon="file-json"
 {
   "compilerOptions": {
     "types": ["bun"], // [!code ++]
@@ -26,7 +22,7 @@ In your `tsconfig.json`, add `"types": ["bun"]` to `compilerOptions`:
 
 The `types` array tells TypeScript to load type definitions from `@types/bun`. If you use other `@types/*` packages, include them too:
 
-```jsonc tsconfig.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```jsonc tsconfig.json icon="file-json"
 {
   "compilerOptions": {
     "types": ["bun", "react"],
@@ -34,9 +30,9 @@ The `types` array tells TypeScript to load type definitions from `@types/bun`. I
 }
 ```
 
-You still need `@types/bun` installed — the `types` option tells TypeScript *which* packages to include, but the package itself must exist in `node_modules`:
+You still need `@types/bun` installed. The `types` option tells TypeScript _which_ packages to include, but the package itself must exist in `node_modules`:
 
-```sh terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh terminal icon="terminal"
 bun add -d @types/bun
 ```
 
@@ -44,7 +40,7 @@ bun add -d @types/bun
 
 Here's the full recommended `tsconfig.json` for a Bun project using TypeScript 6.0 or later:
 
-```jsonc tsconfig.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```jsonc tsconfig.json icon="file-json"
 {
   "compilerOptions": {
     // Environment setup & latest features

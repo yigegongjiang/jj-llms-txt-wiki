@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Environment Variables
 
 > Read and configure environment variables in Bun, including automatic .env file support
@@ -12,11 +8,12 @@ Bun reads your `.env` files automatically and provides idiomatic ways to read an
 
 Bun reads the following files automatically (listed in order of increasing precedence).
 
-* `.env`
-* `.env.production`, `.env.development`, `.env.test` (depending on the value of `NODE_ENV`)
-* `.env.local`
+- `.env`
+- `.env.production`, `.env.development`, `.env.test` (depending on the value of `NODE_ENV`)
+- `.env.local`
+- `.env.production.local`, `.env.development.local`, `.env.test.local` (depending on the value of `NODE_ENV`)
 
-```ini .env icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .env icon="settings"
 FOO=hello
 BAR=world
 ```
@@ -24,48 +21,52 @@ BAR=world
 You can also set variables on the command line.
 
 <CodeGroup>
-  ```sh Linux/macOS icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  FOO=helloworld bun run dev
-  ```
 
-  ```sh Windows icon="windows" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  # Using CMD
-  set FOO=helloworld && bun run dev
+```sh Linux/macOS icon="terminal"
+FOO=helloworld bun run dev
+```
 
-  # Using PowerShell
-  $env:FOO="helloworld"; bun run dev
-  ```
+```sh Windows icon="windows"
+# Using CMD
+set FOO=helloworld && bun run dev
+
+# Using PowerShell
+$env:FOO="helloworld"; bun run dev
+```
+
 </CodeGroup>
 
 <Accordion title="Cross-platform solution with Windows">
-  For a cross-platform solution, use [Bun Shell](/docs/runtime/shell), for example through `bun exec`.
 
-  ```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
-  bun exec 'FOO=helloworld bun run dev'
-  ```
+For a cross-platform solution, use [Bun Shell](/runtime/shell), for example through `bun exec`.
 
-  On Windows, `package.json` scripts called with `bun run` automatically use the **Bun Shell**, so the following is also cross-platform.
+```sh
+bun exec 'FOO=helloworld bun run dev'
+```
 
-  ```json package.json icon="file-json" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  "scripts": {
-    "dev": "NODE_ENV=development bun --watch app.ts",
-  },
-  ```
+On Windows, `package.json` scripts called with `bun run` automatically use the **Bun Shell**, so the following is also cross-platform.
+
+```json package.json icon="file-json"
+"scripts": {
+  "dev": "NODE_ENV=development bun --watch app.ts",
+},
+```
+
 </Accordion>
 
 Or set them programmatically by assigning a property to `process.env`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 process.env.FOO = "hello";
 ```
 
-***
+---
 
 ## Manually specifying `.env` files
 
 The `--env-file` flag overrides which `.env` files Bun loads. It works both when running a file with `bun` and when running `package.json` scripts.
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun --env-file=.env.1 src/index.ts
 
 bun --env-file=.env.abc --env-file=.env.def run build
@@ -75,26 +76,28 @@ bun --env-file=.env.abc --env-file=.env.def run build
 
 Use `--no-env-file` to disable Bun's automatic `.env` file loading, for example in production or CI/CD pipelines where you want to rely solely on system environment variables.
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun run --no-env-file index.ts
 ```
 
 You can also disable it in `bunfig.toml`:
 
-```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```toml bunfig.toml icon="settings"
 # Disable loading .env files
 env = false
 ```
 
 Files passed with `--env-file` still load even when default loading is disabled.
 
-***
+When invoked as `node` (for example via `bun --bun`, `bunx --bun`, or a `node` symlink pointing at Bun), Bun disables automatic `.env` loading to match Node.js. This lets tools with their own mode-aware `.env` resolution, such as Vite's `loadEnv`, pick the correct `.env.{mode}` file instead of seeing Bun's pre-populated values as shell-set overrides. Bun still honors explicit `--env-file` arguments.
+
+---
 
 ## Quotation marks
 
 Bun supports double quotes, single quotes, and template literal backticks:
 
-```ini .env icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .env icon="settings"
 FOO='hello'
 FOO="hello"
 FOO=`hello`
@@ -102,20 +105,20 @@ FOO=`hello`
 
 ### Expansion
 
-Bun automatically *expands* environment variables, so you can reference previously-defined variables.
+Bun automatically _expands_ environment variables, so you can reference previously-defined variables.
 
-```ini .env icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .env icon="settings"
 FOO=world
 BAR=hello$FOO
 ```
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 process.env.BAR; // => "helloworld"
 ```
 
-This is useful for constructing connection strings or other compound values.
+Expansion is useful for constructing connection strings or other compound values.
 
-```ini .env icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .env icon="settings"
 DB_USER=postgres
 DB_PASSWORD=secret
 DB_HOST=localhost
@@ -125,12 +128,12 @@ DB_URL=postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME
 
 To disable expansion, escape the `$` with a backslash.
 
-```ini .env icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ini .env icon="settings"
 FOO=world
 BAR=hello\$FOO
 ```
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 process.env.BAR; // => "hello$FOO"
 ```
 
@@ -142,20 +145,20 @@ Bun reads `.env` files automatically, so `dotenv` and `dotenv-expand` are unnece
 
 Read the current environment variables from `process.env`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 process.env.API_TOKEN; // => "secret"
 ```
 
 Bun also exposes these variables as `Bun.env` and `import.meta.env`, both aliases of `process.env`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.env.API_TOKEN; // => "secret"
 import.meta.env.API_TOKEN; // => "secret"
 ```
 
 To print all currently-set environment variables, run `bun --print process.env`.
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 bun --print process.env
 BAZ=stuff
 FOOBAR=aaaaaa
@@ -166,14 +169,14 @@ FOOBAR=aaaaaa
 
 In TypeScript, all properties of `process.env` are typed as `string | undefined`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.env.whatever;
 // string | undefined
 ```
 
 To get autocompletion and tell TypeScript to treat a variable as a non-optional string, use [interface merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces).
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 declare module "bun" {
   interface Env {
     AWESOME: string;
@@ -183,7 +186,7 @@ declare module "bun" {
 
 Add this declaration to any file in your project. It globally adds the `AWESOME` property to `process.env` and `Bun.env`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 process.env.AWESOME; // => string
 ```
 
@@ -195,20 +198,20 @@ Bun reads these environment variables to configure aspects of its behavior.
 | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `NODE_TLS_REJECT_UNAUTHORIZED`           | `NODE_TLS_REJECT_UNAUTHORIZED=0` disables SSL certificate validation. Useful for testing and debugging, but be very hesitant to use it in production. Node.js introduced this variable; Bun keeps the name for compatibility.                                                                                                                                                 |
 | `BUN_CONFIG_VERBOSE_FETCH`               | If `BUN_CONFIG_VERBOSE_FETCH=curl`, then fetch requests log the URL, method, request headers and response headers to the console. This also works with `node:http`. `BUN_CONFIG_VERBOSE_FETCH=1` is equivalent to `BUN_CONFIG_VERBOSE_FETCH=curl` except without the `curl` output.                                                                                           |
-| `BUN_RUNTIME_TRANSPILER_CACHE_PATH`      | The runtime transpiler caches the transpiled output of source files larger than 4 KB, which makes CLIs using Bun load faster. If `BUN_RUNTIME_TRANSPILER_CACHE_PATH` is set, the cache is written to that directory. If it is set to an empty string or the string `"0"`, caching is disabled. If it is unset, the cache is written to the platform-specific cache directory. |
+| `BUN_RUNTIME_TRANSPILER_CACHE_PATH`      | The runtime transpiler caches the transpiled output of source files larger than 4 KB, which makes CLIs using Bun load faster. If `BUN_RUNTIME_TRANSPILER_CACHE_PATH` is set, Bun writes the cache to that directory. If it is set to an empty string or the string `"0"`, caching is disabled. If it is unset, Bun writes the cache to the platform-specific cache directory. |
 | `TMPDIR`                                 | Bun occasionally requires a directory to store intermediate assets during bundling or other operations. If unset, defaults to the platform-specific temporary directory: `/tmp` on Linux, `/private/tmp` on macOS.                                                                                                                                                            |
 | `NO_COLOR`                               | If `NO_COLOR=1`, then ANSI color output is [disabled](https://no-color.org/).                                                                                                                                                                                                                                                                                                 |
 | `FORCE_COLOR`                            | If `FORCE_COLOR=1`, then ANSI color output is forced on, even if `NO_COLOR` is set.                                                                                                                                                                                                                                                                                           |
 | `BUN_CONFIG_MAX_HTTP_REQUESTS`           | Sets the maximum number of concurrent HTTP requests sent by fetch and `bun install`. Defaults to `256`. Lower it if you run into rate limits or connection issues.                                                                                                                                                                                                            |
 | `BUN_CONFIG_NO_CLEAR_TERMINAL_ON_RELOAD` | If `BUN_CONFIG_NO_CLEAR_TERMINAL_ON_RELOAD=true`, then `bun --watch` does not clear the console on reload                                                                                                                                                                                                                                                                     |
-| `DO_NOT_TRACK`                           | Disable uploading crash reports to `bun.report` on crash. On macOS & Windows, crash report uploads are enabled by default. Other telemetry is not sent, though we plan to add some. If `DO_NOT_TRACK=1`, then auto-uploading crash reports and telemetry are both [disabled](https://do-not-track.dev/).                                                                      |
+| `DO_NOT_TRACK`                           | Disable uploading crash reports to `bun.report` on crash. On macOS & Windows, crash report uploads are enabled by default. Bun sends no other telemetry, though we plan to add some. If `DO_NOT_TRACK=1`, then auto-uploading crash reports and telemetry are both [disabled](https://do-not-track.dev/).                                                                     |
 | `BUN_OPTIONS`                            | Prepends command-line arguments to any Bun execution. For example, `BUN_OPTIONS="--hot"` makes `bun run dev` behave like `bun --hot run dev`.                                                                                                                                                                                                                                 |
 
 ## Runtime transpiler caching
 
 For files larger than 4 KB, Bun caches transpiled output into `$BUN_RUNTIME_TRANSPILER_CACHE_PATH` or the platform-specific cache directory. This makes CLIs using Bun load faster.
 
-The cache is global and shared across all projects, and it is content-addressable, so it never contains duplicate entries. It is safe to delete at any time, even while a Bun process is running.
+The cache is global and shared across all projects. It is content-addressable, so it never contains duplicate entries. It is safe to delete at any time, even while a Bun process is running.
 
 Disable this cache when using ephemeral filesystems like Docker. Bun's Docker images disable it automatically.
 
@@ -216,7 +219,7 @@ Disable this cache when using ephemeral filesystems like Docker. Bun's Docker im
 
 To disable the runtime transpiler cache, set `BUN_RUNTIME_TRANSPILER_CACHE_PATH` to an empty string or the string `"0"`.
 
-```sh theme={"theme":{"light":"github-light","dark":"dracula"}}
+```sh
 BUN_RUNTIME_TRANSPILER_CACHE_PATH=0 bun run dev
 ```
 
@@ -224,7 +227,7 @@ BUN_RUNTIME_TRANSPILER_CACHE_PATH=0 bun run dev
 
 It caches:
 
-* The transpiled output of source files larger than 4 KB.
-* The sourcemap for the transpiled output of the file
+- The transpiled output of source files larger than 4 KB.
+- The sourcemap for the transpiled output of the file
 
 Cached files use the `.pile` extension.

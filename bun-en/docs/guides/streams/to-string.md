@@ -1,16 +1,14 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Convert a ReadableStream to a string
 
-`Bun.readableStreamToText` reads the contents of a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) into a string.
+Bun provides several conveniences for reading the contents of a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) into other formats. To read a stream into a string, call its `text()` method.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream();
-const str = await Bun.readableStreamToText(stream);
+const str = await stream.text();
 ```
 
-***
+`Bun.readableStreamToText(stream)` does the same thing, but is deprecated in favor of `stream.text()`.
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+---
+
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

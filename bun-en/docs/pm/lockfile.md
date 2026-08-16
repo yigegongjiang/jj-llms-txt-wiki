@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Lockfile
 
 > Bun's lockfile format and configuration
@@ -14,11 +10,13 @@ Yes
 
 #### Generate a lockfile without installing?
 
-To generate a lockfile without installing to `node_modules`, use the `--lockfile-only` flag. The lockfile is always saved to disk, even if it is already up to date with your project's `package.json`(s).
+To generate a lockfile without installing to `node_modules`, use the `--lockfile-only` flag. Bun always saves the lockfile to disk, even if it is already up to date with your project's `package.json`(s). The exception is when `--frozen-lockfile` (or `--production`) is set.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --lockfile-only
 ```
+
+`bun add`, `bun remove`, and `bun update` also accept `--lockfile-only`.
 
 <Note>
   `--lockfile-only` still populates the global install cache with registry metadata and git/tarball dependencies.
@@ -28,23 +26,25 @@ bun install --lockfile-only
 
 To install without creating a lockfile:
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun install --no-save
 ```
 
-To write a Yarn lockfile *in addition* to `bun.lock`:
+To write a Yarn lockfile _in addition_ to `bun.lock`:
 
 <CodeGroup>
-  ```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  bun install --yarn
-  ```
 
-  ```toml bunfig.toml icon="settings" theme={"theme":{"light":"github-light","dark":"dracula"}}
-  [install.lockfile]
-  # whether to save a non-Bun lockfile alongside bun.lock
-  # only "yarn" is supported
-  print = "yarn"
-  ```
+```bash terminal icon="terminal"
+bun install --yarn
+```
+
+```toml bunfig.toml icon="settings"
+[install.lockfile]
+# whether to save a non-Bun lockfile alongside bun.lock
+# only "yarn" is supported
+print = "yarn"
+```
+
 </CodeGroup>
 
 #### Text-based lockfile
@@ -55,10 +55,12 @@ For more on the format, see [the blog post](https://bun.com/blog/bun-lock-text-l
 
 #### Automatic lockfile migration
 
-When running `bun install` in a project without a `bun.lock`, Bun automatically migrates existing lockfiles:
+When you run `bun install` in a project without a `bun.lock`, Bun automatically migrates existing lockfiles:
 
-* `yarn.lock` (v1)
-* `package-lock.json` (npm)
-* `pnpm-lock.yaml` (pnpm)
+- `yarn.lock` (v1)
+- `package-lock.json` (npm, `lockfileVersion` 2, 3 or 4)
+- `pnpm-lock.yaml` (pnpm)
 
-The original lockfile is preserved and can be removed manually after verification.
+Bun does not migrate a `package-lock.json` from npm 6 or older (`lockfileVersion` 1); it prints a warning and resolves from `package.json` instead.
+
+Bun preserves the original lockfile. You can remove it manually after verification.

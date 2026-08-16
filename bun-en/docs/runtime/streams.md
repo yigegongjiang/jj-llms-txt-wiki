@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Streams
 
 > Use Bun's streams API to work with binary data without loading it all into memory at once
@@ -20,7 +16,7 @@ Bun implements the Web APIs [`ReadableStream`](https://developer.mozilla.org/en-
 
 To create a `ReadableStream`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream({
   start(controller) {
     controller.enqueue("hello");
@@ -30,9 +26,9 @@ const stream = new ReadableStream({
 });
 ```
 
-The contents of a `ReadableStream` can be read chunk-by-chunk with `for await` syntax.
+You can read the contents of a `ReadableStream` chunk-by-chunk with `for await` syntax.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 for await (const chunk of stream) {
   console.log(chunk);
 }
@@ -41,15 +37,15 @@ for await (const chunk of stream) {
 // world
 ```
 
-***
+---
 
 ## Direct `ReadableStream`
 
-Bun implements an optimized version of `ReadableStream` that avoids unnecessary data copying and queue management.
+Bun implements an optimized version of `ReadableStream` that avoids unnecessary queue management.
 
-With a traditional `ReadableStream`, chunks of data are *enqueued*. Each chunk is copied into a queue, where it sits until the stream is ready to send more data.
+With a traditional `ReadableStream`, you _enqueue_ chunks of data. The stream adds each chunk to a queue, where it sits until the stream is ready to send more data.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream({
   start(controller) {
     controller.enqueue("hello");
@@ -59,9 +55,9 @@ const stream = new ReadableStream({
 });
 ```
 
-With a direct `ReadableStream`, chunks of data are written directly to the stream. No queueing happens, and there's no need to clone the chunk data into memory. The `controller` API reflects this: you call `.write()` instead of `.enqueue()`.
+With a direct `ReadableStream`, you write chunks of data directly to the stream. No queueing happens. The `controller` API reflects this: you call `.write()` instead of `.enqueue()`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream({
   type: "direct", // [!code ++]
   pull(controller) {
@@ -75,35 +71,31 @@ When using a direct `ReadableStream`, the destination handles all chunk queueing
 
 ### Handling backpressure
 
-`controller.write()` returns the number of bytes written. When the destination's internal buffer is full (for example, a slow HTTP client), it returns a **negative number** instead. The chunk is still accepted — the negative return is a signal to pause and wait for the destination to drain.
+`controller.write()` returns the number of bytes written, or a **pending `Promise<number>`** when the destination's internal buffer is full (for example, a slow HTTP client). The chunk is accepted either way. The promise resolves once the destination has drained, so `await`ing the result is enough:
 
-To wait for the drain, `await controller.flush(true)`:
-
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const stream = new ReadableStream({
   type: "direct",
   async pull(controller) {
     for (const chunk of chunks) {
-      const n = controller.write(chunk);
-      if (typeof n === "number" && n < 0) {
-        // destination is backed up; wait for it to drain before writing more
-        await controller.flush(true);
-      }
+      await controller.write(chunk);
     }
     controller.close();
   },
 });
 ```
 
-For default (non-`direct`) `ReadableStream`s and async-generator response bodies, Bun applies this backpressure automatically — the producer is paused while the destination is backed up.
+`await controller.flush(true)` is equivalent, and you can use it after a write returns a `Promise`.
 
-***
+For default (non-`direct`) `ReadableStream`s and async-generator response bodies, Bun applies this backpressure automatically: it pauses the producer while the destination is backed up.
+
+---
 
 ## Async generator streams
 
 Bun also supports async generator functions as a source for `Response` and `Request`. Use async generators to create a `ReadableStream` that fetches data from an asynchronous source.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = new Response(
   (async function* () {
     yield "hello";
@@ -116,7 +108,7 @@ await response.text(); // "helloworld"
 
 You can also use `[Symbol.asyncIterator]` directly.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = new Response({
   [Symbol.asyncIterator]: async function* () {
     yield "hello";
@@ -129,7 +121,7 @@ await response.text(); // "helloworld"
 
 For more control over the stream, `yield` returns the direct `ReadableStream` controller.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const response = new Response({
   [Symbol.asyncIterator]: async function* () {
     const controller = yield "hello";
@@ -140,13 +132,13 @@ const response = new Response({
 await response.text(); // "hello"
 ```
 
-***
+---
 
 ## `Bun.ArrayBufferSink`
 
 The `Bun.ArrayBufferSink` class is a fast incremental writer for constructing an `ArrayBuffer` of unknown size.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const sink = new Bun.ArrayBufferSink();
 
 sink.write("h");
@@ -161,7 +153,7 @@ sink.end();
 
 To instead retrieve the data as a `Uint8Array`, pass the `asUint8Array` option to the `start` method.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const sink = new Bun.ArrayBufferSink();
 sink.start({
   asUint8Array: true, // [!code ++]
@@ -179,7 +171,7 @@ sink.end();
 
 The `.write()` method supports strings, typed arrays, `ArrayBuffer`, and `SharedArrayBuffer`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 sink.write("h");
 sink.write(new Uint8Array([101, 108]));
 sink.write(Buffer.from("lo").buffer);
@@ -187,9 +179,9 @@ sink.write(Buffer.from("lo").buffer);
 sink.end();
 ```
 
-Once `.end()` is called, no more data can be written to the `ArrayBufferSink`. However, when buffering a stream you may want to keep writing data and periodically `.flush()` the contents (say, into a `WritableStream`). To support this, pass `stream: true` to the `start` method.
+Once you call `.end()`, you can't write any more data to the `ArrayBufferSink`. However, when buffering a stream you may want to keep writing data and periodically `.flush()` the contents (say, into a `WritableStream`). To support this, pass `stream: true` to the `start` method.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const sink = new Bun.ArrayBufferSink();
 sink.start({
   stream: true, // [!code ++]
@@ -211,18 +203,18 @@ The `.flush()` method returns the buffered data as an `ArrayBuffer` (or `Uint8Ar
 
 To manually set the size of the internal buffer in bytes, pass a value for `highWaterMark`:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const sink = new Bun.ArrayBufferSink();
 sink.start({
   highWaterMark: 1024 * 1024, // 1 MB  // [!code ++]
 });
 ```
 
-***
+---
 
 ## Reference
 
-```ts See Typescript Definitions expandable theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts See Typescript Definitions expandable
 /**
  * Fast incremental writer that becomes an `ArrayBuffer` on end().
  */

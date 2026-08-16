@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # File System Router
 
 > Bun provides a fast API for resolving routes against file-system paths
@@ -12,7 +8,7 @@ This API is intended primarily for library authors. It supports only Next.js-sty
 
 The `FileSystemRouter` class resolves routes against a `pages` directory. (The Next.js 13 `app` directory is not supported.) Consider the following `pages` directory:
 
-```txt theme={"theme":{"light":"github-light","dark":"dracula"}}
+```txt
 pages
 ├── index.tsx
 ├── settings.tsx
@@ -24,7 +20,7 @@ pages
 
 To resolve routes against this directory:
 
-```ts router.ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts router.ts
 const router = new Bun.FileSystemRouter({
   style: "nextjs",
   dir: "./pages",
@@ -44,9 +40,9 @@ router.match("/");
 }
 ```
 
-Query parameters are parsed and returned in the `query` property.
+The router parses query parameters and returns them in the `query` property.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 router.match("/settings?foo=bar");
 
 // =>
@@ -64,7 +60,7 @@ router.match("/settings?foo=bar");
 
 The router parses URL parameters and returns them in the `params` property:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 router.match("/blog/my-cool-post");
 
 // =>
@@ -80,21 +76,21 @@ router.match("/blog/my-cool-post");
 }
 ```
 
-The `.match()` method also accepts `Request` and `Response` objects; their `url` property is used to resolve the route.
+The `.match()` method also accepts `Request` and `Response` objects; the router uses their `url` property to resolve the route.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 router.match(new Request("https://example.com/blog/my-cool-post"));
 ```
 
 The router reads the directory contents on initialization. To re-scan the files, use the `.reload()` method.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 router.reload();
 ```
 
 ## Reference
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 interface Bun {
   class FileSystemRouter {
     constructor(params: {

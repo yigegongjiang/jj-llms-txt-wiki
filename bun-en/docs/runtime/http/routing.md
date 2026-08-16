@@ -1,18 +1,14 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Routing
 
 > Define routes in `Bun.serve` using static paths, parameters, and wildcards
 
-Add routes to `Bun.serve()` with the `routes` property (static paths, parameters, and wildcards), or handle unmatched requests with the [`fetch`](#fetch) method.
+Add routes to `Bun.serve()` with the `routes` property (static paths, parameters, and wildcards), or handle unmatched requests with the [`fetch`](#fetch-request-handler) method.
 
-`Bun.serve()`'s router builds on top of uWebSocket's [tree-based approach](https://github.com/oven-sh/bun/blob/0d1a00fa0f7830f8ecd99c027fce8096c9d459b6/packages/bun-uws/src/HttpRouter.h#L57-L64) to add [SIMD-accelerated route parameter decoding](https://github.com/oven-sh/bun/blob/main/src/jsc/bindings/decodeURIComponentSIMD.cpp#L21-L271) and [JavaScriptCore structure caching](https://github.com/oven-sh/bun/blob/main/src/jsc/bindings/ServerRouteList.cpp#L100-L101) to push the performance limits of what modern hardware allows.
+`Bun.serve()`'s router builds on top of uWebSocket's [tree-based approach](https://github.com/oven-sh/bun/blob/0d1a00fa0f7830f8ecd99c027fce8096c9d459b6/packages/bun-uws/src/HttpRouter.h#L57-L64). The router adds [SIMD-accelerated route parameter decoding](https://github.com/oven-sh/bun/blob/main/src/jsc/bindings/decodeURIComponentSIMD.cpp#L21-L271) and [JavaScriptCore structure caching](https://github.com/oven-sh/bun/blob/main/src/jsc/bindings/ServerRouteList.cpp#L100-L101) to push the performance limits of what modern hardware allows.
 
 ## Basic Setup
 
-```ts title="server.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="server.ts" icon="/icons/typescript.svg"
 Bun.serve({
   routes: {
     "/": () => new Response("Home"),
@@ -25,9 +21,9 @@ Bun.serve({
 });
 ```
 
-Routes in `Bun.serve()` receive a `BunRequest` (which extends [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)) and return a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) or `Promise<Response>`. This makes it easier to use the same code for both sending & receiving HTTP requests.
+Routes in `Bun.serve()` receive a `BunRequest` (which extends [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)) and return a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) or `Promise<Response>`. Because routes use these `Request` and `Response` types, it is easier to use the same code for both sending and receiving HTTP requests.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // Simplified for brevity
 interface BunRequest<T extends string> extends Request {
   params: Record<T, string>;
@@ -41,7 +37,7 @@ interface BunRequest<T extends string> extends Request {
 
 Use async/await in route handlers to return a `Promise<Response>`.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { sql, serve } from "bun";
 
 serve({
@@ -59,7 +55,7 @@ serve({
 
 You can also return a `Promise<Response>` from a route handler.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { sql, serve } from "bun";
 
 serve({
@@ -76,18 +72,18 @@ serve({
 });
 ```
 
-***
+---
 
 ## Route precedence
 
-Routes are matched in order of specificity:
+Bun matches routes in order of specificity:
 
 1. Exact routes (`/users/all`)
 2. Parameter routes (`/users/:id`)
 3. Wildcard routes (`/users/*`)
 4. Global catch-all (`/*`)
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   routes: {
     // Most specific first
@@ -99,13 +95,13 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 ## Type-safe route parameters
 
 TypeScript parses route parameters when passed as a string literal, so your editor shows autocomplete when accessing `request.params`.
 
-```ts title="index.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="index.ts" icon="/icons/typescript.svg"
 import type { BunRequest } from "bun";
 
 Bun.serve({
@@ -127,13 +123,13 @@ Bun.serve({
 });
 ```
 
-Bun automatically decodes percent-encoded route parameter values, including Unicode characters. Invalid Unicode is replaced with the Unicode replacement character (`\uFFFD`).
+Bun automatically decodes percent-encoded route parameter values, including Unicode characters. Bun replaces invalid Unicode with the Unicode replacement character (`\uFFFD`).
 
 ### Static responses
 
 Routes can also be `Response` objects (without the handler function). `Bun.serve()` optimizes them for zero-allocation dispatch, which suits health checks, redirects, and fixed content:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   routes: {
     // Health checks
@@ -159,13 +155,13 @@ Bun.serve({
 
 Static responses do not allocate additional memory after initialization. You can generally expect at least a 15% performance improvement over manually returning a `Response` object.
 
-Static route responses are cached for the lifetime of the server object. To reload static routes, call `server.reload(options)`.
+Bun caches static route responses for the lifetime of the server object. To reload static routes, call `server.reload(options)`.
 
 ### File Responses vs Static Responses
 
 Serving a file from a route behaves differently depending on whether you buffer the file content or serve it directly:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   routes: {
     // Static route - content is buffered in memory at startup
@@ -179,31 +175,62 @@ Bun.serve({
 
 **Static routes** (`new Response(await file.bytes())`) buffer content in memory at startup:
 
-* **Zero filesystem I/O** during requests - content served entirely from memory
-* **ETag support** - Automatically generates and validates ETags for caching
-* **If-None-Match** - Returns `304 Not Modified` when client ETag matches
-* **No 404 handling** - Missing files cause startup errors, not runtime 404s
-* **Memory usage** - Full file content stored in RAM
-* **Best for**: Small static assets, API responses, frequently accessed files
+- **Zero filesystem I/O** during requests - content served entirely from memory
+- **ETag support** - Automatically generates and validates ETags for caching
+- **If-None-Match** - Returns `304 Not Modified` when client ETag matches
+- **No 404 handling** - Missing files cause startup errors, not runtime 404s
+- **Memory usage** - Full file content stored in RAM
+- **Best for**: Small static assets, API responses, frequently accessed files
 
 **File routes** (`new Response(Bun.file(path))`) read from filesystem per request:
 
-* **Filesystem reads** on each request - checks file existence and reads content
-* **Built-in 404 handling** - Returns `404 Not Found` if file doesn't exist or becomes inaccessible
-* **Last-Modified support** - Uses file modification time for `If-Modified-Since` headers
-* **If-Modified-Since** - Returns `304 Not Modified` when file hasn't changed since client's cached version
-* **Range request support** - Automatically handles partial content requests with `Content-Range` headers
-* **Streaming transfers** - Uses buffered reader with backpressure handling for efficient memory usage
-* **Memory efficient** - Only buffers small chunks during transfer, not entire file
-* **Best for**: Large files, dynamic content, user uploads, files that change frequently
+- **Filesystem reads** on each request - checks file existence and reads content
+- **Built-in 404 handling** - Returns `404 Not Found` if file doesn't exist or becomes inaccessible
+- **Last-Modified support** - Uses file modification time for `If-Modified-Since` headers
+- **If-Modified-Since** - Returns `304 Not Modified` when file hasn't changed since client's cached version
+- **Range request support** - Automatically handles partial content requests with `Content-Range` headers
+- **Streaming transfers** - Uses buffered reader with backpressure handling for efficient memory usage
+- **Memory efficient** - Only buffers small chunks during transfer, not entire file
+- **Best for**: Large files, dynamic content, user uploads, files that change frequently
 
-***
+### Directory routes
+
+To serve an entire directory tree at a URL prefix, pass `{ dir }` as the route value. The route path must end in `/*`.
+
+```ts
+Bun.serve({
+  routes: {
+    "/static/*": { dir: "./public" },
+  },
+});
+```
+
+Bun percent-decodes the part of the request URL after the prefix once and opens it relative to `dir`. Bun rejects non-canonical paths with `404`, so the served path is always the path the router matched. A path is non-canonical if it contains `.`, `..`, empty segments, `%2F`, or a `%XX` sequence encoding a character that may appear literally in a path segment. On Linux the open uses `openat2(RESOLVE_IN_ROOT)`, so the kernel clamps symlinks that would escape `dir`.
+
+<Info>
+  Routing is case-sensitive, but filesystems on macOS and Windows are case-insensitive by default. As a result, a
+  case-varied URL (`/static/Admin/secret.txt`) routes to the directory wildcard rather than a sibling `/static/admin/*`
+  handler and still opens `admin/secret.txt`. As with nginx, Caddy, and other static file servers, keep
+  access-controlled content outside `dir` rather than relying on an overlapping route to gate it.
+</Info>
+
+Directory routes share the response path with file routes:
+
+- **Content-Type** is set from the file extension.
+- **Last-Modified** and a weak `ETag` (`W/"<size>-<mtime>"`) are sent on every response, and `If-Modified-Since` / `If-None-Match` are honored with `304 Not Modified`.
+- **Range requests** are supported with `Accept-Ranges: bytes` and `Content-Range`.
+- A request that resolves to a directory without a trailing `/` receives a `301` redirect to the trailing-slash URL. With the trailing slash, Bun serves `index.html` from that directory.
+- Missing files return `404`.
+
+Pass `statCache: false` to disable the per-path `Last-Modified` cache (saves roughly 20 KB per route).
+
+---
 
 ## Streaming files
 
 To stream a file, return a `Response` object with a `BunFile` object as the body.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   fetch(req) {
     return new Response(Bun.file("./hello.txt"));
@@ -218,7 +245,7 @@ Bun.serve({
 
 To send part of a file, use the [`slice(start, end)`](https://developer.mozilla.org/en-US/docs/Web/API/Blob/slice) method on the `Bun.file` object. Bun sets the `Content-Range` and `Content-Length` headers on the `Response` object automatically.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   fetch(req) {
     // parse `Range` header
@@ -236,13 +263,13 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 ## `fetch` request handler
 
 The `fetch` handler runs for incoming requests that no route matched. It receives a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and returns a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) or [`Promise<Response>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   fetch(req) {
     const url = new URL(req.url);
@@ -255,7 +282,7 @@ Bun.serve({
 
 The `fetch` handler supports async/await:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 import { sleep, serve } from "bun";
 
 serve({
@@ -270,7 +297,7 @@ serve({
 
 Promise-based responses are also supported:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 Bun.serve({
   fetch(req) {
     // Forward the request to another server.
@@ -281,7 +308,7 @@ Bun.serve({
 
 The `fetch` handler also receives the `Server` object as its second argument.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // `server` is passed in as the second argument to `fetch`.
 const server = Bun.serve({
   fetch(req, server) {

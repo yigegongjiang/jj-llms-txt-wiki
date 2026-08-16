@@ -1,7 +1,3 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Markdown
 
 > Parse and render Markdown with Bun's built-in Markdown API, supporting GFM extensions and custom rendering callbacks
@@ -12,24 +8,24 @@
 
 Bun includes a fast, built-in Markdown parser written in Rust. It supports GitHub Flavored Markdown (GFM) extensions and provides three APIs:
 
-* `Bun.markdown.html()` — render Markdown to an HTML string
-* `Bun.markdown.render()` — render Markdown with custom callbacks for each element
-* `Bun.markdown.react()` — render Markdown to React JSX elements
+- `Bun.markdown.html()` — render Markdown to an HTML string
+- `Bun.markdown.render()` — render Markdown with custom callbacks for each element
+- `Bun.markdown.react()` — render Markdown to React JSX elements
 
-***
+---
 
 ## `Bun.markdown.html()`
 
 Convert a Markdown string to HTML.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const html = Bun.markdown.html("# Hello **world**");
 // "<h1>Hello <strong>world</strong></h1>\n"
 ```
 
 GFM extensions like tables, strikethrough, and task lists are enabled by default:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const html = Bun.markdown.html(`
 | Feature      | Status |
 |-------------|--------|
@@ -43,7 +39,7 @@ const html = Bun.markdown.html(`
 
 Pass an options object as the second argument to configure the parser:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const html = Bun.markdown.html("some markdown", {
   tables: true, // GFM tables (default: true)
   strikethrough: true, // GFM strikethrough (default: true)
@@ -77,7 +73,7 @@ All available options:
 
 Pass `true` to enable all autolink types, or an object for granular control:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // Enable all autolinks (URL, WWW, email)
 Bun.markdown.html("Visit www.example.com", { autolinks: true });
 
@@ -91,7 +87,7 @@ Bun.markdown.html("Visit www.example.com", {
 
 Pass `true` to enable both heading IDs and autolink headings, or an object for granular control:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 // Enable heading IDs and autolink headings
 Bun.markdown.html("## Hello World", { headings: true });
 // '<h2 id="hello-world"><a href="#hello-world">Hello World</a></h2>\n'
@@ -101,13 +97,13 @@ Bun.markdown.html("## Hello World", { headings: { ids: true } });
 // '<h2 id="hello-world">Hello World</h2>\n'
 ```
 
-***
+---
 
 ## `Bun.markdown.render()`
 
-Parse Markdown and render it using custom JavaScript callbacks. This gives you full control over the output format — you can generate HTML with custom classes, React elements, ANSI terminal output, or any other string format.
+Parse Markdown and render it using custom JavaScript callbacks. The callbacks give you full control over the output format. You can generate HTML with custom classes, ANSI terminal output, or any other string format.
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const result = Bun.markdown.render("# Hello **world**", {
   heading: (children, { level }) => `<h${level} class="title">${children}</h${level}>`,
   strong: children => `<b>${children}</b>`,
@@ -123,7 +119,7 @@ Each callback receives:
 1. **`children`** — the accumulated content of the element as a string
 2. **`meta`** (optional) — an object with element-specific metadata
 
-Return a string to replace the element's rendering. Return `null` or `undefined` to omit the element from the output entirely. If no callback is registered for an element, its children pass through unchanged.
+Return a string to replace the element's rendering. Return `null` or `undefined` to omit the element from the output entirely. If an element has no callback, its children pass through unchanged.
 
 ### Block callbacks
 
@@ -148,11 +144,11 @@ Return a string to replace the element's rendering. Return `null` or `undefined`
 
 The `listItem` callback receives everything needed to render markers directly:
 
-* `index` — 0-based position within the parent list
-* `depth` — the parent list's nesting level (0 = top-level)
-* `ordered` — whether the parent list is ordered
-* `start` — the parent list's start number (only when `ordered` is true)
-* `checked` — task list state (only for `- [x]` / `- [ ]` items)
+- `index` — 0-based position within the parent list
+- `depth` — the parent list's nesting level (0 = top-level)
+- `ordered` — whether the parent list is ordered
+- `start` — the parent list's start number (only when `ordered` is true)
+- `checked` — task list state (only for `- [x]` / `- [ ]` items)
 
 ### Inline callbacks
 
@@ -170,7 +166,7 @@ The `listItem` callback receives everything needed to render markers directly:
 
 #### Custom HTML with classes
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const html = Bun.markdown.render("# Title\n\nHello **world**", {
   heading: (children, { level }) => `<h${level} class="heading heading-${level}">${children}</h${level}>`,
   paragraph: children => `<p class="body">${children}</p>`,
@@ -180,7 +176,7 @@ const html = Bun.markdown.render("# Title\n\nHello **world**", {
 
 #### Stripping all formatting
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const plaintext = Bun.markdown.render("# Hello **world**", {
   heading: children => children,
   paragraph: children => children,
@@ -198,7 +194,7 @@ const plaintext = Bun.markdown.render("# Hello **world**", {
 
 Return `null` or `undefined` to remove an element from the output:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const result = Bun.markdown.render("# Title\n\n![logo](img.png)\n\nHello", {
   image: () => null, // Remove all images
   heading: children => children,
@@ -209,7 +205,7 @@ const result = Bun.markdown.render("# Title\n\n![logo](img.png)\n\nHello", {
 
 #### ANSI terminal output
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const ansi = Bun.markdown.render("# Hello\n\nThis is **bold** and *italic*", {
   heading: (children, { level }) => `\x1b[1;4m${children}\x1b[0m\n`,
   paragraph: children => children + "\n",
@@ -222,7 +218,7 @@ const ansi = Bun.markdown.render("# Hello\n\nThis is **bold** and *italic*", {
 
 The `listItem` callback receives everything needed to render markers directly — no post-processing:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const result = Bun.markdown.render("1. first\n   1. sub-a\n   2. sub-b\n2. second", {
   listItem: (children, { index, depth, ordered, start }) => {
     const n = (start ?? 1) + index;
@@ -247,7 +243,7 @@ const result = Bun.markdown.render("1. first\n   1. sub-a\n   2. sub-b\n2. secon
 
 #### Code block syntax highlighting
 
-````ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+````ts
 const result = Bun.markdown.render("```js\nconsole.log('hi')\n```", {
   code: (children, meta) => {
     const lang = meta?.language ?? "";
@@ -260,7 +256,7 @@ const result = Bun.markdown.render("```js\nconsole.log('hi')\n```", {
 
 Pass parser options as a separate third argument:
 
-```ts theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts
 const result = Bun.markdown.render(
   "Visit www.example.com",
   {
@@ -271,13 +267,13 @@ const result = Bun.markdown.render(
 );
 ```
 
-***
+---
 
 ## `Bun.markdown.react()`
 
 Render Markdown directly to React elements. Returns a `<Fragment>` that you can use as a component return value.
 
-```tsx theme={"theme":{"light":"github-light","dark":"dracula"}}
+```tsx
 function Markdown({ text }: { text: string }) {
   return Bun.markdown.react(text);
 }
@@ -287,7 +283,7 @@ function Markdown({ text }: { text: string }) {
 
 Works with `renderToString()` and React Server Components:
 
-```tsx theme={"theme":{"light":"github-light","dark":"dracula"}}
+```tsx
 import { renderToString } from "react-dom/server";
 
 const html = renderToString(Bun.markdown.react("# Hello **world**"));
@@ -298,7 +294,7 @@ const html = renderToString(Bun.markdown.react("# Hello **world**"));
 
 Replace any HTML element with a custom React component by passing it in the second argument, keyed by tag name:
 
-```tsx theme={"theme":{"light":"github-light","dark":"dracula"}}
+```tsx
 function Code({ language, children }) {
   return (
     <pre data-language={language}>
@@ -336,7 +332,7 @@ const el = Bun.markdown.react(
 
 #### Available overrides
 
-Every HTML tag produced by the parser can be overridden:
+You can override every HTML tag the parser produces:
 
 | Option       | Props                        | Description                                                     |
 | ------------ | ---------------------------- | --------------------------------------------------------------- |
@@ -366,7 +362,7 @@ Every HTML tag produced by the parser can be overridden:
 
 By default, elements use `Symbol.for('react.transitional.element')` as the `$$typeof` symbol. For React 18 and older, pass `reactVersion: 18` in the options (third argument):
 
-```tsx theme={"theme":{"light":"github-light","dark":"dracula"}}
+```tsx
 function Markdown({ text }: { text: string }) {
   return Bun.markdown.react(text, undefined, { reactVersion: 18 });
 }
@@ -376,7 +372,7 @@ function Markdown({ text }: { text: string }) {
 
 Pass any of the [parser options](#options) as the third argument:
 
-```tsx theme={"theme":{"light":"github-light","dark":"dracula"}}
+```tsx
 const el = Bun.markdown.react("## Hello World", undefined, {
   headings: { ids: true },
   autolinks: true,

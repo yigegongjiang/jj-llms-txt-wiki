@@ -1,18 +1,14 @@
-> ## Documentation Index
-> Fetch the complete documentation index at: https://bun.com/docs/llms.txt
-> Use this file to discover all available pages before exploring further.
-
 # Writing tests
 
 > Write tests with Bun's Jest-compatible API, including async tests, timeouts, and test modifiers
 
-Define tests with a Jest-like API imported from the built-in `bun:test` module. Long term, Bun aims for complete Jest compatibility; a limited set of `expect` matchers is supported.
+Define tests with a Jest-like API imported from the built-in `bun:test` module. Long term, Bun aims for complete Jest compatibility.
 
 ## Basic Usage
 
 To define a test:
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="math.test.ts" icon="/icons/typescript.svg"
 import { expect, test } from "bun:test";
 
 test("2 + 2", () => {
@@ -24,7 +20,7 @@ test("2 + 2", () => {
 
 Group tests into suites with `describe`.
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="math.test.ts" icon="/icons/typescript.svg"
 import { expect, test, describe } from "bun:test";
 
 describe("arithmetic", () => {
@@ -42,7 +38,7 @@ describe("arithmetic", () => {
 
 Tests can be async.
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="math.test.ts" icon="/icons/typescript.svg"
 import { expect, test } from "bun:test";
 
 test("2 * 2", async () => {
@@ -53,7 +49,7 @@ test("2 * 2", async () => {
 
 Alternatively, use the `done` callback to signal completion. If your test function takes a `done` parameter, you must call it or the test hangs.
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="math.test.ts" icon="/icons/typescript.svg"
 import { expect, test } from "bun:test";
 
 test("2 * 2", done => {
@@ -68,8 +64,8 @@ test("2 * 2", done => {
 
 Optionally specify a per-test timeout in milliseconds by passing a number as the third argument to `test`.
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-import { test } from "bun:test";
+```ts title="math.test.ts" icon="/icons/typescript.svg"
+import { expect, test } from "bun:test";
 
 test("wat", async () => {
   const data = await slowOperation();
@@ -79,7 +75,7 @@ test("wat", async () => {
 
 In `bun:test`, a timeout throws an uncatchable exception to force the test to stop running and fail. Bun also kills any child processes spawned in the test, so they don't linger as zombie processes.
 
-The default timeout for each test is 5000ms (5 seconds) if not overridden by this timeout option or `jest.setTimeout()`.
+The default timeout for each test is 5000ms (5 seconds) unless you override it with this timeout option or `jest.setTimeout()`.
 
 ## Retries and Repeats
 
@@ -87,8 +83,8 @@ The default timeout for each test is 5000ms (5 seconds) if not overridden by thi
 
 Use the `retry` option to automatically retry a flaky test when it fails. The test passes if it succeeds within the specified number of attempts.
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-import { test } from "bun:test";
+```ts title="example.test.ts" icon="/icons/typescript.svg"
+import { expect, test } from "bun:test";
 
 test(
   "flaky network request",
@@ -104,8 +100,8 @@ test(
 
 Use the `repeats` option to run a test multiple times regardless of pass/fail status; the test fails if any iteration fails. Use it to detect flaky tests or for stress testing. `repeats: N` runs the test N+1 times total (1 initial run + N repeats).
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
-import { test } from "bun:test";
+```ts title="example.test.ts" icon="/icons/typescript.svg"
+import { expect, test } from "bun:test";
 
 test(
   "ensure test is stable",
@@ -120,15 +116,15 @@ test(
 
 ### 🧟 Zombie Process Killer
 
-When a test times out, Bun kills any processes spawned in it with `Bun.spawn`, `Bun.spawnSync`, or `node:child_process` that are still running, and logs a message to the console. This prevents zombie processes from lingering after timed-out tests.
+When a test times out, Bun kills any still-running processes that the test spawned with `Bun.spawn`, `Bun.spawnSync`, or `node:child_process`, and logs a message to the console. This prevents zombie processes from lingering after timed-out tests.
 
 ## Test Modifiers
 
 ### test.skip
 
-Skip individual tests with `test.skip`. These tests are not run.
+Skip individual tests with `test.skip`. Bun does not run these tests.
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="math.test.ts" icon="/icons/typescript.svg"
 import { expect, test } from "bun:test";
 
 test.skip("wat", () => {
@@ -139,9 +135,9 @@ test.skip("wat", () => {
 
 ### test.todo
 
-Mark a test as a todo with `test.todo`. These tests are not run.
+Mark a test as a todo with `test.todo`. Bun does not run these tests.
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="math.test.ts" icon="/icons/typescript.svg"
 import { expect, test } from "bun:test";
 
 test.todo("fix this", () => {
@@ -151,27 +147,26 @@ test.todo("fix this", () => {
 
 To run todo tests and find any that pass, use `bun test --todo`.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun test --todo
 ```
 
 ```
-my.test.ts:
-✗ unimplemented feature
-  ^ this test is marked as todo but passes. Remove `.todo` or check that test is correct.
+math.test.ts:
+✗ fix this
+  ^ this test is marked as todo but passes. Remove `.todo` if tested behavior now works
 
  0 pass
  1 fail
- 1 expect() calls
 ```
 
-With this flag, failing todo tests do not cause an error, but todo tests that pass are marked as failing so you can remove the todo mark or fix the test.
+With this flag, failing todo tests do not cause an error, but Bun marks todo tests that pass as failing so you can remove the todo mark or fix the test.
 
 ### test.only
 
 To run a particular test or suite of tests, use `test.only()` or `describe.only()`.
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 import { test, describe } from "bun:test";
 
 test("test #1", () => {
@@ -191,7 +186,7 @@ describe.only("only", () => {
 
 The following command runs only tests #2 and #3.
 
-```bash terminal icon="terminal" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```bash terminal icon="terminal"
 bun test --only
 ```
 
@@ -199,7 +194,7 @@ bun test --only
 
 To run a test conditionally, use `test.if()`. The test runs if the condition is truthy. Use it for tests that should only run on a specific architecture or operating system.
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 test.if(Math.random() > 0.5)("runs half the time", () => {
   // ...
 });
@@ -214,7 +209,7 @@ test.if(macOS)("runs on macOS", () => {
 
 To instead skip a test based on some condition, use `test.skipIf()` or `describe.skipIf()`.
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 const macOS = process.platform === "darwin";
 
 test.skipIf(macOS)("runs on non-macOS", () => {
@@ -226,7 +221,7 @@ test.skipIf(macOS)("runs on non-macOS", () => {
 
 To mark the test as TODO instead, use `test.todoIf()` or `describe.todoIf()`. The choice between `skipIf` and `todoIf` signals intent: "invalid for this target" versus "planned but not implemented yet."
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 const macOS = process.platform === "darwin";
 
 // TODO: we've only implemented this for Linux so far.
@@ -239,10 +234,10 @@ test.todoIf(macOS)("runs on posix", () => {
 
 Use `test.failing()` when you know a test is failing but you want to track it and be notified when it starts passing. This inverts the test result:
 
-* A failing test marked with `.failing()` passes
-* A passing test marked with `.failing()` fails, with a message that it now passes and should be fixed
+- A failing test marked with `.failing()` passes
+- A passing test marked with `.failing()` fails, with a message that it now passes and should be fixed
 
-```ts math.test.ts icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts math.test.ts icon="/icons/typescript.svg"
 // This will pass because the test is failing as expected
 test.failing("math is broken", () => {
   expect(0.1 + 0.2).toBe(0.3); // fails due to floating point precision
@@ -260,7 +255,7 @@ Use it to track known bugs you plan to fix later, or for test-driven development
 
 The conditional modifiers `.if()`, `.skipIf()`, and `.todoIf()` also work on `describe` blocks, affecting all tests in the suite:
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 const isMacOS = process.platform === "darwin";
 
 // Only runs the entire suite on macOS
@@ -295,7 +290,7 @@ describe.todoIf(process.platform === "linux")("Upcoming Linux support", () => {
 
 To run the same test with multiple sets of data, use `test.each`. This creates a parametrized test that runs once for each test case provided.
 
-```ts title="math.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="math.test.ts" icon="/icons/typescript.svg"
 const cases = [
   [1, 2, 3],
   [3, 4, 7],
@@ -308,7 +303,7 @@ test.each(cases)("%p + %p should be %p", (a, b, expected) => {
 
 `describe.each` creates a parametrized suite that runs once for each test case:
 
-```ts title="sum.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="sum.test.ts" icon="/icons/typescript.svg"
 describe.each([
   [1, 2, 3],
   [3, 4, 7],
@@ -326,12 +321,12 @@ describe.each([
 
 ### Argument Passing
 
-How arguments are passed to your test function depends on the structure of your test cases:
+How Bun passes arguments to your test function depends on the structure of your test cases:
 
-* If a table row is an array (like `[1, 2, 3]`), each element is passed as an individual argument
-* If a row is not an array (like an object), it's passed as a single argument
+- If a table row is an array (like `[1, 2, 3]`), Bun passes each element as an individual argument
+- If a row is not an array (like an object), Bun passes it as a single argument
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 // Array items passed as individual arguments
 test.each([
   [1, 2, 3],
@@ -367,7 +362,7 @@ Use these specifiers to format the test title:
 
 #### Examples
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 // Basic specifiers
 test.each([
   ["hello", 123],
@@ -401,7 +396,7 @@ Bun supports verifying that a specific number of assertions were called during a
 
 Use `expect.hasAssertions()` to verify that at least one assertion is called during a test:
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 test("async work calls assertions", async () => {
   expect.hasAssertions(); // Will fail if no assertions are called
 
@@ -410,13 +405,13 @@ test("async work calls assertions", async () => {
 });
 ```
 
-This is especially useful in async tests, to make sure your assertions run.
+`expect.hasAssertions()` is especially useful in async tests, to make sure your assertions run.
 
 ### expect.assertions(count)
 
 Use `expect.assertions(count)` to verify that a specific number of assertions are called during a test:
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 test("exactly two assertions", () => {
   expect.assertions(2); // Will fail if not exactly 2 assertions are called
 
@@ -425,7 +420,7 @@ test("exactly two assertions", () => {
 });
 ```
 
-This helps ensure all your assertions run, especially in complex async code with multiple code paths.
+`expect.assertions(count)` helps ensure all your assertions run, especially in complex async code with multiple code paths.
 
 ## Type Testing
 
@@ -435,12 +430,12 @@ Bun includes `expectTypeOf` for testing TypeScript types, compatible with Vitest
 
 <Warning>These functions are no-ops at runtime. Run TypeScript separately to verify the type checks.</Warning>
 
-The `expectTypeOf` function provides type-level assertions that are checked by TypeScript's type checker. To test your types:
+The `expectTypeOf` function provides type-level assertions that TypeScript's type checker verifies. To test your types:
 
 1. Write your type assertions using `expectTypeOf`
 2. Run `bunx tsc --noEmit` to check that your types are correct
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 import { expectTypeOf } from "bun:test";
 
 // Basic type assertions
@@ -477,112 +472,112 @@ Bun implements the following matchers. Full Jest compatibility is planned; see t
 
 | Status | Matcher            |
 | ------ | ------------------ |
-| ✅      | `.not`             |
-| ✅      | `.toBe()`          |
-| ✅      | `.toEqual()`       |
-| ✅      | `.toBeNull()`      |
-| ✅      | `.toBeUndefined()` |
-| ✅      | `.toBeNaN()`       |
-| ✅      | `.toBeDefined()`   |
-| ✅      | `.toBeFalsy()`     |
-| ✅      | `.toBeTruthy()`    |
-| ✅      | `.toStrictEqual()` |
+| ✅     | `.not`             |
+| ✅     | `.toBe()`          |
+| ✅     | `.toEqual()`       |
+| ✅     | `.toBeNull()`      |
+| ✅     | `.toBeUndefined()` |
+| ✅     | `.toBeNaN()`       |
+| ✅     | `.toBeDefined()`   |
+| ✅     | `.toBeFalsy()`     |
+| ✅     | `.toBeTruthy()`    |
+| ✅     | `.toStrictEqual()` |
 
 ### String and Array Matchers
 
 | Status | Matcher               |
 | ------ | --------------------- |
-| ✅      | `.toContain()`        |
-| ✅      | `.toHaveLength()`     |
-| ✅      | `.toMatch()`          |
-| ✅      | `.toContainEqual()`   |
-| ✅      | `.stringContaining()` |
-| ✅      | `.stringMatching()`   |
-| ✅      | `.arrayContaining()`  |
+| ✅     | `.toContain()`        |
+| ✅     | `.toHaveLength()`     |
+| ✅     | `.toMatch()`          |
+| ✅     | `.toContainEqual()`   |
+| ✅     | `.stringContaining()` |
+| ✅     | `.stringMatching()`   |
+| ✅     | `.arrayContaining()`  |
 
 ### Object Matchers
 
 | Status | Matcher                 |
 | ------ | ----------------------- |
-| ✅      | `.toHaveProperty()`     |
-| ✅      | `.toMatchObject()`      |
-| ✅      | `.toContainAllKeys()`   |
-| ✅      | `.toContainValue()`     |
-| ✅      | `.toContainValues()`    |
-| ✅      | `.toContainAllValues()` |
-| ✅      | `.toContainAnyValues()` |
-| ✅      | `.objectContaining()`   |
+| ✅     | `.toHaveProperty()`     |
+| ✅     | `.toMatchObject()`      |
+| ✅     | `.toContainAllKeys()`   |
+| ✅     | `.toContainValue()`     |
+| ✅     | `.toContainValues()`    |
+| ✅     | `.toContainAllValues()` |
+| ✅     | `.toContainAnyValues()` |
+| ✅     | `.objectContaining()`   |
 
 ### Number Matchers
 
 | Status | Matcher                     |
 | ------ | --------------------------- |
-| ✅      | `.toBeCloseTo()`            |
-| ✅      | `.closeTo()`                |
-| ✅      | `.toBeGreaterThan()`        |
-| ✅      | `.toBeGreaterThanOrEqual()` |
-| ✅      | `.toBeLessThan()`           |
-| ✅      | `.toBeLessThanOrEqual()`    |
+| ✅     | `.toBeCloseTo()`            |
+| ✅     | `.closeTo()`                |
+| ✅     | `.toBeGreaterThan()`        |
+| ✅     | `.toBeGreaterThanOrEqual()` |
+| ✅     | `.toBeLessThan()`           |
+| ✅     | `.toBeLessThanOrEqual()`    |
 
 ### Function and Class Matchers
 
 | Status | Matcher             |
 | ------ | ------------------- |
-| ✅      | `.toThrow()`        |
-| ✅      | `.toBeInstanceOf()` |
+| ✅     | `.toThrow()`        |
+| ✅     | `.toBeInstanceOf()` |
 
 ### Promise Matchers
 
 | Status | Matcher       |
 | ------ | ------------- |
-| ✅      | `.resolves()` |
-| ✅      | `.rejects()`  |
+| ✅     | `.resolves()` |
+| ✅     | `.rejects()`  |
 
 ### Mock Function Matchers
 
 | Status | Matcher                       |
 | ------ | ----------------------------- |
-| ✅      | `.toHaveBeenCalled()`         |
-| ✅      | `.toHaveBeenCalledTimes()`    |
-| ✅      | `.toHaveBeenCalledWith()`     |
-| ✅      | `.toHaveBeenLastCalledWith()` |
-| ✅      | `.toHaveBeenNthCalledWith()`  |
-| ✅      | `.toHaveReturned()`           |
-| ✅      | `.toHaveReturnedTimes()`      |
-| ✅      | `.toHaveReturnedWith()`       |
-| ✅      | `.toHaveLastReturnedWith()`   |
-| ✅      | `.toHaveNthReturnedWith()`    |
+| ✅     | `.toHaveBeenCalled()`         |
+| ✅     | `.toHaveBeenCalledTimes()`    |
+| ✅     | `.toHaveBeenCalledWith()`     |
+| ✅     | `.toHaveBeenLastCalledWith()` |
+| ✅     | `.toHaveBeenNthCalledWith()`  |
+| ✅     | `.toHaveReturned()`           |
+| ✅     | `.toHaveReturnedTimes()`      |
+| ✅     | `.toHaveReturnedWith()`       |
+| ✅     | `.toHaveLastReturnedWith()`   |
+| ✅     | `.toHaveNthReturnedWith()`    |
 
 ### Snapshot Matchers
 
 | Status | Matcher                                 |
 | ------ | --------------------------------------- |
-| ✅      | `.toMatchSnapshot()`                    |
-| ✅      | `.toMatchInlineSnapshot()`              |
-| ✅      | `.toThrowErrorMatchingSnapshot()`       |
-| ✅      | `.toThrowErrorMatchingInlineSnapshot()` |
+| ✅     | `.toMatchSnapshot()`                    |
+| ✅     | `.toMatchInlineSnapshot()`              |
+| ✅     | `.toThrowErrorMatchingSnapshot()`       |
+| ✅     | `.toThrowErrorMatchingInlineSnapshot()` |
 
 ### Utility Matchers
 
 | Status | Matcher            |
 | ------ | ------------------ |
-| ✅      | `.extend`          |
-| ✅      | `.anything()`      |
-| ✅      | `.any()`           |
-| ✅      | `.assertions()`    |
-| ✅      | `.hasAssertions()` |
+| ✅     | `.extend`          |
+| ✅     | `.anything()`      |
+| ✅     | `.any()`           |
+| ✅     | `.assertions()`    |
+| ✅     | `.hasAssertions()` |
 
 ### Not Yet Implemented
 
 | Status | Matcher                    |
 | ------ | -------------------------- |
-| ❌      | `.addSnapshotSerializer()` |
+| ❌     | `.addSnapshotSerializer()` |
 
 ## Best Practices
 
 ### Use Descriptive Test Names
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 // Good
 test("should calculate total price including tax for multiple items", () => {
   // test implementation
@@ -596,7 +591,7 @@ test("price calculation", () => {
 
 ### Group Related Tests
 
-```ts title="auth.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="auth.test.ts" icon="/icons/typescript.svg"
 describe("User authentication", () => {
   describe("with valid credentials", () => {
     test("should return user data", () => {
@@ -618,7 +613,7 @@ describe("User authentication", () => {
 
 ### Use Appropriate Matchers
 
-```ts title="auth.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="auth.test.ts" icon="/icons/typescript.svg"
 // Good: Use specific matchers
 expect(users).toHaveLength(3);
 expect(user.email).toContain("@");
@@ -632,7 +627,7 @@ expect(response.status >= 200).toBe(true);
 
 ### Test Error Conditions
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 test("should throw error for invalid input", () => {
   expect(() => {
     validateEmail("not-an-email");
@@ -648,7 +643,7 @@ test("should handle async errors", async () => {
 
 ### Use Setup and Teardown
 
-```ts title="example.test.ts" icon="https://mintcdn.com/bun-1dd33a4e/JUhaF6Mf68z_zHyy/icons/typescript.svg?fit=max&auto=format&n=JUhaF6Mf68z_zHyy&q=85&s=7ac549adaea8d5487d8fbd58cc3ea35b" theme={"theme":{"light":"github-light","dark":"dracula"}}
+```ts title="example.test.ts" icon="/icons/typescript.svg"
 import { beforeEach, afterEach, test } from "bun:test";
 
 let testUser;
