@@ -26,6 +26,14 @@ configuration but make sure to first create an issue
 
 ## CPTConfig[[peft.CPTConfig]]
 
+#### peft.CPTConfig[[peft.CPTConfig]]
+
+```python
+peft.CPTConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, num_virtual_tokens: int = None, token_dim: int = None, num_transformer_submodules: Optional[int] = None, num_attention_heads: Optional[int] = None, num_layers: Optional[int] = None, modules_to_save: Optional[list[str]] = None, cpt_token_ids: typing.Optional[list[int]] = None, cpt_mask: typing.Optional[list[int]] = None, cpt_tokens_type_mask: typing.Optional[list[int]] = None, opt_weighted_loss_type: typing.Optional[typing.Literal['none', 'decay']] = 'none', opt_loss_decay_factor: typing.Optional[float] = 1.0, opt_projection_epsilon: typing.Optional[float] = 0.1, opt_projection_format_epsilon: typing.Optional[float] = 0.1, tokenizer_name_or_path: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cpt/config.py#L23)
+
 CPT Configuration class extending PeftConfig for Context-aware Prompt Tuning (CPT).
 
 This class introduces additional parameters required for CPT, such as:
@@ -38,25 +46,75 @@ For more details, see the paper: https://huggingface.co/papers/2410.17222
 
 ## CPTEmbedding[[peft.CPTEmbedding]]
 
+#### peft.CPTEmbedding[[peft.CPTEmbedding]]
+
+```python
+peft.CPTEmbedding(config, word_embeddings)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cpt/model.py#L23)
+
 CPTEmbedding is a custom embedding layer designed for Context-aware Prompt Tuning (CPT) in PEFT. It initializes
 embeddings, applies prompt-specific projections, and computes loss using label masks.
 
-- **base_model_output** (ModelOutput) --
-  Output from the base model containing logits.
-- **labels** (torch.Tensor) --
-  Ground-truth labels for the input tokens.
-- **cpt_type_mask** (torch.Tensor) --
-  Token type mask used for filtering valid loss terms.
-- **config** (Namespace) --
-  Configuration object containing loss-related hyperparameters.ModelOutputThe base model output with computed loss.
+#### calculate_loss[[peft.CPTEmbedding.calculate_loss]]
+
+```python
+calculate_loss(base_model_output, labels, cpt_type_mask, config)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cpt/model.py#L143)
+
+**Parameters:**
+
+base_model_output (ModelOutput) : Output from the base model containing logits.
+
+labels (torch.Tensor) : Ground-truth labels for the input tokens.
+
+cpt_type_mask (torch.Tensor) : Token type mask used for filtering valid loss terms.
+
+config (Namespace) : Configuration object containing loss-related hyperparameters.
+
+**Returns:** `ModelOutput`
+
+The base model output with computed loss.
 
 Computes the loss for CPT models with optional exponential decay.
 
-- **indices** (torch.Tensor) --
-  Indices of the tokens to be embedded.torch.TensorSum of prompt embeddings and delta embeddings.
+#### forward[[peft.CPTEmbedding.forward]]
+
+```python
+forward(indices)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cpt/model.py#L65)
+
+**Parameters:**
+
+indices (torch.Tensor) : Indices of the tokens to be embedded.
+
+**Returns:** `torch.Tensor`
+
+Sum of prompt embeddings and delta embeddings.
 
 Computes the prompt embeddings and applies delta adjustments.
 
+#### get_projection[[peft.CPTEmbedding.get_projection]]
+
+```python
+get_projection()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cpt/model.py#L125)
+
 Applies epsilon-based projection to the delta embeddings to control their norm.
+
+#### set_updated_tokens[[peft.CPTEmbedding.set_updated_tokens]]
+
+```python
+set_updated_tokens()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cpt/model.py#L86)
 
 Sets up a backward hook to selectively update token gradients based on the CPT token type mask.

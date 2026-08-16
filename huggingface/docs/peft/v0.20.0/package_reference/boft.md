@@ -67,53 +67,63 @@ boft_model = get_peft_model(model, config)
 
 ## BOFTConfig[[peft.BOFTConfig]]
 
-- **boft_block_size** (`int`) -- BOFT matrix block size across different layers, expressed in `int`. Bigger
-  block sizes results in more dense update matrices with more trainable parameters. Choose `boft_block_size`
-  to be divisible by most layer's input dimension (`in_features`), e.g., 4, 8, 16. Also, please only specify
-  either `boft_block_size` or `boft_block_num`, but not both simultaneously or leaving both to 0, because
-  `boft_block_size` x `boft_block_num` must equal the layer's input dimension.
-- **boft_block_num** (`int`) -- Number of BOFT blocks per injected layer. Bigger `boft_block_num` result in sparser
-  update matrices with **fewer** trainable parameters. **Note**, please choose `boft_block_num` to be
-  divisible by most layer's input dimension (`in_features`), e.g., 4, 8, 16. Only specify either
-  `boft_block_size` or `boft_block_num`, but not both simultaneously or leaving both to 0, because
-  `boft_block_size` x `boft_block_num` must equal the layer's input dimension.
-- **boft_n_butterfly_factor** (`int`) -- Number of butterfly factors across different layers. For
-  `boft_n_butterfly_factor=1`, BOFT is the same as vanilla OFT, for `boft_n_butterfly_factor=2`, the
-  effective block size of OFT becomes twice as big and the number of blocks become half.
-- **target_modules** (`Union[List[str],str]`) -- The names of the modules to apply the adapter to.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **boft_dropout** (`float`) --
-  The multiplicative dropout probability, by setting OFT blocks to identity during training, similar to the
-  dropout layer in LoRA.
-- **fan_in_fan_out** (`bool`) -- Set this to True if the layer to replace stores weight like (fan_in, fan_out).
-  For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set
-  to `True`.
-- **bias** (`str`) -- Bias type for BOFT. Can be 'none', 'all' or 'boft_only'. If 'all' or 'boft_only', the
-  corresponding biases will be updated during training. Be aware that this means that, even when disabling
-  the adapters, the model will not produce the same output as the base model would have without adaptation.
-- **modules_to_save** (`List[str]`) --List of modules apart from BOFT layers to be set as trainable
-  and saved in the final checkpoint.
-- **layers_to_transform** (`Union[List[int],int]`) --
-  The layer indexes to transform, if this argument is specified, it will apply the BOFT transformations on
-  the layer indexes that are specified in this list. If a single integer is passed, it will apply the BOFT
-  transformations on the layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None` and if the layer
-  pattern is not in the common layers pattern. This should target the `nn.ModuleList` of the model, which is
-  often called `'layers'` or `'h'`.
+#### peft.BOFTConfig[[peft.BOFTConfig]]
+
+```python
+peft.BOFTConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, boft_block_size: int = 4, boft_block_num: int = 0, boft_n_butterfly_factor: int = 1, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, boft_dropout: float = 0.0, fan_in_fan_out: bool = False, bias: str = 'none', modules_to_save: Optional[list[str]] = None, init_weights: bool = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/boft/config.py#L28)
+
+**Parameters:**
+
+boft_block_size (`int`) : BOFT matrix block size across different layers, expressed in `int`. Bigger block sizes results in more dense update matrices with more trainable parameters. Choose `boft_block_size` to be divisible by most layer's input dimension (`in_features`), e.g., 4, 8, 16. Also, please only specify either `boft_block_size` or `boft_block_num`, but not both simultaneously or leaving both to 0, because `boft_block_size` x `boft_block_num` must equal the layer's input dimension.
+
+boft_block_num (`int`) : Number of BOFT blocks per injected layer. Bigger `boft_block_num` result in sparser update matrices with **fewer** trainable parameters. **Note**, please choose `boft_block_num` to be divisible by most layer's input dimension (`in_features`), e.g., 4, 8, 16. Only specify either `boft_block_size` or `boft_block_num`, but not both simultaneously or leaving both to 0, because `boft_block_size` x `boft_block_num` must equal the layer's input dimension.
+
+boft_n_butterfly_factor (`int`) : Number of butterfly factors across different layers. For `boft_n_butterfly_factor=1`, BOFT is the same as vanilla OFT, for `boft_n_butterfly_factor=2`, the effective block size of OFT becomes twice as big and the number of blocks become half.
+
+target_modules (`Union[List[str],str]`) : The names of the modules to apply the adapter to.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+boft_dropout (`float`) : The multiplicative dropout probability, by setting OFT blocks to identity during training, similar to the dropout layer in LoRA.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+bias (`str`) : Bias type for BOFT. Can be 'none', 'all' or 'boft_only'. If 'all' or 'boft_only', the corresponding biases will be updated during training. Be aware that this means that, even when disabling the adapters, the model will not produce the same output as the base model would have without adaptation.
+
+modules_to_save (`List[str]`) --List of modules apart from BOFT layers to be set as trainable and saved in the final checkpoint.
+
+layers_to_transform (`Union[List[int],int]`) : The layer indexes to transform, if this argument is specified, it will apply the BOFT transformations on the layer indexes that are specified in this list. If a single integer is passed, it will apply the BOFT transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None` and if the layer pattern is not in the common layers pattern. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
 
 This is the configuration class to store the configuration of a [BOFTModel](/docs/peft/v0.20.0/en/package_reference/boft#peft.BOFTModel).
 
 ## BOFTModel[[peft.BOFTModel]]
 
-- **model** ([transformers.PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
-- **config** ([BOFTConfig](/docs/peft/v0.20.0/en/package_reference/boft#peft.BOFTConfig)) -- The configuration of the BOFT model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The BOFT model.
+#### peft.BOFTModel[[peft.BOFTModel]]
+
+```python
+peft.BOFTModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/boft/model.py#L47)
+
+**Parameters:**
+
+model ([transformers.PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) : The model to be adapted.
+
+config ([BOFTConfig](/docs/peft/v0.20.0/en/package_reference/boft#peft.BOFTConfig)) : The configuration of the BOFT model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The BOFT model.
 
 Creates BOFT and OFT model from a pretrained transformers model. Paper: https://huggingface.co/papers/2311.06243
 https://huggingface.co/papers/2306.07280

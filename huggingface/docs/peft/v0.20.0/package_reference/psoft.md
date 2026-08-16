@@ -112,71 +112,53 @@ config = PsoftConfig(psoft_orth=True,psoft_mag_a=True,psoft_mag_b=True)
 
 ## PsoftConfig[[peft.PsoftConfig]]
 
-- **r** (`int`) --
-  Defaults to 32. PSOFT rank (r) controls the adapter capacity through an r*r transformation R. Smaller ranks
-  32-128 are typically sufficient for simple tasks, More complex tasks may benefit from 64-256, increasing
-  expressiveness at the cost of additional parameters and computation. See the paper for empirically
-  validated settings: https://openreview.net/forum?id=FSHrinMArK.
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if
-  the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be
-  chosen according to the model architecture. If the architecture is not known, an error will be raised -- in
-  this case, you should specify the target modules manually.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **psoft_alpha** (`int`) -- Defaults to 32. It controls PSOFT scaling factor. Same semantics as LoRA alpha.
-- **psoft_dropout** (`float`) -- Defaults to 0.0. Dropout for PSOFT path. Same semantics as LoRA dropout.
-- **fan_in_fan_out** (`bool`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **ab_svd_init** (`Literal["psoft_init", "pissa_init"]`) --
-  Defaults to 'psoft_init'. Initialization strategy for A and B used to construct the principal subspace in
-  PSOFT. 'psoft_init': SVD-based initialization with row-orthogonal A, ensuring strict orthogonality (PSOFT).
-  'pissa_init': SVD-based initialization with symmetric A and B (standard PiSSA).
-- **psoft_svd** (`Literal["full", "lowrank"]`) --
-  Defaults to 'full'. SVD backend for initialization: 'full' uses torch.linalg.svd; 'lowrank' uses
-  torch.svd_lowrank.
-- **psoft_svd_lowrank_niter** (`int`) --
-  Only used when psoft_svd='lowrank'. Defaults to 10. Number of power iterations used by torch.svd_lowrank
-  when psoft_svd='lowrank'.
-- **psoft_orth** (`bool`) --
-  Defaults to 'True'. If True, constrains R to be orthogonal via Cayley parameterization, preserving the
-  geometric relationships among column of the pre-trained weight vectors. If False, R is a free matrix
-  without orthogonality constraints.
-- **psoft_mag_b** (`bool`) --
-  Defaults to 'True'. If True, learns a diagonal scaling vector on the 'output' side of R. Commonly paired
-  with psoft_mag_a to increase task adaptability, with slight distortion to the pre-trained geometry.
-- **psoft_mag_a** (`bool`) --
-  Defaults to 'True'. If True, learns a diagonal scaling vector on the 'input' side of R. Commonly paired
-  with psoft_mag_b to increase task adaptability, with slight distortion to the pre-trained geometry.
-- **use_cayley_neumann** (`bool`) --
-  Defaults to 'False'. Whether to use the Cayley-Neumann formulation of PSOFT or not. Set to True to improve
-  computational efficiency but comes at costs of bigger approximation error for orthogonality.
-- **num_cayley_neumann_terms** (`int`) --
-  Defaults to 5. Only used when use_cayley_neumann=True. Number of Cayley-Neumann terms to use. Higher number
-  results in less approximation error for orthogonality.
-- **cayley_neumann_eps** (`optional[float]`) --
-  Defaults to 'None'. Only used when use_cayley_neumann=True. Optional Frobenius-norm bound for the generator
-  matrix Q in the Cayley-Neumann approximation. If None (default), no rescaling is applied. If set to a value
-  in (0, 1) (e.g., 0.9), Q is rescaled whenever ||Q||_F exceeds the threshold to improve numerical stability.
-  See https://spherelab.ai/oftv2/ for details.
-- **init_weights** (`bool`) --
-  Defaults to 'True'. Whether to initialize the weights of the PSOFT layers with their default
-  initialization. Don't change this setting, except if you know exactly what you're doing.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
-- **layers_to_transform** (`Union[List[int], int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the
-  `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+#### peft.PsoftConfig[[peft.PsoftConfig]]
+
+```python
+peft.PsoftConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 32, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, psoft_alpha: int = 32, psoft_dropout: float = 0.0, fan_in_fan_out: bool = False, ab_svd_init: Literal['psoft_init', 'pissa_init'] = 'psoft_init', psoft_svd: Literal['full', 'lowrank'] = 'full', psoft_svd_lowrank_niter: int = 10, random_seed: int = 0, psoft_orth: bool = True, psoft_mag_b: bool = True, psoft_mag_a: bool = True, use_cayley_neumann: bool = False, num_cayley_neumann_terms: int = 5, cayley_neumann_eps: Optional[float] = None, modules_to_save: Optional[list[str]] = None, init_weights: bool = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/psoft/config.py#L26)
+
+**Parameters:**
+
+r (`int`) : Defaults to 32. PSOFT rank (r) controls the adapter capacity through an r*r transformation R. Smaller ranks 32-128 are typically sufficient for simple tasks, More complex tasks may benefit from 64-256, increasing expressiveness at the cost of additional parameters and computation. See the paper for empirically validated settings: https://openreview.net/forum?id=FSHrinMArK.
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+psoft_alpha (`int`) : Defaults to 32. It controls PSOFT scaling factor. Same semantics as LoRA alpha.
+
+psoft_dropout (`float`) : Defaults to 0.0. Dropout for PSOFT path. Same semantics as LoRA dropout.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+ab_svd_init (`Literal["psoft_init", "pissa_init"]`) : Defaults to 'psoft_init'. Initialization strategy for A and B used to construct the principal subspace in PSOFT. 'psoft_init': SVD-based initialization with row-orthogonal A, ensuring strict orthogonality (PSOFT). 'pissa_init': SVD-based initialization with symmetric A and B (standard PiSSA).
+
+psoft_svd (`Literal["full", "lowrank"]`) : Defaults to 'full'. SVD backend for initialization: 'full' uses torch.linalg.svd; 'lowrank' uses torch.svd_lowrank.
+
+psoft_svd_lowrank_niter (`int`) : Only used when psoft_svd='lowrank'. Defaults to 10. Number of power iterations used by torch.svd_lowrank when psoft_svd='lowrank'.
+
+psoft_orth (`bool`) : Defaults to 'True'. If True, constrains R to be orthogonal via Cayley parameterization, preserving the geometric relationships among column of the pre-trained weight vectors. If False, R is a free matrix without orthogonality constraints.
+
+psoft_mag_b (`bool`) : Defaults to 'True'. If True, learns a diagonal scaling vector on the 'output' side of R. Commonly paired with psoft_mag_a to increase task adaptability, with slight distortion to the pre-trained geometry.
+
+psoft_mag_a (`bool`) : Defaults to 'True'. If True, learns a diagonal scaling vector on the 'input' side of R. Commonly paired with psoft_mag_b to increase task adaptability, with slight distortion to the pre-trained geometry.
+
+use_cayley_neumann (`bool`) : Defaults to 'False'. Whether to use the Cayley-Neumann formulation of PSOFT or not. Set to True to improve computational efficiency but comes at costs of bigger approximation error for orthogonality.
+
+num_cayley_neumann_terms (`int`) : Defaults to 5. Only used when use_cayley_neumann=True. Number of Cayley-Neumann terms to use. Higher number results in less approximation error for orthogonality.
+
+cayley_neumann_eps (`optional[float]`) : Defaults to 'None'. Only used when use_cayley_neumann=True. Optional Frobenius-norm bound for the generator matrix Q in the Cayley-Neumann approximation. If None (default), no rescaling is applied. If set to a value in (0, 1) (e.g., 0.9), Q is rescaled whenever ||Q||_F exceeds the threshold to improve numerical stability. See https://spherelab.ai/oftv2/ for details.
+
+init_weights (`bool`) : Defaults to 'True'. Whether to initialize the weights of the PSOFT layers with their default initialization. Don't change this setting, except if you know exactly what you're doing.
+
+modules_to_save (`List[str]`) : List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
+
+layers_to_transform (`Union[List[int], int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
 
 Configuration for PSOFT (Efficient Orthogonal Fine-Tuning with Principal Subspace Adaptation).
 
@@ -186,10 +168,23 @@ B @ (R-I) @ A. Only R (and optional tunable vectors) are trained; A and B are in
 
 ## PsoftModel[[peft.PsoftModel]]
 
-- **model** -- The model to adapt.
-- **config** -- PsoftConfig.
-- **adapter_name** -- Adapter name, default "default".
-- **low_cpu_mem_usage** -- Create empty adapter weights on meta device.
+#### peft.PsoftModel[[peft.PsoftModel]]
+
+```python
+peft.PsoftModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/psoft/model.py#L28)
+
+**Parameters:**
+
+model : The model to adapt.
+
+config : PsoftConfig.
+
+adapter_name : Adapter name, default "default".
+
+low_cpu_mem_usage : Create empty adapter weights on meta device.
 
 PSOFT (Efficient Orthogonal Fine-Tuning with Principal Subspace Adaptation) model.
 

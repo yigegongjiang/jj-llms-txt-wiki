@@ -258,6 +258,21 @@ The OpenEnv community has built a catalog of ready-to-run environments that cove
       
     
     
+      Pelican SVG
+      pelican_svg_env scores blind SVG drawings of an animal riding a vehicle in three layers: a source gate against cheats, deterministic geometry checks and a vision judge. 30 subject-vehicle tasks, with eval and GRPO training examples included.
+      
+        📄 Docs
+        🤗 HF
+      
+    
+    
+      Pi
+      pi_env runs the Pi coding agent inside an isolated Hugging Face sandbox against any OpenAI-compatible LLM endpoint, optionally capturing per-token logprobs.
+      
+        📄 Docs
+      
+    
+    
       Sophistry Bench Sprint
       sophistry_bench_sprint_env is a single-turn advocacy reward-hacking environment on QuALITY passages: the policy defends an assigned answer and the reward proxy peaks at 8 &lt;claim&gt; tags, with four weight-0 canaries that detect format hacking.
       

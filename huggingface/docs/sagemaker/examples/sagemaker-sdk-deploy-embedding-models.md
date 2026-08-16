@@ -1,6 +1,6 @@
 # How to deploy Embedding Models to Amazon SageMaker using new Hugging Face Embedding DLC
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
 This is an example on how to deploy the open Embedding Models, like [Snowflake/snowflake-arctic-embed-l](https://huggingface.co/Snowflake/snowflake-arctic-embed-l), [BAAI/bge-large-en-v1.5](https://huggingface.co/BAAI/bge-large-en-v1.5) or [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) to Amazon SageMaker for inference using the new Hugging Face Embedding Inference Container. We will deploy the [Snowflake/snowflake-arctic-embed-m](https://huggingface.co/Snowflake/snowflake-arctic-embed-m) one of the best open Embedding Models for retrieval and ranking on the [MTEB Leaderboard](https://huggingface.co/spaces/mteb/leaderboard). 
 

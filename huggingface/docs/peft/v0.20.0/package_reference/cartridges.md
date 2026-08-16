@@ -70,10 +70,17 @@ To concatenate independently trained cartridges into a single adapter, use `comp
 
 ## CartridgeConfig[[peft.CartridgeConfig]]
 
-- **num_frozen_tokens** (`int`, defaults to 1) --
-  Number of *prefix* tokens at the start of the cartridge to keep frozen (no gradients). The Cartridges paper
-  recommends freezing the first token as an attention sink for stability (set this to `1`), as many LLMs use
-  early tokens as attention sinks and changing them can harm training.
+#### peft.CartridgeConfig[[peft.CartridgeConfig]]
+
+```python
+peft.CartridgeConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, num_virtual_tokens: int = None, token_dim: int = None, num_transformer_submodules: Optional[int] = None, num_attention_heads: Optional[int] = None, num_layers: Optional[int] = None, modules_to_save: Optional[list[str]] = None, num_frozen_tokens: int = 1)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cartridge/config.py#L22)
+
+**Parameters:**
+
+num_frozen_tokens (`int`, defaults to 1) : Number of *prefix* tokens at the start of the cartridge to keep frozen (no gradients). The Cartridges paper recommends freezing the first token as an attention sink for stability (set this to `1`), as many LLMs use early tokens as attention sinks and changing them can harm training.
 
 Configuration for CARTRIDGE, a KV-cache-parameterized prefix adapter.
 
@@ -99,6 +106,14 @@ from constructing the adapter config:
 
 ## CartridgeEncoder[[peft.CartridgeEncoder]]
 
+#### peft.CartridgeEncoder[[peft.CartridgeEncoder]]
+
+```python
+peft.CartridgeEncoder(config)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cartridge/model.py#L20)
+
 A parameterized prefix KV cache.
 
 The parameters are stored in the same flattened layout as `PrefixEncoder` output: `[num_virtual_tokens, num_layers
@@ -107,6 +122,14 @@ performed by `_prepare_prompt_learning_config`).
 
 If `num_frozen_tokens > 0`, the first `num_frozen_tokens` virtual tokens are stored as a non-trainable parameter,
 and the remaining tokens are trainable.
+
+#### load_prompt_embeddings[[peft.CartridgeEncoder.load_prompt_embeddings]]
+
+```python
+load_prompt_embeddings(prompt_embeddings: torch.Tensor)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/cartridge/model.py#L89)
 
 Load the flattened prompt embeddings saved by PEFT (`prompt_embeddings`).
 

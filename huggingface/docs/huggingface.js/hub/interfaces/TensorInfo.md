@@ -8,7 +8,7 @@
 
 #### Defined in[[dataoffsets.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:188](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L188)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:276](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L276)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[dtype.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:186](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L186)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:274](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L274)
 
 ___
 
@@ -28,4 +28,4 @@ ___
 
 #### Defined in[[shape.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:187](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L187)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:275](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L275)

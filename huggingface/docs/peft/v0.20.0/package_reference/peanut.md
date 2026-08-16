@@ -40,48 +40,35 @@ The abstract from the paper is:
 
 ## PeanutConfig[[peft.PeanutConfig]]
 
-- **r** (`int`) --
-  PEANuT rank. This is the hidden dimension used by the adapters. Similar to LoRA rank, larger `r` increases
-  adapter capacity and trainable parameters.
-- **depth** (`int`) --
-  Number of hidden adapter layers per encoder/decoder side in PEANuT. The input projection `A` and output
-  projection `B` are always present in addition to these hidden layers. Therefore, `depth` must be a
-  non-negative integer.
+#### peft.PeanutConfig[[peft.PeanutConfig]]
 
-  - `depth=0`: `A`, `B`.
-  - `depth=1`: `A`, one encoder, one decoder, `B`.
-  - `depth=2`: `A`, two encoders, two decoders, `B`.
-  - `depth=3`: `A`, three encoders, three decoders, `B`, etc.
-- **act_fn** (`str`) --
-  Non-linear activation applied in the PEANuT network. This corresponds to `non_linear` in the vanilla
-  PyTorch implementation. Default is `"relu"`. Any activation key available in
-  `transformers.activations.ACT2FN` is supported and may perform better on different tasks.
-- **scaling** (`float`) --
-  A scalar multiplier applied to the PEANuT output before adding it to the frozen base layer output. The
-  final adapter contribution is `scaling * (x @ delta_w)`.
-- **target_modules** (`Union[List[str], str]`, *optional*) --
-  The names of the modules to apply PEANuT to. Can be a list of module name strings (e.g. `['q_proj',
-  'v_proj']`) or a regex pattern.
-- **modules_to_save** (`List[str]`, *optional*) --
-  List of modules apart from PEANuT layers to be set as trainable and saved in the final checkpoint.
-- **exclude_modules** (`Union[List[str], str]`, *optional*) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **layers_to_transform** (`Union[list[int], int]`, *optional*) --
-  The layer indexes to transform. If this argument is specified, PEFT will transform only the layer indexes
-  that are specified in this list. If a single integer is passed, PEFT will transform only the layer at this
-  index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`, *optional*) --
-  The layer pattern name, used only if `layers_to_transform` is not None and if the layer pattern is not in
-  the common layers pattern.
-- **init_weights** (`bool`) --
-  Whether to initialize PEANuT adapter weights using the default initialization scheme:
+```python
+peft.PeanutConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 32, depth: int = 0, act_fn: str = 'relu', scaling: float = 1.0, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, modules_to_save: Optional[list[str]] = None, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None, init_weights: bool = True)
+```
 
-  - If `True`: all weights except `B` are initialized with Kaiming uniform, and `B` is initialized to zero.
-  - If `False`: all weights (including `B`) are initialized with Kaiming uniform.
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/peanut/config.py#L26)
 
-  Initializing `B` to zero makes the adapter start as an exact no-op.
+**Parameters:**
+
+r (`int`) : PEANuT rank. This is the hidden dimension used by the adapters. Similar to LoRA rank, larger `r` increases adapter capacity and trainable parameters.
+
+depth (`int`) : Number of hidden adapter layers per encoder/decoder side in PEANuT. The input projection `A` and output projection `B` are always present in addition to these hidden layers. Therefore, `depth` must be a non-negative integer.  - `depth=0`: `A`, `B`. - `depth=1`: `A`, one encoder, one decoder, `B`. - `depth=2`: `A`, two encoders, two decoders, `B`. - `depth=3`: `A`, three encoders, three decoders, `B`, etc.
+
+act_fn (`str`) : Non-linear activation applied in the PEANuT network. This corresponds to `non_linear` in the vanilla PyTorch implementation. Default is `"relu"`. Any activation key available in `transformers.activations.ACT2FN` is supported and may perform better on different tasks.
+
+scaling (`float`) : A scalar multiplier applied to the PEANuT output before adding it to the frozen base layer output. The final adapter contribution is `scaling * (x @ delta_w)`.
+
+target_modules (`Union[List[str], str]`, *optional*) : The names of the modules to apply PEANuT to. Can be a list of module name strings (e.g. `['q_proj', 'v_proj']`) or a regex pattern.
+
+modules_to_save (`List[str]`, *optional*) : List of modules apart from PEANuT layers to be set as trainable and saved in the final checkpoint.
+
+exclude_modules (`Union[List[str], str]`, *optional*) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+layers_to_transform (`Union[list[int], int]`, *optional*) : The layer indexes to transform. If this argument is specified, PEFT will transform only the layer indexes that are specified in this list. If a single integer is passed, PEFT will transform only the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`, *optional*) : The layer pattern name, used only if `layers_to_transform` is not None and if the layer pattern is not in the common layers pattern.
+
+init_weights (`bool`) : Whether to initialize PEANuT adapter weights using the default initialization scheme:  - If `True`: all weights except `B` are initialized with Kaiming uniform, and `B` is initialized to zero. - If `False`: all weights (including `B`) are initialized with Kaiming uniform.  Initializing `B` to zero makes the adapter start as an exact no-op.
 
 This is the configuration class to store the configuration of a [PeanutModel](/docs/peft/v0.20.0/en/package_reference/peanut#peft.PeanutModel).
 
@@ -92,9 +79,25 @@ is applied over the base weight's output dimension, so `A` has shape `(out_dim -
 
 ## PeanutModel[[peft.PeanutModel]]
 
-- **model** (`torch.nn.Module`) -- The model to be adapted.
-- **config** ([PeanutConfig](/docs/peft/v0.20.0/en/package_reference/peanut#peft.PeanutConfig)) -- The configuration of the PEANuT model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.`torch.nn.Module`The PEANuT PEFT model.
+#### peft.PeanutModel[[peft.PeanutModel]]
+
+```python
+peft.PeanutModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/peanut/model.py#L28)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to be adapted.
+
+config ([PeanutConfig](/docs/peft/v0.20.0/en/package_reference/peanut#peft.PeanutConfig)) : The configuration of the PEANuT model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+**Returns:** `torch.nn.Module`
+
+The PEANuT PEFT model.
 
 Creates a PEANuT model from a pretrained transformers model.
 

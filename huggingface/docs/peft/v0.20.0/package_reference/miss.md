@@ -79,53 +79,61 @@ For a full fine-tuning example including training and inference, see the [MiSS f
 
 ## MissConfig[[peft.MissConfig]]
 
-- **r** (`int`) --
-  The rank of MiSS across different layers. It is best to set 'r' to an even number; otherwise, the default
-  initialization method will not work. The rank of MiSS corresponds to a low-rank decomposition along the
-  in_features dimension.
-- **miss_dropout** (`float`) --
-  The dropout probability for MiSS layers.
-- **mini_r** (`int`) --
-  The rank of MiSS corresponds to a low-rank decomposition along the out_features dimension. When you set
-  `init_weights=mini`, you need to set `mini_r`. Please make sure that `out_features` is divisible by
-  `mini_r`.
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear modules are chosen, excluding
-  the output layer. If this is not specified, modules will be chosen according to the model architecture. If
-  the architecture is not known, an error will be raised -- in this case, you should specify the target
-  modules manually.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **init_weights** (bool | Literal["bat", "mini"]) --
-  Different initializations correspond to different MiSS variants. By default(balance), the most efficient
-  and general method in MiSS will be used. 'bat': In this mode, you can enable nonlinear updates across
-  different shards. 'mini': In this mode, you can set a smaller rank to use fewer trainable parameters, but
-  it is recommended to keep `out_features % mini_r == 0`.
-- **layers_to_transform** (`Union[List[int], int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`str`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`.
-- **bias** (`str`) --
-  Bias type for MiSS. Can be `'none'`, `'all'` or `'MiSS_only'`.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
+#### peft.MissConfig[[peft.MissConfig]]
+
+```python
+peft.MissConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 64, miss_dropout: float = 0.0, mini_r: int = 1, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, init_weights: bool | Literal['bat', 'mini'] = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[str] = None, bias: str = 'none', modules_to_save: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/miss/config.py#L25)
+
+**Parameters:**
+
+r (`int`) : The rank of MiSS across different layers. It is best to set 'r' to an even number; otherwise, the default initialization method will not work. The rank of MiSS corresponds to a low-rank decomposition along the in_features dimension.
+
+miss_dropout (`float`) : The dropout probability for MiSS layers.
+
+mini_r (`int`) : The rank of MiSS corresponds to a low-rank decomposition along the out_features dimension. When you set `init_weights=mini`, you need to set `mini_r`. Please make sure that `out_features` is divisible by `mini_r`.
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear modules are chosen, excluding the output layer. If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+init_weights (bool | Literal["bat", "mini"]) : Different initializations correspond to different MiSS variants. By default(balance), the most efficient and general method in MiSS will be used. 'bat': In this mode, you can enable nonlinear updates across different shards. 'mini': In this mode, you can set a smaller rank to use fewer trainable parameters, but it is recommended to keep `out_features % mini_r == 0`.
+
+layers_to_transform (`Union[List[int], int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`str`) : The layer pattern name, used only if `layers_to_transform` is different from `None`.
+
+bias (`str`) : Bias type for MiSS. Can be `'none'`, `'all'` or `'MiSS_only'`.
+
+modules_to_save (`List[str]`) : List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
 
 This is the configuration class to store the configuration of a [MissModel](/docs/peft/v0.20.0/en/package_reference/miss#peft.MissModel).
 
 ## MissModel[[peft.MissModel]]
 
-- **model** (`torch.nn.Module`) -- The model to which the adapter tuner layers will be attached.
-- **config** ([MissConfig](/docs/peft/v0.20.0/en/package_reference/miss#peft.MissConfig)) -- The configuration of the MiSS model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The MiSS model.
+#### peft.MissModel[[peft.MissModel]]
+
+```python
+peft.MissModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/miss/model.py#L38)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to which the adapter tuner layers will be attached.
+
+config ([MissConfig](/docs/peft/v0.20.0/en/package_reference/miss#peft.MissConfig)) : The configuration of the MiSS model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The MiSS model.
 
 Creates Householder reflection adaptation (MiSS) model from a pretrained model. The method is described in
 https://huggingface.co/papers/2409.15371

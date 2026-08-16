@@ -23,9 +23,25 @@ The abstract from the paper is:
 
 ## AdaptionPromptConfig[[peft.AdaptionPromptConfig]]
 
+#### peft.AdaptionPromptConfig[[peft.AdaptionPromptConfig]]
+
+```python
+peft.AdaptionPromptConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, target_modules: str = None, adapter_len: int = None, adapter_layers: int = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adaption_prompt/config.py#L25)
+
 Stores the configuration of an [AdaptionPromptModel](/docs/peft/v0.20.0/en/package_reference/llama_adapter#peft.AdaptionPromptModel).
 
 ## AdaptionPromptModel[[peft.AdaptionPromptModel]]
+
+#### peft.AdaptionPromptModel[[peft.AdaptionPromptModel]]
+
+```python
+peft.AdaptionPromptModel(model, configs: dict, adapter_name: str)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adaption_prompt/model.py#L25)
 
 Implements adaption prompts as described in https://huggingface.co/papers/2303.16199.
 
@@ -41,10 +57,42 @@ Notes on the multi-adapter pattern:
   dictionary.
 - Disabling the adapter would also result in the modules being removed from the model.
 
+#### add_adapter[[peft.AdaptionPromptModel.add_adapter]]
+
+```python
+add_adapter(adapter_name: str, config: AdaptionPromptConfig)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adaption_prompt/model.py#L60)
+
 Add an adapter with the given name and config.
+
+#### disable_adapter_layers[[peft.AdaptionPromptModel.disable_adapter_layers]]
+
+```python
+disable_adapter_layers()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adaption_prompt/model.py#L115)
 
 Disable adapter layers by swapping out AdaptedAttention modules.
 
+#### enable_adapter_layers[[peft.AdaptionPromptModel.enable_adapter_layers]]
+
+```python
+enable_adapter_layers()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adaption_prompt/model.py#L110)
+
 Enable adapter layers by swapping in cached AdaptedAttention modules.
+
+#### set_adapter[[peft.AdaptionPromptModel.set_adapter]]
+
+```python
+set_adapter(adapter_name: str, inference_mode: bool = False)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adaption_prompt/model.py#L95)
 
 Set the model to use the adapter with the given name.

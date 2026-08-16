@@ -72,40 +72,53 @@ IA3 is particularly effective when you need the smallest possible adapters for s
 
 ## IA3Config[[peft.IA3Config]]
 
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen,
-  excluding the output layer. If this is not specified, modules will be chosen according to the model
-  architecture. If the architecture is not known, an error will be raised -- in this case, you should specify
-  the target modules manually.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **feedforward_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to be treated as feedforward modules, as in the original paper. These modules will
-  have (IA)³ vectors multiplied to the input, instead of the output. `feedforward_modules` must be a name or
-  a subset of names present in `target_modules`.
-- **fan_in_fan_out** (`bool`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **modules_to_save** (`Optional[List[str]]`) --
-  List of modules apart from (IA)³ layers to be set as trainable and saved in the final checkpoint.
-- **init_ia3_weights** (`bool`) --
-  Whether to initialize the vectors in the (IA)³ layers, defaults to `True`. Setting this to `False` is
-  discouraged.
+#### peft.IA3Config[[peft.IA3Config]]
+
+```python
+peft.IA3Config(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, feedforward_modules: Optional[Union[list[str], str]] = None, fan_in_fan_out: bool = False, modules_to_save: Optional[list[str]] = None, init_ia3_weights: bool = True)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/ia3/config.py#L25)
+
+**Parameters:**
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen, excluding the output layer. If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+feedforward_modules (`Optional[Union[List[str], str]]`) : The names of the modules to be treated as feedforward modules, as in the original paper. These modules will have (IA)³ vectors multiplied to the input, instead of the output. `feedforward_modules` must be a name or a subset of names present in `target_modules`.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+modules_to_save (`Optional[List[str]]`) : List of modules apart from (IA)³ layers to be set as trainable and saved in the final checkpoint.
+
+init_ia3_weights (`bool`) : Whether to initialize the vectors in the (IA)³ layers, defaults to `True`. Setting this to `False` is discouraged.
 
 This is the configuration class to store the configuration of a [IA3Model](/docs/peft/v0.20.0/en/package_reference/ia3#peft.IA3Model).
 
 ## IA3Model[[peft.IA3Model]]
 
-- **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
-- **config** ([IA3Config](/docs/peft/v0.20.0/en/package_reference/ia3#peft.IA3Config)) -- The configuration of the (IA)^3 model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The (IA)^3 model.
+#### peft.IA3Model[[peft.IA3Model]]
+
+```python
+peft.IA3Model(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/ia3/model.py#L36)
+
+**Parameters:**
+
+model ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) : The model to be adapted.
+
+config ([IA3Config](/docs/peft/v0.20.0/en/package_reference/ia3#peft.IA3Config)) : The configuration of the (IA)^3 model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The (IA)^3 model.
 
 Creates a Infused Adapter by Inhibiting and Amplifying Inner Activations ((IA)^3) model from a pretrained
 transformers model. The method is described in detail in https://huggingface.co/papers/2205.05638
@@ -131,11 +144,20 @@ Example:
 - **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
 - **peft_config** ([IA3Config](/docs/peft/v0.20.0/en/package_reference/ia3#peft.IA3Config)): The configuration of the (IA)^3 model.
 
-- **adapters** (`list`) --
-  List of adapter names to be merged.
-- **weights** (`list`) --
-  List of weights for each adapter.
-- **adapter_name** (`str`) --
-  Name of the new adapter.
+#### add_weighted_adapter[[peft.IA3Model.add_weighted_adapter]]
+
+```python
+add_weighted_adapter(adapters: list[str], weights: list[float], adapter_name: str)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/ia3/model.py#L273)
+
+**Parameters:**
+
+adapters (`list`) : List of adapter names to be merged.
+
+weights (`list`) : List of weights for each adapter.
+
+adapter_name (`str`) : Name of the new adapter.
 
 This method adds a new adapter by merging the given adapters with the given weights.

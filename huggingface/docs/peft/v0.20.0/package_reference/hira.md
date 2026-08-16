@@ -64,45 +64,35 @@ url={https://openreview.net/forum?id=TwJrTz9cRS}
 
 ## HiraConfig[[peft.HiraConfig]]
 
-"}]}>
-- **r** (`int`) --
-  Rank of the low-rank component in HiRA. Although HiRA achieves a high-rank adaptation through Hadamard
-  fusion, this value defines the dimension of the underlying low-rank factorization (matrices A and B).
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if
-  the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be
-  chosen according to the model architecture. If the architecture is not known, an error will be raised -- in
-  this case, you should specify the target modules manually.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **hira_dropout** (`float`) --
-  The dropout probability for HiRA layers.
-- **fan_in_fan_out** (`bool`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
-- **init_weights** (`bool` | `Literal["gaussian"]`) --
-  How to initialize the weights of the HiRA layers. Passing True (default) results in the default
-  initialization, with the HiRA B weight being set to 0. This means that without further training, the HiRA
-  adapter will be a no-op. Setting the initialization to False leads to random initialization of HiRA A and
-  B, meaning that HiRA is not a no-op before training; this setting is intended for debugging purposes.
-  Passing `'gaussian'` results in Gaussian initialization scaled by the HiRA rank for linear and layers.
-- **layers_to_transform** (`Union[List[int], int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the
-  `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
-- **rank_pattern** (`dict`) --
-  The mapping from layer names or regexp expression to ranks which are different from the default r specified
-  by `r`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
+#### peft.HiraConfig[[peft.HiraConfig]]
+
+```python
+peft.HiraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 32, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, hira_dropout: float = 0.0, fan_in_fan_out: bool = False, modules_to_save: Optional[list[str]] = None, init_weights: bool | Literal['gaussian'] | None = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None, rank_pattern: Optional[dict] = <factory>)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/config.py#L25)
+
+**Parameters:**
+
+r (`int`) : Rank of the low-rank component in HiRA. Although HiRA achieves a high-rank adaptation through Hadamard fusion, this value defines the dimension of the underlying low-rank factorization (matrices A and B).
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+hira_dropout (`float`) : The dropout probability for HiRA layers.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+modules_to_save (`List[str]`) : List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
+
+init_weights (`bool` | `Literal["gaussian"]`) : How to initialize the weights of the HiRA layers. Passing True (default) results in the default initialization, with the HiRA B weight being set to 0. This means that without further training, the HiRA adapter will be a no-op. Setting the initialization to False leads to random initialization of HiRA A and B, meaning that HiRA is not a no-op before training; this setting is intended for debugging purposes. Passing `'gaussian'` results in Gaussian initialization scaled by the HiRA rank for linear and layers.
+
+layers_to_transform (`Union[List[int], int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+
+rank_pattern (`dict`) : The mapping from layer names or regexp expression to ranks which are different from the default r specified by `r`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
 
 This is the configuration class to store the configuration of a `HiraModel`.
 
@@ -110,43 +100,121 @@ This is the configuration class to store the configuration of a `HiraModel`.
 
 ### HiraLayer[[peft.tuners.hira.HiraLayer]]
 
+#### peft.tuners.hira.HiraLayer[[peft.tuners.hira.HiraLayer]]
+
+```python
+peft.tuners.hira.HiraLayer(base_layer: nn.Module, ephemeral_gpu_offload: bool = False, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L31)
+
 ### Linear Adapter[[peft.tuners.hira.Linear]]
 
-- **adapter** (str) --
-  The name of the adapter for which the delta weight should be computed.
+#### peft.tuners.hira.Linear[[peft.tuners.hira.Linear]]
+
+```python
+peft.tuners.hira.Linear(base_layer, adapter_name: str, config: HiraConfig, r: int = 0, fan_in_fan_out: bool = False, is_target_conv_1d_layer: bool = False, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L168)
+
+#### get_delta_weight[[peft.tuners.hira.Linear.get_delta_weight]]
+
+```python
+get_delta_weight(adapter)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L213)
+
+**Parameters:**
+
+adapter (str) : The name of the adapter for which the delta weight should be computed.
 
 Compute the delta weight for the given adapter.
 
-- **safe_merge** (`bool`, *optional*) --
-  If True, the merge operation will be performed in a copy of the original weights and check for NaNs
-  before merging the weights. This is useful if you want to check if the merge operation will produce
-  NaNs. Defaults to `False`.
-- **adapter_names** (`list[str]`, *optional*) --
-  The list of adapter names that should be merged. If None, all active adapters will be merged. Defaults
-  to `None`.
+#### merge[[peft.tuners.hira.Linear.merge]]
+
+```python
+merge(safe_merge: bool = False, adapter_names: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L188)
+
+**Parameters:**
+
+safe_merge (`bool`, *optional*) : If True, the merge operation will be performed in a copy of the original weights and check for NaNs before merging the weights. This is useful if you want to check if the merge operation will produce NaNs. Defaults to `False`.
+
+adapter_names (`list[str]`, *optional*) : The list of adapter names that should be merged. If None, all active adapters will be merged. Defaults to `None`.
 
 Merge the active adapter weights into the base weights
+
+#### unmerge[[peft.tuners.hira.Linear.unmerge]]
+
+```python
+unmerge()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L207)
 
 This method unmerges all merged adapter layers from the base weights.
 
 ### Embedding Adapter[[peft.tuners.hira.Embedding]]
 
+#### peft.tuners.hira.Embedding[[peft.tuners.hira.Embedding]]
+
+```python
+peft.tuners.hira.Embedding(base_layer: nn.Module, adapter_name: str, config: HiraConfig, r: int = 0, fan_in_fan_out: bool = False, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L289)
+
+#### forward[[peft.tuners.hira.Embedding.forward]]
+
+```python
+forward(x: torch.Tensor, *args: Any, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L403)
+
 HiRA forward for Embedding layer. Supports mixed adapters per batch or single adapter.
 
-- **adapter** (str) --
-  The name of the adapter for which the delta weight should be computed.
+#### get_delta_weight[[peft.tuners.hira.Embedding.get_delta_weight]]
+
+```python
+get_delta_weight(adapter)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L358)
+
+**Parameters:**
+
+adapter (str) : The name of the adapter for which the delta weight should be computed.
 
 Compute the delta weight for the given adapter.
 
-- **safe_merge** (`bool`, *optional*) --
-  If True, the merge operation will be performed in a copy of the original weights and check for NaNs
-  before merging the weights. This is useful if you want to check if the merge operation will produce
-  NaNs. Defaults to `False`.
-- **adapter_names** (`list[str]`, *optional*) --
-  The list of adapter names that should be merged. If None, all active adapters will be merged. Defaults
-  to `None`.
+#### merge[[peft.tuners.hira.Embedding.merge]]
+
+```python
+merge(safe_merge: bool = False, adapter_names: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L333)
+
+**Parameters:**
+
+safe_merge (`bool`, *optional*) : If True, the merge operation will be performed in a copy of the original weights and check for NaNs before merging the weights. This is useful if you want to check if the merge operation will produce NaNs. Defaults to `False`.
+
+adapter_names (`list[str]`, *optional*) : The list of adapter names that should be merged. If None, all active adapters will be merged. Defaults to `None`.
 
 Merge the active adapter weights into the base weights
+
+#### unmerge[[peft.tuners.hira.Embedding.unmerge]]
+
+```python
+unmerge()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/hira/layer.py#L352)
 
 This method unmerges all merged adapter layers from the base weights.
 

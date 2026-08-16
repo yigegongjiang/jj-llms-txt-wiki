@@ -4,6 +4,7 @@
 
 - [HubApiError](classes/HubApiError)
 - [InvalidApiResponseFormatError](classes/InvalidApiResponseFormatError)
+- [SafetensorParseError](classes/SafetensorParseError)
 - [\_\_internal\_XetBlob](classes/_internal_XetBlob)
 
 ## Interfaces
@@ -34,6 +35,7 @@
 - [ModelDerivedFields](interfaces/ModelDerivedFields)
 - [ModelEntry](interfaces/ModelEntry)
 - [OAuthResult](interfaces/OAuthResult)
+- [ParallelDownloadOptions](interfaces/ParallelDownloadOptions)
 - [PathInfo](interfaces/PathInfo)
 - [QuantizationConfig](interfaces/QuantizationConfig)
 - [RepoId](interfaces/RepoId)
@@ -132,7 +134,7 @@ ___
 
 #### Defined in[[dtype.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:158](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L158)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:246](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L246)
 
 ___
 
@@ -208,7 +210,7 @@ ___
 
 #### Defined in[[safetensorsfileheader.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:191](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L191)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:279](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L279)
 
 ___
 
@@ -218,7 +220,7 @@ ___
 
 #### Defined in[[safetensorsparsefromrepo.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:215](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L215)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:303](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L303)
 
 ___
 
@@ -228,7 +230,7 @@ ___
 
 #### Defined in[[safetensorsshardedheaders.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:213](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L213)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:301](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L301)
 
 ___
 
@@ -268,7 +270,7 @@ ___
 
 #### Defined in[[tensorname.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:157](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L157)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:245](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L245)
 
 ___
 
@@ -318,7 +320,7 @@ ___
 
 #### Defined in[[diffuserssafetensorsfile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:15](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L15)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:16](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L16)
 
 ___
 
@@ -328,7 +330,7 @@ ___
 
 #### Defined in[[diffuserssafetensorsindexfile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:16](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L16)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:17](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L17)
 
 ___
 
@@ -338,7 +340,7 @@ ___
 
 #### Defined in[[diffusersweightssubfolders.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:17](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L17)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:18](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L18)
 
 ___
 
@@ -346,9 +348,11 @@ ___
 
 • `Const` **HUB\_URL**: ``"https://huggingface.co"``
 
+Base URL of the Hugging Face Hub.
+
 #### Defined in[[huburl.defined-in]]
 
-[packages/hub/src/consts.ts:1](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/consts.ts#L1)
+[packages/hub/src/consts.ts:4](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/consts.ts#L4)
 
 ___
 
@@ -408,7 +412,7 @@ ___
 
 #### Defined in[[resafetensorsfile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:20](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L20)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:21](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L21)
 
 ___
 
@@ -418,7 +422,7 @@ ___
 
 #### Defined in[[resafetensorsindexfile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:21](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L21)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:22](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L22)
 
 ___
 
@@ -428,7 +432,7 @@ ___
 
 #### Defined in[[resafetensorsshardfile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:22](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L22)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:23](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L23)
 
 ___
 
@@ -438,7 +442,7 @@ ___
 
 #### Defined in[[safetensorsfile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:11](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L11)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:12](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L12)
 
 ___
 
@@ -448,7 +452,7 @@ ___
 
 #### Defined in[[safetensorsindexfile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:12](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L12)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:13](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L13)
 
 ___
 
@@ -612,6 +616,31 @@ ___
 #### Defined in[[commititerbucket.defined-in]]
 
 [packages/hub/src/lib/commit.ts:748](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L748)
+
+___
+
+### computeNumOfParamsByDtypeSingleFile
+
+▸ **computeNumOfParamsByDtypeSingleFile**(`header`, `quantConfig?`, `expertDtype?`): `Partial`\<`Record`\<[`Dtype`](modules#dtype), `number`\>\>
+
+Sums parameters per dtype for one file's header, applying the quantization packing factors and
+skipping bookkeeping tensors.
+
+#### Parameters[[computenumofparamsbydtypesinglefile.parameters]]
+
+| Name | Type |
+| :------ | :------ |
+| `header` | [`SafetensorsFileHeader`](modules#safetensorsfileheader) |
+| `quantConfig?` | [`QuantizationConfig`](interfaces/QuantizationConfig) |
+| `expertDtype?` | `string` |
+
+#### Returns[[computenumofparamsbydtypesinglefile.returns]]
+
+`Partial`\<`Record`\<[`Dtype`](modules#dtype), `number`\>\>
+
+#### Defined in[[computenumofparamsbydtypesinglefile.defined-in]]
+
+[packages/hub/src/lib/parse-safetensors-metadata.ts:908](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L908)
 
 ___
 
@@ -1119,7 +1148,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `params` | \{ `downloadInfo?`: [`FileDownloadInfoOutput`](interfaces/FileDownloadInfoOutput) ; `fetch?`: (`input`: URL \| RequestInfo, `init?`: `RequestInit`) => `Promise`\<`Response`\>(`input`: `string` \| `URL` \| `Request`, `init?`: `RequestInit`) => `Promise`\<`Response`\> ; `hubUrl?`: `string` ; `path`: `string` ; `raw?`: `boolean` ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `revision?`: `string` ; `xet?`: `boolean` \| \{ `readToken`: [`XetReadToken`](interfaces/XetReadToken)  }  } & `Partial`\<`CredentialsParams`\> |
+| `params` | \{ `downloadInfo?`: [`FileDownloadInfoOutput`](interfaces/FileDownloadInfoOutput) ; `fetch?`: (`input`: URL \| RequestInfo, `init?`: `RequestInit`) => `Promise`\<`Response`\>(`input`: `string` \| `URL` \| `Request`, `init?`: `RequestInit`) => `Promise`\<`Response`\> ; `hubUrl?`: `string` ; `parallelDownloads?`: `boolean` \| [`ParallelDownloadOptions`](interfaces/ParallelDownloadOptions) ; `path`: `string` ; `raw?`: `boolean` ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `revision?`: `string` ; `xet?`: `boolean` \| \{ `readToken`: [`XetReadToken`](interfaces/XetReadToken)  }  } & `Partial`\<`CredentialsParams`\> |
 
 #### Returns[[downloadfile.returns]]
 
@@ -1129,7 +1158,7 @@ null when the file doesn't exist
 
 #### Defined in[[downloadfile.defined-in]]
 
-[packages/hub/src/lib/download-file.ts:12](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/download-file.ts#L12)
+[packages/hub/src/lib/download-file.ts:13](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/download-file.ts#L13)
 
 ___
 
@@ -1278,6 +1307,33 @@ Get a specific job by ID.
 
 ___
 
+### getQuantizationMultiplier
+
+▸ **getQuantizationMultiplier**(`tensorName`, `dtype`, `quantConfig?`, `expertDtype?`): `number`
+
+Gets the parameter multiplier for a quantized tensor based on quantization method.
+
+May be fractional — see `packingFactor`.
+
+#### Parameters[[getquantizationmultiplier.parameters]]
+
+| Name | Type |
+| :------ | :------ |
+| `tensorName` | `string` |
+| `dtype` | [`Dtype`](modules#dtype) |
+| `quantConfig?` | [`QuantizationConfig`](interfaces/QuantizationConfig) |
+| `expertDtype?` | `string` |
+
+#### Returns[[getquantizationmultiplier.returns]]
+
+`number`
+
+#### Defined in[[getquantizationmultiplier.defined-in]]
+
+[packages/hub/src/lib/parse-safetensors-metadata.ts:811](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L811)
+
+___
+
 ### getRepoFolderName
 
 ▸ **getRepoFolderName**(`«destructured»`): `string`
@@ -1341,7 +1397,7 @@ no SyntaxError from attacker-controlled patterns in config.json).
 
 #### Defined in[[globmatch.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:595](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L595)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:715](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L715)
 
 ___
 
@@ -1368,7 +1424,7 @@ pattern contains a `*` we fall back to proper glob matching for flexibility.
 
 #### Defined in[[isquantizedtensor.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:631](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L631)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:751](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L751)
 
 ___
 
@@ -1606,7 +1662,7 @@ treat targets using any other regex syntax as non-matching.
 
 #### Defined in[[matchescompressedtensorstarget.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:663](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L663)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:783](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L783)
 
 ___
 
@@ -1789,7 +1845,7 @@ on Hugging Face using smart range requests to extract its metadata.
 
 #### Defined in[[parsesafetensorsmetadata.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:411](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L411)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:522](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L522)
 
 ▸ **parseSafetensorsMetadata**(`params`): `Promise`\<[`SafetensorsParseFromRepo`](modules#safetensorsparsefromrepo)\>
 
@@ -1805,7 +1861,7 @@ on Hugging Face using smart range requests to extract its metadata.
 
 #### Defined in[[parsesafetensorsmetadata.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:441](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L441)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:552](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L552)
 
 ___
 
@@ -1825,7 +1881,32 @@ ___
 
 #### Defined in[[parsesafetensorsshardfilename.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:30](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L30)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:31](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L31)
+
+___
+
+### parseTotalParameters
+
+▸ **parseTotalParameters**(`value`, `computedTotal?`): `number` \| `undefined`
+
+Reads the `total_parameters` shortcut from the header/index metadata. It's self-reported and
+the Hub displays it verbatim, bypassing the header validation above — so cap it at the
+computed count when we have one (a no-op for well-formed files, where the two agree).
+
+#### Parameters[[parsetotalparameters.parameters]]
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `undefined` \| `string` \| `number` |
+| `computedTotal?` | `number` |
+
+#### Returns[[parsetotalparameters.returns]]
+
+`number` \| `undefined`
+
+#### Defined in[[parsetotalparameters.defined-in]]
+
+[packages/hub/src/lib/parse-safetensors-metadata.ts:483](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L483)
 
 ___
 
@@ -2270,6 +2351,34 @@ Set useWebWorkers to true in order to have progress events for hashing for model
 #### Defined in[[uploadfileswithprogress.defined-in]]
 
 [packages/hub/src/lib/upload-files-with-progress.ts:20](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/upload-files-with-progress.ts#L20)
+
+___
+
+### validateTensorEntry
+
+▸ **validateTensorEntry**(`path`, `tensorName`, `info`, `fileSizeBytes`): `void`
+
+Validates one tensor entry from a header: dims are finite integers under `MAX_TENSOR_DIM`,
+`data_offsets` are sane, and — when the file size is known — the declared byte span fits in
+the file. `data_offsets` is checked rather than `shape * dtype size` because the two may
+legitimately disagree (padding), so offsets are the only ground truth the format gives us.
+
+#### Parameters[[validatetensorentry.parameters]]
+
+| Name | Type |
+| :------ | :------ |
+| `path` | `string` |
+| `tensorName` | `string` |
+| `info` | [`TensorInfo`](interfaces/TensorInfo) |
+| `fileSizeBytes` | `undefined` \| `number` |
+
+#### Returns[[validatetensorentry.returns]]
+
+`void`
+
+#### Defined in[[validatetensorentry.defined-in]]
+
+[packages/hub/src/lib/parse-safetensors-metadata.ts:201](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L201)
 
 ___
 

@@ -1,6 +1,6 @@
 # Fine-tune and deploy embedding models with Amazon SageMaker
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
 Embedding models are crucial for successful RAG applications, but they're often trained on general knowledge, which limits their effectiveness for company or domain specific adoption. Customizing embedding for your domain specific data can significantly boost the retrieval performance of your RAG Application. With the new release of [Sentence Transformers 3](https://huggingface.co/blog/train-sentence-transformers) and the [Hugging Face Embedding Container](https://huggingface.co/blog/sagemaker-huggingface-embedding), it's easier than ever to fine-tune and deploy embedding models.
 

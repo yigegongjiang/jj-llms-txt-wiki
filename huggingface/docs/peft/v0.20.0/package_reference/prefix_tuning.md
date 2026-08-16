@@ -97,16 +97,37 @@ As a guideline:
 
 ## PrefixTuningConfig[[peft.PrefixTuningConfig]]
 
-- **init_weights** (`Optional[str]`) -- If not set, weights are initialized at random, if set to "zero"
-  the weights are initialized so that the activations will be a no-op (zero).
-- **encoder_hidden_size** (`int`) -- The hidden size of the prompt encoder.
-- **prefix_projection** (`bool`) -- Whether to project the prefix embeddings.
+#### peft.PrefixTuningConfig[[peft.PrefixTuningConfig]]
+
+```python
+peft.PrefixTuningConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, num_virtual_tokens: int = None, token_dim: int = None, num_transformer_submodules: Optional[int] = None, num_attention_heads: Optional[int] = None, num_layers: Optional[int] = None, modules_to_save: Optional[list[str]] = None, init_weights: typing.Optional[typing.Literal['zero']] = None, encoder_hidden_size: int = None, prefix_projection: bool = False)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/prefix_tuning/config.py#L23)
+
+**Parameters:**
+
+init_weights (`Optional[str]`) : If not set, weights are initialized at random, if set to "zero" the weights are initialized so that the activations will be a no-op (zero).
+
+encoder_hidden_size (`int`) : The hidden size of the prompt encoder.
+
+prefix_projection (`bool`) : Whether to project the prefix embeddings.
 
 This is the configuration class to store the configuration of a [PrefixEncoder](/docs/peft/v0.20.0/en/package_reference/prefix_tuning#peft.PrefixEncoder).
 
 ## PrefixEncoder[[peft.PrefixEncoder]]
 
-- **config** ([PrefixTuningConfig](/docs/peft/v0.20.0/en/package_reference/prefix_tuning#peft.PrefixTuningConfig)) -- The configuration of the prefix encoder.
+#### peft.PrefixEncoder[[peft.PrefixEncoder]]
+
+```python
+peft.PrefixEncoder(config)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/prefix_tuning/model.py#L20)
+
+**Parameters:**
+
+config ([PrefixTuningConfig](/docs/peft/v0.20.0/en/package_reference/prefix_tuning#peft.PrefixTuningConfig)) : The configuration of the prefix encoder.
 
 The `torch.nn` model to encode the prefix.
 
@@ -137,6 +158,14 @@ Example:
 Input shape: (`batch_size`, `num_virtual_tokens`)
 
 Output shape: (`batch_size`, `num_virtual_tokens`, `2*layers*hidden`)
+
+#### load_prompt_embeddings[[peft.PrefixEncoder.load_prompt_embeddings]]
+
+```python
+load_prompt_embeddings(prompt_embeddings: Tensor)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/prefix_tuning/model.py#L89)
 
 Load the flattened prompt embeddings saved by PEFT (`prompt_embeddings`).
 

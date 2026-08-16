@@ -39,52 +39,92 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             text-generation(OVModelForCausalLM)
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m TinyLlama/TinyLlama-1.1B-Chat-v1.0 --weight-format int8 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForCausalLM.from_pretrained(\'TinyLlama/TinyLlama-1.1B-Chat-v1.0\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m TinyLlama/TinyLlama-1.1B-Chat-v1.0 --weight-format int4 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForCausalLM.from_pretrained(\'TinyLlama/TinyLlama-1.1B-Chat-v1.0\', quantization_config=OVWeightQuantizationConfig(bits=4, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             -
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m TinyLlama/TinyLlama-1.1B-Chat-v1.0 --quant-mode int8 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForCausalLM.from_pretrained(\'TinyLlama/TinyLlama-1.1B-Chat-v1.0\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m TinyLlama/TinyLlama-1.1B-Chat-v1.0 --quant-mode cb4_f8e4m3 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForCausalLM.from_pretrained(\'TinyLlama/TinyLlama-1.1B-Chat-v1.0\', quantization_config=OVMixedQuantizationConfig(OVWeightQuantizationConfig(bits=4, dtype=\'cb4\'), OVQuantizationConfig(dtype=\'f8e4m3\', dataset=\'wikitext2\'))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -92,40 +132,70 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             image-text-to-text(OVModelForVisualCausalLM)
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino --task image-text-to-text -m OpenGVLab/InternVL2-1B --trust-remote-code --weight-format int4 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForVisualCausalLM.from_pretrained(\'OpenGVLab/InternVL2-1B\', trust_remote_code=True, quantization_config=OVWeightQuantizationConfig(bits=4)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino --task image-text-to-text -m OpenGVLab/InternVL2-1B --trust-remote-code --weight-format int4 --dataset textvqa ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForVisualCausalLM.from_pretrained(\'OpenGVLab/InternVL2-1B\', trust_remote_code=True, quantization_config=OVWeightQuantizationConfig(bits=4, dataset=\'textvqa\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             –
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino --task image-text-to-text -m OpenGVLab/InternVL2-1B --trust-remote-code --quant-mode int8 --dataset textvqa ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForVisualCausalLM.from_pretrained(\'OpenGVLab/InternVL2-1B\', trust_remote_code=True, quantization_config=OVQuantizationConfig(bits=8, dataset=\'textvqa\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -135,40 +205,70 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             text-to-image, text-to-video(OVDiffusionPipeline)
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m dreamlike-art/dreamlike-anime-1.0 --weight-format int8 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVDiffusionPipeline.from_pretrained(\'dreamlike-art/dreamlike-anime-1.0\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             –
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m dreamlike-art/dreamlike-anime-1.0 --weight-format int8 --dataset conceptual_captions ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVDiffusionPipeline.from_pretrained(\'dreamlike-art/dreamlike-anime-1.0\', quantization_config=OVWeightQuantizationConfig(bits=8, quant_method=\'hybrid\', dataset=\'conceptual_captions\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m dreamlike-art/dreamlike-anime-1.0 --quant-mode int8 --dataset conceptual_captions ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVDiffusionPipeline.from_pretrained(\'dreamlike-art/dreamlike-anime-1.0\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'conceptual_captions\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -184,14 +284,24 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
             –
             –
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m openai/whisper-large-v3-turbo --quant-mode int8 --dataset librispeech --num-samples 10 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForSpeechSeq2Seq.from_pretrained(\'openai/whisper-large-v3-turbo\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'librispeech\', num_samples=10)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -201,52 +311,92 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             feature-extraction(OVModelForFeatureExtraction)
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m microsoft/codebert-base --weight-format int8 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForFeatureExtraction.from_pretrained(\'microsoft/codebert-base\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m microsoft/codebert-base --weight-format int4 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForFeatureExtraction.from_pretrained(\'microsoft/codebert-base\', quantization_config=OVWeightQuantizationConfig(bits=4, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             -
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m microsoft/codebert-base --quant-mode int8 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForFeatureExtraction.from_pretrained(\'microsoft/codebert-base\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m microsoft/codebert-base --quant-mode cb4_f8e4m3 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForFeatureExtraction.from_pretrained(\'microsoft/codebert-base\', quantization_config=OVMixedQuantizationConfig(OVWeightQuantizationConfig(bits=4, dtype=\'cb4\'), OVQuantizationConfig(dtype=\'f8e4m3\', dataset=\'wikitext2\'))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -254,52 +404,92 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             feature-extraction(OVSentenceTransformer)
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino --library sentence_transformers -m sentence-transformers/all-mpnet-base-v2 --weight-format int8 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVSentenceTransformer.from_pretrained(\'sentence-transformers/all-mpnet-base-v2\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino --library sentence_transformers -m sentence-transformers/all-mpnet-base-v2 --weight-format int4 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVSentenceTransformer.from_pretrained(\'sentence-transformers/all-mpnet-base-v2\', quantization_config=OVWeightQuantizationConfig(bits=4, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             -
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino --library sentence_transformers -m sentence-transformers/all-mpnet-base-v2 --quant-mode int8 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVSentenceTransformer.from_pretrained(\'sentence-transformers/all-mpnet-base-v2\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino --library sentence_transformers -m sentence-transformers/all-mpnet-base-v2 --quant-mode cb4_f8e4m3 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVSentenceTransformer.from_pretrained(\'sentence-transformers/all-mpnet-base-v2\', quantization_config=OVMixedQuantizationConfig(OVWeightQuantizationConfig(bits=4, dtype=\'cb4\'), OVQuantizationConfig(dtype=\'f8e4m3\', dataset=\'wikitext2\'))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -307,52 +497,92 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             fill-mask(OVModelForMaskedLM)
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m FacebookAI/roberta-base --weight-format int8 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForMaskedLM.from_pretrained(\'FacebookAI/roberta-base\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m FacebookAI/roberta-base --weight-format int4 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForMaskedLM.from_pretrained(\'FacebookAI/roberta-base\', quantization_config=OVWeightQuantizationConfig(bits=4, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             -
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m FacebookAI/roberta-base --quant-mode int8 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForMaskedLM.from_pretrained(\'FacebookAI/roberta-base\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m FacebookAI/roberta-base --quant-mode cb4_f8e4m3 --dataset wikitext2 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForMaskedLM.from_pretrained(\'FacebookAI/roberta-base\', quantization_config=OVMixedQuantizationConfig(OVWeightQuantizationConfig(bits=4, dtype=\'cb4\'), OVQuantizationConfig(dtype=\'f8e4m3\', dataset=\'wikitext2\'))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -360,44 +590,52 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             text2text-generation(OVModelForSeq2SeqLM)
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('optimum-cli export openvino -m google-t5/t5-small --weight-format int8 ./save_dir')}}>
                     ✅
                 
             
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('OVModelForSeq2SeqLM.from_pretrained(\'google-t5/t5-small\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')')}}>
                     ✅
                 
             
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('optimum-cli export openvino -m google-t5/t5-small --weight-format int4 --dataset wikitext2 ./save_dir')}}>
                     ✅
                 
             
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('OVModelForSeq2SeqLM.from_pretrained(\'google-t5/t5-small\', quantization_config=OVWeightQuantizationConfig(bits=4, dataset=\'wikitext2\')).save_pretrained(\'save_dir\')')}}>
                     ✅
                 
             
             –
             -
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('optimum-cli export openvino -m google-t5/t5-small --quant-mode int8 --dataset wikitext2 --smooth-quant-alpha -1 ./save_dir')}}>
                     ✅
                 
             
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('OVModelForSeq2SeqLM.from_pretrained(\'google-t5/t5-small\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'wikitext2\', smooth_quant_alpha=-1)).save_pretrained(\'save_dir\')')}}>
                     ✅
                 
             
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('optimum-cli export openvino -m google-t5/t5-small --quant-mode cb4_f8e4m3 --dataset wikitext2 --smooth-quant-alpha -1 ./save_dir')}}>
                     ✅
                 
             
             
-                
+                <button
+                    onclick={() => {navigator.clipboard.writeText('OVModelForSeq2SeqLM.from_pretrained(\'google-t5/t5-small\', quantization_config=OVMixedQuantizationConfig(OVWeightQuantizationConfig(bits=4, dtype=\'cb4\'), OVQuantizationConfig(dtype=\'f8e4m3\', dataset=\'wikitext2\', smooth_quant_alpha=-1))).save_pretrained(\'save_dir\')')}}>
                     ✅
                 
             
@@ -405,52 +643,92 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
         
             zero-shot-image-classification(OVModelForZeroShotImageClassification)
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m openai/clip-vit-base-patch16 --weight-format int8 ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForZeroShotImageClassification.from_pretrained(\'openai/clip-vit-base-patch16\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m openai/clip-vit-base-patch16 --weight-format int4 --dataset conceptual_captions ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForZeroShotImageClassification.from_pretrained(\'openai/clip-vit-base-patch16\', quantization_config=OVWeightQuantizationConfig(bits=4, dataset=\'conceptual_captions\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             -
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m openai/clip-vit-base-patch16 --quant-mode int8 --dataset conceptual_captions ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForZeroShotImageClassification.from_pretrained(\'openai/clip-vit-base-patch16\', quantization_config=OVQuantizationConfig(bits=8, dataset=\'conceptual_captions\')).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m openai/clip-vit-base-patch16 --quant-mode cb4_f8e4m3 --dataset conceptual_captions ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForZeroShotImageClassification.from_pretrained(\'openai/clip-vit-base-patch16\', quantization_config=OVMixedQuantizationConfig(OVWeightQuantizationConfig(bits=4, dtype=\'cb4\'), OVQuantizationConfig(dtype=\'f8e4m3\', dataset=\'conceptual_captions\'))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -459,29 +737,49 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
             feature-extraction(OVSamModel)
             –
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVSamModel.from_pretrained(\'facebook/sam-vit-base\', quantization_config=OVPipelineQuantizationConfig(quantization_configs=dict(vision_encoder=OVWeightQuantizationConfig(bits=8)))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVSamModel.from_pretrained(\'facebook/sam-vit-base\', quantization_config=OVPipelineQuantizationConfig(quantization_configs=dict(vision_encoder=OVWeightQuantizationConfig(bits=4, dataset=\'coco\')))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             –
             -
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('optimum-cli export openvino -m facebook/sam-vit-base --quant-mode int8 --dataset coco ./save_dir');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVSamModel.from_pretrained(\'facebook/sam-vit-base\', quantization_config=OVPipelineQuantizationConfig(quantization_configs=dict(vision_encoder=OVQuantizationConfig(bits=8, dataset=\'coco\')))).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -492,8 +790,13 @@ Click on a ✅ to copy the command/code for the corresponding optimization case.
             text-to-audio(OVModelForTextToSpeechSeq2Seq)
             ✅
             
-                m.style.display='none', 2000);
-                ">
+                 {
+                    navigator.clipboard.writeText('OVModelForTextToSpeechSeq2Seq.from_pretrained(\'microsoft/speecht5_tts\', vocoder=\'microsoft/speecht5_hifigan\', quantization_config=OVWeightQuantizationConfig(bits=8)).save_pretrained(\'save_dir\')');
+                    let m=document.getElementById('copyMsg');
+                    m.style.display='block';
+                    clearTimeout(window._copyTimeout);
+                    window._copyTimeout=setTimeout(()=>m.style.display='none', 2000);
+                }}>
                     ✅
                 
             
@@ -739,7 +1042,7 @@ model = OVModelForVisualCausalLM.from_pretrained(
             "lm_model": OVQuantizationConfig(bits=8),
             "text_embeddings_model": OVWeightQuantizationConfig(bits=8),
         },
-        dataset="contextual",
+        dataset="textvqa",
     )
 )
 ```

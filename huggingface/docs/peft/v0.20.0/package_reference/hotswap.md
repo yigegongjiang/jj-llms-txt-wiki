@@ -69,16 +69,26 @@ Hotswapping works with transformers models and diffusers models. However, there 
 
 ## API[[peft.utils.hotswap.hotswap_adapter]]
 
-- **model** ([~PeftModel](/docs/peft/v0.20.0/en/package_reference/peft_model#peft.PeftModel)) --
-  The PEFT model with the loaded adapter.
-- **model_name_or_path** (`str`) --
-  The name or path of the model to load the new adapter from.
-- **adapter_name** (`str`) --
-  The name of the adapter to swap, e.g. `"default"`. The name will stay the same after swapping.
-- **torch_device** -- (`str`, *optional*, defaults to None):
-  The device to load the new adapter onto.
-- ****kwargs** (`optional`) --
-  Additional keyword arguments used for loading the config and weights.
+#### peft.utils.hotswap.hotswap_adapter[[peft.utils.hotswap.hotswap_adapter]]
+
+```python
+peft.utils.hotswap.hotswap_adapter(model, model_name_or_path, adapter_name, torch_device = None, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/utils/hotswap.py#L613)
+
+**Parameters:**
+
+model ([~PeftModel](/docs/peft/v0.20.0/en/package_reference/peft_model#peft.PeftModel)) : The PEFT model with the loaded adapter.
+
+model_name_or_path (`str`) : The name or path of the model to load the new adapter from.
+
+adapter_name (`str`) : The name of the adapter to swap, e.g. `"default"`. The name will stay the same after swapping.
+
+torch_device : (`str`, *optional*, defaults to None): The device to load the new adapter onto.
+
+- ****kwargs** (`optional`) : Additional keyword arguments used for loading the config and weights.
+
 Substitute old adapter data with new adapter data, keeping the rest the same.
 
 As of now, only LoRA is supported.
@@ -114,19 +124,30 @@ Example:
 ...     output_adapter_1 = model(inputs).logits
 ```
 
-- **model** (`nn.Module`) --
-  The model with the loaded adapter.
-- **state_dict** (`dict[str, torch.Tensor]`) --
-  The state dict of the new adapter, which needs to be compatible (targeting same modules etc.).
-- **adapter_name** (`str`) --
-  The name of the adapter that should be hot-swapped, e.g. `"default"`. The name will remain the same after
-  swapping.
-- **config** (`LoraConfig`) --
-  The config of the LoRA adapter. This is used to determine the scaling and rank of the adapter.
-- **parameter_prefix** (`str`, *optional*, defaults to `"lora_"`) --
-  The prefix used to identify the adapter's keys in the state dict. For LoRA, this would be `"lora_"` (the
-  default).- ``RuntimeError`` -- 
-  If the old and the new adapter are not compatible, a RuntimeError is raised.``RuntimeError``
+#### peft.utils.hotswap.hotswap_adapter_from_state_dict[[peft.utils.hotswap.hotswap_adapter_from_state_dict]]
+
+```python
+peft.utils.hotswap.hotswap_adapter_from_state_dict(model: torch.nn.Module, state_dict: dict[str, torch.Tensor], adapter_name: str, config: LoraConfig, parameter_prefix: str = 'lora_')
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/utils/hotswap.py#L419)
+
+**Parameters:**
+
+model (`nn.Module`) : The model with the loaded adapter.
+
+state_dict (`dict[str, torch.Tensor]`) : The state dict of the new adapter, which needs to be compatible (targeting same modules etc.).
+
+adapter_name (`str`) : The name of the adapter that should be hot-swapped, e.g. `"default"`. The name will remain the same after swapping.
+
+config (`LoraConfig`) : The config of the LoRA adapter. This is used to determine the scaling and rank of the adapter.
+
+parameter_prefix (`str`, *optional*, defaults to `"lora_"`) : The prefix used to identify the adapter's keys in the state dict. For LoRA, this would be `"lora_"` (the default).
+
+**Raises:** ``RuntimeError``
+
+- ``RuntimeError`` -- 
+  If the old and the new adapter are not compatible, a RuntimeError is raised.
 
 Swap out the adapter weights from the model with the weights from state_dict.
 

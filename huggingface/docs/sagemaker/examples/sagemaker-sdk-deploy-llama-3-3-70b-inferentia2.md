@@ -1,6 +1,6 @@
 # Deploy Llama 3.3 70B on AWS Inferentia2
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
 In this tutorial you will learn how to deploy [/meta-llama/Llama-3.3-70B-Instruct](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) model on AWS Inferentia2 with Hugging Face Optimum on Amazon SageMaker. We are going to use the Hugging Face TGI Neuron Container, a purpose-built Inference Container to easily deploy LLMs on AWS Inferentia2 powered by[ Text Generation Inference](https://huggingface.co/docs/text-generation-inference/index) and [Optimum Neuron](https://huggingface.co/docs/optimum-neuron/index).
 

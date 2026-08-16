@@ -1,6 +1,6 @@
 # Batch-embed a corpus with SageMaker asynchronous inference
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
 ## What asynchronous inference is
 

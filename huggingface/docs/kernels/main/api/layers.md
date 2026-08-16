@@ -4,8 +4,21 @@
 
 ### use_kernel_forward_from_hub[[kernels.use_kernel_forward_from_hub]]
 
-- **layer_name** (`str`) --
-  The name of the layer to use for kernel lookup in registered mappings.`Callable`A decorator function that can be applied to layer classes.
+#### kernels.use_kernel_forward_from_hub[[kernels.use_kernel_forward_from_hub]]
+
+```python
+kernels.use_kernel_forward_from_hub(layer_name: str)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L272)
+
+**Parameters:**
+
+layer_name (`str`) : The name of the layer to use for kernel lookup in registered mappings.
+
+**Returns:** `Callable`
+
+A decorator function that can be applied to layer classes.
 
 Decorator factory that makes a layer extensible using the specified layer name.
 
@@ -57,8 +70,21 @@ class LayerUsingIdentity(nn.Module):
 
 ### use_kernel_func_from_hub[[kernels.use_kernel_func_from_hub]]
 
-- **func_name** (`str`) --
-  The name of the function name to use for kernel lookup in registered mappings.`Callable`A decorator function that can be applied to layer classes.
+#### kernels.use_kernel_func_from_hub[[kernels.use_kernel_func_from_hub]]
+
+```python
+kernels.use_kernel_func_from_hub(func_name: str)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L198)
+
+**Parameters:**
+
+func_name (`str`) : The name of the function name to use for kernel lookup in registered mappings.
+
+**Returns:** `Callable`
+
+A decorator function that can be applied to layer classes.
 
 Decorator that makes a function extensible using the specified function name.
 
@@ -103,8 +129,21 @@ model = MyModel()
 
 ### use_kernelized_func[[kernels.use_kernelized_func]]
 
-- ***args** (`Callable`) --
-  Kernel functions to attach to the module.`Callable`A decorator function that can be applied to modules.
+#### kernels.use_kernelized_func[[kernels.use_kernelized_func]]
+
+```python
+kernels.use_kernelized_func(*args: Callable)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L344)
+
+**Parameters:**
+
+- ***args** (`Callable`) : Kernel functions to attach to the module.
+
+**Returns:** `Callable`
+
+A decorator function that can be applied to modules.
 
 This decorator attaches the target function within the module as a plain
 attribute (not as a submodule). This makes the function visible to
@@ -138,6 +177,14 @@ model = LayerUsingIdentity()
 
 ### replace_kernel_forward_from_hub[[kernels.replace_kernel_forward_from_hub]]
 
+#### kernels.replace_kernel_forward_from_hub[[kernels.replace_kernel_forward_from_hub]]
+
+```python
+kernels.replace_kernel_forward_from_hub(layer_name: str)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L249)
+
 Function that prepares a layer class to use kernels from the Hugging Face Hub.
 
 It is recommended to use [use_kernel_forward_from_hub()](/docs/kernels/main/en/api/layers#kernels.use_kernel_forward_from_hub) decorator instead.
@@ -157,11 +204,23 @@ replace_kernel_forward_from_hub(nn.LayerNorm, "LayerNorm")
 
 ### use_kernel_mapping[[kernels.use_kernel_mapping]]
 
-- **mapping** (`dict[str, dict[Union[Device, str], Union[LayerRepositoryProtocol, dict[Mode, LayerRepositoryProtocol]]]]`) --
-  The kernel mapping to apply. Maps layer names to device-specific kernel configurations.
-- **inherit_mapping** (`bool`, *optional*, defaults to `True`) --
-  When `True`, the current mapping will be extended by `mapping` inside the context. When `False`,
-  only `mapping` is used inside the context.Context manager that handles the temporary kernel mapping.
+#### kernels.use_kernel_mapping[[kernels.use_kernel_mapping]]
+
+```python
+kernels.use_kernel_mapping(mapping: dict[str, dict[Device | str, RepositoryProtocol | dict[Mode, RepositoryProtocol]]], inherit_mapping: bool = True)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L17)
+
+**Parameters:**
+
+mapping (`dict[str, dict[Union[Device, str], Union[LayerRepositoryProtocol, dict[Mode, LayerRepositoryProtocol]]]]`) : The kernel mapping to apply. Maps layer names to device-specific kernel configurations.
+
+inherit_mapping (`bool`, *optional*, defaults to `True`) : When `True`, the current mapping will be extended by `mapping` inside the context. When `False`, only `mapping` is used inside the context.
+
+**Returns:**
+
+Context manager that handles the temporary kernel mapping.
 
 Context manager that sets a kernel mapping for the duration of the context.
 
@@ -207,12 +266,19 @@ with use_kernel_mapping(mapping):
 
 ### register_kernel_mapping[[kernels.register_kernel_mapping]]
 
-- **mapping** (`dict[str, dict[Union[Device, str], Union[RepositoryProtocol, dict[Mode, RepositoryProtocol]]]]`) --
-  The kernel mapping to register globally. Maps layer names to device-specific kernels.
-  The mapping can specify different kernels for different modes (training, inference, etc.).
-- **inherit_mapping** (`bool`, *optional*, defaults to `True`) --
-  When `True`, the current mapping will be extended by `mapping`. When `False`, the existing mappings
-  are erased before adding `mapping`.
+#### kernels.register_kernel_mapping[[kernels.register_kernel_mapping]]
+
+```python
+kernels.register_kernel_mapping(mapping: dict[str, dict[Device | str, RepositoryProtocol | dict[Mode, RepositoryProtocol]]], inherit_mapping: bool = True)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L97)
+
+**Parameters:**
+
+mapping (`dict[str, dict[Union[Device, str], Union[RepositoryProtocol, dict[Mode, RepositoryProtocol]]]]`) : The kernel mapping to register globally. Maps layer names to device-specific kernels. The mapping can specify different kernels for different modes (training, inference, etc.).
+
+inherit_mapping (`bool`, *optional*, defaults to `True`) : When `True`, the current mapping will be extended by `mapping`. When `False`, the existing mappings are erased before adding `mapping`.
 
 Register a global mapping between layer names and their corresponding kernel implementations.
 
@@ -259,17 +325,27 @@ register_kernel_mapping(advanced_mapping)
 
 ### kernelize[[kernels.kernelize]]
 
-- **model** (`nn.Module`) --
-  The PyTorch model to kernelize.
-- **mode** ([Mode](/docs/kernels/main/en/api/layers#kernels.Mode)) -- The mode that the kernel is going to be used in. For example,
-  `Mode.TRAINING | Mode.TORCH_COMPILE` kernelizes the model for training with
-  `torch.compile`.
-- **device** (`Union[str, torch.device]`, *optional*) --
-  The device type to load kernels for. Supported device types are: "cuda", "mps", "npu", "rocm", "xpu".
-  The device type will be inferred from the model parameters when not provided.
-- **use_fallback** (`bool`, *optional*, defaults to `True`) --
-  Whether to use the original forward method of modules when no compatible kernel could be found.
-  If set to `False`, an exception will be raised in such cases.`nn.Module`The kernelized model with optimized kernel implementations.
+#### kernels.kernelize[[kernels.kernelize]]
+
+```python
+kernels.kernelize(model: 'nn.Module', mode: Mode, device: str | 'torch.device' | None = None, use_fallback: bool = True)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L175)
+
+**Parameters:**
+
+model (`nn.Module`) : The PyTorch model to kernelize.
+
+mode ([Mode](/docs/kernels/main/en/api/layers#kernels.Mode)) : The mode that the kernel is going to be used in. For example, `Mode.TRAINING | Mode.TORCH_COMPILE` kernelizes the model for training with `torch.compile`.
+
+device (`Union[str, torch.device]`, *optional*) : The device type to load kernels for. Supported device types are: "cuda", "mps", "npu", "rocm", "tpu", "xpu". The device type will be inferred from the model parameters when not provided.
+
+use_fallback (`bool`, *optional*, defaults to `True`) : Whether to use the original forward method of modules when no compatible kernel could be found. If set to `False`, an exception will be raised in such cases.
+
+**Returns:** `nn.Module`
+
+The kernelized model with optimized kernel implementations.
 
 Replace layer forward methods with optimized kernel implementations.
 
@@ -315,10 +391,19 @@ with use_kernel_mapping(mapping):
 
 ### Device[[kernels.Device]]
 
-- **type** (`str`) --
-  The device type (e.g., "cuda", "mps", "npu", "rocm", "xpu").
-- **properties** ([CUDAProperties](/docs/kernels/main/en/api/layers#kernels.CUDAProperties), *optional*) --
-  Device-specific properties. Currently only [CUDAProperties](/docs/kernels/main/en/api/layers#kernels.CUDAProperties) is supported for CUDA devices.
+#### kernels.Device[[kernels.Device]]
+
+```python
+kernels.Device(type: str, properties: kernels.layer.device.CUDAProperties | kernels.layer.device.ROCMProperties | None = None)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/device.py#L106)
+
+**Parameters:**
+
+type (`str`) : The device type (e.g., "cuda", "mps", "npu", "rocm", "xpu").
+
+properties ([CUDAProperties](/docs/kernels/main/en/api/layers#kernels.CUDAProperties), *optional*) : Device-specific properties. Currently only [CUDAProperties](/docs/kernels/main/en/api/layers#kernels.CUDAProperties) is supported for CUDA devices.
 
 Represents a compute device with optional properties.
 
@@ -348,14 +433,31 @@ xpu_device = Device(type="xpu")
 npu_device = Device(type="npu")
 ```
 
+#### validate[[kernels.Device.validate]]
+
+```python
+validate()
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/huggingface_hub/dataclasses.py#L247)
+
 Run class validators on the instance.
 
 ### CUDAProperties[[kernels.CUDAProperties]]
 
-- **min_capability** (`int`) --
-  Minimum CUDA compute capability required (e.g., 75 for compute capability 7.5).
-- **max_capability** (`int`) --
-  Maximum CUDA compute capability supported (e.g., 90 for compute capability 9.0).
+#### kernels.CUDAProperties[[kernels.CUDAProperties]]
+
+```python
+kernels.CUDAProperties(min_capability: int, max_capability: int)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/device.py#L8)
+
+**Parameters:**
+
+min_capability (`int`) : Minimum CUDA compute capability required (e.g., 75 for compute capability 7.5).
+
+max_capability (`int`) : Maximum CUDA compute capability supported (e.g., 90 for compute capability 9.0).
 
 CUDA-specific device properties for capability-based kernel selection.
 
@@ -377,14 +479,31 @@ Note:
 CUDA compute capabilities are represented as integers where the major and minor versions are concatenated.
 For example, compute capability 7.5 is represented as 75, and 8.6 is represented as 86.
 
+#### validate[[kernels.CUDAProperties.validate]]
+
+```python
+validate()
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/huggingface_hub/dataclasses.py#L247)
+
 Run class validators on the instance.
 
 ### ROCMProperties[[kernels.ROCMProperties]]
 
-- **min_capability** (`int`) --
-  Minimum ROCM compute capability required (e.g., 75 for compute capability 7.5).
-- **max_capability** (`int`) --
-  Maximum ROCM compute capability supported (e.g., 90 for compute capability 9.0).
+#### kernels.ROCMProperties[[kernels.ROCMProperties]]
+
+```python
+kernels.ROCMProperties(min_capability: int, max_capability: int)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/device.py#L57)
+
+**Parameters:**
+
+min_capability (`int`) : Minimum ROCM compute capability required (e.g., 75 for compute capability 7.5).
+
+max_capability (`int`) : Maximum ROCM compute capability supported (e.g., 90 for compute capability 9.0).
 
 ROCM-specific device properties for capability-based kernel selection.
 
@@ -406,14 +525,35 @@ Note:
 ROCM compute capabilities are represented as integers where the major and minor versions are concatenated.
 For example, compute capability 7.5 is represented as 75, and 8.6 is represented as 86.
 
+#### validate[[kernels.ROCMProperties.validate]]
+
+```python
+validate()
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/huggingface_hub/dataclasses.py#L247)
+
 Run class validators on the instance.
 
 ### Mode[[kernels.Mode]]
 
-- **INFERENCE** -- The kernel is used for inference.
-- **TRAINING** -- The kernel is used for training.
-- **TORCH_COMPILE** -- The kernel is used with `torch.compile`.
-- **FALLBACK** -- In a kernel mapping, this kernel is used when no other mode matches.
+#### kernels.Mode[[kernels.Mode]]
+
+```python
+kernels.Mode(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/mode.py#L4)
+
+**Parameters:**
+
+INFERENCE : The kernel is used for inference.
+
+TRAINING : The kernel is used for training.
+
+TORCH_COMPILE : The kernel is used with `torch.compile`.
+
+FALLBACK : In a kernel mapping, this kernel is used when no other mode matches.
 
 Kernelize mode
 
@@ -426,15 +566,23 @@ are used for inference *with* `torch.compile`.
 
 ### FuncRepository[[kernels.FuncRepository]]
 
-- **repo_id** (`str`) --
-  The Hub repository containing the layer.
-- **func_name** (`str`) --
-  The name of the function within the kernel repository.
-- **revision** (`str`, *optional*) --
-  The specific revision (branch, tag, or commit) to download. Cannot be used together with `version`.
-- **version** (`int`, *optional*) --
-  The kernel version to download. Cannot be used together with `revision`.
-  Either `version` or `revision` must be specified.
+#### kernels.FuncRepository[[kernels.FuncRepository]]
+
+```python
+kernels.FuncRepository(repo_id: str, func_name: str, revision: str | None = None, version: int | None = None, trust_remote_code: bool | list[str] = False)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L28)
+
+**Parameters:**
+
+repo_id (`str`) : The Hub repository containing the layer.
+
+func_name (`str`) : The name of the function within the kernel repository.
+
+revision (`str`, *optional*) : The specific revision (branch, tag, or commit) to download. Cannot be used together with `version`.
+
+version (`int`, *optional*) : The kernel version to download. Cannot be used together with `revision`. Either `version` or `revision` must be specified.
 
 Repository and name of a function for kernel mapping.
 
@@ -463,19 +611,25 @@ layer_repo_versioned = FuncRepository(
 
 ### LayerRepository[[kernels.LayerRepository]]
 
-- **repo_id** (`str`) --
-  The Hub repository containing the layer.
-- **layer_name** (`str`) --
-  The name of the layer within the kernel repository.
-- **revision** (`str`, *optional*) --
-  The specific revision (branch, tag, or commit) to download. Cannot be used together with `version`.
-- **version** (`int`, *optional*) --
-  The kernel version to download. Cannot be used together with `revision`.
-  Either `version` or `revision` must be specified.
-- **trust_remote_code** (`bool | list[str]`, *optional*, defaults to `False`) --
-  Whether to allow loading kernels from untrusted organisations. A list
-  of signing identities can be provided for future verification support;
-  until then it warns and falls back to the default trust check.
+#### kernels.LayerRepository[[kernels.LayerRepository]]
+
+```python
+kernels.LayerRepository(repo_id: str, layer_name: str, revision: str | None = None, version: int | None = None, trust_remote_code: bool | list[str] = False)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L35)
+
+**Parameters:**
+
+repo_id (`str`) : The Hub repository containing the layer.
+
+layer_name (`str`) : The name of the layer within the kernel repository.
+
+revision (`str`, *optional*) : The specific revision (branch, tag, or commit) to download. Cannot be used together with `version`.
+
+version (`int`, *optional*) : The kernel version to download. Cannot be used together with `revision`. Either `version` or `revision` must be specified.
+
+trust_remote_code (`bool | list[str]`, *optional*, defaults to `False`) : Whether to allow loading kernels from untrusted organisations. A list of signing identities can be provided for future verification support; until then it warns and falls back to the default trust check.
 
 Repository and name of a layer for kernel mapping.
 
@@ -493,10 +647,19 @@ layer_repo = LayerRepository(
 
 ### LocalFuncRepository[[kernels.LocalFuncRepository]]
 
-- **repo_path** (`Path`) --
-  The local repository containing the layer.
-- **func_name** (`str`) --
-  The name of the function within the kernel repository.
+#### kernels.LocalFuncRepository[[kernels.LocalFuncRepository]]
+
+```python
+kernels.LocalFuncRepository(repo_path: Path, func_name: str)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L137)
+
+**Parameters:**
+
+repo_path (`Path`) : The local repository containing the layer.
+
+func_name (`str`) : The name of the function within the kernel repository.
 
 Repository and function name from a local directory for kernel mapping.
 
@@ -519,10 +682,19 @@ layer_repo = LocalFuncRepository(
 
 ### LocalLayerRepository[[kernels.LocalLayerRepository]]
 
-- **repo_path** (`Path`) --
-  The local repository containing the layer.
-- **layer_name** (`str`) --
-  The name of the layer within the kernel repository.
+#### kernels.LocalLayerRepository[[kernels.LocalLayerRepository]]
+
+```python
+kernels.LocalLayerRepository(repo_path: Path, layer_name: str)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L131)
+
+**Parameters:**
+
+repo_path (`Path`) : The local repository containing the layer.
+
+layer_name (`str`) : The name of the layer within the kernel repository.
 
 Repository from a local directory for kernel mapping.
 
@@ -541,12 +713,23 @@ layer_repo = LocalLayerRepository(
 
 ### LockedFuncRepository[[kernels.LockedFuncRepository]]
 
-- **repo_id** (`str`) -- The Hub repository containing the function.
-- **lockfile** (`Path`, *optional*) -- Path to the lockfile. If not provided,
-  the lockfile will be inferred from the caller's context.
-- **func_name** (`str`) -- The name of the function within the kernel repository.
-- **trust_remote_code** (`bool`, *optional*, defaults to `False`) --
-  Whether to allow loading kernels from untrusted organisations.
+#### kernels.LockedFuncRepository[[kernels.LockedFuncRepository]]
+
+```python
+kernels.LockedFuncRepository(repo_id: str, lockfile: pathlib.Path | None = None, func_name: str, trust_remote_code: bool | list[str] = False)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L257)
+
+**Parameters:**
+
+repo_id (`str`) : The Hub repository containing the function.
+
+lockfile (`Path`, *optional*) : Path to the lockfile. If not provided, the lockfile will be inferred from the caller's context.
+
+func_name (`str`) : The name of the function within the kernel repository.
+
+trust_remote_code (`bool`, *optional*, defaults to `False`) : Whether to allow loading kernels from untrusted organisations.
 
 Repository and name of a function.
 
@@ -558,6 +741,14 @@ are locked inside a project.
 > Use [LockedLayerRepository](/docs/kernels/main/en/api/layers#kernels.LockedLayerRepository) instead.
 
 ### LockedLayerRepository[[kernels.LockedLayerRepository]]
+
+#### kernels.LockedLayerRepository[[kernels.LockedLayerRepository]]
+
+```python
+kernels.LockedLayerRepository(repo_id: str, lockfile: Path | None = None, layer_name: str, trust_remote_code: bool | list[str] = False)
+```
+
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L182)
 
 Repository and name of a layer.
 

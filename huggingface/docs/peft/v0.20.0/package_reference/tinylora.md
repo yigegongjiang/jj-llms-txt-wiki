@@ -29,45 +29,43 @@ The abstract from the paper is:
 
 ## TinyLoraConfig[[peft.TinyLoraConfig]]
 
-- **r** (`int`, *optional*, defaults to `2`) --
-  SVD rank for the frozen U, Sigma, V decomposition. The paper recommends r=2.
-- **u** (`int`, *optional*, defaults to `64`) --
-  Trainable vector dimension per group. This controls the expressivity of the adaptation. Can be as low as
-  1-13 for extreme parameter efficiency.
-- **weight_tying** (`float`, *optional*, defaults to `0.0`) --
-  Degree of weight tying across target modules, as a ratio between 0.0 and 1.0. Controls how many modules
-  share the same trainable vector v. 0.0 means no sharing (each module has its own v). 1.0 means full sharing
-  (all modules share one v). Values in between give partial sharing.
-- **projection_seed** (`int`, *optional*, defaults to `42`) --
-  Random seed for generating the fixed projection matrices P.
-- **save_projection** (`bool`, *optional*, defaults to `True`) --
-  Whether to save the projection tensors P in the state dict. If False, they will be regenerated from the
-  seed when loading.
-- **init_v_bound** (`float`, *optional*, defaults to `0.02`) --
-  Uniform initialization bound for the trainable vector v. Values are initialized in [-init_v_bound,
-  init_v_bound].
-- **target_modules** (`Union[List[str], str]`, *optional*) --
-  The names of the modules to apply TinyLoRA to. This can be a list of module names (e.g. `['q_proj',
-  'v_proj']`), a regex pattern (e.g. `'.*decoder.*(q|v)_proj$'`), or the special keyword `"all-linear"` to
-  target all linear modules. Only `nn.Linear`, `nn.Embedding`, and `transformers.pytorch_utils.Conv1D` layers
-  are supported.
-- **tinylora_dropout** (`float`, *optional*, defaults to `0.0`) --
-  The dropout probability for TinyLoRA layers.
-- **fan_in_fan_out** (`bool`, *optional*, defaults to `False`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out).
-- **bias** (`str`, *optional*, defaults to `"none"`) --
-  Bias type for TinyLoRA. Can be 'none', 'all' or 'tinylora_only'.
-- **modules_to_save** (`List[str]`, *optional*) --
-  List of modules apart from TinyLoRA layers to be set as trainable and saved.
-- **init_weights** (`bool` | `Literal["uniform"]`, *optional*, defaults to `True`) --
-  How to initialize the trainable vector v. Passing `True` (default) initializes v to zeros, making the
-  adapter a no-op (identity operation). Passing `"uniform"` initializes v with uniform random values in
-  `[-init_v_bound, init_v_bound]`. Passing `False` leaves v uninitialized (for advanced use cases).
-- **layers_to_transform** (`Union[List[int], int]`, *optional*) --
-  The layer indexes to transform. If specified, only these layers will be adapted.
-- **layers_pattern** (`Optional[Union[List[str], str]]`, *optional*) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`.
+#### peft.TinyLoraConfig[[peft.TinyLoraConfig]]
+
+```python
+peft.TinyLoraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 2, u: int = 64, weight_tying: float = 0.0, projection_seed: int = 42, save_projection: bool = True, init_v_bound: float = 0.02, target_modules: Optional[Union[list[str], str]] = None, tinylora_dropout: float = 0.0, fan_in_fan_out: bool = False, bias: str = 'none', modules_to_save: Optional[list[str]] = None, init_weights: Union[bool, str] = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/tinylora/config.py#L25)
+
+**Parameters:**
+
+r (`int`, *optional*, defaults to `2`) : SVD rank for the frozen U, Sigma, V decomposition. The paper recommends r=2.
+
+u (`int`, *optional*, defaults to `64`) : Trainable vector dimension per group. This controls the expressivity of the adaptation. Can be as low as 1-13 for extreme parameter efficiency.
+
+weight_tying (`float`, *optional*, defaults to `0.0`) : Degree of weight tying across target modules, as a ratio between 0.0 and 1.0. Controls how many modules share the same trainable vector v. 0.0 means no sharing (each module has its own v). 1.0 means full sharing (all modules share one v). Values in between give partial sharing.
+
+projection_seed (`int`, *optional*, defaults to `42`) : Random seed for generating the fixed projection matrices P.
+
+save_projection (`bool`, *optional*, defaults to `True`) : Whether to save the projection tensors P in the state dict. If False, they will be regenerated from the seed when loading.
+
+init_v_bound (`float`, *optional*, defaults to `0.02`) : Uniform initialization bound for the trainable vector v. Values are initialized in [-init_v_bound, init_v_bound].
+
+target_modules (`Union[List[str], str]`, *optional*) : The names of the modules to apply TinyLoRA to. This can be a list of module names (e.g. `['q_proj', 'v_proj']`), a regex pattern (e.g. `'.*decoder.*(q|v)_proj$'`), or the special keyword `"all-linear"` to target all linear modules. Only `nn.Linear`, `nn.Embedding`, and `transformers.pytorch_utils.Conv1D` layers are supported.
+
+tinylora_dropout (`float`, *optional*, defaults to `0.0`) : The dropout probability for TinyLoRA layers.
+
+fan_in_fan_out (`bool`, *optional*, defaults to `False`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out).
+
+bias (`str`, *optional*, defaults to `"none"`) : Bias type for TinyLoRA. Can be 'none', 'all' or 'tinylora_only'.
+
+modules_to_save (`List[str]`, *optional*) : List of modules apart from TinyLoRA layers to be set as trainable and saved.
+
+init_weights (`bool` | `Literal["uniform"]`, *optional*, defaults to `True`) : How to initialize the trainable vector v. Passing `True` (default) initializes v to zeros, making the adapter a no-op (identity operation). Passing `"uniform"` initializes v with uniform random values in `[-init_v_bound, init_v_bound]`. Passing `False` leaves v uninitialized (for advanced use cases).
+
+layers_to_transform (`Union[List[int], int]`, *optional*) : The layer indexes to transform. If specified, only these layers will be adapted.
+
+layers_pattern (`Optional[Union[List[str], str]]`, *optional*) : The layer pattern name, used only if `layers_to_transform` is different from `None`.
 
 This is the configuration class to store the configuration of a [TinyLoraModel](/docs/peft/v0.20.0/en/package_reference/tinylora#peft.TinyLoraModel).
 
@@ -93,11 +91,27 @@ model = get_peft_model(base_model, config)
 
 ## TinyLoraModel[[peft.TinyLoraModel]]
 
-- **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
-- **config** ([TinyLoraConfig](/docs/peft/v0.20.0/en/package_reference/tinylora#peft.TinyLoraConfig)) -- The configuration of the TinyLoRA model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, *optional*, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The TinyLoRA model.
+#### peft.TinyLoraModel[[peft.TinyLoraModel]]
+
+```python
+peft.TinyLoraModel(model, config, adapter_name, low_cpu_mem_usage = False, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/tinylora/model.py#L33)
+
+**Parameters:**
+
+model ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) : The model to be adapted.
+
+config ([TinyLoraConfig](/docs/peft/v0.20.0/en/package_reference/tinylora#peft.TinyLoraConfig)) : The configuration of the TinyLoRA model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, *optional*, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The TinyLoRA model.
 
 Creates TinyLoRA model from a pretrained transformers model.
 
@@ -118,5 +132,13 @@ Example:
 **Attributes**:
 - **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
 - **peft_config** ([TinyLoraConfig](/docs/peft/v0.20.0/en/package_reference/tinylora#peft.TinyLoraConfig)): The configuration of the TinyLoRA model.
+
+#### delete_adapter[[peft.TinyLoraModel.delete_adapter]]
+
+```python
+delete_adapter(adapter_name: str)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/tinylora/model.py#L284)
 
 Delete an adapter and clean up the model-level shared v parameters.

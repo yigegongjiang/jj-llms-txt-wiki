@@ -36,6 +36,7 @@ Our platform integrates with leading AI infrastructure providers, giving you acc
 
 | Provider                                     | Chat completion (LLM) | Chat completion (VLM) | Feature Extraction | Text to Image | Text to video | Speech to text |
 | -------------------------------------------- | :-------------------: | :-------------------: | :----------------: | :-----------: | :-----------: | :------------: |
+| [Baseten](./providers/baseten)               |          ✅           |          ✅           |                    |               |               |                |
 | [Cerebras](./providers/cerebras)             |          ✅           |                       |                    |               |               |                |
 | [Cohere](./providers/cohere)                 |          ✅           |          ✅           |                    |               |               |                |
 | [DeepInfra](./providers/deepinfra)           |          ✅           |          ✅           |                    |               |               |                |
@@ -50,7 +51,7 @@ Our platform integrates with leading AI infrastructure providers, giving you acc
 | [Public AI](./providers/publicai)            |          ✅           |                       |                    |               |               |                |
 | [Replicate](./providers/replicate)           |                       |                       |                    |      ✅       |      ✅       |       ✅       |
 | [Scaleway](./providers/scaleway)             |          ✅           |                       |         ✅         |               |               |                |
-| [Together](./providers/together)             |          ✅           |          ✅           |                    |      ✅       |               |                |
+| [Together](./providers/together)             |          ✅           |          ✅           |         ✅         |      ✅       |      ✅        |       ✅       |
 | [WaveSpeedAI](./providers/wavespeed)         |                       |                       |                    |      ✅       |      ✅       |                |
 | [Z.ai](./providers/zai-org)                  |          ✅           |          ✅           |                    |               |               |                |
 

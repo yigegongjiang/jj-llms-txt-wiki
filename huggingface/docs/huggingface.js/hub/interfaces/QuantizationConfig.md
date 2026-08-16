@@ -8,7 +8,7 @@
 
 #### Defined in[[bits.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:565](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L565)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:685](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L685)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[configgroups.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:570](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L570)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:690](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L690)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in[[format.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:569](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L569)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:689](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L689)
 
 ___
 
@@ -41,7 +41,7 @@ using the same `re:`-prefixed target syntax as `config_groups[].targets`.
 
 #### Defined in[[ignore.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:575](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L575)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:695](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L695)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in[[loadin4bit.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:566](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L566)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:686](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L686)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in[[loadin8bit.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:567](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L567)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:687](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L687)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in[[modulestonotconvert.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:564](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L564)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:684](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L684)
 
 ___
 
@@ -81,4 +81,4 @@ ___
 
 #### Defined in[[quantmethod.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:563](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L563)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:683](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L683)

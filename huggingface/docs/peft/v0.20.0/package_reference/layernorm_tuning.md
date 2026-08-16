@@ -22,29 +22,47 @@ The abstract from the paper is:
 
 ## LNTuningConfig[[peft.LNTuningConfig]]
 
-- **target_modules** (*Optional[Union[List[str], str]]*) --
-  List of module names or regex expression of the module names to replace with LNTuning. For example,
-  '.*decoder.*' or '.*encoder.*'. If this is not specified, modules will be chosen according to the model
-  architecture. If the architecture is not known, an error will be raised -- in this case, you should specify
-  the target modules manually.
-- **exclude_modules** (*Optional[Union[List[str], str]]*) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **modules_to_save** (*Optional[Union[List[str], str]]*) --
-  List of modules to be set as trainable and saved in the final checkpoint. For example, in Sequence
-  Classification or Token Classification tasks, the final layer *classifier/score* are randomly initialized
-  and as such need to be trainable and saved.
+#### peft.LNTuningConfig[[peft.LNTuningConfig]]
+
+```python
+peft.LNTuningConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, modules_to_save: Optional[Union[list[str], str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/ln_tuning/config.py#L24)
+
+**Parameters:**
+
+target_modules (*Optional[Union[List[str], str]]*) : List of module names or regex expression of the module names to replace with LNTuning. For example, '.*decoder.*' or '.*encoder.*'. If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (*Optional[Union[List[str], str]]*) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+modules_to_save (*Optional[Union[List[str], str]]*) : List of modules to be set as trainable and saved in the final checkpoint. For example, in Sequence Classification or Token Classification tasks, the final layer *classifier/score* are randomly initialized and as such need to be trainable and saved.
 
 This is the configuration class to store the configuration of a [LNTuningModel](/docs/peft/v0.20.0/en/package_reference/layernorm_tuning#peft.LNTuningModel).
 
 ## LNTuningModel[[peft.LNTuningModel]]
 
-- **model** (`torch.nn.Module`) -- The model to be adapted.
-- **config** ([LNTuningConfig](/docs/peft/v0.20.0/en/package_reference/layernorm_tuning#peft.LNTuningConfig)) -- The configuration of the LN tuning model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  This option has no effect on LN tuning but exists for consistency with other PEFT methods.'torch.nn.Module'The adapted model with LayerNorm tuned on.
+#### peft.LNTuningModel[[peft.LNTuningModel]]
+
+```python
+peft.LNTuningModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/ln_tuning/model.py#L28)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to be adapted.
+
+config ([LNTuningConfig](/docs/peft/v0.20.0/en/package_reference/layernorm_tuning#peft.LNTuningConfig)) : The configuration of the LN tuning model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : This option has no effect on LN tuning but exists for consistency with other PEFT methods.
+
+**Returns:** `'torch.nn.Module'`
+
+The adapted model with LayerNorm tuned on.
 
 Creates LayerNorm tuning from a pretrained transformer model.
 

@@ -29,6 +29,20 @@ configuration but make sure to first create an issue
 
 ## MultitaskPromptTuningConfig[[peft.MultitaskPromptTuningConfig]]
 
-"}, {"name": "prompt_tuning_init_text", "val": ": typing.Optional[str] = None"}, {"name": "tokenizer_name_or_path", "val": ": typing.Optional[str] = None"}, {"name": "tokenizer_kwargs", "val": ": typing.Optional[dict] = None"}, {"name": "prompt_tuning_init_state_dict_path", "val": ": typing.Optional[str] = None"}, {"name": "prompt_tuning_init_task", "val": ": typing.Optional[int] = 0"}, {"name": "num_ranks", "val": ": typing.Optional[int] = 1"}, {"name": "num_tasks", "val": ": typing.Optional[int] = 1"}]}>
+#### peft.MultitaskPromptTuningConfig[[peft.MultitaskPromptTuningConfig]]
+
+```python
+peft.MultitaskPromptTuningConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, num_virtual_tokens: int = None, token_dim: int = None, num_transformer_submodules: Optional[int] = None, num_attention_heads: Optional[int] = None, num_layers: Optional[int] = None, modules_to_save: Optional[list[str]] = None, prompt_tuning_init: typing.Union[peft.tuners.multitask_prompt_tuning.config.MultitaskPromptTuningInit, str] = <MultitaskPromptTuningInit.RANDOM: 'RANDOM'>, prompt_tuning_init_text: typing.Optional[str] = None, tokenizer_name_or_path: typing.Optional[str] = None, tokenizer_kwargs: typing.Optional[dict] = None, prompt_tuning_init_state_dict_path: typing.Optional[str] = None, prompt_tuning_init_task: typing.Optional[int] = 0, num_ranks: typing.Optional[int] = 1, num_tasks: typing.Optional[int] = 1)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/multitask_prompt_tuning/config.py#L37)
 
 ## MultitaskPromptEmbedding[[peft.tuners.MultitaskPromptEmbedding]]
+
+#### peft.tuners.MultitaskPromptEmbedding[[peft.tuners.MultitaskPromptEmbedding]]
+
+```python
+peft.tuners.MultitaskPromptEmbedding(config: MultitaskPromptTuningConfig, word_embeddings)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/multitask_prompt_tuning/model.py#L28)

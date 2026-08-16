@@ -42,6 +42,7 @@ Here is the list of the supported architectures :
 - DeepSeek
 - DeepSeek-V2
 - DeepSeek-V3
+- DeepSeek-OCR-2
 - DistilBERT
 - ERNIE 4.5
 - ELECTRA
@@ -64,6 +65,9 @@ Here is the list of the supported architectures :
 - Gemma
 - Gemma 2
 - Gemma 3
+- Gemma 3n
+- Gemma 4
+- Gemma 4 Unified
 - GOT-OCR 2.0
 - Granite
 - Granite 4.0
@@ -78,6 +82,7 @@ Here is the list of the supported architectures :
 - Jais
 - LeViT
 - LFM2
+- LFM2-MoE
 - LLaMA
 - LLaMA 4
 - LLaVa
@@ -103,6 +108,7 @@ Here is the list of the supported architectures :
 - MobileNet v1
 - MobileNet v2
 - MobileViT
+- Muse-Glimmer
 - Nystromformer
 - OLMo
 - OLMo 2
@@ -125,7 +131,11 @@ Here is the list of the supported architectures :
 - Qwen2.5-VL
 - Qwen3
 - Qwen3MoE
-- Qwen3-VL
+- Qwen3-VL (including Qwen3-VL-Embedding)
+- Qwen3-Omni-MoE
+- Qwen3.5
+- Qwen3.5-MoE
+- Qwen3.6
 - Qwen3-Next
 - RemBERT
 - ResNet
@@ -136,6 +146,7 @@ Here is the list of the supported architectures :
 - SEW-D
 - SegFormer
 - SigLIP
+- SmolLM3
 - SmolVLM (SmolVLM2)
 - SpeechT5 (text-to-speech)
 - SqueezeBERT
@@ -146,6 +157,7 @@ Here is the list of the supported architectures :
 - TrOCR
 - UniSpeech
 - UniSpeech-SAT
+- VideoChat-Flash-Qwen
 - Vision Encoder Decoder
 - ViT
 - Wav2Vec2
@@ -164,9 +176,12 @@ Here is the list of the supported architectures :
 - Latent Consistency
 - Stable Diffusion 3
 - Flux
+- Flux.2
 - Sana
 - SanaSprint
 - LTX
+- LTX2
+- Qwen-Image
 
 ## [Timm](https://huggingface.co/docs/timm/index)
 - PiT
@@ -177,3 +192,28 @@ Here is the list of the supported architectures :
 
 ## [OpenCLIP](https://github.com/mlfoundations/open_clip)
 - All CLIP-based models
+
+## [Kokoro](https://github.com/hexgrad/kokoro)
+- Kokoro-82M (text-to-speech)
+
+## [Qwen3-ASR](https://github.com/QwenLM/Qwen3-ASR)
+- All Qwen3-ASR models (automatic-speech-recognition)
+
+## [FunASR](https://github.com/modelscope/FunASR)
+- Fun-ASR-Nano (automatic-speech-recognition)
+
+## [AngelSlim](https://github.com/Tencent/AngelSlim)
+- Qwen3-VL-4B-Instruct_eagle3
+- Qwen3-1.7B_eagle3
+
+## [DFlash](https://github.com/z-lab/dflash)
+- Qwen3-*-DFlash
+- Qwen3.5-*-DFlash
+- Qwen3.6-*-DFlash
+- Qwen3-Coder-30B-A3B-DFlash
+
+## [Ouro](https://huggingface.co/ByteDance/Ouro-1.4B)
+- Ouro-1.4B
+- Ouro-1.4B-Thinking
+- Ouro-2.6B
+- Ouro-2.6B-Thinking

@@ -19,37 +19,35 @@ For running inference with different RoAd adapters in the same batch see [Infere
 
 ## RoadConfig[[peft.RoadConfig]]
 
-- **variant** (Union[`RoadVariant`, `str`]) --
-  The variant of the Road model to use. It can be one of road_1, road_2, or road_4. Refer to the paper for
-  more details.
-  - road_1: Uses the same scale and angle for all pairs of elements.
-  This variant has lowest number of parameters, it stores a number equal to the output hidden size of
-  parameters for each layer that RoAd is applied to.
-  - road_2: Uses the same scale and angle for each element.
-  This variant has 2x the number of parameters compared to road_1.
-  - road_4: Uses two different scales and angles for each element.
-  This variant has 4x the number of parameters compared to road_1.
-- **group_size** (`int`) --
-  Group size defines how elements are grouped together into 2D vectors for rotation. Within each group
-  element 0 is paired with element group_size/2, then element 1 is paired with element group_size/2+1 and so
-  on. This has no effect on the model performance, since elements are unordered, however it has some effect
-  on inference speed when used in e.g. VLLM. For best speed group size of at least 32 or 64 (the default) is
-  recommended. Note that model hidden size (or hidden size per partition when used with tensor parallelism)
-  must be divisible by group_size, so for very small models you might need to reduce this parameter.
-- **init_weights** (`bool`) --
-  Whether to perform initialization of RoAd weights.
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if
-  the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be
-  chosen according to the model architecture. If the architecture is not known, an error will be raised -- in
-  this case, you should specify the target modules manually.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from Road layers to be set as trainable and saved in the final checkpoint.
+#### peft.RoadConfig[[peft.RoadConfig]]
+
+```python
+peft.RoadConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, variant: Union[str, RoadVariant] = 'road_1', group_size: int = 64, init_weights: bool = True, target_modules: Optional[Union[list[str], str]] = None, modules_to_save: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/road/config.py#L28)
+
+**Parameters:**
+
+variant (Union[`RoadVariant`, `str`]) : The variant of the Road model to use. It can be one of road_1, road_2, or road_4. Refer to the paper for more details. - road_1: Uses the same scale and angle for all pairs of elements. This variant has lowest number of parameters, it stores a number equal to the output hidden size of parameters for each layer that RoAd is applied to. - road_2: Uses the same scale and angle for each element. This variant has 2x the number of parameters compared to road_1. - road_4: Uses two different scales and angles for each element. This variant has 4x the number of parameters compared to road_1.
+
+group_size (`int`) : Group size defines how elements are grouped together into 2D vectors for rotation. Within each group element 0 is paired with element group_size/2, then element 1 is paired with element group_size/2+1 and so on. This has no effect on the model performance, since elements are unordered, however it has some effect on inference speed when used in e.g. VLLM. For best speed group size of at least 32 or 64 (the default) is recommended. Note that model hidden size (or hidden size per partition when used with tensor parallelism) must be divisible by group_size, so for very small models you might need to reduce this parameter.
+
+init_weights (`bool`) : Whether to perform initialization of RoAd weights.
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+modules_to_save (`List[str]`) : List of modules apart from Road layers to be set as trainable and saved in the final checkpoint.
 
 This is the configuration class to store the configuration of a [RoadModel](/docs/peft/v0.20.0/en/package_reference/road#peft.RoadModel). RoAd adapter is proposed in
 https://huggingface.co/papers/2409.00119.
 
 ## RoadModel[[peft.RoadModel]]
+
+#### peft.RoadModel[[peft.RoadModel]]
+
+```python
+peft.RoadModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/road/model.py#L39)

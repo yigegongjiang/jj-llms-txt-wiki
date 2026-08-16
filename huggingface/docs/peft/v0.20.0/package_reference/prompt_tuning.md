@@ -50,25 +50,41 @@ model.print_trainable_parameters()
 
 ## PromptTuningConfig[[peft.PromptTuningConfig]]
 
-"}, {"name": "prompt_tuning_init_text", "val": ": typing.Optional[str] = None"}, {"name": "tokenizer_name_or_path", "val": ": typing.Optional[str] = None"}, {"name": "tokenizer_kwargs", "val": ": typing.Optional[dict] = None"}]}>
-- **prompt_tuning_init** (Union[`PromptTuningInit`, `str`]) --
-  The initialization of the prompt embedding. `TEXT` will initialize with your text. `SAMPLE_VOCAB` will
-  initialize with randomly sampled tokens from the model's vocabulary. `RANDOM` will initialize with randomly
-  sampled continuous, soft tokens (warning: sampled soft tokens may fall outside of embedding manifold)
-- **prompt_tuning_init_text** (`str`, *optional*) --
-  The text to initialize the prompt embedding. Only used if `prompt_tuning_init` is `TEXT`.
-- **tokenizer_name_or_path** (`str`, *optional*) --
-  The name or path of the tokenizer. Only used if `prompt_tuning_init` is `TEXT`.
-- **tokenizer_kwargs** (`dict`, *optional*) --
-  The keyword arguments to pass to `AutoTokenizer.from_pretrained`. Only used if `prompt_tuning_init` is
-  `TEXT`.
+#### peft.PromptTuningConfig[[peft.PromptTuningConfig]]
+
+```python
+peft.PromptTuningConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, num_virtual_tokens: int = None, token_dim: int = None, num_transformer_submodules: Optional[int] = None, num_attention_heads: Optional[int] = None, num_layers: Optional[int] = None, modules_to_save: Optional[list[str]] = None, prompt_tuning_init: typing.Union[peft.tuners.prompt_tuning.config.PromptTuningInit, str] = <PromptTuningInit.RANDOM: 'RANDOM'>, prompt_tuning_init_text: typing.Optional[str] = None, tokenizer_name_or_path: typing.Optional[str] = None, tokenizer_kwargs: typing.Optional[dict] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/prompt_tuning/config.py#L30)
+
+**Parameters:**
+
+prompt_tuning_init (Union[`PromptTuningInit`, `str`]) : The initialization of the prompt embedding. `TEXT` will initialize with your text. `SAMPLE_VOCAB` will initialize with randomly sampled tokens from the model's vocabulary. `RANDOM` will initialize with randomly sampled continuous, soft tokens (warning: sampled soft tokens may fall outside of embedding manifold)
+
+prompt_tuning_init_text (`str`, *optional*) : The text to initialize the prompt embedding. Only used if `prompt_tuning_init` is `TEXT`.
+
+tokenizer_name_or_path (`str`, *optional*) : The name or path of the tokenizer. Only used if `prompt_tuning_init` is `TEXT`.
+
+tokenizer_kwargs (`dict`, *optional*) : The keyword arguments to pass to `AutoTokenizer.from_pretrained`. Only used if `prompt_tuning_init` is `TEXT`.
 
 This is the configuration class to store the configuration of a [PromptEmbedding](/docs/peft/v0.20.0/en/package_reference/prompt_tuning#peft.PromptEmbedding).
 
 ## PromptEmbedding[[peft.PromptEmbedding]]
 
-- **config** ([PromptTuningConfig](/docs/peft/v0.20.0/en/package_reference/prompt_tuning#peft.PromptTuningConfig)) -- The configuration of the prompt embedding.
-- **word_embeddings** (`torch.nn.Module`) -- The word embeddings of the base transformer model.
+#### peft.PromptEmbedding[[peft.PromptEmbedding]]
+
+```python
+peft.PromptEmbedding(config, word_embeddings)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/prompt_tuning/model.py#L24)
+
+**Parameters:**
+
+config ([PromptTuningConfig](/docs/peft/v0.20.0/en/package_reference/prompt_tuning#peft.PromptTuningConfig)) : The configuration of the prompt embedding.
+
+word_embeddings (`torch.nn.Module`) : The word embeddings of the base transformer model.
 
 The model to encode virtual tokens into prompt embeddings.
 

@@ -33,57 +33,43 @@ This paper aims to answer this question by introducing RandLora, a parameter-eff
 
 ## RandLoraConfig[[peft.RandLoraConfig]]
 
-- **r** (`int`, *optional*, defaults to `32`) --
-  RandLora's random basis rank dimension. Contrary to Lora, this parameter is inversely proportional to the
-  amount of trainable parameters as reducing it increases trainable parameters.
-- **target_modules** (`Union[list[str], str]`) --
-  The names of the modules to apply RandLora to. Only linear layers are supported.
-- **projection_prng_key** (`int`) --
-  RandLora PRNG init key. Used for initialising basis_A and basis_B for new models or when loading a
-  checkpoint that did not include these projections. Defaults to `0`.
-- **save_projection** (`bool`) --
-  Whether to save the global basis_A / basis_B random basis in the state dict alongside per layer lambda /
-  gamma diagonal matrices. This will increase the size of the checkpoint, but guarantee that we can reload
-  the checkpoint on all system configurations. Defaults to `True`.
-- **sparse** (`bool`) --
-  Whether to use sparse random bases as described in the RandLora paper. The bases are ternary sparse bases
-  (only containing -1, 0 and 1) where the attribution probability is 1/6 for -1 and 1 and 2/3 for 0. These
-  sparse matrices aim to be used for matmul free computation in the future, see
-  https://huggingface.co/papers/2406.02528v1 The current implementation is a proof of concept however where
-  the sparseness is not used to improve speed or memory usage. Using sparse matrices typically does not
-  reduce performance and can even help reduce overfitting. Defaults to `False`.
-- **very_sparse** (`bool`) --
-  Whether to use highly sparse random bases as described in the RandLora paper. The very sparse bases are
-  ternary sparse bases (only containing -1, 0 and 1) given a matrix with smallest dimension d, the
-  attribution probability is 1/√D for -1 and 1 and 1- 2/√D for 0. Using these sparse matrices can further
-  reduce overfitting over the `sparse` alternatives but will most likely decrease performance as a results.
-  Use carefully. Defaults to `False`.
-- **randlora_dropout** (`float`) --
-  The dropout probability for RandLora layers.
-- **randlora_alpha** (`float`) --
-  The scaling coefficient for RandLora layers, this would typically be 20 times the rank. Because the
-  `randlora_alpha` coefficient is large by default, it can lead to numerical instabilities especially when
-  learning rates are high. If training is unstable, consider reducing the learning rate or the
-  `randlora_alpha` coefficient.
-- **fan_in_fan_out** (`bool`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **bias** (`str`) --
-  Bias type. Can be 'none', 'all' or 'randlora_only'. If 'all' or 'randlora_only', the corresponding biases
-  will be updated during training. Be aware that this means that, even when disabling the adapters, the model
-  will not produce the same output as the base model would have without adaptation.
-- **modules_to_save** (`list[str]`) --
-  list of modules apart from RandLora layers to be set as trainable and saved in the final checkpoint.
-- **init_weights** (`bool`) --
-  Whether to initialize the weights of the RandLora layers with their default initialization. Don't change
-  this setting, except if you know exactly what you're doing.
-- **layers_to_transform** (`Union[list[int],int]`) --
-  The layer indexes to transform, if this argument is specified, it will apply the RandLora transformations
-  on the layer indexes that are specified in this list. If a single integer is passed, it will apply the
-  RandLora transformations on the layer at this index.
-- **layers_pattern** (`str`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None` and if the layer
-  pattern is not in the common layers pattern.
+#### peft.RandLoraConfig[[peft.RandLoraConfig]]
+
+```python
+peft.RandLoraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 32, target_modules: typing.Union[str, list[str], NoneType] = None, projection_prng_key: int = 0, save_projection: bool = True, sparse: bool = False, very_sparse: bool = False, randlora_dropout: float = 0.0, fan_in_fan_out: bool = False, randlora_alpha: int = 640, bias: str = 'none', modules_to_save: typing.Optional[list[str]] = None, init_weights: bool = True, layers_to_transform: typing.Union[list[int], int, NoneType] = None, layers_pattern: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/randlora/config.py#L24)
+
+**Parameters:**
+
+r (`int`, *optional*, defaults to `32`) : RandLora's random basis rank dimension. Contrary to Lora, this parameter is inversely proportional to the amount of trainable parameters as reducing it increases trainable parameters.
+
+target_modules (`Union[list[str], str]`) : The names of the modules to apply RandLora to. Only linear layers are supported.
+
+projection_prng_key (`int`) : RandLora PRNG init key. Used for initialising basis_A and basis_B for new models or when loading a checkpoint that did not include these projections. Defaults to `0`.
+
+save_projection (`bool`) : Whether to save the global basis_A / basis_B random basis in the state dict alongside per layer lambda / gamma diagonal matrices. This will increase the size of the checkpoint, but guarantee that we can reload the checkpoint on all system configurations. Defaults to `True`.
+
+sparse (`bool`) : Whether to use sparse random bases as described in the RandLora paper. The bases are ternary sparse bases (only containing -1, 0 and 1) where the attribution probability is 1/6 for -1 and 1 and 2/3 for 0. These sparse matrices aim to be used for matmul free computation in the future, see https://huggingface.co/papers/2406.02528v1 The current implementation is a proof of concept however where the sparseness is not used to improve speed or memory usage. Using sparse matrices typically does not reduce performance and can even help reduce overfitting. Defaults to `False`.
+
+very_sparse (`bool`) : Whether to use highly sparse random bases as described in the RandLora paper. The very sparse bases are ternary sparse bases (only containing -1, 0 and 1) given a matrix with smallest dimension d, the attribution probability is 1/√D for -1 and 1 and 1- 2/√D for 0. Using these sparse matrices can further reduce overfitting over the `sparse` alternatives but will most likely decrease performance as a results. Use carefully. Defaults to `False`.
+
+randlora_dropout (`float`) : The dropout probability for RandLora layers.
+
+randlora_alpha (`float`) : The scaling coefficient for RandLora layers, this would typically be 20 times the rank. Because the `randlora_alpha` coefficient is large by default, it can lead to numerical instabilities especially when learning rates are high. If training is unstable, consider reducing the learning rate or the `randlora_alpha` coefficient.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+bias (`str`) : Bias type. Can be 'none', 'all' or 'randlora_only'. If 'all' or 'randlora_only', the corresponding biases will be updated during training. Be aware that this means that, even when disabling the adapters, the model will not produce the same output as the base model would have without adaptation.
+
+modules_to_save (`list[str]`) : list of modules apart from RandLora layers to be set as trainable and saved in the final checkpoint.
+
+init_weights (`bool`) : Whether to initialize the weights of the RandLora layers with their default initialization. Don't change this setting, except if you know exactly what you're doing.
+
+layers_to_transform (`Union[list[int],int]`) : The layer indexes to transform, if this argument is specified, it will apply the RandLora transformations on the layer indexes that are specified in this list. If a single integer is passed, it will apply the RandLora transformations on the layer at this index.
+
+layers_pattern (`str`) : The layer pattern name, used only if `layers_to_transform` is different from `None` and if the layer pattern is not in the common layers pattern.
 
 This is the configuration class to store the configuration of a [RandLoraModel](/docs/peft/v0.20.0/en/package_reference/randlora#peft.RandLoraModel).
 
@@ -91,11 +77,27 @@ Paper: https://huggingface.co/papers/2502.00987.
 
 ## RandLoraModel[[peft.RandLoraModel]]
 
-- **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
-- **config** ([RandLoraConfig](/docs/peft/v0.20.0/en/package_reference/randlora#peft.RandLoraConfig)) -- The configuration of the RandLora model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The RandLora model.
+#### peft.RandLoraModel[[peft.RandLoraModel]]
+
+```python
+peft.RandLoraModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/randlora/model.py#L67)
+
+**Parameters:**
+
+model ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) : The model to be adapted.
+
+config ([RandLoraConfig](/docs/peft/v0.20.0/en/package_reference/randlora#peft.RandLoraConfig)) : The configuration of the RandLora model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The RandLora model.
 
 Creates a RandLoRA model from a pretrained transformers model.
 

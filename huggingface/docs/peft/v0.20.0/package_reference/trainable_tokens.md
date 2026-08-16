@@ -37,20 +37,21 @@ This method can also be used in conjunction with LoRA layers! See [the LoRA docu
 
 ## TrainableTokensConfig[[peft.TrainableTokensConfig]]
 
-"}, {"name": "target_modules", "val": ": Optional[Union[list[str], str]] = None"}, {"name": "init_weights", "val": ": bool = True"}]}>
-- **token_indices** (`list[int]`) --
-  List of integers, signifying the indices of the tokens you want to be trainable. To find the index of a
-  token with a tokenizer, you can tokenize the string and look at the returned `input_ids`. The closer the
-  amount of indices is to the total amount of tokens, the less efficient this method gets.
-- **target_modules** (`Optional[Union[list[str], str]]`) --
-  List of module names or regex expression of the module names to replace with our `TrainableTokensLayer`. If
-  not defined, it will attempt to get the model's input embedding layer if the model has a
-  `get_input_embeddings` method (transformer models usually do), if that fails the default is 'embed_tokens'.
-  Other example targets are `embedding`, `encoder.embeddings` or `decoder.embeddings`.
-- **init_weights** (`bool`) --
-  By default the new token weights are initialized to be the same as the respective token embeddings. This
-  makes TrainableTokens a no-op when not trained. If set to `False` the weights will be random values. Do not
-  change this setting unless you know exactly what you're doing.
+#### peft.TrainableTokensConfig[[peft.TrainableTokensConfig]]
+
+```python
+peft.TrainableTokensConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, token_indices: list[int] = <factory>, target_modules: Optional[Union[list[str], str]] = None, init_weights: bool = True)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/trainable_tokens/config.py#L25)
+
+**Parameters:**
+
+token_indices (`list[int]`) : List of integers, signifying the indices of the tokens you want to be trainable. To find the index of a token with a tokenizer, you can tokenize the string and look at the returned `input_ids`. The closer the amount of indices is to the total amount of tokens, the less efficient this method gets.
+
+target_modules (`Optional[Union[list[str], str]]`) : List of module names or regex expression of the module names to replace with our `TrainableTokensLayer`. If not defined, it will attempt to get the model's input embedding layer if the model has a `get_input_embeddings` method (transformer models usually do), if that fails the default is 'embed_tokens'. Other example targets are `embedding`, `encoder.embeddings` or `decoder.embeddings`.
+
+init_weights (`bool`) : By default the new token weights are initialized to be the same as the respective token embeddings. This makes TrainableTokens a no-op when not trained. If set to `False` the weights will be random values. Do not change this setting unless you know exactly what you're doing.
 
 Configuration for the `TrainableTokens` method.
 
@@ -62,3 +63,11 @@ as working memory usage are reduced in contrast to training the embedding matrix
 Note that training with FSDP/DeepSpeed might not yet be fully supported.
 
 ## TrainableTokensModel[[peft.TrainableTokensModel]]
+
+#### peft.TrainableTokensModel[[peft.TrainableTokensModel]]
+
+```python
+peft.TrainableTokensModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/trainable_tokens/model.py#L26)

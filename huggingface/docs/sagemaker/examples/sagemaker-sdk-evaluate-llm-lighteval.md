@@ -1,6 +1,6 @@
 # Evaluate LLMs with Hugging Face Lighteval on Amazon SageMaker
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
 In this sagemaker example, we are going to learn how to evaluate LLMs using Hugging Face [lighteval](https://github.com/huggingface/lighteval/tree/main).  LightEval is a lightweight LLM evaluation suite that powers [Hugging Face Open LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard). 
 

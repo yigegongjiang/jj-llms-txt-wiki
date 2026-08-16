@@ -142,28 +142,29 @@ If there is a lot of demand to extend LoRA conversion, please let us know by cre
 
 ### Convert a non-LoRA model to a LoRA model, return the `LoraConfig` and `state_dict`[[peft.convert_to_lora]]
 
-- **model** --
-  The model to be converted. Should be a model that has PEFT layers that support conversion.
-- **rank** (`int` or `float`) --
-  The desired rank for the returned LoRA adapter. A higher rank results in a LoRA adapter that more
-  accurately mirrors the original adapter. It will, however, also require more memory, compute, and disk
-  space. Therefore, choose a value that represents the best trade off for your use case and validate the
-  final adapter. If a float is passed, it is interpreted as an explained variance / energy threshold: we pick
-  the smallest rank k such that the top k singular values account for at least that fraction of the total
-  squared singular values. This effectively results in lower ranks being assigned if a few singular can
-  capture the adaptation of this layer. A lower float means the rank is lower and vice versa. Be aware that
-  dynamic ranks can lead to very unequal ranks per layer, which means that some layers may require a
-  disproportionally high amount of memory for activations. Choosing a fixed (int) rank is better to achieve
-  predictable memory requirement.
-- **adapter_name** (`str`, *optional*) --
-  The name of the adapter to be converted. Can only convert a single adapter at a time. Defaults to
-  `"default"`.
-- **progressbar** (`bool`) --
-  whether to show a progressbar indicating the progress of the conversion (it can take a few minutes for big
-  models).
-- **compile_kwargs** (`dict`, *optional*) --
-  If provided, compile the function to convert individual modules to LoRA with the given kwargs being passed
-  to `torch.compile`. This can potentially speed up the conversion on large models.lora_config (`LoraConfig`)
+#### peft.convert_to_lora[[peft.convert_to_lora]]
+
+```python
+peft.convert_to_lora(model: Module, rank: float, adapter_name: str = 'default', progressbar: bool = False, compile_kwargs = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/conversion.py#L146)
+
+**Parameters:**
+
+model : The model to be converted. Should be a model that has PEFT layers that support conversion.
+
+rank (`int` or `float`) : The desired rank for the returned LoRA adapter. A higher rank results in a LoRA adapter that more accurately mirrors the original adapter. It will, however, also require more memory, compute, and disk space. Therefore, choose a value that represents the best trade off for your use case and validate the final adapter. If a float is passed, it is interpreted as an explained variance / energy threshold: we pick the smallest rank k such that the top k singular values account for at least that fraction of the total squared singular values. This effectively results in lower ranks being assigned if a few singular can capture the adaptation of this layer. A lower float means the rank is lower and vice versa. Be aware that dynamic ranks can lead to very unequal ranks per layer, which means that some layers may require a disproportionally high amount of memory for activations. Choosing a fixed (int) rank is better to achieve predictable memory requirement.
+
+adapter_name (`str`, *optional*) : The name of the adapter to be converted. Can only convert a single adapter at a time. Defaults to `"default"`.
+
+progressbar (`bool`) : whether to show a progressbar indicating the progress of the conversion (it can take a few minutes for big models).
+
+compile_kwargs (`dict`, *optional*) : If provided, compile the function to convert individual modules to LoRA with the given kwargs being passed to `torch.compile`. This can potentially speed up the conversion on large models.
+
+**Returns:**
+
+lora_config (`LoraConfig`)
 The `LoraConfig` that corresponds to the converted LoRA adapter.
 state_dict (`dict[str, torch.Tensor]`)
 The `state_dict` containing the LoRA weights.
@@ -197,28 +198,25 @@ If an invalid rank was chosen (too high or too low).
 
 ### Convert a non-LoRA model to a LoRA model, save the adapter checkpoint and config at the given path[[peft.save_as_lora]]
 
-- **model** --
-  The model to be converted. Should be a model that has PEFT layers that support conversion.
-- **rank** (`int` or `float`) --
-  The desired rank for the returned LoRA adapter. A higher rank results in a LoRA adapter that more
-  accurately mirrors the original adapter. It will, however, also require more memory, compute, and disk
-  space. Therefore, choose a value that represents the best trade off for your use case and validate the
-  final adapter. If a float is passed, it is interpreted as an explained variance / energy threshold: we pick
-  the smallest rank k such that the top k singular values account for at least that fraction of the total
-  squared singular values. This effectively results in lower ranks being assigned if a few singular can
-  capture the adaptation of this layer. A lower float means the rank is lower and vice versa. Be aware that
-  dynamic ranks can lead to very unequal ranks per layer, which means that some layers may require a
-  disproportionally high amount of memory for activations. Choosing a fixed (int) rank is better to achieve
-  predictable memory requirement.
-- **adapter_name** (`str`, *optional*) --
-  The name of the adapter to be converted. Can only convert a single adapter at a time. Defaults to
-  `"default"`.
-- **progressbar** (`bool`) --
-  whether to show a progressbar indicating the progress of the conversion (it can take a few minutes for big
-  models).
-- **compile_kwargs** (`dict`, *optional*) --
-  If provided, compile the function to convert individual modules to LoRA with the given kwargs being passed
-  to `torch.compile`. This can potentially speed up the conversion on large models.
+#### peft.save_as_lora[[peft.save_as_lora]]
+
+```python
+peft.save_as_lora(path: str | os.PathLike, model: Module, rank: float, adapter_name: str = 'default', progressbar: bool = False, compile_kwargs = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/conversion.py#L363)
+
+**Parameters:**
+
+model : The model to be converted. Should be a model that has PEFT layers that support conversion.
+
+rank (`int` or `float`) : The desired rank for the returned LoRA adapter. A higher rank results in a LoRA adapter that more accurately mirrors the original adapter. It will, however, also require more memory, compute, and disk space. Therefore, choose a value that represents the best trade off for your use case and validate the final adapter. If a float is passed, it is interpreted as an explained variance / energy threshold: we pick the smallest rank k such that the top k singular values account for at least that fraction of the total squared singular values. This effectively results in lower ranks being assigned if a few singular can capture the adaptation of this layer. A lower float means the rank is lower and vice versa. Be aware that dynamic ranks can lead to very unequal ranks per layer, which means that some layers may require a disproportionally high amount of memory for activations. Choosing a fixed (int) rank is better to achieve predictable memory requirement.
+
+adapter_name (`str`, *optional*) : The name of the adapter to be converted. Can only convert a single adapter at a time. Defaults to `"default"`.
+
+progressbar (`bool`) : whether to show a progressbar indicating the progress of the conversion (it can take a few minutes for big models).
+
+compile_kwargs (`dict`, *optional*) : If provided, compile the function to convert individual modules to LoRA with the given kwargs being passed to `torch.compile`. This can potentially speed up the conversion on large models.
 
 Convert a non-LoRA model with PEFT layers to a LoRA, then save the checkpoint file and PEFT config.
 

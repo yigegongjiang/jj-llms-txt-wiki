@@ -1,6 +1,6 @@
 # Fine-Tuning LLMs with TRL CLI on SageMaker
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
 This notebook shows how to fine-tune language models on AWS SageMaker using the **`trl sft` CLI** - the same command used by [trl-jobs](https://github.com/huggingface/trl-jobs) on HuggingFace.
 

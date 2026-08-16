@@ -27,17 +27,27 @@ where each path is independently parameterized.
 
 ## GloraConfig[[peft.GloraConfig]]
 
-- **r** (`int`) -- Rank of the low-rank decomposition used when a config is set to `lora`.
-- **target_modules** (`Optional[Union[List[str], str]]`) -- The names of the modules to apply Glora to.
-- **config_A_B** (`str`) -- Parameterization for the A and B matrices (weight multiplicative and additive
-  corrections). Valid values: `lora`, `vector`, `constant`, `none`.
-- **config_C** (`str`) -- Parameterization for the C matrix (weight-to-bias coupling: b += W0 @ C).
-  Valid values: `lora`, `vector`, `none`.
-- **config_D_E** (`str`) -- Parameterization for the D and E scalars (bias multiplicative and additive
-  corrections). Does not support `lora` since D and E are bias-sized vectors, not matrices. Valid values:
-  `vector`, `constant`, `none`.
-- **init_weights** (`bool`) -- If True (default), initialize GLoRA as a no-op (zeros). If False,
-  use kaiming initialization so the adapter is not a no-op.
+#### peft.GloraConfig[[peft.GloraConfig]]
+
+```python
+peft.GloraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 8, target_modules: typing.Union[str, list[str], NoneType] = None, bias: str = 'none', modules_to_save: typing.Optional[list[str]] = None, config_A_B: typing.Literal['lora', 'vector', 'constant', 'none'] = 'lora', config_C: typing.Literal['lora', 'vector', 'none'] = 'lora', config_D_E: typing.Literal['vector', 'constant', 'none'] = 'constant', init_weights: bool = True)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/glora/config.py#L23)
+
+**Parameters:**
+
+r (`int`) : Rank of the low-rank decomposition used when a config is set to `lora`.
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply Glora to.
+
+config_A_B (`str`) : Parameterization for the A and B matrices (weight multiplicative and additive corrections). Valid values: `lora`, `vector`, `constant`, `none`.
+
+config_C (`str`) : Parameterization for the C matrix (weight-to-bias coupling: b += W0 @ C). Valid values: `lora`, `vector`, `none`.
+
+config_D_E (`str`) : Parameterization for the D and E scalars (bias multiplicative and additive corrections). Does not support `lora` since D and E are bias-sized vectors, not matrices. Valid values: `vector`, `constant`, `none`.
+
+init_weights (`bool`) : If True (default), initialize GLoRA as a no-op (zeros). If False, use kaiming initialization so the adapter is not a no-op.
 
 This is the configuration class to store the configuration of a [GloraModel](/docs/peft/v0.20.0/en/package_reference/glora#peft.GloraModel).
 
@@ -68,6 +78,14 @@ Notes:
 
 ## GloraModel[[peft.GloraModel]]
 
+#### peft.GloraModel[[peft.GloraModel]]
+
+```python
+peft.GloraModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/glora/model.py#L34)
+
 Creates Generalized Low Rank Adapter (GLoRA) model from a pretrained transformers model.
 
 - Wraps a base model and injects GLoRA adapters into the specified modules.
@@ -75,6 +93,22 @@ Creates Generalized Low Rank Adapter (GLoRA) model from a pretrained transformer
 - Use `set_adapter`, `merge_and_unload`, and related methods for adapter management.
 
 ## GloraLayer and GloraLinear[[peft.tuners.glora.GloraLayer]]
+
+#### peft.tuners.glora.GloraLayer[[peft.tuners.glora.GloraLayer]]
+
+```python
+peft.tuners.glora.GloraLayer(base_layer: nn.Module, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/glora/layer.py#L103)
+
+#### peft.tuners.glora.GloraLinear[[peft.tuners.glora.GloraLinear]]
+
+```python
+peft.tuners.glora.GloraLinear(base_layer: nn.Module, adapter_name: str, config, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/glora/layer.py#L298)
 
 GLoRA adapter wrapping a dense `~torch.nn.Linear` `base_layer`.
 

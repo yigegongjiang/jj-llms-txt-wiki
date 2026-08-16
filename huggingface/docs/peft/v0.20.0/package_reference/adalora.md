@@ -55,17 +55,35 @@ model.update_and_allocate(step_idx)
 
 ## AdaLoraConfig[[peft.AdaLoraConfig]]
 
-"}, {"name": "megatron_config", "val": ": Optional[dict] = None"}, {"name": "megatron_core", "val": ": Optional[str] = 'megatron.core'"}, {"name": "trainable_token_indices", "val": ": Optional[Union[list[int], dict[str, list[int]]]] = None"}, {"name": "loftq_config", "val": ": Union[LoftQConfig, dict] = "}, {"name": "eva_config", "val": ": Optional[EvaConfig] = None"}, {"name": "corda_config", "val": ": Optional[CordaConfig] = None"}, {"name": "lora_ga_config", "val": ": Optional[LoraGAConfig] = None"}, {"name": "use_dora", "val": ": bool = False"}, {"name": "velora_config", "val": ": Optional[Union[VeloraConfig, dict]] = None"}, {"name": "alora_invocation_tokens", "val": ": Optional[list[int]] = None"}, {"name": "use_qalora", "val": ": bool = False"}, {"name": "qalora_group_size", "val": ": int = 16"}, {"name": "monteclora_config", "val": ": Optional[MontecloraConfig] = None"}, {"name": "layer_replication", "val": ": Optional[list[tuple[int, int]]] = None"}, {"name": "runtime_config", "val": ": LoraRuntimeConfig = "}, {"name": "lora_bias", "val": ": bool = False"}, {"name": "target_parameters", "val": ": Optional[list[str]] = None"}, {"name": "use_bdlora", "val": ": Optional[BdLoraConfig] = None"}, {"name": "arrow_config", "val": ": Optional[ArrowConfig] = None"}, {"name": "ensure_weight_tying", "val": ": bool = False"}, {"name": "target_r", "val": ": int = 8"}, {"name": "init_r", "val": ": int = 12"}, {"name": "tinit", "val": ": int = 0"}, {"name": "tfinal", "val": ": int = 0"}, {"name": "deltaT", "val": ": int = 1"}, {"name": "beta1", "val": ": float = 0.85"}, {"name": "beta2", "val": ": float = 0.85"}, {"name": "orth_reg_weight", "val": ": float = 0.5"}, {"name": "total_step", "val": ": typing.Optional[int] = None"}]}>
-- **target_r** (`int`) -- The target average rank of incremental matrix.
-- **init_r** (`int`) -- The initial rank for each incremental matrix.
-- **tinit** (`int`) -- The steps of initial fine-tuning warmup.
-- **tfinal** (`int`) -- The number of steps of final fine-tuning.
-- **deltaT** (`int`) -- The time internval between two budget allocations.
-- **beta1** (`float`) -- The hyperparameter of EMA for sensitivity smoothing.
-- **beta2** (`float`) -- The hyperparameter of EMA for undertainty quantification.
-- **orth_reg_weight** (`float`) -- The coefficient of orthogonal regularization.
-- **total_step** (`int`) -- The total training steps that should be specified before training.
-- **rank_pattern** (`list`) -- The allocated rank for each weight matrix by RankAllocator.
+#### peft.AdaLoraConfig[[peft.AdaLoraConfig]]
+
+```python
+peft.AdaLoraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 8, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, lora_alpha: int = 8, lora_dropout: float = 0.0, fan_in_fan_out: bool = False, bias: Literal['none', 'all', 'lora_only'] = 'none', use_rslora: bool = False, modules_to_save: Optional[list[str]] = None, init_lora_weights: bool | Literal['gaussian', 'eva', 'olora', 'pissa', 'pissa_niter_[number of iters]', 'corda', 'loftq', 'orthogonal', 'mica'] = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None, rank_pattern: typing.Optional[dict] = None, alpha_pattern: Optional[dict] = <factory>, megatron_config: Optional[dict] = None, megatron_core: Optional[str] = 'megatron.core', trainable_token_indices: Optional[Union[list[int], dict[str, list[int]]]] = None, loftq_config: Union[LoftQConfig, dict] = <factory>, eva_config: Optional[EvaConfig] = None, corda_config: Optional[CordaConfig] = None, lora_ga_config: Optional[LoraGAConfig] = None, use_dora: bool = False, velora_config: Optional[Union[VeloraConfig, dict]] = None, alora_invocation_tokens: Optional[list[int]] = None, use_qalora: bool = False, qalora_group_size: int = 16, monteclora_config: Optional[MontecloraConfig] = None, layer_replication: Optional[list[tuple[int, int]]] = None, runtime_config: LoraRuntimeConfig = <factory>, lora_bias: bool = False, target_parameters: Optional[list[str]] = None, use_bdlora: Optional[BdLoraConfig] = None, arrow_config: Optional[ArrowConfig] = None, ensure_weight_tying: bool = False, target_r: int = 8, init_r: int = 12, tinit: int = 0, tfinal: int = 0, deltaT: int = 1, beta1: float = 0.85, beta2: float = 0.85, orth_reg_weight: float = 0.5, total_step: typing.Optional[int] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adalora/config.py#L24)
+
+**Parameters:**
+
+target_r (`int`) : The target average rank of incremental matrix.
+
+init_r (`int`) : The initial rank for each incremental matrix.
+
+tinit (`int`) : The steps of initial fine-tuning warmup.
+
+tfinal (`int`) : The number of steps of final fine-tuning.
+
+deltaT (`int`) : The time internval between two budget allocations.
+
+beta1 (`float`) : The hyperparameter of EMA for sensitivity smoothing.
+
+beta2 (`float`) : The hyperparameter of EMA for undertainty quantification.
+
+orth_reg_weight (`float`) : The coefficient of orthogonal regularization.
+
+total_step (`int`) : The total training steps that should be specified before training.
+
+rank_pattern (`list`) : The allocated rank for each weight matrix by RankAllocator.
 
 This is the configuration class to store the configuration of a [AdaLoraModel](/docs/peft/v0.20.0/en/package_reference/adalora#peft.AdaLoraModel).
 
@@ -89,11 +107,27 @@ reduction.
 
 ## AdaLoraModel[[peft.AdaLoraModel]]
 
-- **model** ([transformers.PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
-- **config** ([AdaLoraConfig](/docs/peft/v0.20.0/en/package_reference/adalora#peft.AdaLoraConfig)) -- The configuration of the AdaLora model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The AdaLora model.
+#### peft.AdaLoraModel[[peft.AdaLoraModel]]
+
+```python
+peft.AdaLoraModel(model, config, adapter_name, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adalora/model.py#L36)
+
+**Parameters:**
+
+model ([transformers.PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) : The model to be adapted.
+
+config ([AdaLoraConfig](/docs/peft/v0.20.0/en/package_reference/adalora#peft.AdaLoraConfig)) : The configuration of the AdaLora model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The AdaLora model.
 
 Creates AdaLoRA (Adaptive LoRA) model from a pretrained transformers model. Paper:
 https://openreview.net/forum?id=lq62uWRJjiY
@@ -120,9 +154,27 @@ Example:
 - **model** ([transformers.PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
 - **peft_config** ([AdaLoraConfig](/docs/peft/v0.20.0/en/package_reference/adalora#peft.AdaLoraConfig)): The configuration of the AdaLora model.
 
+#### add_weighted_adapter[[peft.AdaLoraModel.add_weighted_adapter]]
+
+```python
+add_weighted_adapter(*args, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adalora/model.py#L347)
+
 This method is not supported for AdaLoRA, use LoRA instead.
 
-- **global_step** (`int`) -- The current training step, it is used to calculate adalora budget.
+#### update_and_allocate[[peft.AdaLoraModel.update_and_allocate]]
+
+```python
+update_and_allocate(global_step)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/adalora/model.py#L305)
+
+**Parameters:**
+
+global_step (`int`) : The current training step, it is used to calculate adalora budget.
 
 This method updates Adalora budget and mask.
 

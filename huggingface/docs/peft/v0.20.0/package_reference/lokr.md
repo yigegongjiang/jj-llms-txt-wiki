@@ -40,64 +40,73 @@ model.print_trainable_parameters()
 
 ## LoKrConfig[[peft.LoKrConfig]]
 
-"}, {"name": "alpha_pattern", "val": ": Optional[dict] = "}, {"name": "r", "val": ": int = 8"}, {"name": "alpha", "val": ": int = 8"}, {"name": "rank_dropout", "val": ": float = 0.0"}, {"name": "module_dropout", "val": ": float = 0.0"}, {"name": "use_effective_conv2d", "val": ": bool = False"}, {"name": "decompose_both", "val": ": bool = False"}, {"name": "decompose_factor", "val": ": int = -1"}, {"name": "rank_dropout_scale", "val": ": bool = False"}, {"name": "target_modules", "val": ": Optional[Union[list[str], str]] = None"}, {"name": "exclude_modules", "val": ": Optional[Union[list[str], str]] = None"}, {"name": "init_weights", "val": ": Union[bool, Literal['lycoris']] = True"}, {"name": "layers_to_transform", "val": ": Optional[Union[list[int], int]] = None"}, {"name": "layers_pattern", "val": ": Optional[Union[list[str], str]] = None"}, {"name": "modules_to_save", "val": ": Optional[list[str]] = None"}]}>
-- **r** (`int`) --
-  LoKr rank.
-- **alpha** (`int`) --
-  The alpha parameter for LoKr scaling.
-- **rank_dropout** (`float`) --
-  The dropout probability for rank dimension during training.
-- **module_dropout** (`float`) --
-  The dropout probability for disabling LoKr modules during training.
-- **use_effective_conv2d** (`bool`) --
-  Use parameter effective decomposition for Conv2d (and Conv1d) with ksize > 1 ("Proposition 3" from FedPara
-  paper).
-- **decompose_both** (`bool`) --
-  Perform rank decomposition of left kronecker product matrix.
-- **decompose_factor** (`int`) --
-  Kronecker product decomposition factor.
-- **rank_dropout_scale** ('bool) --
-  Whether to scale the rank dropout while training, defaults to `False`.
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen,
-  excluding the output layer. If this is not specified, modules will be chosen according to the model
-  architecture. If the architecture is not known, an error will be raised -- in this case, you should specify
-  the target modules manually.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **init_weights** (`bool`) --
-  Whether to perform initialization of adapter weights. This defaults to `True`. Use "lycoris" to initialize
-  weights in the style of the LYCORIS repository. Passing `False` is discouraged.
-- **layers_to_transform** (`Union[List[int], int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the
-  `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
-- **rank_pattern** (`dict`) --
-  The mapping from layer names or regexp expression to ranks which are different from the default rank
-  specified by `r`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
-- **alpha_pattern** (`dict`) --
-  The mapping from layer names or regexp expression to alphas which are different from the default alpha
-  specified by `alpha`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
-- **modules_to_save** (`Optional[List[str]]`) --
-  List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
+#### peft.LoKrConfig[[peft.LoKrConfig]]
+
+```python
+peft.LoKrConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, rank_pattern: Optional[dict] = <factory>, alpha_pattern: Optional[dict] = <factory>, r: int = 8, alpha: int = 8, rank_dropout: float = 0.0, module_dropout: float = 0.0, use_effective_conv2d: bool = False, decompose_both: bool = False, decompose_factor: int = -1, rank_dropout_scale: bool = False, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, init_weights: Union[bool, Literal['lycoris']] = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None, modules_to_save: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lokr/config.py#L24)
+
+**Parameters:**
+
+r (`int`) : LoKr rank.
+
+alpha (`int`) : The alpha parameter for LoKr scaling.
+
+rank_dropout (`float`) : The dropout probability for rank dimension during training.
+
+module_dropout (`float`) : The dropout probability for disabling LoKr modules during training.
+
+use_effective_conv2d (`bool`) : Use parameter effective decomposition for Conv2d (and Conv1d) with ksize > 1 ("Proposition 3" from FedPara paper).
+
+decompose_both (`bool`) : Perform rank decomposition of left kronecker product matrix.
+
+decompose_factor (`int`) : Kronecker product decomposition factor.
+
+rank_dropout_scale ('bool) : Whether to scale the rank dropout while training, defaults to `False`.
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen, excluding the output layer. If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+init_weights (`bool`) : Whether to perform initialization of adapter weights. This defaults to `True`. Use "lycoris" to initialize weights in the style of the LYCORIS repository. Passing `False` is discouraged.
+
+layers_to_transform (`Union[List[int], int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+
+rank_pattern (`dict`) : The mapping from layer names or regexp expression to ranks which are different from the default rank specified by `r`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
+
+alpha_pattern (`dict`) : The mapping from layer names or regexp expression to alphas which are different from the default alpha specified by `alpha`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
+
+modules_to_save (`Optional[List[str]]`) : List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
 
 Configuration class of [LoKrModel](/docs/peft/v0.20.0/en/package_reference/lokr#peft.LoKrModel).
 
 ## LoKrModel[[peft.LoKrModel]]
 
-- **model** (`torch.nn.Module`) -- The model to which the adapter tuner layers will be attached.
-- **config** ([LoKrConfig](/docs/peft/v0.20.0/en/package_reference/lokr#peft.LoKrConfig)) -- The configuration of the LoKr model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The LoKr model.
+#### peft.LoKrModel[[peft.LoKrModel]]
+
+```python
+peft.LoKrModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lokr/model.py#L27)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to which the adapter tuner layers will be attached.
+
+config ([LoKrConfig](/docs/peft/v0.20.0/en/package_reference/lokr#peft.LoKrConfig)) : The configuration of the LoKr model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The LoKr model.
 
 Creates Low-Rank Kronecker Product model from a pretrained model. The original method is partially described in
 https://huggingface.co/papers/2108.06098 and in https://huggingface.co/papers/2309.14859 Current implementation

@@ -140,6 +140,22 @@ repo_id = "yaak-ai/L2D-v3"
 dataset = StreamingLeRobotDataset(repo_id)  # streams directly from the Hub
 ```
 
+Datasets stored in an [HF Storage Bucket](https://huggingface.co/docs/hub/storage-buckets) (`hf://buckets/`) can be streamed the same way by passing `repo_type="bucket"`:
+
+```python
+dataset = StreamingLeRobotDataset("my-org/my-bucket", repo_type="bucket")
+```
+
+Both options are available in `lerobot-train` through `--dataset.streaming=true`, and `--dataset.repo_type=bucket` to stream from a bucket instead of a Hub dataset repo:
+
+```bash
+lerobot-train \
+  --dataset.repo_id=my-org/my-bucket \
+  --dataset.repo_type=bucket \
+  --dataset.streaming=true \
+  ...
+```
+
   
     <img
       src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/lerobotdataset-v3/streaming-lerobot.png"

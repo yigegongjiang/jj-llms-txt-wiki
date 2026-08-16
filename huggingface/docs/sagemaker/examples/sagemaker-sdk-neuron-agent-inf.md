@@ -1,6 +1,6 @@
 # Deploy an AI Agent on AWS Inferentia2 with SageMaker
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
  This notebook demontrates how to deploy an open-ource LLM on a real-time AWS endpoint with Neuron devices using Hugging Face library `optimum-neuron`, `strands-agent` and AWS Sagemaker.
 

@@ -10,9 +10,21 @@ For a high-level explanation of how MCP-backed environments move through `step()
 
 ### Environment server primitives[[openenv.core.Message]]
 
+#### openenv.core.Message[[openenv.core.Message]]
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L19)
+
 A message in a conversation.
 
 Compatible with Huggingface chat template format.
+
+#### openenv.core.ModelTokenizer[[openenv.core.ModelTokenizer]]
+
+```python
+openenv.core.ModelTokenizer(*args, **kwargs)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L29)
 
 Protocol for tokenizers that support chat templates.
 
@@ -20,23 +32,59 @@ This protocol defines the interface that tokenizers must implement
 to work with chat-based environments. It's compatible with
 Huggingface transformers tokenizers.
 
-- **conversation** (`list[Message]`) --
-  List of message dictionaries with 'role' and 'content'.
-- **tokenize** (`bool`, *optional*, defaults to `True`) --
-  Whether to tokenize the output.
-- **return_tensors** (`str`, *optional*) --
-  Format for returned tensors ('pt' for PyTorch).
-- ****kwargs** --
-  Additional arguments.Formatted and optionally tokenized conversation.
+#### apply_chat_template[[openenv.core.ModelTokenizer.apply_chat_template]]
+
+```python
+apply_chat_template(conversation: list, tokenize: bool = True, return_tensors: str | None = None, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L37)
+
+**Parameters:**
+
+conversation (`list[Message]`) : List of message dictionaries with 'role' and 'content'.
+
+tokenize (`bool`, *optional*, defaults to `True`) : Whether to tokenize the output.
+
+return_tensors (`str`, *optional*) : Format for returned tensors ('pt' for PyTorch).
+
+- ****kwargs** : Additional arguments.
+
+**Returns:**
+
+Formatted and optionally tokenized conversation.
+
 Apply a chat template to format and optionally tokenize a conversation.
 
-- **token_ids** (`Any`) --
-  Token IDs to decode.
-- **skip_special_tokens** (`bool`, *optional*, defaults to `False`) --
-  Whether to skip special tokens in output.
-- ****kwargs** --
-  Additional arguments.`str`Decoded text string.
+#### decode[[openenv.core.ModelTokenizer.decode]]
+
+```python
+decode(token_ids: typing.Any, skip_special_tokens: bool = False, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L61)
+
+**Parameters:**
+
+token_ids (`Any`) : Token IDs to decode.
+
+skip_special_tokens (`bool`, *optional*, defaults to `False`) : Whether to skip special tokens in output.
+
+- ****kwargs** : Additional arguments.
+
+**Returns:** `str`
+
+Decoded text string.
+
 Decode token IDs back to text.
+
+#### openenv.core.Transform[[openenv.core.Transform]]
+
+```python
+openenv.core.Transform()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L115)
 
 Transform observations to add rewards, metrics, or other modifications.
 
@@ -44,37 +92,50 @@ Transforms follow the TorchRL pattern where they take an observation
 and return a (potentially modified) observation. This allows for
 flexible reward computation and observation augmentation.
 
-- **transform** (*Transform*, *optional*) --
-Optional transform to apply to observations.
-- **rubric** (*Rubric*, *optional*) --
-  Optional rubric for reward computation. When provided, the
-  rubric's output can be used to set the observation's reward in step().
-- **SUPPORTS_CONCURRENT_SESSIONS** (*bool*) --
-  Whether this environment supports concurrent sessions. When `True`,
-  multiple WebSocket connections can each have their own environment
-  instance (up to `max_concurrent_envs`). When `False` (default),
-  the environment should only be used with a single session at a time.
-
-  Set this to `True` in your subclass if the environment uses proper
-  session isolation (unique working dirs, no shared mutable state, and
-  external resources that can handle concurrent access).
-- **rubric** (*Rubric*, *optional*) --
-  Optional rubric for computing rewards. Set in `__init__` and use in
-  `step()` to compute observation rewards. Training infrastructure can
-  access it for introspection:
+#### openenv.core.Environment[[openenv.core.Environment]]
 
 ```python
-for name, r in env.rubric.named_rubrics():
-    print(f"&amp;lcub;name}: &amp;lcub;r.last_score}")
+openenv.core.Environment(transform: typing.Optional[openenv.core.env_server.interfaces.Transform[~ObsT]] = None, rubric: typing.Optional[ForwardRef('Rubric')] = None)
 ```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L137)
+
+**Parameters:**
+
+transform (*Transform*, *optional*) : Optional transform to apply to observations.
+
+rubric (*Rubric*, *optional*) : Optional rubric for reward computation. When provided, the rubric's output can be used to set the observation's reward in step().
+
+SUPPORTS_CONCURRENT_SESSIONS (*bool*) : Whether this environment supports concurrent sessions. When `True`, multiple WebSocket connections can each have their own environment instance (up to `max_concurrent_envs`). When `False` (default), the environment should only be used with a single session at a time.  Set this to `True` in your subclass if the environment uses proper session isolation (unique working dirs, no shared mutable state, and external resources that can handle concurrent access).
+
+rubric (*Rubric*, *optional*) : Optional rubric for computing rewards. Set in `__init__` and use in `step()` to compute observation rewards. Training infrastructure can access it for introspection:  ```python for name, r in env.rubric.named_rubrics(): print(f"&amp;lcub;name}: &amp;lcub;r.last_score}") ```
+
 Base class for all environment servers following Gym/Gymnasium API.
 
 See [rfcs/004-rubrics.md](https://github.com/huggingface/OpenEnv/blob/main/rfcs/004-rubrics.md) for rubric design details.
+
+#### close[[openenv.core.Environment.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L348)
 
 Clean up resources used by the environment.
 
 Override this method to implement custom cleanup logic.
 Called when the environment is being destroyed or reset.
+
+#### get_metadata[[openenv.core.Environment.get_metadata]]
+
+```python
+get_metadata()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L236)
+
+**Returns:**
 
 `EnvironmentMetadata` with environment information.
 
@@ -83,13 +144,45 @@ Get metadata about this environment.
 Override this method to provide custom metadata for the environment.
 Default implementation returns basic metadata derived from class name.
 
+#### reset[[openenv.core.Environment.reset]]
+
+```python
+reset(seed: typing.Optional[int] = None, episode_id: typing.Optional[str] = None, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L186)
+
 Reset the environment and return initial observation.
+
+#### reset_async[[openenv.core.Environment.reset_async]]
+
+```python
+reset_async(seed: typing.Optional[int] = None, episode_id: typing.Optional[str] = None, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L196)
 
 Async version of reset. Default implementation calls sync reset.
 
 Override to provide true async implementation.
 
+#### step[[openenv.core.Environment.step]]
+
+```python
+step(action: ~ActT, timeout_s: typing.Optional[float] = None, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L208)
+
 Take a step in the environment.
+
+#### step_async[[openenv.core.Environment.step_async]]
+
+```python
+step_async(action: ~ActT, timeout_s: typing.Optional[float] = None, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L218)
 
 Async version of step. Default implementation calls sync step.
 
@@ -97,95 +190,347 @@ Override to provide true async implementation.
 
 ### Types[[openenv.core.ServerMode]]
 
+#### openenv.core.ServerMode[[openenv.core.ServerMode]]
+
+```python
+openenv.core.ServerMode(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L18)
+
 Server operation mode.
+
+#### openenv.core.HealthStatus[[openenv.core.HealthStatus]]
+
+```python
+openenv.core.HealthStatus(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L25)
 
 Server health status values.
 
+#### openenv.core.WSErrorCode[[openenv.core.WSErrorCode]]
+
+```python
+openenv.core.WSErrorCode(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L33)
+
 WebSocket error codes for structured error handling.
 
-"}]}>
+#### openenv.core.Action[[openenv.core.Action]]
+
+```python
+openenv.core.Action(metadata: typing.Dict[str, typing.Any] = <factory>)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L50)
 
 Base class for all environment actions.
 
 All action subclasses should inherit from this base class.
 Uses Pydantic for automatic validation and serialization.
 
-"}]}>
+#### openenv.core.Observation[[openenv.core.Observation]]
+
+```python
+openenv.core.Observation(done: bool = False, reward: bool | int | float | None = None, metadata: typing.Dict[str, typing.Any] = <factory>)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L68)
 
 Base class for all environment observations.
 
 All observation subclasses should inherit from this base class.
 Uses Pydantic for automatic validation and serialization.
 
+#### openenv.core.env_server.types.ResetRequest[[openenv.core.env_server.types.ResetRequest]]
+
+```python
+openenv.core.env_server.types.ResetRequest(seed: typing.Annotated[typing.Optional[int], Ge(ge=0)] = None, episode_id: typing.Annotated[typing.Optional[str], MaxLen(max_length=255)] = None, **extra_data: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L90)
+
 Request model for environment reset.
+
+#### openenv.core.env_server.types.ResetResponse[[openenv.core.env_server.types.ResetResponse]]
+
+```python
+openenv.core.env_server.types.ResetResponse(observation: typing.Dict[str, typing.Any], reward: typing.Optional[float] = None, done: bool = False, metadata: typing.Optional[typing.Dict[str, typing.Any]] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L106)
 
 Response model for environment reset.
 
+#### openenv.core.env_server.types.StepRequest[[openenv.core.env_server.types.StepRequest]]
+
+```python
+openenv.core.env_server.types.StepRequest(action: typing.Dict[str, typing.Any], timeout_s: typing.Annotated[typing.Optional[float], Gt(gt=0)] = None, request_id: typing.Annotated[typing.Optional[str], MaxLen(max_length=255)] = None, **extra_data: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L125)
+
 Request model for environment step.
+
+#### openenv.core.env_server.types.StepResponse[[openenv.core.env_server.types.StepResponse]]
+
+```python
+openenv.core.env_server.types.StepResponse(observation: typing.Dict[str, typing.Any], reward: typing.Optional[float] = None, done: bool = False, metadata: typing.Optional[typing.Dict[str, typing.Any]] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L154)
 
 Response model for environment step.
 
+#### openenv.core.BaseMessage[[openenv.core.BaseMessage]]
+
+```python
+openenv.core.BaseMessage()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L171)
+
 Base class for WebSocket messages with shared configuration.
+
+#### openenv.core.State[[openenv.core.State]]
+
+```python
+openenv.core.State(episode_id: typing.Optional[str] = None, step_count: Annotated = 0, **extra_data: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L180)
 
 Base class for environment state.
 
 Represents internal environment state, separate from observations.
 
+#### openenv.core.env_server.types.CodeExecResult[[openenv.core.env_server.types.CodeExecResult]]
+
+```python
+openenv.core.env_server.types.CodeExecResult(stdout: str, stderr: str, exit_code: int)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L202)
+
 Result of code execution containing stdout, stderr, and exit code.
+
+#### openenv.core.env_server.types.EnvironmentMetadata[[openenv.core.env_server.types.EnvironmentMetadata]]
+
+```python
+openenv.core.env_server.types.EnvironmentMetadata(name: str, description: str, readme_content: typing.Optional[str] = None, version: typing.Optional[str] = None, author: typing.Optional[str] = None, documentation_url: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L210)
 
 Metadata about an environment for documentation and UI purposes.
 
+#### openenv.core.SchemaResponse[[openenv.core.SchemaResponse]]
+
+```python
+openenv.core.SchemaResponse(action: typing.Dict[str, typing.Any], observation: typing.Dict[str, typing.Any], state: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L227)
+
 Response model for the combined schema endpoint.
 
-"}]}>
+#### openenv.core.HealthResponse[[openenv.core.HealthResponse]]
+
+```python
+openenv.core.HealthResponse(status: HealthStatus = <HealthStatus.HEALTHY: 'healthy'>)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L241)
 
 Response model for health check endpoint.
 
-"}]}>
+#### openenv.core.WSResetMessage[[openenv.core.WSResetMessage]]
+
+```python
+openenv.core.WSResetMessage(type: typing.Literal['reset'] = 'reset', data: typing.Dict[str, typing.Any] = <factory>)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L277)
 
 WebSocket message to reset the environment.
 
+#### openenv.core.WSStepMessage[[openenv.core.WSStepMessage]]
+
+```python
+openenv.core.WSStepMessage(type: typing.Literal['step'] = 'step', data: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L287)
+
 WebSocket message to execute a step.
+
+#### openenv.core.WSStateMessage[[openenv.core.WSStateMessage]]
+
+```python
+openenv.core.WSStateMessage(type: typing.Literal['state'] = 'state')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L296)
 
 WebSocket message to request current state.
 
+#### openenv.core.WSCloseMessage[[openenv.core.WSCloseMessage]]
+
+```python
+openenv.core.WSCloseMessage(type: typing.Literal['close'] = 'close')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L302)
+
 WebSocket message to close the session.
+
+#### openenv.core.WSObservationResponse[[openenv.core.WSObservationResponse]]
+
+```python
+openenv.core.WSObservationResponse(type: typing.Literal['observation'] = 'observation', data: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L317)
 
 WebSocket response containing an observation.
 
+#### openenv.core.WSStateResponse[[openenv.core.WSStateResponse]]
+
+```python
+openenv.core.WSStateResponse(type: typing.Literal['state'] = 'state', data: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L328)
+
 WebSocket response containing environment state.
+
+#### openenv.core.WSErrorResponse[[openenv.core.WSErrorResponse]]
+
+```python
+openenv.core.WSErrorResponse(type: typing.Literal['error'] = 'error', data: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L337)
 
 WebSocket response for errors.
 
+#### openenv.core.ConcurrencyConfig[[openenv.core.ConcurrencyConfig]]
+
+```python
+openenv.core.ConcurrencyConfig(max_concurrent_envs: Annotated = 1, session_timeout: typing.Annotated[typing.Optional[float], Gt(gt=0)] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L346)
+
 Configuration for concurrent environment sessions.
+
+#### openenv.core.ServerCapacityStatus[[openenv.core.ServerCapacityStatus]]
+
+```python
+openenv.core.ServerCapacityStatus(active_sessions: Annotated, max_sessions: Annotated)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L361)
 
 Status of server capacity for concurrent sessions.
 
+#### from_counts[[openenv.core.ServerCapacityStatus.from_counts]]
+
+```python
+from_counts(active: int, max_sessions: int)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L392)
+
 Create status from active and max session counts.
+
+#### openenv.core.SessionInfo[[openenv.core.SessionInfo]]
+
+```python
+openenv.core.SessionInfo(session_id: str, created_at: float, last_activity_at: float, step_count: Annotated = 0, environment_type: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L401)
 
 Information about an active session.
 
 ### Exceptions[[openenv.core.OpenEnvError]]
 
+#### openenv.core.OpenEnvError[[openenv.core.OpenEnvError]]
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/exceptions.py#L8)
+
 Base exception for all OpenEnv errors.
+
+#### openenv.core.ConcurrencyConfigurationError[[openenv.core.ConcurrencyConfigurationError]]
+
+```python
+openenv.core.ConcurrencyConfigurationError(environment_name: str, max_concurrent_envs: int, message: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/exceptions.py#L14)
 
 Raised when an environment is misconfigured for concurrent sessions.
 
 This error is raised during server startup when max_concurrent_envs > 1
 is specified for an environment that is not marked as SUPPORTS_CONCURRENT_SESSIONS.
 
+#### openenv.core.SessionCapacityError[[openenv.core.SessionCapacityError]]
+
+```python
+openenv.core.SessionCapacityError(active_sessions: int, max_sessions: int, message: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/exceptions.py#L42)
+
 Raised when the server cannot accept new sessions due to capacity limits.
 
 This error is raised when a new WebSocket connection is attempted but
 the server has already reached max_concurrent_envs active sessions.
 
+#### openenv.core.SessionNotFoundError[[openenv.core.SessionNotFoundError]]
+
+```python
+openenv.core.SessionNotFoundError(session_id: str, message: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/exceptions.py#L68)
+
 Raised when attempting to access a session that does not exist.
 
+#### openenv.core.SessionCreationError[[openenv.core.SessionCreationError]]
+
+```python
+openenv.core.SessionCreationError(reason: str, message: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/exceptions.py#L80)
+
 Raised when a session cannot be created.
+
+#### openenv.core.EnvironmentFactoryError[[openenv.core.EnvironmentFactoryError]]
+
+```python
+openenv.core.EnvironmentFactoryError(factory_name: str, message: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/exceptions.py#L92)
 
 Raised when the environment factory fails to create an instance.
 
 ### HTTP server utilities[[openenv.core.HTTPEnvServer]]
+
+#### openenv.core.HTTPEnvServer[[openenv.core.HTTPEnvServer]]
+
+```python
+openenv.core.HTTPEnvServer(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, env_name: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L140)
 
 HTTP server wrapper for Environment instances.
 
@@ -217,132 +562,270 @@ app = FastAPI()
 server.register_routes(app)
 ```
 
+#### get_capacity_status[[openenv.core.HTTPEnvServer.get_capacity_status]]
+
+```python
+get_capacity_status()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L317)
+
+**Returns:**
+
 `ServerCapacityStatus` with current session counts and availability.
 
 Get the current capacity status of the server.
 
-- **session_id** (`str`) --
-  The session ID to query.`SessionInfo` if the session exists, `None` otherwise.
+#### get_session_info[[openenv.core.HTTPEnvServer.get_session_info]]
+
+```python
+get_session_info(session_id: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L557)
+
+**Parameters:**
+
+session_id (`str`) : The session ID to query.
+
+**Returns:**
+
+`SessionInfo` if the session exists, `None` otherwise.
 
 Get information about a specific session.
 
-"}]}>
-- **app** (`FastAPI`) --
-  FastAPI application instance.
-- **mode** (`ServerMode` or `str`, *optional*, defaults to `ServerMode.SIMULATION`) --
-  Server mode. In production mode, simulation control endpoints (/reset, /step,
-  /state) are NOT registered. Only safe endpoints (/health, /schema, /metadata,
-  /ws) are available.- ``ValueError`` -- If `mode` is not a valid `ServerMode` or string equivalent.</raises><raisederrors>``ValueError``
+#### register_routes[[openenv.core.HTTPEnvServer.register_routes]]
+
+```python
+register_routes(app: FastAPI, mode: ServerMode | str = <ServerMode.SIMULATION: 'simulation'>)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L626)
+
+**Parameters:**
+
+app (`FastAPI`) : FastAPI application instance.
+
+mode (`ServerMode` or `str`, *optional*, defaults to `ServerMode.SIMULATION`) : Server mode. In production mode, simulation control endpoints (/reset, /step, /state) are NOT registered. Only safe endpoints (/health, /schema, /metadata, /ws) are available.
+
+**Raises:** ``ValueError``
+
+- ``ValueError`` -- If `mode` is not a valid `ServerMode` or string equivalent.
 
 Register HTTP routes on a FastAPI application.
 
-- **env** (`Callable[[], Environment]`) --
-  Environment factory (callable) that creates new instances.
-- **action_cls** (`Type[Action]`) --
-  The Action subclass this environment expects.
-- **observation_cls** (`Type[Observation]`) --
-  The Observation subclass this environment returns.
-- **env_name** (`str`, *optional*) --
-  Environment name for README loading.
-- **max_concurrent_envs** (`int`, *optional*) --
-  Maximum concurrent WebSocket sessions. Mutually exclusive with
-  `concurrency_config`.
-- **concurrency_config** (`ConcurrencyConfig`, *optional*) --
-  Advanced concurrency settings. Mutually exclusive with
-  `max_concurrent_envs`.
-- **gradio_builder** (`Callable`, *optional*) --
-  Callable to build a custom Gradio UI at /web. Signature:
-  `(web_manager, action_fields, metadata, is_chat_env, title, quick_start_md) -> gr.Blocks`.
-  When `None`, the default Gradio app is used.
-- **custom_tab_name** (`str`, *optional*, defaults to `"Custom"`) --
-  Label for the env-specific tab when `gradio_builder` is provided.
-- **custom_tab_primary** (`bool`, *optional*, defaults to `False`) --
-  When `True`, the env-specific tab is active first; the auto-generated
-  Playground becomes secondary.
-- **show_default_tab** (`bool`, *optional*, defaults to `True`) --
-  When `False`, mount the env's `gradio_builder` output alone (no
-  auto-generated Playground, no tab chrome). Only meaningful when
-  `gradio_builder` is provided.
-- **title_override** (`str`, *optional*) --
-  If set, used as the Gradio app title instead of the default
-  `"OpenEnv Agentic Environment: {name}"`.`FastAPI` application instance with or without web interface and README integration.
+#### openenv.core.create_app[[openenv.core.create_app]]
+
+```python
+openenv.core.create_app(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], env_name: Optional[str] = None, max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, gradio_builder: Optional[Callable[..., Any]] = None, custom_tab_name: str = 'Custom', custom_tab_primary: bool = False, show_default_tab: bool = True, title_override: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L1699)
+
+**Parameters:**
+
+env (`Callable[[], Environment]`) : Environment factory (callable) that creates new instances.
+
+action_cls (`Type[Action]`) : The Action subclass this environment expects.
+
+observation_cls (`Type[Observation]`) : The Observation subclass this environment returns.
+
+env_name (`str`, *optional*) : Environment name for README loading.
+
+max_concurrent_envs (`int`, *optional*) : Maximum concurrent WebSocket sessions. Mutually exclusive with `concurrency_config`.
+
+concurrency_config (`ConcurrencyConfig`, *optional*) : Advanced concurrency settings. Mutually exclusive with `max_concurrent_envs`.
+
+gradio_builder (`Callable`, *optional*) : Callable to build a custom Gradio UI at /web. Signature: `(web_manager, action_fields, metadata, is_chat_env, title, quick_start_md) -> gr.Blocks`. When `None`, the default Gradio app is used.
+
+custom_tab_name (`str`, *optional*, defaults to `"Custom"`) : Label for the env-specific tab when `gradio_builder` is provided.
+
+custom_tab_primary (`bool`, *optional*, defaults to `False`) : When `True`, the env-specific tab is active first; the auto-generated Playground becomes secondary.
+
+show_default_tab (`bool`, *optional*, defaults to `True`) : When `False`, mount the env's `gradio_builder` output alone (no auto-generated Playground, no tab chrome). Only meaningful when `gradio_builder` is provided.
+
+title_override (`str`, *optional*) : If set, used as the Gradio app title instead of the default `"OpenEnv Agentic Environment: {name}"`.
+
+**Returns:**
+
+`FastAPI` application instance with or without web interface and README integration.
 
 Create a FastAPI application with or without web interface.
 
 This function creates a FastAPI app with the web interface enabled by default,
 including README integration for better user experience.
 
-- **env** (`Callable[[], Environment]`) --
-  Environment factory (callable) that creates new instances.
-- **action_cls** (`Type[Action]`) --
-  The Action subclass this environment expects.
-- **observation_cls** (`Type[Observation]`) --
-  The Observation subclass this environment returns.
-- **max_concurrent_envs** (`int`, *optional*) --
-  Maximum concurrent WebSocket sessions. Mutually exclusive with
-  `concurrency_config`.
-- **concurrency_config** (`ConcurrencyConfig`, *optional*) --
-  Advanced concurrency settings. Mutually exclusive with
-  `max_concurrent_envs`.
-- **env_name** (`str`, *optional*) --
-  Optional environment name for task/split endpoints.`FastAPI` application instance.
+#### openenv.core.create_fastapi_app[[openenv.core.create_fastapi_app]]
+
+```python
+openenv.core.create_fastapi_app(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, env_name: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L1790)
+
+**Parameters:**
+
+env (`Callable[[], Environment]`) : Environment factory (callable) that creates new instances.
+
+action_cls (`Type[Action]`) : The Action subclass this environment expects.
+
+observation_cls (`Type[Observation]`) : The Observation subclass this environment returns.
+
+max_concurrent_envs (`int`, *optional*) : Maximum concurrent WebSocket sessions. Mutually exclusive with `concurrency_config`.
+
+concurrency_config (`ConcurrencyConfig`, *optional*) : Advanced concurrency settings. Mutually exclusive with `max_concurrent_envs`.
+
+env_name (`str`, *optional*) : Optional environment name for task/split endpoints.
+
+**Returns:**
+
+`FastAPI` application instance.
 
 Create a FastAPI application with comprehensive documentation.
 
 ### Web interface helpers[[openenv.core.env_server.web_interface.ActionLog]]
 
+#### openenv.core.env_server.web_interface.ActionLog[[openenv.core.env_server.web_interface.ActionLog]]
+
+```python
+openenv.core.env_server.web_interface.ActionLog(timestamp: str, action: typing.Dict[str, typing.Any], observation: typing.Dict[str, typing.Any], reward: typing.Optional[float] = None, done: bool, step_count: int)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L203)
+
 Log entry for an action taken.
 
-"}, {"name": "is_reset", "val": ": bool = True"}]}>
+#### openenv.core.env_server.web_interface.EpisodeState[[openenv.core.env_server.web_interface.EpisodeState]]
+
+```python
+openenv.core.env_server.web_interface.EpisodeState(episode_id: typing.Optional[str] = None, step_count: int, current_observation: typing.Optional[typing.Dict[str, typing.Any]] = None, action_logs: typing.List[openenv.core.env_server.web_interface.ActionLog] = <factory>, is_reset: bool = True)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L218)
 
 Current episode state for the web interface.
 
+#### openenv.core.WebInterfaceManager[[openenv.core.WebInterfaceManager]]
+
+```python
+openenv.core.WebInterfaceManager(env: Environment, action_cls: Type[Action], observation_cls: Type[Observation], metadata: Optional[EnvironmentMetadata] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L236)
+
 Manages the web interface for an environment.
+
+#### connect_websocket[[openenv.core.WebInterfaceManager.connect_websocket]]
+
+```python
+connect_websocket(websocket: WebSocket)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L306)
 
 Connect a new WebSocket client.
 
+#### disconnect_websocket[[openenv.core.WebInterfaceManager.disconnect_websocket]]
+
+```python
+disconnect_websocket(websocket: WebSocket)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L314)
+
 Disconnect a WebSocket client.
+
+#### get_state[[openenv.core.WebInterfaceManager.get_state]]
+
+```python
+get_state()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L419)
 
 Get current environment state.
 
+#### reset_environment[[openenv.core.WebInterfaceManager.reset_environment]]
+
+```python
+reset_environment(reset_kwargs: Optional[Dict[str, Any]] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L341)
+
 Reset the environment and update state.
+
+#### step_environment[[openenv.core.WebInterfaceManager.step_environment]]
+
+```python
+step_environment(action_data: Dict[str, Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L376)
 
 Execute a step in the environment and update state.
 
-- **env** -- The Environment instance to serve
-- **action_cls** -- The Action subclass this environment expects
-- **observation_cls** -- The Observation subclass this environment returns
-- **env_name** -- Optional environment name for README loading
-- **max_concurrent_envs** -- Maximum concurrent WebSocket sessions
-- **concurrency_config** -- Optional ConcurrencyConfig for advanced concurrency settings
-- **gradio_builder** -- Optional callable (web_manager, action_fields, metadata,
-  is_chat_env, title, quick_start_md) -> gr.Blocks to use instead of the
-  default Gradio UI. Lets envs replace or customize the /web interface.
-- **custom_tab_name** -- Label shown on the env-specific tab when `gradio_builder`
-  is provided. Defaults to `"Custom"` for backwards compatibility; envs
-  that ship a rich custom UI should pass a descriptive name
-  (e.g. `"REPL"`). Ignored when `show_default_tab=False` (no tab chrome
-  is rendered).
-- **custom_tab_primary** -- When True, the env-specific tab is rendered first and
-  selected by default; the auto-generated Playground becomes secondary.
-  Use this for envs whose custom tab is the real interaction surface
-  (so visitors don't land on a less informative schema form). Ignored
-  when `show_default_tab=False`.
-- **show_default_tab** -- When False, the auto-generated Playground tab is not
-  rendered and the env's `gradio_builder` output is mounted directly
-  (single-view UI, no tab chrome). Only meaningful when
-  `gradio_builder` is provided.
-- **title_override** -- If set, used verbatim as the Gradio app/browser-tab
-  title instead of the default `"OpenEnv Agentic Environment: &amp;lcub;name}"`.FastAPI application instance with web interface
+#### openenv.core.create_web_interface_app[[openenv.core.create_web_interface_app]]
+
+```python
+openenv.core.create_web_interface_app(env: Environment, action_cls: Type[Action], observation_cls: Type[Observation], env_name: Optional[str] = None, max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[Any] = None, gradio_builder: Optional[Callable[..., Any]] = None, custom_tab_name: str = 'Custom', custom_tab_primary: bool = False, show_default_tab: bool = True, title_override: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L425)
+
+**Parameters:**
+
+env : The Environment instance to serve
+
+action_cls : The Action subclass this environment expects
+
+observation_cls : The Observation subclass this environment returns
+
+env_name : Optional environment name for README loading
+
+max_concurrent_envs : Maximum concurrent WebSocket sessions
+
+concurrency_config : Optional ConcurrencyConfig for advanced concurrency settings
+
+gradio_builder : Optional callable (web_manager, action_fields, metadata, is_chat_env, title, quick_start_md) -> gr.Blocks to use instead of the default Gradio UI. Lets envs replace or customize the /web interface.
+
+custom_tab_name : Label shown on the env-specific tab when `gradio_builder` is provided. Defaults to `"Custom"` for backwards compatibility; envs that ship a rich custom UI should pass a descriptive name (e.g. `"REPL"`). Ignored when `show_default_tab=False` (no tab chrome is rendered).
+
+custom_tab_primary : When True, the env-specific tab is rendered first and selected by default; the auto-generated Playground becomes secondary. Use this for envs whose custom tab is the real interaction surface (so visitors don't land on a less informative schema form). Ignored when `show_default_tab=False`.
+
+show_default_tab : When False, the auto-generated Playground tab is not rendered and the env's `gradio_builder` output is mounted directly (single-view UI, no tab chrome). Only meaningful when `gradio_builder` is provided.
+
+title_override : If set, used verbatim as the Gradio app/browser-tab title instead of the default `"OpenEnv Agentic Environment: &amp;lcub;name}"`.
+
+**Returns:**
+
+FastAPI application instance with web interface
 
 Create a FastAPI application with web interface for the given environment.
 
 ### Serialization[[openenv.core.deserialize_action]]
 
-- **action_data** (*dict*) --
-  Dictionary containing action data.
-- **action_cls** (*type*) --
-  The Action subclass to instantiate.*Action* instance.- `ValidationError` -- If *action_data* is invalid for the action class.`ValidationError`
+#### openenv.core.deserialize_action[[openenv.core.deserialize_action]]
+
+```python
+openenv.core.deserialize_action(action_data: typing.Dict[str, typing.Any], action_cls: typing.Type[openenv.core.env_server.types.Action])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L42)
+
+**Parameters:**
+
+action_data (*dict*) : Dictionary containing action data.
+
+action_cls (*type*) : The Action subclass to instantiate.
+
+**Returns:**
+
+*Action* instance.
+
+**Raises:** `ValidationError`
+
+- `ValidationError` -- If *action_data* is invalid for the action class.
 
 Convert JSON dict to Action instance using Pydantic validation.
 
@@ -354,10 +837,27 @@ fall through to `action_cls.model_validate()`.
 For special cases (e.g., tensor fields, custom type conversions),
 use deserialize_action_with_preprocessing().
 
-- **action_data** (`dict`) --
-  Dictionary containing action data.
-- **action_cls** (`type`) --
-  The Action subclass to instantiate.`Action` instance.- ``ValidationError`` -- If `action_data` is invalid for the action class.</raises><raisederrors>``ValidationError``
+#### openenv.core.deserialize_action_with_preprocessing[[openenv.core.deserialize_action_with_preprocessing]]
+
+```python
+openenv.core.deserialize_action_with_preprocessing(action_data: typing.Dict[str, typing.Any], action_cls: typing.Type[openenv.core.env_server.types.Action])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L73)
+
+**Parameters:**
+
+action_data (`dict`) : Dictionary containing action data.
+
+action_cls (`type`) : The Action subclass to instantiate.
+
+**Returns:**
+
+`Action` instance.
+
+**Raises:** ``ValidationError``
+
+- ``ValidationError`` -- If `action_data` is invalid for the action class.
 
 Convert JSON dict to Action instance with preprocessing for special types.
 
@@ -366,8 +866,21 @@ This version handles common type conversions needed for web interfaces:
 - Converting string action_id to int
 - Other custom preprocessing as needed
 
-- **observation** (`Observation`) --
-  Observation instance to serialize.`dict` compatible with `EnvClient._parse_result()`, with keys- `observation` (`dict`): Observation fields.
+#### openenv.core.serialize_observation[[openenv.core.serialize_observation]]
+
+```python
+openenv.core.serialize_observation(observation: Observation)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L137)
+
+**Parameters:**
+
+observation (`Observation`) : Observation instance to serialize.
+
+**Returns:** `dict` compatible with `EnvClient._parse_result()`, with keys
+
+- `observation` (`dict`): Observation fields.
 - `reward` (`float` or `None`): Reward value.
 - `done` (`bool`): Whether the episode is done.
 - `metadata` (`dict`, *optional*): Additional observation metadata.
@@ -376,24 +889,65 @@ Convert Observation instance to JSON-compatible dict using Pydantic.
 
 ### Transforms[[openenv.core.CompositeTransform]]
 
+#### openenv.core.CompositeTransform[[openenv.core.CompositeTransform]]
+
+```python
+openenv.core.CompositeTransform(transforms: list)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/base_transforms.py#L9)
+
 Combines multiple transforms into a single transform.
+
+#### openenv.core.NullTransform[[openenv.core.NullTransform]]
+
+```python
+openenv.core.NullTransform()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/base_transforms.py#L21)
 
 Default transform that passes through unchanged.
 
 ### Route configuration[[openenv.core.GetEndpointConfig]]
 
+#### openenv.core.GetEndpointConfig[[openenv.core.GetEndpointConfig]]
+
+```python
+openenv.core.GetEndpointConfig(path: str, handler: typing.Callable[[], pydantic.main.BaseModel | dict], response_model: typing.Union[typing.Type[pydantic.main.BaseModel], type[dict]], tag: str, summary: str, description: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/route_config.py#L18)
+
 Configuration for a simple GET endpoint.
 
-- **app** (`~fastapi.FastAPI`) --
-  FastAPI application instance.
-- **configs** (`List[GetEndpointConfig]`) --
-  List of GET endpoint configurations.
+#### openenv.core.env_server.route_config.register_get_endpoints[[openenv.core.env_server.route_config.register_get_endpoints]]
+
+```python
+openenv.core.env_server.route_config.register_get_endpoints(app: FastAPI, configs: typing.List[openenv.core.env_server.route_config.GetEndpointConfig])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/route_config.py#L40)
+
+**Parameters:**
+
+app (`~fastapi.FastAPI`) : FastAPI application instance.
+
+configs (`List[GetEndpointConfig]`) : List of GET endpoint configurations.
 
 Register multiple GET endpoints from configuration.
 
 ## Clients
 
 ### Base client[[openenv.core.EnvClient]]
+
+#### openenv.core.EnvClient[[openenv.core.EnvClient]]
+
+```python
+openenv.core.EnvClient(base_url: Optional[str] = None, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, max_message_size_mb: float = 100.0, websocket_ping_interval_s: Optional[float] = 20.0, websocket_ping_timeout_s: Optional[float] = 20.0, provider: Optional['ContainerProvider | RuntimeProvider'] = None, mode: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L238)
 
 Async environment client for persistent sessions.
 
@@ -433,12 +987,25 @@ with env:
     result = env.step(action)
 ```
 
-- **image** (`str`) --
-  Docker image name to run (e.g., `"coding-env:latest"`).
-- **provider** (`ContainerProvider`, *optional*) --
-  Container provider to use. Defaults to `LocalDockerProvider`.
-- ****kwargs** --
-  Additional arguments to pass to `provider.start_container()`.`_BootstrapResult``await` for a connected async client, or call
+#### from_docker_image[[openenv.core.EnvClient.from_docker_image]]
+
+```python
+from_docker_image(image: str, provider: Optional['ContainerProvider'] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L629)
+
+**Parameters:**
+
+image (`str`) : Docker image name to run (e.g., `"coding-env:latest"`).
+
+provider (`ContainerProvider`, *optional*) : Container provider to use. Defaults to `LocalDockerProvider`.
+
+- ****kwargs** : Additional arguments to pass to `provider.start_container()`.
+
+**Returns:** `_BootstrapResult`
+
+`await` for a connected async client, or call
 `.sync()` for a connected `SyncEnvClient`.
 
 Create an environment client by spinning up a Docker container.
@@ -460,19 +1027,27 @@ env = MyEnv.from_docker_image("coding-env:latest").sync()
 result = env.reset()
 ```
 
-- **repo_id** (`str`) --
-  Hugging Face space identifier `{org}/{space}`.
-- **use_docker** (`bool`, *optional*, defaults to `True`) --
-  When `True`, pull from the HF registry and launch via `LocalDockerProvider`.
-  When `False`, run the space locally with `UVProvider`.
-- **provider** (`ContainerProvider` or `RuntimeProvider`, *optional*) --
-  Provider instance to reuse. Must be a `ContainerProvider` when
-  `use_docker=True` and a `RuntimeProvider` otherwise.
-- ****provider_kwargs** --
-  Additional keyword arguments forwarded to either the container provider's
-  `start_container` (docker) or to the `UVProvider` constructor/start (uv).
-  When `use_docker=False`, the `project_path` argument can be used to override
-  the default git URL (`git+https://huggingface.co/spaces/{repo_id}`).`_BootstrapResult``await` for a connected async client, or call
+#### from_env[[openenv.core.EnvClient.from_env]]
+
+```python
+from_env(repo_id: str, use_docker: bool = True, provider: Optional['ContainerProvider | RuntimeProvider'] = None, **provider_kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L749)
+
+**Parameters:**
+
+repo_id (`str`) : Hugging Face space identifier `{org}/{space}`.
+
+use_docker (`bool`, *optional*, defaults to `True`) : When `True`, pull from the HF registry and launch via `LocalDockerProvider`. When `False`, run the space locally with `UVProvider`.
+
+provider (`ContainerProvider` or `RuntimeProvider`, *optional*) : Provider instance to reuse. Must be a `ContainerProvider` when `use_docker=True` and a `RuntimeProvider` otherwise.
+
+- ****provider_kwargs** : Additional keyword arguments forwarded to either the container provider's `start_container` (docker) or to the `UVProvider` constructor/start (uv). When `use_docker=False`, the `project_path` argument can be used to override the default git URL (`git+https://huggingface.co/spaces/{repo_id}`).
+
+**Returns:** `_BootstrapResult`
+
+`await` for a connected async client, or call
 `.sync()` for a connected `SyncEnvClient`.
 
 Create a client from a Hugging Face Space.
@@ -501,7 +1076,17 @@ env = await MyEnv.from_env(
 )
 ```
 
-`EnvClient`A connected child client of the same concrete type.
+#### new_session[[openenv.core.EnvClient.new_session]]
+
+```python
+new_session()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L412)
+
+**Returns:** `EnvClient`
+
+A connected child client of the same concrete type.
 
 Create and connect a new session against the same environment server.
 
@@ -509,6 +1094,16 @@ The child session is tracked by this parent and closed when the parent
 is closed. Server-side capacity still applies: when the server is at
 `MAX_CONCURRENT_ENVS`, opening the child WebSocket can fail and is
 surfaced as a connection error.
+
+#### sync[[openenv.core.EnvClient.sync]]
+
+```python
+sync()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L952)
+
+**Returns:**
 
 SyncEnvClient wrapper that provides synchronous methods
 
@@ -533,7 +1128,17 @@ with sync_client:
 
 ### Synchronous client[[openenv.SyncEnvClient]]
 
-- **_async** -- The wrapped async EnvClient instance
+#### openenv.SyncEnvClient[[openenv.SyncEnvClient]]
+
+```python
+openenv.SyncEnvClient(async_client: 'EnvClient[ActT, ObsT, StateT]')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L43)
+
+**Parameters:**
+
+_async : The wrapped async EnvClient instance
 
 Synchronous wrapper around an async EnvClient.
 
@@ -561,15 +1166,51 @@ with sync_client:
     result = sync_client.step({"action": "test"})
 ```
 
+#### close[[openenv.SyncEnvClient.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L219)
+
 Close the connection and clean up resources.
+
+#### connect[[openenv.SyncEnvClient.connect]]
+
+```python
+connect()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L163)
+
+**Returns:**
 
 self for method chaining
 
 Establish connection to the server.
 
+#### disconnect[[openenv.SyncEnvClient.disconnect]]
+
+```python
+disconnect()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L174)
+
 Close the connection.
 
-`SyncEnvClient`A connected child wrapper around a child async
+#### new_session[[openenv.SyncEnvClient.new_session]]
+
+```python
+new_session()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L231)
+
+**Returns:** `SyncEnvClient`
+
+A connected child wrapper around a child async
 client of the same concrete type.
 
 Create a new synchronous session against the same environment server.
@@ -580,23 +1221,67 @@ reuses the parent's current base URL. Server-side capacity still
 applies: when the server is at `MAX_CONCURRENT_ENVS`, opening the child
 WebSocket can fail and is surfaced as a connection error.
 
-- ****kwargs** --
-  Optional parameters passed to the environment's reset method.StepResult containing initial observation
+#### reset[[openenv.SyncEnvClient.reset]]
+
+```python
+reset(**kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L179)
+
+**Parameters:**
+
+- ****kwargs** : Optional parameters passed to the environment's reset method.
+
+**Returns:**
+
+StepResult containing initial observation
 
 Reset the environment.
+
+#### state[[openenv.SyncEnvClient.state]]
+
+```python
+state()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L209)
+
+**Returns:**
 
 State object with environment state information
 
 Get the current environment state.
 
-- **action** --
-  The action to execute.
-- ****kwargs** --
-  Optional parameters.StepResult containing observation, reward, and done status
+#### step[[openenv.SyncEnvClient.step]]
+
+```python
+step(action: ActT, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/sync_client.py#L193)
+
+**Parameters:**
+
+action : The action to execute.
+
+- ****kwargs** : Optional parameters.
+
+**Returns:**
+
+StepResult containing observation, reward, and done status
 
 Execute an action in the environment.
 
 ### Generic client[[openenv.GenericEnvClient]]
+
+#### openenv.GenericEnvClient[[openenv.GenericEnvClient]]
+
+```python
+openenv.GenericEnvClient(base_url: Optional[str] = None, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, max_message_size_mb: float = 100.0, websocket_ping_interval_s: Optional[float] = 20.0, websocket_ping_timeout_s: Optional[float] = 20.0, provider: Optional['ContainerProvider | RuntimeProvider'] = None, mode: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/generic_client.py#L17)
 
 Environment client that works with raw dictionaries instead of typed classes.
 
@@ -636,6 +1321,14 @@ env.close()
 `EnvClient`, so you can use it with Docker containers and HuggingFace
 Spaces without any package installation.
 
+#### openenv.GenericAction[[openenv.GenericAction]]
+
+```python
+openenv.GenericAction(**kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/generic_client.py#L126)
+
 A dictionary subclass for creating actions when using GenericEnvClient.
 
 This provides a semantic wrapper around dictionaries to make code more
@@ -663,109 +1356,225 @@ to make code more readable.
 
 ### LLM client[[openenv.core.ToolCall]]
 
+#### openenv.core.ToolCall[[openenv.core.ToolCall]]
+
+```python
+openenv.core.ToolCall(id: str, name: str, args: dict[str, Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L33)
+
 A single tool/function call returned by the model.
 
-"}]}>
+#### openenv.core.LLMResponse[[openenv.core.LLMResponse]]
+
+```python
+openenv.core.LLMResponse(content: str, tool_calls: list[ToolCall] = <factory>)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L42)
 
 Normalized response from an LLM, with optional tool calls.
 
+#### to_message_dict[[openenv.core.LLMResponse.to_message_dict]]
+
+```python
+to_message_dict()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L48)
+
 Convert to an OpenAI-format assistant message dict.
 
-- **endpoint** (`str`) --
-  The base URL of the LLM service (e.g. "http://localhost").
-- **port** (`int`) --
-  The port the service listens on.
+#### openenv.core.LLMClient[[openenv.core.LLMClient]]
+
+```python
+openenv.core.LLMClient(endpoint: str, port: int)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L66)
+
+**Parameters:**
+
+endpoint (`str`) : The base URL of the LLM service (e.g. "http://localhost").
+
+port (`int`) : The port the service listens on.
+
 Abstract base for LLM endpoint clients.
 
 Subclass and implement `complete()` for your protocol.
 
-- **prompt** (`str`) --
-  The user prompt to send.
-- ****kwargs** --
-  Override default parameters (temperature, max_tokens, etc.).The model's text response.
+#### complete[[openenv.core.LLMClient.complete]]
+
+```python
+complete(prompt: str, **kwargs)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L82)
+
+**Parameters:**
+
+prompt (`str`) : The user prompt to send.
+
+- ****kwargs** : Override default parameters (temperature, max_tokens, etc.).
+
+**Returns:**
+
+The model's text response.
+
 Send a prompt, return the text response.
 
-- **messages** (`list[dict[str, Any]]`) --
-  Conversation history as OpenAI-format message dicts.
-- **tools** (`list[dict[str, Any]]`) --
-  MCP tool definitions.
-- ****kwargs** --
-  Override default parameters (temperature, max_tokens, etc.).An `LLMResponse` with the model's text and any tool calls.
+#### complete_with_tools[[openenv.core.LLMClient.complete_with_tools]]
+
+```python
+complete_with_tools(messages: list[dict[str, Any]], tools: list[dict[str, Any]], **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L97)
+
+**Parameters:**
+
+messages (`list[dict[str, Any]]`) : Conversation history as OpenAI-format message dicts.
+
+tools (`list[dict[str, Any]]`) : MCP tool definitions.
+
+- ****kwargs** : Override default parameters (temperature, max_tokens, etc.).
+
+**Returns:**
+
+An `LLMResponse` with the model's text and any tool calls.
+
 Send messages with tool definitions, return a normalized response.
 
 Messages use OpenAI-format dicts (`{"role": "...", "content": "..."}`).
 Tools use MCP tool definitions; they are converted internally.
 
-- **endpoint** (`str`) --
-  The base URL (e.g. "http://localhost").
-- **port** (`int`) --
-  The port number.
-- **model** (`str`) --
-  Model name to pass to the API.
-- **api_key** (`str`, *optional*) --
-  API key. Defaults to "not-needed" for local endpoints.
-- **system_prompt** (`str`, *optional*) --
-  System message prepended to every request.
-- **temperature** (`float`, *optional*, defaults to `0.0`) --
-  Default sampling temperature.
-- **max_tokens** (`int`, *optional*, defaults to `256`) --
-  Default max tokens in the response.
-- **use_max_completion_tokens** (`bool`, *optional*, defaults to `False`) --
-  Use max_completion_tokens instead of max_tokens. Required for newer OpenAI models
-  (gpt-5-mini, o1, o3). Not supported by self-hosted OpenAI-compatible endpoints.
+#### openenv.core.OpenAIClient[[openenv.core.OpenAIClient]]
+
+```python
+openenv.core.OpenAIClient(endpoint: str, port: int, model: str, api_key: str | None = None, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 256, use_max_completion_tokens: bool = False)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L129)
+
+**Parameters:**
+
+endpoint (`str`) : The base URL (e.g. "http://localhost").
+
+port (`int`) : The port number.
+
+model (`str`) : Model name to pass to the API.
+
+api_key (`str`, *optional*) : API key. Defaults to "not-needed" for local endpoints.
+
+system_prompt (`str`, *optional*) : System message prepended to every request.
+
+temperature (`float`, *optional*, defaults to `0.0`) : Default sampling temperature.
+
+max_tokens (`int`, *optional*, defaults to `256`) : Default max tokens in the response.
+
+use_max_completion_tokens (`bool`, *optional*, defaults to `False`) : Use max_completion_tokens instead of max_tokens. Required for newer OpenAI models (gpt-5-mini, o1, o3). Not supported by self-hosted OpenAI-compatible endpoints.
+
 Client for OpenAI-compatible APIs.
 
 Works with: OpenAI, vLLM, TGI, Ollama, HuggingFace Inference API,
 or any endpoint that speaks the OpenAI chat completions format.
 
-- **prompt** (`str`) --
-  The user message.
-- ****kwargs** --
-  Overrides for temperature, max_tokens.The assistant's response text.
+#### complete[[openenv.core.OpenAIClient.complete]]
+
+```python
+complete(prompt: str, **kwargs)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L193)
+
+**Parameters:**
+
+prompt (`str`) : The user message.
+
+- ****kwargs** : Overrides for temperature, max_tokens.
+
+**Returns:**
+
+The assistant's response text.
+
 Send a chat completion request.
 
-- **endpoint** (`str`) --
-  The base URL (e.g. `https://api.anthropic.com`).
-- **port** (`int`) --
-  The port number.
-- **model** (`str`) --
-  Model name (e.g. "claude-sonnet-4-20250514").
-- **api_key** (`str`, *optional*) --
-  Anthropic API key.
-- **system_prompt** (`str`, *optional*) --
-  System message prepended to every request.
-- **temperature** (`float`, *optional*, defaults to `0.0`) --
-  Default sampling temperature.
-- **max_tokens** (`int`, *optional*, defaults to `256`) --
-  Default max tokens in the response.
+#### openenv.core.AnthropicClient[[openenv.core.AnthropicClient]]
+
+```python
+openenv.core.AnthropicClient(endpoint: str, port: int, model: str, api_key: str | None = None, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 256)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L242)
+
+**Parameters:**
+
+endpoint (`str`) : The base URL (e.g. `https://api.anthropic.com`).
+
+port (`int`) : The port number.
+
+model (`str`) : Model name (e.g. "claude-sonnet-4-20250514").
+
+api_key (`str`, *optional*) : Anthropic API key.
+
+system_prompt (`str`, *optional*) : System message prepended to every request.
+
+temperature (`float`, *optional*, defaults to `0.0`) : Default sampling temperature.
+
+max_tokens (`int`, *optional*, defaults to `256`) : Default max tokens in the response.
+
 Client for Anthropic's Messages API.
 
 Requires the `anthropic` package (lazy-imported at construction time).
 
-- **provider** (`str`) --
-  Provider name ("openai" or "anthropic").
-- **model** (`str`) --
-  Model identifier.
-- **api_key** (`str`) --
-  API key for the provider.
-- **system_prompt** (`str`, *optional*) --
-  System message prepended to every request.
-- **temperature** (`float`, *optional*, defaults to `0.0`) --
-  Sampling temperature.
-- **max_tokens** (`int`, *optional*, defaults to `4096`) --
-  Maximum tokens in the response.A configured `LLMClient` instance.
+#### openenv.core.create_llm_client[[openenv.core.create_llm_client]]
+
+```python
+openenv.core.create_llm_client(provider: str, model: str, api_key: str, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 4096)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L359)
+
+**Parameters:**
+
+provider (`str`) : Provider name ("openai" or "anthropic").
+
+model (`str`) : Model identifier.
+
+api_key (`str`) : API key for the provider.
+
+system_prompt (`str`, *optional*) : System message prepended to every request.
+
+temperature (`float`, *optional*, defaults to `0.0`) : Sampling temperature.
+
+max_tokens (`int`, *optional*, defaults to `4096`) : Maximum tokens in the response.
+
+**Returns:**
+
+A configured `LLMClient` instance.
+
 Create an LLM client for a hosted provider.
 
 ### Shared dataclasses[[openenv.core.client_types.StepResult]]
 
-- **observation** --
-  The environment's observation after the action.
-- **reward** (`float`, *optional*) --
-  Scalar reward for this step.
-- **done** (`bool`, *optional*, defaults to `False`) --
-  Whether the episode is finished.
-- **metadata** (`dict`, *optional*) --
-  Additional metadata returned alongside the observation.
+#### openenv.core.client_types.StepResult[[openenv.core.client_types.StepResult]]
+
+```python
+openenv.core.client_types.StepResult(observation: ~ObsT, reward: typing.Optional[float] = None, done: bool = False, metadata: typing.Optional[typing.Dict[str, typing.Any]] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/client_types.py#L11)
+
+**Parameters:**
+
+observation : The environment's observation after the action.
+
+reward (`float`, *optional*) : Scalar reward for this step.
+
+done (`bool`, *optional*, defaults to `False`) : Whether the episode is finished.
+
+metadata (`dict`, *optional*) : Additional metadata returned alongside the observation.
 
 Represents the result of one environment step.
 
@@ -773,10 +1582,24 @@ Represents the result of one environment step.
 
 ### MCP environment[[openenv.core.MCPEnvironment]]
 
-- **mcp_server** -- A FastMCP server instance containing tool definitions.
-  The server's tools will be validated against reserved names.
-- **transform** -- Optional transform to apply to observations (inherited from Environment).- ``ValueError`` -- If any tool in the MCP server uses a reserved name
-  (reset, step, state, close).``ValueError``
+#### openenv.core.MCPEnvironment[[openenv.core.MCPEnvironment]]
+
+```python
+openenv.core.MCPEnvironment(mcp_server: typing.Any, transform: typing.Optional[typing.Any] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L133)
+
+**Parameters:**
+
+mcp_server : A FastMCP server instance containing tool definitions. The server's tools will be validated against reserved names.
+
+transform : Optional transform to apply to observations (inherited from Environment).
+
+**Raises:** ``ValueError``
+
+- ``ValueError`` -- If any tool in the MCP server uses a reserved name
+  (reset, step, state, close).
 
 Base class for environments that expose tools via MCP (Model Context Protocol).
 
@@ -806,20 +1629,50 @@ obs = env.step(ListToolsAction())
 obs.tools[0].name  # 'add'
 ```
 
+#### close[[openenv.core.MCPEnvironment.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L644)
+
 Clean up resources used by the environment.
 
 This method cleans up the MCP client and any other resources.
 Subclasses should call super().close() if they override this method.
 
-- **code** -- Python code to execute. Tools are available as functions
-  in the execution namespace. Set a variable named 'result'
-  to capture the return value.Observation with result in metadata["result"] or error in
+#### execute_code[[openenv.core.MCPEnvironment.execute_code]]
+
+```python
+execute_code(code: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L290)
+
+**Parameters:**
+
+code : Python code to execute. Tools are available as functions in the execution namespace. Set a variable named 'result' to capture the return value.
+
+**Returns:**
+
+Observation with result in metadata["result"] or error in
 metadata["error"].
 
 Execute Python code with tools available as callables.
 
 This enables the CodeAct pattern where agents write Python code
 that calls tools directly as functions, avoiding JSON-RPC overhead.
+
+#### get_callables[[openenv.core.MCPEnvironment.get_callables]]
+
+```python
+get_callables()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L259)
+
+**Returns:**
 
 Dictionary mapping tool names to callables.
 
@@ -828,6 +1681,14 @@ Get callable functions for code mode.
 Returns tool functions as direct Python callables, enabling code mode
 where agents write Python code that calls tools directly (no JSON-RPC
 overhead). Mode-specific tools are filtered by the current mode.
+
+#### mcp_session[[openenv.core.MCPEnvironment.mcp_session]]
+
+```python
+mcp_session()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L211)
 
 Context manager for MCP client sessions.
 
@@ -856,15 +1717,25 @@ No external lock is needed because `Client._connect` /
 `Client._disconnect` already serialise connection state changes
 through their own `anyio.Lock`.
 
-- **action** (`Action`) --
-  The action to execute. `ListToolsAction` returns available MCP tools,
-  `CallToolAction` invokes a specific MCP tool, and any other action
-  is delegated to _step_impl().
-- **timeout_s** (`float`, *optional*) --
-  Timeout in seconds for the action. Defaults to MCP_TOOL_CALL_TIMEOUT
-  (30s) for MCP actions.
-- ****kwargs** (`Any`) --
-  Additional arguments passed to handlers.`Observation``ListToolsObservation` for `ListToolsAction`,
+#### step[[openenv.core.MCPEnvironment.step]]
+
+```python
+step(action: Action, timeout_s: typing.Optional[float] = None, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L418)
+
+**Parameters:**
+
+action (`Action`) : The action to execute. `ListToolsAction` returns available MCP tools, `CallToolAction` invokes a specific MCP tool, and any other action is delegated to _step_impl().
+
+timeout_s (`float`, *optional*) : Timeout in seconds for the action. Defaults to MCP_TOOL_CALL_TIMEOUT (30s) for MCP actions.
+
+- ****kwargs** (`Any`) : Additional arguments passed to handlers.
+
+**Returns:** `Observation`
+
+`ListToolsObservation` for `ListToolsAction`,
 `CallToolObservation` for `CallToolAction`, or a subclass-defined
 Observation for other actions.
 
@@ -874,36 +1745,107 @@ This method routes MCP-specific actions (ListToolsAction, CallToolAction)
 to the appropriate handlers, while delegating all other actions to
 the subclass's _step_impl() method.
 
+#### step_async[[openenv.core.MCPEnvironment.step_async]]
+
+```python
+step_async(action: Action, timeout_s: typing.Optional[float] = None, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L597)
+
 Async step that routes MCP actions without going through run_async_safely.
 
 The WebSocket handler calls this directly on the outer event loop, where
 the MCP session is already open, avoiding the thread/event-loop deadlock
 that occurs when the sync step() path is used via run_in_executor.
 
-- **mode** -- Optional mode for the tool ("production" or "simulation").
-  If None, tool is available in all modes.A decorator function for registering tools.- ``ValueError`` -- If mode is not None, "production", or "simulation".</raises><raisederrors>``ValueError``
+#### tool[[openenv.core.MCPEnvironment.tool]]
+
+```python
+tool(mode: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_environment.py#L343)
+
+**Parameters:**
+
+mode : Optional mode for the tool ("production" or "simulation"). If None, tool is available in all modes.
+
+**Returns:**
+
+A decorator function for registering tools.
+
+**Raises:** ``ValueError``
+
+- ``ValueError`` -- If mode is not None, "production", or "simulation".
 
 Decorator for registering mode-aware tools.
 
 ### MCP types[[openenv.core.JsonRpcErrorCode]]
 
+#### openenv.core.JsonRpcErrorCode[[openenv.core.JsonRpcErrorCode]]
+
+```python
+openenv.core.JsonRpcErrorCode(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L29)
+
 Standard JSON-RPC 2.0 error codes.
 
 See: https://www.jsonrpc.org/specification#error_object
 
+#### openenv.core.McpMethod[[openenv.core.McpMethod]]
+
+```python
+openenv.core.McpMethod(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L47)
+
 Supported MCP method names.
+
+#### openenv.core.JsonRpcError[[openenv.core.JsonRpcError]]
+
+```python
+openenv.core.JsonRpcError(code: int, message: str, data: typing.Optional[typing.Any] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L54)
 
 JSON-RPC 2.0 error object.
 
 See: https://www.jsonrpc.org/specification#error_object
 
+#### from_code[[openenv.core.JsonRpcError.from_code]]
+
+```python
+from_code(code: JsonRpcErrorCode, message: typing.Optional[str] = None, data: typing.Any = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L69)
+
 Create an error from a standard error code.
 
-"}, {"name": "id", "val": ": typing.Union[str, int, NoneType] = None"}]}>
+#### openenv.core.JsonRpcRequest[[openenv.core.JsonRpcRequest]]
+
+```python
+openenv.core.JsonRpcRequest(jsonrpc: typing.Literal['2.0'], method: str, params: typing.Dict[str, typing.Any] = <factory>, id: typing.Union[str, int, NoneType] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L89)
 
 JSON-RPC 2.0 request object.
 
 See: https://www.jsonrpc.org/specification#request_object
+
+#### openenv.core.JsonRpcResponse[[openenv.core.JsonRpcResponse]]
+
+```python
+openenv.core.JsonRpcResponse(jsonrpc: typing.Literal['2.0'] = '2.0', result: typing.Optional[typing.Any] = None, error: typing.Optional[openenv.core.env_server.mcp_types.JsonRpcError] = None, id: typing.Union[str, int, NoneType] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L108)
 
 JSON-RPC 2.0 response object.
 
@@ -912,27 +1854,89 @@ This model excludes None values during serialization to comply with the spec.
 
 See: https://www.jsonrpc.org/specification#response_object
 
+#### error_response[[openenv.core.JsonRpcResponse.error_response]]
+
+```python
+error_response(code: JsonRpcErrorCode, message: typing.Optional[str] = None, data: typing.Any = None, request_id: typing.Union[str, int, NoneType] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L159)
+
 Create an error response from a standard error code.
+
+#### model_dump[[openenv.core.JsonRpcResponse.model_dump]]
+
+```python
+model_dump(**kwargs)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L131)
 
 Serialize to dict, excluding result or error when None (JSON-RPC compliance).
 
+#### model_dump_json[[openenv.core.JsonRpcResponse.model_dump_json]]
+
+```python
+model_dump_json(**kwargs)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L146)
+
 Serialize to JSON string, excluding result or error when None (JSON-RPC compliance).
 
+#### success[[openenv.core.JsonRpcResponse.success]]
+
+```python
+success(result: typing.Any, request_id: typing.Union[str, int, NoneType] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L152)
+
 Create a success response.
+
+#### openenv.core.Tool[[openenv.core.Tool]]
+
+```python
+openenv.core.Tool(name: str, description: str, input_schema: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L179)
 
 Strongly typed MCP tool specification.
 
 Follows the MCP ToolSpec format for tool discovery.
 See: https://modelcontextprotocol.io/specification/2025-06-18/server/tools
 
+#### openenv.core.ToolErrorType[[openenv.core.ToolErrorType]]
+
+```python
+openenv.core.ToolErrorType(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L198)
+
 Types of errors that can occur during tool execution.
+
+#### openenv.core.ToolError[[openenv.core.ToolError]]
+
+```python
+openenv.core.ToolError(error_type: ToolErrorType, message: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L208)
 
 Structured error for tool execution failures.
 
 This is used for transport/framework errors, NOT for errors returned
 by the tool itself (those go in the result field).
 
-"}, {"name": "type", "val": ": typing.Literal['list_tools'] = 'list_tools'"}]}>
+#### openenv.core.ListToolsAction[[openenv.core.ListToolsAction]]
+
+```python
+openenv.core.ListToolsAction(metadata: typing.Dict[str, typing.Any] = <factory>, type: typing.Literal['list_tools'] = 'list_tools')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L225)
 
 Request list of available tools from the environment.
 
@@ -940,20 +1944,38 @@ This action triggers MCP's tools/list operation and returns
 all available tools with their schemas. Does NOT require reset()
 to be called first.
 
-"}, {"name": "type", "val": ": typing.Literal['call_tool'] = 'call_tool'"}, {"name": "tool_name", "val": ": str"}, {"name": "arguments", "val": ": typing.Dict[str, typing.Any] = "}]}>
+#### openenv.core.CallToolAction[[openenv.core.CallToolAction]]
+
+```python
+openenv.core.CallToolAction(metadata: typing.Dict[str, typing.Any] = <factory>, type: typing.Literal['call_tool'] = 'call_tool', tool_name: str, arguments: typing.Dict[str, typing.Any] = <factory>)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L239)
 
 Call a specific tool via MCP.
 
 This action triggers MCP's tools/call operation with the
 specified tool name and arguments.
 
-"}, {"name": "tools", "val": ": typing.List[openenv.core.env_server.mcp_types.Tool]"}]}>
+#### openenv.core.ListToolsObservation[[openenv.core.ListToolsObservation]]
+
+```python
+openenv.core.ListToolsObservation(done: bool = False, reward: bool | int | float | None = None, metadata: typing.Dict[str, typing.Any] = <factory>, tools: typing.List[openenv.core.env_server.mcp_types.Tool])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L259)
 
 Response containing available tools.
 
 Returned when processing a ListToolsAction.
 
-"}, {"name": "tool_name", "val": ": str"}, {"name": "result", "val": ": typing.Any = None"}, {"name": "error", "val": ": typing.Optional[openenv.core.env_server.mcp_types.ToolError] = None"}]}>
+#### openenv.core.CallToolObservation[[openenv.core.CallToolObservation]]
+
+```python
+openenv.core.CallToolObservation(done: bool = False, reward: bool | int | float | None = None, metadata: typing.Dict[str, typing.Any] = <factory>, tool_name: str, result: typing.Any = None, error: typing.Optional[openenv.core.env_server.mcp_types.ToolError] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L269)
 
 Response from tool execution.
 
@@ -961,10 +1983,26 @@ Contains the tool's result or an error if the call failed.
 Tool-specific errors (from the tool itself) are included in the result.
 Transport/framework errors use the error field.
 
+#### openenv.core.WSMCPMessage[[openenv.core.WSMCPMessage]]
+
+```python
+openenv.core.WSMCPMessage(type: typing.Literal['mcp'] = 'mcp', data: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L290)
+
 WebSocket message for MCP JSON-RPC requests.
 
 Allows direct MCP access via WebSocket for production inference,
 bypassing the step() API.
+
+#### openenv.core.WSMCPResponse[[openenv.core.WSMCPResponse]]
+
+```python
+openenv.core.WSMCPResponse(type: str = 'mcp', data: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/mcp_types.py#L302)
 
 WebSocket response for MCP JSON-RPC.
 
@@ -972,7 +2010,17 @@ Contains the JSON-RPC response from the MCP server.
 
 ### MCP client[[openenv.core.MCPClientBase]]
 
-- **_tools_cache** -- Cached list of tools (populated on first `list_tools()` call)
+#### openenv.core.MCPClientBase[[openenv.core.MCPClientBase]]
+
+```python
+openenv.core.MCPClientBase(base_url: str, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, websocket_ping_interval_s: typing.Optional[float] = 20.0, websocket_ping_timeout_s: typing.Optional[float] = 20.0, provider: typing.Optional[typing.Any] = None, mode: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L94)
+
+**Parameters:**
+
+_tools_cache : Cached list of tools (populated on first `list_tools()` call)
 
 Base class for MCP clients with tool discovery.
 
@@ -980,13 +2028,34 @@ This class provides the common `list_tools()` method for discovering
 available tools from an MCP-enabled environment. Subclasses implement
 specific interaction patterns (tool-calling or CodeAct).
 
+#### close[[openenv.core.MCPClientBase.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L342)
+
 Close client resources.
 
 In production MCP mode, this also closes the server-side persistent
 MCP session (best effort) before closing websocket/provider resources.
 
-- **use_cache** (`bool`, *optional*, defaults to `True`) --
-  If `True`, return cached tools if available. Set to `False` to force a fresh request.List of `Tool` objects with name, description, and input_schema.
+#### list_tools[[openenv.core.MCPClientBase.list_tools]]
+
+```python
+list_tools(use_cache: bool = True)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L219)
+
+**Parameters:**
+
+use_cache (`bool`, *optional*, defaults to `True`) : If `True`, return cached tools if available. Set to `False` to force a fresh request.
+
+**Returns:**
+
+List of `Tool` objects with name, description, and input_schema.
 
 Discover available tools from the environment.
 
@@ -997,6 +2066,14 @@ tools = await env.list_tools()
 for tool in tools:
     print(f"{tool.name}: {tool.description}")
 ```
+
+#### openenv.core.MCPToolClient[[openenv.core.MCPToolClient]]
+
+```python
+openenv.core.MCPToolClient(base_url: str, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, websocket_ping_interval_s: typing.Optional[float] = 20.0, websocket_ping_timeout_s: typing.Optional[float] = 20.0, provider: typing.Optional[typing.Any] = None, mode: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L372)
 
 Async client for tool-calling style MCP interactions.
 
@@ -1040,10 +2117,27 @@ with env:
     result = env.call_tool("echo_message", message="Hello!")
 ```
 
-- **name** (`str`) --
-  Name of the tool to invoke (must match a tool from `list_tools()`).
-- ****kwargs** --
-  Arguments to pass to the tool. Must match the tool's input_schema.The tool's result. The type depends on the tool being called.- ``RuntimeError`` -- If the server returns an error response.</raises><raisederrors>``RuntimeError``
+#### call_tool[[openenv.core.MCPToolClient.call_tool]]
+
+```python
+call_tool(name: str, **kwargs: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L417)
+
+**Parameters:**
+
+name (`str`) : Name of the tool to invoke (must match a tool from `list_tools()`).
+
+- ****kwargs** : Arguments to pass to the tool. Must match the tool's input_schema.
+
+**Returns:**
+
+The tool's result. The type depends on the tool being called.
+
+**Raises:** ``RuntimeError``
+
+- ``RuntimeError`` -- If the server returns an error response.
 
 Call a tool by name.
 
@@ -1061,8 +2155,21 @@ result = await env.call_tool("greet", name="Claude")
 print(result)  # "Hello, Claude!"
 ```
 
-- **name** (`str`) --
-  Name of the tool to find.The `Tool` object if found, `None` otherwise.
+#### get_tool[[openenv.core.MCPToolClient.get_tool]]
+
+```python
+get_tool(name: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L493)
+
+**Parameters:**
+
+name (`str`) : Name of the tool to find.
+
+**Returns:**
+
+The `Tool` object if found, `None` otherwise.
 
 Get a specific tool by name.
 
@@ -1075,12 +2182,33 @@ if tool:
     print(tool.input_schema)
 ```
 
-- **name** (`str`) --
-  Name of the tool to check.`True` if the tool exists, `False` otherwise.
+#### has_tool[[openenv.core.MCPToolClient.has_tool]]
+
+```python
+has_tool(name: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L519)
+
+**Parameters:**
+
+name (`str`) : Name of the tool to check.
+
+**Returns:**
+
+`True` if the tool exists, `False` otherwise.
 
 Check if a tool exists.
 
 ## Rubrics[[openenv.core.rubrics.Rubric]]
+
+#### openenv.core.rubrics.Rubric[[openenv.core.rubrics.Rubric]]
+
+```python
+openenv.core.rubrics.Rubric()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L17)
 
 Abstract base class for reward computation.
 
@@ -1101,35 +2229,153 @@ reward = rubric(action, observation)
 Child rubrics are auto-registered when assigned as attributes,
 enabling hierarchical composition and introspection.
 
+#### children[[openenv.core.rubrics.Rubric.children]]
+
+```python
+children()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L164)
+
 Iterate over immediate child rubrics.
 
-- **action** -- The action taken by the agent.
-- **observation** -- The resulting observation.`float`Reward value (typically 0.0 to 1.0).
+#### forward[[openenv.core.rubrics.Rubric.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L129)
+
+**Parameters:**
+
+action : The action taken by the agent.
+
+observation : The resulting observation.
+
+**Returns:** `float`
+
+Reward value (typically 0.0 to 1.0).
+
 Compute the reward. Implement this in subclasses.
 
-- **path** (`str`) --
-  Dot-separated path (e.g., "code.syntax").`Rubric`The rubric at the specified path.- ``KeyError`` -- If the path does not exist.</raises><raisederrors>``KeyError``
+#### get_rubric[[openenv.core.rubrics.Rubric.get_rubric]]
+
+```python
+get_rubric(path: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L185)
+
+**Parameters:**
+
+path (`str`) : Dot-separated path (e.g., "code.syntax").
+
+**Returns:** `Rubric`
+
+The rubric at the specified path.
+
+**Raises:** ``KeyError``
+
+- ``KeyError`` -- If the path does not exist.
+
 Access a nested rubric by dot-separated path.
+
+#### load_state_dict[[openenv.core.rubrics.Rubric.load_state_dict]]
+
+```python
+load_state_dict(state: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L214)
 
 Load rubric configuration from checkpoint.
 
+#### named_children[[openenv.core.rubrics.Rubric.named_children]]
+
+```python
+named_children()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L168)
+
 Iterate over immediate child rubrics with names.
+
+#### named_rubrics[[openenv.core.rubrics.Rubric.named_rubrics]]
+
+```python
+named_rubrics(prefix: str = '')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L178)
 
 Iterate over all descendant rubrics with dot-separated names.
 
-- **hook** (`Callable`) --
-  Callable with signature (rubric, action, observation, result).
+#### register_forward_hook[[openenv.core.rubrics.Rubric.register_forward_hook]]
+
+```python
+register_forward_hook(hook: typing.Callable[[ForwardRef('Rubric'), typing.Any, typing.Any, float], NoneType])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L142)
+
+**Parameters:**
+
+hook (`Callable`) : Callable with signature (rubric, action, observation, result).
+
 Register a hook called after forward().
 
-- **hook** (`Callable`) --
-  Callable with signature (rubric, action, observation).
+#### register_forward_pre_hook[[openenv.core.rubrics.Rubric.register_forward_pre_hook]]
+
+```python
+register_forward_pre_hook(hook: typing.Callable[[ForwardRef('Rubric'), typing.Any, typing.Any], NoneType])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L153)
+
+**Parameters:**
+
+hook (`Callable`) : Callable with signature (rubric, action, observation).
+
 Register a hook called before forward().
+
+#### reset[[openenv.core.rubrics.Rubric.reset]]
+
+```python
+reset()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L206)
 
 Reset any internal state. Override in subclasses if needed.
 
+#### rubrics[[openenv.core.rubrics.Rubric.rubrics]]
+
+```python
+rubrics()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L172)
+
 Iterate over all descendant rubrics (depth-first).
 
+#### state_dict[[openenv.core.rubrics.Rubric.state_dict]]
+
+```python
+state_dict()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/base.py#L210)
+
 Serialize rubric configuration for checkpointing.
+
+#### openenv.core.rubrics.Sequential[[openenv.core.rubrics.Sequential]]
+
+```python
+openenv.core.rubrics.Sequential(*rubrics: Rubric)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L27)
 
 Run rubrics in order, fail-fast on zero.
 
@@ -1147,7 +2393,23 @@ rubric = Sequential(
 )
 ```
 
+#### forward[[openenv.core.rubrics.Sequential.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L57)
+
 Run rubrics in order, return 0 if any returns 0. Sync version.
+
+#### openenv.core.rubrics.Gate[[openenv.core.rubrics.Gate]]
+
+```python
+openenv.core.rubrics.Gate(rubric: Rubric, threshold: float = 1.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L167)
 
 Threshold wrapper - returns 0 if child score is below threshold.
 
@@ -1160,7 +2422,23 @@ rubric = Gate(PassesTests(), threshold=0.5)
 # Returns PassesTests() score if >= 0.5, else 0.0
 ```
 
+#### forward[[openenv.core.rubrics.Gate.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L193)
+
 Return child score if >= threshold, else 0. Sync version.
+
+#### openenv.core.rubrics.WeightedSum[[openenv.core.rubrics.WeightedSum]]
+
+```python
+openenv.core.rubrics.WeightedSum(rubrics: typing.List[openenv.core.rubrics.base.Rubric], weights: typing.List[float])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L223)
 
 Weighted combination of child rubrics.
 
@@ -1175,7 +2453,23 @@ rubric = WeightedSum(
 )
 ```
 
+#### forward[[openenv.core.rubrics.WeightedSum.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L264)
+
 Return weighted sum of child scores. Sync version.
+
+#### openenv.core.rubrics.RubricList[[openenv.core.rubrics.RubricList]]
+
+```python
+openenv.core.rubrics.RubricList(rubrics: typing.List[openenv.core.rubrics.base.Rubric] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L326)
 
 Container for dynamic lists of rubrics.
 
@@ -1194,11 +2488,43 @@ class MultiGameRubric(Rubric):
         return self.games[obs.game_index](action, obs)
 ```
 
+#### append[[openenv.core.rubrics.RubricList.append]]
+
+```python
+append(rubric: Rubric)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L365)
+
 Add a rubric to the list.
+
+#### extend[[openenv.core.rubrics.RubricList.extend]]
+
+```python
+extend(rubrics: typing.List[openenv.core.rubrics.base.Rubric])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L371)
 
 Add multiple rubrics to the list.
 
+#### forward[[openenv.core.rubrics.RubricList.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L358)
+
 RubricList does not define aggregation - override in parent.
+
+#### openenv.core.rubrics.RubricDict[[openenv.core.rubrics.RubricDict]]
+
+```python
+openenv.core.rubrics.RubricDict(rubrics: typing.Dict[str, openenv.core.rubrics.base.Rubric] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L386)
 
 Container for named rubrics with keyed access.
 
@@ -1223,15 +2549,63 @@ class AtariRubric(Rubric):
 # Access: env.rubric.games["pong"]
 ```
 
+#### forward[[openenv.core.rubrics.RubricDict.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L424)
+
 RubricDict does not define aggregation - override in parent.
+
+#### items[[openenv.core.rubrics.RubricDict.items]]
+
+```python
+items()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L458)
 
 Iterate over (key, rubric) pairs.
 
+#### keys[[openenv.core.rubrics.RubricDict.keys]]
+
+```python
+keys()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L450)
+
 Iterate over keys.
+
+#### update[[openenv.core.rubrics.RubricDict.update]]
+
+```python
+update(rubrics: typing.Union[typing.Dict[str, openenv.core.rubrics.base.Rubric], typing.Mapping[str, openenv.core.rubrics.base.Rubric]])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L462)
 
 Update with rubrics from a dictionary.
 
+#### values[[openenv.core.rubrics.RubricDict.values]]
+
+```python
+values()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/containers.py#L454)
+
 Iterate over rubrics.
+
+#### openenv.core.rubrics.TrajectoryRubric[[openenv.core.rubrics.TrajectoryRubric]]
+
+```python
+openenv.core.rubrics.TrajectoryRubric(intermediate_reward: float = 0.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L22)
 
 Abstract base for rubrics that score based on full trajectories.
 
@@ -1268,29 +2642,102 @@ for action, obs in episode:
 step_rewards = rubric.compute_step_rewards()  # Credit assignment
 ```
 
-`list[float]`Rewards, one per step. Length matches len(trajectory).
+#### compute_step_rewards[[openenv.core.rubrics.TrajectoryRubric.compute_step_rewards]]
+
+```python
+compute_step_rewards()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L107)
+
+**Returns:** `list[float]`
+
+Rewards, one per step. Length matches len(trajectory).
+
 Compute per-step rewards from the accumulated trajectory.
 
 Define your credit assignment strategy here (e.g., discounting,
 assigning all credit to specific steps, etc.).
 
-- **action** -- The action taken.
-- **observation** -- The resulting observation. Must have a 'done' attribute.`float`intermediate_reward if not done, else score_trajectory() result.
+#### forward[[openenv.core.rubrics.TrajectoryRubric.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L73)
+
+**Parameters:**
+
+action : The action taken.
+
+observation : The resulting observation. Must have a 'done' attribute.
+
+**Returns:** `float`
+
+intermediate_reward if not done, else score_trajectory() result.
+
 Accumulate step and return reward.
 
 Returns intermediate_reward until done, then computes trajectory score.
 
+#### load_state_dict[[openenv.core.rubrics.TrajectoryRubric.load_state_dict]]
+
+```python
+load_state_dict(state: typing.Dict[str, typing.Any])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L132)
+
 Load configuration from checkpoint.
+
+#### reset[[openenv.core.rubrics.TrajectoryRubric.reset]]
+
+```python
+reset()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L119)
 
 Clear accumulated trajectory. Call on env.reset().
 
-- **trajectory** (`list`) --
-  List of (action, observation) tuples.`float`Final trajectory score (typically 0.0 to 1.0).
+#### score_trajectory[[openenv.core.rubrics.TrajectoryRubric.score_trajectory]]
+
+```python
+score_trajectory(trajectory: typing.List[typing.Tuple[typing.Any, typing.Any]])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L92)
+
+**Parameters:**
+
+trajectory (`list`) : List of (action, observation) tuples.
+
+**Returns:** `float`
+
+Final trajectory score (typically 0.0 to 1.0).
+
 Score the complete trajectory. Return 0.0-1.0.
 
 Called when observation.done=True.
 
+#### state_dict[[openenv.core.rubrics.TrajectoryRubric.state_dict]]
+
+```python
+state_dict()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L128)
+
 Serialize configuration (not trajectory data).
+
+#### openenv.core.rubrics.ExponentialDiscountingTrajectoryRubric[[openenv.core.rubrics.ExponentialDiscountingTrajectoryRubric]]
+
+```python
+openenv.core.rubrics.ExponentialDiscountingTrajectoryRubric(gamma: float = 0.99, intermediate_reward: float = 0.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L138)
 
 TrajectoryRubric with exponential discounting for credit assignment.
 
@@ -1323,42 +2770,115 @@ reward = rubric(action, obs)  # 0.0 until done, then final score
 step_rewards = rubric.compute_step_rewards()  # Discounted per-step rewards
 ```
 
-`list[float]`Discounted rewards where `step_rewards[t] = gamma^(T-1-t) * R_final`,
+#### compute_step_rewards[[openenv.core.rubrics.ExponentialDiscountingTrajectoryRubric.compute_step_rewards]]
+
+```python
+compute_step_rewards()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L187)
+
+**Returns:** `list[float]`
+
+Discounted rewards where `step_rewards[t] = gamma^(T-1-t) * R_final`,
 T is the trajectory length and R_final is score_trajectory().
+
 Apply exponential discounting from final reward.
+
+#### state_dict[[openenv.core.rubrics.ExponentialDiscountingTrajectoryRubric.state_dict]]
+
+```python
+state_dict()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/trajectory.py#L201)
 
 Serialize configuration.
 
-- **prompt_template** (*str*) --
-  Template string with &amp;lcub;action} and &amp;lcub;observation} placeholders.
-- **client** (*LLMClient*) --
-  An LLMClient instance for making LLM calls.
-- **score_pattern** (*str*, *optional*) --
-  Regex to extract the score from the LLM response. Defaults to matching
-  the first decimal number.
-- **default_score** (*float*, *optional*, defaults to *0.0*) --
-  Score returned when parsing fails.
-- **normalize** (*bool*, *optional*, defaults to *True*) --
-  If True, clamp extracted score to [0, 1].
+#### openenv.core.rubrics.LLMJudge[[openenv.core.rubrics.LLMJudge]]
+
+```python
+openenv.core.rubrics.LLMJudge(prompt_template: str, client: LLMClient, score_pattern: str | None = None, default_score: float = 0.0, normalize: bool = True)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/llm_judge.py#L28)
+
+**Parameters:**
+
+prompt_template (*str*) : Template string with &amp;lcub;action} and &amp;lcub;observation} placeholders.
+
+client (*LLMClient*) : An LLMClient instance for making LLM calls.
+
+score_pattern (*str*, *optional*) : Regex to extract the score from the LLM response. Defaults to matching the first decimal number.
+
+default_score (*float*, *optional*, defaults to *0.0*) : Score returned when parsing fails.
+
+normalize (*bool*, *optional*, defaults to *True*) : If True, clamp extracted score to [0, 1].
+
 Rubric that uses an LLM to evaluate agent actions/observations.
 
 The prompt template is formatted with `&amp;lcub;action}` and `&amp;lcub;observation}`
 placeholders. The LLM response is parsed for a numeric score.
 
-- **action** -- The action taken by the agent.
-- **observation** -- The resulting observation.`float`Parsed score from the LLM response.
+#### forward[[openenv.core.rubrics.LLMJudge.forward]]
+
+```python
+forward(action: typing.Any, observation: typing.Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/llm_judge.py#L64)
+
+**Parameters:**
+
+action : The action taken by the agent.
+
+observation : The resulting observation.
+
+**Returns:** `float`
+
+Parsed score from the LLM response.
+
 Evaluate by sending a prompt to the LLM and parsing the score.
+
+#### state_dict[[openenv.core.rubrics.LLMJudge.state_dict]]
+
+```python
+state_dict()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/rubrics/llm_judge.py#L104)
 
 Serialize rubric configuration.
 
 ## Tools[[openenv.core.tools.RepoInfo]]
 
+#### openenv.core.tools.RepoInfo[[openenv.core.tools.RepoInfo]]
+
+```python
+openenv.core.tools.RepoInfo(name: str, url: str, commit: str, clone_url: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L21)
+
 Information about a repository.
 
-- **gitea_url** -- URL of the Gitea server (e.g., "http://gitea:3000")
-- **username** -- Gitea username for authentication
-- **password** -- Gitea password for authentication
-- **workspace_dir** -- Local workspace directory for cloning repos
+#### openenv.core.tools.GitServerClient[[openenv.core.tools.GitServerClient]]
+
+```python
+openenv.core.tools.GitServerClient(gitea_url: str, username: str, password: str, workspace_dir: str = '/workspace')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L30)
+
+**Parameters:**
+
+gitea_url : URL of the Gitea server (e.g., "http://gitea:3000")
+
+username : Gitea username for authentication
+
+password : Gitea password for authentication
+
+workspace_dir : Local workspace directory for cloning repos
 
 Client for connecting to an external Gitea server.
 
@@ -1386,37 +2906,107 @@ path = client.clone_to_workspace("my-repo", commit="abc123")
 client.reset_workspace("my-repo", commit="abc123")
 ```
 
-- **repo_name** (`str`) --
-  Name of repository to clone.
-- **target_dir** (`str`, *optional*) --
-  Target directory name. Defaults to `repo_name`.
-- **commit** (`str`, *optional*, defaults to `"main"`) --
-  Commit hash or branch to check out.`str`Path to cloned repository.- ``RuntimeError`` -- If clone fails.</raises><raisederrors>``RuntimeError``
+#### clone_to_workspace[[openenv.core.tools.GitServerClient.clone_to_workspace]]
+
+```python
+clone_to_workspace(repo_name: str, target_dir: str | None = None, commit: str = 'main')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L184)
+
+**Parameters:**
+
+repo_name (`str`) : Name of repository to clone.
+
+target_dir (`str`, *optional*) : Target directory name. Defaults to `repo_name`.
+
+commit (`str`, *optional*, defaults to `"main"`) : Commit hash or branch to check out.
+
+**Returns:** `str`
+
+Path to cloned repository.
+
+**Raises:** ``RuntimeError``
+
+- ``RuntimeError`` -- If clone fails.
 
 Clone a repository to the workspace at a specific commit.
 
 This creates a fresh clone optimized for task isolation.
 
-- **command** (`str`) --
-  Git command to execute (without `git` prefix).
-- **working_dir** (`str`, *optional*, defaults to `""`) --
-  Working directory relative to workspace.`tuple` of (exit_code, stdout, stderr).
+#### execute_git_command[[openenv.core.tools.GitServerClient.execute_git_command]]
+
+```python
+execute_git_command(command: str, working_dir: str = '')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L318)
+
+**Parameters:**
+
+command (`str`) : Git command to execute (without `git` prefix).
+
+working_dir (`str`, *optional*, defaults to `""`) : Working directory relative to workspace.
+
+**Returns:**
+
+`tuple` of (exit_code, stdout, stderr).
 
 Execute a git command in the workspace.
 
-- **repo_name** (`str`) --
-  Name of repository in workspace.`str`Commit hash.
+#### get_current_commit[[openenv.core.tools.GitServerClient.get_current_commit]]
+
+```python
+get_current_commit(repo_name: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L352)
+
+**Parameters:**
+
+repo_name (`str`) : Name of repository in workspace.
+
+**Returns:** `str`
+
+Commit hash.
 
 Get current commit hash of a workspace repository.
+
+#### list_repositories[[openenv.core.tools.GitServerClient.list_repositories]]
+
+```python
+list_repositories()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L145)
+
+**Returns:**
 
 `list` of repository information dictionaries.
 
 List all repositories in Gitea.
 
-- **repo_name** (`str`) --
-  Name of repository (directory in workspace).
-- **commit** (`str`, *optional*, defaults to `"main"`) --
-  Commit hash or branch to reset to.`bool`True if reset successful.- ``RuntimeError`` -- If reset fails.</raises><raisederrors>``RuntimeError``
+#### reset_workspace[[openenv.core.tools.GitServerClient.reset_workspace]]
+
+```python
+reset_workspace(repo_name: str, commit: str = 'main')
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L242)
+
+**Parameters:**
+
+repo_name (`str`) : Name of repository (directory in workspace).
+
+commit (`str`, *optional*, defaults to `"main"`) : Commit hash or branch to reset to.
+
+**Returns:** `bool`
+
+True if reset successful.
+
+**Raises:** ``RuntimeError``
+
+- ``RuntimeError`` -- If reset fails.
 
 Fast reset of workspace to base state (optimized for task resets).
 
@@ -1425,14 +3015,43 @@ This is much faster than re-cloning. It:
 2. Resets to that commit (hard)
 3. Cleans untracked files
 
-- **timeout** (`int`, *optional*, defaults to `30`) --
-  Maximum seconds to wait.`bool`True if server is ready, False otherwise.
+#### wait_for_ready[[openenv.core.tools.GitServerClient.wait_for_ready]]
+
+```python
+wait_for_ready(timeout: int = 30)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L114)
+
+**Parameters:**
+
+timeout (`int`, *optional*, defaults to `30`) : Maximum seconds to wait.
+
+**Returns:** `bool`
+
+True if server is ready, False otherwise.
 
 Wait for Gitea server to be ready.
+
+#### workspace_exists[[openenv.core.tools.GitServerClient.workspace_exists]]
+
+```python
+workspace_exists(repo_name: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/tools/git_server_client.py#L380)
 
 Check if a repository exists in workspace.
 
 ## Container providers[[openenv.core.containers.runtime.ContainerProvider]]
+
+#### openenv.core.containers.runtime.ContainerProvider[[openenv.core.containers.runtime.ContainerProvider]]
+
+```python
+openenv.core.containers.runtime.ContainerProvider()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L18)
 
 Abstract base class for container providers.
 
@@ -1455,6 +3074,14 @@ print(base_url)  # http://localhost:8000
 provider.stop_container()
 ```
 
+#### close[[openenv.core.containers.runtime.ContainerProvider.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L101)
+
 Release provider-held resources (e.g. SDK clients, connections).
 
 Defaults to a no-op so existing providers are unaffected. Providers that
@@ -1462,32 +3089,75 @@ hold external resources beyond the container itself (such as a cloud SDK
 client) override this to release them; it is also invoked on context-
 manager exit. Lightweight providers need not override it.
 
-- **image** (`str`) --
-  Provider-specific container *source* identifier. For
-  container-based providers this is a registry image name (e.g.
-  `"echo-env:latest"`); other providers may map it to a
-  provider-specific source (see the provider's documentation).
-- **port** (`int`, *optional*) --
-  Port to expose. If `None`, the provider chooses.
-- **env_vars** (`dict`, *optional*) --
-  Environment variables to pass to container.
-- ****kwargs** --
-  Provider-specific options.`str`Base URL to connect to the container (e.g., `"http://localhost:8000"`).- ``RuntimeError`` -- If container fails to start.</raises><raisederrors>``RuntimeError``
+#### start_container[[openenv.core.containers.runtime.ContainerProvider.start_container]]
+
+```python
+start_container(image: str, port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L42)
+
+**Parameters:**
+
+image (`str`) : Provider-specific container *source* identifier. For container-based providers this is a registry image name (e.g. `"echo-env:latest"`); other providers may map it to a provider-specific source (see the provider's documentation).
+
+port (`int`, *optional*) : Port to expose. If `None`, the provider chooses.
+
+env_vars (`dict`, *optional*) : Environment variables to pass to container.
+
+- ****kwargs** : Provider-specific options.
+
+**Returns:** `str`
+
+Base URL to connect to the container (e.g., `"http://localhost:8000"`).
+
+**Raises:** ``RuntimeError``
+
+- ``RuntimeError`` -- If container fails to start.
 
 Start a container from the specified image.
+
+#### stop_container[[openenv.core.containers.runtime.ContainerProvider.stop_container]]
+
+```python
+stop_container()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L74)
 
 Stop and remove the running container.
 
 This cleans up the container that was started by start_container().
 
-- **base_url** (`str`) --
-  Base URL of the container.
-- **timeout_s** (`float`, *optional*, defaults to `30.0`) --
-  Maximum time to wait in seconds.- ``TimeoutError`` -- If container doesn't become ready in time.</raises><raisederrors>``TimeoutError``
+#### wait_for_ready[[openenv.core.containers.runtime.ContainerProvider.wait_for_ready]]
+
+```python
+wait_for_ready(base_url: str, timeout_s: float = 30.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L83)
+
+**Parameters:**
+
+base_url (`str`) : Base URL of the container.
+
+timeout_s (`float`, *optional*, defaults to `30.0`) : Maximum time to wait in seconds.
+
+**Raises:** ``TimeoutError``
+
+- ``TimeoutError`` -- If container doesn't become ready in time.
 
 Wait for the container to be ready to accept requests.
 
 This typically polls the /health endpoint until it returns 200.
+
+#### openenv.core.containers.runtime.LocalDockerProvider[[openenv.core.containers.runtime.LocalDockerProvider]]
+
+```python
+openenv.core.containers.runtime.LocalDockerProvider()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L120)
 
 Container provider for local Docker daemon.
 
@@ -1503,25 +3173,67 @@ base_url = provider.start_container("echo-env:latest")
 provider.stop_container()
 ```
 
-- **image** (`str`) --
-  Docker image name.
-- **port** (`int`, *optional*) --
-  Port to expose. If `None`, finds an available port.
-- **env_vars** (`dict`, *optional*) --
-  Environment variables for the container.
-- ****kwargs** --
-  Additional Docker run options.`str`Base URL to connect to the container.
+#### start_container[[openenv.core.containers.runtime.LocalDockerProvider.start_container]]
+
+```python
+start_container(image: str, port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L161)
+
+**Parameters:**
+
+image (`str`) : Docker image name.
+
+port (`int`, *optional*) : Port to expose. If `None`, finds an available port.
+
+env_vars (`dict`, *optional*) : Environment variables for the container.
+
+- ****kwargs** : Additional Docker run options.
+
+**Returns:** `str`
+
+Base URL to connect to the container.
 
 Start a Docker container locally.
 
+#### stop_container[[openenv.core.containers.runtime.LocalDockerProvider.stop_container]]
+
+```python
+stop_container()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L227)
+
 Stop and remove the Docker container.
 
-- **base_url** (`str`) --
-  Base URL of the container.
-- **timeout_s** (`float`, *optional*, defaults to `30.0`) --
-  Maximum time to wait in seconds.- ``TimeoutError`` -- If container doesn't become ready.</raises><raisederrors>``TimeoutError``
+#### wait_for_ready[[openenv.core.containers.runtime.LocalDockerProvider.wait_for_ready]]
+
+```python
+wait_for_ready(base_url: str, timeout_s: float = 30.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L259)
+
+**Parameters:**
+
+base_url (`str`) : Base URL of the container.
+
+timeout_s (`float`, *optional*, defaults to `30.0`) : Maximum time to wait in seconds.
+
+**Raises:** ``TimeoutError``
+
+- ``TimeoutError`` -- If container doesn't become ready.
 
 Wait for container to be ready by polling /health endpoint.
+
+#### openenv.core.containers.runtime.DockerSwarmProvider[[openenv.core.containers.runtime.DockerSwarmProvider]]
+
+```python
+openenv.core.containers.runtime.DockerSwarmProvider(auto_init_swarm: bool = True, overlay_network: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L329)
 
 Container provider that uses Docker Swarm services for local concurrency.
 
@@ -1530,34 +3242,71 @@ engine. The built-in load-balancer fans requests across the replicas,
 allowing multiple container instances to run concurrently on the developer
 workstation (mirroring the workflow described in the Docker stack docs).
 
-- **image** (`str`) --
-  Docker image name.
-- **port** (`int`, *optional*) --
-  Port to expose. If `None`, finds an available port.
-- **env_vars** (`dict`, *optional*) --
-  Environment variables for the container.
-- **replicas** (`int`, *optional*, defaults to `2`) --
-  Number of container replicas.
-- **cpu_limit** (`float` or `str`, *optional*) --
-  CPU limit passed to `--limit-cpu`.
-- **memory_limit** (`str`, *optional*) --
-  Memory limit passed to `--limit-memory`.
-- **constraints** (`Sequence[str]`, *optional*) --
-  Placement constraints.
-- **labels** (`dict`, *optional*) --
-  Service labels.
-- **command** (`Sequence[str]` or `str`, *optional*) --
-  Override container command.`str`Base URL to connect to the service.
+#### start_container[[openenv.core.containers.runtime.DockerSwarmProvider.start_container]]
+
+```python
+start_container(image: str, port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L366)
+
+**Parameters:**
+
+image (`str`) : Docker image name.
+
+port (`int`, *optional*) : Port to expose. If `None`, finds an available port.
+
+env_vars (`dict`, *optional*) : Environment variables for the container.
+
+replicas (`int`, *optional*, defaults to `2`) : Number of container replicas.
+
+cpu_limit (`float` or `str`, *optional*) : CPU limit passed to `--limit-cpu`.
+
+memory_limit (`str`, *optional*) : Memory limit passed to `--limit-memory`.
+
+constraints (`Sequence[str]`, *optional*) : Placement constraints.
+
+labels (`dict`, *optional*) : Service labels.
+
+command (`Sequence[str]` or `str`, *optional*) : Override container command.
+
+**Returns:** `str`
+
+Base URL to connect to the service.
 
 Start (or scale) a Swarm service for the given image.
 
+#### stop_container[[openenv.core.containers.runtime.DockerSwarmProvider.stop_container]]
+
+```python
+stop_container()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L493)
+
 Remove the Swarm service (and keep the Swarm manager running).
+
+#### wait_for_ready[[openenv.core.containers.runtime.DockerSwarmProvider.wait_for_ready]]
+
+```python
+wait_for_ready(base_url: str, timeout_s: float = 30.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L517)
 
 Wait for at least one replica to become healthy by polling /health.
 
 With Swarm's load balancer, requests round-robin across replicas,
 so this only verifies that at least one replica is responding. Some
 replicas may still be starting when this returns.
+
+#### openenv.core.containers.runtime.RuntimeProvider[[openenv.core.containers.runtime.RuntimeProvider]]
+
+```python
+openenv.core.containers.runtime.RuntimeProvider()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L660)
 
 Abstract base class for runtime providers that are not container providers.
 Providers implement this interface to support different runtime platforms:
@@ -1575,32 +3324,69 @@ print(base_url)  # http://localhost:8000
 provider.stop()
 ```
 
-- **port** (`int`, *optional*) --
-  Port to expose. If `None`, the provider chooses.
-- **env_vars** (`dict`, *optional*) --
-  Environment variables for the runtime.
-- ****kwargs** --
-  Additional runtime options.`str`Base URL to connect to the runtime.
+#### start[[openenv.core.containers.runtime.RuntimeProvider.start]]
+
+```python
+start(port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L679)
+
+**Parameters:**
+
+port (`int`, *optional*) : Port to expose. If `None`, the provider chooses.
+
+env_vars (`dict`, *optional*) : Environment variables for the runtime.
+
+- ****kwargs** : Additional runtime options.
+
+**Returns:** `str`
+
+Base URL to connect to the runtime.
 
 Start the runtime.
 
+#### stop[[openenv.core.containers.runtime.RuntimeProvider.stop]]
+
+```python
+stop()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L701)
+
 Stop the runtime.
+
+#### wait_for_ready[[openenv.core.containers.runtime.RuntimeProvider.wait_for_ready]]
+
+```python
+wait_for_ready(timeout_s: float = 30.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/providers.py#L708)
 
 Wait for the runtime to be ready to accept requests.
 
-- **project_path** (*str*) --
-  Local path to a uv project (passed to *uv run --project*), or a
-  *git+&amp;lt;url>* spec that is cloned to a temp directory on *start()*.
-- **app** (*str*, *optional*, defaults to *"server.app --app"*):
-  ASGI application path for uvicorn.
-- **host** (*str*, *optional*, defaults to *"0.0.0.0"*) --
-  Host interface to bind to.
-- **reload** (*bool*, *optional*, defaults to *False*) --
-  Whether to enable uvicorn's reload mode.
-- **env_vars** (*dict*, *optional*) --
-  Environment variables to pass through to the spawned process.
-- **context_timeout_s** (*float*, *optional*, defaults to *60.0*) --
-  How long to wait for the environment to become ready.
+#### openenv.core.containers.runtime.UVProvider[[openenv.core.containers.runtime.UVProvider]]
+
+```python
+openenv.core.containers.runtime.UVProvider(project_path: str, app: str = 'server.app:app', host: str = '0.0.0.0', reload: bool = False, env_vars: Optional[Dict[str, str]] = None, context_timeout_s: float = 60.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/uv_provider.py#L125)
+
+**Parameters:**
+
+project_path (*str*) : Local path to a uv project (passed to *uv run --project*), or a *git+&amp;lt;url>* spec that is cloned to a temp directory on *start()*.
+
+app (*str*, *optional*, defaults to *"server.app --app"*): ASGI application path for uvicorn.
+
+host (*str*, *optional*, defaults to *"0.0.0.0"*) : Host interface to bind to.
+
+reload (*bool*, *optional*, defaults to *False*) : Whether to enable uvicorn's reload mode.
+
+env_vars (*dict*, *optional*) : Environment variables to pass through to the spawned process.
+
+context_timeout_s (*float*, *optional*, defaults to *60.0*) : How long to wait for the environment to become ready.
 
 RuntimeProvider implementation backed by `uv run`.
 
@@ -1614,23 +3400,68 @@ print(base_url)  # http://localhost:8000
 provider.stop()
 ```
 
-- **port** (`int`, *optional*) --
-  The port to bind the environment to.
-- **env_vars** (`dict`, *optional*) --
-  Environment variables to pass to the environment.
-- **workers** (`int`, *optional*, defaults to `1`) --
-  The number of workers to use.`str`Base URL of the environment.- ``RuntimeError`` -- If the environment is already running.</raises><raisederrors>``RuntimeError``
+#### start[[openenv.core.containers.runtime.UVProvider.start]]
+
+```python
+start(port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, workers: int = 1, **_: Dict[str, str])
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/uv_provider.py#L184)
+
+**Parameters:**
+
+port (`int`, *optional*) : The port to bind the environment to.
+
+env_vars (`dict`, *optional*) : Environment variables to pass to the environment.
+
+workers (`int`, *optional*, defaults to `1`) : The number of workers to use.
+
+**Returns:** `str`
+
+Base URL of the environment.
+
+**Raises:** ``RuntimeError``
+
+- ``RuntimeError`` -- If the environment is already running.
 
 Start the environment via `uv run`.
 
+#### stop[[openenv.core.containers.runtime.UVProvider.stop]]
+
+```python
+stop()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/uv_provider.py#L276)
+
 Stop the environment.
 
-- **timeout_s** (`float`, *optional*) --
-  Maximum time in seconds to wait for the environment to become
-  ready. Defaults to the provider's `context_timeout_s`.- ``RuntimeError`` -- If the environment is not running.
-- ``TimeoutError`` -- If the environment does not become ready within the timeout.</raises><raisederrors>``RuntimeError`` or ``TimeoutError``
+#### wait_for_ready[[openenv.core.containers.runtime.UVProvider.wait_for_ready]]
+
+```python
+wait_for_ready(timeout_s: float | None = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/uv_provider.py#L254)
+
+**Parameters:**
+
+timeout_s (`float`, *optional*) : Maximum time in seconds to wait for the environment to become ready. Defaults to the provider's `context_timeout_s`.
+
+**Raises:** ``RuntimeError`` or ``TimeoutError``
+
+- ``RuntimeError`` -- If the environment is not running.
+- ``TimeoutError`` -- If the environment does not become ready within the timeout.
 
 Wait for the environment to become ready.
+
+#### openenv.core.containers.runtime.daytona_provider.DaytonaProvider[[openenv.core.containers.runtime.daytona_provider.DaytonaProvider]]
+
+```python
+openenv.core.containers.runtime.daytona_provider.DaytonaProvider(image: Optional[str] = None, env_vars: Optional[Dict[str, str]] = None, api_key: Optional[str] = None, public: bool = False, resources: Optional[Any] = None, auto_stop_interval: int = 15, target: Optional[str] = None, on_snapshot_create_logs: Optional[Callable[[str], None]] = None, cmd: Optional[str] = None, create_timeout: float = 300)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/daytona_provider.py#L20)
 
 Container provider that runs environments in Daytona cloud sandboxes.
 
@@ -1641,16 +3472,31 @@ Example:
 >>> provider.wait_for_ready(base_url)
 >>> provider.stop_container()
 
-- **dockerfile_path** -- Path to the Dockerfile on disk.
-- **context_dir** -- Build context directory.  Defaults to the
-  Dockerfile's grandparent directory, matching the
-  `openenv init` convention where Dockerfiles live in
-  `&amp;lt;env>/server/Dockerfile` and the build context is
-  `&amp;lt;env>/`.  Pass explicitly for non-standard layouts
-  (e.g. `context_dir="."` for repo-root contexts).A `"dockerfile</rettype><retdesc>&amp;lt;abs_path>"` string to pass to `start_container`.- `FileNotFoundError` -- If *dockerfile_path* does not exist.
+#### image_from_dockerfile[[openenv.core.containers.runtime.daytona_provider.DaytonaProvider.image_from_dockerfile]]
+
+```python
+image_from_dockerfile(dockerfile_path: str, context_dir: str | None = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/daytona_provider.py#L233)
+
+**Parameters:**
+
+dockerfile_path : Path to the Dockerfile on disk.
+
+context_dir : Build context directory.  Defaults to the Dockerfile's grandparent directory, matching the `openenv init` convention where Dockerfiles live in `&amp;lt;env>/server/Dockerfile` and the build context is `&amp;lt;env>/`.  Pass explicitly for non-standard layouts (e.g. `context_dir="."` for repo-root contexts).
+
+**Returns:** A `"dockerfile
+
+&amp;lt;abs_path>"` string to pass to `start_container`.
+
+**Raises:** `FileNotFoundError` or `ValueError`
+
+- `FileNotFoundError` -- If *dockerfile_path* does not exist.
 - `ValueError` -- If *context_dir* is given but does not exist,
   or if COPY sources in the Dockerfile cannot be found
-  under the resolved context directory.`FileNotFoundError` or `ValueError`
+  under the resolved context directory.
+
 Validate a Dockerfile and return a `dockerfile:` URI for
 `start_container`.
 
@@ -1659,22 +3505,41 @@ BuildKit stripping) and stores the processed content in an
 internal registry.  The actual `daytona.Image` is created
 later inside `start_container`.
 
+#### refresh_preview_url[[openenv.core.containers.runtime.daytona_provider.DaytonaProvider.refresh_preview_url]]
+
+```python
+refresh_preview_url()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/daytona_provider.py#L471)
+
 Get a fresh signed preview URL (valid for 24h).
 
 Daytona signed URLs expire after at most 24 hours.  Call this to
 get a new one for long-running sessions.  The returned URL points
 to the same sandbox — clients will need to reconnect using it.
 
-- **image** -- Docker image name (e.g. `"echo-env:latest"`),
-  `"snapshot:&amp;lt;name>"` to create from a pre-built snapshot,
-  or `"dockerfile:&amp;lt;path>"` returned by
-  `image_from_dockerfile`. May be omitted when supplied
-  to the constructor.
-- **port** -- Must be `None` or `8000`. Daytona exposes port 8000
-  via its preview proxy; other ports raise `ValueError`.
-- **env_vars** -- Environment variables forwarded to the sandbox.
-- ****kwargs** -- `cmd` (str) to override the server command;
-  remaining kwargs passed through to `Daytona.create()`.HTTPS preview URL for the sandbox (base_url).
+#### start_container[[openenv.core.containers.runtime.daytona_provider.DaytonaProvider.start_container]]
+
+```python
+start_container(image: Optional[str] = None, port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/daytona_provider.py#L316)
+
+**Parameters:**
+
+image : Docker image name (e.g. `"echo-env:latest"`), `"snapshot:&amp;lt;name>"` to create from a pre-built snapshot, or `"dockerfile:&amp;lt;path>"` returned by `image_from_dockerfile`. May be omitted when supplied to the constructor.
+
+port : Must be `None` or `8000`. Daytona exposes port 8000 via its preview proxy; other ports raise `ValueError`.
+
+env_vars : Environment variables forwarded to the sandbox.
+
+- ****kwargs** : `cmd` (str) to override the server command; remaining kwargs passed through to `Daytona.create()`.
+
+**Returns:**
+
+HTTPS preview URL for the sandbox (base_url).
 
 Create a Daytona sandbox from a Docker image or snapshot.
 
@@ -1687,7 +3552,23 @@ runs, CMD does not).  The server command is resolved in order:
 4. `CMD` parsed from the Dockerfile (when *image* came from
    `image_from_dockerfile`).
 
+#### stop_container[[openenv.core.containers.runtime.daytona_provider.DaytonaProvider.stop_container]]
+
+```python
+stop_container()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/daytona_provider.py#L484)
+
 Delete the Daytona sandbox.
+
+#### strip_buildkit_syntax[[openenv.core.containers.runtime.daytona_provider.DaytonaProvider.strip_buildkit_syntax]]
+
+```python
+strip_buildkit_syntax(dockerfile_content: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/daytona_provider.py#L167)
 
 Remove BuildKit `--mount=...` flags from `RUN` instructions.
 
@@ -1700,14 +3581,37 @@ Daytona's `Image.from_dockerfile` does not support BuildKit
 Dockerfiles (like the ones generated by `openenv build`) can
 be used directly.
 
-- **base_url** -- Preview URL returned by `start_container()`.
-- **timeout_s** -- Maximum seconds to wait.- `TimeoutError` -- If the sandbox doesn't become ready in time.
-- `RuntimeError` -- If the server process died (detected via PID check).`TimeoutError` or `RuntimeError`
+#### wait_for_ready[[openenv.core.containers.runtime.daytona_provider.DaytonaProvider.wait_for_ready]]
+
+```python
+wait_for_ready(base_url: str, timeout_s: float = 120.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/daytona_provider.py#L495)
+
+**Parameters:**
+
+base_url : Preview URL returned by `start_container()`.
+
+timeout_s : Maximum seconds to wait.
+
+**Raises:** `TimeoutError` or `RuntimeError`
+
+- `TimeoutError` -- If the sandbox doesn't become ready in time.
+- `RuntimeError` -- If the server process died (detected via PID check).
 
 Poll the /health endpoint until the sandbox is ready.
 
 Uses a longer default timeout (120s) than Docker providers because
 Daytona sandboxes may have cold-start latency.
+
+#### openenv.core.containers.runtime.aca_provider.ACASandboxProvider[[openenv.core.containers.runtime.aca_provider.ACASandboxProvider]]
+
+```python
+openenv.core.containers.runtime.aca_provider.ACASandboxProvider(subscription_id: Optional[str] = None, resource_group: Optional[str] = None, sandbox_group: Optional[str] = None, region: Optional[str] = None, endpoint: Optional[str] = None, credential: Any = None, cpu: str = '1000m', memory: str = '2048Mi', disk_size: Optional[str] = None, auto_suspend_seconds: int = 900, auto_suspend_mode: Literal['Memory', 'Disk'] = 'Memory', labels: Optional[Dict[str, str]] = None, egress_policy: Any = None, anonymous_port: Literal[True] | None = None, image: Optional[str] = None, env_vars: Optional[Dict[str, str]] = None, cmd: Optional[str] = None, working_directory: Optional[str] = None, surface_server_logs: bool = False, create_timeout: int = 300, polling_interval: int = 3, sdk_kwargs: Optional[dict[str, Any]] = None, _adapter: Any = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/aca_provider.py#L256)
 
 Container provider backed by Azure Container Apps Sandboxes.
 
@@ -1748,12 +3652,28 @@ with ACASandboxProvider(
 # sandbox deleted and SDK client closed on exit
 ```
 
+#### close[[openenv.core.containers.runtime.aca_provider.ACASandboxProvider.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/aca_provider.py#L675)
+
 Stop the active sandbox and close the underlying SDK client.
 
 Overrides the base no-op so a caller can release the preview SDK client
 deterministically (also invoked on context-manager exit). The base
 `ContainerProvider` defines `close()`/`__enter__`/`__exit__`, so callers
 holding a bare `ContainerProvider` can release resources polymorphically.
+
+#### deny_all_egress[[openenv.core.containers.runtime.aca_provider.ACASandboxProvider.deny_all_egress]]
+
+```python
+deny_all_egress(allow: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/aca_provider.py#L381)
 
 Build a default-deny ACA `EgressPolicy` (RFC 002 security invariant S3).
 
@@ -1771,6 +3691,14 @@ provider = ACASandboxProvider(
 )
 ```
 
+#### start_container[[openenv.core.containers.runtime.aca_provider.ACASandboxProvider.start_container]]
+
+```python
+start_container(image: Optional[str] = None, port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/aca_provider.py#L409)
+
 Start an OpenEnv server in an ACA sandbox and return its base URL.
 
 `image` is an ACA sandbox *source*, not a Docker/OCI registry image: a
@@ -1782,7 +3710,23 @@ A value that looks like a container image (a registry path or
 `egress_policy`, `anonymous_port`); unknown options raise `ValueError`
 so typos cannot silently change sandbox behavior.
 
+#### stop_container[[openenv.core.containers.runtime.aca_provider.ACASandboxProvider.stop_container]]
+
+```python
+stop_container()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/aca_provider.py#L647)
+
 Delete the active ACA sandbox.
+
+#### wait_for_ready[[openenv.core.containers.runtime.aca_provider.ACASandboxProvider.wait_for_ready]]
+
+```python
+wait_for_ready(base_url: str, timeout_s: float = 120.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/aca_provider.py#L603)
 
 Wait for the ACA-hosted OpenEnv server to answer on `/health`.
 
@@ -1791,6 +3735,14 @@ ACA port proxies the `/ws` WebSocket upgrade `EnvClient` needs; the
 integration test covers the full `wss://` round-trip. If the captured
 server process dies during startup this raises `RuntimeError` (sandbox
 output is withheld unless `surface_server_logs=True`; see RFC 002 S4).
+
+#### openenv.core.containers.runtime.modal_provider.ModalProvider[[openenv.core.containers.runtime.modal_provider.ModalProvider]]
+
+```python
+openenv.core.containers.runtime.modal_provider.ModalProvider(image: str | None = None, env_vars: dict[str, str] | None = None, app_name: str = 'openenv', use_sandbox_v2: bool = False, timeout: int = 300, cmd: str | None = None, cpu: float | None = None, memory: int | None = None, surface_server_logs: bool = False, _adapter: Any = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/modal_provider.py#L137)
 
 Container provider that runs environments in Modal sandboxes.
 
@@ -1825,6 +3777,14 @@ Sandbox v2 (beta) is opt-in:
 provider = ModalProvider(app_name="openenv", use_sandbox_v2=True)
 ```
 
+#### close[[openenv.core.containers.runtime.modal_provider.ModalProvider.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/modal_provider.py#L587)
+
 Stop the active sandbox.
 
 Overrides the base no-op so a caller holding a bare `ContainerProvider`
@@ -1832,19 +3792,32 @@ reference can release the sandbox polymorphically (also invoked on
 context-manager exit). `ModalProvider` holds no separate SDK client, so
 this is equivalent to `stop_container()`.
 
-- **dockerfile_path** (*str*) --
-  Path to the Dockerfile on disk.
-- **context_dir** (*str*, *optional*) --
-  Build context directory.  Defaults to the Dockerfile's
-  grandparent directory, matching the `openenv init`
-  convention where Dockerfiles live in
-  `&amp;lt;env>/server/Dockerfile` and the build context is
-  `&amp;lt;env>/`.  Pass explicitly for non-standard layouts
-  (e.g. `context_dir="."` for repo-root contexts).*str*A `"dockerfile:&amp;lt;abs_path>"` string to pass to
-`start_container`.- `FileNotFoundError` -- If *dockerfile_path* does not exist.
+#### image_from_dockerfile[[openenv.core.containers.runtime.modal_provider.ModalProvider.image_from_dockerfile]]
+
+```python
+image_from_dockerfile(dockerfile_path: str, context_dir: str | None = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/modal_provider.py#L336)
+
+**Parameters:**
+
+dockerfile_path (*str*) : Path to the Dockerfile on disk.
+
+context_dir (*str*, *optional*) : Build context directory.  Defaults to the Dockerfile's grandparent directory, matching the `openenv init` convention where Dockerfiles live in `&amp;lt;env>/server/Dockerfile` and the build context is `&amp;lt;env>/`.  Pass explicitly for non-standard layouts (e.g. `context_dir="."` for repo-root contexts).
+
+**Returns:** `*str*`
+
+A `"dockerfile:&amp;lt;abs_path>"` string to pass to
+`start_container`.
+
+**Raises:** `FileNotFoundError` or `ValueError`
+
+- `FileNotFoundError` -- If *dockerfile_path* does not exist.
 - `ValueError` -- If *context_dir* is given but does not exist,
   or if COPY sources in the Dockerfile cannot be found
-  under the resolved context directory.`FileNotFoundError` or `ValueError`
+  under the resolved context directory.
+
 Validate a Dockerfile and return a `dockerfile:` URI for
 `start_container`.
 
@@ -1852,19 +3825,27 @@ Eagerly validates the Dockerfile (existence, COPY sources) and stores
 its content in an internal registry.  The actual `modal.Image` is
 created later inside `start_container`.
 
-- **image** (*str*, *optional*) --
-  Registry image tag (e.g. `"echo-env:latest"`) or
-  `"dockerfile:&amp;lt;path>"` returned by
-  `image_from_dockerfile`. May be omitted when supplied to
-  the constructor.
-- **port** (*int*, *optional*) --
-  Must be `None` or `8000`. Modal exposes port 8000 via an
-  encrypted tunnel; other ports raise `ValueError`.
-- **env_vars** (*dict*, *optional*) --
-  Environment variables forwarded to the sandbox.
-- ****kwargs** --
-  `cmd` (*str*) to override the server command; any remaining
-  keyword arguments are forwarded to `modal.Sandbox.create`.*str*HTTPS tunnel URL for the sandbox (base_url).
+#### start_container[[openenv.core.containers.runtime.modal_provider.ModalProvider.start_container]]
+
+```python
+start_container(image: str | None = None, port: int | None = None, env_vars: dict[str, str] | None = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/modal_provider.py#L436)
+
+**Parameters:**
+
+image (*str*, *optional*) : Registry image tag (e.g. `"echo-env:latest"`) or `"dockerfile:&amp;lt;path>"` returned by `image_from_dockerfile`. May be omitted when supplied to the constructor.
+
+port (*int*, *optional*) : Must be `None` or `8000`. Modal exposes port 8000 via an encrypted tunnel; other ports raise `ValueError`.
+
+env_vars (*dict*, *optional*) : Environment variables forwarded to the sandbox.
+
+- ****kwargs** : `cmd` (*str*) to override the server command; any remaining keyword arguments are forwarded to `modal.Sandbox.create`.
+
+**Returns:** `*str*`
+
+HTTPS tunnel URL for the sandbox (base_url).
 
 Create a Modal sandbox from a Docker image or Dockerfile.
 
@@ -1879,13 +3860,34 @@ order:
 4. `CMD` parsed from the Dockerfile (when *image* came from
    `image_from_dockerfile`).
 
+#### stop_container[[openenv.core.containers.runtime.modal_provider.ModalProvider.stop_container]]
+
+```python
+stop_container()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/modal_provider.py#L573)
+
 Terminate the Modal sandbox.
 
-- **base_url** (*str*) --
-  Tunnel URL returned by `start_container()`.
-- **timeout_s** (*float*, *optional*, defaults to *120.0*) --
-  Maximum seconds to wait.- `TimeoutError` -- If the sandbox doesn't become ready in time.
-- `RuntimeError` -- If the server process died (detected via PID check).`TimeoutError` or `RuntimeError`
+#### wait_for_ready[[openenv.core.containers.runtime.modal_provider.ModalProvider.wait_for_ready]]
+
+```python
+wait_for_ready(base_url: str, timeout_s: float = 120.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/modal_provider.py#L649)
+
+**Parameters:**
+
+base_url (*str*) : Tunnel URL returned by `start_container()`.
+
+timeout_s (*float*, *optional*, defaults to *120.0*) : Maximum seconds to wait.
+
+**Raises:** `TimeoutError` or `RuntimeError`
+
+- `TimeoutError` -- If the sandbox doesn't become ready in time.
+- `RuntimeError` -- If the server process died (detected via PID check).
 
 Poll the /health endpoint until the sandbox is ready.
 

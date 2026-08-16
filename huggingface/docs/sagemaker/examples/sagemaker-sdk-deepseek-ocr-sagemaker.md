@@ -1,6 +1,6 @@
 # DeepSeek OCR Pipeline on SageMaker Training Jobs
 
-Last updated 2026-07-27
+Last updated 2026-08-05
 
 📖 **Context**: This notebook is part of the [VLM-OCR Recipes on GPU Infrastructure](https://huggingface.co/blog/florentgbelidji/vlm-ocr-recipes-gpu-infra) article, which explains the architecture and design decisions behind this pipeline.
 

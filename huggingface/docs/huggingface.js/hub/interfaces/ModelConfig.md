@@ -12,7 +12,7 @@ attention but `expert_dtype: "fp4"` for the experts, which dominate the paramete
 
 #### Defined in[[expertdtype.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:586](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L586)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:706](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L706)
 
 ___
 
@@ -22,7 +22,7 @@ ___
 
 #### Defined in[[quantizationconfig.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:579](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L579)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:699](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L699)
 
 ___
 
@@ -32,4 +32,4 @@ ___
 
 #### Defined in[[textconfig.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:580](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L580)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:700](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L700)

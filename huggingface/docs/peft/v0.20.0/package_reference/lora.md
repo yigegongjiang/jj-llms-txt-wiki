@@ -997,186 +997,119 @@ To encode general knowledge, GenKnowSub subtracts the average of the provided ge
 
 ## LoraConfig[[peft.LoraConfig]]
 
-"}, {"name": "alpha_pattern", "val": ": Optional[dict] = "}, {"name": "megatron_config", "val": ": Optional[dict] = None"}, {"name": "megatron_core", "val": ": Optional[str] = 'megatron.core'"}, {"name": "trainable_token_indices", "val": ": Optional[Union[list[int], dict[str, list[int]]]] = None"}, {"name": "loftq_config", "val": ": Union[LoftQConfig, dict] = "}, {"name": "eva_config", "val": ": Optional[EvaConfig] = None"}, {"name": "corda_config", "val": ": Optional[CordaConfig] = None"}, {"name": "lora_ga_config", "val": ": Optional[LoraGAConfig] = None"}, {"name": "use_dora", "val": ": bool = False"}, {"name": "velora_config", "val": ": Optional[Union[VeloraConfig, dict]] = None"}, {"name": "alora_invocation_tokens", "val": ": Optional[list[int]] = None"}, {"name": "use_qalora", "val": ": bool = False"}, {"name": "qalora_group_size", "val": ": int = 16"}, {"name": "monteclora_config", "val": ": Optional[MontecloraConfig] = None"}, {"name": "layer_replication", "val": ": Optional[list[tuple[int, int]]] = None"}, {"name": "runtime_config", "val": ": LoraRuntimeConfig = "}, {"name": "lora_bias", "val": ": bool = False"}, {"name": "target_parameters", "val": ": Optional[list[str]] = None"}, {"name": "use_bdlora", "val": ": Optional[BdLoraConfig] = None"}, {"name": "arrow_config", "val": ": Optional[ArrowConfig] = None"}, {"name": "ensure_weight_tying", "val": ": bool = False"}]}>
-- **r** (`int`) --
-  Lora attention dimension (the "rank").
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if
-  the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be
-  chosen according to the model architecture. If the architecture is not known, an error will be raised -- in
-  this case, you should specify the target modules manually. To avoid targeting any modules (because you want
-  to apply `target_parameters`), set `target_modules=[]`.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **lora_alpha** (`int`) --
-  The alpha parameter for Lora scaling.
-- **lora_dropout** (`float`) --
-  The dropout probability for Lora layers.
-- **fan_in_fan_out** (`bool`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **bias** (`str`) --
-  Bias type for LoRA. Can be 'none', 'all' or 'lora_only'. If 'all' or 'lora_only', the corresponding biases
-  will be updated during training. Be aware that this means that, even when disabling the adapters, the model
-  will not produce the same output as the base model would have without adaptation.
-- **use_rslora** (`bool`) --
-  When set to True, uses [Rank-Stabilized LoRA](https://huggingface.co/papers/2312.03732) which sets the
-  adapter scaling factor to `lora_alpha/math.sqrt(r)`, since it was proven to work better. Otherwise, it will
-  use the original default value of `lora_alpha/r`.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
-- **init_lora_weights** (`bool` | `Literal["gaussian", "eva", "olora", "pissa", "pissa_niter_[number of iters]", "corda", "loftq", "orthogonal", "mica"]`) --
-  How to initialize the weights of the adapter layers. Passing True (default) results in the default
-  initialization from the reference implementation from Microsoft, with the LoRA B weight being set to 0.
-  This means that without further training, the LoRA adapter will be a no-op. Setting the initialization to
-  False leads to random initialization of LoRA A and B, meaning that LoRA is not a no-op before training;
-  this setting is intended for debugging purposes. Passing 'gaussian' results in Gaussian initialization
-  scaled by the LoRA rank for linear and layers. Pass `'loftq'` to use LoftQ initialization. Passing `'eva'`
-  results in a data-driven initialization of Explained
-  Variance Adaptation. EVA initializes LoRA based on the SVD of layer input activations and achieves SOTA
-  performance due to its ability to adapt to the finetuning data. Pass `'olora'` to use OLoRA initialization.
-  Passing `'pissa'` results in the initialization of <a href='https://huggingface.co/papers/2404.02948'
-  >Principal Singular values and Singular vectors Adaptation (PiSSA), which converges more rapidly than
-  LoRA and ultimately achieves superior performance. Moreover, PiSSA reduces the quantization error compared
-  to QLoRA, leading to further enhancements. Passing `'pissa_niter_[number of iters]'` initiates
-  Fast-SVD-based PiSSA initialization, where `[number of iters]` indicates the number of subspace iterations
-  to perform FSVD, and must be a nonnegative integer. When `[number of iters]` is set to 16, it can complete
-  the initialization of a 7B model within seconds, and the training effect is approximately equivalent to
-  using SVD. Passing `'corda'` results in the initialization of <a
-  href='https://huggingface.co/papers/2406.05223' >Context-Oriented Decomposition Adaptation, which
-  converges even more rapidly than PiSSA in Instruction-Previewed Mode, and preserves world knowledge better
-  than LoRA in Knowledge-Preserved Mode. Passing `"orthogonal"` results in LoRA A and B being initialized
-  orthogonally; in this, it resembles `"olora"`, but the base weights are left untouched (requires `r` to be
-  even, only supported for linear layers for now). Passing `"mica"` results in the initialization of <a
-  href='https://arxiv.org/abs/2604.01694' >Minor Component Adaptation (MiCA), which initializes B from
-  the r left singular vectors of the base weight associated with the smallest singular values, sets A to
-  zero, and freezes B during training; only A is updated. Currently supported for linear and embedding
-  layers.
-- **layers_to_transform** (`Union[List[int], int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the
-  `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
-- **rank_pattern** (`dict`) --
-  The mapping from layer names or regexp expression to ranks which are different from the default rank
-  specified by `r`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
-- **alpha_pattern** (`dict`) --
-  The mapping from layer names or regexp expression to alphas which are different from the default alpha
-  specified by `lora_alpha`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
-- **megatron_config** (`Optional[dict]`) --
-  The TransformerConfig arguments for Megatron. It is used to create LoRA's parallel linear layer. You can
-  get it like this, `core_transformer_config_from_args(get_args())`, these two functions being from Megatron.
-  The arguments will be used to initialize the TransformerConfig of Megatron. You need to specify this
-  parameter when you want to apply LoRA to the ColumnParallelLinear and RowParallelLinear layers of megatron.
-- **megatron_core** (`Optional[str]`) --
-  The core module from Megatron to use, defaults to `"megatron.core"`.
-- **trainable_token_indices** (`Optional[Union[List[int], dict[str, List[int]]]]`) --
-  Lets you specify which token indices to selectively fine-tune without requiring to re-train the whole
-  embedding matrix using the `peft.TrainableTokensModel` method. You can specify token indices in two ways.
-  Either you specify a list of indices which will then target the model's input embedding layer (or, if not
-  found, `embed_tokens`). Alternatively, you can specify a dictionary where the key is the name of the
-  embedding module and the values are the list of token indices, e.g. `{'embed_tokens': [0, 1, ...]}`. Note
-  that training with FSDP requires `use_orig_params=True` to avoid issues with non-uniform `requires_grad`.
-- **loftq_config** (`Optional[LoftQConfig]`) --
-  The configuration of LoftQ. If this is not None, then LoftQ will be used to quantize the backbone weights
-  and initialize Lora layers. Also pass `init_lora_weights='loftq'`. Note that you should not pass a
-  quantized model in this case, as LoftQ will quantize the model itself.
-- **eva_config** (`Optional[EvaConfig]`) --
-  The configuration of EVA. At a minimum the dataset argument needs to be set (use the same dataset as for
-  finetuning).
-- **corda_config** (`Optional[CordaConfig]`) --
-  The configuration of CorDA. If this is not None, then CorDA will be used to build the adapter layers. Also
-  pass `init_lora_weights='corda'`.
-- **lora_ga_config** (`Optional[LoraGAConfig]`) --
-  The configuration of LoRA-GA. If this is passed, then LoRA-GA will be used to initialize the adapter
-  layers. Also set `init_lora_weights='lora_ga'` in this case.
-- **use_dora** (`bool`) --
-  Enable 'Weight-Decomposed Low-Rank Adaptation' (DoRA). This technique decomposes the updates of the weights
-  into two parts, magnitude and direction. Direction is handled by normal LoRA, whereas the magnitude is
-  handled by a separate learnable parameter. This can improve the performance of LoRA especially at low
-  ranks. Right now, DoRA only supports linear and Conv2D layers. DoRA introduces a bigger overhead than pure
-  LoRA, so it is recommended to merge weights for inference. For more information, see
-  https://huggingface.co/papers/2402.09353.
-- **velora_config** (`Optional[VeloraConfig]`) --
-  Enable VeLoRA by providing a VeloraConfig. VeLoRA swaps in a custom backward pass for the LoRA A projection
-  that stores compressed activations instead of the full input activations.
-- **alora_invocation_tokens** (`List[int]`) --
-  If not None, enable 'Activated LoRA' (aLoRA), with
-  alora_invocation_tokens being the tokenized invocation string for the adapter (must be present in all model
-  input strings). This technique selectively activates the adapter weights only on tokens during and after
-  the alora_invocation_tokens. When used in a CausalLM, this means that the KV cache prior to invocation is
-  interchangeable with that of the base model (and other aLoRA adapters operating this way). As a result, in
-  inference pipelines involving switching between base model inference and adapter inference (e.g. agentic
-  pipelines, see paper for examples), significant savings are realized (relative to LoRA) by saving prefill
-  operations. Overall adapter inference speedups of an order of magnitude or more can occur on vLLM,
-  depending on the length of the shared context. Note that merging is not possible due to the selective
-  application of the weights.
-- **use_qalora** (`bool`) --
-  It is only implemented in GPTQ for now. Enable <a
-  href='https://huggingface.co/papers/2309.14717'>Quantization-Aware Low-Rank Adaptation (QALoRA). This
-  technique combines quantization-aware training with LoRA to improve performance for quantized models. This
-  can improve the performance of LoRA, especially at low ranks. Right now, QALoRA only supports linear
-  layers.
-- **qalora_group_size** (`int`) --
-  Group size parameter for QALoRA pooling, controlling the dimension reduction factor. Input dimensions are
-  pooled into groups of this size, reducing the computational cost. Higher values provide more compression
-  but may reduce model quality. This parameter determines how many original features are averaged together to
-  create one pooled feature. Only used when `use_qalora=True`.
-- **monteclora_config** (`Optional[MontecloraConfig]`) --
-  The configuration of Monteclora (Monte Carlo Low-Rank Adaptation). If passed, Monteclora will be used to
-  add variational Monte Carlo sampling on top of the LoRA adapters. See `MontecloraConfig` for details on the
-  individual hyperparameters.
-- **layer_replication** (`List[Tuple[int, int]]`) --
-  Build a new stack of layers by stacking the original model layers according to the ranges specified. This
-  allows expanding (or shrinking) the model without duplicating the base model weights. The new layers will
-  all have separate LoRA adapters attached to them.
-- **runtime_config** (`LoraRuntimeConfig`) --
-  Runtime configurations (which are not saved or restored).
-- **lora_bias** (`bool`) --
-  Defaults to `False`. Whether to enable the bias term for the LoRA B parameter. Typically, this should be
-  disabled. The main use case for this is when the LoRA weights were extracted from fully fine-tuned
-  parameters so the bias of those parameters can be taken into account.
-- **target_parameters** (`List[str]`, *optional*) --
-  List of parameter names of the parameter names to replace with LoRA. This argument behaves similarly to
-  `target_modules`, except that the parameter name should be passed. Generally, you should use
-  `target_modules` to target the module (e.g. `nn.Linear`). However, in some circumstances, this is not
-  possible. E.g., in many mixture of expert (MoE) layers in HF Transformers, instead of using `nn.Linear`, an
-  `nn.Parameter` is used. PEFT normally overwrites the `forward` method for LoRA, but for `nn.Parameter`,
-  there is none. Therefore, to apply LoRA to that parameter, it needs to be targeted with
-  `target_parameters`. As an example, for Llama4, you can pass:
-  `target_parameters=['feed_forward.experts.gate_up_proj', 'feed_forward.experts.down_proj]`. Passing a
-  string for regex matching is not implemented yet. Note that when the model is compiled and uses
-  `target_parameters`, re-compilation and/or graph breaks are expected. It is recommended not to use both at
-  the same time.
-- **use_bdlora** (`Optional[BdLoraConfig]`) --
-  Enable BD-LoRA (Block-Diagonal LoRA) by providing a BdLoraConfig. This technique uses block-diagonal
-  matrices for LoRA-A or LoRA-B factors to enable faster multi-LoRA serving by eliminating communication
-  overheads in distributed settings.
-- **arrow_config** (`Optional[ArrowConfig]`) --
-  The necessary config to apply arrow routing on the model.
-- **ensure_weight_tying** (`bool`, *optional*) --
-  Whether to tie weights or not after peft initialization. This will ensure that the adapters added to the
-  tied layers are also tied. This is only applicable for layers passed via `modules_to_save` and
-  `target_modules`.
+#### peft.LoraConfig[[peft.LoraConfig]]
+
+```python
+peft.LoraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 8, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, lora_alpha: int = 8, lora_dropout: float = 0.0, fan_in_fan_out: bool = False, bias: Literal['none', 'all', 'lora_only'] = 'none', use_rslora: bool = False, modules_to_save: Optional[list[str]] = None, init_lora_weights: bool | Literal['gaussian', 'eva', 'olora', 'pissa', 'pissa_niter_[number of iters]', 'corda', 'loftq', 'orthogonal', 'mica'] = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None, rank_pattern: Optional[dict] = <factory>, alpha_pattern: Optional[dict] = <factory>, megatron_config: Optional[dict] = None, megatron_core: Optional[str] = 'megatron.core', trainable_token_indices: Optional[Union[list[int], dict[str, list[int]]]] = None, loftq_config: Union[LoftQConfig, dict] = <factory>, eva_config: Optional[EvaConfig] = None, corda_config: Optional[CordaConfig] = None, lora_ga_config: Optional[LoraGAConfig] = None, use_dora: bool = False, velora_config: Optional[Union[VeloraConfig, dict]] = None, alora_invocation_tokens: Optional[list[int]] = None, use_qalora: bool = False, qalora_group_size: int = 16, monteclora_config: Optional[MontecloraConfig] = None, layer_replication: Optional[list[tuple[int, int]]] = None, runtime_config: LoraRuntimeConfig = <factory>, lora_bias: bool = False, target_parameters: Optional[list[str]] = None, use_bdlora: Optional[BdLoraConfig] = None, arrow_config: Optional[ArrowConfig] = None, ensure_weight_tying: bool = False)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/config.py#L371)
+
+**Parameters:**
+
+r (`int`) : Lora attention dimension (the "rank").
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen (if the model is a PreTrainedModel, the output layer excluded). If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually. To avoid targeting any modules (because you want to apply `target_parameters`), set `target_modules=[]`.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+lora_alpha (`int`) : The alpha parameter for Lora scaling.
+
+lora_dropout (`float`) : The dropout probability for Lora layers.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+bias (`str`) : Bias type for LoRA. Can be 'none', 'all' or 'lora_only'. If 'all' or 'lora_only', the corresponding biases will be updated during training. Be aware that this means that, even when disabling the adapters, the model will not produce the same output as the base model would have without adaptation.
+
+use_rslora (`bool`) : When set to True, uses [Rank-Stabilized LoRA](https://huggingface.co/papers/2312.03732) which sets the adapter scaling factor to `lora_alpha/math.sqrt(r)`, since it was proven to work better. Otherwise, it will use the original default value of `lora_alpha/r`.
+
+modules_to_save (`List[str]`) : List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
+
+init_lora_weights (`bool` | `Literal["gaussian", "eva", "olora", "pissa", "pissa_niter_[number of iters]", "corda", "loftq", "orthogonal", "mica"]`) : How to initialize the weights of the adapter layers. Passing True (default) results in the default initialization from the reference implementation from Microsoft, with the LoRA B weight being set to 0. This means that without further training, the LoRA adapter will be a no-op. Setting the initialization to False leads to random initialization of LoRA A and B, meaning that LoRA is not a no-op before training; this setting is intended for debugging purposes. Passing 'gaussian' results in Gaussian initialization scaled by the LoRA rank for linear and layers. Pass `'loftq'` to use LoftQ initialization. Passing `'eva'` results in a data-driven initialization of Explained Variance Adaptation. EVA initializes LoRA based on the SVD of layer input activations and achieves SOTA performance due to its ability to adapt to the finetuning data. Pass `'olora'` to use OLoRA initialization. Passing `'pissa'` results in the initialization of Principal Singular values and Singular vectors Adaptation (PiSSA), which converges more rapidly than LoRA and ultimately achieves superior performance. Moreover, PiSSA reduces the quantization error compared to QLoRA, leading to further enhancements. Passing `'pissa_niter_[number of iters]'` initiates Fast-SVD-based PiSSA initialization, where `[number of iters]` indicates the number of subspace iterations to perform FSVD, and must be a nonnegative integer. When `[number of iters]` is set to 16, it can complete the initialization of a 7B model within seconds, and the training effect is approximately equivalent to using SVD. Passing `'corda'` results in the initialization of Context-Oriented Decomposition Adaptation, which converges even more rapidly than PiSSA in Instruction-Previewed Mode, and preserves world knowledge better than LoRA in Knowledge-Preserved Mode. Passing `"orthogonal"` results in LoRA A and B being initialized orthogonally; in this, it resembles `"olora"`, but the base weights are left untouched (requires `r` to be even, only supported for linear layers for now). Passing `"mica"` results in the initialization of Minor Component Adaptation (MiCA), which initializes B from the r left singular vectors of the base weight associated with the smallest singular values, sets A to zero, and freezes B during training; only A is updated. Currently supported for linear and embedding layers.
+
+layers_to_transform (`Union[List[int], int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+
+rank_pattern (`dict`) : The mapping from layer names or regexp expression to ranks which are different from the default rank specified by `r`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
+
+alpha_pattern (`dict`) : The mapping from layer names or regexp expression to alphas which are different from the default alpha specified by `lora_alpha`. For example, `{'^model.decoder.layers.0.encoder_attn.k_proj': 16}`.
+
+megatron_config (`Optional[dict]`) : The TransformerConfig arguments for Megatron. It is used to create LoRA's parallel linear layer. You can get it like this, `core_transformer_config_from_args(get_args())`, these two functions being from Megatron. The arguments will be used to initialize the TransformerConfig of Megatron. You need to specify this parameter when you want to apply LoRA to the ColumnParallelLinear and RowParallelLinear layers of megatron.
+
+megatron_core (`Optional[str]`) : The core module from Megatron to use, defaults to `"megatron.core"`.
+
+trainable_token_indices (`Optional[Union[List[int], dict[str, List[int]]]]`) : Lets you specify which token indices to selectively fine-tune without requiring to re-train the whole embedding matrix using the `peft.TrainableTokensModel` method. You can specify token indices in two ways. Either you specify a list of indices which will then target the model's input embedding layer (or, if not found, `embed_tokens`). Alternatively, you can specify a dictionary where the key is the name of the embedding module and the values are the list of token indices, e.g. `{'embed_tokens': [0, 1, ...]}`. Note that training with FSDP requires `use_orig_params=True` to avoid issues with non-uniform `requires_grad`.
+
+loftq_config (`Optional[LoftQConfig]`) : The configuration of LoftQ. If this is not None, then LoftQ will be used to quantize the backbone weights and initialize Lora layers. Also pass `init_lora_weights='loftq'`. Note that you should not pass a quantized model in this case, as LoftQ will quantize the model itself.
+
+eva_config (`Optional[EvaConfig]`) : The configuration of EVA. At a minimum the dataset argument needs to be set (use the same dataset as for finetuning).
+
+corda_config (`Optional[CordaConfig]`) : The configuration of CorDA. If this is not None, then CorDA will be used to build the adapter layers. Also pass `init_lora_weights='corda'`.
+
+lora_ga_config (`Optional[LoraGAConfig]`) : The configuration of LoRA-GA. If this is passed, then LoRA-GA will be used to initialize the adapter layers. Also set `init_lora_weights='lora_ga'` in this case.
+
+use_dora (`bool`) : Enable 'Weight-Decomposed Low-Rank Adaptation' (DoRA). This technique decomposes the updates of the weights into two parts, magnitude and direction. Direction is handled by normal LoRA, whereas the magnitude is handled by a separate learnable parameter. This can improve the performance of LoRA especially at low ranks. Right now, DoRA only supports linear and Conv2D layers. DoRA introduces a bigger overhead than pure LoRA, so it is recommended to merge weights for inference. For more information, see https://huggingface.co/papers/2402.09353.
+
+velora_config (`Optional[VeloraConfig]`) : Enable VeLoRA by providing a VeloraConfig. VeLoRA swaps in a custom backward pass for the LoRA A projection that stores compressed activations instead of the full input activations.
+
+alora_invocation_tokens (`List[int]`) : If not None, enable 'Activated LoRA' (aLoRA), with alora_invocation_tokens being the tokenized invocation string for the adapter (must be present in all model input strings). This technique selectively activates the adapter weights only on tokens during and after the alora_invocation_tokens. When used in a CausalLM, this means that the KV cache prior to invocation is interchangeable with that of the base model (and other aLoRA adapters operating this way). As a result, in inference pipelines involving switching between base model inference and adapter inference (e.g. agentic pipelines, see paper for examples), significant savings are realized (relative to LoRA) by saving prefill operations. Overall adapter inference speedups of an order of magnitude or more can occur on vLLM, depending on the length of the shared context. Note that merging is not possible due to the selective application of the weights.
+
+use_qalora (`bool`) : It is only implemented in GPTQ for now. Enable Quantization-Aware Low-Rank Adaptation (QALoRA). This technique combines quantization-aware training with LoRA to improve performance for quantized models. This can improve the performance of LoRA, especially at low ranks. Right now, QALoRA only supports linear layers.
+
+qalora_group_size (`int`) : Group size parameter for QALoRA pooling, controlling the dimension reduction factor. Input dimensions are pooled into groups of this size, reducing the computational cost. Higher values provide more compression but may reduce model quality. This parameter determines how many original features are averaged together to create one pooled feature. Only used when `use_qalora=True`.
+
+monteclora_config (`Optional[MontecloraConfig]`) : The configuration of Monteclora (Monte Carlo Low-Rank Adaptation). If passed, Monteclora will be used to add variational Monte Carlo sampling on top of the LoRA adapters. See `MontecloraConfig` for details on the individual hyperparameters.
+
+layer_replication (`List[Tuple[int, int]]`) : Build a new stack of layers by stacking the original model layers according to the ranges specified. This allows expanding (or shrinking) the model without duplicating the base model weights. The new layers will all have separate LoRA adapters attached to them.
+
+runtime_config (`LoraRuntimeConfig`) : Runtime configurations (which are not saved or restored).
+
+lora_bias (`bool`) : Defaults to `False`. Whether to enable the bias term for the LoRA B parameter. Typically, this should be disabled. The main use case for this is when the LoRA weights were extracted from fully fine-tuned parameters so the bias of those parameters can be taken into account.
+
+target_parameters (`List[str]`, *optional*) : List of parameter names of the parameter names to replace with LoRA. This argument behaves similarly to `target_modules`, except that the parameter name should be passed. Generally, you should use `target_modules` to target the module (e.g. `nn.Linear`). However, in some circumstances, this is not possible. E.g., in many mixture of expert (MoE) layers in HF Transformers, instead of using `nn.Linear`, an `nn.Parameter` is used. PEFT normally overwrites the `forward` method for LoRA, but for `nn.Parameter`, there is none. Therefore, to apply LoRA to that parameter, it needs to be targeted with `target_parameters`. As an example, for Llama4, you can pass: `target_parameters=['feed_forward.experts.gate_up_proj', 'feed_forward.experts.down_proj]`. Passing a string for regex matching is not implemented yet. Note that when the model is compiled and uses `target_parameters`, re-compilation and/or graph breaks are expected. It is recommended not to use both at the same time.
+
+use_bdlora (`Optional[BdLoraConfig]`) : Enable BD-LoRA (Block-Diagonal LoRA) by providing a BdLoraConfig. This technique uses block-diagonal matrices for LoRA-A or LoRA-B factors to enable faster multi-LoRA serving by eliminating communication overheads in distributed settings.
+
+arrow_config (`Optional[ArrowConfig]`) : The necessary config to apply arrow routing on the model.
+
+ensure_weight_tying (`bool`, *optional*) : Whether to tie weights or not after peft initialization. This will ensure that the adapters added to the tied layers are also tied. This is only applicable for layers passed via `modules_to_save` and `target_modules`.
 
 This is the configuration class to store the configuration of a [LoraModel](/docs/peft/v0.20.0/en/package_reference/lora#peft.LoraModel).
+
+#### to_dict[[peft.LoraConfig.to_dict]]
+
+```python
+to_dict()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/config.py#L902)
 
 Returns the configuration for your adapter model as a dictionary. Removes runtime configurations.
 
 ## LoraModel[[peft.LoraModel]]
 
-- **model** (`torch.nn.Module`) -- The model to be adapted.
-- **config** ([LoraConfig](/docs/peft/v0.20.0/en/package_reference/lora#peft.LoraConfig)) -- The configuration of the Lora model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The Lora model.
+#### peft.LoraModel[[peft.LoraModel]]
+
+```python
+peft.LoraModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/model.py#L88)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to be adapted.
+
+config ([LoraConfig](/docs/peft/v0.20.0/en/package_reference/lora#peft.LoraConfig)) : The configuration of the Lora model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The Lora model.
 
 Creates Low Rank Adapter (LoRA) model from a pretrained transformers model.
 
@@ -1238,43 +1171,49 @@ Example:
 - **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
 - **peft_config** ([LoraConfig](/docs/peft/v0.20.0/en/package_reference/lora#peft.LoraConfig)): The configuration of the Lora model.
 
-- **adapters** (`list`) --
-  List of adapter names to be merged.
-- **weights** (`list`) --
-  List of weights for each adapter. Weights can be positive or negative, allowing for both addition and
-  subtraction of adapter effects.
-- **adapter_name** (`str`) --
-  Name of the new adapter.
-- **combination_type** (`str`) --
-  The merging type can be one of [`svd`, `linear`, `cat`, `ties`, `ties_svd`, `dare_ties`, `dare_linear`,
-  `dare_ties_svd`, `dare_linear_svd`, `magnitude_prune`, `magnitude_prune_svd`]. When using the `cat`
-  combination_type, the rank of the resulting adapter is equal to the sum of all adapters ranks (the
-  mixed adapter may be too big and result in OOM errors).
-- **svd_rank** (`int`, *optional*) --
-  Rank of output adapter for svd. If None provided, will use max rank of merging adapters.
-- **svd_clamp** (`float`, *optional*) --
-  A quantile threshold for clamping SVD decomposition output. If None is provided, do not perform
-  clamping. Defaults to None.
-- **svd_full_matrices** (`bool`, *optional*) --
-  Controls whether to compute the full or reduced SVD, and consequently, the shape of the returned
-  tensors U and Vh. Defaults to True.
-- **svd_driver** (`str`, *optional*) --
-  Name of the cuSOLVER method to be used. This keyword argument only works when merging on CUDA. Can be
-  one of [None, `gesvd`, `gesvdj`, `gesvda`]. For more info please refer to `torch.linalg.svd`
-  documentation. Defaults to None.
-- **density** (`float`, *optional*) --
-  Value between 0 and 1. 0 means all values are pruned and 1 means no values are pruned. Should be used
-  with [`ties`, `ties_svd`, `dare_ties`, `dare_linear`, `dare_ties_svd`, `dare_linear_svd`,
-  `magnintude_prune`, `magnitude_prune_svd`]
-- **majority_sign_method** (`str`) --
-  The method, should be one of ["total", "frequency"], to use to get the magnitude of the sign values.
-  Should be used with [`ties`, `ties_svd`, `dare_ties`, `dare_ties_svd`]
+#### add_weighted_adapter[[peft.LoraModel.add_weighted_adapter]]
+
+```python
+add_weighted_adapter(adapters: list[str], weights: list[float], adapter_name: str, combination_type: str = 'svd', svd_rank: int | None = None, svd_clamp: int | None = None, svd_full_matrices: bool = True, svd_driver: str | None = None, density: float | None = None, majority_sign_method: Literal['total', 'frequency'] = 'total')
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/model.py#L664)
+
+**Parameters:**
+
+adapters (`list`) : List of adapter names to be merged.
+
+weights (`list`) : List of weights for each adapter. Weights can be positive or negative, allowing for both addition and subtraction of adapter effects.
+
+adapter_name (`str`) : Name of the new adapter.
+
+combination_type (`str`) : The merging type can be one of [`svd`, `linear`, `cat`, `ties`, `ties_svd`, `dare_ties`, `dare_linear`, `dare_ties_svd`, `dare_linear_svd`, `magnitude_prune`, `magnitude_prune_svd`]. When using the `cat` combination_type, the rank of the resulting adapter is equal to the sum of all adapters ranks (the mixed adapter may be too big and result in OOM errors).
+
+svd_rank (`int`, *optional*) : Rank of output adapter for svd. If None provided, will use max rank of merging adapters.
+
+svd_clamp (`float`, *optional*) : A quantile threshold for clamping SVD decomposition output. If None is provided, do not perform clamping. Defaults to None.
+
+svd_full_matrices (`bool`, *optional*) : Controls whether to compute the full or reduced SVD, and consequently, the shape of the returned tensors U and Vh. Defaults to True.
+
+svd_driver (`str`, *optional*) : Name of the cuSOLVER method to be used. This keyword argument only works when merging on CUDA. Can be one of [None, `gesvd`, `gesvdj`, `gesvda`]. For more info please refer to `torch.linalg.svd` documentation. Defaults to None.
+
+density (`float`, *optional*) : Value between 0 and 1. 0 means all values are pruned and 1 means no values are pruned. Should be used with [`ties`, `ties_svd`, `dare_ties`, `dare_linear`, `dare_ties_svd`, `dare_linear_svd`, `magnintude_prune`, `magnitude_prune_svd`]
+
+majority_sign_method (`str`) : The method, should be one of ["total", "frequency"], to use to get the magnitude of the sign values. Should be used with [`ties`, `ties_svd`, `dare_ties`, `dare_ties_svd`]
 
 This method adds a new adapter by merging the given adapters with the given weights.
 
 When using the `cat` combination_type you should be aware that rank of the resulting adapter will be equal to
 the sum of all adapters ranks. So it's possible that the mixed adapter may become too big and result in OOM
 errors.
+
+#### subtract_mutated_init[[peft.LoraModel.subtract_mutated_init]]
+
+```python
+subtract_mutated_init(output_state_dict: dict[str, torch.Tensor], adapter_name: str, kwargs = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/model.py#L921)
 
 This function can calculate the updates of PiSSA/CorDA/OLoRA by comparing the parameters of the
 PiSSA/CorDA/OLoRA adapter in `output_state_dict` with the initial values of PiSSA/CorDA/OLoRA in
@@ -1295,6 +1234,14 @@ Compute steps:
 
 ### ArrowConfig[[peft.ArrowConfig]]
 
+#### peft.ArrowConfig[[peft.ArrowConfig]]
+
+```python
+peft.ArrowConfig(top_k: int = 3, router_temperature: float = 1.0, use_gks: bool = False, rng_seed: Optional[int] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/config.py#L120)
+
 This is the sub-configuration class to store the configuration for Arrow and GenKnowSub algorithm. Arrow is a
 routing algorithm to combine the trained LoRA modules to solve new tasks, proposed in
 'https://huggingface.co/papers/2405.11157'. GenKnowSub is a refinement on the trained modules before being combined
@@ -1302,22 +1249,23 @@ via Arrow, introduced in 'https://aclanthology.org/2025.acl-short.54/'
 
 ### LoftQ[[peft.replace_lora_weights_loftq]]
 
-- **peft_model** (`PeftModel`) --
-  The model to replace the weights of. Must be a quantized PEFT model with LoRA layers.
-- **model_path** (`Optional[str]`) --
-  The path to the model safetensors file. If the model is a Hugging Face model, this will be inferred from
-  the model's config. Otherwise, it must be provided.
-- **adapter_name** (`str`) --
-  The name of the adapter to replace the weights of. The default adapter name is "default".
-- **callback** (`Optional[Callable[[PeftModel, str], bool]]`) --
-  A callback function that will be called after each module is replaced. The callback function should take
-  the model and the name of the current module as input and return a boolean indicating whether the
-  replacement should be kept. If the callback returns False, the replacement will be rolled back. This can be
-  very useful to confirm that the LoftQ initialization actually decreases the quantization error of the
-  model. As an example, this callback could generate logits for given input and compare it with the logits
-  from the original, non-quanitzed model with the same input, and only return `True` if there is an
-  improvement. As this is a greedy optimization, it's possible that calling this function multiple times
-  yields incremental improvements.
+#### peft.replace_lora_weights_loftq[[peft.replace_lora_weights_loftq]]
+
+```python
+peft.replace_lora_weights_loftq(peft_model, model_path: Optional[str] = None, adapter_name: str = 'default', callback: Optional[Callable[[torch.nn.Module, str], bool]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/utils/loftq_utils.py#L193)
+
+**Parameters:**
+
+peft_model (`PeftModel`) : The model to replace the weights of. Must be a quantized PEFT model with LoRA layers.
+
+model_path (`Optional[str]`) : The path to the model safetensors file. If the model is a Hugging Face model, this will be inferred from the model's config. Otherwise, it must be provided.
+
+adapter_name (`str`) : The name of the adapter to replace the weights of. The default adapter name is "default".
+
+callback (`Optional[Callable[[PeftModel, str], bool]]`) : A callback function that will be called after each module is replaced. The callback function should take the model and the name of the current module as input and return a boolean indicating whether the replacement should be kept. If the callback returns False, the replacement will be rolled back. This can be very useful to confirm that the LoftQ initialization actually decreases the quantization error of the model. As an example, this callback could generate logits for given input and compare it with the logits from the original, non-quanitzed model with the same input, and only return `True` if there is an improvement. As this is a greedy optimization, it's possible that calling this function multiple times yields incremental improvements.
 
 Replace the LoRA weights of a model quantized with bitsandbytes, using the LoftQ technique.
 
@@ -1333,66 +1281,64 @@ Depending on the model size, calling this function may take some time to finish.
 
 #### EvaConfig[[peft.EvaConfig]]
 
-- **rho** (`float`) --
-  Rho value for EVA redistribution (>= 1.0). The maximum rank for a layer is lora_r * rho. Default is 2.0,
-  meaning the maximum rank allowed for a layer is 2r. Increasing rho will allow for a higher degree of
-  redistribution of ranks across layers. Some pre-trained models might be more sensitive to a rank
-  redistribution. It can therefore be beneficial to try rho=1.0 (no redistribution) if the performance is
-  lower than expected.
-- **tau** (`float`) --
-  Cosine similarity threshold for early stopping. Compares the cosine similarity of right-singular vectors
-  between two consecutive SVD steps. If the cosine similarity is above this threshold, the SVD iteration is
-  stopped. Default is 0.99.
-- **use_label_mask** (`bool`) --
-  Use label mask for EVA initialization. This means that positions where labels=label_mask_value are ignored
-  for the SVD computation. Setting use_label_mask=True is preferred in most cases and can be especially
-  beneficial for multi-turn conversations. The default value is True. Filtering out items based on the label
-  mask can sometimes lead to a small batch size and as a result instabilities in the SVD computation. For
-  cases where a large share of batch items would be filtered out, set use_label_mask=False.
-- **label_mask_value** (`int`) --
-  If use_label_mask=True the value to look for to mask out ignored tokens. Default is -100.
-- **whiten** (`bool`) -- Apply whitening to singular vectors. Default is False.
-  Whitening has been shown to be beneficial for EVA in the vision domain.
-- **adjust_scaling_factors** (`bool`) --
-  Adjust LoRA scaling factors after the rank redistribution. Setting this to True means the scaling factors
-  are adjusted so that all LoRA gradients have the same scale regardless of their rank. Default is True.
+#### peft.EvaConfig[[peft.EvaConfig]]
+
+```python
+peft.EvaConfig(rho: float = 2.0, tau: float = 0.99, use_label_mask: bool = True, label_mask_value: int = -100, whiten: bool = False, adjust_scaling_factors: bool = True)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/config.py#L244)
+
+**Parameters:**
+
+rho (`float`) : Rho value for EVA redistribution (>= 1.0). The maximum rank for a layer is lora_r * rho. Default is 2.0, meaning the maximum rank allowed for a layer is 2r. Increasing rho will allow for a higher degree of redistribution of ranks across layers. Some pre-trained models might be more sensitive to a rank redistribution. It can therefore be beneficial to try rho=1.0 (no redistribution) if the performance is lower than expected.
+
+tau (`float`) : Cosine similarity threshold for early stopping. Compares the cosine similarity of right-singular vectors between two consecutive SVD steps. If the cosine similarity is above this threshold, the SVD iteration is stopped. Default is 0.99.
+
+use_label_mask (`bool`) : Use label mask for EVA initialization. This means that positions where labels=label_mask_value are ignored for the SVD computation. Setting use_label_mask=True is preferred in most cases and can be especially beneficial for multi-turn conversations. The default value is True. Filtering out items based on the label mask can sometimes lead to a small batch size and as a result instabilities in the SVD computation. For cases where a large share of batch items would be filtered out, set use_label_mask=False.
+
+label_mask_value (`int`) : If use_label_mask=True the value to look for to mask out ignored tokens. Default is -100.
+
+whiten (`bool`) : Apply whitening to singular vectors. Default is False. Whitening has been shown to be beneficial for EVA in the vision domain.
+
+adjust_scaling_factors (`bool`) : Adjust LoRA scaling factors after the rank redistribution. Setting this to True means the scaling factors are adjusted so that all LoRA gradients have the same scale regardless of their rank. Default is True.
 
 This is the sub-configuration class to store the configuration for a data-driven initialization via EVA. EVA was
 introduced in Explained Variance Adaptation.
 
 #### initialize_lora_eva_weights[[peft.initialize_lora_eva_weights]]
 
-"}, {"name": "prepare_model_inputs_fn", "val": ": typing.Optional[collections.abc.Callable] = "}, {"name": "prepare_layer_inputs_fn", "val": ": typing.Union[collections.abc.Callable, dict[str, collections.abc.Callable], NoneType] = "}, {"name": "adapter_name", "val": ": str = 'default'"}, {"name": "gather_distributed_inputs", "val": ": bool = True"}, {"name": "show_progress_bar", "val": ": bool = True"}]}>
-- **model** (PeftModel) -- The peft model to compute the SVD for.
-- **dataloader** (Optional[Iterable]) --
-  The dataloader to use for the forward pass. If None, eva_state_dict needs to be provided.
-- **eva_state_dict** (Optional[dict]) --
-  The state_dict to load into the model. If None, a dataloader needs to be provided and the state_dict will
-  be computed using `get_eva_state_dict`.
-- **forward_fn** (Callable) --
-  The forward function to use for the forward pass. Takes two arguments: `model` and `inputs`. Default
-  behavior is `return model(**inputs)`
-- **prepare_model_inputs_fn** (Optional[Callable]) --
-  This function receives the model inputs and the peft_config and passes the output to
-  `prepare_layer_inputs_fn`. Can be used to modify the input to the SVD computation based on the original
-  model inputs. For example for language modeling the attention mask is used to determine which indices are
-  padding tokens and should not be used for SVD. Any function defined here expects two arguments:
-  `model_input` and `peft_config`. `peft.tuners.lora.eva.prepare_model_inputs_fn_language_modeling` is used
-  by default.
-- **prepare_layer_inputs_fn** (Union[Callable, Dict[str, Callable], None]) --
-  This function receives the layer inputs, the model inputs (potentially modified by
-  `prepare_model_inputs_fn`) and the name of the layer and returns the inputs that should be used for SVD for
-  that particular layer. Any custom function defined here expects three arguments: `layer_input`,
-  `model_input`, and `layer_name` and should return a 2d tensor. The default logic can be found in
-  peft.tuners.lora.eva.prepare_layer_inputs_fn_language_modeling and works for language modeling. In this
-  case model_inputs is the mask used to determine which indices should be used for SVD (created by
-  `prepare_model_inputs_fn_language_modeling`).
-- **adapter_name** (str) -- The name of the adapter to initialize the weights for.
-- **gather_distributed_inputs** (bool) --
-  Whether to gather the layer inputs from all ranks. Default is True meaning in a distributed setting the
-  layer inputs will be gathered from all ranks for the SVD computation. For non-distributed settings this
-  argument is ignored. Set to False if you are using a non-distributed dataloader in a distributed setting.
-- **show_progress_bar** (bool) -- Whether to show a progress bar. Default is True.model (torch.nn.Module)The model with the initialized LoRA weights.
+#### peft.initialize_lora_eva_weights[[peft.initialize_lora_eva_weights]]
+
+```python
+peft.initialize_lora_eva_weights(model: Module, dataloader: typing.Optional[collections.abc.Iterable] = None, eva_state_dict: typing.Optional[dict] = None, forward_fn: typing.Optional[collections.abc.Callable] = <function forward_fn_dict at 0x7f29b0f34550>, prepare_model_inputs_fn: typing.Optional[collections.abc.Callable] = <function prepare_model_inputs_fn_language_modeling at 0x7f29b0f34430>, prepare_layer_inputs_fn: typing.Union[collections.abc.Callable, dict[str, collections.abc.Callable], NoneType] = <function prepare_layer_inputs_fn_language_modeling at 0x7f29b0f344c0>, adapter_name: str = 'default', gather_distributed_inputs: bool = True, show_progress_bar: bool = True)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/eva.py#L654)
+
+**Parameters:**
+
+model (PeftModel) : The peft model to compute the SVD for.
+
+dataloader (Optional[Iterable]) : The dataloader to use for the forward pass. If None, eva_state_dict needs to be provided.
+
+eva_state_dict (Optional[dict]) : The state_dict to load into the model. If None, a dataloader needs to be provided and the state_dict will be computed using `get_eva_state_dict`.
+
+forward_fn (Callable) : The forward function to use for the forward pass. Takes two arguments: `model` and `inputs`. Default behavior is `return model(**inputs)`
+
+prepare_model_inputs_fn (Optional[Callable]) : This function receives the model inputs and the peft_config and passes the output to `prepare_layer_inputs_fn`. Can be used to modify the input to the SVD computation based on the original model inputs. For example for language modeling the attention mask is used to determine which indices are padding tokens and should not be used for SVD. Any function defined here expects two arguments: `model_input` and `peft_config`. `peft.tuners.lora.eva.prepare_model_inputs_fn_language_modeling` is used by default.
+
+prepare_layer_inputs_fn (Union[Callable, Dict[str, Callable], None]) : This function receives the layer inputs, the model inputs (potentially modified by `prepare_model_inputs_fn`) and the name of the layer and returns the inputs that should be used for SVD for that particular layer. Any custom function defined here expects three arguments: `layer_input`, `model_input`, and `layer_name` and should return a 2d tensor. The default logic can be found in peft.tuners.lora.eva.prepare_layer_inputs_fn_language_modeling and works for language modeling. In this case model_inputs is the mask used to determine which indices should be used for SVD (created by `prepare_model_inputs_fn_language_modeling`).
+
+adapter_name (str) : The name of the adapter to initialize the weights for.
+
+gather_distributed_inputs (bool) : Whether to gather the layer inputs from all ranks. Default is True meaning in a distributed setting the layer inputs will be gathered from all ranks for the SVD computation. For non-distributed settings this argument is ignored. Set to False if you are using a non-distributed dataloader in a distributed setting.
+
+show_progress_bar (bool) : Whether to show a progress bar. Default is True.
+
+**Returns:** `model (torch.nn.Module)`
+
+The model with the initialized LoRA weights.
 
 Initialize the weights of the LoRA layers using the EVA method.
 
@@ -1401,35 +1347,37 @@ layer and updates the weights accordingly.
 
 #### get_eva_state_dict[[peft.get_eva_state_dict]]
 
-"}, {"name": "prepare_model_inputs_fn", "val": ": typing.Optional[collections.abc.Callable] = "}, {"name": "prepare_layer_inputs_fn", "val": ": typing.Union[collections.abc.Callable, dict[str, collections.abc.Callable], NoneType] = "}, {"name": "adapter_name", "val": ": str = 'default'"}, {"name": "gather_distributed_inputs", "val": ": bool = True"}, {"name": "show_progress_bar", "val": ": bool = True"}]}>
-- **model** (torch.nn.Module) -- The model to compute the SVD for. Does not need to be a PeftModel.
-- **dataloader** (Iterable) -- The dataloader to use for the forward pass.
-- **peft_config** (Optional[LoraConfig]) --
-  The configuration for the LoRA layers. Only required if `model` is not a PeftModel.
-- **forward_fn** (Callable) --
-  The forward function to use for the forward pass. Takes two arguments: `model` and `inputs`. Default
-  behavior is `return model(**inputs)`
-- **prepare_model_inputs_fn** (Optional[Callable]) --
-  This function receives the model inputs and the peft_config and passes the output to
-  `prepare_layer_inputs_fn`. Can be used to modify the input to the SVD computation based on the original
-  model inputs. For example for language modeling the attention mask is used to determine which indices are
-  padding tokens and should not be used for SVD. Any function defined here expects two arguments:
-  `model_input` and `peft_config`. `peft.tuners.lora.eva.prepare_model_inputs_fn_language_modeling` is used
-  by default.
-- **prepare_layer_inputs_fn** (Union[Callable, Dict[str, Callable], None]) --
-  This function receives the layer inputs, the model inputs (potentially modified by
-  `prepare_model_inputs_fn`) and the name of the layer and returns the inputs that should be used for SVD for
-  that particular layer. Any custom function defined here expects three arguments: `layer_input`,
-  `model_input`, and `layer_name` and should return a 2d tensor. The default logic can be found in
-  peft.tuners.lora.eva.prepare_layer_inputs_fn_language_modeling and works for language modeling. In this
-  case model_inputs is the mask used to determine which indices should be used for SVD (created by
-  `prepare_model_inputs_fn_language_modeling`).
-- **adapter_name** (str) -- The name of the adapter to compute the SVD for.
-- **gather_distributed_inputs** (bool) --
-  Whether to gather the layer inputs from all ranks. Default is True meaning in a distributed setting the
-  layer inputs will be gathered from all ranks for the SVD computation. For non-distributed settings this
-  argument is ignored. Set to False if you are using a non-distributed dataloader in a distributed setting.
-- **show_progress_bar** (bool) -- Whether to show a progress bar. Default is True.eva_state_dict (dict)The state dictionary containing the SVD components for each layer.
+#### peft.get_eva_state_dict[[peft.get_eva_state_dict]]
+
+```python
+peft.get_eva_state_dict(model: Module, dataloader: Iterable, peft_config: typing.Optional[peft.tuners.lora.config.LoraConfig] = None, forward_fn: typing.Optional[collections.abc.Callable] = <function forward_fn_dict at 0x7f29b0f34550>, prepare_model_inputs_fn: typing.Optional[collections.abc.Callable] = <function prepare_model_inputs_fn_language_modeling at 0x7f29b0f34430>, prepare_layer_inputs_fn: typing.Union[collections.abc.Callable, dict[str, collections.abc.Callable], NoneType] = <function prepare_layer_inputs_fn_language_modeling at 0x7f29b0f344c0>, adapter_name: str = 'default', gather_distributed_inputs: bool = True, show_progress_bar: bool = True)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/eva.py#L556)
+
+**Parameters:**
+
+model (torch.nn.Module) : The model to compute the SVD for. Does not need to be a PeftModel.
+
+dataloader (Iterable) : The dataloader to use for the forward pass.
+
+peft_config (Optional[LoraConfig]) : The configuration for the LoRA layers. Only required if `model` is not a PeftModel.
+
+forward_fn (Callable) : The forward function to use for the forward pass. Takes two arguments: `model` and `inputs`. Default behavior is `return model(**inputs)`
+
+prepare_model_inputs_fn (Optional[Callable]) : This function receives the model inputs and the peft_config and passes the output to `prepare_layer_inputs_fn`. Can be used to modify the input to the SVD computation based on the original model inputs. For example for language modeling the attention mask is used to determine which indices are padding tokens and should not be used for SVD. Any function defined here expects two arguments: `model_input` and `peft_config`. `peft.tuners.lora.eva.prepare_model_inputs_fn_language_modeling` is used by default.
+
+prepare_layer_inputs_fn (Union[Callable, Dict[str, Callable], None]) : This function receives the layer inputs, the model inputs (potentially modified by `prepare_model_inputs_fn`) and the name of the layer and returns the inputs that should be used for SVD for that particular layer. Any custom function defined here expects three arguments: `layer_input`, `model_input`, and `layer_name` and should return a 2d tensor. The default logic can be found in peft.tuners.lora.eva.prepare_layer_inputs_fn_language_modeling and works for language modeling. In this case model_inputs is the mask used to determine which indices should be used for SVD (created by `prepare_model_inputs_fn_language_modeling`).
+
+adapter_name (str) : The name of the adapter to compute the SVD for.
+
+gather_distributed_inputs (bool) : Whether to gather the layer inputs from all ranks. Default is True meaning in a distributed setting the layer inputs will be gathered from all ranks for the SVD computation. For non-distributed settings this argument is ignored. Set to False if you are using a non-distributed dataloader in a distributed setting.
+
+show_progress_bar (bool) : Whether to show a progress bar. Default is True.
+
+**Returns:** `eva_state_dict (dict)`
+
+The state dictionary containing the SVD components for each layer.
 
 Compute the SVD for each layer in the model.
 
@@ -1439,22 +1387,21 @@ cosine similarity. The rank distribution for each layer is determined based on t
 
 ### LoraGAConfig[[peft.LoraGAConfig]]
 
-- **direction** (`Literal["ArBr", "A2rBr", "ArB2r", "random"]`) --
-  Strategy for distributing gradient SVD components to lora_A and lora_B matrices.
-  - "ArBr": Alternating indices (A takes odd, B takes even)
-  - "A2rBr": A takes indices [r:2r], B takes indices [:r]
-  - "ArB2r": A takes indices [:r], B takes indices [r:2r] (recommended)
-  - "random": Random selection of indices
-  Default: "ArB2r"
-- **scale** (`Literal["stable", "weight_svd", "gd_scale", "unit"]`) --
-  Scaling strategy for adapter initialization.
-  - "stable": Stable scaling with gamma parameter
-  - "weight_svd": Scale based on weight matrix singular values
-  - "gd_scale": Gradient descent based scaling
-  - "unit": No additional scaling
-  Default: "stable"
-- **stable_gamma** (`int`) --
-  Gamma parameter for stable scaling method. Default: 16
+#### peft.LoraGAConfig[[peft.LoraGAConfig]]
+
+```python
+peft.LoraGAConfig(direction: Literal['ArBr', 'A2rBr', 'ArB2r', 'random'] = 'ArB2r', scale: Literal['stable', 'weight_svd', 'gd_scale', 'unit'] = 'stable', stable_gamma: int = 16)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/config.py#L1033)
+
+**Parameters:**
+
+direction (`Literal["ArBr", "A2rBr", "ArB2r", "random"]`) : Strategy for distributing gradient SVD components to lora_A and lora_B matrices. - "ArBr": Alternating indices (A takes odd, B takes even) - "A2rBr": A takes indices [r:2r], B takes indices [:r] - "ArB2r": A takes indices [:r], B takes indices [r:2r] (recommended) - "random": Random selection of indices Default: "ArB2r"
+
+scale (`Literal["stable", "weight_svd", "gd_scale", "unit"]`) : Scaling strategy for adapter initialization. - "stable": Stable scaling with gamma parameter - "weight_svd": Scale based on weight matrix singular values - "gd_scale": Gradient descent based scaling - "unit": No additional scaling Default: "stable"
+
+stable_gamma (`int`) : Gamma parameter for stable scaling method. Default: 16
 
 This is the sub-configuration class to store the configuration for LoRA-GA initialization.
 
@@ -1466,21 +1413,36 @@ Reference: https://arxiv.org/abs/2407.05000
 
 #### Utilities[[peft.tuners.lora.loraga.estimate_gradients]]
 
+#### peft.tuners.lora.loraga.estimate_gradients[[peft.tuners.lora.loraga.estimate_gradients]]
+
+```python
+peft.tuners.lora.loraga.estimate_gradients(model: Module, lora_config: LoraConfig, train_step: Callable)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/loraga.py#L118)
+
 Estimate gradients for LoRA-GA initialization.
 
 This function enables gradient computation ONLY on target module weights and runs the train_step callback. This is
 more memory-efficient than enabling gradients globally.
 
-- **model** (`nn.Module`) --
-  Model to preprocess.
-- **lora_config** (`LoraConfig`) --
-  Lora configuration of the model. `lora_config.lora_ga_config` should be set.
-- **train_step** (`Callable[[], None]`) --
-  Callback to run gradient estimation. Typically you should run model forward and backward passes in this
-  callback. The gradients will be accumulated across all calls within this callback.
-- **cache_file** (`Optional[str]`) --
-  Optional path to cache file for saving/loading gradients. If provided and the file exists, gradients will
-  be loaded from cache. Otherwise, gradients will be estimated and saved to this path.
+#### peft.preprocess_loraga[[peft.preprocess_loraga]]
+
+```python
+peft.preprocess_loraga(model: Module, lora_config: LoraConfig, train_step: Callable, cache_file: typing.Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/loraga.py#L46)
+
+**Parameters:**
+
+model (`nn.Module`) : Model to preprocess.
+
+lora_config (`LoraConfig`) : Lora configuration of the model. `lora_config.lora_ga_config` should be set.
+
+train_step (`Callable[[], None]`) : Callback to run gradient estimation. Typically you should run model forward and backward passes in this callback. The gradients will be accumulated across all calls within this callback.
+
+cache_file (`Optional[str]`) : Optional path to cache file for saving/loading gradients. If provided and the file exists, gradients will be loaded from cache. Otherwise, gradients will be estimated and saved to this path.
 
 Build necessary LoRA-GA fields for a model by estimating gradients.
 
@@ -1493,31 +1455,25 @@ Accumulated gradient for the weight matrix.
 
 ## Intruder Dimension Reduction[[peft.tuners.lora.intruders.reduce_intruder_dimension]]
 
-"}]}>
-- **peft_model** --
-  The PEFT model with a loaded LoRA adapter with the name provided in `old_adapter_name`. Currently mixed
-  models are not supported.
+#### peft.tuners.lora.intruders.reduce_intruder_dimension[[peft.tuners.lora.intruders.reduce_intruder_dimension]]
 
-- **top_k** (default -- 10)
-  Consider the top-k dimensions for intruder detection. The larger the value, the more dimensions will be
-  considered for intruder detection analysis (and the more false-postiives there can be). Operates on the
-  cosine similarity between base weights and adapter weights roughly sorted by influence of dimension
-  (determined by singular value decomposition), so a top-k of 10 will look at the 10 most 'important'
-  dimensions.
+```python
+peft.tuners.lora.intruders.reduce_intruder_dimension(peft_model, old_adapter_name = 'default', new_adapter_name = 'intruder_reduced', top_k = 10, threshold_epsilon = 0.5, mitigation_lambda = 0.75, logging_sink = <built-in function print>)
+```
 
-- **threshold_epsilon** (default -- 0.5)
-  Threshold value when to consider a cosine similarity between base weight and adapter weight as intruder.
-  According to the paper, intruder dimensions show near-zero absolute cosine similarity with pre-trained
-  singular vectors. The lower this value, the less potential intruder dimensions are identified. The higher
-  the value, the more potential false-positives are considered as intruders.
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/lora/intruders.py#L20)
 
-- **mitigation_lambda** (default -- 0.75)
-  The relative portion of the intruder dimensions that is subtracted from the adapter's delta weight. The
-  higher the value the more of the intruder dimension is subtracted but the more information is lost. Refer
-  to Figure 8 in the paper for a trade-off analysis.
+**Parameters:**
 
-- **logging_sink** (default -- print)
-  Function that prints information about the mitigation process. Set to None if you don't want any output.
+peft_model : The PEFT model with a loaded LoRA adapter with the name provided in `old_adapter_name`. Currently mixed models are not supported. 
+
+top_k (default : 10) Consider the top-k dimensions for intruder detection. The larger the value, the more dimensions will be considered for intruder detection analysis (and the more false-postiives there can be). Operates on the cosine similarity between base weights and adapter weights roughly sorted by influence of dimension (determined by singular value decomposition), so a top-k of 10 will look at the 10 most 'important' dimensions. 
+
+threshold_epsilon (default : 0.5) Threshold value when to consider a cosine similarity between base weight and adapter weight as intruder. According to the paper, intruder dimensions show near-zero absolute cosine similarity with pre-trained singular vectors. The lower this value, the less potential intruder dimensions are identified. The higher the value, the more potential false-positives are considered as intruders. 
+
+mitigation_lambda (default : 0.75) The relative portion of the intruder dimensions that is subtracted from the adapter's delta weight. The higher the value the more of the intruder dimension is subtracted but the more information is lost. Refer to Figure 8 in the paper for a trade-off analysis. 
+
+logging_sink (default : print) Function that prints information about the mitigation process. Set to None if you don't want any output.
 
 Intruder dimension mitigation based on https://huggingface.co/papers/2410.21228 ("LoRA vs Full Fine-tuning: An
 Illusion of Equivalence").

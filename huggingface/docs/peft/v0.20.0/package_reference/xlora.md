@@ -39,36 +39,41 @@ Please cite X-LoRA as:
 
 ## XLoraConfig[[peft.XLoraConfig]]
 
-- **hidden_size** (`int`) --
-  Hidden size of the base model.
-- **adapters** (`dict`) --
-  Mapping of adapter names to the LoRA adapter id, as per PeftModel.load_adapter. *They will be automatically
-  loaded*, to use as LoRA experts. When using from_pretrained, pass the new adapters dict as a keyword
-  argument.
-- **enable_softmax** (`bool`, *optional*, defaults to `True`) --
-  Enable softmax application for the X-LoRA classifier.
-- **enable_softmax_topk** (`bool`, *optional*, defaults to `False`) --
-  Enable softmax application for the top-k LoRA adapters. Mutually exclusive to `enable_softmax` and must
-  only be set if `top_k_lora` is.
-- **softmax_temperature** (`float`, *optional*, defaults to 1.0) --
-  Softmax temperature, lower yields sharper predictions
-- **layerwise_scalings** (`bool`, *optional*, defaults to `False`) --
-  If True, generate scalings for each LoRA adapter (each layer). If this is False, then scalings will be
-  broadcasted, the same, to each layer.
-- **top_k_lora** (`int`, *optional*, defaults to None) --
-  Sparsely select the top_k LoRA experts instead of the default dense method.
-- **xlora_depth** (`int`, *optional*, defaults to 1) --
-  Depth of the X-LoRA classifier.
-- **xlora_size** (`int`, *optional*, defaults to 2048) --
-  Hidden size of the X-LoRA classifier, irrelevant if `xlora_depth=1`.
-- **xlora_dropout_p** (`float`, *optional*, defaults to 0.2) --
-  Dropout probability of the X-LoRA classifier, irrelevant if `xlora_depth=1`.
-- **use_trainable_adapters** (`bool`, *optional*, defaults to False) --
-  Make the adapters trainable.
-- **scaling_pass_value** (`float`, *optional*, defaults to 0) --
-  Scaling pass value.
-- **global_scaling_weight** (`float`, *optional*, defaults to 1) --
-  Weight to multiply output of each LoRA adapter by.
+#### peft.XLoraConfig[[peft.XLoraConfig]]
+
+```python
+peft.XLoraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, hidden_size: int = None, adapters: dict[str, str] = None, enable_softmax: bool = True, enable_softmax_topk: bool = False, layerwise_scalings: bool = False, xlora_depth: int = 1, xlora_size: int = 2048, xlora_dropout_p: float = 0.2, use_trainable_adapters: bool = False, softmax_temperature: float = 1.0, top_k_lora: Optional[int] = None, scaling_pass_value: float = 0.0, global_scaling_weight: float = 1.0)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/config.py#L25)
+
+**Parameters:**
+
+hidden_size (`int`) : Hidden size of the base model.
+
+adapters (`dict`) : Mapping of adapter names to the LoRA adapter id, as per PeftModel.load_adapter. *They will be automatically loaded*, to use as LoRA experts. When using from_pretrained, pass the new adapters dict as a keyword argument.
+
+enable_softmax (`bool`, *optional*, defaults to `True`) : Enable softmax application for the X-LoRA classifier.
+
+enable_softmax_topk (`bool`, *optional*, defaults to `False`) : Enable softmax application for the top-k LoRA adapters. Mutually exclusive to `enable_softmax` and must only be set if `top_k_lora` is.
+
+softmax_temperature (`float`, *optional*, defaults to 1.0) : Softmax temperature, lower yields sharper predictions
+
+layerwise_scalings (`bool`, *optional*, defaults to `False`) : If True, generate scalings for each LoRA adapter (each layer). If this is False, then scalings will be broadcasted, the same, to each layer.
+
+top_k_lora (`int`, *optional*, defaults to None) : Sparsely select the top_k LoRA experts instead of the default dense method.
+
+xlora_depth (`int`, *optional*, defaults to 1) : Depth of the X-LoRA classifier.
+
+xlora_size (`int`, *optional*, defaults to 2048) : Hidden size of the X-LoRA classifier, irrelevant if `xlora_depth=1`.
+
+xlora_dropout_p (`float`, *optional*, defaults to 0.2) : Dropout probability of the X-LoRA classifier, irrelevant if `xlora_depth=1`.
+
+use_trainable_adapters (`bool`, *optional*, defaults to False) : Make the adapters trainable.
+
+scaling_pass_value (`float`, *optional*, defaults to 0) : Scaling pass value.
+
+global_scaling_weight (`float`, *optional*, defaults to 1) : Weight to multiply output of each LoRA adapter by.
 
 This is the configuration class to store the configuration of a `XLoraModel`. When the config is reloaded, the
 paths of the `adapters` field is disregarded in favor of the saved adapters. As such, only the keys matter during
@@ -76,9 +81,25 @@ loading.
 
 ## XLoraModel[[peft.XLoraModel]]
 
-- **model** (`torch.nn.Module`) -- The model to be adapted.
-- **config** ([XLoraConfig](/docs/peft/v0.20.0/en/package_reference/xlora#peft.XLoraConfig)) -- The configuration of the Lora model.
-- **adapter_name** (`str`) -- The name of the adapter, does not affect the LoRA adapter names.`torch.nn.Module`The X-LoRA model.
+#### peft.XLoraModel[[peft.XLoraModel]]
+
+```python
+peft.XLoraModel(model: nn.Module, config: Union[dict[str, XLoraConfig], XLoraConfig], adapter_name: str, torch_device: Optional[str] = None, ephemeral_gpu_offload: bool = False, autocast_adapter_dtype: bool = True, **kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L156)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to be adapted.
+
+config ([XLoraConfig](/docs/peft/v0.20.0/en/package_reference/xlora#peft.XLoraConfig)) : The configuration of the Lora model.
+
+adapter_name (`str`) : The name of the adapter, does not affect the LoRA adapter names.
+
+**Returns:** `torch.nn.Module`
+
+The X-LoRA model.
 
 Creates an X-LoRA (Mixture of LoRA experts), model from a pretrained transformers model. Currently, this X-LoRA
 implementation only works with models with a transformer architecture.
@@ -115,30 +136,110 @@ Example:
 >>> xlora_model = get_peft_model(model, config)
 ```
 
+#### clear_scalings_log[[peft.XLoraModel.clear_scalings_log]]
+
+```python
+clear_scalings_log()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L511)
+
 Clear the scalings log.
+
+#### disable_scalings_logging[[peft.XLoraModel.disable_scalings_logging]]
+
+```python
+disable_scalings_logging()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L504)
 
 Disable scalings logging, without clearing the log.
 
+#### enable_scalings_logging[[peft.XLoraModel.enable_scalings_logging]]
+
+```python
+enable_scalings_logging()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L497)
+
 Enable scalings logging.
+
+#### get_bucketed_scalings_log[[peft.XLoraModel.get_bucketed_scalings_log]]
+
+```python
+get_bucketed_scalings_log()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L518)
 
 Returns bucketed scalings, bucketed by seq_len. Each value consists of the positions (the first) and the
 associated tensors. The positions are paired with the associated tensors and give the position in the scaling
 log.
 
+#### get_global_scaling_weight[[peft.XLoraModel.get_global_scaling_weight]]
+
+```python
+get_global_scaling_weight()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L474)
+
 Get the global LoRA weight.
+
+#### get_latest_scalings[[peft.XLoraModel.get_latest_scalings]]
+
+```python
+get_latest_scalings()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L481)
 
 Returns the latest scalings prediction, or None if no scalings have been predicted. The tensor is of shape
 (batch_size, seq_len, n_layers, n_classes).
+
+#### get_scalings_log[[peft.XLoraModel.get_scalings_log]]
+
+```python
+get_scalings_log()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L488)
 
 Returns a shallow (only copying the list itself not the tensors) copy of the list containing the scalings log.
 Editing the list does not change the underlying log. The tensors are of shape (batch_size, seq_len, n_layers,
 n_classes). The seq_len dim may vary with input dimension.
 
+#### set_global_scaling_weight[[peft.XLoraModel.set_global_scaling_weight]]
+
+```python
+set_global_scaling_weight(weight: float)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L458)
+
 Set the global LoRA weight, a scalar to multiply the output of each LoRA adapter by. This is by default 1. This
 is reflected in the config.
 
+#### set_scaling_pass_value[[peft.XLoraModel.set_scaling_pass_value]]
+
+```python
+set_scaling_pass_value(value: float | None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L466)
+
 Set the scaling pass value, the value to set the scalings to during the scaling pass. If the value is None, the
 scaling pass value will be 1/n where n is the number of adapters.
+
+#### set_topk_lora[[peft.XLoraModel.set_topk_lora]]
+
+```python
+set_topk_lora(value: Optional[int])
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/xlora/model.py#L450)
 
 Sparsely select the specified top_k LoRA experts instead of the default dense method. Set to None to use dense.
 This is reflected in the config.

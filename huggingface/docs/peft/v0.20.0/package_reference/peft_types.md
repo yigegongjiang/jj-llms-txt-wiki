@@ -4,6 +4,14 @@
 
 ## PeftType[[peft.PeftType]]
 
+#### peft.PeftType[[peft.PeftType]]
+
+```python
+peft.PeftType(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/utils/peft_types.py#L19)
+
 Enum class for the different types of adapters in PEFT.
 
 Supported PEFT types:
@@ -41,6 +49,14 @@ Supported PEFT types:
 - DEFT
 
 ## TaskType[[peft.TaskType]]
+
+#### peft.TaskType[[peft.TaskType]]
+
+```python
+peft.TaskType(value, names = None, module = None, qualname = None, type = None, start = 1)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/utils/peft_types.py#L103)
 
 Enum class for the different types of tasks supported by PEFT.
 

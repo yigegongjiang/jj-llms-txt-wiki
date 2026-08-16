@@ -23,39 +23,53 @@ The abstract from the paper is:
 
 ## ShiraConfig[[peft.ShiraConfig]]
 
-- **r** (`int`, *optional*, defaults to `32`) --
-  For a given target module, the number of SHiRA parameters is computed as r(m+n), where the original tensor
-  dimensions are m x n. This means the number of SHiRA parameters is the same as that for a LoRA adapter.
-  SHiRA is a high rank adapter. Setting this r parameter does not restrict the rank to this value.
-- **mask_type** (`str`, defaults to `random`) --
-  Type of mask function. Defaults to a random sparse mask. An optional user-defined mask_fn to compute the
-  mask value can also be supplied by instantiating `config = ShiraConfig(...)` and then setting
-  `config.mask_fn = <your custom mask function>`. For a pretrained weight with shape m x n, the custom mask
-  function must return only one mask (shape: m x n) which must be binary 0 or 1 with num_shira_parameters =
-  r(m + n) for linear layers. Device and dtype of mask must be same as base layer's weight's device and
-  dtype. Please see mask_functions.py for more details and to see the default random sparse mask
-  implementation.
-- **random_seed** (`int`, *optional*, defaults to `None`) --
-  random seed for the torch generator for random_mask.
-- **target_modules** (`Union[List[str], str]`) --
-  List of module names or regex expression of the module names to replace with SHiRA. For example, ['q', 'v']
-  or '.*decoder.*(SelfAttention|EncDecAttention).*(q|v)$'. Only linear layers are supported.
-- **fan_in_fan_out** (`bool`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **init_weights** (`bool`, defaults to `True`) --
-  Initialize SHiRA weight to have zero values. If set to False, SHiRA weights are initialized to randn values
-  instead of zeros and this is used only for testing.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from SHiRA layers to be set as trainable and saved in the final checkpoint.
+#### peft.ShiraConfig[[peft.ShiraConfig]]
+
+```python
+peft.ShiraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 32, mask_type: Literal['random'] = 'random', random_seed: Optional[int] = None, target_modules: Optional[Union[list[str], str]] = None, fan_in_fan_out: bool = False, init_weights: bool = True, modules_to_save: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/shira/config.py#L28)
+
+**Parameters:**
+
+r (`int`, *optional*, defaults to `32`) : For a given target module, the number of SHiRA parameters is computed as r(m+n), where the original tensor dimensions are m x n. This means the number of SHiRA parameters is the same as that for a LoRA adapter. SHiRA is a high rank adapter. Setting this r parameter does not restrict the rank to this value.
+
+mask_type (`str`, defaults to `random`) : Type of mask function. Defaults to a random sparse mask. An optional user-defined mask_fn to compute the mask value can also be supplied by instantiating `config = ShiraConfig(...)` and then setting `config.mask_fn = <your custom mask function>`. For a pretrained weight with shape m x n, the custom mask function must return only one mask (shape: m x n) which must be binary 0 or 1 with num_shira_parameters = r(m + n) for linear layers. Device and dtype of mask must be same as base layer's weight's device and dtype. Please see mask_functions.py for more details and to see the default random sparse mask implementation.
+
+random_seed (`int`, *optional*, defaults to `None`) : random seed for the torch generator for random_mask.
+
+target_modules (`Union[List[str], str]`) : List of module names or regex expression of the module names to replace with SHiRA. For example, ['q', 'v'] or '.*decoder.*(SelfAttention|EncDecAttention).*(q|v)$'. Only linear layers are supported.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+init_weights (`bool`, defaults to `True`) : Initialize SHiRA weight to have zero values. If set to False, SHiRA weights are initialized to randn values instead of zeros and this is used only for testing.
+
+modules_to_save (`List[str]`) : List of modules apart from SHiRA layers to be set as trainable and saved in the final checkpoint.
 
 This is the configuration class to store the configuration of a [ShiraModel](/docs/peft/v0.20.0/en/package_reference/shira#peft.ShiraModel).
 
 ## ShiraModel[[peft.ShiraModel]]
 
-- **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
-- **config** ([ShiraConfig](/docs/peft/v0.20.0/en/package_reference/shira#peft.ShiraConfig)) -- The configuration of the SHiRA model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.`torch.nn.Module`The SHiRA model.
+#### peft.ShiraModel[[peft.ShiraModel]]
+
+```python
+peft.ShiraModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/shira/model.py#L41)
+
+**Parameters:**
+
+model ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) : The model to be adapted.
+
+config ([ShiraConfig](/docs/peft/v0.20.0/en/package_reference/shira#peft.ShiraConfig)) : The configuration of the SHiRA model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+**Returns:** `torch.nn.Module`
+
+The SHiRA model.
 
 Creates a Sparse High Rank Adapter (SHiRA) Model from a pretrained model.
 

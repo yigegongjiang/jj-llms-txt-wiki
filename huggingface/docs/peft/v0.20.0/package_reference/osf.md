@@ -218,20 +218,33 @@ optimizer = torch.optim.AdamW([
 
 ## OSFConfig[[peft.OSFConfig]]
 
-- **effective_rank** (*int* or *float*, *optional*) --
-  Preserved SVD rank ("high" subspace). The top-`effective_rank` singular directions are frozen and
-  retained across tasks; the remaining dimensions form the trainable low-rank subspace. If *None*, defaults
-  to 50% of the smaller weight dimension per target module. Note: This differs from LoRA's *r* (trainable
-  rank). In OSF, the trainable rank is *min(weight.shape) - effective_rank*.
-- **target_modules** (*Union[list[str], str]*, *optional*) --
-  The names of the modules to apply OSF to. Can be a list of module names or *"all-linear"*.
-- **rank_pattern** (*dict[str, int|float]*, *optional*) --
-  A dictionary of regex patterns to override *effective_rank* for specific modules. Values can be absolute
-  integers or fractions in (0, 1], interpreted as a fraction of the smaller matrix dimension per target.
+#### peft.OSFConfig[[peft.OSFConfig]]
+
+```python
+peft.OSFConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, effective_rank: Optional[Union[int, float]] = None, target_modules: Optional[Union[list[str], str]] = None, rank_pattern: Optional[dict[str, Union[int, float]]] = None, init_weights: Optional[bool] = None, modules_to_save: Optional[list[str]] = None, target_svd_config: Optional[dict[str, int]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/osf/config.py#L11)
+
+**Parameters:**
+
+effective_rank (*int* or *float*, *optional*) : Preserved SVD rank ("high" subspace). The top-`effective_rank` singular directions are frozen and retained across tasks; the remaining dimensions form the trainable low-rank subspace. If *None*, defaults to 50% of the smaller weight dimension per target module. Note: This differs from LoRA's *r* (trainable rank). In OSF, the trainable rank is *min(weight.shape) - effective_rank*.
+
+target_modules (*Union[list[str], str]*, *optional*) : The names of the modules to apply OSF to. Can be a list of module names or *"all-linear"*.
+
+rank_pattern (*dict[str, int|float]*, *optional*) : A dictionary of regex patterns to override *effective_rank* for specific modules. Values can be absolute integers or fractions in (0, 1], interpreted as a fraction of the smaller matrix dimension per target.
 
 Configuration for Orthogonal Subspace Fine-tuning (OSF).
 
 ## OSFModel[[peft.OSFModel]]
+
+#### peft.OSFModel[[peft.OSFModel]]
+
+```python
+peft.OSFModel(model, config, adapter_name, low_cpu_mem_usage: bool = False, state_dict: dict[str, torch.Tensor] | None = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/osf/model.py#L14)
 
 A minimal tuner implementing Orthogonal Subspace Fine-tuning.
 
@@ -239,10 +252,34 @@ A minimal tuner implementing Orthogonal Subspace Fine-tuning.
 
 ### Weight Decomposition[[peft.tuners.osf.utils.decompose_weight_matrix]]
 
+#### peft.tuners.osf.utils.decompose_weight_matrix[[peft.tuners.osf.utils.decompose_weight_matrix]]
+
+```python
+peft.tuners.osf.utils.decompose_weight_matrix(weight: torch.Tensor, top_k: int)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/osf/utils.py#L42)
+
 Perform an SVD of `weight` and split it into frozen and trainable parts.
+
+#### peft.tuners.osf.utils.reconstruct_weight_matrix[[peft.tuners.osf.utils.reconstruct_weight_matrix]]
+
+```python
+peft.tuners.osf.utils.reconstruct_weight_matrix(svd_dict: dict[str, torch.Tensor])
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/osf/utils.py#L62)
 
 Reconstruct a weight matrix from its SVD components.
 
 ### Gradient Projection[[peft.tuners.osf.utils.project_gradient_to_orthogonal_space]]
+
+#### peft.tuners.osf.utils.project_gradient_to_orthogonal_space[[peft.tuners.osf.utils.project_gradient_to_orthogonal_space]]
+
+```python
+peft.tuners.osf.utils.project_gradient_to_orthogonal_space(svd_dict: dict[str, Any])
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/osf/utils.py#L84)
 
 Project gradients of `U_low` and `V_low` to be orthogonal to the high rank space.

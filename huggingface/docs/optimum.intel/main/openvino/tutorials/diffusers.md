@@ -63,7 +63,7 @@ from optimum.intel import OVStableDiffusionPipeline
 import numpy as np
 
 model_id = "echarlaix/stable-diffusion-v1-5-openvino"
-prompt = "A  back-pack"
+prompt = "A <cat-toy> back-pack"
 # Set a random seed for better comparison
 np.random.seed(42)
 
@@ -79,7 +79,7 @@ Then, you can load [sd-concepts-library/cat-toy](https://huggingface.co/sd-conce
 pipeline.clear_requests()
 
 # Load textual inversion into stable diffusion pipeline
-pipeline.load_textual_inversion("sd-concepts-library/cat-toy", "")
+pipeline.load_textual_inversion("sd-concepts-library/cat-toy", "<cat-toy>")
 
 # Compile the model before the first inference
 pipeline.compile()

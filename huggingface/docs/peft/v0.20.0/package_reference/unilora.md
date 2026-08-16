@@ -62,49 +62,41 @@ height="1000"
 
 ## UniLoraConfig[[peft.UniLoraConfig]]
 
-- **r** (`int`) --
-  Rank of the low-rank adaptation. This controls the expressive capacity of the UniLora update.
-- **proj_seed** (`int`) --
-  Random seed used to generate the fixed index assignment. This ensures reproducibility across runs.
-- **theta_d_length** (`int`) --
-  Length of the shared UniLora vector `theta_d`.
-- **target_modules** (`Union[list[str], str]`, *optional*) --
-  Names or patterns of modules to which UniLora adapters are applied.
-  - If a string is provided, it is treated as a regular expression.
-  - If a list is provided, modules are matched by exact name or suffix.
-  - The special value 'all-linear' applies UniLora to all Linear / Conv1D layers except the output layer.
-  If not specified, modules are inferred from the model architecture. An error is raised if the architecture
-  is unsupported.
-- **unilora_dropout** (`float`) --
-  Dropout probability applied within UniLora layers.
-- **fan_in_fan_out** (`bool`) --
-  Whether the replaced layer stores weights in (fan_in, fan_out) format. This should be set to True for
-  models such as GPT-2 that use Conv1D layers.
-- **bias** (`str`) --
-  Specifies which bias terms are trainable:
-  - 'none': no bias parameters are updated
-  - 'all': all bias parameters are updated
-  - 'unilora_only': only biases inside UniLora layers are updated
-  Note: enabling bias updates changes model outputs even when adapters are disabled.
-- **modules_to_save** (`list[str]`, *optional*) --
-  Additional modules (outside UniLora layers) that should remain trainable and be saved in the final
-  checkpoint. This is commonly used for task-specific heads such as classifiers.
-- **init_theta_d_bound** (`float`) --
-  Initialization bound for the UniLora vector bank. Vectors are sampled uniformly from [-init_theta_d_bound,
-  init_theta_d_bound]. Initializing with zeros is avoided to prevent vanishing gradients. Small values (e.g.,
-  0.02) are recommended for stable training.
-- **init_weights** (`bool`) --
-  Whether to initialize `theta_d` with the default UniLora initialization. If set to `False`, `theta_d` keeps
-  a random initialization.
-- **save_indices** (`bool`) --
-  Whether to save the generated UniLora index and scale buffers alongside `theta_d`. This increases
-  checkpoint size, but makes saved adapters independent from future changes to the index generation routine.
-- **layers_to_transform** (`Union[list[int], int]`, *optional*) --
-  Indices of transformer layers to which UniLora is applied. If specified, only these layers are modified.
-  This option is valid only when `target_modules` is a list.
-- **layers_pattern** (`Union[list[str], str]`, *optional*) --
-  Custom layer name pattern used together with `layers_to_transform` when the model does not follow standard
-  layer naming conventions. This option is valid only when `target_modules` is a list.
+#### peft.UniLoraConfig[[peft.UniLoraConfig]]
+
+```python
+peft.UniLoraConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 4, proj_seed: int = 42, theta_d_length: int = 256, target_modules: typing.Union[str, list[str], NoneType] = None, unilora_dropout: float = 0.0, fan_in_fan_out: bool = False, bias: str = 'none', modules_to_save: typing.Optional[list[str]] = None, init_theta_d_bound: float = 0.02, init_weights: bool = True, save_indices: bool = False, layers_to_transform: typing.Union[list[int], int, NoneType] = None, layers_pattern: typing.Union[str, list[str], NoneType] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/unilora/config.py#L23)
+
+**Parameters:**
+
+r (`int`) : Rank of the low-rank adaptation. This controls the expressive capacity of the UniLora update.
+
+proj_seed (`int`) : Random seed used to generate the fixed index assignment. This ensures reproducibility across runs.
+
+theta_d_length (`int`) : Length of the shared UniLora vector `theta_d`.
+
+target_modules (`Union[list[str], str]`, *optional*) : Names or patterns of modules to which UniLora adapters are applied. - If a string is provided, it is treated as a regular expression. - If a list is provided, modules are matched by exact name or suffix. - The special value 'all-linear' applies UniLora to all Linear / Conv1D layers except the output layer. If not specified, modules are inferred from the model architecture. An error is raised if the architecture is unsupported.
+
+unilora_dropout (`float`) : Dropout probability applied within UniLora layers.
+
+fan_in_fan_out (`bool`) : Whether the replaced layer stores weights in (fan_in, fan_out) format. This should be set to True for models such as GPT-2 that use Conv1D layers.
+
+bias (`str`) : Specifies which bias terms are trainable: - 'none': no bias parameters are updated - 'all': all bias parameters are updated - 'unilora_only': only biases inside UniLora layers are updated Note: enabling bias updates changes model outputs even when adapters are disabled.
+
+modules_to_save (`list[str]`, *optional*) : Additional modules (outside UniLora layers) that should remain trainable and be saved in the final checkpoint. This is commonly used for task-specific heads such as classifiers.
+
+init_theta_d_bound (`float`) : Initialization bound for the UniLora vector bank. Vectors are sampled uniformly from [-init_theta_d_bound, init_theta_d_bound]. Initializing with zeros is avoided to prevent vanishing gradients. Small values (e.g., 0.02) are recommended for stable training.
+
+init_weights (`bool`) : Whether to initialize `theta_d` with the default UniLora initialization. If set to `False`, `theta_d` keeps a random initialization.
+
+save_indices (`bool`) : Whether to save the generated UniLora index and scale buffers alongside `theta_d`. This increases checkpoint size, but makes saved adapters independent from future changes to the index generation routine.
+
+layers_to_transform (`Union[list[int], int]`, *optional*) : Indices of transformer layers to which UniLora is applied. If specified, only these layers are modified. This option is valid only when `target_modules` is a list.
+
+layers_pattern (`Union[list[str], str]`, *optional*) : Custom layer name pattern used together with `layers_to_transform` when the model does not follow standard layer naming conventions. This option is valid only when `target_modules` is a list.
 
 Configuration class for UniLora adapters.
 
@@ -117,7 +109,23 @@ Uni-LoRA: One Vector Is All You Need https://arxiv.org/abs/2506.00799
 
 ## UniLoraModel[[peft.UniLoraModel]]
 
+#### peft.UniLoraModel[[peft.UniLoraModel]]
+
+```python
+peft.UniLoraModel(model, config, adapter_name, low_cpu_mem_usage: bool = False, state_dict: dict[str, torch.Tensor] | None = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/unilora/model.py#L31)
+
 Creates a UniLora adapter around a pretrained model.
+
+#### generate_index[[peft.UniLoraModel.generate_index]]
+
+```python
+generate_index(lora_param_count: int, theta_d_length: int, proj_seed: int)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/unilora/model.py#L127)
 
 Assign deterministic `theta_d` indices to the flattened UniLora parameter space.
 

@@ -27,59 +27,45 @@ The abstract from the paper is:
 
 ## VBLoRAConfig[[peft.VBLoRAConfig]]
 
-- **r** (`int`) --
-  The rank of incremental matrices.
-- **num_vectors** (`int`) --
-  Number of vectors in the vector bank. Use higher values when the model size increases.
-- **vector_length** (`int`) --
-  The length of the vectors in the vector bank. The length of the vectors should be divisible by the hidden
-  dimension of the model.
-- **topk** (`int`) --
-  The K value for top-K selection. A larger value of K increases the size of the saved model. In practice,
-  setting K=2 typically provides the best performance and parameter efficiency. For more details, refer to
-  the discussion in the paper.
-- **target_modules** (`Union[List[str], str]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen,
-  excluding the output layer. If this is not specified, modules will be chosen according to the model
-  architecture. If the architecture is not known, an error will be raised -- in this case, you should specify
-  the target modules manually.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **save_only_topk_weights** (`bool`) --
-  Whether to only save the topk weights. Setting `save_only_topk_weights = True` significantly reduces
-  storage space. However, models saved in this mode can be used for merging or inference only, not for
-  resuming training.
-- **vblora_dropout** (`float`) --
-  The dropout probability for VBLoRA layers.
-- **fan_in_fan_out** (`bool`) --
-  Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **bias** (`str`) --
-  Bias type for VBLoRA. Can be 'none', 'all' or 'vblora_only'. If 'all' or 'vblora_only', the corresponding
-  biases will be updated during training. Be aware that this means that, even when disabling the adapters,
-  the model will not produce the same output as the base model would have without adaptation.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from VBLoRA layers to be set as trainable and saved in the final checkpoint.
-- **init_vector_bank_bound** (`float`) --
-  The vector bank is initialized with a uniform distribution between -init_vector_bank_bound and
-  init_vector_bank_bound. Avoid initializing the vector bank with all zeros to prevent zero gradients. A
-  small value, such as 0.02, is typically effective. Initializing with a large value may cause training
-  instability.
-- **init_logits_std** (`float`) --
-  The logits are initialized with a normal distribution with a standard deviation of init_logits_std. Default
-  is 0.1.
-- **layers_to_transform** (`Union[List[int],int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the
-  `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+#### peft.VBLoRAConfig[[peft.VBLoRAConfig]]
+
+```python
+peft.VBLoRAConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 4, num_vectors: int = 256, vector_length: int = 256, topk: int = 2, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, save_only_topk_weights: bool = False, vblora_dropout: float = 0.0, fan_in_fan_out: bool = False, bias: str = 'none', modules_to_save: Optional[list[str]] = None, init_vector_bank_bound: float = 0.02, init_logits_std: float = 0.1, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/vblora/config.py#L25)
+
+**Parameters:**
+
+r (`int`) : The rank of incremental matrices.
+
+num_vectors (`int`) : Number of vectors in the vector bank. Use higher values when the model size increases.
+
+vector_length (`int`) : The length of the vectors in the vector bank. The length of the vectors should be divisible by the hidden dimension of the model.
+
+topk (`int`) : The K value for top-K selection. A larger value of K increases the size of the saved model. In practice, setting K=2 typically provides the best performance and parameter efficiency. For more details, refer to the discussion in the paper.
+
+target_modules (`Union[List[str], str]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear/Conv1D modules are chosen, excluding the output layer. If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+save_only_topk_weights (`bool`) : Whether to only save the topk weights. Setting `save_only_topk_weights = True` significantly reduces storage space. However, models saved in this mode can be used for merging or inference only, not for resuming training.
+
+vblora_dropout (`float`) : The dropout probability for VBLoRA layers.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+bias (`str`) : Bias type for VBLoRA. Can be 'none', 'all' or 'vblora_only'. If 'all' or 'vblora_only', the corresponding biases will be updated during training. Be aware that this means that, even when disabling the adapters, the model will not produce the same output as the base model would have without adaptation.
+
+modules_to_save (`List[str]`) : List of modules apart from VBLoRA layers to be set as trainable and saved in the final checkpoint.
+
+init_vector_bank_bound (`float`) : The vector bank is initialized with a uniform distribution between -init_vector_bank_bound and init_vector_bank_bound. Avoid initializing the vector bank with all zeros to prevent zero gradients. A small value, such as 0.02, is typically effective. Initializing with a large value may cause training instability.
+
+init_logits_std (`float`) : The logits are initialized with a normal distribution with a standard deviation of init_logits_std. Default is 0.1.
+
+layers_to_transform (`Union[List[int],int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
 
 This is the configuration class to store the configuration of a [VBLoRAModel](/docs/peft/v0.20.0/en/package_reference/vblora#peft.VBLoRAModel).
 
@@ -87,11 +73,27 @@ Paper: https://huggingface.co/papers/2405.15179
 
 ## VBLoRAModel[[peft.VBLoRAModel]]
 
-- **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
-- **config** ([VBLoRAConfig](/docs/peft/v0.20.0/en/package_reference/vblora#peft.VBLoRAConfig)) -- The configuration of the VBLoRA model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The VBLoRA model.
+#### peft.VBLoRAModel[[peft.VBLoRAModel]]
+
+```python
+peft.VBLoRAModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/vblora/model.py#L29)
+
+**Parameters:**
+
+model ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) : The model to be adapted.
+
+config ([VBLoRAConfig](/docs/peft/v0.20.0/en/package_reference/vblora#peft.VBLoRAConfig)) : The configuration of the VBLoRA model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The VBLoRA model.
 
 Creates VBLoRA model from a pretrained transformers model.
 
@@ -119,6 +121,22 @@ Example:
 - **model** ([PreTrainedModel](https://huggingface.co/docs/transformers/v5.14.1/en/main_classes/model#transformers.PreTrainedModel)) -- The model to be adapted.
 - **peft_config** ([VBLoRAConfig](/docs/peft/v0.20.0/en/package_reference/vblora#peft.VBLoRAConfig)): The configuration of the VBLoRAConfig model.
 
+#### get_nb_savable_parameters[[peft.VBLoRAModel.get_nb_savable_parameters]]
+
+```python
+get_nb_savable_parameters(adapter = 'default')
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/vblora/model.py#L157)
+
 Returns the number of savable VB-LoRA parameters and other savable parameters.
+
+#### print_savable_parameters[[peft.VBLoRAModel.print_savable_parameters]]
+
+```python
+print_savable_parameters()
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/vblora/model.py#L193)
 
 Prints the number of savable VB-LoRA parameters and total savable parameters.

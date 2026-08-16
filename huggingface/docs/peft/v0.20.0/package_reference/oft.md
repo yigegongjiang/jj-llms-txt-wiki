@@ -74,73 +74,85 @@ trainer.train()
 
 ## OFTConfig[[peft.OFTConfig]]
 
-- **r** (`int`) --
-  OFT rank, number of OFT blocks per injected layer. Bigger `r` results in more sparse update matrices with
-  fewer trainable parameters. You can only specify either `r` or `oft_block_size`, but not both
-  simultaneously, because `r` × `oft_block_size` = layer dimension. For simplicity, we let you specify either
-  `r` or `oft_block_size` and infer the other one. Default set to `r = 0`, the user is advised to set the
-  `oft_block_size` instead for better clarity.
-- **oft_block_size** (`int`) -- OFT block size across different layers. Bigger `oft_block_size` results in more dense
-  update matrices with more trainable parameters. Choose `oft_block_size` to be divisible by layer's input
-  dimension (`in_features`), e.g., 4, 8, 16. You can only specify either `r` or `oft_block_size`, but not
-  both simultaneously, because `r` × `oft_block_size` = layer dimension. For simplicity, we let you specify
-  either `r` or `oft_block_size` and infer the other one. Default set to `oft_block_size = 32`.
-- **use_cayley_neumann** (bool) -- Specifies whether to use the Cayley-Neumann parameterization (efficient but
-  approximate) or the vanilla Cayley parameterization (exact but computationally expensive because of matrix
-  inverse). We recommend to set it to `True` for better efficiency, but performance may be slightly worse
-  because of the approximation error. Please test both settings (`True` and `False`) depending on your needs.
-  Default is `False`.
-- **module_dropout** (`float`) --
-  The multiplicative dropout probability, by setting OFT blocks to identity during training, similar to the
-  dropout layer in LoRA.
-- **target_modules** (`Optional[Union[list[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear modules are chosen, excluding
-  the output layer. If this is not specified, modules will be chosen according to the model architecture. If
-  the architecture is not known, an error will be raised -- in this case, you should specify the target
-  modules manually.
-- **fan_in_fan_out** (`bool`) -- Set this to True if the layer to replace stores weight like (fan_in, fan_out).
-- **bias** (`str`) -- Bias type for OFT. Can be 'none', 'all' or 'oft_only'. If 'all' or 'oft_only', the
-  corresponding biases will be updated during training. Be aware that this means that, even when disabling
-  the adapters, the model will not produce the same output as the base model would have without adaptation.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **init_weights** (`bool`) --
-  Whether to perform initialization of OFT weights.
-- **layers_to_transform** (`Union[List[int], int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the
-  `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
-- **coft** (`bool`) --
-  Whether to use the constrained variant of OFT or not, off by default.
-- **eps** (`float`) --
-  The control strength of COFT. The freedom of rotation. Only has an effect if `coft` is set to True.
-- **block_share** (`bool`) --
-  Whether to share the OFT parameters between blocks or not. This is `False` by default.
+#### peft.OFTConfig[[peft.OFTConfig]]
+
+```python
+peft.OFTConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 0, oft_block_size: int = 32, module_dropout: float = 0.0, target_modules: Optional[Union[list[str], str]] = None, fan_in_fan_out: bool = False, bias: Literal['none', 'all', 'oft_only'] = 'none', exclude_modules: Optional[Union[list[str], str]] = None, init_weights: bool = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None, modules_to_save: Optional[list[str]] = None, coft: bool = False, eps: float = 6e-05, block_share: bool = False, use_cayley_neumann: bool = True, num_cayley_neumann_terms: int = 5)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/oft/config.py#L28)
+
+**Parameters:**
+
+r (`int`) : OFT rank, number of OFT blocks per injected layer. Bigger `r` results in more sparse update matrices with fewer trainable parameters. You can only specify either `r` or `oft_block_size`, but not both simultaneously, because `r` × `oft_block_size` = layer dimension. For simplicity, we let you specify either `r` or `oft_block_size` and infer the other one. Default set to `r = 0`, the user is advised to set the `oft_block_size` instead for better clarity.
+
+oft_block_size (`int`) : OFT block size across different layers. Bigger `oft_block_size` results in more dense update matrices with more trainable parameters. Choose `oft_block_size` to be divisible by layer's input dimension (`in_features`), e.g., 4, 8, 16. You can only specify either `r` or `oft_block_size`, but not both simultaneously, because `r` × `oft_block_size` = layer dimension. For simplicity, we let you specify either `r` or `oft_block_size` and infer the other one. Default set to `oft_block_size = 32`.
+
+use_cayley_neumann (bool) : Specifies whether to use the Cayley-Neumann parameterization (efficient but approximate) or the vanilla Cayley parameterization (exact but computationally expensive because of matrix inverse). We recommend to set it to `True` for better efficiency, but performance may be slightly worse because of the approximation error. Please test both settings (`True` and `False`) depending on your needs. Default is `False`.
+
+module_dropout (`float`) : The multiplicative dropout probability, by setting OFT blocks to identity during training, similar to the dropout layer in LoRA.
+
+target_modules (`Optional[Union[list[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear modules are chosen, excluding the output layer. If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+fan_in_fan_out (`bool`) : Set this to True if the layer to replace stores weight like (fan_in, fan_out).
+
+bias (`str`) : Bias type for OFT. Can be 'none', 'all' or 'oft_only'. If 'all' or 'oft_only', the corresponding biases will be updated during training. Be aware that this means that, even when disabling the adapters, the model will not produce the same output as the base model would have without adaptation.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+init_weights (`bool`) : Whether to perform initialization of OFT weights.
+
+layers_to_transform (`Union[List[int], int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+
+modules_to_save (`List[str]`) : List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
+
+coft (`bool`) : Whether to use the constrained variant of OFT or not, off by default.
+
+eps (`float`) : The control strength of COFT. The freedom of rotation. Only has an effect if `coft` is set to True.
+
+block_share (`bool`) : Whether to share the OFT parameters between blocks or not. This is `False` by default.
 
 This is the configuration class to store the configuration of a [OFTModel](/docs/peft/v0.20.0/en/package_reference/oft#peft.OFTModel).
 
-- **kwargs** (additional keyword arguments, *optional*) --
-  Additional keyword arguments passed along to the child class initialization.
+#### check_kwargs[[peft.OFTConfig.check_kwargs]]
+
+```python
+check_kwargs(**kwargs)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/oft/config.py#L198)
+
+**Parameters:**
+
+kwargs (additional keyword arguments, *optional*) : Additional keyword arguments passed along to the child class initialization.
 
 Check if the kwargs are valid for the configuration.
 
 ## OFTModel[[peft.OFTModel]]
 
-- **model** (`torch.nn.Module`) -- The model to which the adapter tuner layers will be attached.
-- **config** ([OFTConfig](/docs/peft/v0.20.0/en/package_reference/oft#peft.OFTConfig)) -- The configuration of the OFT model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The OFT model.
+#### peft.OFTModel[[peft.OFTModel]]
+
+```python
+peft.OFTModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/oft/model.py#L35)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to which the adapter tuner layers will be attached.
+
+config ([OFTConfig](/docs/peft/v0.20.0/en/package_reference/oft#peft.OFTConfig)) : The configuration of the OFT model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The OFT model.
 
 Creates Orthogonal Finetuning model from a pretrained model. The method is described in
 https://huggingface.co/papers/2306.07280

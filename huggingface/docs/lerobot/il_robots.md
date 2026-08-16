@@ -80,7 +80,7 @@ The teleoperate command will automatically:
 
 ## Cameras
 
-To add cameras to your setup, follow this [Guide](./cameras#setup-cameras).
+To add cameras to your setup, follow this [Guide](./cameras).
 
 ## Teleoperate with cameras
 

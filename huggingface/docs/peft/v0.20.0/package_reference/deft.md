@@ -69,54 +69,43 @@ If you use the PaRa variant (`para=True`), please also cite:
 
 ## DeftConfig[[peft.DeftConfig]]
 
-- **r** (`int`) --
-  The rank of the DEFT projection/injection across layers.
-- **target_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to apply the adapter to. If this is specified, only the modules with the specified
-  names will be replaced. When passing a string, a regex match will be performed. When passing a list of
-  strings, either an exact match will be performed or it is checked if the name of the module ends with any
-  of the passed strings. If this is specified as 'all-linear', then all linear modules are chosen, excluding
-  the output layer. If this is not specified, modules will be chosen according to the model architecture. If
-  the architecture is not known, an error will be raised -- in this case, you should specify the target
-  modules manually.
-- **exclude_modules** (`Optional[Union[List[str], str]]`) --
-  The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-  When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-  module ends with any of the passed strings.
-- **decomposition_method** (`str`) --
-  How the projector `P_proj` is derived from `P`. Either `"relu"` (default, non-orthogonal `P @ relu(P).T`)
-  or `"qr"` (orthogonal `Q_P @ Q_P.T`).
-- **init_scale** (`float`) --
-  Scaling applied to the standard deviation used to initialize the injection matrix `R` (only used when
-  `init_weights=False`). Smaller values keep the injected update closer to zero at initialization. Defaults
-  to `1.0`.
-- **alpha** (`Optional[int]`) --
-  The scaling factor for the injection term, which is scaled by `alpha / r` (analogous to LoRA's alpha). If
-  `None`, no scaling is applied (factor `1.0`). The subspace-removal term is unaffected.
-- **para** (`bool`) --
-  Whether to use the PaRa method: pure subspace removal (`delta = -P_proj @ W`) with no injection term. When
-  `True`, `R` is not created, `P` is the only trainable matrix, and the adapter cannot be an identity at
-  init. Defaults to `False` (full DEFT).
-- **fan_in_fan_out** (`bool`) --
-  Set this to `True` if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses
-  `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
-- **deft_dropout** (`float`) --
-  The dropout probability applied to the layer input. Defaults to `0.0`.
-- **init_weights** (`bool`) --
-  Whether to use DEFT's default (identity) initialization for the adapter weights, so the adapter is a no-op
-  at the start of training. Don't change this setting, except if you know exactly what you're doing. Defaults
-  to `True`.
-- **layers_to_transform** (`Union[List[int], int]`) --
-  The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices
-  that are specified in this list. If a single integer is passed, it will apply the transformations on the
-  layer at this index.
-- **layers_pattern** (`Optional[Union[List[str], str]]`) --
-  The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the
-  `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
-- **bias** (`str`) --
-  Bias type for DEFT. Can be `'none'`, `'all'` or `'deft_only'`.
-- **modules_to_save** (`List[str]`) --
-  List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
+#### peft.DeftConfig[[peft.DeftConfig]]
+
+```python
+peft.DeftConfig(task_type: Optional[Union[str, TaskType]] = None, peft_type: Optional[Union[str, PeftType]] = None, auto_mapping: Optional[dict] = None, peft_version: Optional[str] = None, base_model_name_or_path: Optional[str] = None, revision: Optional[str] = None, inference_mode: bool = False, r: int = 8, target_modules: Optional[Union[list[str], str]] = None, exclude_modules: Optional[Union[list[str], str]] = None, decomposition_method: Literal['relu', 'qr'] = 'relu', init_scale: float = 1.0, alpha: Optional[int] = None, para: bool = False, fan_in_fan_out: bool = False, deft_dropout: float = 0.0, init_weights: bool = True, layers_to_transform: Optional[Union[list[int], int]] = None, layers_pattern: Optional[Union[list[str], str]] = None, bias: str = 'none', modules_to_save: Optional[list[str]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/deft/config.py#L25)
+
+**Parameters:**
+
+r (`int`) : The rank of the DEFT projection/injection across layers.
+
+target_modules (`Optional[Union[List[str], str]]`) : The names of the modules to apply the adapter to. If this is specified, only the modules with the specified names will be replaced. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings. If this is specified as 'all-linear', then all linear modules are chosen, excluding the output layer. If this is not specified, modules will be chosen according to the model architecture. If the architecture is not known, an error will be raised -- in this case, you should specify the target modules manually.
+
+exclude_modules (`Optional[Union[List[str], str]]`) : The names of the modules to not apply the adapter. When passing a string, a regex match will be performed. When passing a list of strings, either an exact match will be performed or it is checked if the name of the module ends with any of the passed strings.
+
+decomposition_method (`str`) : How the projector `P_proj` is derived from `P`. Either `"relu"` (default, non-orthogonal `P @ relu(P).T`) or `"qr"` (orthogonal `Q_P @ Q_P.T`).
+
+init_scale (`float`) : Scaling applied to the standard deviation used to initialize the injection matrix `R` (only used when `init_weights=False`). Smaller values keep the injected update closer to zero at initialization. Defaults to `1.0`.
+
+alpha (`Optional[int]`) : The scaling factor for the injection term, which is scaled by `alpha / r` (analogous to LoRA's alpha). If `None`, no scaling is applied (factor `1.0`). The subspace-removal term is unaffected.
+
+para (`bool`) : Whether to use the PaRa method: pure subspace removal (`delta = -P_proj @ W`) with no injection term. When `True`, `R` is not created, `P` is the only trainable matrix, and the adapter cannot be an identity at init. Defaults to `False` (full DEFT).
+
+fan_in_fan_out (`bool`) : Set this to `True` if the layer to replace stores weight like (fan_in, fan_out). For example, gpt-2 uses `Conv1D` which stores weights like (fan_in, fan_out) and hence this should be set to `True`.
+
+deft_dropout (`float`) : The dropout probability applied to the layer input. Defaults to `0.0`.
+
+init_weights (`bool`) : Whether to use DEFT's default (identity) initialization for the adapter weights, so the adapter is a no-op at the start of training. Don't change this setting, except if you know exactly what you're doing. Defaults to `True`.
+
+layers_to_transform (`Union[List[int], int]`) : The layer indices to transform. If a list of ints is passed, it will apply the adapter to the layer indices that are specified in this list. If a single integer is passed, it will apply the transformations on the layer at this index.
+
+layers_pattern (`Optional[Union[List[str], str]]`) : The layer pattern name, used only if `layers_to_transform` is different from `None`. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+
+bias (`str`) : Bias type for DEFT. Can be `'none'`, `'all'` or `'deft_only'`.
+
+modules_to_save (`List[str]`) : List of modules apart from adapter layers to be set as trainable and saved in the final checkpoint.
 
 This is the configuration class to store the configuration of a [DeftModel](/docs/peft/v0.20.0/en/package_reference/deft#peft.DeftModel).
 
@@ -133,11 +122,27 @@ equals `W`), so training starts from the pretrained weights and learns the injec
 
 ## DeftModel[[peft.DeftModel]]
 
-- **model** (`torch.nn.Module`) -- The model to which the adapter tuner layers will be attached.
-- **config** ([DeftConfig](/docs/peft/v0.20.0/en/package_reference/deft#peft.DeftConfig)) -- The configuration of the DEFT model.
-- **adapter_name** (`str`) -- The name of the adapter, defaults to `"default"`.
-- **low_cpu_mem_usage** (`bool`, `optional`, defaults to `False`) --
-  Create empty adapter weights on meta device. Useful to speed up the loading process.`torch.nn.Module`The DEFT model.
+#### peft.DeftModel[[peft.DeftModel]]
+
+```python
+peft.DeftModel(model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str, low_cpu_mem_usage: bool = False, state_dict: Optional[dict[str, torch.Tensor]] = None)
+```
+
+[Source](https://github.com/huggingface/peft/blob/v0.20.0/src/peft/tuners/deft/model.py#L27)
+
+**Parameters:**
+
+model (`torch.nn.Module`) : The model to which the adapter tuner layers will be attached.
+
+config ([DeftConfig](/docs/peft/v0.20.0/en/package_reference/deft#peft.DeftConfig)) : The configuration of the DEFT model.
+
+adapter_name (`str`) : The name of the adapter, defaults to `"default"`.
+
+low_cpu_mem_usage (`bool`, `optional`, defaults to `False`) : Create empty adapter weights on meta device. Useful to speed up the loading process.
+
+**Returns:** `torch.nn.Module`
+
+The DEFT model.
 
 Creates a DEFT (Decompositional Efficient Fine-Tuning) model from a pretrained model.
 

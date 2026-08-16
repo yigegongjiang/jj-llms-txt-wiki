@@ -25,6 +25,18 @@ You can create or use OAuth apps without a client secret. This is useful for nat
 
 Public apps authenticate using only the client ID (e.g. in device code or authorization code flows with PKCE). Apps that have a secret can still use the secret when needed (e.g. `Authorization: Basic` for token requests).
 
+### Redirect URIs
+
+The `redirect_uri` sent in an authorization request must exactly match one of the redirect URIs registered on your app.
+
+Loopback redirect URIs are the one exception: for URIs using the `http` scheme on a loopback host (`localhost`, `127.0.0.1` or `[::1]`), any port is accepted at request time, as long as every other component matches a registered URI. This follows [RFC 8252 §7.3](https://datatracker.ietf.org/doc/html/rfc8252#section-7.3) / OAuth 2.1, and lets native apps, CLIs and MCP clients register a port-less URI such as `http://localhost/callback` and then listen on whatever ephemeral port the operating system assigns them (e.g. `http://localhost:49282/callback`).
+
+A few things to keep in mind:
+
+- The exception only applies to the `http` scheme. `https` and custom-scheme (e.g. `myapp://callback`) redirect URIs always require an exact match, port included.
+- Loopback hosts are matched individually: a request for `http://localhost:49282/callback` does not match a registered `http://127.0.0.1/callback`. Register both if your app may use either.
+- Only the port may differ. Path, query and userinfo must still match exactly.
+
 ### If you are hosting in Spaces
 
 > [!TIP]
@@ -48,6 +60,8 @@ Hugging Face supports CIMD aka [Client ID Metadata Documents](https://datatracke
 ```
 
 - Use `"[your website url]/.well-known/oauth-cimd"` as client ID, and PCKE as auth mechanism
+
+Native apps and MCP clients that receive the authorization code on a local port can list port-less loopback URIs in `redirect_uris`, e.g. `["http://localhost/callback", "http://127.0.0.1/callback"]` — see [Redirect URIs](#redirect-uris).
 
 This is particularly useful for ephemeral environments or MCP clients. See an [implementation example](https://github.com/huggingface/chat-ui/pull/1978) in Hugging Chat.
 
@@ -97,18 +111,20 @@ curl -X POST https://huggingface.co/oauth/token \
 
 The currently supported scopes are:
 
-- `openid`: Get the ID token in addition to the access token.
-- `profile`: Get the user's profile information (username, avatar, etc.)
-- `email`: Get the user's email address.
+- `openid`: Receive an ID token in addition to the access token.
+- `profile`: Read the user's profile information (username, avatar, etc.)
+- `email`: Read the user's email address.
 - `read-billing`: Know whether the user has a payment method set up.
-- `read-repos`: Get read access to the user's personal repos.
-- `gated-repos`: Get read access to the content of public gated repos the user has been granted access to. Unlike `read-repos`, this does not grant access to private repos.
-- `contribute-repos`: Can create repositories and access those created by this app. Cannot access any other repositories unless additional permissions are granted.
-- `write-repos`: Get write/read access to the user's personal repos.
-- `manage-repos`: Get full access to the user's personal repos. Also grants repo creation and deletion.
-- `read-collections`: Get read access to the user's personal collections.
-- `write-collections`: Get write/read access to the user's personal collections. Also grants collection creation and deletion.
-- `inference-api`: Get access to the [Inference Providers](https://huggingface.co/docs/inference-providers/index), you will be able to make inference requests on behalf of the user.
+- `read-repos`: Read the user's personal repos.
+- `gated-repos`: Read the content of public gated repos the user has been granted access to. Unlike `read-repos`, this does not grant access to private repos.
+- `contribute-repos`: Create repositories and access those created by this app. Cannot access any other repositories unless additional permissions are granted.
+- `write-repos`: Read and write the user's personal repos.
+- `manage-repos`: Fully manage the user's personal repos, including creating and deleting them.
+- `read-collections`: Read the user's personal collections.
+- `write-collections`: Read and write the user's personal collections, including creating and deleting them.
+- `inference-api`: Make inference requests to [Inference Providers](https://huggingface.co/docs/inference-providers/index) on behalf of the user.
+- `read-endpoints`: View the user's [Inference Endpoints](https://huggingface.co/docs/inference-endpoints/index) and make inference requests to them on behalf of the user.
+- `write-endpoints`: Manage the user's Inference Endpoints, including creating and deleting them. Includes `read-endpoints` access.
 - `jobs`: Run [jobs](https://huggingface.co/docs/huggingface_hub/main/en/guides/jobs)
 - `webhooks`: Manage [webhooks](https://huggingface.co/docs/huggingface_hub/main/en/guides/webhooks)
 - `write-discussions`: Open discussions and Pull Requests on behalf of the user as well as interact with discussions (including reactions, posting/editing comments, closing discussions, ...). To open Pull Requests on private repos, you need to request the `read-repos` scope as well.

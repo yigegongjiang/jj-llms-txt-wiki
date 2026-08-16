@@ -8,7 +8,7 @@
 
 #### Defined in[[baseprefix.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:26](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L26)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:27](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L27)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[prefix.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:25](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L25)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:26](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L26)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in[[shard.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:27](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L27)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:28](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L28)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in[[total.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:28](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L28)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:29](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L29)
