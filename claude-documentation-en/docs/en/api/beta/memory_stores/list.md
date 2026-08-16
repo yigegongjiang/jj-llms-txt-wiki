@@ -1,3 +1,8 @@
+---
+title: List memory stores
+url: https://platform.claude.com/docs/en/api/beta/memory_stores/list
+---
+
 ## List memory stores
 
 **get** `/v1/memory_stores`
@@ -34,7 +39,7 @@ List memory stores
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -100,6 +105,8 @@ List memory stores
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `data: optional array of BetaManagedAgentsMemoryStore`
@@ -126,7 +133,7 @@ List memory stores
 
     A timestamp in RFC 3339 format
 
-  - `archived_at: optional string`
+  - `archived_at: optional string or null`
 
     A timestamp in RFC 3339 format
 
@@ -138,7 +145,7 @@ List memory stores
 
     Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Returned on retrieve/list but not filterable.
 
-- `next_page: optional string`
+- `next_page: optional string or null`
 
   Opaque cursor for the next page (a `page_...` value). Pass as `page` on the next request. `null` when there are no more results.
 

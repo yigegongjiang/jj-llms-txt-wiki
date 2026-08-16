@@ -1,3 +1,8 @@
+---
+title: Get Claude Code Usage Report
+url: https://platform.claude.com/docs/en/api/admin/usage_report/retrieve_claude_code
+---
+
 ## Get Claude Code Usage Report
 
 **get** `/v1/organizations/usage_report/claude_code`
@@ -23,7 +28,7 @@ Enables organizations to analyze developer productivity and build custom dashboa
 
 - `ClaudeCodeUsageReport object { data, has_more, next_page }`
 
-  - `data: array of object { actor, core_metrics, customer_type, 6 more }`
+  - `data: array of object { actor, core_metrics, customer_type, 7 more }`
 
     List of Claude Code usage records for the requested date.
 
@@ -31,7 +36,7 @@ Enables organizations to analyze developer productivity and build custom dashboa
 
       The user or API key that performed the Claude Code actions.
 
-      - `ClaudeCodeUserActor object { email_address, type }`
+      - `UserActor object { email_address, type }`
 
         - `email_address: string`
 
@@ -39,15 +44,19 @@ Enables organizations to analyze developer productivity and build custom dashboa
 
         - `type: "user_actor"`
 
+          Actor type. Always `"user_actor"` for a user.
+
           - `"user_actor"`
 
-      - `ClaudeCodeAPIActor object { api_key_name, type }`
+      - `APIActor object { api_key_name, type }`
 
         - `api_key_name: string`
 
           Name of the API key used to perform Claude Code actions.
 
         - `type: "api_actor"`
+
+          Actor type. Always `"api_actor"` for an API key.
 
           - `"api_actor"`
 
@@ -89,7 +98,13 @@ Enables organizations to analyze developer productivity and build custom dashboa
 
     - `date: string`
 
-      UTC date for the usage metrics in YYYY-MM-DD format.
+      UTC day the usage metrics cover, as an RFC 3339 timestamp at midnight UTC
+      (for example `2025-08-08T00:00:00Z`).
+
+    - `is_remote: boolean`
+
+      Whether the usage came from remote Claude Code sessions, such as Claude Code
+      on the web. Remote and local usage are reported as separate rows.
 
     - `model_breakdown: array of object { estimated_cost, model, tokens }`
 
@@ -151,7 +166,7 @@ Enables organizations to analyze developer productivity and build custom dashboa
 
         Number of tool action proposals that the user rejected.
 
-    - `subscription_type: optional "enterprise" or "team"`
+    - `subscription_type: optional "enterprise" or "team" or null`
 
       Subscription tier for subscription customers. `null` for API customers.
 
@@ -163,7 +178,7 @@ Enables organizations to analyze developer productivity and build custom dashboa
 
     True if there are more records available beyond the current page.
 
-  - `next_page: string`
+  - `next_page: string or null`
 
     Opaque cursor token for fetching the next page of results, or null if no more pages are available.
 
@@ -196,13 +211,14 @@ curl https://api.anthropic.com/v1/organizations/usage_report/claude_code \
       },
       "customer_type": "api",
       "date": "2025-08-08T00:00:00Z",
+      "is_remote": false,
       "model_breakdown": [
         {
           "estimated_cost": {
             "amount": 186,
             "currency": "USD"
           },
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-opus-4-8",
           "tokens": {
             "cache_creation": 2340,
             "cache_read": 8790,
@@ -215,7 +231,7 @@ curl https://api.anthropic.com/v1/organizations/usage_report/claude_code \
             "amount": 42,
             "currency": "USD"
           },
-          "model": "claude-3-5-haiku-20241022",
+          "model": "claude-sonnet-5",
           "tokens": {
             "cache_creation": 890,
             "cache_read": 3420,

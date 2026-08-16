@@ -1,3 +1,8 @@
+---
+title: Rotate Tunnel Token
+url: https://platform.claude.com/docs/en/api/admin/mcp_tunnels/rotate_token
+---
+
 ## Rotate Tunnel Token
 
 **post** `/v1/organizations/tunnels/{tunnel_id}/rotate_token`
@@ -26,7 +31,7 @@ restarted after rotation must use the new value. An optional
 
 ### Body Parameters
 
-- `reason: optional string`
+- `reason: optional string or null`
 
   Optional free-text reason for the rotation, recorded for audit.
 

@@ -1,3 +1,8 @@
+---
+title: List organizations
+url: https://platform.claude.com/docs/en/api/compliance/organizations/list
+---
+
 ## List organizations
 
 **get** `/v1/compliance/organizations`
@@ -44,7 +49,7 @@ Returns organizations sorted by creation date in ascending order. Use
 
   Whether more records exist beyond the current result set
 
-- `next_page: optional string`
+- `next_page: optional string or null`
 
   Token to retrieve the next page. Use this as the 'page' parameter in your next request
 

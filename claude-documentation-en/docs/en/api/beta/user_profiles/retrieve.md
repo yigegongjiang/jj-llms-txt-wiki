@@ -1,3 +1,8 @@
+---
+title: Get User Profile
+url: https://platform.claude.com/docs/en/api/beta/user_profiles/retrieve
+---
+
 ## Get User Profile
 
 **get** `/v1/user_profiles/{user_profile_id}`
@@ -16,7 +21,7 @@ Get User Profile
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -82,6 +87,8 @@ Get User Profile
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `BetaUserProfile object { id, created_at, metadata, 6 more }`
@@ -132,11 +139,11 @@ Get User Profile
 
     A timestamp in RFC 3339 format
 
-  - `external_id: optional string`
+  - `external_id: optional string or null`
 
     Platform's own identifier for this user. Not enforced unique.
 
-  - `name: optional string`
+  - `name: optional string or null`
 
     Display name of the entity this profile represents. For `resold` this is the resold-to company's name.
 

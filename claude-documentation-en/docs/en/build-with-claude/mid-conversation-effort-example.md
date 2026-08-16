@@ -1,19 +1,19 @@
-# Build an orchestration mode
-
-Build a session-level mode that grants standing consent for multiagent fan-out, switched on and off with mid-conversation system messages.
-
+---
+title: Build an orchestration mode
+url: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-effort-example
+description: Build a session-level mode that grants standing consent for multiagent fan-out, switched on and off with mid-conversation system messages.
 ---
 
 An orchestration mode is a session-level switch: when it is on, the model puts maximum thoroughness behind every substantive request, scouting the task itself and then fanning work out to parallel subagents by default. When it is off, the same orchestration tool goes back to per-request opt-in.
 
 The mode is not an API parameter. It is built entirely from documented pieces:
 
-1. **An effort level:** requests run at a documented [Effort](/docs/en/build-with-claude/effort) value such as `xhigh`. There is no hidden level above the ones on that page. This example sets effort at the top level of each request, which needs no beta header.
-2. **A mode reminder:** a [mid-conversation system message](/docs/en/build-with-claude/mid-conversation-system-messages) tells the model the mode is active, with a one-line refresher every several turns and an exit notice when the mode is turned off. The top-level `system` field never changes, so the cached prefix stays intact.
+1. **An effort level:** requests run at a documented [Effort](https://platform.claude.com/docs/en/build-with-claude/effort) value such as `xhigh`. There is no hidden level above the ones on that page. This example sets effort at the top level of each request, which needs no beta header.
+2. **A mode reminder:** a [mid-conversation system message](https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages) tells the model the mode is active, with a one-line refresher every several turns and an exit notice when the mode is turned off. The top-level `system` field never changes, so the cached prefix stays intact.
 3. **Standing consent in the tool description:** the orchestration tool's description states that while the mode is on, the model should author and run a workflow for every substantive task without asking first.
 
 <Note>
-  This example uses mid-conversation system messages; for the models and platforms that support them, see [Mid-conversation system messages](/docs/en/build-with-claude/mid-conversation-system-messages). The fan-out itself multiplies token usage: a single request can spawn many subagent conversations, so reserve the mode for work that justifies the cost.
+  This example uses mid-conversation system messages; for the models and platforms that support them, see [Mid-conversation system messages](https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages). The fan-out itself multiplies token usage: a single request can spawn many subagent conversations, so reserve the mode for work that justifies the cost.
 </Note>
 
 ## Set up the loop
@@ -95,7 +95,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   AnthropicClient client = new();
 
-  const string model = "claude-opus-5";
+  const Model model = Model.ClaudeOpus5;
   var effort = Effort.Xhigh;
 
   const string systemPrompt = "You are a helpful general-purpose agent. Answer the user's request directly.";
@@ -141,7 +141,7 @@ The example is a single file. The constants control the effort level, the fan-ou
   var client = anthropic.NewClient()
 
   const (
-  	modelID = "claude-opus-5"
+  	modelID = anthropic.ModelClaudeOpus5
   	effort  = anthropic.OutputConfigEffortXhigh
 
   	systemPrompt = "You are a helpful general-purpose agent. Answer the user's request directly."
@@ -181,6 +181,7 @@ The example is a single file. The constants control the effort level, the fan-ou
   import com.anthropic.models.messages.Message;
   import com.anthropic.models.messages.MessageCreateParams;
   import com.anthropic.models.messages.MessageParam;
+  import com.anthropic.models.messages.Model;
   import com.anthropic.models.messages.OutputConfig;
   import com.anthropic.models.messages.StopReason;
   import com.anthropic.models.messages.TextBlock;
@@ -222,7 +223,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
-  static final String MODEL = "claude-opus-5";
+  static final Model MODEL = Model.CLAUDE_OPUS_5;
   static final boolean DOC_TEST_MODE =
           !Objects.requireNonNullElse(System.getenv("DOC_TEST_MODE"), "").isEmpty();
   static final OutputConfig.Effort EFFORT = OutputConfig.Effort.XHIGH;
@@ -1726,7 +1727,7 @@ Each workflow subtask becomes its own small agent loop with the bash tool, runni
   ```java Java
   // One subagent: a small nested agent loop with the bash tool plus report_findings.
   // Subagents inherit the main loop's effort level.
-  String runSubagent(String model, String prompt) throws InterruptedException {
+  String runSubagent(Model model, String prompt) throws InterruptedException {
       String subagentSystem = "You are one agent in a larger parallel fan-out, assigned a single subtask. "
               + "Investigate it directly, using bash to check facts rather than guessing, and finish "
               + "by calling report_findings exactly once. Return findings, not narration.";
@@ -2645,7 +2646,7 @@ The fan-out accepts up to `MAX_TOTAL_SUBTASKS` prompts, runs them through the jo
               + "Subtask: " + subtask + "\n\nResult to verify:\n" + result;
   }
 
-  List<String> runAll(ExecutorService pool, List<String> prompts, String model) throws InterruptedException {
+  List<String> runAll(ExecutorService pool, List<String> prompts, Model model) throws InterruptedException {
       List<Callable<String>> jobs = prompts.stream()
               .<Callable<String>>map(prompt -> () -> journaled(prompt, () -> runSubagent(model, prompt)))
               .toList();
@@ -2665,7 +2666,7 @@ The fan-out accepts up to `MAX_TOTAL_SUBTASKS` prompts, runs them through the jo
   // Run subtasks as parallel subagents, then run a second verification wave over
   // the results, and return both. MAX_TOTAL_SUBTASKS bounds how many the model can
   // queue; MAX_CONCURRENT bounds how many run at once.
-  ToolOutput runWorkflow(String model, JsonValue rawSubtasks) throws InterruptedException {
+  ToolOutput runWorkflow(Model model, JsonValue rawSubtasks) throws InterruptedException {
       List<String> allSubtasks = normalizeSubtasks(rawSubtasks);
       List<String> subtasks = allSubtasks.stream().limit(MAX_TOTAL_SUBTASKS).toList();
       int dropped = allSubtasks.size() - subtasks.size();
@@ -3448,18 +3449,18 @@ The agent appends the user's message first, then any system messages that are du
   ```java Java
   // An agent loop whose orchestration mode is toggled with mid-conversation system messages.
   class ModeAgent {
-      private final String model;
+      private final Model model;
       private boolean modeOn;
       private final List<MessageParam> messages = new ArrayList<>();
       private boolean modeAnnounced = false;
       private boolean exitPending = false;
       private int turnsSinceReminder = 0;
 
-      ModeAgent(String model) {
+      ModeAgent(Model model) {
           this(model, true);
       }
 
-      ModeAgent(String model, boolean modeOn) {
+      ModeAgent(Model model, boolean modeOn) {
           this.model = model;
           this.modeOn = modeOn;
       }
@@ -3944,19 +3945,19 @@ The patterns in this example (the mode reminders, standing consent in the tool d
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Mid-conversation system messages" icon="message" href="/docs/en/build-with-claude/mid-conversation-system-messages">
+  <Card title="Mid-conversation system messages" icon="message" href="https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages">
     The mechanism the mode reminders use, and how it interacts with prompt caching.
   </Card>
 
-  <Card title="Effort" icon="gauge" href="/docs/en/build-with-claude/effort">
+  <Card title="Effort" icon="gauge" href="https://platform.claude.com/docs/en/build-with-claude/effort">
     The effort levels the API accepts and how to choose one.
   </Card>
 
-  <Card title="Tool use with Claude" icon="wrench" href="/docs/en/agents-and-tools/tool-use/overview">
+  <Card title="Tool use with Claude" icon="wrench" href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">
     Defining tools, handling tool calls, and tool results.
   </Card>
 
-  <Card title="Bash tool" icon="terminal" href="/docs/en/agents-and-tools/tool-use/bash-tool">
+  <Card title="Bash tool" icon="terminal" href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/bash-tool">
     The Anthropic-defined bash tool this example executes locally.
   </Card>
 </CardGroup>

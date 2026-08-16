@@ -1,3 +1,8 @@
+---
+title: Run Deployment Now
+url: https://platform.claude.com/docs/en/api/beta/deployments/run
+---
+
 ## Run Deployment Now
 
 **post** `/v1/deployments/{deployment_id}/run`
@@ -16,7 +21,7 @@ Run Deployment Now
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -82,6 +87,8 @@ Run Deployment Now
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `BetaManagedAgentsDeploymentRun object { id, agent, created_at, 5 more }`
@@ -112,7 +119,7 @@ Run Deployment Now
 
     ID of the deployment that produced this run.
 
-  - `error: BetaManagedAgentsEnvironmentArchivedRunError or BetaManagedAgentsAgentArchivedRunError or BetaManagedAgentsEnvironmentNotFoundRunError or 13 more`
+  - `error: BetaManagedAgentsEnvironmentArchivedRunError or BetaManagedAgentsAgentArchivedRunError or BetaManagedAgentsEnvironmentNotFoundRunError or 13 more or null`
 
     Why the run failed to create a session. The type identifies the failure; message is human-readable detail.
 
@@ -308,7 +315,7 @@ Run Deployment Now
 
         - `"mcp_egress_blocked_error"`
 
-  - `session_id: string`
+  - `session_id: string or null`
 
     Populated on success. Null on creation failure. Exactly one of session_id or error is non-null.
 

@@ -1,3 +1,8 @@
+---
+title: Send Events
+url: https://platform.claude.com/docs/en/api/beta/sessions/events/send
+---
+
 ## Send Events
 
 **post** `/v1/sessions/{session_id}/events`
@@ -16,7 +21,7 @@ Send Events
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -82,6 +87,8 @@ Send Events
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Body Parameters
 
 - `events: array of BetaManagedAgentsEventParams`
@@ -92,7 +99,7 @@ Send Events
 
     Parameters for sending a user message to the session.
 
-    - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock`
+    - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock or BetaManagedAgentsRedactedBlock`
 
       Array of content blocks for the user message.
 
@@ -230,13 +237,21 @@ Send Events
 
           - `"document"`
 
-        - `context: optional string`
+        - `context: optional string or null`
 
           Additional context about the document for the model.
 
-        - `title: optional string`
+        - `title: optional string or null`
 
           The title of the document.
+
+      - `BetaManagedAgentsRedactedBlock object { type }`
+
+        Placeholder for content withheld by Anthropic model policy.
+
+        - `type: "redacted"`
+
+          - `"redacted"`
 
     - `type: "user.message"`
 
@@ -250,7 +265,7 @@ Send Events
 
       - `"user.interrupt"`
 
-    - `session_thread_id: optional string`
+    - `session_thread_id: optional string or null`
 
       If absent, interrupts every non-archived thread in a multiagent session (or the primary alone in a single-agent session). If present, interrupts only the named thread.
 
@@ -274,7 +289,7 @@ Send Events
 
       - `"user.tool_confirmation"`
 
-    - `deny_message: optional string`
+    - `deny_message: optional string or null`
 
       Optional message providing context for a 'deny' decision. Only allowed when result is 'deny'.
 
@@ -342,7 +357,7 @@ Send Events
 
           - `"search_result"`
 
-    - `is_error: optional boolean`
+    - `is_error: optional boolean or null`
 
       Whether the tool execution resulted in an error.
 
@@ -386,7 +401,7 @@ Send Events
 
       - `"user.define_outcome"`
 
-    - `max_iterations: optional number`
+    - `max_iterations: optional number or null`
 
       Eval→revision cycles before giving up. Default 3, max 20.
 
@@ -422,7 +437,7 @@ Send Events
 
         A block containing a web search result.
 
-    - `is_error: optional boolean`
+    - `is_error: optional boolean or null`
 
       Whether the tool execution resulted in an error.
 
@@ -464,7 +479,7 @@ Send Events
 
         Unique identifier for this event.
 
-      - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock`
+      - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock or BetaManagedAgentsRedactedBlock`
 
         Array of content blocks comprising the user message.
 
@@ -602,19 +617,27 @@ Send Events
 
             - `"document"`
 
-          - `context: optional string`
+          - `context: optional string or null`
 
             Additional context about the document for the model.
 
-          - `title: optional string`
+          - `title: optional string or null`
 
             The title of the document.
+
+        - `BetaManagedAgentsRedactedBlock object { type }`
+
+          Placeholder for content withheld by Anthropic model policy.
+
+          - `type: "redacted"`
+
+            - `"redacted"`
 
       - `type: "user.message"`
 
         - `"user.message"`
 
-      - `processed_at: optional string`
+      - `processed_at: optional string or null`
 
         A timestamp in RFC 3339 format
 
@@ -630,11 +653,11 @@ Send Events
 
         - `"user.interrupt"`
 
-      - `processed_at: optional string`
+      - `processed_at: optional string or null`
 
         A timestamp in RFC 3339 format
 
-      - `session_thread_id: optional string`
+      - `session_thread_id: optional string or null`
 
         If absent, interrupts every non-archived thread in a multiagent session (or the primary alone in a single-agent session). If present, interrupts only the named thread.
 
@@ -662,15 +685,15 @@ Send Events
 
         - `"user.tool_confirmation"`
 
-      - `deny_message: optional string`
+      - `deny_message: optional string or null`
 
         Optional message providing context for a 'deny' decision. Only allowed when result is 'deny'.
 
-      - `processed_at: optional string`
+      - `processed_at: optional string or null`
 
         A timestamp in RFC 3339 format
 
-      - `session_thread_id: optional string`
+      - `session_thread_id: optional string or null`
 
         When set, the confirmation routes to this subagent's thread rather than the primary. Echo this from the `session_thread_id` on the `agent.tool_use` or `agent.mcp_tool_use` event that prompted the approval.
 
@@ -742,15 +765,15 @@ Send Events
 
             - `"search_result"`
 
-      - `is_error: optional boolean`
+      - `is_error: optional boolean or null`
 
         Whether the tool execution resulted in an error.
 
-      - `processed_at: optional string`
+      - `processed_at: optional string or null`
 
         A timestamp in RFC 3339 format
 
-      - `session_thread_id: optional string`
+      - `session_thread_id: optional string or null`
 
         Routes this result to a subagent thread. Copy from the `agent.custom_tool_use` event's `session_thread_id`.
 
@@ -766,7 +789,7 @@ Send Events
 
         What the agent should produce. Copied from the input event.
 
-      - `max_iterations: number`
+      - `max_iterations: number or null`
 
         Evaluate-then-revise cycles before giving up. Default 3, max 20.
 
@@ -846,15 +869,15 @@ Send Events
 
           A block containing a web search result.
 
-      - `is_error: optional boolean`
+      - `is_error: optional boolean or null`
 
         Whether the tool execution resulted in an error.
 
-      - `processed_at: optional string`
+      - `processed_at: optional string or null`
 
         A timestamp in RFC 3339 format
 
-      - `session_thread_id: optional string`
+      - `session_thread_id: optional string or null`
 
         Routes this result to a subagent thread. Copy from the `agent.tool_use` event's `session_thread_id`.
 
@@ -882,7 +905,7 @@ Send Events
 
         - `"system.message"`
 
-      - `processed_at: optional string`
+      - `processed_at: optional string or null`
 
         A timestamp in RFC 3339 format
 

@@ -1,7 +1,7 @@
-# Multilingual support
-
-Claude excels at tasks across multiple languages, maintaining strong cross-lingual performance relative to English.
-
+---
+title: Multilingual support
+url: https://platform.claude.com/docs/en/build-with-claude/multilingual-support
+description: Claude excels at tasks across multiple languages, maintaining strong cross-lingual performance relative to English.
 ---
 
 ## Overview
@@ -14,25 +14,25 @@ Claude is capable in many languages beyond those benchmarked in the following ta
 
 The following table shows zero-shot chain-of-thought evaluation scores for Claude models across languages, expressed as a percentage relative to English performance (100%):
 
-| Language                          | Claude Opus 4.1 (deprecated)1 | Claude Sonnet 4.51 | Claude Haiku 4.51 |
-| --------------------------------- | ----------------------------- | ------------------ | ----------------- |
-| English (baseline, fixed to 100%) | 100%                          | 100%               | 100%              |
-| Spanish                           | 98.1%                         | 98.2%              | 96.4%             |
-| Portuguese (Brazil)               | 97.8%                         | 97.8%              | 96.1%             |
-| Italian                           | 97.7%                         | 97.9%              | 96.0%             |
-| French                            | 97.9%                         | 97.5%              | 95.7%             |
-| Indonesian                        | 97.3%                         | 97.3%              | 94.2%             |
-| German                            | 97.7%                         | 97.0%              | 94.3%             |
-| Arabic                            | 97.1%                         | 97.2%              | 92.5%             |
-| Chinese (Simplified)              | 97.1%                         | 96.9%              | 94.2%             |
-| Korean                            | 96.6%                         | 96.7%              | 93.3%             |
-| Japanese                          | 96.9%                         | 96.8%              | 93.5%             |
-| Hindi                             | 96.8%                         | 96.7%              | 92.4%             |
-| Bengali                           | 95.7%                         | 95.4%              | 90.4%             |
-| Swahili                           | 89.8%                         | 91.1%              | 78.3%             |
-| Yoruba                            | 80.3%                         | 79.7%              | 52.7%             |
+| Language                          | Claude Sonnet 4.51 | Claude Haiku 4.51 |
+| --------------------------------- | ------------------ | ----------------- |
+| English (baseline, fixed to 100%) | 100%               | 100%              |
+| Spanish                           | 98.2%              | 96.4%             |
+| Portuguese (Brazil)               | 97.8%              | 96.1%             |
+| Italian                           | 97.9%              | 96.0%             |
+| French                            | 97.5%              | 95.7%             |
+| Indonesian                        | 97.3%              | 94.2%             |
+| German                            | 97.0%              | 94.3%             |
+| Arabic                            | 97.2%              | 92.5%             |
+| Chinese (Simplified)              | 96.9%              | 94.2%             |
+| Korean                            | 96.7%              | 93.3%             |
+| Japanese                          | 96.8%              | 93.5%             |
+| Hindi                             | 96.7%              | 92.4%             |
+| Bengali                           | 95.4%              | 90.4%             |
+| Swahili                           | 91.1%              | 78.3%             |
+| Yoruba                            | 79.7%              | 52.7%             |
 
-1 With [extended thinking](/docs/en/build-with-claude/extended-thinking).
+1 With [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking).
 
 <Note>
   These metrics are based on [MMLU (Massive Multitask Language Understanding)](https://en.wikipedia.org/wiki/MMLU) English test sets that were translated into 14 additional languages by professional human translators, as documented in [OpenAI's simple-evals repository](https://github.com/openai/simple-evals/blob/main/multilingual_mmlu_benchmark_results.md). The use of human translators for this evaluation ensures high-quality translations, particularly important for languages with fewer digital resources.
@@ -188,7 +188,7 @@ When working with multilingual content:
 2. **Use native scripts:** Submit text in its native script rather than transliteration for optimal results.
 3. **Consider cultural context:** Effective communication often requires cultural and regional awareness beyond pure translation.
 
-Also follow the general guidance in [Prompt engineering overview](/docs/en/build-with-claude/prompt-engineering/overview) to further improve output quality.
+Also follow the general guidance in [Prompt engineering overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview) to further improve output quality.
 
 ***
 
@@ -201,19 +201,19 @@ Also follow the general guidance in [Prompt engineering overview](/docs/en/build
 ## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Prompt engineering overview" icon="edit" href="/docs/en/build-with-claude/prompt-engineering/overview">
+  <Card title="Prompt engineering overview" icon="edit" href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview">
     Apply general prompting techniques to improve multilingual output quality.
   </Card>
 
-  <Card title="Customer support agent" icon="headset" href="/docs/en/about-claude/use-case-guides/customer-support-chat">
+  <Card title="Customer support agent" icon="headset" href="https://platform.claude.com/docs/en/about-claude/use-case-guides/customer-support-chat">
     Build a localized support chatbot using a language-constrained system prompt.
   </Card>
 
-  <Card title="Models overview" icon="table" href="/docs/en/about-claude/models/overview">
+  <Card title="Models overview" icon="table" href="https://platform.claude.com/docs/en/about-claude/models/overview">
     Compare model tiers to balance multilingual quality against cost and latency.
   </Card>
 
-  <Card title="Define success criteria and build evaluations" icon="scales" href="/docs/en/test-and-evaluate/develop-tests">
+  <Card title="Define success criteria and build evaluations" icon="scales" href="https://platform.claude.com/docs/en/test-and-evaluate/develop-tests">
     Evaluate translation and localization quality before you ship.
   </Card>
 </CardGroup>

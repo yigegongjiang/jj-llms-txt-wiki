@@ -1,7 +1,7 @@
-# API usage primer for Claude
-
-This guide is designed to give Claude the basics of using the Claude API. It gives explanation and examples of model IDs/the basic messages API, tool use, streaming, thinking, and nothing else.
-
+---
+title: API usage primer for Claude
+url: https://platform.claude.com/docs/en/claude_api_primer
+description: This guide is designed to give Claude the basics of using the Claude API. It gives explanation and examples of model IDs/the basic messages API, tool use, streaming, thinking, and nothing else.
 ---
 
 # API usage primer for Claude
@@ -31,11 +31,8 @@ For fast, cost-effective tasks: Claude Haiku 4.5: claude-haiku-4-5-20251001
 
   ```python Python
   import anthropic
-  import os
 
-  message = anthropic.Anthropic(
-      api_key=os.environ.get("ANTHROPIC_API_KEY")
-  ).messages.create(
+  message = anthropic.Anthropic().messages.create(
       model="claude-opus-5",
       max_tokens=1024,
       messages=[{"role": "user", "content": "Hello, Claude"}],
@@ -102,7 +99,7 @@ The Messages API is stateless, which means that you always send the full convers
 
 ### Prefilling Claude's response
 
-You can pre-fill part of Claude's response in the last position of the input messages list. This can be used to shape Claude's response. The following example uses `"max_tokens": 1` to get a single multiple choice answer from Claude.
+You can prefill part of Claude's response in the last position of the input messages list. Use this technique to shape Claude's response. The following example uses `"max_tokens": 1` to get a single multiple choice answer from Claude.
 
 <Note>
   Claude 4.6 and later models and Claude Mythos Preview do not support assistant message prefill; requests to those models must end with a user message. The examples below use a model that supports prefill.
@@ -145,11 +142,10 @@ Claude can read both text and images in requests. Both `base64` and `url` source
 
 <CodeGroup>
   ```bash CLI
-  IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/a/a7"
-  IMAGE_URL="$IMAGE_URL/Camponotus_flavomarginatus_ant.jpg"
+  IMAGE_URL="https://platform.claude.com/docs/images/vision-example.jpg"
 
   # Option 1: Base64-encoded image (@ prefix auto-encodes binary files as base64)
-  curl -sSo ant.jpg "$IMAGE_URL"
+  curl -sSo vision-example.jpg "$IMAGE_URL"
 
   ant messages create <<'YAML'
   model: claude-opus-5
@@ -161,7 +157,7 @@ Claude can read both text and images in requests. Both `base64` and `url` source
           source:
             type: base64
             media_type: image/jpeg
-            data: "@./ant.jpg"
+            data: "@./vision-example.jpg"
         - type: text
           text: What is in the above image?
   YAML
@@ -188,7 +184,7 @@ Claude can read both text and images in requests. Both `base64` and `url` source
   import httpx
 
   # Option 1: Base64-encoded image
-  image_url = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+  image_url = "https://platform.claude.com/docs/images/vision-example.jpg"
   image_media_type = "image/jpeg"
   image_data = base64.standard_b64encode(httpx.get(image_url).content).decode("utf-8")
 
@@ -226,7 +222,7 @@ Claude can read both text and images in requests. Both `base64` and `url` source
                       "type": "image",
                       "source": {
                           "type": "url",
-                          "url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg",
+                          "url": "https://platform.claude.com/docs/images/vision-example.jpg",
                       },
                   },
                   {"type": "text", "text": "What is in the above image?"},
@@ -240,7 +236,7 @@ Claude can read both text and images in requests. Both `base64` and `url` source
 
 ## Thinking
 
-Thinking can sometimes help Claude with very hard tasks. The current mechanism is [adaptive thinking](/docs/en/build-with-claude/thinking) (`thinking: {"type": "adaptive"}`): Claude decides when and how much to think, and you steer thinking depth with the [`effort`](/docs/en/build-with-claude/effort) parameter rather than a token budget. Adaptive thinking is supported on Claude 4.6 and later models and Claude Mythos Preview. On Claude 5 models and Claude Mythos Preview, thinking is on by default when the `thinking` parameter is omitted.
+Thinking can sometimes help Claude with very hard tasks. The current mechanism is [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) (`thinking: {"type": "adaptive"}`): Claude decides when and how much to think, and you steer thinking depth with the [`effort`](https://platform.claude.com/docs/en/build-with-claude/effort) parameter rather than a token budget. Adaptive thinking is supported on Claude 4.6 and later models and Claude Mythos Preview. On Claude 5 models and Claude Mythos Preview, thinking is on by default when the `thinking` parameter is omitted.
 
 Temperature must be set to 1 (or left unset) whenever thinking is enabled, on all models. On Claude 4.7 and later models and Claude Mythos Preview, `temperature` is deprecated and only its default value is accepted, even when thinking is off.
 
@@ -257,7 +253,7 @@ Thinking is supported in the following models:
 * Claude Haiku 4.5 (`claude-haiku-4-5-20251001`, legacy manual thinking only)
 
 <Note>
-  On Claude 4.7 and later models, manual extended thinking (`type: enabled` with a `budget_tokens` value) is not supported and returns a 400 error. Use [adaptive thinking](/docs/en/build-with-claude/thinking) (`type: adaptive`) instead.
+  On Claude 4.7 and later models, manual extended thinking (`type: enabled` with a `budget_tokens` value) is not supported and returns a 400 error. Use [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) (`type: adaptive`) instead.
 </Note>
 
 ### How thinking works
@@ -296,7 +292,7 @@ When thinking is on, Claude creates `thinking` content blocks where it outputs i
       ],
   )
 
-  # The response will contain summarized thinking blocks and text blocks
+  # The response contains summarized thinking blocks and text blocks
   for block in response.content:
       if block.type == "thinking":
           print(f"\nThinking summary: {block.thinking}")
@@ -305,7 +301,7 @@ When thinking is on, Claude creates `thinking` content blocks where it outputs i
   ```
 </CodeGroup>
 
-Manual extended thinking (`thinking: {"type": "enabled", "budget_tokens": N}`) is the legacy mechanism. It works only on Claude 4 through 4.6 models that support thinking; Claude 4.7 and later models reject `type: enabled` with a 400 error and use [adaptive thinking](/docs/en/build-with-claude/thinking) instead. With manual extended thinking, `budget_tokens` sets the maximum number of tokens Claude is allowed to use for its internal reasoning process; the limit applies to full thinking tokens, not to the summarized output. Unless you are using [interleaved thinking](#interleaved-thinking), `budget_tokens` must be less than `max_tokens` so that Claude has space to write its response after thinking is complete.
+Manual extended thinking (`thinking: {"type": "enabled", "budget_tokens": N}`) is the legacy mechanism. It works only on Claude 4 through 4.6 models that support thinking; Claude 4.7 and later models reject `type: enabled` with a 400 error and use [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) instead. With manual extended thinking, `budget_tokens` sets the maximum number of tokens Claude is allowed to use for its internal reasoning process; the limit applies to full thinking tokens, not to the summarized output. Unless you are using [interleaved thinking](https://platform.claude.com/docs/en/claude_api_primer#interleaved-thinking), `budget_tokens` must be less than `max_tokens` so that Claude has space to write its response after thinking is complete.
 
 ## Thinking with tool use
 
@@ -447,7 +443,7 @@ Important limitations:
 Interleaved thinking enables Claude to think between tool calls, reasoning about tool results before deciding the next step.
 
 <Info>
-  On models with [adaptive thinking](/docs/en/build-with-claude/thinking) (`thinking: {type: "adaptive"}`), interleaved thinking is automatically enabled. No beta header is needed. Sonnet 4.6 supports both the `interleaved-thinking-2025-05-14` beta header with manual extended thinking and adaptive thinking.
+  On models with [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) (`thinking: {type: "adaptive"}`), interleaved thinking is automatically enabled. No beta header is needed. Sonnet 4.6 supports both the `interleaved-thinking-2025-05-14` beta header with manual extended thinking and adaptive thinking.
 </Info>
 
 On older models that use manual extended thinking (Claude 4, 4.5, and Sonnet 4.6 models), enable interleaved thinking by adding the beta header `interleaved-thinking-2025-05-14` to your API request:
@@ -588,7 +584,7 @@ Client tools are specified in the `tools` top-level parameter of the API request
 * What each parameter means and how it affects the tool's behavior
 * Any important caveats or limitations
 
-**Consider using `input_examples` for complex tools.** For tools with nested objects, optional parameters, or format-sensitive inputs, you can provide concrete examples using the `input_examples` field (beta). This helps Claude understand expected input patterns. See [Providing tool use examples](/docs/en/agents-and-tools/tool-use/define-tools#providing-tool-use-examples) for details.
+**Consider using `input_examples` for complex tools.** For tools with nested objects, optional parameters, or format-sensitive inputs, you can provide concrete examples using the `input_examples` field (beta). This helps Claude understand expected input patterns. See [Providing tool use examples](https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#providing-tool-use-examples) for details.
 
 Example of a good tool description:
 
@@ -621,7 +617,7 @@ tool_choice = {"type": "tool", "name": "get_weather"}
 
 When working with the `tool_choice` parameter, there are four possible options:
 
-* `auto` allows Claude to decide whether to call any provided tools or not (default).
+* `auto` allows Claude to determine whether to call any provided tools or not (default).
 * `any` tells Claude that it must use one of the provided tools.
 * `tool` forces Claude to always use a particular tool.
 * `none` prevents Claude from using any tools.
@@ -632,7 +628,7 @@ Tools do not necessarily need to be client functions. You can use tools anytime 
 
 ### Chain of thought
 
-When using tools, Claude often shows its "chain of thought," that is, the step-by-step reasoning it uses to break down the problem and decide which tools to use.
+When using tools, Claude often shows its "chain of thought," that is, the step-by-step reasoning it uses to break down the problem and determine which tools to use.
 
 ```json
 {

@@ -1,3 +1,8 @@
+---
+title: Permissions
+url: https://platform.claude.com/docs/en/api/compliance/organizations/roles/permissions
+---
+
 # Permissions
 
 ## List Compliance Role Permissions
@@ -52,7 +57,7 @@ List Compliance Role Permissions
 
   Whether more records exist beyond the current result set
 
-- `next_page: string`
+- `next_page: string or null`
 
   Token to retrieve the next page. Use this as the 'page' parameter in your next request
 

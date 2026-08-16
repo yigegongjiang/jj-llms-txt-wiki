@@ -1,3 +1,8 @@
+---
+title: Create Tunnel
+url: https://platform.claude.com/docs/en/api/beta/tunnels/create
+---
+
 ## Create Tunnel
 
 **post** `/v1/tunnels`
@@ -14,7 +19,7 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -80,9 +85,11 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Body Parameters
 
-- `display_name: optional string`
+- `display_name: optional string or null`
 
   Optional human-readable name for the tunnel (1-255 characters).
 
@@ -96,7 +103,7 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
     Unique identifier for the tunnel, prefixed with `tnl_`.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     A timestamp in RFC 3339 format
 
@@ -104,7 +111,7 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
     A timestamp in RFC 3339 format
 
-  - `display_name: string`
+  - `display_name: string or null`
 
     Human-readable name for the tunnel (1-255 characters). Null if unset.
 

@@ -1,3 +1,8 @@
+---
+title: MCP Tunnels
+url: https://platform.claude.com/docs/en/api/admin/mcp_tunnels
+---
+
 # MCP Tunnels
 
 ## Get Tunnel
@@ -28,7 +33,7 @@ Retrieve a single tunnel in the caller's organization by ID.
 
   ID of the Tunnel.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the Tunnel was archived, or
   `null` if it is not archived.
@@ -37,7 +42,7 @@ Retrieve a single tunnel in the caller's organization by ID.
 
   RFC 3339 datetime string indicating when the Tunnel was created.
 
-- `display_name: string`
+- `display_name: string or null`
 
   Human-readable name for the Tunnel (1–255 characters), or `null` if unset.
 
@@ -53,7 +58,7 @@ Retrieve a single tunnel in the caller's organization by ID.
 
   - `"tunnel"`
 
-- `workspace_id: string`
+- `workspace_id: string or null`
 
   ID of the Workspace this Tunnel belongs to, or `null` for the default
   Workspace. Immutable after creation.
@@ -129,7 +134,7 @@ archived tunnels are excluded unless `include_archived` is set.
 
     ID of the Tunnel.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the Tunnel was archived, or
     `null` if it is not archived.
@@ -138,7 +143,7 @@ archived tunnels are excluded unless `include_archived` is set.
 
     RFC 3339 datetime string indicating when the Tunnel was created.
 
-  - `display_name: string`
+  - `display_name: string or null`
 
     Human-readable name for the Tunnel (1–255 characters), or `null` if unset.
 
@@ -154,12 +159,12 @@ archived tunnels are excluded unless `include_archived` is set.
 
     - `"tunnel"`
 
-  - `workspace_id: string`
+  - `workspace_id: string or null`
 
     ID of the Workspace this Tunnel belongs to, or `null` for the default
     Workspace. Immutable after creation.
 
-- `next_page: string`
+- `next_page: string or null`
 
   Opaque cursor for the next page, or `null` if there are no more results.
 
@@ -281,7 +286,7 @@ restarted after rotation must use the new value. An optional
 
 ### Body Parameters
 
-- `reason: optional string`
+- `reason: optional string or null`
 
   Optional free-text reason for the rotation, recorded for audit.
 
@@ -354,7 +359,7 @@ tunnel returns the existing record unchanged.
 
   ID of the Tunnel.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the Tunnel was archived, or
   `null` if it is not archived.
@@ -363,7 +368,7 @@ tunnel returns the existing record unchanged.
 
   RFC 3339 datetime string indicating when the Tunnel was created.
 
-- `display_name: string`
+- `display_name: string or null`
 
   Human-readable name for the Tunnel (1–255 characters), or `null` if unset.
 
@@ -379,7 +384,7 @@ tunnel returns the existing record unchanged.
 
   - `"tunnel"`
 
-- `workspace_id: string`
+- `workspace_id: string or null`
 
   ID of the Workspace this Tunnel belongs to, or `null` for the default
   Workspace. Immutable after creation.
@@ -417,7 +422,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     ID of the Tunnel.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the Tunnel was archived, or
     `null` if it is not archived.
@@ -426,7 +431,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     RFC 3339 datetime string indicating when the Tunnel was created.
 
-  - `display_name: string`
+  - `display_name: string or null`
 
     Human-readable name for the Tunnel (1–255 characters), or `null` if unset.
 
@@ -442,7 +447,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     - `"tunnel"`
 
-  - `workspace_id: string`
+  - `workspace_id: string or null`
 
     ID of the Workspace this Tunnel belongs to, or `null` for the default
     Workspace. Immutable after creation.
@@ -455,7 +460,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     ID of the Tunnel.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the Tunnel was archived, or
     `null` if it is not archived.
@@ -464,7 +469,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     RFC 3339 datetime string indicating when the Tunnel was created.
 
-  - `display_name: string`
+  - `display_name: string or null`
 
     Human-readable name for the Tunnel (1–255 characters), or `null` if unset.
 
@@ -480,7 +485,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     - `"tunnel"`
 
-  - `workspace_id: string`
+  - `workspace_id: string or null`
 
     ID of the Workspace this Tunnel belongs to, or `null` for the default
     Workspace. Immutable after creation.
@@ -531,7 +536,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     ID of the Tunnel.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the Tunnel was archived, or
     `null` if it is not archived.
@@ -540,7 +545,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     RFC 3339 datetime string indicating when the Tunnel was created.
 
-  - `display_name: string`
+  - `display_name: string or null`
 
     Human-readable name for the Tunnel (1–255 characters), or `null` if unset.
 
@@ -556,7 +561,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/archive \
 
     - `"tunnel"`
 
-  - `workspace_id: string`
+  - `workspace_id: string or null`
 
     ID of the Workspace this Tunnel belongs to, or `null` for the default
     Workspace. Immutable after creation.
@@ -603,7 +608,7 @@ holds at most two non-archived certificates.
 
   ID of the Tunnel Certificate.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate was archived, or
   `null` if it is not archived.
@@ -612,7 +617,7 @@ holds at most two non-archived certificates.
 
   RFC 3339 datetime string indicating when the certificate was registered.
 
-- `expires_at: string`
+- `expires_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate expires, or
   `null` if it does not expire.
@@ -639,7 +644,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates 
     -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_OAUTH_TOKEN" \
     -d '{
-          "ca_certificate_pem": "-----BEGIN CERTIFICATE-----\\nMIIBexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexa\\n...illustrative placeholder, not a real certificate...\\n-----END CERTIFICATE-----\\n"
+          "ca_certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIBexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexa\n...illustrative placeholder, not a real certificate...\n-----END CERTIFICATE-----\n"
         }'
 ```
 
@@ -689,7 +694,7 @@ Retrieve a single certificate registered on a tunnel by ID.
 
   ID of the Tunnel Certificate.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate was archived, or
   `null` if it is not archived.
@@ -698,7 +703,7 @@ Retrieve a single certificate registered on a tunnel by ID.
 
   RFC 3339 datetime string indicating when the certificate was registered.
 
-- `expires_at: string`
+- `expires_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate expires, or
   `null` if it does not expire.
@@ -787,7 +792,7 @@ Archived certificates are excluded unless `include_archived` is set.
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -796,7 +801,7 @@ Archived certificates are excluded unless `include_archived` is set.
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -815,7 +820,7 @@ Archived certificates are excluded unless `include_archived` is set.
 
     - `"tunnel_certificate"`
 
-- `next_page: string`
+- `next_page: string or null`
 
   Opaque cursor for the next page, or `null` if there are no more results.
 
@@ -882,7 +887,7 @@ certificate is added.
 
   ID of the Tunnel Certificate.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate was archived, or
   `null` if it is not archived.
@@ -891,7 +896,7 @@ certificate is added.
 
   RFC 3339 datetime string indicating when the certificate was registered.
 
-- `expires_at: string`
+- `expires_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate expires, or
   `null` if it does not expire.
@@ -943,7 +948,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -952,7 +957,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -979,7 +984,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -988,7 +993,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -1015,7 +1020,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -1024,7 +1029,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -1051,7 +1056,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -1060,7 +1065,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.

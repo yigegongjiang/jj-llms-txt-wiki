@@ -1,3 +1,8 @@
+---
+title: Resources
+url: https://platform.claude.com/docs/en/api/beta/sessions/resources
+---
+
 # Resources
 
 ## Add Session Resource
@@ -18,7 +23,7 @@ Add Session Resource
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -84,6 +89,8 @@ Add Session Resource
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Body Parameters
 
 - `file_id: string`
@@ -94,7 +101,7 @@ Add Session Resource
 
   - `"file"`
 
-- `mount_path: optional string`
+- `mount_path: optional string or null`
 
   Mount path in the container. Defaults to `/mnt/session/uploads/<file_id>`.
 
@@ -176,7 +183,7 @@ List Session Resources
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -242,6 +249,8 @@ List Session Resources
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `data: array of BetaManagedAgentsSessionResource`
@@ -268,7 +277,7 @@ List Session Resources
 
     - `url: string`
 
-    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
       - `BetaManagedAgentsBranchCheckout object { name, type }`
 
@@ -322,7 +331,7 @@ List Session Resources
 
       - `"memory_store"`
 
-    - `access: optional "read_write" or "read_only"`
+    - `access: optional "read_write" or "read_only" or null`
 
       Access mode for an attached memory store.
 
@@ -334,19 +343,19 @@ List Session Resources
 
       Description of the memory store, snapshotted at attach time. Rendered into the agent's system prompt. Empty string when the store has no description.
 
-    - `instructions: optional string`
+    - `instructions: optional string or null`
 
       Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-    - `mount_path: optional string`
+    - `mount_path: optional string or null`
 
       Filesystem path where the store is mounted in the session container, e.g. /mnt/memory/user-preferences. Derived from the store's name. Output-only.
 
-    - `name: optional string`
+    - `name: optional string or null`
 
       Display name of the memory store, snapshotted at attach time. Later edits to the store's name do not propagate to this resource.
 
-- `next_page: optional string`
+- `next_page: optional string or null`
 
   Opaque cursor for the next page. Null when no more results.
 
@@ -409,7 +418,7 @@ Get Session Resource
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -475,6 +484,8 @@ Get Session Resource
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `BetaManagedAgentsGitHubRepositoryResource object { id, created_at, mount_path, 4 more }`
@@ -497,7 +508,7 @@ Get Session Resource
 
   - `url: string`
 
-  - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+  - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
     - `BetaManagedAgentsBranchCheckout object { name, type }`
 
@@ -551,7 +562,7 @@ Get Session Resource
 
     - `"memory_store"`
 
-  - `access: optional "read_write" or "read_only"`
+  - `access: optional "read_write" or "read_only" or null`
 
     Access mode for an attached memory store.
 
@@ -563,15 +574,15 @@ Get Session Resource
 
     Description of the memory store, snapshotted at attach time. Rendered into the agent's system prompt. Empty string when the store has no description.
 
-  - `instructions: optional string`
+  - `instructions: optional string or null`
 
     Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-  - `mount_path: optional string`
+  - `mount_path: optional string or null`
 
     Filesystem path where the store is mounted in the session container, e.g. /mnt/memory/user-preferences. Derived from the store's name. Output-only.
 
-  - `name: optional string`
+  - `name: optional string or null`
 
     Display name of the memory store, snapshotted at attach time. Later edits to the store's name do not propagate to this resource.
 
@@ -621,7 +632,7 @@ Update Session Resource
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -687,6 +698,8 @@ Update Session Resource
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Body Parameters
 
 - `authorization_token: string`
@@ -715,7 +728,7 @@ Update Session Resource
 
   - `url: string`
 
-  - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+  - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
     - `BetaManagedAgentsBranchCheckout object { name, type }`
 
@@ -769,7 +782,7 @@ Update Session Resource
 
     - `"memory_store"`
 
-  - `access: optional "read_write" or "read_only"`
+  - `access: optional "read_write" or "read_only" or null`
 
     Access mode for an attached memory store.
 
@@ -781,15 +794,15 @@ Update Session Resource
 
     Description of the memory store, snapshotted at attach time. Rendered into the agent's system prompt. Empty string when the store has no description.
 
-  - `instructions: optional string`
+  - `instructions: optional string or null`
 
     Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-  - `mount_path: optional string`
+  - `mount_path: optional string or null`
 
     Filesystem path where the store is mounted in the session container, e.g. /mnt/memory/user-preferences. Derived from the store's name. Output-only.
 
-  - `name: optional string`
+  - `name: optional string or null`
 
     Display name of the memory store, snapshotted at attach time. Later edits to the store's name do not propagate to this resource.
 
@@ -843,7 +856,7 @@ Delete Session Resource
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -908,6 +921,8 @@ Delete Session Resource
     - `"fallback-credit-2026-07-01"`
 
     - `"agent-memory-2026-07-22"`
+
+    - `"mid-conversation-tool-changes-2026-07-01"`
 
 ### Returns
 
@@ -998,7 +1013,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
   - `url: string`
 
-  - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+  - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
     - `BetaManagedAgentsBranchCheckout object { name, type }`
 
@@ -1034,7 +1049,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
     - `"memory_store"`
 
-  - `access: optional "read_write" or "read_only"`
+  - `access: optional "read_write" or "read_only" or null`
 
     Access mode for an attached memory store.
 
@@ -1046,15 +1061,15 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
     Description of the memory store, snapshotted at attach time. Rendered into the agent's system prompt. Empty string when the store has no description.
 
-  - `instructions: optional string`
+  - `instructions: optional string or null`
 
     Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-  - `mount_path: optional string`
+  - `mount_path: optional string or null`
 
     Filesystem path where the store is mounted in the session container, e.g. /mnt/memory/user-preferences. Derived from the store's name. Output-only.
 
-  - `name: optional string`
+  - `name: optional string or null`
 
     Display name of the memory store, snapshotted at attach time. Later edits to the store's name do not propagate to this resource.
 
@@ -1084,7 +1099,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
     - `url: string`
 
-    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
       - `BetaManagedAgentsBranchCheckout object { name, type }`
 
@@ -1138,7 +1153,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
       - `"memory_store"`
 
-    - `access: optional "read_write" or "read_only"`
+    - `access: optional "read_write" or "read_only" or null`
 
       Access mode for an attached memory store.
 
@@ -1150,15 +1165,15 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
       Description of the memory store, snapshotted at attach time. Rendered into the agent's system prompt. Empty string when the store has no description.
 
-    - `instructions: optional string`
+    - `instructions: optional string or null`
 
       Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-    - `mount_path: optional string`
+    - `mount_path: optional string or null`
 
       Filesystem path where the store is mounted in the session container, e.g. /mnt/memory/user-preferences. Derived from the store's name. Output-only.
 
-    - `name: optional string`
+    - `name: optional string or null`
 
       Display name of the memory store, snapshotted at attach time. Later edits to the store's name do not propagate to this resource.
 
@@ -1188,7 +1203,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
     - `url: string`
 
-    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
       - `BetaManagedAgentsBranchCheckout object { name, type }`
 
@@ -1242,7 +1257,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
       - `"memory_store"`
 
-    - `access: optional "read_write" or "read_only"`
+    - `access: optional "read_write" or "read_only" or null`
 
       Access mode for an attached memory store.
 
@@ -1254,15 +1269,15 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
       Description of the memory store, snapshotted at attach time. Rendered into the agent's system prompt. Empty string when the store has no description.
 
-    - `instructions: optional string`
+    - `instructions: optional string or null`
 
       Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-    - `mount_path: optional string`
+    - `mount_path: optional string or null`
 
       Filesystem path where the store is mounted in the session container, e.g. /mnt/memory/user-preferences. Derived from the store's name. Output-only.
 
-    - `name: optional string`
+    - `name: optional string or null`
 
       Display name of the memory store, snapshotted at attach time. Later edits to the store's name do not propagate to this resource.
 
@@ -1292,7 +1307,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
     - `url: string`
 
-    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
       - `BetaManagedAgentsBranchCheckout object { name, type }`
 
@@ -1346,7 +1361,7 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
       - `"memory_store"`
 
-    - `access: optional "read_write" or "read_only"`
+    - `access: optional "read_write" or "read_only" or null`
 
       Access mode for an attached memory store.
 
@@ -1358,14 +1373,14 @@ curl https://api.anthropic.com/v1/sessions/$SESSION_ID/resources/$RESOURCE_ID \
 
       Description of the memory store, snapshotted at attach time. Rendered into the agent's system prompt. Empty string when the store has no description.
 
-    - `instructions: optional string`
+    - `instructions: optional string or null`
 
       Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-    - `mount_path: optional string`
+    - `mount_path: optional string or null`
 
       Filesystem path where the store is mounted in the session container, e.g. /mnt/memory/user-preferences. Derived from the store's name. Output-only.
 
-    - `name: optional string`
+    - `name: optional string or null`
 
       Display name of the memory store, snapshotted at attach time. Later edits to the store's name do not propagate to this resource.

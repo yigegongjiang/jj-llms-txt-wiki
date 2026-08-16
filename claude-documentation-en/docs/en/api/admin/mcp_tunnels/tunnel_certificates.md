@@ -1,3 +1,8 @@
+---
+title: Tunnel Certificates
+url: https://platform.claude.com/docs/en/api/admin/mcp_tunnels/tunnel_certificates
+---
+
 # Tunnel Certificates
 
 ## Create Tunnel Certificate
@@ -40,7 +45,7 @@ holds at most two non-archived certificates.
 
   ID of the Tunnel Certificate.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate was archived, or
   `null` if it is not archived.
@@ -49,7 +54,7 @@ holds at most two non-archived certificates.
 
   RFC 3339 datetime string indicating when the certificate was registered.
 
-- `expires_at: string`
+- `expires_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate expires, or
   `null` if it does not expire.
@@ -76,7 +81,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates 
     -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_OAUTH_TOKEN" \
     -d '{
-          "ca_certificate_pem": "-----BEGIN CERTIFICATE-----\\nMIIBexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexa\\n...illustrative placeholder, not a real certificate...\\n-----END CERTIFICATE-----\\n"
+          "ca_certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIBexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexampleEXAMPLEexa\n...illustrative placeholder, not a real certificate...\n-----END CERTIFICATE-----\n"
         }'
 ```
 
@@ -126,7 +131,7 @@ Retrieve a single certificate registered on a tunnel by ID.
 
   ID of the Tunnel Certificate.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate was archived, or
   `null` if it is not archived.
@@ -135,7 +140,7 @@ Retrieve a single certificate registered on a tunnel by ID.
 
   RFC 3339 datetime string indicating when the certificate was registered.
 
-- `expires_at: string`
+- `expires_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate expires, or
   `null` if it does not expire.
@@ -224,7 +229,7 @@ Archived certificates are excluded unless `include_archived` is set.
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -233,7 +238,7 @@ Archived certificates are excluded unless `include_archived` is set.
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -252,7 +257,7 @@ Archived certificates are excluded unless `include_archived` is set.
 
     - `"tunnel_certificate"`
 
-- `next_page: string`
+- `next_page: string or null`
 
   Opaque cursor for the next page, or `null` if there are no more results.
 
@@ -319,7 +324,7 @@ certificate is added.
 
   ID of the Tunnel Certificate.
 
-- `archived_at: string`
+- `archived_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate was archived, or
   `null` if it is not archived.
@@ -328,7 +333,7 @@ certificate is added.
 
   RFC 3339 datetime string indicating when the certificate was registered.
 
-- `expires_at: string`
+- `expires_at: string or null`
 
   RFC 3339 datetime string indicating when the certificate expires, or
   `null` if it does not expire.
@@ -380,7 +385,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -389,7 +394,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -416,7 +421,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -425,7 +430,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -452,7 +457,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -461,7 +466,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.
@@ -488,7 +493,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     ID of the Tunnel Certificate.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate was archived, or
     `null` if it is not archived.
@@ -497,7 +502,7 @@ curl https://api.anthropic.com/v1/organizations/tunnels/$TUNNEL_ID/certificates/
 
     RFC 3339 datetime string indicating when the certificate was registered.
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     RFC 3339 datetime string indicating when the certificate expires, or
     `null` if it does not expire.

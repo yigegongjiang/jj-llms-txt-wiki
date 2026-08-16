@@ -1,3 +1,8 @@
+---
+title: Create Workspace
+url: https://platform.claude.com/docs/en/api/admin/workspaces/create
+---
+
 ## Create Workspace
 
 **post** `/v1/organizations/workspaces`
@@ -18,29 +23,39 @@ Create Workspace
 
   Name of the Workspace.
 
-- `data_residency: optional object { allowed_inference_geos, default_inference_geo, workspace_geo }`
+- `data_residency: optional object { allowed_inference_geos, default_inference_geo, workspace_geo }  or null`
 
   Data residency configuration for the workspace. If omitted, defaults to workspace_geo=`"us"`, allowed_inference_geos=`"unrestricted"`, and default_inference_geo=`"global"`.
 
-  - `allowed_inference_geos: optional array of string or "unrestricted"`
+  - `allowed_inference_geos: optional array of "global" or "us" or "unrestricted" or null`
 
     Permitted inference geo values. Defaults to 'unrestricted' if omitted, which allows all geos. Use the string 'unrestricted' to allow all geos, or a list of specific geos.
 
-    - `array of string`
+    - `array of "global" or "us"`
+
+      - `"global"`
+
+      - `"us"`
 
     - `"unrestricted"`
 
       - `"unrestricted"`
 
-  - `default_inference_geo: optional string`
+  - `default_inference_geo: optional "global" or "us" or null`
 
     Default inference geo applied when requests omit the parameter. Defaults to 'global' if omitted. Must be a member of allowed_inference_geos unless allowed_inference_geos is `"unrestricted"`.
 
-  - `workspace_geo: optional string`
+    - `"global"`
+
+    - `"us"`
+
+  - `workspace_geo: optional "us" or null`
 
     Geographic region for workspace data storage. Immutable after creation. Defaults to 'us' if omitted.
 
-- `external_key_id: optional string`
+    - `"us"`
+
+- `external_key_id: optional string or null`
 
   ID of the customer-managed encryption key (CMEK) configuration to use for this
   Workspace. Setting this field requires CMEK to be enabled for your
@@ -50,7 +65,7 @@ Create Workspace
   detached or replaced. To rotate key material, rotate the underlying key on
   your cloud KMS; the `external_key_id` stays the same.
 
-- `tags: optional map[string]`
+- `tags: optional map[string] or null`
 
   User-defined tags as string key-value pairs. Keys may not begin with `anthropic`.
 
@@ -62,7 +77,7 @@ Create Workspace
 
     ID of the Workspace.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     RFC 3339 datetime string indicating when the Workspace was archived, or `null` if the Workspace is not archived.
 
@@ -105,7 +120,7 @@ Create Workspace
 
     Hex color code representing the Workspace in the Anthropic Console.
 
-  - `external_key_id: string`
+  - `external_key_id: string or null`
 
     ID of the customer-managed encryption key (CMEK) configuration to use for this
     Workspace. Setting this field requires CMEK to be enabled for your

@@ -1,3 +1,8 @@
+---
+title: List Skills
+url: https://platform.claude.com/docs/en/api/beta/skills/list
+---
+
 ## List Skills
 
 **get** `/v1/skills`
@@ -35,7 +40,7 @@ List Skills
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -101,6 +106,8 @@ List Skills
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `data: array of object { id, created_at, display_title, 4 more }`
@@ -117,13 +124,13 @@ List Skills
 
     ISO 8601 timestamp of when the skill was created.
 
-  - `display_title: string`
+  - `display_title: string or null`
 
     Display title for the skill.
 
     This is a human-readable label that is not included in the prompt sent to the model.
 
-  - `latest_version: string`
+  - `latest_version: string or null`
 
     The latest version identifier for the skill.
 
@@ -154,11 +161,11 @@ List Skills
 
   If `true`, there are additional results that can be fetched using the `next_page` token.
 
-- `next_page: string`
+- `next_page: string or null`
 
   Token for fetching the next page of results.
 
-  If `null`, there are no more results available. Pass this value to the `page_token` parameter in the next request to get the next page.
+  If `null`, there are no more results available. Pass this value to the `page` parameter in the next request to get the next page.
 
 ### Example
 

@@ -1,3 +1,8 @@
+---
+title: Rate Limits
+url: https://platform.claude.com/docs/en/api/admin/workspaces/rate_limits
+---
+
 # Rate Limits
 
 ## List Workspace Rate Limits
@@ -40,7 +45,7 @@ are not listed; use `GET /v1/organizations/rate_limits` to see those.
 
 ### Returns
 
-- `data: array of object { group_type, limits, models, type }`
+- `data: array of object { group_type, limits, models, 3 more }`
 
   Rate-limit entries for the workspace, one per group that has at least one override.
 
@@ -64,7 +69,7 @@ are not listed; use `GET /v1/organizations/rate_limits` to see those.
 
     The limiter values overridden for this group in this workspace. Limiter types without a workspace override are omitted and inherit the organization value.
 
-    - `org_limit: number`
+    - `org_limit: number or null`
 
       The organization-level value for the same limiter type, for reference. `null` when the organization has no limit configured for this limiter type.
 
@@ -76,9 +81,13 @@ are not listed; use `GET /v1/organizations/rate_limits` to see those.
 
       The workspace-level override value for this limiter type.
 
-  - `models: array of string`
+  - `models: array of string or null`
 
     Model names this entry's limits apply to, including aliases. `null` when `group_type` is not `"model_group"`.
+
+  - `rate_limit_id: string`
+
+    The `id` of the RateLimit group this override applies to.
 
   - `type: "workspace_rate_limit"`
 
@@ -86,7 +95,11 @@ are not listed; use `GET /v1/organizations/rate_limits` to see those.
 
     - `"workspace_rate_limit"`
 
-- `next_page: string`
+  - `workspace_id: string`
+
+    ID of the Workspace this override applies to.
+
+- `next_page: string or null`
 
   Token to provide in as `page` in the subsequent request to retrieve the next page of data.
 
@@ -115,7 +128,9 @@ curl https://api.anthropic.com/v1/organizations/workspaces/$WORKSPACE_ID/rate_li
       "models": [
         "string"
       ],
-      "type": "workspace_rate_limit"
+      "rate_limit_id": "rate_limit_id",
+      "type": "workspace_rate_limit",
+      "workspace_id": "workspace_id"
     }
   ],
   "next_page": "next_page"
@@ -128,7 +143,7 @@ curl https://api.anthropic.com/v1/organizations/workspaces/$WORKSPACE_ID/rate_li
 
 - `RateLimitListResponse object { data, next_page }`
 
-  - `data: array of object { group_type, limits, models, type }`
+  - `data: array of object { group_type, limits, models, 3 more }`
 
     Rate-limit entries for the workspace, one per group that has at least one override.
 
@@ -152,7 +167,7 @@ curl https://api.anthropic.com/v1/organizations/workspaces/$WORKSPACE_ID/rate_li
 
       The limiter values overridden for this group in this workspace. Limiter types without a workspace override are omitted and inherit the organization value.
 
-      - `org_limit: number`
+      - `org_limit: number or null`
 
         The organization-level value for the same limiter type, for reference. `null` when the organization has no limit configured for this limiter type.
 
@@ -164,9 +179,13 @@ curl https://api.anthropic.com/v1/organizations/workspaces/$WORKSPACE_ID/rate_li
 
         The workspace-level override value for this limiter type.
 
-    - `models: array of string`
+    - `models: array of string or null`
 
       Model names this entry's limits apply to, including aliases. `null` when `group_type` is not `"model_group"`.
+
+    - `rate_limit_id: string`
+
+      The `id` of the RateLimit group this override applies to.
 
     - `type: "workspace_rate_limit"`
 
@@ -174,6 +193,10 @@ curl https://api.anthropic.com/v1/organizations/workspaces/$WORKSPACE_ID/rate_li
 
       - `"workspace_rate_limit"`
 
-  - `next_page: string`
+    - `workspace_id: string`
+
+      ID of the Workspace this override applies to.
+
+  - `next_page: string or null`
 
     Token to provide in as `page` in the subsequent request to retrieve the next page of data.

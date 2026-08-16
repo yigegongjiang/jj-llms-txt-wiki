@@ -1,3 +1,8 @@
+---
+title: Redact a memory version
+url: https://platform.claude.com/docs/en/api/beta/memory_stores/memory_versions/redact
+---
+
 ## Redact a memory version
 
 **post** `/v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact`
@@ -18,7 +23,7 @@ Redact a memory version
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -84,6 +89,8 @@ Redact a memory version
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `BetaManagedAgentsMemoryVersion object { id, created_at, memory_id, 10 more }`
@@ -120,15 +127,15 @@ Redact a memory version
 
     - `"memory_version"`
 
-  - `content: optional string`
+  - `content: optional string or null`
 
     The memory's UTF-8 text content as of this version. `null` when `view=basic`, when `operation` is `deleted`, or when `redacted_at` is set.
 
-  - `content_sha256: optional string`
+  - `content_sha256: optional string or null`
 
     Lowercase hex SHA-256 digest of `content` as of this version (64 characters). `null` when `redacted_at` is set or `operation` is `deleted`. Populated regardless of `view` otherwise.
 
-  - `content_size_bytes: optional number`
+  - `content_size_bytes: optional number or null`
 
     Size of `content` in bytes as of this version. `null` when `redacted_at` is set or `operation` is `deleted`. Populated regardless of `view` otherwise.
 
@@ -172,11 +179,11 @@ Redact a memory version
 
         ID of the user who performed the write (a `user_...` value).
 
-  - `path: optional string`
+  - `path: optional string or null`
 
     The memory's path at the time of this write. `null` if and only if `redacted_at` is set.
 
-  - `redacted_at: optional string`
+  - `redacted_at: optional string or null`
 
     A timestamp in RFC 3339 format
 

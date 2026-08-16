@@ -1,3 +1,8 @@
+---
+title: Get Spend Limit
+url: https://platform.claude.com/docs/en/api/admin/spend_limits/retrieve
+---
+
 ## Get Spend Limit
 
 **get** `/v1/organizations/spend_limits/{spend_limit_id}`
@@ -16,11 +21,15 @@ Retrieve a spend limit by ID.
 
   - `id: string`
 
-  - `amount: string`
+  - `amount: string or null`
+
+    Limit amount as a non-negative integer decimal string in the minor unit of `currency` (cents for USD): "50000" is $500.00. `null` means no numeric cap is configured at this scope — see the effective report for whether a limit applies.
 
   - `created_at: string`
 
   - `currency: string`
+
+    ISO 4217 code of the organization's billing currency; the unit for `amount`.
 
   - `period: "daily" or "monthly" or "weekly"`
 

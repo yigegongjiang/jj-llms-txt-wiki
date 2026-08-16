@@ -1,3 +1,8 @@
+---
+title: List User Profiles
+url: https://platform.claude.com/docs/en/api/beta/user_profiles/list
+---
+
 ## List User Profiles
 
 **get** `/v1/user_profiles`
@@ -30,7 +35,7 @@ List User Profiles
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -96,6 +101,8 @@ List User Profiles
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `data: array of BetaUserProfile`
@@ -148,15 +155,15 @@ List User Profiles
 
     A timestamp in RFC 3339 format
 
-  - `external_id: optional string`
+  - `external_id: optional string or null`
 
     Platform's own identifier for this user. Not enforced unique.
 
-  - `name: optional string`
+  - `name: optional string or null`
 
     Display name of the entity this profile represents. For `resold` this is the resold-to company's name.
 
-- `next_page: string`
+- `next_page: string or null`
 
   Cursor for the next page, or `null` when there are no more results.
 

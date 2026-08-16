@@ -1,3 +1,8 @@
+---
+title: Get Tunnel Certificate
+url: https://platform.claude.com/docs/en/api/beta/tunnels/certificates/retrieve
+---
+
 ## Get Tunnel Certificate
 
 **get** `/v1/tunnels/{tunnel_id}/certificates/{certificate_id}`
@@ -20,7 +25,7 @@ Fetches a tunnel certificate by ID.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -86,6 +91,8 @@ Fetches a tunnel certificate by ID.
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `BetaTunnelCertificate object { id, archived_at, created_at, 4 more }`
@@ -96,7 +103,7 @@ Fetches a tunnel certificate by ID.
 
     Unique identifier for the certificate, prefixed with `tcrt_`.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     A timestamp in RFC 3339 format
 
@@ -104,7 +111,7 @@ Fetches a tunnel certificate by ID.
 
     A timestamp in RFC 3339 format
 
-  - `expires_at: string`
+  - `expires_at: string or null`
 
     A timestamp in RFC 3339 format
 

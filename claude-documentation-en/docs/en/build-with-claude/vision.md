@@ -1,10 +1,10 @@
-# Vision
-
-Claude's vision capabilities allow it to understand and analyze images, opening up exciting possibilities for multimodal interaction.
-
+---
+title: Vision
+url: https://platform.claude.com/docs/en/build-with-claude/vision
+description: Claude's vision capabilities allow it to understand and analyze images, opening up exciting possibilities for multimodal interaction.
 ---
 
-This guide describes how to send images to Claude, the limits and costs that apply, and where to find guidance for [coordinate-based workflows](/docs/en/build-with-claude/vision-coordinates).
+This guide describes how to send images to Claude, the limits and costs that apply, and where to find guidance for [coordinate-based workflows](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates).
 
 ***
 
@@ -13,21 +13,21 @@ This guide describes how to send images to Claude, the limits and costs that app
 Use Claude's vision capabilities through:
 
 * [claude.ai](https://claude.ai/). Upload an image like you would a file, or drag and drop an image directly into the chat window.
-* The [Workbench](/playground) in the Claude Console. Add images directly to any User message block.
+* The [Workbench](https://platform.claude.com/playground) in the Claude Console. Add images directly to any User message block.
 * API request. See the following examples.
 
 On the API, provide images to Claude as `image` content blocks using one of three source types:
 
 1. A base64-encoded image embedded in the request body
 2. A URL reference to an image hosted online
-3. A `file_id` returned by the [Files API](/docs/en/build-with-claude/files) (upload once, reference many times)
+3. A `file_id` returned by the [Files API](https://platform.claude.com/docs/en/build-with-claude/files) (upload once, reference many times)
 
 <Note>
   On Amazon Bedrock and Google Cloud, only base64-encoded sources are currently available.
 </Note>
 
 <Tip>
-  Just as [placing long documents before your query](/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#long-context-prompting) improves results in text prompts, Claude works best when images come before text. Images placed after text or interpolated with text still perform well, but if your use case allows it, prefer an image-then-text structure.
+  Just as [placing long documents before your query](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#long-context-prompting) improves results in text prompts, Claude works best when images come before text. Images placed after text or interpolated with text still perform well, but if your use case allows it, prefer an image-then-text structure.
 </Tip>
 
 ### Base64-encoded image example
@@ -66,8 +66,8 @@ On the API, provide images to Claude as `image` content blocks using one of thre
   ```
 
   ```bash CLI
-  curl -sSo ./image.jpg \
-    https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg
+  curl -sSo ./vision-example.jpg \
+    https://platform.claude.com/docs/images/vision-example.jpg
 
   ant messages create <<'YAML'
   model: claude-opus-5
@@ -79,7 +79,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
           source:
             type: base64
             media_type: image/jpeg
-            data: "@./image.jpg"
+            data: "@./vision-example.jpg"
         - type: text
           text: Describe this image.
   YAML
@@ -114,9 +114,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
   ```
 
   ```typescript TypeScript
-  const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY
-  });
+  const anthropic = new Anthropic();
 
   const message = await anthropic.messages.create({
     model: "claude-opus-5",
@@ -205,14 +203,15 @@ On the API, provide images to Claude as `image` content blocks using one of thre
 
   ```java Java
   AnthropicClient client = AnthropicOkHttpClient.fromEnv();
-  String imageData = ""; // Base64-encoded image data as string
+  String imageData =
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC";
 
   List<ContentBlockParam> contentBlockParams = List.of(
     ContentBlockParam.ofImage(
       ImageBlockParam.builder()
         .source(
           Base64ImageSource.builder()
-            .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
+            .mediaType(Base64ImageSource.MediaType.IMAGE_PNG)
             .data(imageData)
             .build()
         )
@@ -230,7 +229,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
         .build()
     );
 
-  System.out.println(message);
+  IO.println(message);
   ```
 
   ```php PHP
@@ -311,7 +310,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
               "type": "image",
               "source": {
                 "type": "url",
-                "url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+                "url": "https://platform.claude.com/docs/images/vision-example.jpg"
               }
             },
             {
@@ -334,7 +333,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
         - type: image
           source:
             type: url
-            url: https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg
+            url: https://platform.claude.com/docs/images/vision-example.jpg
         - type: text
           text: Describe this image.
   YAML
@@ -353,7 +352,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
                       "type": "image",
                       "source": {
                           "type": "url",
-                          "url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg",
+                          "url": "https://platform.claude.com/docs/images/vision-example.jpg",
                       },
                   },
                   {"type": "text", "text": "Describe this image."},
@@ -365,9 +364,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
   ```
 
   ```typescript TypeScript
-  const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY
-  });
+  const anthropic = new Anthropic();
 
   const message = await anthropic.messages.create({
     model: "claude-opus-5",
@@ -380,7 +377,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
             type: "image",
             source: {
               type: "url",
-              url: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+              url: "https://platform.claude.com/docs/images/vision-example.jpg"
             }
           },
           {
@@ -416,7 +413,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
                   new ContentBlockParam(new ImageBlockParam(
                       new ImageBlockParamSource(new UrlImageSource()
                       {
-                          Url = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg",
+                          Url = "https://platform.claude.com/docs/images/vision-example.jpg",
                       })
                   )),
                   new ContentBlockParam(new TextBlockParam("Describe this image.")),
@@ -437,7 +434,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
   	Messages: []anthropic.MessageParam{
   		anthropic.NewUserMessage(
   			anthropic.NewImageBlock(anthropic.URLImageSourceParam{
-  				URL: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg",
+  				URL: "https://platform.claude.com/docs/images/vision-example.jpg",
   			}),
   			anthropic.NewTextBlock("Describe this image."),
   		),
@@ -458,9 +455,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
       ImageBlockParam.builder()
         .source(
           UrlImageSource.builder()
-            .url(
-              "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
-            )
+            .url("https://platform.claude.com/docs/images/vision-example.jpg")
             .build()
         )
         .build()
@@ -492,7 +487,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
                       'type' => 'image',
                       'source' => [
                           'type' => 'url',
-                          'url' => 'https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg',
+                          'url' => 'https://platform.claude.com/docs/images/vision-example.jpg',
                       ],
                   ],
                   ['type' => 'text', 'text' => 'Describe this image.'],
@@ -519,7 +514,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
             type: "image",
             source: {
               type: "url",
-              url: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+              url: "https://platform.claude.com/docs/images/vision-example.jpg"
             }
           },
           { type: "text", text: "Describe this image." }
@@ -534,7 +529,7 @@ On the API, provide images to Claude as `image` content blocks using one of thre
 
 ### Files API image example
 
-For images you'll use repeatedly or when you want to avoid encoding overhead, use the [Files API](/docs/en/build-with-claude/files). Upload the image once, then reference the returned `file_id` in subsequent messages instead of resending base64 data.
+For images you'll use repeatedly or when you want to avoid encoding overhead, use the [Files API](https://platform.claude.com/docs/en/build-with-claude/files). Upload the image once, then reference the returned `file_id` in subsequent messages instead of resending base64 data.
 
 <Tip>
   In multi-turn conversations and agentic workflows, each request resends the full conversation history. If images are base64-encoded, the full image bytes are included in the payload on every turn, which can significantly increase request size and latency as the conversation grows. Uploading images to the Files API and referencing them by `file_id` keeps request payloads small regardless of how many images accumulate in the conversation history.
@@ -543,11 +538,11 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
 <CodeGroup>
   ```bash cURL
   # First, upload your image to the Files API
-  curl -X POST https://api.anthropic.com/v1/files \
+  FILE_ID=$(curl -sS -X POST https://api.anthropic.com/v1/files \
     -H "x-api-key: $ANTHROPIC_API_KEY" \
     -H "anthropic-version: 2023-06-01" \
     -H "anthropic-beta: files-api-2025-04-14" \
-    -F "file=@image.jpg"
+    -F "file=@vision-example.jpg" | jq -r '.id')
 
   # Then use the returned file_id in your message
   curl https://api.anthropic.com/v1/messages \
@@ -555,37 +550,39 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
     -H "anthropic-version: 2023-06-01" \
     -H "anthropic-beta: files-api-2025-04-14" \
     -H "content-type: application/json" \
-    -d '{
-      "model": "claude-opus-5",
-      "max_tokens": 1024,
-      "messages": [
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "image",
-              "source": {
-                "type": "file",
-                "file_id": "file_abc123"
-              }
-            },
-            {
-              "type": "text",
-              "text": "Describe this image."
+    -d @- <<EOF
+  {
+    "model": "claude-opus-5",
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "image",
+            "source": {
+              "type": "file",
+              "file_id": "$FILE_ID"
             }
-          ]
-        }
-      ]
-    }'
+          },
+          {
+            "type": "text",
+            "text": "Describe this image."
+          }
+        ]
+      }
+    ]
+  }
+  EOF
   ```
 
   ```bash CLI
-  curl -sSo image.jpg \
-    https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg
+  curl -sSo vision-example.jpg \
+    https://platform.claude.com/docs/images/vision-example.jpg
 
   # First, upload your image to the Files API
   FILE_ID=$(ant beta:files upload \
-    --file ./image.jpg \
+    --file ./vision-example.jpg \
     --transform id --raw-output)
 
   # Then use the returned file_id in your message
@@ -610,8 +607,8 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
   client = anthropic.Anthropic()
 
   # Upload the image file
-  with open("image.jpg", "rb") as f:
-      file_upload = client.beta.files.upload(file=("image.jpg", f, "image/jpeg"))
+  with open("vision-example.jpg", "rb") as f:
+      file_upload = client.beta.files.upload(file=("vision-example.jpg", f, "image/jpeg"))
 
   # Use the uploaded file in a message
   message = client.beta.messages.create(
@@ -643,7 +640,9 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
 
   // Upload the image file
   const fileUpload = await anthropic.beta.files.upload({
-    file: await toFile(fs.createReadStream("image.jpg"), undefined, { type: "image/jpeg" })
+    file: await toFile(fs.createReadStream("vision-example.jpg"), undefined, {
+      type: "image/jpeg"
+    })
   });
 
   // Use the uploaded file in a message
@@ -681,7 +680,7 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
 
   // Upload the image file
   var fileUpload = await client.Beta.Files.Upload(
-      new FileUploadParams { File = File.OpenRead("image.jpg") });
+      new FileUploadParams { File = File.OpenRead("vision-example.jpg") });
 
   // Use the uploaded file in a message
   var response = await client.Beta.Messages.Create(
@@ -715,7 +714,7 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
   client := anthropic.NewClient()
 
   // Upload the image file
-  file, err := os.Open("image.jpg")
+  file, err := os.Open("vision-example.jpg")
   if err != nil {
   	log.Fatal(err)
   }
@@ -762,7 +761,9 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
         .beta()
         .files()
         .upload(
-          FileUploadParams.builder().file(Files.newInputStream(Path.of("image.jpg"))).build()
+          FileUploadParams.builder()
+            .file(Files.newInputStream(Path.of("vision-example.jpg")))
+            .build()
         );
 
       // Use the uploaded file in a message
@@ -790,7 +791,7 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
 
   // Upload the image file
   $fileUpload = $client->beta->files->upload(
-      file: fopen('image.jpg', 'r'),
+      file: fopen('vision-example.jpg', 'r'),
   );
 
   // Use the uploaded file in a message
@@ -820,7 +821,7 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
 
   # Upload the image file
   file_upload = client.beta.files.upload(
-    file: File.open("image.jpg", "rb")
+    file: File.open("vision-example.jpg", "rb")
   )
 
   # Use the uploaded file in a message
@@ -846,7 +847,7 @@ For images you'll use repeatedly or when you want to avoid encoding overhead, us
   ```
 </CodeGroup>
 
-See [Messages API examples](/docs/en/api/messages/create) for more example code and parameter details.
+See [Messages API examples](https://platform.claude.com/docs/en/api/messages/create) for more example code and parameter details.
 
 ### Multiple images
 
@@ -964,9 +965,7 @@ You can include multiple images in a single request, and Claude analyzes them jo
   ```
 
   ```typescript TypeScript
-  const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY
-  });
+  const anthropic = new Anthropic();
 
   const image1Data =
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC";
@@ -1237,9 +1236,9 @@ The maximum size per image is:
 * 10 MB on [claude.ai](https://claude.ai/).
 
 <Note>
-  Although the API supports up to 600 images per request, [request size limits](/docs/en/api/overview#request-size-limits) (32 MB for standard endpoints; lower on some partner-operated platforms, for example, Amazon Bedrock and Google Cloud) can be reached first. For many images, consider uploading with the [Files API](#files-api-image-example) and referencing by `file_id` to keep request payloads small.
+  Although the API supports up to 600 images per request, [request size limits](https://platform.claude.com/docs/en/api/overview#request-size-limits) (32 MB for standard endpoints; lower on some partner-operated platforms, for example, Amazon Bedrock and Google Cloud) can be reached first. For many images, consider uploading with the [Files API](https://platform.claude.com/docs/en/build-with-claude/vision#files-api-image-example) and referencing by `file_id` to keep request payloads small.
 
-  Even when using the Files API, requests with many large images can fail before reaching the 600-image count. Reduce image dimensions or file sizes (for example, by downsampling) before uploading (see [Resolution and token cost](#evaluate-image-size)).
+  Even when using the Files API, requests with many large images can fail before reaching the 600-image count. Reduce image dimensions or file sizes (for example, by downsampling) before uploading (see [Resolution and token cost](https://platform.claude.com/docs/en/build-with-claude/vision#evaluate-image-size)).
 </Note>
 
 ### Supported formats
@@ -1250,7 +1249,7 @@ Claude supports JPEG, PNG, GIF, and WebP images (`image/jpeg`, `image/png`, `ima
 
 Claude views images in patches instead of pixels. Each patch is a 28×28-pixel block of the image, referred to as a visual token. An image, therefore, costs `⌈width / 28⌉ × ⌈height / 28⌉` visual tokens.
 
-Each model has a maximum native image resolution, expressed as a long-edge limit and a visual-token limit. Images larger than either limit are downscaled before processing; see [How Claude resizes and pads images](/docs/en/build-with-claude/vision-coordinates#how-claude-resizes-and-pads-images) for the exact rule.
+Each model has a maximum native image resolution, expressed as a long-edge limit and a visual-token limit. Images larger than either limit are downscaled before processing; see [How Claude resizes and pads images](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates#how-claude-resizes-and-pads-images) for the exact rule.
 
 | Resolution tier | Models                      | Max long edge | Max visual tokens |
 | --------------- | --------------------------- | ------------- | ----------------- |
@@ -1270,11 +1269,11 @@ The following table shows the downsized resolution and visual-token cost for sev
 | 2000x1500 px (3 megapixels)    | 1269x952 px                 | 1564                  | Not resized                        | 3888                         |
 | 3840x2160 px (8.29 megapixels) | 1456x819 px                 | 1560                  | 2576x1449 px                       | 4784                         |
 
-When an image is downsized, Claude scales it to the largest size that fits the tier's limits while preserving its aspect ratio. This caps the token cost. For the precise rule and a reference implementation, see [How Claude resizes and pads images](/docs/en/build-with-claude/vision-coordinates#how-claude-resizes-and-pads-images).
+When an image is downsized, Claude scales it to the largest size that fits the tier's limits while preserving its aspect ratio. This caps the token cost. For the precise rule and a reference implementation, see [How Claude resizes and pads images](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates#how-claude-resizes-and-pads-images).
 
-To estimate cost, multiply the token count by the [per-token price of the model](https://claude.com/pricing) you're using. For example, at Claude Haiku 4.5's $1 per million input tokens (standard tier), the 1000×1000 image costs about $1.30 per thousand images. At Claude Opus 5's $5 per million (high-resolution tier), the same image costs about $6.48 per thousand and the 4K image about $23.92 per thousand.
+To estimate cost, multiply the token count by the [per-token price of the model](https://claude.com/pricing) you're using. For example, at Claude Haiku 4.5's $1 USD per million input tokens (standard tier), the 1000×1000 image costs about $1.30 USD per thousand images. At Claude Opus 5's $5 USD per million (high-resolution tier), the same image costs about $6.48 USD per thousand and the 4K image about $23.92 USD per thousand.
 
-High-resolution images can use up to roughly three times more visual tokens than the same image on a standard-tier model. If you don't need the additional fidelity that high resolution provides for computer use, screenshot understanding, and dense documents, downsample images before sending to control token costs. To minimize latency and to simplify [coordinate-based workflows](/docs/en/build-with-claude/vision-coordinates), prefer resizing images before uploading them.
+High-resolution images can use up to roughly three times more visual tokens than the same image on a standard-tier model. If you don't need the additional fidelity that high resolution provides for computer use, screenshot understanding, and dense documents, downsample images before sending to control token costs. To minimize latency and to simplify [coordinate-based workflows](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates), prefer resizing images before uploading them.
 
 ### Image quality guidance
 
@@ -1282,14 +1281,14 @@ When providing images to Claude, keep the following in mind for best results:
 
 * **Image clarity:** Ensure images are clear and not too blurry or pixelated.
 * **Text:** If the image contains important text, make sure it's legible and not too small. Avoid cropping out key visual context solely to enlarge the text.
-* **Resizing:** Take into account that your image might be resized if it is too large (see [Resolution and token cost](#evaluate-image-size)); this might, for example, make text less legible. Consider pre-resizing your images, cropping them, or both.
+* **Resizing:** Take into account that your image might be resized if it is too large (see [Resolution and token cost](https://platform.claude.com/docs/en/build-with-claude/vision#evaluate-image-size)); this might, for example, make text less legible. Consider pre-resizing your images, cropping them, or both.
 * **Image compression:** Compressing images before sending them, using a lossy format such as JPEG or WebP (lossy mode), can reduce latency by reducing the size of requests. However, this can introduce artifacts that are detrimental to model performance, especially when multiple compression passes are applied. For example, heavy JPEG compression can make text difficult to read. Confirm your compression settings are appropriate for the task by inspecting the actual images sent to the API.
 
 ***
 
 ## Coordinates and bounding boxes
 
-For bounding boxes, points, and pixel coordinates, see [Coordinates and bounding boxes](/docs/en/build-with-claude/vision-coordinates). Claude returns absolute pixel coordinates relative to the image it sees after resizing; that guide covers how Claude resizes and pads images and how to pre-resize or rescale so coordinates line up with your original image.
+For bounding boxes, points, and pixel coordinates, see [Coordinates and bounding boxes](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates). Claude returns absolute pixel coordinates relative to the image it sees after resizing; that guide covers how Claude resizes and pads images and how to pre-resize or rescale so coordinates line up with your original image.
 
 ***
 
@@ -1299,7 +1298,7 @@ Although Claude's image understanding capabilities are cutting-edge, there are s
 
 * **People identification:** Claude [cannot be used](https://www.anthropic.com/legal/aup) to name people in images and refuses to do so.
 * **Accuracy:** Claude might hallucinate or make mistakes when interpreting low-quality, rotated, or very small images under 200 pixels.
-* **Spatial reasoning:** Claude's coordinate and localization outputs are approximate. Follow the guidance in [Coordinates and bounding boxes](/docs/en/build-with-claude/vision-coordinates) and verify outputs before relying on them.
+* **Spatial reasoning:** Claude's coordinate and localization outputs are approximate. Follow the guidance in [Coordinates and bounding boxes](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates) and verify outputs before relying on them.
 * **Counting:** Claude can give approximate counts of objects in an image but might not always be precisely accurate, especially with large numbers of small objects.
 * **AI-generated images:** Claude cannot determine whether an image is AI-generated and might be incorrect if asked. Do not rely on it to detect fake or synthetic images.
 * **Inappropriate content:** Claude does not process inappropriate or explicit images that violate the [Acceptable Use Policy](https://www.anthropic.com/legal/aup).
@@ -1313,19 +1312,19 @@ Always carefully review and verify Claude's image interpretations, especially fo
 
 <AccordionGroup>
   <Accordion title="What image file types does Claude support?">
-    JPEG, PNG, GIF, and WebP. See [Supported formats](#supported-formats).
+    JPEG, PNG, GIF, and WebP. See [Supported formats](https://platform.claude.com/docs/en/build-with-claude/vision#supported-formats).
   </Accordion>
 
   <Accordion title="Can Claude read image URLs?">
-    Yes. Use the `url` source type instead of `base64` in the `image` content block. See the [URL-based image example](#url-based-image-example).
+    Yes. Use the `url` source type instead of `base64` in the `image` content block. See the [URL-based image example](https://platform.claude.com/docs/en/build-with-claude/vision#url-based-image-example).
   </Accordion>
 
   <Accordion title="Is there a limit to the image file size I can upload?">
-    Yes. See [Request limits](#request-limits) for per-image and overall request size limits across the Claude API, Amazon Bedrock, Google Cloud, and claude.ai.
+    Yes. See [Request limits](https://platform.claude.com/docs/en/build-with-claude/vision#request-limits) for per-image and overall request size limits across the Claude API, Amazon Bedrock, Google Cloud, and claude.ai.
   </Accordion>
 
   <Accordion title="How many images can I include in one request?">
-    Up to 600 per API request (100 for models with a 200k-token context window) and 20 per turn on claude.ai. See [Request limits](#request-limits) for details and the lower per-image dimension limit that applies above 20 images.
+    Up to 600 per API request (100 for models with a 200k-token context window) and 20 per turn on claude.ai. See [Request limits](https://platform.claude.com/docs/en/build-with-claude/vision#request-limits) for details and the lower per-image dimension limit that applies above 20 images.
   </Accordion>
 
   <Accordion title="Does Claude read image metadata?">
@@ -1364,7 +1363,7 @@ Always carefully review and verify Claude's image interpretations, especially fo
     Get tips and best-practice techniques for tasks such as interpreting charts and extracting content from forms.
   </Card>
 
-  <Card title="API reference" icon="code" href="/docs/en/api/messages/create">
+  <Card title="API reference" icon="code" href="https://platform.claude.com/docs/en/api/messages/create">
     See the Messages API documentation, including example API calls involving images.
   </Card>
 </CardGroup>

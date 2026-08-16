@@ -1,3 +1,8 @@
+---
+title: List project collaborators
+url: https://platform.claude.com/docs/en/api/compliance/apps/projects/collaborators/list
+---
+
 ## List project collaborators
 
 **get** `/v1/compliance/apps/projects/{project_id}/collaborators`
@@ -61,7 +66,7 @@ role.
 
       - `"user"`
 
-    - `user_id: string`
+    - `user_id: string or null`
 
       Identifier of the user granted access (tagged ID), or null if their account has since been deleted
 
@@ -159,7 +164,7 @@ role.
 
   Whether more records exist beyond the current result set
 
-- `next_page: string`
+- `next_page: string or null`
 
   To get the next page, use the 'next_page' from the current response as the 'page' in your next request
 

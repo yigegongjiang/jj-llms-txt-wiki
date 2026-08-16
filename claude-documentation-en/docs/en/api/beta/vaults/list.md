@@ -1,3 +1,8 @@
+---
+title: List Vaults
+url: https://platform.claude.com/docs/en/api/beta/vaults/list
+---
+
 ## List Vaults
 
 **get** `/v1/vaults`
@@ -26,7 +31,7 @@ List Vaults
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -92,6 +97,8 @@ List Vaults
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `data: optional array of BetaManagedAgentsVault`
@@ -102,7 +109,7 @@ List Vaults
 
     Unique identifier for the vault.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     A timestamp in RFC 3339 format
 
@@ -126,7 +133,7 @@ List Vaults
 
     A timestamp in RFC 3339 format
 
-- `next_page: optional string`
+- `next_page: optional string or null`
 
   Pagination token for the next page, or null if no more results.
 

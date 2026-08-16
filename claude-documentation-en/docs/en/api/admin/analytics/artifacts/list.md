@@ -1,3 +1,8 @@
+---
+title: Get Artifact Activity
+url: https://platform.claude.com/docs/en/api/admin/analytics/artifacts/list
+---
+
 ## Get Artifact Activity
 
 **get** `/v1/organizations/analytics/artifacts`
@@ -5,8 +10,9 @@
 Get artifact-creation activity for a given day, broken out by MIME type.
 
 Returns the full (artifact_type, is_shared) cube for the organization;
-`next_page` is null except for grouped queries, which paginate. Requires
-an API key with the `read:analytics` scope.
+`next_page` is null except for grouped queries, which paginate. The cube
+can be broken out per member or per RBAC group via group_by[], and scoped
+via filter[]. Requires an API key with the `read:analytics` scope.
 
 ### Query Parameters
 
@@ -16,11 +22,15 @@ an API key with the `read:analytics` scope.
 
 - `filter: optional array of string`
 
-  Filters as 'dimension:value', e.g. filter[]=rbac_group_id:<id>. Repeat the param for OR within a dimension and across dimensions for AND. Unsupported dimensions return 400. rbac_group_id accepts the tagged id (rbac_group_..., as emitted in responses and by the spend-limits API) or a bare group UUID, and matches users who held the group at any point during each covered UTC day (time-of-usage attribution). At most 100 entries.
+  Filters as 'dimension:value', e.g. filter[]=rbac_group_id:<id>. Repeat the param for OR within a dimension and across dimensions for AND. Supported dimensions on this endpoint: artifact_type, is_shared, rbac_group_id, user_id. Value forms: artifact_type is a canonical artifact MIME type (e.g. text/markdown) or 'other'; is_shared is 'true' or 'false'; rbac_group_id takes the tagged id (rbac_group_..., as emitted in responses and by the spend-limits API) or a bare group UUID, and matches users who held the group at any point during each covered UTC day (time-of-usage attribution); user_id takes a tagged user id (user_...), as emitted in responses. An unsupported dimension returns 400. At most 100 entries.
 
-- `group_by: optional array of string`
+- `group_by: optional array of "rbac_group_id" or "user_id"`
 
   Dimensions to break results out by: user_id and/or rbac_group_id. The ungrouped artifact-type cube is finite and returned in full; grouped queries multiply the cube and paginate via next_page. rbac_group_id attributes a user to every group they held at any point during the requested UTC day, so grouped rows are not an exclusive partition. At most 100 entries.
+
+  - `"rbac_group_id"`
+
+  - `"user_id"`
 
 - `limit: optional number`
 
@@ -37,8 +47,8 @@ an API key with the `read:analytics` scope.
   Response for GET /v1/organizations/analytics/artifacts.
 
   `next_page` is null on ungrouped queries — the artifact-type cube is
-  finite and returned in full. Grouped queries (group_by[] on user_id /
-  rbac_group_id) multiply the cube and paginate like the other analytics
+  finite and returned in full. Grouped queries (`group_by[]` on `user_id` /
+  `rbac_group_id`) multiply the cube and paginate like the other analytics
   list endpoints.
 
   - `data: array of object { artifact_type, artifacts_created_count, distinct_user_count, 6 more }`
@@ -63,23 +73,23 @@ an API key with the `read:analytics` scope.
 
       Number of those artifacts that have been published
 
-    - `product: optional string`
+    - `product: optional string or null`
 
-      Product that produced this row's activity: one of chat, claude_code, cowork, or office_agent (the canonical Cost & Usage product naming; an office_agent row's per-surface breakdown is in its office_metrics). On /plugins only cowork and claude_code occur (the only surfaces with plugin attribution); /artifacts and /apps/chat/projects do not support the product dimension (a product group_by[] or filter[] there is rejected). Present only when the request grouped by product.
+      Product that produced this row's activity: one of chat, claude_code, cowork, or office_agent (the canonical Cost & Usage product naming; an office_agent row's per-surface breakdown is in its office_metrics). On /plugins only cowork and claude_code occur (the only surfaces with plugin attribution); /artifacts and /apps/chat/projects do not support the product dimension (a product `group_by[]` or `filter[]` there is rejected). Present only when the request grouped by product.
 
-    - `rbac_group_id: optional string`
+    - `rbac_group_id: optional string or null`
 
-      Tagged RBAC group identifier (rbac_group_...), matching the spend-limits API spelling. Present only when the request grouped by rbac_group_id.
+      Tagged RBAC group identifier (`rbac_group_...`), matching the spend-limits API spelling. Present only when the request grouped by `rbac_group_id`.
 
-    - `rbac_group_name: optional string`
+    - `rbac_group_name: optional string or null`
 
-      Resolved RBAC group display name, alongside rbac_group_id when name resolution is available. Null if the group has been deleted or its name could not be resolved; rbac_group_id remains the stable key.
+      Resolved RBAC group display name, alongside `rbac_group_id` when name resolution is available. Null if the group has been deleted or its name could not be resolved; `rbac_group_id` remains the stable key.
 
-    - `user_id: optional string`
+    - `user_id: optional string or null`
 
-      Tagged user identifier (e.g. user_...). Present only when the request grouped by user_id.
+      Tagged user identifier (e.g. `user_...`). Present only when the request grouped by `user_id`.
 
-  - `next_page: optional string`
+  - `next_page: optional string or null`
 
     Cursor for the next page of a grouped query; always null for the ungrouped artifact-type cube, which is returned in full.
 

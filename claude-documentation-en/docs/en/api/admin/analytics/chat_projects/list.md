@@ -1,3 +1,8 @@
+---
+title: Get Chat Project Usage
+url: https://platform.claude.com/docs/en/api/admin/analytics/chat_projects/list
+---
+
 ## Get Chat Project Usage
 
 **get** `/v1/organizations/analytics/apps/chat/projects`
@@ -5,8 +10,10 @@
 Get per-project activity for a given day, with cursor-based pagination.
 
 Returns activity metrics for each project in the organization, sorted by
-project ID. Available to organizations on a Claude Enterprise plan.
-Requires an API key with the `read:analytics` scope.
+project ID. Use group_by[] to break projects out per member or per RBAC
+group, and filter[] to scope results; the parameter descriptions list the
+supported dimensions. Available to organizations on a Claude Enterprise
+plan. Requires an API key with the `read:analytics` scope.
 
 ### Query Parameters
 
@@ -20,11 +27,15 @@ Requires an API key with the `read:analytics` scope.
 
 - `filter: optional array of string`
 
-  Filters as 'dimension:value', e.g. filter[]=rbac_group_id:<id>. Repeat the param for OR within a dimension and across dimensions for AND. Unsupported dimensions return 400. rbac_group_id accepts the tagged id (rbac_group_..., as emitted in responses and by the spend-limits API) or a bare group UUID, and matches users who held the group at any point during each covered UTC day (time-of-usage attribution). At most 100 entries.
+  Filters as 'dimension:value', e.g. filter[]=rbac_group_id:<id>. Repeat the param for OR within a dimension and across dimensions for AND. Supported dimensions on this endpoint: project_id, rbac_group_id, user_id. Value forms: project_id takes a tagged project id (claude_proj_...); rbac_group_id takes the tagged id (rbac_group_..., as emitted in responses and by the spend-limits API) or a bare group UUID, and matches users who held the group at any point during each covered UTC day (time-of-usage attribution); user_id takes a tagged user id (user_...), as emitted in responses. An unsupported dimension returns 400. At most 100 entries.
 
-- `group_by: optional array of string`
+- `group_by: optional array of "rbac_group_id" or "user_id"`
 
-  Dimensions to break results out by, e.g. group_by[]=rbac_group_id. Supported dimensions vary by endpoint; an unsupported dimension returns 400. Grouped responses paginate like ungrouped ones via next_page. rbac_group_id attributes a user to every group they held at any point during each covered UTC day, so grouped rows are not an exclusive partition and can sum above org-level totals. At most 100 entries.
+  Dimensions to break results out by (e.g. group_by[]=user_id). Supported on this endpoint: rbac_group_id, user_id. Grouped rows carry the requested dimension values as additional fields and paginate like ungrouped responses via next_page; an unsupported dimension returns 400. rbac_group_id attributes a user to every group they held at any point during each covered UTC day, so grouped rows are not an exclusive partition and can sum above org-level totals. At most 100 entries.
+
+  - `"rbac_group_id"`
+
+  - `"user_id"`
 
 - `limit: optional number`
 
@@ -74,43 +85,49 @@ Requires an API key with the `read:analytics` scope.
 
       Name of the project
 
-    - `created_at: optional string`
+    - `created_at: optional string or null`
 
       Project creation timestamp, RFC 3339. Null if the project was deleted before attribution was recorded.
 
-    - `created_by: optional AnalyticsUser`
+    - `created_by: optional AnalyticsUser or null`
 
       User identifier.
 
       - `id: string`
 
-        Tagged user identifier (e.g. user_...)
+        Tagged user identifier (e.g. `user_...`)
 
       - `email_address: string`
 
         Email address of the user
 
-    - `distinct_conversation_count: optional number`
+      - `type: optional "user"`
+
+        Object type. Always `user`.
+
+        - `"user"`
+
+    - `distinct_conversation_count: optional number or null`
 
       Number of distinct conversations in the project. Null on aggregated rows where a distinct count cannot be computed.
 
-    - `product: optional string`
+    - `product: optional string or null`
 
-      Product that produced this row's activity: one of chat, claude_code, cowork, or office_agent (the canonical Cost & Usage product naming; an office_agent row's per-surface breakdown is in its office_metrics). On /plugins only cowork and claude_code occur (the only surfaces with plugin attribution); /artifacts and /apps/chat/projects do not support the product dimension (a product group_by[] or filter[] there is rejected). Present only when the request grouped by product.
+      Product that produced this row's activity: one of chat, claude_code, cowork, or office_agent (the canonical Cost & Usage product naming; an office_agent row's per-surface breakdown is in its office_metrics). On /plugins only cowork and claude_code occur (the only surfaces with plugin attribution); /artifacts and /apps/chat/projects do not support the product dimension (a product `group_by[]` or `filter[]` there is rejected). Present only when the request grouped by product.
 
-    - `rbac_group_id: optional string`
+    - `rbac_group_id: optional string or null`
 
-      Tagged RBAC group identifier (rbac_group_...), matching the spend-limits API spelling. Present only when the request grouped by rbac_group_id.
+      Tagged RBAC group identifier (`rbac_group_...`), matching the spend-limits API spelling. Present only when the request grouped by `rbac_group_id`.
 
-    - `rbac_group_name: optional string`
+    - `rbac_group_name: optional string or null`
 
-      Resolved RBAC group display name, alongside rbac_group_id when name resolution is available. Null if the group has been deleted or its name could not be resolved; rbac_group_id remains the stable key.
+      Resolved RBAC group display name, alongside `rbac_group_id` when name resolution is available. Null if the group has been deleted or its name could not be resolved; `rbac_group_id` remains the stable key.
 
-    - `user_id: optional string`
+    - `user_id: optional string or null`
 
-      Tagged user identifier (e.g. user_...). Present only when the request grouped by user_id.
+      Tagged user identifier (e.g. `user_...`). Present only when the request grouped by `user_id`.
 
-  - `next_page: string`
+  - `next_page: string or null`
 
     Opaque cursor for the next page, or null if no more results
 
@@ -135,7 +152,8 @@ curl https://api.anthropic.com/v1/organizations/analytics/apps/chat/projects \
       "created_at": "created_at",
       "created_by": {
         "id": "id",
-        "email_address": "email_address"
+        "email_address": "email_address",
+        "type": "user"
       },
       "distinct_conversation_count": 0,
       "product": "product",

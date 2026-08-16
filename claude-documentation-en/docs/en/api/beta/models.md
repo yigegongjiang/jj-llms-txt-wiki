@@ -1,3 +1,8 @@
+---
+title: Models
+url: https://platform.claude.com/docs/en/api/beta/models
+---
+
 # Models
 
 ## List Models
@@ -32,7 +37,7 @@ The Models API response can be used to determine which models are available for 
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -98,6 +103,8 @@ The Models API response can be used to determine which models are available for 
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `data: array of BetaModelInfo`
@@ -106,11 +113,11 @@ The Models API response can be used to determine which models are available for 
 
     Unique model identifier.
 
-  - `allowed_fallback_models: array of string`
+  - `allowed_fallback_models: array of string or null`
 
     Model IDs this model accepts as `fallbacks[i].model` on the Messages API. An empty list means the `fallbacks` parameter is not supported for this model as primary.
 
-  - `capabilities: BetaModelCapabilities`
+  - `capabilities: BetaModelCapabilities or null`
 
     Model capability information.
 
@@ -134,15 +141,15 @@ The Models API response can be used to determine which models are available for 
 
       Context management support and available strategies.
 
-      - `clear_thinking_20251015: BetaCapabilitySupport`
+      - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
-      - `clear_tool_uses_20250919: BetaCapabilitySupport`
+      - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
-      - `compact_20260112: BetaCapabilitySupport`
+      - `compact_20260112: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
@@ -174,7 +181,7 @@ The Models API response can be used to determine which models are available for 
 
         Whether this capability is supported by the model.
 
-      - `xhigh: BetaCapabilitySupport`
+      - `xhigh: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
@@ -218,11 +225,11 @@ The Models API response can be used to determine which models are available for 
 
     A human-readable name for the model.
 
-  - `max_input_tokens: number`
+  - `max_input_tokens: number or null`
 
     Maximum input context window size in tokens for this model.
 
-  - `max_tokens: number`
+  - `max_tokens: number or null`
 
     Maximum value for the `max_tokens` parameter when using this model.
 
@@ -234,7 +241,7 @@ The Models API response can be used to determine which models are available for 
 
     - `"model"`
 
-- `first_id: string`
+- `first_id: string or null`
 
   First ID in the `data` list. Can be used as the `before_id` for the previous page.
 
@@ -242,7 +249,7 @@ The Models API response can be used to determine which models are available for 
 
   Indicates if there are more results in the requested page direction.
 
-- `last_id: string`
+- `last_id: string or null`
 
   Last ID in the `data` list. Can be used as the `after_id` for the next page.
 
@@ -360,7 +367,7 @@ The Models API response can be used to determine information about a specific mo
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -426,6 +433,8 @@ The Models API response can be used to determine information about a specific mo
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `BetaModelInfo object { id, allowed_fallback_models, capabilities, 5 more }`
@@ -434,11 +443,11 @@ The Models API response can be used to determine information about a specific mo
 
     Unique model identifier.
 
-  - `allowed_fallback_models: array of string`
+  - `allowed_fallback_models: array of string or null`
 
     Model IDs this model accepts as `fallbacks[i].model` on the Messages API. An empty list means the `fallbacks` parameter is not supported for this model as primary.
 
-  - `capabilities: BetaModelCapabilities`
+  - `capabilities: BetaModelCapabilities or null`
 
     Model capability information.
 
@@ -462,15 +471,15 @@ The Models API response can be used to determine information about a specific mo
 
       Context management support and available strategies.
 
-      - `clear_thinking_20251015: BetaCapabilitySupport`
+      - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
-      - `clear_tool_uses_20250919: BetaCapabilitySupport`
+      - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
-      - `compact_20260112: BetaCapabilitySupport`
+      - `compact_20260112: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
@@ -502,7 +511,7 @@ The Models API response can be used to determine information about a specific mo
 
         Whether this capability is supported by the model.
 
-      - `xhigh: BetaCapabilitySupport`
+      - `xhigh: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
@@ -546,11 +555,11 @@ The Models API response can be used to determine information about a specific mo
 
     A human-readable name for the model.
 
-  - `max_input_tokens: number`
+  - `max_input_tokens: number or null`
 
     Maximum input context window size in tokens for this model.
 
-  - `max_tokens: number`
+  - `max_tokens: number or null`
 
     Maximum value for the `max_tokens` parameter when using this model.
 
@@ -665,7 +674,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
   Context management capability details.
 
-  - `clear_thinking_20251015: BetaCapabilitySupport`
+  - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
     Indicates whether a capability is supported.
 
@@ -673,11 +682,11 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
       Whether this capability is supported by the model.
 
-  - `clear_tool_uses_20250919: BetaCapabilitySupport`
+  - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
     Indicates whether a capability is supported.
 
-  - `compact_20260112: BetaCapabilitySupport`
+  - `compact_20260112: BetaCapabilitySupport or null`
 
     Indicates whether a capability is supported.
 
@@ -715,7 +724,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
     Whether this capability is supported by the model.
 
-  - `xhigh: BetaCapabilitySupport`
+  - `xhigh: BetaCapabilitySupport or null`
 
     Indicates whether a capability is supported.
 
@@ -745,15 +754,15 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
     Context management support and available strategies.
 
-    - `clear_thinking_20251015: BetaCapabilitySupport`
+    - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
       Indicates whether a capability is supported.
 
-    - `clear_tool_uses_20250919: BetaCapabilitySupport`
+    - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
       Indicates whether a capability is supported.
 
-    - `compact_20260112: BetaCapabilitySupport`
+    - `compact_20260112: BetaCapabilitySupport or null`
 
       Indicates whether a capability is supported.
 
@@ -785,7 +794,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
       Whether this capability is supported by the model.
 
-    - `xhigh: BetaCapabilitySupport`
+    - `xhigh: BetaCapabilitySupport or null`
 
       Indicates whether a capability is supported.
 
@@ -829,11 +838,11 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
     Unique model identifier.
 
-  - `allowed_fallback_models: array of string`
+  - `allowed_fallback_models: array of string or null`
 
     Model IDs this model accepts as `fallbacks[i].model` on the Messages API. An empty list means the `fallbacks` parameter is not supported for this model as primary.
 
-  - `capabilities: BetaModelCapabilities`
+  - `capabilities: BetaModelCapabilities or null`
 
     Model capability information.
 
@@ -857,15 +866,15 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
       Context management support and available strategies.
 
-      - `clear_thinking_20251015: BetaCapabilitySupport`
+      - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
-      - `clear_tool_uses_20250919: BetaCapabilitySupport`
+      - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
-      - `compact_20260112: BetaCapabilitySupport`
+      - `compact_20260112: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
@@ -897,7 +906,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
         Whether this capability is supported by the model.
 
-      - `xhigh: BetaCapabilitySupport`
+      - `xhigh: BetaCapabilitySupport or null`
 
         Indicates whether a capability is supported.
 
@@ -941,11 +950,11 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
     A human-readable name for the model.
 
-  - `max_input_tokens: number`
+  - `max_input_tokens: number or null`
 
     Maximum input context window size in tokens for this model.
 
-  - `max_tokens: number`
+  - `max_tokens: number or null`
 
     Maximum value for the `max_tokens` parameter when using this model.
 

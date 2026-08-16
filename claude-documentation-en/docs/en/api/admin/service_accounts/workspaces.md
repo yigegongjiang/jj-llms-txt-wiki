@@ -1,3 +1,8 @@
+---
+title: Workspaces
+url: https://platform.claude.com/docs/en/api/admin/service_accounts/workspaces
+---
+
 # Workspaces
 
 ## Add Workspace To Service Account
@@ -48,11 +53,11 @@ are not accepted.
 
 ### Returns
 
-- `created_by_actor_id: string`
+- `created_by_actor_id: string or null`
 
   Tagged ID (`user_...`/`svac_...`) of the actor who created this membership.
 
-- `implicit: boolean`
+- `implicit: boolean or null`
 
   True when this is the implicit default-workspace membership every service account has when no explicit membership exists. Implicit memberships have role workspace_user and cannot be removed.
 
@@ -152,11 +157,11 @@ empty list.
 
 - `data: array of object { created_by_actor_id, implicit, service_account_id, 3 more }`
 
-  - `created_by_actor_id: string`
+  - `created_by_actor_id: string or null`
 
     Tagged ID (`user_...`/`svac_...`) of the actor who created this membership.
 
-  - `implicit: boolean`
+  - `implicit: boolean or null`
 
     True when this is the implicit default-workspace membership every service account has when no explicit membership exists. Implicit memberships have role workspace_user and cannot be removed.
 
@@ -186,7 +191,7 @@ empty list.
 
     - `"workspace_user"`
 
-- `next_page: string`
+- `next_page: string or null`
 
   Opaque cursor for the next page, or null if no more results.
 
@@ -288,11 +293,11 @@ curl https://api.anthropic.com/v1/organizations/service_accounts/$SERVICE_ACCOUN
 
 - `WorkspaceCreateResponse object { created_by_actor_id, implicit, service_account_id, 3 more }`
 
-  - `created_by_actor_id: string`
+  - `created_by_actor_id: string or null`
 
     Tagged ID (`user_...`/`svac_...`) of the actor who created this membership.
 
-  - `implicit: boolean`
+  - `implicit: boolean or null`
 
     True when this is the implicit default-workspace membership every service account has when no explicit membership exists. Implicit memberships have role workspace_user and cannot be removed.
 
@@ -326,11 +331,11 @@ curl https://api.anthropic.com/v1/organizations/service_accounts/$SERVICE_ACCOUN
 
 - `WorkspaceListResponse object { created_by_actor_id, implicit, service_account_id, 3 more }`
 
-  - `created_by_actor_id: string`
+  - `created_by_actor_id: string or null`
 
     Tagged ID (`user_...`/`svac_...`) of the actor who created this membership.
 
-  - `implicit: boolean`
+  - `implicit: boolean or null`
 
     True when this is the implicit default-workspace membership every service account has when no explicit membership exists. Implicit memberships have role workspace_user and cannot be removed.
 

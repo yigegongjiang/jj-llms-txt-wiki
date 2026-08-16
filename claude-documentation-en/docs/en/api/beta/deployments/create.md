@@ -1,3 +1,8 @@
+---
+title: Create Deployment
+url: https://platform.claude.com/docs/en/api/beta/deployments/create
+---
+
 ## Create Deployment
 
 **post** `/v1/deployments`
@@ -12,7 +17,7 @@ Create Deployment
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -78,6 +83,8 @@ Create Deployment
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Body Parameters
 
 - `agent: string or BetaManagedAgentsAgentParams`
@@ -114,7 +121,7 @@ Create Deployment
 
     Parameters for sending a user message to the session.
 
-    - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock`
+    - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock or BetaManagedAgentsRedactedBlock`
 
       Array of content blocks for the user message.
 
@@ -252,13 +259,21 @@ Create Deployment
 
           - `"document"`
 
-        - `context: optional string`
+        - `context: optional string or null`
 
           Additional context about the document for the model.
 
-        - `title: optional string`
+        - `title: optional string or null`
 
           The title of the document.
+
+      - `BetaManagedAgentsRedactedBlock object { type }`
+
+        Placeholder for content withheld by Anthropic model policy.
+
+        - `type: "redacted"`
+
+          - `"redacted"`
 
     - `type: "user.message"`
 
@@ -304,7 +319,7 @@ Create Deployment
 
       - `"user.define_outcome"`
 
-    - `max_iterations: optional number`
+    - `max_iterations: optional number or null`
 
       Eval→revision cycles before giving up. Default 3, max 20.
 
@@ -332,7 +347,29 @@ Create Deployment
 
   Human-readable name for the deployment.
 
-- `description: optional string`
+- `budget: optional BetaManagedAgentsBudgetLimit or null`
+
+  A hard spend ceiling. The session stops issuing new model requests once the tracked list cost reaches `max_list_cost`.
+
+  - `max_list_cost: BetaMonetaryAmount`
+
+    A monetary amount in a specific currency.
+
+    - `amount: string`
+
+      Amount in minor units of the currency, as an integer decimal string with no leading zeros: "2500" is $25.00 and "50" is fifty cents. A string rather than a number so no float rounding is ever applied.
+
+    - `currency: BetaCurrency`
+
+      Uppercase ISO-4217 currency code. `USD` is the only currency currently supported; the accepted set is closed and grows only when a new currency is priced.
+
+      - `"USD"`
+
+  - `type: "limit"`
+
+    - `"limit"`
+
+- `description: optional string or null`
 
   Description of what the deployment does.
 
@@ -360,7 +397,7 @@ Create Deployment
 
       Github URL of the repository
 
-    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+    - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
       Branch or commit to check out. Defaults to the repository's default branch.
 
@@ -384,7 +421,7 @@ Create Deployment
 
           - `"commit"`
 
-    - `mount_path: optional string`
+    - `mount_path: optional string or null`
 
       Mount path in the container. Defaults to `/workspace/<repo-name>`.
 
@@ -400,7 +437,7 @@ Create Deployment
 
       - `"file"`
 
-    - `mount_path: optional string`
+    - `mount_path: optional string or null`
 
       Mount path in the container. Defaults to `/mnt/session/uploads/<file_id>`.
 
@@ -416,7 +453,7 @@ Create Deployment
 
       - `"memory_store"`
 
-    - `access: optional "read_write" or "read_only"`
+    - `access: optional "read_write" or "read_only" or null`
 
       Access mode for an attached memory store.
 
@@ -424,11 +461,11 @@ Create Deployment
 
       - `"read_only"`
 
-    - `instructions: optional string`
+    - `instructions: optional string or null`
 
       Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-- `schedule: optional BetaManagedAgentsScheduleParams`
+- `schedule: optional BetaManagedAgentsScheduleParams or null`
 
   5-field POSIX cron schedule. Literal wall-clock matching in the configured timezone.
 
@@ -450,7 +487,7 @@ Create Deployment
 
 ### Returns
 
-- `BetaManagedAgentsDeployment object { id, agent, archived_at, 13 more }`
+- `BetaManagedAgentsDeployment object { id, agent, archived_at, 14 more }`
 
   A deployment is a configured instance of an agent — it binds the agent to everything needed to run it autonomously: an environment, credentials, initial events, and an optional schedule.
 
@@ -470,7 +507,7 @@ Create Deployment
 
     - `version: number`
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     A timestamp in RFC 3339 format
 
@@ -478,7 +515,7 @@ Create Deployment
 
     A timestamp in RFC 3339 format
 
-  - `description: string`
+  - `description: string or null`
 
     Description of what the deployment does.
 
@@ -494,7 +531,7 @@ Create Deployment
 
       A user message sent to the session.
 
-      - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock`
+      - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock or BetaManagedAgentsRedactedBlock`
 
         Array of content blocks for the user message.
 
@@ -632,13 +669,21 @@ Create Deployment
 
             - `"document"`
 
-          - `context: optional string`
+          - `context: optional string or null`
 
             Additional context about the document for the model.
 
-          - `title: optional string`
+          - `title: optional string or null`
 
             The title of the document.
+
+        - `BetaManagedAgentsRedactedBlock object { type }`
+
+          Placeholder for content withheld by Anthropic model policy.
+
+          - `type: "redacted"`
+
+            - `"redacted"`
 
       - `type: "user.message"`
 
@@ -684,7 +729,7 @@ Create Deployment
 
         - `"user.define_outcome"`
 
-      - `max_iterations: optional number`
+      - `max_iterations: optional number or null`
 
         Eval→revision cycles before giving up. Default 3, max 20.
 
@@ -716,7 +761,7 @@ Create Deployment
 
     Human-readable name.
 
-  - `paused_reason: BetaManagedAgentsDeploymentPausedReason`
+  - `paused_reason: BetaManagedAgentsDeploymentPausedReason or null`
 
     Why a deployment is paused. Non-null exactly when `status` is `paused`.
 
@@ -868,7 +913,7 @@ Create Deployment
 
         Github URL of the repository
 
-      - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout`
+      - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
         Branch or commit to check out. Defaults to the repository's default branch.
 
@@ -892,7 +937,7 @@ Create Deployment
 
             - `"commit"`
 
-      - `mount_path: optional string`
+      - `mount_path: optional string or null`
 
         Mount path in the container. Defaults to `/workspace/<repo-name>`.
 
@@ -908,7 +953,7 @@ Create Deployment
 
         - `"file"`
 
-      - `mount_path: optional string`
+      - `mount_path: optional string or null`
 
         Mount path in the container. Defaults to `/mnt/session/uploads/<file_id>`.
 
@@ -924,7 +969,7 @@ Create Deployment
 
         - `"memory_store"`
 
-      - `access: optional "read_write" or "read_only"`
+      - `access: optional "read_write" or "read_only" or null`
 
         Access mode for an attached memory store.
 
@@ -932,11 +977,11 @@ Create Deployment
 
         - `"read_only"`
 
-      - `instructions: optional string`
+      - `instructions: optional string or null`
 
         Per-attachment guidance for the agent on how to use this store. Rendered into the memory section of the system prompt. Max 4096 chars.
 
-  - `schedule: BetaManagedAgentsSchedule`
+  - `schedule: BetaManagedAgentsSchedule or null`
 
     5-field POSIX cron schedule with computed runtime timestamps.
 
@@ -952,7 +997,7 @@ Create Deployment
 
       - `"cron"`
 
-    - `last_run_at: optional string`
+    - `last_run_at: optional string or null`
 
       A timestamp in RFC 3339 format
 
@@ -979,6 +1024,28 @@ Create Deployment
   - `vault_ids: array of string`
 
     Vault IDs supplying stored credentials for sessions created from this deployment.
+
+  - `budget: optional BetaManagedAgentsBudgetLimit or null`
+
+    A hard spend ceiling. The session stops issuing new model requests once the tracked list cost reaches `max_list_cost`.
+
+    - `max_list_cost: BetaMonetaryAmount`
+
+      A monetary amount in a specific currency.
+
+      - `amount: string`
+
+        Amount in minor units of the currency, as an integer decimal string with no leading zeros: "2500" is $25.00 and "50" is fifty cents. A string rather than a number so no float rounding is ever applied.
+
+      - `currency: BetaCurrency`
+
+        Uppercase ISO-4217 currency code. `USD` is the only currency currently supported; the accepted set is closed and grows only when a new currency is priced.
+
+        - `"USD"`
+
+    - `type: "limit"`
+
+      - `"limit"`
 
 ### Example
 
@@ -1062,6 +1129,13 @@ curl https://api.anthropic.com/v1/deployments \
   "updated_at": "2026-03-15T10:00:00Z",
   "vault_ids": [
     "vlt_011CZkZDLs7fYzm1hXNPeRjv"
-  ]
+  ],
+  "budget": {
+    "max_list_cost": {
+      "amount": "2500",
+      "currency": "USD"
+    },
+    "type": "limit"
+  }
 }
 ```

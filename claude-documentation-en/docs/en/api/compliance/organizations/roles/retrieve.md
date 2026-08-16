@@ -1,3 +1,8 @@
+---
+title: Get Compliance Role
+url: https://platform.claude.com/docs/en/api/compliance/organizations/roles/retrieve
+---
+
 ## Get Compliance Role
 
 **get** `/v1/compliance/organizations/{org_uuid}/roles/{role_id}`
@@ -24,7 +29,7 @@ Get Compliance Role
 
   Role identifier (tagged ID)
 
-- `created_at: string`
+- `created_at: string or null`
 
   Role creation timestamp (ISO 8601)
 
@@ -36,7 +41,7 @@ Get Compliance Role
 
   Role name
 
-- `updated_at: string`
+- `updated_at: string or null`
 
   Role last-updated timestamp (ISO 8601)
 

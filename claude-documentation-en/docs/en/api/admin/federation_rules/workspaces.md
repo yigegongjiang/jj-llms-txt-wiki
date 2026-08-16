@@ -1,3 +1,8 @@
+---
+title: Workspaces
+url: https://platform.claude.com/docs/en/api/admin/federation_rules/workspaces
+---
+
 # Workspaces
 
 ## List Federation Rule Workspaces
@@ -44,7 +49,7 @@ rules with `applies_to_all_workspaces` or a legacy single
 
     When this workspace was enabled for the rule.
 
-  - `created_by_actor_id: string`
+  - `created_by_actor_id: string or null`
 
     Tagged ID (`user_...` or `svac_...`) of the actor that enabled this workspace for the rule, if known.
 
@@ -60,11 +65,11 @@ rules with `applies_to_all_workspaces` or a legacy single
 
     Tagged ID of the workspace this rule is enabled for.
 
-  - `workspace_name: string`
+  - `workspace_name: string or null`
 
     Workspace display name. Populated when listing; null in the enable response.
 
-- `next_page: string`
+- `next_page: string or null`
 
   Opaque cursor for the next page; null when there are no more results.
 
@@ -135,7 +140,7 @@ scopes require a Console session. Admin API keys are not accepted.
 
   When this workspace was enabled for the rule.
 
-- `created_by_actor_id: string`
+- `created_by_actor_id: string or null`
 
   Tagged ID (`user_...` or `svac_...`) of the actor that enabled this workspace for the rule, if known.
 
@@ -151,7 +156,7 @@ scopes require a Console session. Admin API keys are not accepted.
 
   Tagged ID of the workspace this rule is enabled for.
 
-- `workspace_name: string`
+- `workspace_name: string or null`
 
   Workspace display name. Populated when listing; null in the enable response.
 
@@ -252,7 +257,7 @@ curl https://api.anthropic.com/v1/organizations/federation_rules/$FEDERATION_RUL
 
     When this workspace was enabled for the rule.
 
-  - `created_by_actor_id: string`
+  - `created_by_actor_id: string or null`
 
     Tagged ID (`user_...` or `svac_...`) of the actor that enabled this workspace for the rule, if known.
 
@@ -268,7 +273,7 @@ curl https://api.anthropic.com/v1/organizations/federation_rules/$FEDERATION_RUL
 
     Tagged ID of the workspace this rule is enabled for.
 
-  - `workspace_name: string`
+  - `workspace_name: string or null`
 
     Workspace display name. Populated when listing; null in the enable response.
 
@@ -280,7 +285,7 @@ curl https://api.anthropic.com/v1/organizations/federation_rules/$FEDERATION_RUL
 
     When this workspace was enabled for the rule.
 
-  - `created_by_actor_id: string`
+  - `created_by_actor_id: string or null`
 
     Tagged ID (`user_...` or `svac_...`) of the actor that enabled this workspace for the rule, if known.
 
@@ -296,7 +301,7 @@ curl https://api.anthropic.com/v1/organizations/federation_rules/$FEDERATION_RUL
 
     Tagged ID of the workspace this rule is enabled for.
 
-  - `workspace_name: string`
+  - `workspace_name: string or null`
 
     Workspace display name. Populated when listing; null in the enable response.
 

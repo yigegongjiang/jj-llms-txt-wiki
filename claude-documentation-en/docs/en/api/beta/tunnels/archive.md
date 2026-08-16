@@ -1,3 +1,8 @@
+---
+title: Archive Tunnel
+url: https://platform.claude.com/docs/en/api/beta/tunnels/archive
+---
+
 ## Archive Tunnel
 
 **post** `/v1/tunnels/{tunnel_id}/archive`
@@ -18,7 +23,7 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -84,6 +89,8 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `BetaTunnel object { id, archived_at, created_at, 3 more }`
@@ -94,7 +101,7 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
     Unique identifier for the tunnel, prefixed with `tnl_`.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     A timestamp in RFC 3339 format
 
@@ -102,7 +109,7 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
     A timestamp in RFC 3339 format
 
-  - `display_name: string`
+  - `display_name: string or null`
 
     Human-readable name for the tunnel (1-255 characters). Null if unset.
 

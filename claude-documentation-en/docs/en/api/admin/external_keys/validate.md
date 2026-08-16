@@ -1,3 +1,8 @@
+---
+title: Validate External Key
+url: https://platform.claude.com/docs/en/api/admin/external_keys/validate
+---
+
 ## Validate External Key
 
 **post** `/v1/organizations/external_keys/{external_key_id}/validate`
@@ -17,7 +22,7 @@ message if it failed or timed out.
 
 ### Returns
 
-- `error: string`
+- `error: string or null`
 
   Error message when status is `failure`. Null otherwise.
 

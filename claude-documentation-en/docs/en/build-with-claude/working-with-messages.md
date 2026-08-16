@@ -1,27 +1,26 @@
-# Using the Messages API
-
-Practical patterns and examples for using the Messages API effectively
-
+---
+title: Using the Messages API
+url: https://platform.claude.com/docs/en/build-with-claude/working-with-messages
+description: Practical patterns and examples for using the Messages API effectively
 ---
 
 Anthropic offers two ways to build with Claude, each suited to different use cases:
 
-|                | Messages API                                                          | Claude Managed Agents                                                     |
-| -------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| **What it is** | Direct model prompting access                                         | Pre-built, configurable agent harness that runs in managed infrastructure |
-| **Best for**   | Custom agent loops and fine-grained control                           | Long-running tasks and asynchronous work                                  |
-| **Learn more** | [Messages API docs](/docs/en/build-with-claude/working-with-messages) | [Claude Managed Agents docs](/docs/en/managed-agents/overview)            |
+|                | Messages API                                | Claude Managed Agents                                                     |
+| -------------- | ------------------------------------------- | ------------------------------------------------------------------------- |
+| **What it is** | Direct model prompting access               | Pre-built, configurable agent harness that runs in managed infrastructure |
+| **Best for**   | Custom agent loops and fine-grained control | Long-running tasks and asynchronous work                                  |
 
-This guide covers common patterns for working with the Messages API, including basic requests, multi-turn conversations, prefill techniques, and vision capabilities. For complete API specifications, see the [Messages API reference](/docs/en/api/messages/create).
+This guide covers common patterns for working with the Messages API, including basic requests, multi-turn conversations, prefill techniques, and vision capabilities. For complete API specifications, see the [Messages API reference](https://platform.claude.com/docs/en/api/messages/create). For the managed agent harness instead, see the [Claude Managed Agents overview](https://platform.claude.com/docs/en/managed-agents/overview).
 
 <Note>
-  For how zero data retention (ZDR) applies to this feature, see [API and data retention](/docs/en/manage-claude/api-and-data-retention).
+  For how zero data retention (ZDR) applies to this feature, see [API and data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention).
 </Note>
 
 ## Basic request and response
 
 <Note>
-  The `temperature`, `top_p`, and `top_k` sampling parameters are not supported on Claude 4.7 and later models and Claude Mythos Preview. Setting them to a non-default value returns a 400 error. Omit them from request payloads and use prompting to guide the model's behavior instead. See the [migration guide](/docs/en/about-claude/models/migration-guide#migrating-from-claude-opus-47).
+  The `temperature`, `top_p`, and `top_k` sampling parameters are not supported on Claude 4.7 and later models and Claude Mythos Preview. Setting them to a non-default value returns a 400 error. Omit them from request payloads and use prompting to guide the model's behavior instead. See the [migration guide](https://platform.claude.com/docs/en/about-claude/models/migration-guide#migrating-from-claude-opus-47).
 </Note>
 
 <CodeGroup>
@@ -155,7 +154,7 @@ This guide covers common patterns for working with the Messages API, including b
 }
 ```
 
-Refusal responses (`stop_reason: "refusal"`) also include a `stop_details` object identifying the policy category that triggered the refusal, on every model. See [Handling stop reasons](/docs/en/build-with-claude/refusals-and-fallback#refusal-response) for the field reference and example handling code.
+Refusal responses (`stop_reason: "refusal"`) also include a `stop_details` object identifying the policy category that triggered the refusal, on every model. See [Handling stop reasons](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback#refusal-response) for the field reference and example handling code.
 
 ## Multiple conversational turns
 
@@ -324,18 +323,18 @@ The Messages API is stateless, which means that you always send the full convers
 
 ### System role in messages
 
-On Claude Fable 5, [Claude Mythos 5](https://anthropic.com/glasswing), Claude Opus 4.8, and Claude Opus 5, you can include messages with `"role": "system"` after a user turn (subject to [placement rules](/docs/en/build-with-claude/mid-conversation-system-messages#limitations)) to add a new system instruction partway through a conversation. A `system` message cannot be the first entry in `messages`; use the top-level `system` field for instructions that apply from the start.
+On Claude Fable 5, [Claude Mythos 5](https://anthropic.com/glasswing), Claude Opus 4.8, and Claude Opus 5, you can include messages with `"role": "system"` after a user turn (subject to [placement rules](https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages#limitations)) to add a new system instruction partway through a conversation. A `system` message cannot be the first entry in `messages`; use the top-level `system` field for instructions that apply from the start.
 
 A mid-conversation system message has the same authority as the top-level `system` field, but because it is appended to the end of the message history, it does not invalidate any cached prefix that came before it. Use the top-level `system` field for instructions that should apply from the very first turn, and a mid-conversation system message for instructions that only become relevant later.
 
-See [Mid-conversation system messages](/docs/en/build-with-claude/mid-conversation-system-messages) for the complete guide, including how to combine it with [prompt caching](/docs/en/build-with-claude/prompt-caching).
+See [Mid-conversation system messages](https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages) for the complete guide, including how to combine it with [prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
 ## Prefilling Claude's response
 
 You can pre-fill part of Claude's response in the last position of the input messages list. Use this technique to shape Claude's response. The following example uses `"max_tokens": 1` to get a single multiple choice answer from Claude.
 
 <Warning>
-  Prefilling is not supported on Claude 4.6 and later models and [Claude Mythos Preview](https://anthropic.com/glasswing). Requests using prefill with these models return a 400 error. Use [structured outputs](/docs/en/build-with-claude/structured-outputs) on models that support it, or system prompt instructions, instead. See the [migration guide](/docs/en/about-claude/models/migration-guide) for migration patterns.
+  Prefilling is not supported on Claude 4.6 and later models and [Claude Mythos Preview](https://anthropic.com/glasswing). Requests using prefill with these models return a 400 error. Use [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) on models that support it, or system prompt instructions, instead. See the [migration guide](https://platform.claude.com/docs/en/about-claude/models/migration-guide) for migration patterns.
 </Warning>
 
 <CodeGroup>
@@ -502,14 +501,14 @@ You can pre-fill part of Claude's response in the last position of the input mes
 
 ## Vision
 
-Claude can read both text and images in requests. You can supply images using the `base64`, `url`, or `file` source types. The `file` source type references an image uploaded through the [Files API](/docs/en/build-with-claude/files). Supported media types are `image/jpeg`, `image/png`, `image/gif`, and `image/webp`. See the [vision guide](/docs/en/build-with-claude/vision) for more details.
+Claude can read both text and images in requests. You can supply images using the `base64`, `url`, or `file` source types. The `file` source type references an image uploaded through the [Files API](https://platform.claude.com/docs/en/build-with-claude/files). Supported media types are `image/jpeg`, `image/png`, `image/gif`, and `image/webp`. See the [vision guide](https://platform.claude.com/docs/en/build-with-claude/vision) for more details.
 
 <CodeGroup>
   ```bash cURL
   #!/bin/sh
 
   # Option 1: Base64-encoded image
-  IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+  IMAGE_URL="https://platform.claude.com/docs/images/vision-example.jpg"
   IMAGE_MEDIA_TYPE="image/jpeg"
   IMAGE_BASE64=$(curl "$IMAGE_URL" | base64 | tr -d '\n')
 
@@ -546,7 +545,7 @@ Claude can read both text and images in requests. You can supply images using th
         {"role": "user", "content": [
           {"type": "image", "source": {
             "type": "url",
-            "url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+            "url": "https://platform.claude.com/docs/images/vision-example.jpg"
           }},
           {"type": "text", "text": "What is in the above image?"}
         ]}
@@ -555,10 +554,10 @@ Claude can read both text and images in requests. You can supply images using th
   ```
 
   ```bash CLI
-  IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+  IMAGE_URL="https://platform.claude.com/docs/images/vision-example.jpg"
 
   # Option 1: Base64-encoded image (CLI auto-encodes binary @file refs)
-  curl -s "$IMAGE_URL" -o ./ant.jpg
+  curl -s "$IMAGE_URL" -o ./vision-example.jpg
 
   ant messages create <<'YAML'
   model: claude-opus-5
@@ -570,7 +569,7 @@ Claude can read both text and images in requests. You can supply images using th
           source:
             type: base64
             media_type: image/jpeg
-            data: "@./ant.jpg"
+            data: "@./vision-example.jpg"
         - type: text
           text: What is in the above image?
   YAML
@@ -596,7 +595,7 @@ Claude can read both text and images in requests. You can supply images using th
   import httpx
 
   # Option 1: Base64-encoded image
-  image_url = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+  image_url = "https://platform.claude.com/docs/images/vision-example.jpg"
   image_media_type = "image/jpeg"
   image_data = base64.standard_b64encode(httpx.get(image_url).content).decode("utf-8")
 
@@ -634,7 +633,7 @@ Claude can read both text and images in requests. You can supply images using th
                       "type": "image",
                       "source": {
                           "type": "url",
-                          "url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg",
+                          "url": "https://platform.claude.com/docs/images/vision-example.jpg",
                       },
                   },
                   {"type": "text", "text": "What is in the above image?"},
@@ -649,8 +648,7 @@ Claude can read both text and images in requests. You can supply images using th
   const anthropic = new Anthropic();
 
   // Option 1: Base64-encoded image
-  const imageUrl =
-    "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg";
+  const imageUrl = "https://platform.claude.com/docs/images/vision-example.jpg";
   const imageMediaType = "image/jpeg";
   const imageArrayBuffer = await (await fetch(imageUrl)).arrayBuffer();
   const imageData = Buffer.from(imageArrayBuffer).toString("base64");
@@ -692,7 +690,7 @@ Claude can read both text and images in requests. You can supply images using th
             type: "image",
             source: {
               type: "url",
-              url: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+              url: "https://platform.claude.com/docs/images/vision-example.jpg"
             }
           },
           {
@@ -715,7 +713,7 @@ Claude can read both text and images in requests. You can supply images using th
   AnthropicClient client = new();
 
   // Option 1: Base64-encoded image
-  string imageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg";
+  string imageUrl = "https://platform.claude.com/docs/images/vision-example.jpg";
 
   using HttpClient httpClient = new();
   byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
@@ -763,7 +761,7 @@ Claude can read both text and images in requests. You can supply images using th
                   new ContentBlockParam(new ImageBlockParam(
                       new ImageBlockParamSource(new UrlImageSource()
                       {
-                          Url = new Uri("https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"),
+                          Url = "https://platform.claude.com/docs/images/vision-example.jpg",
                       })
                   )),
                   new ContentBlockParam(new TextBlockParam("What is in the above image?")),
@@ -780,7 +778,7 @@ Claude can read both text and images in requests. You can supply images using th
   client := anthropic.NewClient()
 
   // Option 1: Base64-encoded image
-  imageURL := "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+  imageURL := "https://platform.claude.com/docs/images/vision-example.jpg"
 
   req, err := http.NewRequest("GET", imageURL, nil)
   if err != nil {
@@ -822,7 +820,7 @@ Claude can read both text and images in requests. You can supply images using th
   	Messages: []anthropic.MessageParam{
   		anthropic.NewUserMessage(
   			anthropic.NewImageBlock(anthropic.URLImageSourceParam{
-  				URL: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg",
+  				URL: "https://platform.claude.com/docs/images/vision-example.jpg",
   			}),
   			anthropic.NewTextBlock("What is in the above image?"),
   		),
@@ -838,7 +836,7 @@ Claude can read both text and images in requests. You can supply images using th
   AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
   // Option 1: Base64-encoded image
-  String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg";
+  String imageUrl = "https://platform.claude.com/docs/images/vision-example.jpg";
 
   HttpClient httpClient = HttpClient.newHttpClient();
   HttpRequest request = HttpRequest.newBuilder().uri(URI.create(imageUrl)).build();
@@ -872,7 +870,7 @@ Claude can read both text and images in requests. You can supply images using th
       ContentBlockParam.ofImage(
           ImageBlockParam.builder()
               .source(UrlImageSource.builder()
-                  .url("https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg")
+                  .url("https://platform.claude.com/docs/images/vision-example.jpg")
                   .build())
               .build()),
       ContentBlockParam.ofText(
@@ -894,7 +892,7 @@ Claude can read both text and images in requests. You can supply images using th
   $client = new Client();
 
   // Option 1: Base64-encoded image
-  $image_url = 'https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg';
+  $image_url = 'https://platform.claude.com/docs/images/vision-example.jpg';
   $image_media_type = "image/jpeg";
   $image_data = base64_encode(file_get_contents($image_url));
 
@@ -934,7 +932,7 @@ Claude can read both text and images in requests. You can supply images using th
                       'type' => 'image',
                       'source' => [
                           'type' => 'url',
-                          'url' => 'https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg',
+                          'url' => 'https://platform.claude.com/docs/images/vision-example.jpg',
                       ],
                   ],
                   [
@@ -956,7 +954,7 @@ Claude can read both text and images in requests. You can supply images using th
   client = Anthropic::Client.new
 
   # Option 1: Base64-encoded image
-  image_url = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+  image_url = "https://platform.claude.com/docs/images/vision-example.jpg"
   image_media_type = "image/jpeg"
   image_data = Base64.strict_encode64(Net::HTTP.get(URI(image_url)))
 
@@ -997,7 +995,7 @@ Claude can read both text and images in requests. You can supply images using th
             type: "image",
             source: {
               type: "url",
-              url: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+              url: "https://platform.claude.com/docs/images/vision-example.jpg"
             }
           },
           {
@@ -1014,21 +1012,21 @@ Claude can read both text and images in requests. You can supply images using th
 
 ```json Output
 {
-  "id": "msg_01EcyWo6m4hyW8KHs2y2pei5",
+  "id": "msg_011CdKmWtV3oFx1C5yUbf5CY",
   "type": "message",
   "role": "assistant",
   "content": [
     {
       "type": "text",
-      "text": "This image shows an ant, specifically a close-up view of an ant. The ant is shown in detail, with its distinct head, antennae, and legs clearly visible. The image is focused on capturing the intricate details and features of the ant, likely taken with a macro lens to get an extreme close-up perspective."
+      "text": "This image is a beautiful minimalist/flat-design illustration of a sunset landscape. Here's what it contains:\n\n**Sky & Sun:**\n- A warm gradient sky transitioning from golden-yellow at the top to deep orange toward the horizon\n- A large pale yellow sun positioned in the upper-right area\n\n**Birds:**\n- Three small silhouetted birds flying in the upper-left portion of the sky, depicted as simple \"M\" or \"v\" shapes\n\n**Mountains:**\n- Multiple layered mountain peaks in purple and maroon tones\n- The mountains overlap to create depth, with varying shades of dusty purple and deep burgundy\n\n**Water:**\n- A dark purple body of water at the bottom of the image\n- A reflection of the sun shown as horizontal cream/peach colored lines in the center-bottom area\n\nThe overall style is clean, geometric, and uses a warm sunset color palette (oranges, yellows, purples, and maroons), giving it a peaceful, serene aesthetic typical of modern vector/flat design artwork."
     }
   ],
   "model": "claude-opus-5",
   "stop_reason": "end_turn",
   "stop_sequence": null,
   "usage": {
-    "input_tokens": 1551,
-    "output_tokens": 71
+    "input_tokens": 1030,
+    "output_tokens": 350
   }
 }
 ```
@@ -1036,23 +1034,23 @@ Claude can read both text and images in requests. You can supply images using th
 ## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Stop reasons and fallback" icon="list" href="/docs/en/build-with-claude/handling-stop-reasons">
+  <Card title="Stop reasons and fallback" icon="list" href="https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons">
     Handle each `stop_reason` value and decide what to do when a response ends.
   </Card>
 
-  <Card title="Tool use with Claude" icon="wrench" href="/docs/en/agents-and-tools/tool-use/overview">
+  <Card title="Tool use with Claude" icon="wrench" href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">
     Give Claude tools to call external services and APIs from within the Messages API.
   </Card>
 
-  <Card title="Computer use tool" icon="computer" href="/docs/en/agents-and-tools/tool-use/computer-use-tool">
+  <Card title="Computer use tool" icon="computer" href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool">
     Control desktop computer environments with the Messages API.
   </Card>
 
-  <Card title="Structured outputs" icon="code-brackets" href="/docs/en/build-with-claude/structured-outputs">
+  <Card title="Structured outputs" icon="code-brackets" href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs">
     Get guaranteed, schema-validated JSON output from Claude.
   </Card>
 
-  <Card title="Task budgets" icon="gauge" href="/docs/en/build-with-claude/task-budgets">
+  <Card title="Task budgets" icon="gauge" href="https://platform.claude.com/docs/en/build-with-claude/task-budgets">
     Set an advisory token budget across a full agentic loop with `output_config.task_budget`.
   </Card>
 </CardGroup>

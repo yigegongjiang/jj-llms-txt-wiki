@@ -1,3 +1,8 @@
+---
+title: Add Workspace To Service Account
+url: https://platform.claude.com/docs/en/api/admin/service_accounts/workspaces/create
+---
+
 ## Add Workspace To Service Account
 
 **post** `/v1/organizations/service_accounts/{service_account_id}/workspaces`
@@ -46,11 +51,11 @@ are not accepted.
 
 ### Returns
 
-- `created_by_actor_id: string`
+- `created_by_actor_id: string or null`
 
   Tagged ID (`user_...`/`svac_...`) of the actor who created this membership.
 
-- `implicit: boolean`
+- `implicit: boolean or null`
 
   True when this is the implicit default-workspace membership every service account has when no explicit membership exists. Implicit memberships have role workspace_user and cannot be removed.
 

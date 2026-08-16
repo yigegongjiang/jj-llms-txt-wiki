@@ -1,3 +1,8 @@
+---
+title: List Dreams
+url: https://platform.claude.com/docs/en/api/beta/dreams/list
+---
+
 ## List Dreams
 
 **get** `/v1/dreams`
@@ -48,7 +53,7 @@ List Dreams
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 29 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -114,13 +119,15 @@ List Dreams
 
     - `"agent-memory-2026-07-22"`
 
+    - `"mid-conversation-tool-changes-2026-07-01"`
+
 ### Returns
 
 - `data: array of BetaDream`
 
   - `id: string`
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     A timestamp in RFC 3339 format
 
@@ -128,11 +135,11 @@ List Dreams
 
     A timestamp in RFC 3339 format
 
-  - `ended_at: string`
+  - `ended_at: string or null`
 
     A timestamp in RFC 3339 format
 
-  - `error: BetaDreamError`
+  - `error: BetaDreamError or null`
 
     Failure detail for a Dream whose `status` is `failed`.
 
@@ -162,7 +169,7 @@ List Dreams
 
         - `"sessions"`
 
-  - `instructions: string`
+  - `instructions: string or null`
 
   - `model: BetaDreamModelConfig`
 
@@ -188,7 +195,7 @@ List Dreams
 
       - `"memory_store"`
 
-  - `session_id: string`
+  - `session_id: string or null`
 
   - `status: BetaDreamStatus`
 
@@ -228,7 +235,7 @@ List Dreams
 
       Total output tokens generated across every pipeline stage.
 
-- `next_page: string`
+- `next_page: string or null`
 
 ### Example
 

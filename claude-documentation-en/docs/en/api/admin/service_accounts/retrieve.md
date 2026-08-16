@@ -1,3 +1,8 @@
+---
+title: Get Service Account
+url: https://platform.claude.com/docs/en/api/admin/service_accounts/retrieve
+---
+
 ## Get Service Account
 
 **get** `/v1/organizations/service_accounts/{service_account_id}`
@@ -31,11 +36,11 @@ Retrieve a service account by its ID (`svac_...`).
 
     Tagged ID of the service account.
 
-  - `archived_at: string`
+  - `archived_at: string or null`
 
     If set, this service account is archived.
 
-  - `archived_by_actor_id: string`
+  - `archived_by_actor_id: string or null`
 
     Tagged ID (`user_`/`svac_`) of the actor that archived this service account.
 
@@ -43,11 +48,11 @@ Retrieve a service account by its ID (`svac_...`).
 
     When this service account was created.
 
-  - `created_by_actor_id: string`
+  - `created_by_actor_id: string or null`
 
     Tagged ID (`user_`/`svac_`) of the actor that created this service account.
 
-  - `description: string`
+  - `description: string or null`
 
     Optional free-text description.
 
@@ -71,7 +76,7 @@ Retrieve a service account by its ID (`svac_...`).
 
     When this service account was last updated.
 
-  - `updated_by_actor_id: string`
+  - `updated_by_actor_id: string or null`
 
     Tagged ID (`user_`/`svac_`) of the actor that last updated this service account.
 

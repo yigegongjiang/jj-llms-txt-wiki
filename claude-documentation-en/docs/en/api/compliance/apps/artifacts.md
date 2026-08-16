@@ -1,3 +1,8 @@
+---
+title: Artifacts
+url: https://platform.claude.com/docs/en/api/compliance/apps/artifacts
+---
+
 # Artifacts
 
 ## Get artifact metadata
@@ -27,7 +32,7 @@ without downloading every artifact.
 
   Artifact ID e.g. 'claude_artifact_abc123'
 
-- `artifact_type: string`
+- `artifact_type: string or null`
 
   MIME-like artifact type e.g. 'application/vnd.ant.code'
 
@@ -47,7 +52,7 @@ without downloading every artifact.
 
   Size in bytes of the artifact content (UTF-8 encoded)
 
-- `title: string`
+- `title: string or null`
 
   Artifact title
 
@@ -117,7 +122,7 @@ curl https://api.anthropic.com/v1/compliance/apps/artifacts/$ARTIFACT_VERSION_ID
 
     Artifact ID e.g. 'claude_artifact_abc123'
 
-  - `artifact_type: string`
+  - `artifact_type: string or null`
 
     MIME-like artifact type e.g. 'application/vnd.ant.code'
 
@@ -137,7 +142,7 @@ curl https://api.anthropic.com/v1/compliance/apps/artifacts/$ARTIFACT_VERSION_ID
 
     Size in bytes of the artifact content (UTF-8 encoded)
 
-  - `title: string`
+  - `title: string or null`
 
     Artifact title
 
