@@ -2,1868 +2,2460 @@
   "version": 1,
   "entries": {
     "https://developers.openai.com/ads/api-overview.md": {
-      "etag": "\"6fd888fa916257c65b8cad7de23ff9b3\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:07 GMT"
+      "etag": "\"333607b024fcf360f3565087d8b0f5c1\"",
+      "last_modified": "Sun, 16 Aug 2026 02:56:38 GMT"
     },
     "https://developers.openai.com/ads/api-partner-setup.md": {
-      "etag": "\"a409d047ecbc19ad6f87fd6bfde67067\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"08ffc359c1bdb358f14039642792dd76\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/api-quickstart.md": {
-      "etag": "\"7d8259c7cd0aa94152e763720ecfed0a\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"fcc6e09698818eb7c56c5c45518e83d5\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:31 GMT"
     },
     "https://developers.openai.com/ads/api-reference/ad-account.md": {
-      "etag": "\"9a6e050f91521d3a3fb0d31d29bbdc16\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:07 GMT"
+      "etag": "\"20ded20d606dac61fc3aa2ce0f3992ad\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:31 GMT"
     },
     "https://developers.openai.com/ads/api-reference/ad-groups.md": {
-      "etag": "\"6f62e2488337b01f0fef9bee3696cd54\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:07 GMT"
+      "etag": "\"0fee003c086c8bed253c175a2bde092c\"",
+      "last_modified": "Sun, 16 Aug 2026 02:20:18 GMT"
     },
     "https://developers.openai.com/ads/api-reference/ads.md": {
-      "etag": "\"96149000c844cc72796df4872a5fe1d8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"ddb8546a5ed10d082b8c8c66a7602a2d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:31 GMT"
     },
     "https://developers.openai.com/ads/api-reference/authentication.md": {
-      "etag": "\"2d72b953563393f5a23269c1d07f992b\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"ac8d6e9fce900a5b4ea6c20824008f73\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/api-reference/campaigns.md": {
-      "etag": "\"801e0b98ce3c764c1c7039097c854298\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:07 GMT"
+      "etag": "\"8d4b79e90aa17e8c9322f9dcee505441\"",
+      "last_modified": "Sun, 16 Aug 2026 02:20:26 GMT"
     },
     "https://developers.openai.com/ads/api-reference/conversion-setup.md": {
-      "etag": "\"c96e5f132249ec692b25a370c9e237ae\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"7164b74b0a41a562b6118f098cbd42d8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/api-reference/files.md": {
-      "etag": "\"b0135a8a3dfce4bb402971cf898aed06\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"062a1cdbd9b22b4bd2e5cfdccfa2e478\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/api-reference/insights.md": {
-      "etag": "\"dcd886b9f2bef08841fca83f4dbb030a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"8884ba469643b7d95f515f0512ed9363\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/bulk-api.md": {
-      "etag": "\"696dff02e38a482ac1327fdbc3220e4a\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"d9be07c2dffc319237090c87e9d3f930\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/campaign-targeting.md": {
-      "etag": "\"504a98cd65d2d8791cc9ff6698d082ee\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"a72552415f28110ce8626597b6b1a555\"",
+      "last_modified": "Sun, 16 Aug 2026 02:06:38 GMT"
     },
     "https://developers.openai.com/ads/conversion-optimized-campaigns.md": {
-      "etag": "\"1d6b67c357deeb06e0a747c33b1811b2\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:07 GMT"
+      "etag": "\"f3b2946eaa143874543b4d060db5af26\"",
+      "last_modified": "Sun, 16 Aug 2026 02:06:47 GMT"
     },
     "https://developers.openai.com/ads/conversions-api.md": {
-      "etag": "\"102bcf2d9564616da7e9fd7931f8c644\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"13c76be676dbfdd1ee9a88b2868e5263\"",
+      "last_modified": "Sun, 16 Aug 2026 01:45:57 GMT"
+    },
+    "https://developers.openai.com/ads/delta-feeds.md": {
+      "etag": "\"08ba2f7fb5acfbde82640bf096f20371\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/image-tag.md": {
-      "etag": "\"71bd174ae61a6b4123ff032a9c14ef04\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"7425437862e79292230f3ab70bf2ca22\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/llms.txt": {
-      "etag": "\"2b619addc1d8c98e9ce83b6589d90ab0\"",
-      "last_modified": "Sat, 25 Jul 2026 10:24:10 GMT"
+      "etag": "\"7737f4778ef7b93ee399b2ec13c11616\"",
+      "last_modified": "Sat, 15 Aug 2026 05:49:46 GMT"
     },
     "https://developers.openai.com/ads/measurement-pixel.md": {
-      "etag": "\"d267a28045b54227d7f2cab02a26f877\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:07 GMT"
+      "etag": "\"0c94be96b2e209c33b4c383968653096\"",
+      "last_modified": "Sun, 16 Aug 2026 01:45:26 GMT"
+    },
+    "https://developers.openai.com/ads/multiple-pixels.md": {
+      "etag": "\"a2535576bb32fb2939ec138b2c87ce9e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/ads/product-feeds.md": {
-      "etag": "\"f84950e0b62a768db2b453c53e573b24\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"1ac5d8faa68bb588ba28ef621c3f8d2a\"",
+      "last_modified": "Sat, 15 Aug 2026 09:29:23 GMT"
     },
     "https://developers.openai.com/ads/supported-events.md": {
-      "etag": "\"ebe04faf3b94fb3d9bd552c2db5c9457\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"4bf76cb0dedb7688f6f4c6a61ee0a4c1\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
     },
     "https://developers.openai.com/api/docs/actions/actions-library.md": {
-      "etag": "\"546fe30a0e73f87872c5e34183dd2b60\"",
-      "last_modified": "Sat, 11 Jul 2026 15:14:36 GMT"
+      "etag": "\"ed1694b39d6fb172398088549725f6b8\"",
+      "last_modified": "Sat, 15 Aug 2026 04:06:55 GMT"
     },
     "https://developers.openai.com/api/docs/actions/authentication.md": {
-      "etag": "\"7c1b57dea9c32f7e3800923a0641edab\"",
-      "last_modified": "Sat, 11 Jul 2026 15:14:36 GMT"
+      "etag": "\"a4d9b2375b6f2205502883b9369e3b29\"",
+      "last_modified": "Sat, 15 Aug 2026 02:41:00 GMT"
     },
     "https://developers.openai.com/api/docs/actions/data-retrieval.md": {
-      "etag": "\"5f8b30cda3a42ea06d7fc9927f75efa0\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"ecd8c9dbb0378c97ab77ad0622d16288\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/api/docs/actions/getting-started.md": {
-      "etag": "\"1a2b5413dbca067d9b5b783de68e465a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"a26b83fa0d1ed063e9552db7f77b5818\"",
+      "last_modified": "Sat, 15 Aug 2026 06:34:21 GMT"
     },
     "https://developers.openai.com/api/docs/actions/introduction.md": {
-      "etag": "\"2652158d52da5fced596ed728a392a49\"",
-      "last_modified": "Sat, 11 Jul 2026 07:22:42 GMT"
+      "etag": "\"aac0dc139f0da94d289e26af2cf4dfd1\"",
+      "last_modified": "Sat, 15 Aug 2026 04:06:55 GMT"
     },
     "https://developers.openai.com/api/docs/actions/production.md": {
-      "etag": "\"ede8a894b9847a97fd39ec7548a3e066\"",
-      "last_modified": "Sat, 11 Jul 2026 15:14:36 GMT"
+      "etag": "\"de64ae029ee2cf49bbfd82f9b1f9b941\"",
+      "last_modified": "Sat, 15 Aug 2026 04:17:01 GMT"
     },
     "https://developers.openai.com/api/docs/actions/sending-files.md": {
-      "etag": "\"5ce98938685bf165ae004f0e0c4c744a\"",
-      "last_modified": "Sat, 11 Jul 2026 07:21:16 GMT"
+      "etag": "\"d089b30c2f807e02aac327ad06844ca6\"",
+      "last_modified": "Sat, 15 Aug 2026 03:52:15 GMT"
     },
     "https://developers.openai.com/api/docs/assistants/deep-dive.md": {
-      "etag": "\"505dff6bc42b2f9930750eaf375c76c8\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"e7f34b75b68a57dca723b5555917b2f4\"",
+      "last_modified": "Sat, 15 Aug 2026 02:05:41 GMT"
     },
     "https://developers.openai.com/api/docs/assistants/migration.md": {
-      "etag": "\"072f8baeb66cd56da7b3f43879f8dee3\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"604fbc9d2ba37ac1d09e0c04e7ded5f5\"",
+      "last_modified": "Sat, 15 Aug 2026 18:25:47 GMT"
     },
     "https://developers.openai.com/api/docs/assistants/tools.md": {
-      "etag": "\"ce1b7d1d4e0c9fff9107c75747ab2649\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"6f505e28a701306e162613150bee1cb9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/api/docs/assistants/tools/code-interpreter.md": {
-      "etag": "\"36b8385e9e7c35a43cfb7eeb314646e7\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"e3ed8971ff395ab7f7f8be7956160631\"",
+      "last_modified": "Sun, 16 Aug 2026 01:14:12 GMT"
     },
     "https://developers.openai.com/api/docs/assistants/tools/file-search.md": {
-      "etag": "\"3d29df76c4e407efe910073d08abc903\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"a9fc983247be9690741e4591e86a2761\"",
+      "last_modified": "Sun, 16 Aug 2026 00:12:09 GMT"
     },
     "https://developers.openai.com/api/docs/assistants/tools/function-calling.md": {
-      "etag": "\"b4cb6b4cf543aa3b15b33a08cd0fc281\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"ae7f00321483a6872e25ea91c45b3132\"",
+      "last_modified": "Sat, 15 Aug 2026 13:39:55 GMT"
     },
     "https://developers.openai.com/api/docs/bots.md": {
-      "etag": "\"dba43c56c5ae415552b9890c29df10ca\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"7135ec97066fbf6098abdc496973c2e4\"",
+      "last_modified": "Sat, 15 Aug 2026 02:55:45 GMT"
+    },
+    "https://developers.openai.com/api/docs/changelog.md": {
+      "etag": "\"c6cbe3b7fb45a60c22fa34a3e7e1b56f\"",
+      "last_modified": "Sat, 15 Aug 2026 01:48:13 GMT"
     },
     "https://developers.openai.com/api/docs/concepts.md": {
-      "etag": "\"d196a171fa162b5c15be19a01897d441\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"aba8172ef2730efc6a436054b5c2a90e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/api/docs/deprecations.md": {
-      "etag": "\"9228b9c842af97fee995b5ac82146388\"",
-      "last_modified": "Sat, 25 Jul 2026 05:50:02 GMT"
+      "etag": "\"657d5bfa655b3260877a0a3bf4a344e1\"",
+      "last_modified": "Sat, 15 Aug 2026 23:07:41 GMT"
     },
     "https://developers.openai.com/api/docs/gpts/release-notes.md": {
-      "etag": "\"e9084dfe21222857b46a54c49910c3e8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"644aa62ec8015e5cb3edf00daae75e13\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/admin-apis.md": {
-      "etag": "\"9bcb38de42b7b5c7841cb7f0b86da5a2\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"01b1749db4863159fc0ef48fd91245be\"",
+      "last_modified": "Sun, 16 Aug 2026 02:15:24 GMT"
     },
     "https://developers.openai.com/api/docs/guides/advanced-usage.md": {
-      "etag": "\"9d6561e64430fd011568e52e77317ac5\"",
-      "last_modified": "Sat, 25 Jul 2026 16:46:20 GMT"
+      "etag": "\"cf51b22b4c7192a8a02834fe0340559f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agent-builder-safety.md": {
-      "etag": "\"d4adbc793d18c077c3f5135fc8a79a43\"",
-      "last_modified": "Sat, 11 Jul 2026 08:59:47 GMT"
+      "etag": "\"3861fa90102bf2280557a83e6941185e\"",
+      "last_modified": "Sat, 15 Aug 2026 20:44:53 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agent-builder.md": {
-      "etag": "\"5f501c470e6b533f2a8d03f89d8752fc\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"31a3dae8f85ccfbd6a2be124c6458cc1\"",
+      "last_modified": "Sat, 15 Aug 2026 04:01:53 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agent-builder/migrate-from-agent-builder.md": {
-      "etag": "\"67291fbef938d6347f3b0a912f866cdf\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"ce1e2f9dbe6091846fae695ca25cf9e6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agent-evals.md": {
-      "etag": "\"2e4d8f6bf9b313a599f24ad84c79b228\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"c8a77f17374b247f7111edf3488ed8fa\"",
+      "last_modified": "Sat, 15 Aug 2026 04:45:12 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents.md": {
-      "etag": "\"aee3473a30972cb00afe7dbbd67171b9\"",
-      "last_modified": "Sat, 11 Jul 2026 08:06:41 GMT"
+      "etag": "\"1600da769afb3b87dcf4045dcc9486f9\"",
+      "last_modified": "Sun, 16 Aug 2026 02:47:06 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/define-agents.md": {
-      "etag": "\"dadeacf320a976fc49725e9bc73b5d28\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"9f41f0e68079f62e7fc613ff5f06b343\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/guardrails-approvals.md": {
-      "etag": "\"9b5b7f6726c62a04a0963463d3eda535\"",
-      "last_modified": "Sun, 26 Jul 2026 08:31:46 GMT"
+      "etag": "\"af854da75d62fce6385f563164e69ea7\"",
+      "last_modified": "Sat, 15 Aug 2026 06:08:09 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/integrations-observability.md": {
-      "etag": "\"b07ceca24913104c36e57bd60d8fe833\"",
-      "last_modified": "Sun, 26 Jul 2026 08:31:46 GMT"
+      "etag": "\"40217fc1a75037a37bb53b5af1f0d944\"",
+      "last_modified": "Sat, 15 Aug 2026 05:16:12 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/models.md": {
-      "etag": "\"eb614a75c8936a9e516d5e5f6b40b066\"",
-      "last_modified": "Sun, 26 Jul 2026 11:29:31 GMT"
+      "etag": "\"c990aa02902a3b4324ab3df2cfe6ef54\"",
+      "last_modified": "Sun, 16 Aug 2026 00:43:54 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/orchestration.md": {
-      "etag": "\"2677842aa071b3e3e8e9b3db05c9ffdc\"",
-      "last_modified": "Sat, 11 Jul 2026 09:13:00 GMT"
+      "etag": "\"abd4d675226ec5bfcc823b17fe33e3db\"",
+      "last_modified": "Sat, 15 Aug 2026 05:25:03 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/quickstart.md": {
-      "etag": "\"68493b3cae543fb59303683f8eba380e\"",
-      "last_modified": "Sun, 26 Jul 2026 02:13:40 GMT"
+      "etag": "\"e1f6d1d7821b4034e6efe17a9d471f6b\"",
+      "last_modified": "Sun, 16 Aug 2026 01:07:21 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/results.md": {
-      "etag": "\"9c9fa554c73d1f66d2071411df6221a9\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"16b7a9c58fdb94a0647b4dca9a4321d4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/running-agents.md": {
-      "etag": "\"8c105100e88e311520ef0ba5c7e8ffc9\"",
-      "last_modified": "Sun, 26 Jul 2026 02:20:12 GMT"
+      "etag": "\"08a8c10c5c9f4429b06f083fc6c54fab\"",
+      "last_modified": "Sun, 16 Aug 2026 01:55:19 GMT"
     },
     "https://developers.openai.com/api/docs/guides/agents/sandboxes.md": {
-      "etag": "\"ef3ba73490296be00254dcc8ec308fa3\"",
-      "last_modified": "Sat, 25 Jul 2026 10:01:39 GMT"
+      "etag": "\"89f7c77caebd3b3c226cae262bccc2fa\"",
+      "last_modified": "Sun, 16 Aug 2026 01:06:07 GMT"
     },
     "https://developers.openai.com/api/docs/guides/amazon-bedrock.md": {
-      "etag": "\"f62bd47bb16de7021e44a319dab1283f\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"2a6511fbb7795c4111cd6a2e4bfa9792\"",
+      "last_modified": "Sat, 15 Aug 2026 02:06:02 GMT"
     },
     "https://developers.openai.com/api/docs/guides/audio.md": {
-      "etag": "\"5e86f297a0c2c22f52cc7577ce7c309e\"",
-      "last_modified": "Sat, 25 Jul 2026 06:13:52 GMT"
+      "etag": "\"31ca612212e8dbfe26d10dd1b951e378\"",
+      "last_modified": "Sat, 15 Aug 2026 02:44:25 GMT"
     },
     "https://developers.openai.com/api/docs/guides/background.md": {
-      "etag": "\"f7714b91606d13064bc19b6f9f1a2970\"",
-      "last_modified": "Sat, 25 Jul 2026 10:08:58 GMT"
+      "etag": "\"4f30e6509e3e08abff0e98f0dc58545b\"",
+      "last_modified": "Sat, 15 Aug 2026 04:03:53 GMT"
     },
     "https://developers.openai.com/api/docs/guides/batch.md": {
-      "etag": "\"e292f1f3a67cb73106f8f3f37a2b8747\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"80e123ffd78dce754f5dc4866fbf8b64\"",
+      "last_modified": "Sat, 15 Aug 2026 19:49:25 GMT"
     },
     "https://developers.openai.com/api/docs/guides/chatkit-actions.md": {
-      "etag": "\"3d12b016ec2f183d11a1c14edb18db02\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:08 GMT"
+      "etag": "\"023d7230b40abb818661bee0cd62f312\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/chatkit-themes.md": {
-      "etag": "\"b7fd5b32bcbdf112fcc47c40002821ae\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"c790b0b8613d0c3e3aad105eac0a62d4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/chatkit-widgets.md": {
-      "etag": "\"57625c04c48d660b77acd4b139659fc4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"c18d2ae218e45f8ae8953b99a709dd65\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/chatkit.md": {
-      "etag": "\"20d2cf110f1efb99763ff7e9b3ecdf00\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"1f98c0e3a3b3e737cf0bf658fd666bc7\"",
+      "last_modified": "Sat, 15 Aug 2026 06:11:28 GMT"
     },
     "https://developers.openai.com/api/docs/guides/citation-formatting.md": {
-      "etag": "\"470339dc561d53f93f12616e8dcd60eb\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"5b9e3d9b7f9346cdf0457fb9f5d37ef9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/code-generation.md": {
-      "etag": "\"81bc90a81e3b82a103b735050b275e82\"",
-      "last_modified": "Sun, 26 Jul 2026 03:25:07 GMT"
+      "etag": "\"e8e74b77d5cd17c9522e5b1e5091e668\"",
+      "last_modified": "Sat, 15 Aug 2026 20:01:27 GMT"
     },
     "https://developers.openai.com/api/docs/guides/compaction.md": {
-      "etag": "\"4a8d99369a98ad1332bc38934383cb29\"",
-      "last_modified": "Sat, 25 Jul 2026 06:10:31 GMT"
+      "etag": "\"6a0f5a78ea4915a4ec505b481804af7d\"",
+      "last_modified": "Sat, 15 Aug 2026 23:54:05 GMT"
     },
     "https://developers.openai.com/api/docs/guides/completions.md": {
-      "etag": "\"053bcc999bacd6406c14c99cc88472bc\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:08 GMT"
+      "etag": "\"4d695e853af478a0875af4429af886a1\"",
+      "last_modified": "Sat, 15 Aug 2026 07:13:24 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/content-provenance.md": {
+      "etag": "\"cc5d24a784793123651769d8872e3545\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/conversation-state.md": {
-      "etag": "\"7c84261956b78edfe0677db6895b3603\"",
-      "last_modified": "Sat, 25 Jul 2026 06:09:09 GMT"
+      "etag": "\"e30ca3a32929c8ffdfc85254c24acece\"",
+      "last_modified": "Sat, 15 Aug 2026 03:18:56 GMT"
     },
     "https://developers.openai.com/api/docs/guides/cost-optimization.md": {
-      "etag": "\"4269639fd742ef906ee36dea8c633b78\"",
-      "last_modified": "Sat, 11 Jul 2026 07:17:39 GMT"
+      "etag": "\"e4a3c881630441310c7ad2508eb5d8ca\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/custom-chatkit.md": {
-      "etag": "\"56e3a6a5dd7166bea467b5f4feee3b02\"",
-      "last_modified": "Sun, 26 Jul 2026 01:53:53 GMT"
+      "etag": "\"267192b1d29f20b30c53c6d42fab9b56\"",
+      "last_modified": "Sat, 15 Aug 2026 06:13:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/deep-research.md": {
-      "etag": "\"a7d732fa669f8e6caf1826b43c5d9c43\"",
-      "last_modified": "Sun, 26 Jul 2026 11:40:10 GMT"
+      "etag": "\"01bb2c9483f216ba87999739e3a9baaa\"",
+      "last_modified": "Sat, 15 Aug 2026 02:17:21 GMT"
     },
     "https://developers.openai.com/api/docs/guides/deployment-checklist.md": {
-      "etag": "\"009b1155bf5e58cf7d8d2b1c85b8a821\"",
-      "last_modified": "Sun, 26 Jul 2026 05:30:54 GMT"
+      "etag": "\"a9b1d438b6abdc9152970bb7c767bd18\"",
+      "last_modified": "Sun, 16 Aug 2026 01:42:03 GMT"
     },
     "https://developers.openai.com/api/docs/guides/developer-mode.md": {
-      "etag": "\"2c069fd9b14155e98eb8cbbe44420fa2\"",
-      "last_modified": "Sat, 11 Jul 2026 06:19:08 GMT"
+      "etag": "\"4c8f9d81829676177379e00b9130d5cf\"",
+      "last_modified": "Sat, 15 Aug 2026 23:23:09 GMT"
     },
     "https://developers.openai.com/api/docs/guides/direct-preference-optimization.md": {
-      "etag": "\"f95394ada7318cba867b819c84b5c966\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"9c454ff7588ed596196b23ee296663bb\"",
+      "last_modified": "Sat, 15 Aug 2026 02:45:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/embeddings.md": {
-      "etag": "\"18e911f34de25f33063736e293c40843\"",
-      "last_modified": "Sun, 26 Jul 2026 09:24:43 GMT"
+      "etag": "\"cfac1f9d33a4ca00aa306748543185d6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/error-codes.md": {
-      "etag": "\"387daa60330d3a492bd4d130a832ac6d\"",
-      "last_modified": "Sat, 25 Jul 2026 10:10:40 GMT"
+      "etag": "\"642276bc648658153924c9dfbbf54a26\"",
+      "last_modified": "Sat, 15 Aug 2026 01:52:32 GMT"
     },
     "https://developers.openai.com/api/docs/guides/evals.md": {
-      "etag": "\"07bc539de5c366d7fd6c17923690358d\"",
-      "last_modified": "Sat, 25 Jul 2026 07:37:42 GMT"
+      "etag": "\"620d4340932888e639586f9a285bb81d\"",
+      "last_modified": "Sun, 16 Aug 2026 03:20:43 GMT"
     },
     "https://developers.openai.com/api/docs/guides/evaluation-best-practices.md": {
-      "etag": "\"a0dfc47a7e88880e797b43250b919b2f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"8d832c52739fcb724811d16a60c80ac6\"",
+      "last_modified": "Sat, 15 Aug 2026 05:09:22 GMT"
     },
     "https://developers.openai.com/api/docs/guides/evaluation-getting-started.md": {
-      "etag": "\"d7afb6ffb79d9f4e0fc8b1c6ef344b90\"",
-      "last_modified": "Sat, 11 Jul 2026 06:53:43 GMT"
+      "etag": "\"9e07b3edef1997c56d85bb81f27dd48e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/external-models.md": {
-      "etag": "\"6aa93b2220219bbcf1cbd1a7c1944e6f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:17 GMT"
+      "etag": "\"59ad87f8cce4bbb89324053f3512f548\"",
+      "last_modified": "Sat, 15 Aug 2026 10:12:01 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/fast-mode.md": {
+      "etag": "\"e0ff24363ad6dc7f4c700506497137dc\"",
+      "last_modified": "Sun, 16 Aug 2026 01:52:53 GMT"
     },
     "https://developers.openai.com/api/docs/guides/file-inputs.md": {
-      "etag": "\"ca2a0067a764a54414e367f7dd8c55ad\"",
-      "last_modified": "Sun, 26 Jul 2026 04:50:14 GMT"
+      "etag": "\"9aa00e8171fb3f4177c5e342b1a53681\"",
+      "last_modified": "Sat, 15 Aug 2026 04:37:59 GMT"
     },
     "https://developers.openai.com/api/docs/guides/fine-tuning-best-practices.md": {
-      "etag": "\"f52801fb0cc2fd0a6cd83c54cdab07d0\"",
-      "last_modified": "Sun, 26 Jul 2026 07:01:31 GMT"
+      "etag": "\"cadb6a015e9085d776c8444e3b066a51\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/flex-processing.md": {
-      "etag": "\"64accc83e05222184ee5df14f683fb5f\"",
-      "last_modified": "Sun, 26 Jul 2026 10:12:20 GMT"
+      "etag": "\"b1093e75102d0f4872b2098b0a45b062\"",
+      "last_modified": "Sat, 15 Aug 2026 04:32:09 GMT"
     },
     "https://developers.openai.com/api/docs/guides/frontend-prompt.md": {
-      "etag": "\"4c58e42e5c7e7def86e907ea304b89c1\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"b3d7789d4c70f2c5f6ab6f0e6236e542\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/function-calling.md": {
-      "etag": "\"7058bf860eba3cec672d84fdd4ec69ea\"",
-      "last_modified": "Sat, 25 Jul 2026 06:51:49 GMT"
+      "etag": "\"cfb60dbe199a9cee7b7c8c65bb17bde1\"",
+      "last_modified": "Sat, 15 Aug 2026 02:09:41 GMT"
     },
     "https://developers.openai.com/api/docs/guides/graders.md": {
-      "etag": "\"2edc36d3edb2915eca877ed48f98575e\"",
-      "last_modified": "Sun, 26 Jul 2026 08:35:13 GMT"
+      "etag": "\"8059161da6b8dd863908a09a5d3b6544\"",
+      "last_modified": "Sat, 15 Aug 2026 03:15:35 GMT"
     },
     "https://developers.openai.com/api/docs/guides/image-generation.md": {
-      "etag": "\"5f5a1681e6df0fde9a56208ef5cd0752\"",
-      "last_modified": "Sat, 25 Jul 2026 05:46:23 GMT"
+      "etag": "\"f005dc5f12599363794653a4d8e8c3d4\"",
+      "last_modified": "Sat, 15 Aug 2026 01:46:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/images-vision.md": {
-      "etag": "\"d02207eab1f03b5ca249b61876422c8d\"",
-      "last_modified": "Sat, 25 Jul 2026 07:21:31 GMT"
+      "etag": "\"329585dce16e47024936c0b0aa2f7eed\"",
+      "last_modified": "Sun, 16 Aug 2026 01:33:42 GMT"
     },
     "https://developers.openai.com/api/docs/guides/ip-addresses.md": {
-      "etag": "\"2742eb661ff9c29629ee0617c62b2479\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:09 GMT"
+      "etag": "\"33b2b19263b2531540a9e25d6453273c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/ip-allowlist.md": {
+      "etag": "\"0ec943e2838a5a2fae39a14dc8a628a2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latency-optimization.md": {
-      "etag": "\"23ae6b7b2a6f27da5f93e8fdc5c1596f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:49:23 GMT"
+      "etag": "\"61d9f4e23f902ae741d602e081281972\"",
+      "last_modified": "Sat, 15 Aug 2026 04:29:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-4.1.md": {
-      "etag": "\"c93992f9b43bb3067b2580590490e864\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:09 GMT"
+      "etag": "\"76a3a41028587069076350ebf4e04373\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-5.1.md": {
-      "etag": "\"39fc67cc101a2d8df9ea485eb4e3a218\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:00 GMT"
+      "etag": "\"62ab35667485ccac6e62e97543ffbeaa\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-5.2.md": {
-      "etag": "\"c5fb4da7e330c1416a66a4f4ef158263\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:09 GMT"
+      "etag": "\"ca7fc61b8c320ae4735636c413ba9d4a\"",
+      "last_modified": "Sun, 16 Aug 2026 02:24:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-5.3-codex.md": {
-      "etag": "\"211734bc3782bba83827e85facde93d0\"",
-      "last_modified": "Sat, 25 Jul 2026 07:10:39 GMT"
+      "etag": "\"8dcd53666ed0413546896ea4cddb647b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-5.4.md": {
-      "etag": "\"b772649a2a8fa26c3d4f1b33d88dddc1\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:00 GMT"
+      "etag": "\"7a7aaa5499798b1f007a3feedc2f66b6\"",
+      "last_modified": "Sun, 16 Aug 2026 02:34:49 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-5.5.md": {
-      "etag": "\"37fe7f0ca7fcbb85b42157295b0be6dd\"",
-      "last_modified": "Sat, 11 Jul 2026 07:08:54 GMT"
+      "etag": "\"f85b4050b7a5fdec9b6508dc56b5fafa\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-5.6.md": {
-      "etag": "\"5f88f065f19c5caee118617b1ac9b722\"",
-      "last_modified": "Fri, 17 Jul 2026 03:08:35 GMT"
+      "etag": "\"2044a7bfb4dcefefffc5eafb03dafbb2\"",
+      "last_modified": "Sat, 15 Aug 2026 04:52:42 GMT"
     },
     "https://developers.openai.com/api/docs/guides/latest-model/gpt-5.md": {
-      "etag": "\"d9ebf89b4d09faecab10a60bfe0e0b76\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"f8239020457c6939d0e7ff7f7cc59c83\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/migrate-to-responses.md": {
-      "etag": "\"03e2e50c80febbb0352d8f48f7950d74\"",
-      "last_modified": "Sat, 25 Jul 2026 05:55:18 GMT"
+      "etag": "\"041efef5bac0e581a8919e9b63cf189f\"",
+      "last_modified": "Sun, 16 Aug 2026 02:55:07 GMT"
     },
     "https://developers.openai.com/api/docs/guides/model-optimization.md": {
-      "etag": "\"3d9d8c84f5b900e02a9559c7e47ee9dd\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"2e614d7ec53fddfaf75573a182ede2ed\"",
+      "last_modified": "Sat, 15 Aug 2026 02:44:32 GMT"
     },
     "https://developers.openai.com/api/docs/guides/model-selection.md": {
-      "etag": "\"9b07d1988ebef750a2f79e7a8618fbda\"",
-      "last_modified": "Sat, 11 Jul 2026 10:22:13 GMT"
+      "etag": "\"778f82f850b1e3bdd08a2d86ee442426\"",
+      "last_modified": "Sat, 15 Aug 2026 02:04:21 GMT"
     },
     "https://developers.openai.com/api/docs/guides/moderation.md": {
-      "etag": "\"c30e383f9cdefef6fb04d066c0fc25ef\"",
-      "last_modified": "Sat, 25 Jul 2026 05:50:53 GMT"
+      "etag": "\"5959b6485c4c0491a59066de1128b89a\"",
+      "last_modified": "Sat, 15 Aug 2026 02:34:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/node-reference.md": {
-      "etag": "\"4088ab27057a02f80cf4ca03fb8acaf0\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"d2209e1a3e0825c646f9cf31f44a8ac3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/optimizing-llm-accuracy.md": {
-      "etag": "\"3415b7b708fbeed4bdefe53240b946d3\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"ce2940a750905539ebfb7c44af2ef7ca\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/predicted-outputs.md": {
-      "etag": "\"7ed0494a4a858ee1ce3dbe4ba48b12d9\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:09 GMT"
+      "etag": "\"3d0c8884fa3d93399309e80befe99122\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/private-link.md": {
-      "etag": "\"c0954a92779c4a213a58c95b8db28bac\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"5733929fced6d67a356fa212678b01e9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/production-best-practices.md": {
-      "etag": "\"5d1c9b50504e7a6052f7cafe241698ec\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:09 GMT"
+      "etag": "\"822f4ea757289bb29ce66911d9f7dd5d\"",
+      "last_modified": "Sat, 15 Aug 2026 11:53:19 GMT"
     },
     "https://developers.openai.com/api/docs/guides/prompt-caching.md": {
-      "etag": "\"46d50c656cdc1ad29d69c50139af6925\"",
-      "last_modified": "Fri, 17 Jul 2026 03:02:57 GMT"
+      "etag": "\"bf8434ddbf443bfedc8e3e267927c41f\"",
+      "last_modified": "Sat, 15 Aug 2026 19:44:14 GMT"
     },
     "https://developers.openai.com/api/docs/guides/prompt-engineering.md": {
-      "etag": "\"a34980d9f76d7a95f9d25580186c593b\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:09 GMT"
+      "etag": "\"e8e606191c415b768ada328122c738c6\"",
+      "last_modified": "Sat, 15 Aug 2026 20:01:26 GMT"
     },
     "https://developers.openai.com/api/docs/guides/prompt-generation.md": {
-      "etag": "\"78e7e83b514ebd98ea0f1b5bf8d7e3f2\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"4ad91f7f0414e8a7ca6cd53d113d6b2d\"",
+      "last_modified": "Sun, 16 Aug 2026 00:55:25 GMT"
     },
     "https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6.md": {
-      "etag": "\"9af093dc6d74909432abf7a1efc896b6\"",
-      "last_modified": "Sat, 11 Jul 2026 17:04:43 GMT"
+      "etag": "\"578320d8c07179094d4da89c1a2b76de\"",
+      "last_modified": "Sun, 16 Aug 2026 00:43:54 GMT"
     },
     "https://developers.openai.com/api/docs/guides/prompt-optimizer.md": {
-      "etag": "\"747840a933b3a07ebd0f564ec1805def\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"f8649ceb6497d19abed0e6218cda23fb\"",
+      "last_modified": "Sat, 15 Aug 2026 04:03:57 GMT"
     },
     "https://developers.openai.com/api/docs/guides/prompting.md": {
-      "etag": "\"8cc0b7beea57b69bb46d9ff71b11d30f\"",
-      "last_modified": "Sat, 11 Jul 2026 07:01:29 GMT"
+      "etag": "\"f66d0968952edb22f58e7feedc21058c\"",
+      "last_modified": "Sat, 15 Aug 2026 03:55:44 GMT"
     },
     "https://developers.openai.com/api/docs/guides/prompting/migrate-from-prompt-object.md": {
-      "etag": "\"79eb7129da1de818c151aff75e9662b5\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:10 GMT"
+      "etag": "\"007412d6f4075d2de913ffceb708c63a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/rate-limits.md": {
-      "etag": "\"acafd3382ab1a0fb99d7bd1313e47122\"",
-      "last_modified": "Sat, 25 Jul 2026 17:24:18 GMT"
+      "etag": "\"6c9330ff164d3757a08782583fa37ac9\"",
+      "last_modified": "Sat, 15 Aug 2026 19:38:09 GMT"
     },
     "https://developers.openai.com/api/docs/guides/rbac.md": {
-      "etag": "\"713ff9d025e94ef706f4a31a6a239e0a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"c82358328b21ddb870ec717054a736e9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-conversations.md": {
-      "etag": "\"2e7f29dd2e51d313bc527096ffaab8f7\"",
-      "last_modified": "Sat, 25 Jul 2026 05:58:41 GMT"
+      "etag": "\"2bf5f724e169929eec7f820cbbd515e8\"",
+      "last_modified": "Sun, 16 Aug 2026 01:19:10 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-costs.md": {
-      "etag": "\"68a75ae320fa964427388902aff8a0c6\"",
-      "last_modified": "Sat, 11 Jul 2026 07:17:39 GMT"
+      "etag": "\"bea73b0e082caa1cf8041ff4c712faf4\"",
+      "last_modified": "Sun, 16 Aug 2026 01:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-mcp.md": {
-      "etag": "\"2d9ed182c96f13f18c14a4527b9d5955\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"341012de7f8136cf509b4b2358fb3121\"",
+      "last_modified": "Sat, 15 Aug 2026 04:14:36 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-models-prompting.md": {
-      "etag": "\"665b1d1d705f23cf48d324a41592f9a1\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:00 GMT"
+      "etag": "\"f6b547e3b8972df1e39fd8bf324014e4\"",
+      "last_modified": "Sat, 15 Aug 2026 03:08:05 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-server-controls.md": {
-      "etag": "\"8cf70da9397c073bf740e153dcef7d3c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:42:57 GMT"
+      "etag": "\"b40b3e74d7d8878a57d91a3b165f2479\"",
+      "last_modified": "Sat, 15 Aug 2026 09:08:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-sip.md": {
-      "etag": "\"2de6b783832e955c2b4b820f8e0347cd\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"32dc50b5b9603907442c96b078259691\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-transcription.md": {
-      "etag": "\"4052f2d8926873fd3853f6a0f7e54b68\"",
-      "last_modified": "Sat, 11 Jul 2026 08:07:47 GMT"
+      "etag": "\"32a2fff0736e80ce07976e7e72dbcaf7\"",
+      "last_modified": "Sat, 15 Aug 2026 01:52:16 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-translation.md": {
-      "etag": "\"61b2e83236d5541e63ef65b4ec8ac435\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"c2b33023f36304c55cc396b6ec8511bc\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-vad.md": {
-      "etag": "\"7590ea300b71a668026466955bd372dc\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"0ea24580431ac24cb0c1df74d1bff404\"",
+      "last_modified": "Sat, 15 Aug 2026 04:13:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-webrtc.md": {
-      "etag": "\"bc8802545345271460ce219bd473c6b6\"",
-      "last_modified": "Sat, 11 Jul 2026 12:06:33 GMT"
+      "etag": "\"25725b2e92a48dd357f5359dc88b5c5c\"",
+      "last_modified": "Sat, 15 Aug 2026 03:26:49 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime-websocket.md": {
-      "etag": "\"efabc3740bc125a41049c58e9400b57e\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:10 GMT"
+      "etag": "\"eb377496315828cddb21dabd6a0b2bf2\"",
+      "last_modified": "Sun, 16 Aug 2026 01:19:31 GMT"
     },
     "https://developers.openai.com/api/docs/guides/realtime.md": {
-      "etag": "\"6f69630e68d7ec9935a8d944bc72e615\"",
-      "last_modified": "Sat, 11 Jul 2026 08:07:47 GMT"
+      "etag": "\"a3c968dbdef006ff241f7ca0de0cf472\"",
+      "last_modified": "Sun, 16 Aug 2026 01:25:42 GMT"
     },
     "https://developers.openai.com/api/docs/guides/reasoning-best-practices.md": {
-      "etag": "\"eefc10049950af4bc41fb3cb7604c710\"",
-      "last_modified": "Sat, 11 Jul 2026 07:34:28 GMT"
+      "etag": "\"d03e20fe5df5656318993379c73b8a1a\"",
+      "last_modified": "Sat, 15 Aug 2026 02:23:26 GMT"
     },
     "https://developers.openai.com/api/docs/guides/reasoning.md": {
-      "etag": "\"cce155e91e64befeee6d363b4734f5a3\"",
-      "last_modified": "Sat, 25 Jul 2026 06:39:29 GMT"
+      "etag": "\"be2d91e665fa23a8b183698ef3311ce6\"",
+      "last_modified": "Sat, 15 Aug 2026 02:41:18 GMT"
     },
     "https://developers.openai.com/api/docs/guides/red-teaming.md": {
-      "etag": "\"99e5b464650361fc22cda523c2c07499\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"7355382074023ee4e5aea88d2267b964\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/reinforcement-fine-tuning.md": {
-      "etag": "\"eb7d45114adf9b41a96a4553af099bb3\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"490b9db56507ddee3aa8fd4a6629f5d3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/responses-multi-agent.md": {
-      "etag": "\"a828032fe2b8af39f033bc75c35c45a2\"",
-      "last_modified": "Sun, 26 Jul 2026 08:49:07 GMT"
+      "etag": "\"98476e81e6d249ba0f068e05ae16e3c6\"",
+      "last_modified": "Sun, 16 Aug 2026 01:28:40 GMT"
     },
     "https://developers.openai.com/api/docs/guides/retrieval.md": {
-      "etag": "\"735e4219475e4bab735a399415c261e1\"",
-      "last_modified": "Sun, 26 Jul 2026 08:31:38 GMT"
+      "etag": "\"74c01e46953d1f5cd82f5d35447f26d7\"",
+      "last_modified": "Sat, 15 Aug 2026 02:14:22 GMT"
     },
     "https://developers.openai.com/api/docs/guides/rft-use-cases.md": {
-      "etag": "\"9cc544c9f275cf4d1cfe88081dd8e203\"",
-      "last_modified": "Sat, 11 Jul 2026 16:21:24 GMT"
+      "etag": "\"4eeea5490e2dbc77aa5ab0f3ba41d375\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/safety-best-practices.md": {
-      "etag": "\"ce08efec966afaacd836efd5565a90ff\"",
-      "last_modified": "Sat, 25 Jul 2026 16:54:18 GMT"
+      "etag": "\"e3f5e02800ceb6962daaff2c93a6eb7f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:11:21 GMT"
     },
     "https://developers.openai.com/api/docs/guides/safety-checks.md": {
-      "etag": "\"97cad8782d5ecdd7d4344203441d3fbd\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"e2eabc4236c6aad7fda3bf173c7c257d\"",
+      "last_modified": "Sun, 16 Aug 2026 01:48:10 GMT"
     },
     "https://developers.openai.com/api/docs/guides/safety-checks/cybersecurity.md": {
-      "etag": "\"06d126de987c30ce9c3b1a7218469952\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"f820f684221193707e678a2a8d434ffa\"",
+      "last_modified": "Sat, 15 Aug 2026 04:27:41 GMT"
     },
     "https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance.md": {
-      "etag": "\"1486595a09e5829f7d8510e6ab8e52b4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"61b37f298cf52d033a30f9ec3a2b1780\"",
+      "last_modified": "Sat, 15 Aug 2026 17:24:38 GMT"
     },
     "https://developers.openai.com/api/docs/guides/secure-mcp-tunnels.md": {
-      "etag": "\"61c00d9e61a305b9e0818cb49c4c40c7\"",
-      "last_modified": "Sat, 11 Jul 2026 13:16:53 GMT"
+      "etag": "\"aece29a480a1e76ba1e964d475c65070\"",
+      "last_modified": "Sat, 15 Aug 2026 04:08:42 GMT"
     },
     "https://developers.openai.com/api/docs/guides/speech-to-text.md": {
-      "etag": "\"b6ad18e79821bdc573093e4f59070a98\"",
-      "last_modified": "Sat, 25 Jul 2026 09:16:36 GMT"
+      "etag": "\"3647f91b2030c83070d00f0794bbe681\"",
+      "last_modified": "Sat, 15 Aug 2026 23:55:17 GMT"
     },
     "https://developers.openai.com/api/docs/guides/spend-limits.md": {
-      "etag": "\"bd7ea99cbb26db85b8c4a2d0679f3823\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:00 GMT"
+      "etag": "\"41e7a401f0cc01348301113964e585c1\"",
+      "last_modified": "Sat, 15 Aug 2026 01:45:12 GMT"
     },
     "https://developers.openai.com/api/docs/guides/streaming-responses.md": {
-      "etag": "\"8e51c6f56fa4aa1551c33fc643a168dc\"",
-      "last_modified": "Sat, 25 Jul 2026 06:13:04 GMT"
+      "etag": "\"5253ba6bb011ddf16f202aabfd37dad3\"",
+      "last_modified": "Sat, 15 Aug 2026 02:42:18 GMT"
     },
     "https://developers.openai.com/api/docs/guides/structured-outputs.md": {
-      "etag": "\"1de0882dd330e0fd8011a47203a5a75d\"",
-      "last_modified": "Sat, 25 Jul 2026 06:28:00 GMT"
+      "etag": "\"67add6991bc06417b289d2f5112b646a\"",
+      "last_modified": "Sun, 16 Aug 2026 01:33:51 GMT"
     },
     "https://developers.openai.com/api/docs/guides/supervised-fine-tuning.md": {
-      "etag": "\"666280ab0fa1584f3ec91a3d75b0d4c8\"",
-      "last_modified": "Sat, 11 Jul 2026 15:53:12 GMT"
+      "etag": "\"08c6d731ed064d75aaac0fc6cfa18632\"",
+      "last_modified": "Sat, 15 Aug 2026 02:44:20 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/terraform.md": {
+      "etag": "\"dd39639a0fa75be3bfb3592ef789fd70\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/terraform/import-and-reconcile.md": {
+      "etag": "\"ede427bc5b5fcaf0629abd11196ba1f4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/terraform/project-controls.md": {
+      "etag": "\"9d688bbecce8f0fbfc4354b7b61f8093\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/terraform/projects-and-access.md": {
+      "etag": "\"b82965b40a6595001a0f64f4fcaf307c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/terraform/rate-limits-and-spend.md": {
+      "etag": "\"f08a9d8d26bb847257cfd60b2c8f926c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/terraform/service-accounts.md": {
+      "etag": "\"7014c204d3f90e8b1e0634003496a072\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/text-to-speech.md": {
-      "etag": "\"60cb7f6def24055167c3d022b5e75b4b\"",
-      "last_modified": "Sat, 25 Jul 2026 06:10:51 GMT"
+      "etag": "\"139ba2055552acffd1faa4b358317993\"",
+      "last_modified": "Sat, 15 Aug 2026 06:04:14 GMT"
     },
     "https://developers.openai.com/api/docs/guides/text.md": {
-      "etag": "\"f38e847e7761aebd140c0c9fb5fef89f\"",
-      "last_modified": "Sun, 26 Jul 2026 08:58:40 GMT"
+      "etag": "\"03342484ca85f46d3a5d57352fdb74c7\"",
+      "last_modified": "Sun, 16 Aug 2026 01:48:14 GMT"
     },
     "https://developers.openai.com/api/docs/guides/token-counting.md": {
-      "etag": "\"57e464e1ead5e3b328140b70b5c294d8\"",
-      "last_modified": "Sat, 25 Jul 2026 07:21:32 GMT"
+      "etag": "\"bcd3a18ee0a22535b2e9a5bd3e7565a8\"",
+      "last_modified": "Sat, 15 Aug 2026 04:52:42 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-apply-patch.md": {
-      "etag": "\"efb9c56d30fc9b92315c36eefa9e6ad7\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"9135e4c24d896ae839a3510d58acf1d0\"",
+      "last_modified": "Sat, 15 Aug 2026 09:28:25 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-code-interpreter.md": {
-      "etag": "\"dc0aa72b43582e10b12d3643542ab304\"",
-      "last_modified": "Sat, 25 Jul 2026 05:58:05 GMT"
+      "etag": "\"e5fe6fec3fefcd37a08699d7b3c3e74c\"",
+      "last_modified": "Sun, 16 Aug 2026 01:13:40 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-computer-use.md": {
-      "etag": "\"8bd72ccea84e7ada94be99f7e3d65e25\"",
-      "last_modified": "Sun, 26 Jul 2026 04:49:39 GMT"
+      "etag": "\"b53b5e38afd3a2cbed57616d73311538\"",
+      "last_modified": "Sat, 15 Aug 2026 20:06:24 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-connectors-mcp.md": {
-      "etag": "\"3009de8bb23a8c9ed50a0035acfded19\"",
-      "last_modified": "Sat, 25 Jul 2026 07:23:24 GMT"
+      "etag": "\"5f8bd8c5ce96bd6cbc6d260cb2e8ecc7\"",
+      "last_modified": "Sat, 15 Aug 2026 02:27:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-file-search.md": {
-      "etag": "\"ba41967544956e4f3f565180ca327baf\"",
-      "last_modified": "Sun, 26 Jul 2026 04:50:14 GMT"
+      "etag": "\"01d3711865e43a31567b34f062a004d7\"",
+      "last_modified": "Sat, 15 Aug 2026 02:12:45 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-image-generation.md": {
-      "etag": "\"6064ee1c3d3f15742a32a7d15e2a3444\"",
-      "last_modified": "Sun, 26 Jul 2026 02:45:54 GMT"
+      "etag": "\"78212606ae3a108d211ddbdf7b0f330e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-local-shell.md": {
-      "etag": "\"51540596c7f25918251c3bc5be535139\"",
-      "last_modified": "Sat, 25 Jul 2026 06:03:49 GMT"
+      "etag": "\"878fed764727df11a73b88f1c0f484b6\"",
+      "last_modified": "Sun, 16 Aug 2026 00:52:15 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-programmatic-tool-calling.md": {
-      "etag": "\"bf336216f0eecbb9159d48b622a3c9da\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:11 GMT"
+      "etag": "\"9b761dcd9da3b739b070f87ca6834285\"",
+      "last_modified": "Sat, 15 Aug 2026 06:00:50 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-shell.md": {
-      "etag": "\"fbe38c9f778ea298b82b927862e5259e\"",
-      "last_modified": "Sun, 26 Jul 2026 06:25:22 GMT"
+      "etag": "\"a49b725385b83ce9297978f420795635\"",
+      "last_modified": "Sat, 15 Aug 2026 05:22:09 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-skills.md": {
-      "etag": "\"98e36f129f85352875caf5baa8dafde2\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:11 GMT"
+      "etag": "\"03bae6f0ecd4d2d9d04ca4dc61ca9750\"",
+      "last_modified": "Sat, 15 Aug 2026 02:22:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-tool-search.md": {
-      "etag": "\"aa3fedfad19f7dade3a535836520075e\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:00 GMT"
+      "etag": "\"2c6188dd1786662305c89b023d3bddfc\"",
+      "last_modified": "Sun, 16 Aug 2026 01:56:27 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools-web-search.md": {
-      "etag": "\"fdb4c1475ba0986c2648dc36ad16929a\"",
-      "last_modified": "Sun, 26 Jul 2026 05:06:02 GMT"
+      "etag": "\"a6db6c7ebbb7291e2f86e0b1388fea9c\"",
+      "last_modified": "Sun, 16 Aug 2026 02:43:43 GMT"
     },
     "https://developers.openai.com/api/docs/guides/tools.md": {
-      "etag": "\"6ab23cf0c83fdbade4045a6636e4ea47\"",
-      "last_modified": "Sat, 25 Jul 2026 20:16:06 GMT"
+      "etag": "\"a0124c349534c2835df7adfcaebc1791\"",
+      "last_modified": "Sat, 15 Aug 2026 06:52:22 GMT"
     },
     "https://developers.openai.com/api/docs/guides/trace-grading.md": {
-      "etag": "\"fe76d835769f30ed269901d07e611eae\"",
-      "last_modified": "Sat, 11 Jul 2026 09:42:16 GMT"
+      "etag": "\"91f350aa7470fdfd70fed8d9934bf5a3\"",
+      "last_modified": "Sat, 15 Aug 2026 05:09:22 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/transcription.md": {
+      "etag": "\"1fef875b7d71e51806af6c61292ae960\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:46 GMT"
     },
     "https://developers.openai.com/api/docs/guides/upgrading-to-gpt-5p4.md": {
-      "etag": "\"a0877c73dbaa54f8a838e3a425515b0c\"",
-      "last_modified": "Sat, 11 Jul 2026 06:21:31 GMT"
+      "etag": "\"4c0c549027d867af79b9783835a798d6\"",
+      "last_modified": "Sat, 15 Aug 2026 09:28:34 GMT"
     },
     "https://developers.openai.com/api/docs/guides/upgrading-to-gpt-5p5.md": {
-      "etag": "\"4dbb3ed097ef0a3ec56bf2f8e17402d7\"",
-      "last_modified": "Sat, 11 Jul 2026 06:21:33 GMT"
+      "etag": "\"cd18f31d6c356f0f8726d64976d71984\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/upgrading-to-gpt-5p6-sol.md": {
-      "etag": "\"4a2f3d28d0e73829ff6feb2aef5d191d\"",
-      "last_modified": "Fri, 17 Jul 2026 03:11:58 GMT"
+      "etag": "\"a286075014b1b3cdafe84b1d9b4f678a\"",
+      "last_modified": "Sun, 16 Aug 2026 00:43:55 GMT"
     },
     "https://developers.openai.com/api/docs/guides/video-generation.md": {
-      "etag": "\"817fc73b4d6ebb58c54e09c78a352d6c\"",
-      "last_modified": "Sun, 26 Jul 2026 10:56:52 GMT"
+      "etag": "\"226da77346a9016cde79c0ec807f49bb\"",
+      "last_modified": "Sat, 15 Aug 2026 02:47:20 GMT"
     },
     "https://developers.openai.com/api/docs/guides/vision-fine-tuning.md": {
-      "etag": "\"c625eeda98ac5dc685246ef4c4130280\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"16c6da704a618cee21be6a10679f40b8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/voice-agents.md": {
-      "etag": "\"194e8c72312d538552e7a9dea9ae6b49\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"05427b18bb7e1a863204b6d7f9644a96\"",
+      "last_modified": "Sun, 16 Aug 2026 04:09:52 GMT"
     },
     "https://developers.openai.com/api/docs/guides/webhooks.md": {
-      "etag": "\"b9aea273dabf35729e5e6453644d0d24\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:00 GMT"
+      "etag": "\"1dd104d29c88657b6d1e8f0f929eb400\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/websocket-mode.md": {
-      "etag": "\"2d7c61289f740e07e4e3c68ca089dc12\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"4d0595f97a13b3586b9c1757bcfd9624\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/workload-identity-federation.md": {
-      "etag": "\"6d8ffe7f4a0095b5645cf0e9c0c17ee9\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"f8b712f7b79b0cdc71016d4446fc3122\"",
+      "last_modified": "Sat, 15 Aug 2026 13:36:20 GMT"
     },
     "https://developers.openai.com/api/docs/guides/workload-identity-federation/aws.md": {
-      "etag": "\"a87cefd5dfd67128fadb069f4f542a50\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"b8a3252031a87cdfdd9e34e91d779c79\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/workload-identity-federation/github-actions.md": {
-      "etag": "\"6bd34fe21183e4a8109f924121547709\"",
-      "last_modified": "Sat, 25 Jul 2026 09:34:58 GMT"
+      "etag": "\"dc8579bf80dced28defe929d22c4e617\"",
+      "last_modified": "Sun, 16 Aug 2026 00:00:34 GMT"
     },
     "https://developers.openai.com/api/docs/guides/workload-identity-federation/google-cloud.md": {
-      "etag": "\"f3546642101bc92a925dd13c3c1b511e\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:11 GMT"
+      "etag": "\"6c15454c02f4e7eb9ba99077743ea9e0\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/workload-identity-federation/kubernetes.md": {
-      "etag": "\"d0c94af085daddbbfe20499973b8b1f2\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"89ac830c0d8fe80dc01daa1e06bbc082\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/workload-identity-federation/microsoft-azure.md": {
-      "etag": "\"05ab4ef0736680e815d3557ec74ee10a\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:11 GMT"
+      "etag": "\"8a813f693d0c70987b67739a9c18b789\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/workload-identity-federation/oracle-cloud.md": {
+      "etag": "\"8736fae42a077a57b6ddb30b38aafb15\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/workload-identity-federation/spiffe.md": {
-      "etag": "\"ed9bae4d48009edda75c28652203850a\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:58 GMT"
+      "etag": "\"b6493e01f335c8a34bc05c415fadb208\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
+    },
+    "https://developers.openai.com/api/docs/guides/workload-identity-federation/x509.md": {
+      "etag": "\"6f28c1214e4d17642c6744b12602c2ee\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/docs/guides/your-data.md": {
-      "etag": "\"5a8471d1712c840e8ef334f13afd0f81\"",
-      "last_modified": "Sat, 11 Jul 2026 07:17:19 GMT"
+      "etag": "\"3a85c1ba034b6ef147d393a4fc28286c\"",
+      "last_modified": "Sat, 15 Aug 2026 23:55:59 GMT"
     },
     "https://developers.openai.com/api/docs/libraries.md": {
-      "etag": "\"203a9461ab79b837e069b149d4a243e2\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"de79400a571f2a3097d419aa4e9bfcd8\"",
+      "last_modified": "Sun, 16 Aug 2026 01:46:59 GMT"
     },
     "https://developers.openai.com/api/docs/libraries/openai-cli.md": {
-      "etag": "\"dbb6d8ad1a0150846130a47d975590d4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:18 GMT"
+      "etag": "\"20c0786741894820233ab6dda5960d22\"",
+      "last_modified": "Sun, 16 Aug 2026 03:30:39 GMT"
     },
     "https://developers.openai.com/api/docs/llms.txt": {
-      "etag": "\"1b5f57a7312a94014791df58cd905fdb\"",
-      "last_modified": "Sun, 26 Jul 2026 03:20:55 GMT"
+      "etag": "\"c23dba1f8904eb400194e8d2997f6dca\"",
+      "last_modified": "Sat, 15 Aug 2026 02:21:36 GMT"
     },
     "https://developers.openai.com/api/docs/mcp.md": {
-      "etag": "\"936b382b885ab8ad138cd2bb4732ac36\"",
-      "last_modified": "Sat, 25 Jul 2026 06:13:27 GMT"
+      "etag": "\"457a4651ad4b51aaa223d8fa3f0da712\"",
+      "last_modified": "Sat, 15 Aug 2026 23:15:55 GMT"
     },
     "https://developers.openai.com/api/docs/pricing.md": {
-      "etag": "\"1892d98a65090be1027b9f6564d934e9\"",
-      "last_modified": "Sat, 11 Jul 2026 06:30:10 GMT"
+      "etag": "\"a6ffa6ae4e6bd6a68139e6554ae17290\"",
+      "last_modified": "Sat, 15 Aug 2026 01:48:03 GMT"
     },
     "https://developers.openai.com/api/docs/quickstart.md": {
-      "etag": "\"153eae90761979266977ba86c64ddefe\"",
-      "last_modified": "Sat, 25 Jul 2026 06:25:04 GMT"
+      "etag": "\"ba654b00541826b01dc35baafcd40b5c\"",
+      "last_modified": "Sat, 15 Aug 2026 02:02:09 GMT"
     },
     "https://developers.openai.com/api/docs/supported-countries.md": {
-      "etag": "\"50d6e4cc823d6db51ec71ec8e96cf773\"",
-      "last_modified": "Sat, 11 Jul 2026 13:12:42 GMT"
+      "etag": "\"068a6a798fc99a7134a800df8d8ffcb7\"",
+      "last_modified": "Sun, 16 Aug 2026 02:16:02 GMT"
     },
     "https://developers.openai.com/api/docs/tutorials/meeting-minutes.md": {
-      "etag": "\"903b02954a6dc50ba4fd1f5499d9ae48\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
+      "etag": "\"aae264e7cd3908dc4c53f6eb630ce70a\"",
+      "last_modified": "Sun, 16 Aug 2026 02:52:59 GMT"
     },
     "https://developers.openai.com/api/docs/tutorials/web-qa-embeddings.md": {
-      "etag": "\"599be1bbb0513a2c27008efbf5b1f394\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:11 GMT"
+      "etag": "\"e6deb02a0b5c828b646e74e25c5497b9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/llms.txt": {
-      "etag": "\"8ae0b60d893cedb225062acd383430fe\"",
-      "last_modified": "Sat, 25 Jul 2026 18:21:03 GMT"
+      "etag": "\"6823cea94f1ba98b9f1485f37aa9ae1e\"",
+      "last_modified": "Sat, 15 Aug 2026 01:48:56 GMT"
     },
     "https://developers.openai.com/api/reference/administration/overview.md": {
-      "etag": "\"53403f7097cbb85c07a535c6838f7a36\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"82e17bb8be14bdc89df4591934753f80\"",
+      "last_modified": "Sun, 16 Aug 2026 02:15:24 GMT"
     },
     "https://developers.openai.com/api/reference/chat-completions/overview.md": {
-      "etag": "\"a63ca07ab37b7a92119edf302c74ee1b\"",
-      "last_modified": "Sat, 11 Jul 2026 07:14:22 GMT"
+      "etag": "\"ac6df981ac80738b0690b64ae9ebd52a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/reference/llms.txt": {
-      "etag": "\"c22593f2dc6af4cb4a0b5257d2523e45\"",
-      "last_modified": "Sat, 11 Jul 2026 06:48:16 GMT"
+      "etag": "\"7e236de9826c962ffa86503daab39827\"",
+      "last_modified": "Sat, 15 Aug 2026 18:25:00 GMT"
     },
     "https://developers.openai.com/api/reference/overview.md": {
-      "etag": "\"cb4902c87682be146f99b40ed05725fb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:10:45 GMT"
+      "etag": "\"f9c19ac39ea613d9fb422a9d8d9be540\"",
+      "last_modified": "Sun, 16 Aug 2026 00:08:20 GMT"
     },
     "https://developers.openai.com/api/reference/realtime-beta/overview.md": {
-      "etag": "\"2c225e63b75c2cda8db4ae0e0fd9fcf6\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"5dca8c0488da00e81cf2c9f94dc5e907\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio.md": {
-      "etag": "\"2be6e5709407101f23a9ba80ae7f8a89\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"03af216cbd3179c1dcab261cfe32f99e\"",
+      "last_modified": "Sat, 15 Aug 2026 08:03:41 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/speech/methods/create.md": {
-      "etag": "\"db733053936a70508be565c7332174cb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"4122dba4806d932dccc4926201e46afa\"",
+      "last_modified": "Sat, 15 Aug 2026 06:54:58 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create.md": {
-      "etag": "\"4b0a4d1ee8086857476eb5746bb69dc9\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"a9ef2fb0da29342d18f404cc31b43c87\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/translations/methods/create.md": {
-      "etag": "\"c97b9e7856996a0323c3296a4e2a779b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"9fef286aa64ec443a43545cd48178355\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:47 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/voice_consents/methods/create.md": {
-      "etag": "\"e9b9854e9f0f94b44967e30bbc68cb05\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"e56741889afd5d098b2ac81415c22991\"",
+      "last_modified": "Sat, 15 Aug 2026 08:03:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/voice_consents/methods/delete.md": {
-      "etag": "\"7357f72aceabcdb0832755fe9d144556\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"82a9cdc9a8e59676fd66b098e917562f\"",
+      "last_modified": "Sat, 15 Aug 2026 08:03:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/voice_consents/methods/list.md": {
-      "etag": "\"3b6ff7a28a5b969bce3d996709e566db\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"41fc91be3ff2c9195d06e48badf95de5\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/voice_consents/methods/retrieve.md": {
-      "etag": "\"479dddfd19209239a2708990df6b464a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"8b5361d1a2c5c528721080b978b95fc5\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/voice_consents/methods/update.md": {
-      "etag": "\"601521a0ecd359b6890931d6a2d0b729\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"f90de1e3321d5adfcfe66cd0c717719c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/audio/subresources/voices/methods/create.md": {
-      "etag": "\"1e541291d4098873f3a185ad02785349\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"bf7120d93769572e7254d57d65a143c2\"",
+      "last_modified": "Sat, 15 Aug 2026 08:04:10 GMT"
     },
     "https://developers.openai.com/api/reference/resources/batches.md": {
-      "etag": "\"3b9b235dac051f75c611328611de496b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"5eb9a67a26bad1f76dd15c42729e9b32\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/batches/methods/cancel.md": {
-      "etag": "\"9d672009081adcfb9b98d679361328be\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"331dbc542e6f2230d89af5499f525a71\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/batches/methods/create.md": {
-      "etag": "\"9bd91cf4168e939c86f7c0549f580ad0\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"626683236dce4db627fccc8e871dbdb6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/batches/methods/list.md": {
-      "etag": "\"e39ce091e00344d5ac3a2cc59fbb67de\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"6fa7453f2e8ebf1407c012c7cc049eff\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/batches/methods/retrieve.md": {
-      "etag": "\"c886f2d94b589d9e61dc7edb8a4ea37a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"3f147123365ec2f16fc9676fb93f1085\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/assistants.md": {
-      "etag": "\"135f4481d1013ea6c48712a80162f2e7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"76771fe9d9c9f9595309535f518c870b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/assistants/methods/create.md": {
-      "etag": "\"90745e2d2279f878fea81d728d1bfdb1\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"670809c3485980e472be43a3524a0fbe\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/assistants/methods/delete.md": {
-      "etag": "\"292a75f0b6b235d15e08048798dc40a9\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"085d77d3594560f018bd674ec2138f4b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/assistants/methods/list.md": {
-      "etag": "\"562c252cc5812eb6d65cd2b5e28150ab\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"04cd3543fe27afd38d0d9b1bd0f7d033\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/assistants/methods/retrieve.md": {
-      "etag": "\"9473929ae8645f740d483da97cd92bd7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"f2c8ccd3d058b922b44abf7cf04ac017\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/assistants/methods/update.md": {
-      "etag": "\"10016a29a325ee39c35510f4468919a3\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"24d14dfd6125c90ee86a6c9f8efec8bb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/assistants/streaming-events.md": {
-      "etag": "\"5a76aaf978599d2279a152a644c7daad\"",
-      "last_modified": "Sun, 12 Jul 2026 06:27:37 GMT"
+      "etag": "\"b335032f93bd55db2b95f084a40fcbf8\"",
+      "last_modified": "Sat, 15 Aug 2026 08:03:37 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit.md": {
-      "etag": "\"129225415b2442e0bb90af4ca84cf974\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"ecb63822e2df35315a1b13efec09f5cb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/sessions.md": {
-      "etag": "\"d46aee5053f3b050078c05adb9e7c9af\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"a5dac9b27ff294e41c06b3c071a0d870\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/sessions/methods/cancel.md": {
-      "etag": "\"22a823c276bf4f36e9d418a60b76fd93\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"79220769d461eeebaf372d8b04aee2cc\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/sessions/methods/create.md": {
-      "etag": "\"e3ec52148ea3560d3d9587eb929b4b44\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"71f883e7d954ab1fe376adbb5756714c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/threads.md": {
-      "etag": "\"e39c734b43b31f7bb68fa9eaba952bf4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"db4c794a0c31c335e76d551bb2e5e141\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/threads/methods/delete.md": {
-      "etag": "\"28eed7577baee9ebc565c63704a46e5c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"aa4dfcecac0cf5cb8653d16f91db2288\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/threads/methods/list.md": {
-      "etag": "\"a4f713d3cfa7c5dedbf1ba74f9239f4f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"57bd58d954688ee0bcfde2d876addf25\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/threads/methods/list_items.md": {
-      "etag": "\"a0d09c68d22400205f36acae58ecba54\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"a05c97ea4bb53c18aa47d611d8cb1103\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/chatkit/subresources/threads/methods/retrieve.md": {
-      "etag": "\"bc91ba95063b82237cd20d4e051b2b40\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"6bf10e46f3655821a4054959b784354b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads.md": {
-      "etag": "\"0d2a47c7806d78fdb1173c7309eb5edd\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"cba4c526d22a066ffa770099fb96e6d9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/methods/create.md": {
-      "etag": "\"65cb5dc4595e324922d746f0601c8ace\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"c8633ed37f7c170bd4fb42bb418c3986\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/methods/delete.md": {
-      "etag": "\"8b896c51bdd1be7ef0d35e0a1057b505\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"2dc53c774491ba9c7df6730a46728da6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/methods/retrieve.md": {
-      "etag": "\"f5f663f337cd82b29fd2db293e96328c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"f216c9111e596119cc2e9d90a7b9e2f4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/methods/update.md": {
-      "etag": "\"3b14a2d4a8de76fd0d6f197e6916cf4d\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"0d30245e2cf47a8b910445cd116f6bd1\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/messages.md": {
-      "etag": "\"4e3bad2abbd5616b85f5881b889517b8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"20d0cc1963b928f468dde2a2eff89cc4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/messages/methods/create.md": {
-      "etag": "\"22e5714f95c70485fe3a5df6a309f4a8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"4caab705faa7b3b4430252fb08883c0f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/messages/methods/delete.md": {
-      "etag": "\"e2180538ded4bc9bef150dd0b3580455\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"6e0794e1889326b4d502f7372a7ca0ed\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/messages/methods/list.md": {
-      "etag": "\"36beca8aa426f78135673e93e9395dbf\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"3bf2d4271c769703b81548a3194a6f7d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/messages/methods/retrieve.md": {
-      "etag": "\"36748ba6b6cc7841af9fe4bd69a61e8f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"1dcc0926643caa57683812ed12232ee9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/messages/methods/update.md": {
-      "etag": "\"559b9fd2b03670168e5178ee6c8b6643\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"f80a3664413a209a31e394a3b7f95d85\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs.md": {
-      "etag": "\"d70235a89369fdeaaa2e33bb2e0bb53b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"4c4e55e2fa42256683ba7ba772744a9a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/methods/cancel.md": {
-      "etag": "\"f5d63c01cf0450e94e2ea5a039282a7a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"08eae887bbfcb8cf8384625bd2a98658\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/methods/create.md": {
-      "etag": "\"6cee9c8f56a79803242debb29f837b85\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"6508f60bab4c3edbc44bfd8faf2b62b8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/methods/list.md": {
-      "etag": "\"15084edd7bc1b60b37da0874b8d34003\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"dab6c3822b0c969a750917b538071031\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/methods/retrieve.md": {
-      "etag": "\"0cb3325ca7c6ddad5249f9db0f19bd83\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"2881f865494f695159c2afc0e7fd9258\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/methods/submit_tool_outputs.md": {
-      "etag": "\"90f7a7f567cc9c237bc7afe98d232be5\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"10ffae91a5f5237cbcc3de16f9a9c8cb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/methods/update.md": {
-      "etag": "\"91dd97b1d8122ad3ce4172efeb1ad804\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"77b64714f7caf377bfad450fcb2203be\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/subresources/steps.md": {
-      "etag": "\"6958e6dda91bf8a81bb4436da22d7a22\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"2b21aef4d575d6795bfc41cc5250bec8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/subresources/steps/methods/list.md": {
-      "etag": "\"76ae707f6e58e34eebf058ac9b461d22\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"028add903bee32214ababe9881c27acc\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/beta/subresources/threads/subresources/runs/subresources/steps/methods/retrieve.md": {
-      "etag": "\"436cb1eaadc9cc6d2f410251c8099004\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"2309c263a845b194eaa4ff4711d40769\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/chat.md": {
-      "etag": "\"49e6e24a909c797d3dca86516c9931f9\"",
-      "last_modified": "Sat, 11 Jul 2026 07:14:21 GMT"
+      "etag": "\"22b89effb77c0788d80cdb701789a9e5\"",
+      "last_modified": "Sat, 15 Aug 2026 03:59:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/retrieve.md": {
-      "etag": "\"738c748127c294e64741ee3e49d2cea1\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"97f3e018946e3415d42951eb85bd6ed2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events.md": {
-      "etag": "\"e98e0f6bd9854ab2e052a80f3e7345b9\"",
-      "last_modified": "Sun, 12 Jul 2026 06:27:38 GMT"
+      "etag": "\"f1348b0274388efe615b2f0e90505757\"",
+      "last_modified": "Sat, 15 Aug 2026 06:23:45 GMT"
     },
     "https://developers.openai.com/api/reference/resources/completions.md": {
-      "etag": "\"d7812a14cbb616628d206984a094a9cf\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"570a97d6580a1c38eae4fc4a1d8b9b7b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/completions/methods/create.md": {
-      "etag": "\"f398966fe225d50ab60d2959376fcb38\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"ccacf4073494d9cc5f7e65e43bde1fd3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers.md": {
-      "etag": "\"79253971abb158f5edad901f7e0d77e7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"70dda7bf06b74938944e7772f32cd210\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/methods/create.md": {
-      "etag": "\"3d2ea3f1f2f346e18861ab644f91eed1\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"4139f46ed5afea1d0ddc404b8568e266\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/methods/delete.md": {
-      "etag": "\"af15b78819f9e68a107c7f4bd42fbf85\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"c192813f995f793993ae081fcfd8f989\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/methods/list.md": {
-      "etag": "\"42df6caf6369318446fbe05ef833ec9a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"2c18bd8720b24e29ec6b6bcac2ad4771\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/methods/retrieve.md": {
-      "etag": "\"7adf73fe9c7116879214673902ea6146\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"4eaadff4d5c71fb741a5cdab344aea8d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/subresources/files.md": {
-      "etag": "\"e3f34e752fefc85f97bbc536f9d06565\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"cdfa3f6e8ff5f2bc6fc6216935afdd30\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/subresources/files/methods/create.md": {
-      "etag": "\"ea1ce8a41c3d94f3cdff0a90f01118f4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"8e4d70c6856bbb6d3b9a2a887ace7483\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/subresources/files/methods/delete.md": {
-      "etag": "\"2699e5b9cfe62157c9a09a8727f12e27\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"828c3bfd8f68f49d500a8d4a308ac986\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/subresources/files/methods/list.md": {
-      "etag": "\"c59226b0ea2dd6d746600b6417d6e543\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"47fa4421fa5d176a6eb959a73819c8a4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/subresources/files/methods/retrieve.md": {
-      "etag": "\"33739e09261cc35257efd7e8eb466c6e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"015a10ecaff62d901ff30598fb645102\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/containers/subresources/files/subresources/content/methods/retrieve.md": {
-      "etag": "\"3ca8fdc4d7958f3cbd65ee68eeef2e04\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"b32f8bc3a3c05d3316bf7c28abc062a9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/conversations.md": {
-      "etag": "\"3b528cd452758c484f8842e4aeadd72e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"7c57125f8d80e37a18c2714c9fa89fdb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/conversations/methods/create.md": {
-      "etag": "\"6d429b343e414fc443abaca40b3a7747\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"fdf0cffdc092dff151dbfb51fcefb99d\"",
+      "last_modified": "Sat, 15 Aug 2026 12:57:12 GMT"
     },
     "https://developers.openai.com/api/reference/resources/conversations/methods/delete.md": {
-      "etag": "\"50485b90f02aeed5289a9445d69b4225\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"91fe2e2e7f44f6383505f4c4e4092042\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/conversations/methods/retrieve.md": {
-      "etag": "\"a2c96a7bbe83fccb35de6472285c2681\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"58f8f324bf21c5d83f74eb810c379459\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/conversations/methods/update.md": {
-      "etag": "\"927aac388221ef3414e2759cfe6ce342\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"8d49d494ecef1247a846827e9ed24850\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/conversations/subresources/items/methods/list.md": {
-      "etag": "\"97a52879ed47c3819882a909a94d6720\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:19 GMT"
+      "etag": "\"947fef7798044b2fcad4e4fd03137059\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/embeddings.md": {
-      "etag": "\"9963aa23ffc1dcbd7c3ad5a58e7371a3\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"70cf938d07f84a48d24dca015af06cf1\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/embeddings/methods/create.md": {
-      "etag": "\"d6423fbb0f5013059fa9580b6a9a421b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"58e4719da9b691f7e91b0bdddedb2331\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/evals.md": {
-      "etag": "\"df593ad5e0c16068fba7b994884d8d4d\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"f3b00d214d8afc36cc85e82fd428bd6b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/evals/methods/create.md": {
-      "etag": "\"0320e03a7bdd18e094d3da528c8d54c7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"bb7f945d408d3cfb50f222d3efea7987\"",
+      "last_modified": "Sun, 16 Aug 2026 03:58:23 GMT"
     },
     "https://developers.openai.com/api/reference/resources/evals/methods/delete.md": {
-      "etag": "\"4d4d10937dfdd011e662aa730734d4b3\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"7150313859006b677f169ef43496bd4b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/evals/methods/list.md": {
-      "etag": "\"b2dc958808eb38d5ffbbe4246388c932\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"7bdbd91f3eb6485601ef140055f9a469\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/evals/methods/retrieve.md": {
-      "etag": "\"4411fbc2f5c3f44911fae40ce58ef71b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"5c2dfc58a99b909d6520915364b3c951\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/evals/methods/update.md": {
-      "etag": "\"d81f1e786aec0bd15ff807353f53f51e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"0e2fe7a761de82b7b3541b0c044fc07d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/evals/subresources/runs/methods/cancel.md": {
-      "etag": "\"8f8ee96e585388d2c9aba4e6635db5d5\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"a39a54bfc0992929f01c86583ffc35ba\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/files.md": {
-      "etag": "\"9987f9efb02a9a6f3a1fbb21e745634e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"717ec86e8ad27112d9b0d4ed87814c73\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/files/methods/create.md": {
-      "etag": "\"ae7590e0eac6897c75e616bedcc7a455\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"2d80605d7d2a67894108efad2f359440\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/files/methods/delete.md": {
-      "etag": "\"b2a2a66f09e6955b92a4057d09de8922\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"9f4086be28022f888ba58f33515d6714\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/files/methods/list.md": {
-      "etag": "\"d28550c2d9390277b0c271d5a2668fcb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"2f47e7dfc21d52feae1f88e701929d3e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/files/methods/retrieve.md": {
-      "etag": "\"792b43044aaabfbfb86503df2d52e177\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"49c4ead672a10e780b3561cc88068f4b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:51 GMT"
     },
     "https://developers.openai.com/api/reference/resources/fine_tuning.md": {
-      "etag": "\"9c1d250f7b4b62deea81944054748db3\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"af8cde1d073e45a21d0c86defbfa1dbe\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/fine_tuning/subresources/checkpoints/subresources/permissions/methods/create.md": {
-      "etag": "\"2de61a3adb0ea2d8636beeff61ccebbc\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"cfdd10dacc771237fb85d9cacd4ae45b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/fine_tuning/subresources/checkpoints/subresources/permissions/methods/delete.md": {
-      "etag": "\"52926a6ecaf0bc7fce4161e37a6da0df\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"19d523392c0cd59272a16ca74b5b1d5b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/fine_tuning/subresources/jobs/methods/list.md": {
-      "etag": "\"96c791162d142642beda395e05f1bc79\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"8da59832dd95e4582cfbc15d4a34f0d8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/fine_tuning/subresources/jobs/subresources/checkpoints/methods/list.md": {
-      "etag": "\"eb350f341c88f5d48e8d0915649373de\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"69a32b15a67c5a00411fbc0ac9358d5d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/graders.md": {
-      "etag": "\"cc911d34b20c5f5c549eed82a13b0d69\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"d4ea4066c50a0d20650e2f774b5a6909\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/images.md": {
-      "etag": "\"25438ed9e3adfea5095a923eecb0d5dd\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"f801e2cac2918f011203db4e1ffeea87\"",
+      "last_modified": "Sun, 16 Aug 2026 01:10:23 GMT"
     },
     "https://developers.openai.com/api/reference/resources/images/edit-streaming-events.md": {
-      "etag": "\"a1b988088dc2e4920b4a3d2cb2cdd246\"",
-      "last_modified": "Sun, 12 Jul 2026 06:27:38 GMT"
+      "etag": "\"982b1970eaee48ec8a75d4ad3a85a2c9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/images/generation-streaming-events.md": {
-      "etag": "\"f16eb83e09d1f213a7dcaa1e14724196\"",
-      "last_modified": "Sun, 12 Jul 2026 06:27:38 GMT"
+      "etag": "\"ad05e03cf4202592ccc2b1529a220621\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/images/methods/create_variation.md": {
-      "etag": "\"72742834d8e42c62fd8e3e2828eee581\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"085e7831496be73bdad18f9e76754e66\"",
+      "last_modified": "Sat, 15 Aug 2026 02:39:30 GMT"
     },
     "https://developers.openai.com/api/reference/resources/models.md": {
-      "etag": "\"6445fa0d6a48450bad240853a2f7c4b7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"2ced2966d92dc096a06e136b0b885ae1\"",
+      "last_modified": "Sat, 15 Aug 2026 13:05:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/models/methods/delete.md": {
-      "etag": "\"99ae0eeacf757ccc9ea4a3b9c6742472\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"acbf1b1b8143d493fecc9ac701f2f457\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/models/methods/list.md": {
-      "etag": "\"8b76202c559f9c3b2ff8db7c89895eb0\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"c671ad6c64209fa12233e1fdfb888a88\"",
+      "last_modified": "Sat, 15 Aug 2026 20:40:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/models/methods/retrieve.md": {
-      "etag": "\"2370f3c8471ba630a850cb464c2820c4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"119c066b5fa651e5cf9477993ed7b99e\"",
+      "last_modified": "Sat, 15 Aug 2026 10:43:48 GMT"
     },
     "https://developers.openai.com/api/reference/resources/moderations.md": {
-      "etag": "\"e8a0a66f2701abbe73e11e55ea452225\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"b9dbd470ecd3893fd877ca103e75960e\"",
+      "last_modified": "Sat, 15 Aug 2026 08:06:47 GMT"
     },
     "https://developers.openai.com/api/reference/resources/moderations/methods/create.md": {
-      "etag": "\"569494e49788bb94e2ead128ff123591\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"4ee07862055415547e962f94bf206b55\"",
+      "last_modified": "Sat, 15 Aug 2026 08:06:47 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization.md": {
-      "etag": "\"d197849edf63b895e674052c4af7ca30\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"8ec6272101d116294bea4d5d943c5ead\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs.md": {
-      "etag": "\"1194023fffe73e276f60428312826d95\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"69f0e6bb89bad33f7815702b86aefff9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs/methods/list.md": {
-      "etag": "\"4ec6fcf98481ebadda89dd0c11d90fdc\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"857045e6d3828527400e8d1decdc6595\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs/subresources/admin_api_keys.md": {
-      "etag": "\"67a6f62b1dcb0dd733b58deac1692cd0\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"10fdecfecb7b7f8030e49422b63a2bee\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs/subresources/admin_api_keys/methods/create.md": {
-      "etag": "\"5e01f4b265758507962cabfcff0db569\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"7ead6f9202cc76ab242255eacdaf48fa\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs/subresources/admin_api_keys/methods/delete.md": {
-      "etag": "\"e4355abb23457fd09633b7ddfad3feb9\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"849eaacf5fde134e25755146de60d298\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs/subresources/admin_api_keys/methods/list.md": {
-      "etag": "\"cfb9d1e508541f5f69ad0479dff3d111\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"3a65ad485eab2b5dfbd3181937fce67e\"",
+      "last_modified": "Sat, 15 Aug 2026 08:04:24 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs/subresources/admin_api_keys/methods/retrieve.md": {
-      "etag": "\"756304ddf5e6b1f688701eef9e133236\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"2cefb0a808e359e8204a9f8d4c13b6f6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/audit_logs/subresources/usage.md": {
-      "etag": "\"c87d9c3d3f4dc6d58b4844f7edfb8bb5\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"67c8564a93cf22b2587051727fa8b57e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups.md": {
-      "etag": "\"fc6e7cba23447d37765daa4d90219e2b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"bcfd89cc846fc42705e993c80ae781f8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/methods/create.md": {
-      "etag": "\"d853de9933305a7dca27f31de268a2e5\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"f4d421b1fce1a61d234a62a78ec6f896\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/methods/delete.md": {
-      "etag": "\"cef9d736ac4422e2ff0c85e5e692885e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"270a6afe9728689a88d3a5bb524da0e1\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/methods/list.md": {
-      "etag": "\"887c9aa757b719082ad07b40f88d7ab7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"8c402e32ee6462719fe6890635cdd8e7\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/methods/update.md": {
-      "etag": "\"f4c83832494f1e9260fb8fb93c926f6b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"98691adf3e1377b0bb203c790cc061f9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/subresources/users.md": {
-      "etag": "\"c050c8956c8fb9a3e312c512738d997a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"6c5522a8b3fb2a8e8d29a8226f02057b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/subresources/users/methods/create.md": {
-      "etag": "\"47b1c0dab6c6a36a0c2e0e3e224dc144\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"65f4fde9fcb0b7bee2cdf2c3b1d2fcee\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/subresources/users/methods/delete.md": {
-      "etag": "\"7e924fe7db8eecd665f113c97a7434df\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"c025823b4259450d9c78070e7584669f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/groups/subresources/users/methods/list.md": {
-      "etag": "\"22f7175997827343475174311df7af32\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"60fc64b2afb43e0eb31213452b9d8046\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/invites.md": {
-      "etag": "\"e69f874422021cca7f3823a724f74209\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"7a77b41f1579cd601961c8a8ba3b3c69\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/invites/methods/create.md": {
-      "etag": "\"052b287062836053692bbd6f50129f07\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"fe34aaef689459feeb51198c154dbb1a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/invites/methods/delete.md": {
-      "etag": "\"8fdefabbf1b0fc5c21d7657b67387bdf\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"a25ab61c9c65116eae81d2662d2ec302\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/invites/methods/list.md": {
-      "etag": "\"3be557088cf0851b8c19c65356805dc7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"3c2a25905bc435058d322c1f944e851b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/invites/methods/retrieve.md": {
-      "etag": "\"116e8fce0cb41a1e9faeaa513dd99cc1\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"272b3a1647b9369c8ec4fade0689ba25\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects.md": {
-      "etag": "\"e239a4093a4add7ed1b7d4016e20c9c2\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"f5adfebbdeb8d6cce72d45aeb62d863e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/methods/create.md": {
-      "etag": "\"aff74be646822e7e22b3f8d89db9cc58\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"3352bc4e3d49c945f31c72a21b0d558e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/methods/list.md": {
-      "etag": "\"ad451d31646a4bef5320916cdbc73536\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"b2cd48d584895e75ad139126be99f270\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/methods/retrieve.md": {
-      "etag": "\"78abf858109b8816e04ea0628613357f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"6f45537ce63435dbd0d6a4ce7737fa91\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/methods/update.md": {
-      "etag": "\"9fd18a51a51a149a18b45f48080b94aa\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"671b1e1a09709e001731894be24b23fa\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/api_keys.md": {
-      "etag": "\"f31617d18764ce733dcd36213292b4a7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"84b63e39d920097bd3ab9aeb65252371\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/api_keys/methods/delete.md": {
-      "etag": "\"61ab7ac656b4f60be551d18530b947aa\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"18724175b2212ad3ba2a01a68c00d617\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/api_keys/methods/list.md": {
-      "etag": "\"0ab82015d5e919efb53eaaa3677eca02\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"9d40e59e2b98a2340e9bdf161ba01b9d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/api_keys/methods/retrieve.md": {
-      "etag": "\"4c3b0332a8fc59fda89bec0a7111d3fc\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"d6812c765c30bd95bf03f9b7a32418ac\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/groups.md": {
-      "etag": "\"d647c47ab3a7af8c14cecfd35f468a90\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"0d772765d3f018b8f525c95c25a33071\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/groups/methods/delete.md": {
-      "etag": "\"08c104fdecaa5913346b43ea2d90a87d\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"6c0784d4388fb754e1f283a637105afc\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/groups/methods/list.md": {
-      "etag": "\"31eec9df824181f9baadd6048d0be590\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"2775538ecc02832d76f94faf3c507263\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/rate_limits.md": {
-      "etag": "\"727ac4bfb8e5c53950bf2047c83210b8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"4d17f629070e928cf679d5a943b29b87\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/service_accounts.md": {
-      "etag": "\"6525edf6c6652e91ee7ba8a8eca76575\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"b5b03bce83c9f8612508a8f88a124d80\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/service_accounts/methods/create.md": {
-      "etag": "\"8eead2f8d07d923587bd3f9668bbb4db\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"1d878d39493015309262f8fd31b288b7\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:53 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/service_accounts/methods/delete.md": {
-      "etag": "\"9732532c393e7ed4443730ec124a765e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"4bd01fd8531fbc5824975ffcb67c7145\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/service_accounts/methods/list.md": {
-      "etag": "\"ae18aa68a1aeb99aab8f19bcb2453591\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"89d6d52d0b52b6f78095e8120717611c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/service_accounts/methods/retrieve.md": {
-      "etag": "\"5fac29a962d7c5708197a1346e760cbf\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"c87fde879b138faefbe42c383b3aaf8f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/users.md": {
-      "etag": "\"ebe467bca97ce90ef8e13d1892c4fb28\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"0be7278257110d2f374961587c847508\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/users/methods/create.md": {
-      "etag": "\"fe5572609ceba2560f99ab90dcef8fe7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"6016e00729829948bc3f80a34c8a5840\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/users/methods/delete.md": {
-      "etag": "\"b19d90902d8a6db520c4f8bbdf5619ae\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"b09677c1e8b1fb944c3604922b38c81a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/users/methods/list.md": {
-      "etag": "\"dd96ff054a19cdebf0464c88616f4a83\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"a8b2cb6c38b681895b1f346f8c7b228a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/users/methods/retrieve.md": {
-      "etag": "\"383d6c9f598d8ac281042d9a2b4bf8d4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"a88932e9145fef9329a909e6b8a6d09e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/projects/subresources/users/methods/update.md": {
-      "etag": "\"69faacaaf7b59dab4405ddcad948718b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"e7d799dad6154615532ba28f23eb1294\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/roles.md": {
-      "etag": "\"6d54aae3c5d2ade3884d0f091dae7f3f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"e9903ae7a3dd474e8c2ff173d2840733\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/roles/methods/create.md": {
-      "etag": "\"7915d4ddb9037d56ca2380dc4d51920c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"027a9f43f74c9d08b0a16cde4ffc158a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/roles/methods/delete.md": {
-      "etag": "\"63f86a824d601a6151a42456f7cec9bb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"c3bf4d2b610198bde626ad51a951fd2c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/roles/methods/list.md": {
-      "etag": "\"e08356fb120c62337821297b4abf060b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"1016a8e0765ebb50a911ba7f340ba87a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/roles/methods/update.md": {
-      "etag": "\"258678a44cbe369fbe6b9cbf777832ff\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"ce15d2a30b7ff0299d6273219df6729c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users.md": {
-      "etag": "\"b11d564c3adb0ead3d31da2a2e5388ef\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"27bb741e9771243dcae5e078d7e010d3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users/methods/delete.md": {
-      "etag": "\"f8e9bdafca83ef4400c50059012c03f4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"20ca11a9771fdc653f3c5260fdde2faf\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users/methods/list.md": {
-      "etag": "\"43789e86d906c9cf26376d66cea787a6\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:20 GMT"
+      "etag": "\"f653758d469851072f368c5d156d6571\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users/methods/retrieve.md": {
-      "etag": "\"15bc37fb600fe999c53e0fc05135cb53\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"a8d50e10d6d19b87e7b5e15fb23b1d80\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users/methods/update.md": {
-      "etag": "\"c573a6b8074020a58fb43af191cebb13\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"993ec07983557c090276d6f70ce2a443\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users/subresources/roles/methods/create.md": {
-      "etag": "\"414b02001135ac511b4db9d7032ee77d\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"6ba670ae08a66d9b5ff9724327f90c3d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users/subresources/roles/methods/delete.md": {
-      "etag": "\"72dad8d83d62126431f9089dbe54c425\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"53f4503c8a58f4e45760fa5f06c0d260\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/organization/subresources/users/subresources/roles/methods/list.md": {
-      "etag": "\"cb692616787bf09039d027cea4005462\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"239b24fc3440a01a868e61c92a6e7e72\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:54 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects.md": {
-      "etag": "\"39361962fd719177d8b9895f4d918e4e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"cceb5ceed6856217ed2d787ef61dbcba\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/groups.md": {
-      "etag": "\"0c631dcb1e9e4344c09c95899e6e934e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"5fb2520c2f41c093d5d30877ce48926f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/groups/subresources/roles/methods/create.md": {
-      "etag": "\"b3e47237c52e0b06738e966e437d742d\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"c2850f48049a4338370011c8ae7db664\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/groups/subresources/roles/methods/delete.md": {
-      "etag": "\"157ef17878885f979b61fd2d2b0fee0b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"edccf2343cfab737f7da9a8616a9f0ed\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/groups/subresources/roles/methods/list.md": {
-      "etag": "\"e62314b7416b7631c849c853916c7341\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"cd235791708aee655e5548412d4b3286\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/roles/methods/create.md": {
-      "etag": "\"fce4fce5e6e2e4a4c1c9f3bd38a97925\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"04beca4c7ae7514024ad7a494bc06416\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/roles/methods/delete.md": {
-      "etag": "\"d2833a10c0394f6f4f232f02a6eb9bb8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"e0dc2edd0fb348510abb65442ad47cf8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/roles/methods/list.md": {
-      "etag": "\"20d9128ff0379a18f66b7af41fd5eb7a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"a5220471aa9746a5640b957c28f7da85\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/roles/methods/update.md": {
-      "etag": "\"a5b1bf41f1487bba435f8682b100b09c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"f6e6ad3b6d29579188fc9c9f88cee4d3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/users.md": {
-      "etag": "\"e12406ebd944c3ce5ba6761311487da5\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"7b46351649a14aefed2506c992f56e4b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/users/subresources/roles/methods/create.md": {
-      "etag": "\"b514e20575df6c36050dd6f18dbc66ac\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"49a0a3373a1c1cf0b285cb05d1055910\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/users/subresources/roles/methods/delete.md": {
-      "etag": "\"1f82f538220713138288739c31a606cc\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"74f55f703fd83c96e073bbfe2d05adb8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/projects/subresources/users/subresources/roles/methods/list.md": {
-      "etag": "\"4b03a948b4467c3ad5e0d8d4a1ef377d\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"211d381f738ff1bcf51891a890edc876\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime.md": {
-      "etag": "\"4c2e87017658857fd1141020faa6ee5c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"014123c757983ec6c01b493ac38340c4\"",
+      "last_modified": "Sat, 15 Aug 2026 06:49:50 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/client-events.md": {
-      "etag": "\"78f14e2c85498d409a0cefe7e557d7e5\"",
-      "last_modified": "Sun, 12 Jul 2026 06:27:39 GMT"
+      "etag": "\"611e20cc4626ab646c02d04822da648e\"",
+      "last_modified": "Sat, 15 Aug 2026 04:33:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/server-events.md": {
-      "etag": "\"b8cd3d95a099af86fac3044493f3dba0\"",
-      "last_modified": "Sun, 12 Jul 2026 06:27:39 GMT"
+      "etag": "\"da05a256c28f6b4d2591b2b8247e2ed0\"",
+      "last_modified": "Sat, 15 Aug 2026 04:44:35 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/calls.md": {
-      "etag": "\"045f942026b5a58c60dc182523021fd4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"4599a87b8b9f226f0dd570c519b517ae\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/calls/methods/accept.md": {
-      "etag": "\"d5870b5e73f335e4b39d7c234d8fe5fb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"c2ebc653566ec66051eb457f4a7af6be\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/calls/methods/create.md": {
-      "etag": "\"74bef1b2f7cec13332394a824db1aafa\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"0e2d7f12b5cef0f02b50a057b488f27a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/calls/methods/hangup.md": {
-      "etag": "\"19bae0c3d16f49df9ceccc385e628e5a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"b65df08d09dcdf54722c3feec12cce02\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/calls/methods/refer.md": {
-      "etag": "\"d06e4352bb01a9a954d9826791168c40\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"a011d293217b2c7566f94ccd19bafa3c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/calls/methods/reject.md": {
-      "etag": "\"c117a0891065bedbe2062b541952cfe7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"0a836ce07229b1a241e6031011722d88\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/client_secrets.md": {
-      "etag": "\"787342f43130b5e9016f35bbc2168aeb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"319985587043dd77b725aff06f17e2ed\"",
+      "last_modified": "Sun, 16 Aug 2026 01:25:55 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/subresources/client_secrets/methods/create.md": {
-      "etag": "\"7e2145509937cb20cb31a398ef58ae17\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"e8fca93f9013e1c351dd99f11280b43b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/translation-client-events.md": {
-      "etag": "\"546895daa718370c117ceb1c2dd7bc74\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"4fccd000d3bfbce4c0d9fdbcdbc8e2de\"",
+      "last_modified": "Sat, 15 Aug 2026 23:10:34 GMT"
     },
     "https://developers.openai.com/api/reference/resources/realtime/translation-server-events.md": {
-      "etag": "\"d0292badd85a60437c58fbb110486360\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"9861484c7df5f49f3ad13d61fc035ab2\"",
+      "last_modified": "Sat, 15 Aug 2026 23:10:27 GMT"
     },
     "https://developers.openai.com/api/reference/resources/responses/methods/cancel.md": {
-      "etag": "\"73a8b43e7e2c07ff8d325f8899fa11eb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"499436ce2438976877ff09ff13448c3f\"",
+      "last_modified": "Sat, 15 Aug 2026 10:32:22 GMT"
     },
     "https://developers.openai.com/api/reference/resources/responses/methods/compact.md": {
-      "etag": "\"519e765423abb36c96df511adb3c356e\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"a67677ff5d165ee9251d6559b076872c\"",
+      "last_modified": "Sat, 15 Aug 2026 11:06:07 GMT"
     },
     "https://developers.openai.com/api/reference/resources/responses/methods/create.md": {
-      "etag": "\"e6daa5bde788dddc04f7c719b11488dd\"",
-      "last_modified": "Sat, 11 Jul 2026 07:14:59 GMT"
+      "etag": "\"47321aa50249c8c2cc86d161f5c7ddf5\"",
+      "last_modified": "Sat, 15 Aug 2026 23:11:52 GMT"
     },
     "https://developers.openai.com/api/reference/resources/responses/methods/delete.md": {
-      "etag": "\"73f900ae6344b26bf962bc11d4437c78\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"3c3a511f1650abcc34348cc27ec763f7\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/responses/methods/retrieve.md": {
-      "etag": "\"5f4934574dcb4e238b16733a310be445\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"9036f0e6b3d6bb98698f8d7afa8d97a2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/responses/subresources/input_items/methods/list.md": {
-      "etag": "\"88d12a7cf8df5b46ab67885a307c983f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"3f921d7682d562e2a4452d2cd3000ab6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/responses/subresources/input_tokens.md": {
-      "etag": "\"146c616986c12e0120bc9848b20a126f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"189c83665f898dbc84c7c113d2c58541\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/uploads.md": {
-      "etag": "\"138d330aaf9c6fa81345ae4057a28a3f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"93c8d163129094107269a09bcfba7ebf\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/uploads/methods/cancel.md": {
-      "etag": "\"b6d6e14db75b17929d6a3f90460e5441\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"fe4cb0ec2a1ebec0abceec4d077e19b3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/uploads/methods/create.md": {
-      "etag": "\"77b537d9b7a169327c415f48597242f1\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"3309c403864d6bd4f22fa0466f69bfb5\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/uploads/subresources/parts/methods/create.md": {
-      "etag": "\"8f09d5fcc3c4733100fa19298fb4be32\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"61e4a47220d91fc743b9d0fa652a15fe\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores.md": {
-      "etag": "\"8c039aae75943c9795c68745f66cfa84\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"2721d8af3c988ac111f187172598d2cd\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/methods/create.md": {
-      "etag": "\"14a862ff740aeb207fa6d3a7419a8fac\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"c3a588ebef12a54f456e5f62a2cf0d5b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/methods/delete.md": {
-      "etag": "\"daa70cf769965100eb2742184b017a30\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"c07b5585181e4315e858013a5d3602dc\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/methods/list.md": {
-      "etag": "\"1e331ff017db0806b3900f4eec63dc7c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"9c2d62392c6c852a4e999913eeb69694\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/methods/retrieve.md": {
-      "etag": "\"a384a5a132ea2f6a842620d0e53bedf8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"033100befbd67b05405d89e219285bc2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/methods/search.md": {
-      "etag": "\"fff1a6dd4678d70b302ff514dae8343b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"dbc7998c668e8b615b00d408c30f6267\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/methods/update.md": {
-      "etag": "\"00aff38849e08095e125f99b2d72bf39\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"8b81519589700b2a9fa89dd31587e694\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:56 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/file_batches.md": {
-      "etag": "\"d5e3b606977a969b679b92f975139556\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"2c212a43ed57af997cd9b53df0ea4bbb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/file_batches/methods/cancel.md": {
-      "etag": "\"699ab958b732dea137643e3ef413fb17\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"93e5e9dda709cb71649bf63fe434ee30\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/file_batches/methods/create.md": {
-      "etag": "\"556c1a9510f8790d6b9fef32a2fd787c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"29c1cd771b401021c1076dc763e5b422\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/file_batches/methods/list_files.md": {
-      "etag": "\"129fe8c7e091f8dab0a4be9576146768\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"8e4578a2d81c844c8da5a475538e5674\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/file_batches/methods/retrieve.md": {
-      "etag": "\"6dc9b78f4674d36ab19ade88d0f76829\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"a0be7fa983179ac868f2e814be9184fe\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/files.md": {
-      "etag": "\"106c0ca9b44f479dce2946fb1487c6b5\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"197a1c0cde6fc1c43c25dd95c5339e29\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/files/methods/content.md": {
-      "etag": "\"47141f35a5f5fde87e2fa3c3986fb37b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"144c686aaa16b0dd7abe6f7bc477ef7e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/files/methods/create.md": {
-      "etag": "\"ddc5ec0db2a3b84ad6dea258d6d53742\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"b7cf868f601526d713dc2f1f6c808a9f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/files/methods/delete.md": {
-      "etag": "\"e9e011f9dbc48077ac0588c225445aab\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"e7974d3e4b8732affe37249751748806\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/files/methods/list.md": {
-      "etag": "\"f91b600919383a7de6f80e2aafe6910b\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"de31cf8767a156c6a8450dc1dc03d92b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/files/methods/retrieve.md": {
-      "etag": "\"559a8ba5f1e07b3d998027b69a8e4737\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:22 GMT"
+      "etag": "\"10e6629d126b874231eb34219aa3005a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/vector_stores/subresources/files/methods/update.md": {
-      "etag": "\"9c28b81ee98cff3464b3b8bab03d3520\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"44f76d1513c00af2a3c2e7b8d2bd7973\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/videos.md": {
-      "etag": "\"31d8beb5840e703615104b5e9abe43a8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"2e1beabbd9a46a0990852ea3f8fc8031\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/videos/methods/create.md": {
-      "etag": "\"49b649a78371c9681159793e65bae2c7\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"b43705cf102e3463f12a3d0b1befe13b\"",
+      "last_modified": "Sat, 15 Aug 2026 13:27:49 GMT"
     },
     "https://developers.openai.com/api/reference/resources/videos/methods/delete.md": {
-      "etag": "\"2202de57b9db54d0577c1c570b79c721\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"b5434a940489ff23dfe4bd8cedd09025\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/videos/methods/list.md": {
-      "etag": "\"dc331d45523f9f4b73cb04264e746976\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"1aa36734b37ced2166ef6bbd6262a07d\"",
+      "last_modified": "Sat, 15 Aug 2026 17:04:43 GMT"
     },
     "https://developers.openai.com/api/reference/resources/videos/methods/retrieve.md": {
-      "etag": "\"a772d0881ff42c688f8a2512e5b10dfb\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"2a0d06c0d1d7a40ff495de16af28b3ca\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/webhooks.md": {
-      "etag": "\"f9675f593fdbffc0db0718d9c55accf3\"",
-      "last_modified": "Fri, 17 Jul 2026 03:29:06 GMT"
+      "etag": "\"1e41dcf8e69e62464f29bb9ff5910041\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/resources/webhooks/methods/unwrap.md": {
-      "etag": "\"a357a3298fbc73bbad967ffb633beebd\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"b995f6a31daaf5708022111d4dfc61ad\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:57 GMT"
     },
     "https://developers.openai.com/api/reference/responses/overview.md": {
-      "etag": "\"7d2f5131129c86ba59b33a7723f2de62\"",
-      "last_modified": "Sat, 11 Jul 2026 07:14:21 GMT"
+      "etag": "\"c4a198a512cabe6cea40e07cf2ca3528\"",
+      "last_modified": "Sat, 15 Aug 2026 04:43:05 GMT"
     },
     "https://developers.openai.com/api/reference/workload-identity-federation.md": {
-      "etag": "\"f393eba4c709d2db985c1a32567bb2e3\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
+      "etag": "\"f73053185f1113ca0d8804cbe5c5eae6\"",
+      "last_modified": "Sat, 15 Aug 2026 06:38:22 GMT"
+    },
+    "https://developers.openai.com/blog/15-lessons-building-chatgpt-apps.md": {
+      "etag": "\"37e75dab6764d7fab5453e179fd92ec9\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/building-frontend-uis-with-codex-and-figma.md": {
+      "etag": "\"d792ef2e9dfd9b6cdd842f9019887444\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/codex-at-devday.md": {
+      "etag": "\"b67cb82084880a80d7be44690f22e68f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/codex-for-documentation-dagster.md": {
+      "etag": "\"96bad86f24c10fa8bd0c9644da50ce38\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/connect-private-mcp-servers-to-openai-products.md": {
+      "etag": "\"0f5fb6a6e1efe4e5e192fee16c5ebea4\"",
+      "last_modified": "Sat, 15 Aug 2026 01:54:05 GMT"
+    },
+    "https://developers.openai.com/blog/custom-code-review-rules-for-codex.md": {
+      "etag": "\"462b035ac5d8e32df2e611198ee015f5\"",
+      "last_modified": "Sun, 16 Aug 2026 00:31:12 GMT"
+    },
+    "https://developers.openai.com/blog/designing-delightful-frontends-with-gpt-5-4.md": {
+      "etag": "\"2c1efde47dbaeb80d6c2b789ab2a69e8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/eval-skills.md": {
+      "etag": "\"710868e4c27045095ea89c0d251be340\"",
+      "last_modified": "Sun, 16 Aug 2026 02:07:50 GMT"
+    },
+    "https://developers.openai.com/blog/intro.md": {
+      "etag": "\"02d43f81389578a849f87eaf49bc337b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/llms.txt": {
+      "etag": "\"fd64a4819efa42d02fdecb89e2ea46e1\"",
+      "last_modified": "Sat, 15 Aug 2026 05:49:51 GMT"
+    },
+    "https://developers.openai.com/blog/mastering-codex-remote-for-engineering.md": {
+      "etag": "\"4e5ce8d89b5ef08aa5a019178a810ae1\"",
+      "last_modified": "Sat, 15 Aug 2026 09:26:31 GMT"
+    },
+    "https://developers.openai.com/blog/one-year-of-responses.md": {
+      "etag": "\"fe1e2ef161d695eb84c7e7bda3917f00\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/openai-for-developers-2025.md": {
+      "etag": "\"d6824a99abbb91548e1a37928d710251\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/realtime-api.md": {
+      "etag": "\"976c744addce84ab2614372e4d6e0c66\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/realtime-perplexity-computer.md": {
+      "etag": "\"3520c80e56385d3a8acd2ccb79af565d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/responses-api.md": {
+      "etag": "\"ccbbdac361cbe27b955bd82a829035d3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:32 GMT"
+    },
+    "https://developers.openai.com/blog/run-long-horizon-tasks-with-codex.md": {
+      "etag": "\"a7df21f79e99e4e4a39bd22b5f9bfc81\"",
+      "last_modified": "Sun, 16 Aug 2026 02:13:35 GMT"
+    },
+    "https://developers.openai.com/blog/skills-agents-sdk.md": {
+      "etag": "\"bfd11b3b09c92f551d0a282cbc43636c\"",
+      "last_modified": "Sun, 16 Aug 2026 03:40:00 GMT"
+    },
+    "https://developers.openai.com/blog/skills-shell-tips.md": {
+      "etag": "\"f723f0fc17b8cfd968947b7573a832ec\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/blog/skyscanner-codex-jetbrains-mcp.md": {
+      "etag": "\"1dad738d2892f6b938b189788d255810\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/blog/updates-audio-models.md": {
+      "etag": "\"0b9644a15f373818a272717dcb329238\"",
+      "last_modified": "Sat, 15 Aug 2026 03:50:24 GMT"
+    },
+    "https://developers.openai.com/blog/what-makes-a-great-chatgpt-app.md": {
+      "etag": "\"7250ab6b2a74b852115e5eb43616ff3b\"",
+      "last_modified": "Sat, 15 Aug 2026 15:05:19 GMT"
     },
     "https://developers.openai.com/commerce/guides/best-practices.md": {
-      "etag": "\"f76ffcdef22311877d5f914ffd2e1dec\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"76fb0baaa2efcb8515faef9400d6238c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/guides/get-started.md": {
-      "etag": "\"04feb8a824448edebc730ae2ed0791a8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"dd94b3e89ddda9d62e757183a13f8e7d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/guides/key-concepts.md": {
-      "etag": "\"38071976200a42c25cec84eb68fba65f\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"eb123cd8d04ca3b0ee5d655dfd8e9bbc\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/guides/production.md": {
-      "etag": "\"25f42604b4d70d62c2b8d7a4b2ae39a4\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"dcc517c8ac3468d5cd49fbb9e1d2478b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/llms.txt": {
       "etag": "\"c91ae936f4635e3f7d75ba6b4f5701d4\"",
       "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
     },
     "https://developers.openai.com/commerce/specs/api/feeds.md": {
-      "etag": "\"abbfae2c56527af8db6ffedaf7bafbce\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"eae62e1bde44301d8693f88674dd2aa2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/api/overview.md": {
-      "etag": "\"889161c0d1c46a263716a7565a6de6ff\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"cccef8204e6980c26eb05e6ebaeabfeb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/api/products.md": {
-      "etag": "\"d04d8fcb87dc3876751562dbb953323c\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"6e667250fe03aee528cf3e8c789b0cc4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/api/promotions.md": {
-      "etag": "\"ceba1de359fc38d09c3bd8c3b0d4d8d9\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"d129fc164c4c5e15ae618991575d7f5f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/checkout.md": {
-      "etag": "\"4d9d1d482a83469d482f32f6b298c9b8\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"9875394f8ebed226a014bdbed2bdb202\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:31 GMT"
     },
     "https://developers.openai.com/commerce/specs/file-upload/legacy.md": {
-      "etag": "\"cce5a87e7077c4e436e29ec34cd2b89d\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"45d9ba7c55607731d6639082097cf940\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/file-upload/overview.md": {
-      "etag": "\"625c241594199f499600ae71d50eccdd\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"721d7b8285d518e68459f93c5d6a3449\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/file-upload/products.md": {
-      "etag": "\"07ebea101728dc75692a2a4544cb4c23\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"609cd883ce8bd83ea402bcbb97f2d0c2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/onboarding.md": {
-      "etag": "\"2550d0be33034cf2317e6f11e09048db\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:23 GMT"
+      "etag": "\"5d19351b711ecf4758c984b3eb131473\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/payment.md": {
-      "etag": "\"7ba5370ba46483f23b01b63f0fdaa948\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:24 GMT"
+      "etag": "\"a9898fd2ea1452604c437c1c7cacae3e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
     },
     "https://developers.openai.com/commerce/specs/spec.md": {
-      "etag": "\"7ed635f609662e7e226daeca58c08ce3\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:24 GMT"
+      "etag": "\"02f9f8388909784bbd067b69af5d945c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/chatgpt-agents-sales-meeting-prep.md": {
+      "etag": "\"350da9f324b085e7947a231f363538c8\"",
+      "last_modified": "Sat, 15 Aug 2026 19:40:37 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/codex_exec_plans.md": {
+      "etag": "\"1726c383e81c7c5c4dce16a1dbdbcb96\"",
+      "last_modified": "Sat, 15 Aug 2026 05:22:47 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss-safeguard-guide.md": {
+      "etag": "\"c4afec587db88887efac9beb649b59a6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/build-your-own-fact-checker-cerebras.md": {
+      "etag": "\"a19d56e25eed6485198505cf51e1d746\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/fine-tune-korean.md": {
+      "etag": "\"6bd971c6312f1595141766a70a24d067\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/fine-tune-transfomers.md": {
+      "etag": "\"cb38d97bc51aae0aaadd985854effc57\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/handle-raw-cot.md": {
+      "etag": "\"3e5e270b164a1e2ee6f1367c7e933ff5\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/run-locally-lmstudio.md": {
+      "etag": "\"b369bca6ee85e868ee99f2fb16da648f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/run-locally-ollama.md": {
+      "etag": "\"450832e3adb8cafd305f1c4a70b99afb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/run-transformers.md": {
+      "etag": "\"c38923f9f2c785547c676e7f3b34143e\"",
+      "last_modified": "Sat, 15 Aug 2026 09:37:17 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/run-vllm.md": {
+      "etag": "\"33f984a88f0e93830cc024c3318371bb\"",
+      "last_modified": "Sat, 15 Aug 2026 04:08:23 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/gpt-oss/verifying-implementations.md": {
+      "etag": "\"93847dbede789a60b9107fb741420a57\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/openai-harmony.md": {
+      "etag": "\"d2f50ebf19c218729d99b7a21272ab18\"",
+      "last_modified": "Sat, 15 Aug 2026 11:11:52 GMT"
+    },
+    "https://developers.openai.com/cookbook/articles/what_makes_documentation_good.md": {
+      "etag": "\"6482a65132b568ad49fefd4a411daafe\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agentkit/agentkit_walkthrough.md": {
+      "etag": "\"5ae34d0675c9641636cb549001f809b3\"",
+      "last_modified": "Sat, 15 Aug 2026 09:29:15 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/agent_improvement_loop.md": {
+      "etag": "\"0e93e8938d618ff81a7581d518ebe8aa\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/building_reliable_agents_memory_compaction.md": {
+      "etag": "\"16202cb11d87947a18a4c05888128966\"",
+      "last_modified": "Sun, 16 Aug 2026 02:47:51 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/context_personalization.md": {
+      "etag": "\"cd147a78002c845c5c59c746f18d85b7\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/deployment_manager/readme.md": {
+      "etag": "\"5dfc4b12c8f467469e880979e11c7c60\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/evaluate_agents.md": {
+      "etag": "\"fabd946827a6eeccd2f822559051b3b7\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/migrate-from-claude-agent-sdk/readme.md": {
+      "etag": "\"b1747e5f62d3aa1613536e9e15eb9260\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/multi-agent-portfolio-collaboration/multi_agent_portfolio_collaboration.md": {
+      "etag": "\"62e6dac38295a86cc039af9117624033\"",
+      "last_modified": "Sat, 15 Aug 2026 19:28:33 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/parallel_agents.md": {
+      "etag": "\"f19a1ee586023975d84cf37ef8e93678\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/sandboxed-code-migration/sandboxed_code_migration_agent.md": {
+      "etag": "\"bfe52b756524a8bce454e2c23608e83c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/agents_sdk/session_memory.md": {
+      "etag": "\"9f5b7a47453f68f9661b34482c027357\"",
+      "last_modified": "Sat, 15 Aug 2026 06:04:11 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/audio/speaker_aware_meeting_intelligence/speaker_aware_meeting_intelligence.md": {
+      "etag": "\"51c1daa9593704943bae911fd9e580bb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/build_a_coding_agent_with_gpt-5.1.md": {
+      "etag": "\"1fa9adb12d542af3254705e0701e13e2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/chatgpt/chatgpt_prompt_guide/chatgpt_prompt_guide.md": {
+      "etag": "\"7b7c82233ea064edefe271d8f508b8c8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/chatgpt/compliance_api/logs_platform.md": {
+      "etag": "\"e157dd8fecbde5e705e121f1285e69ab\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/chatgpt/workspace_agents/workspace-agents-api-trigger.md": {
+      "etag": "\"d54672749d0bd1f079aeca5eca64487b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/autofix-github-actions.md": {
+      "etag": "\"bfd0e04bba63b75e47c91ab7a7f70fd0\"",
+      "last_modified": "Sun, 16 Aug 2026 00:20:32 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/build_code_review_with_codex_sdk.md": {
+      "etag": "\"6a2d7ee5f6c202d808abcf8440f8b92d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/build_iterative_repair_loops_with_codex.md": {
+      "etag": "\"b98cc7a5e8cd5823b8e38aa2614ce91c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/code_modernization.md": {
+      "etag": "\"58dcc182c1ea54f94b09fd999b627b22\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/codex_mcp_agents_sdk/building_consistent_workflows_codex_cli_agents_sdk.md": {
+      "etag": "\"ecb30215745b8723a2a0de6ed257d406\"",
+      "last_modified": "Sat, 15 Aug 2026 04:02:40 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/jira-github.md": {
+      "etag": "\"a3d5cc1444746513ae8df2db33ee8dd2\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/secure_quality_gitlab.md": {
+      "etag": "\"a2ab6892ed63a6dff1b16eda972d3297\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex.md": {
+      "etag": "\"e1956968ae2d973994c226fd132f326b\"",
+      "last_modified": "Sat, 15 Aug 2026 02:34:56 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/completions_usage_api.md": {
+      "etag": "\"a23105ccf8e71f69fc271ebac95fc724\"",
+      "last_modified": "Sun, 16 Aug 2026 03:02:50 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/context_summarization_with_realtime_api.md": {
+      "etag": "\"5e2abdae770e4885389e45988b2b8c2f\"",
+      "last_modified": "Sat, 15 Aug 2026 20:35:30 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/deep_research_api/how_to_build_a_deep_research_mcp_server/readme.md": {
+      "etag": "\"ddf36769d0e02dbc1c8dc55f1c7aca02\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/deep_research_api/introduction_to_deep_research_api.md": {
+      "etag": "\"5162eb5329b47f786f60a69f1cc8d4c8\"",
+      "last_modified": "Sun, 16 Aug 2026 03:37:52 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/deep_research_api/introduction_to_deep_research_api_agents.md": {
+      "etag": "\"e3bff010731110f254cc778290d85cf2\"",
+      "last_modified": "Sun, 16 Aug 2026 02:48:47 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/embedding_wikipedia_articles_for_search.md": {
+      "etag": "\"79f71f43068db3d48eee7e1ecd52808a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/evaluation/building_resilient_prompts_using_an_evaluation_flywheel.md": {
+      "etag": "\"b2103526ea7593f3f2bf269bcc93c3b4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/evaluation/moving-from-openai-evals-to-promptfoo.md": {
+      "etag": "\"6305e95b360236dfd48d6176f571ea41\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/file_search_responses.md": {
+      "etag": "\"88eaf4a22d6c31b0ee3ea0c64dc1c401\"",
+      "last_modified": "Sun, 16 Aug 2026 00:12:09 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/fine-tuned_qa/reinforcement_finetuning_healthbench.md": {
+      "etag": "\"9ff4e54339eae7eab69fdf4cb4346036\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/fine_tuning_direct_preference_optimization_guide.md": {
+      "etag": "\"5ecc8eba25c9ade9dbf0a0ce65f711c0\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/generate_images_with_gpt_image.md": {
+      "etag": "\"c6c42ac2d1bace0e6e99ee721410f7d8\"",
+      "last_modified": "Sat, 15 Aug 2026 04:26:17 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/generate_images_with_high_input_fidelity.md": {
+      "etag": "\"eb0a081756e3ce819b1af4523e79fd4f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide.md": {
+      "etag": "\"55e5ee9822e21b6e070dc1f6fd290397\"",
+      "last_modified": "Sat, 15 Aug 2026 02:05:49 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/gpt-5-1_prompting_guide.md": {
+      "etag": "\"b5c21a02662da91c23bd70710ee54877\"",
+      "last_modified": "Sat, 15 Aug 2026 07:53:56 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/gpt-5-2_prompting_guide.md": {
+      "etag": "\"7d73ccd77f708481c675b6249468b8ca\"",
+      "last_modified": "Sun, 16 Aug 2026 00:41:04 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/gpt-5_frontend.md": {
+      "etag": "\"451609c304331024bdf1d2c81b3ec35f\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/gpt-5_new_params_and_tools.md": {
+      "etag": "\"2a674b3c853640bbef32b03654d7a222\"",
+      "last_modified": "Sun, 16 Aug 2026 02:03:20 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/gpt-5_prompting_guide.md": {
+      "etag": "\"d2d42eb58ff5fe1207687d04d8494776\"",
+      "last_modified": "Sat, 15 Aug 2026 02:56:10 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/prompt-optimization-cookbook.md": {
+      "etag": "\"0a5d48baeac7e0625863f2cc8310ae04\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt-5/prompt_personalities.md": {
+      "etag": "\"46dc316b143dee59b94fbdd7e7b143aa\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/gpt4-1_prompting_guide.md": {
+      "etag": "\"32228596ff98070afad4b950d073ff1c\"",
+      "last_modified": "Sat, 15 Aug 2026 12:28:18 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/how_to_handle_rate_limits.md": {
+      "etag": "\"d9872e76e5e5c0dee32a694c526dda7d\"",
+      "last_modified": "Sat, 15 Aug 2026 04:13:25 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/mcp/databricks_mcp_cookbook.md": {
+      "etag": "\"0809fba496ac306eac24b00a277646c3\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/mcp/mcp_tool_guide.md": {
+      "etag": "\"c7c2ff41c413c1faed5f75ba50fb1df2\"",
+      "last_modified": "Sat, 15 Aug 2026 04:14:22 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/migrating_from_whisper_to_gpt_transcribe.md": {
+      "etag": "\"0f50cb4adb7e1b79b26921e1b5cf46d8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:35 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/multimodal/document_and_multimodal_understanding_tips.md": {
+      "etag": "\"40bc5777c9a5172e20ac808d3fff481a\"",
+      "last_modified": "Sun, 16 Aug 2026 02:05:27 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/multimodal/grounded_spatial_reasoning_layouts.md": {
+      "etag": "\"d8474b4d4adb3ca35b3ce10fa5ac4d02\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/multimodal/image-gen-1.5-prompting_guide.md": {
+      "etag": "\"1c089d6f52f1acbefb3d408a963430fc\"",
+      "last_modified": "Sun, 16 Aug 2026 02:20:30 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide.md": {
+      "etag": "\"f186484d9c97fae10ccef9ebca9499db\"",
+      "last_modified": "Sat, 15 Aug 2026 01:53:16 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/multimodal/image_evals.md": {
+      "etag": "\"d2c264cd68621aa4dff9d9bada8985bd\"",
+      "last_modified": "Sat, 15 Aug 2026 05:50:11 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/multimodal/image_understanding_with_rag.md": {
+      "etag": "\"724b11a05aeef46232405bcfa9364a4d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/multimodal/vision_fine_tuning_on_gpt4o_for_visual_question_answering.md": {
+      "etag": "\"6d44b6335f1461ec67c1502b59bdc9b4\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/object_oriented_agentic_approach/secure_code_interpreter_tool_for_llm_agents.md": {
+      "etag": "\"eb7db3e9d00057b9aba125efb4a47ea8\"",
+      "last_modified": "Sun, 16 Aug 2026 03:37:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/optimize_prompts.md": {
+      "etag": "\"63af4c563bf8ca43e9e4a6e9bbb64f86\"",
+      "last_modified": "Sat, 15 Aug 2026 11:23:29 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/agentic_governance_guide/agentic_governance_cookbook.md": {
+      "etag": "\"3d7a8f547425f7e31f391d5be6392b32\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/aws/controlled_agentic_commerce_with_agentcore_payments/controlled_agentic_commerce.md": {
+      "etag": "\"ce7d1dc9560310be7110c30edf7f2aef\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/aws/evidence_grounded_aml_agent_with_bedrock.md": {
+      "etag": "\"c638da04b94c1a39a1406471a503ea3d\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/aws/openai_models_with_amazon_bedrock.md": {
+      "etag": "\"2a66874b766508ec8fda858aadd6c6ac\"",
+      "last_modified": "Sat, 15 Aug 2026 03:23:57 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/eval_driven_system_design/receipt_inspection.md": {
+      "etag": "\"f98fdb04a54d11b37c2fc0500ba9d87e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/macro_evals_for_agentic_systems/macro_evals_for_agentic_systems.md": {
+      "etag": "\"463b0c27fb7af076715734f1a1c29eef\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/model_selection_guide/model_selection_guide.md": {
+      "etag": "\"e92fa03a4a22c674d22e9df35dd51e41\"",
+      "last_modified": "Sat, 15 Aug 2026 09:55:34 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/schemaflow_design_guide/schemaflow_cookbook.md": {
+      "etag": "\"d938138b1d7f3cc9a31f9e4f2d82a63a\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/self_evolving_agents/autonomous_agent_retraining.md": {
+      "etag": "\"85d8186f8f93930933a7b7f36ea06c0c\"",
+      "last_modified": "Sat, 15 Aug 2026 06:37:18 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/partners/temporal_agents_with_knowledge_graphs/temporal_agents.md": {
+      "etag": "\"d8890a1383456c06a469e0468cc1413b\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/prompt_caching_201.md": {
+      "etag": "\"1be41ee88859ded05929c82185f391e8\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/prompt_migration_guide.md": {
+      "etag": "\"3e58b4a0283a764780b1c3e6e4ab5ef1\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/realtime_eval_guide.md": {
+      "etag": "\"e90dd7af5d5871373f0857b615958cf6\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/realtime_out_of_band_transcription.md": {
+      "etag": "\"14c1787e133e26d6850784cea3fc881c\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:36 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/realtime_prompting_guide.md": {
+      "etag": "\"719c8a67fd0cfc80486099b01d766bfb\"",
+      "last_modified": "Sat, 15 Aug 2026 06:44:21 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/reinforcement_fine_tuning.md": {
+      "etag": "\"0675af293ab2b3fdc3145577e9b839fb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:37 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/responses_api/reasoning_items.md": {
+      "etag": "\"bed9c6aada2cb999fd78570b904f7d2c\"",
+      "last_modified": "Sat, 15 Aug 2026 04:45:05 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/responses_api/responses_api_tool_orchestration.md": {
+      "etag": "\"8ee8217c7f882130204c7321ac9fe2c0\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:37 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/responses_api/responses_example.md": {
+      "etag": "\"278d5a4916587d1d63a6c77094582ee9\"",
+      "last_modified": "Sat, 15 Aug 2026 11:41:57 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/skills_in_api.md": {
+      "etag": "\"2dcad22c8e1b8705b8e74eb568c73469\"",
+      "last_modified": "Sun, 16 Aug 2026 00:21:52 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/sora/sora2_prompting_guide.md": {
+      "etag": "\"307d89e0ff775825829c8e0f02508964\"",
+      "last_modified": "Sat, 15 Aug 2026 04:19:17 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/speech_transcription_methods.md": {
+      "etag": "\"c0160944610ae6f6b169ba39fd44025e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:37 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/structured_outputs_intro.md": {
+      "etag": "\"8e17a9e910e8bc46b9b1b25513ba48a6\"",
+      "last_modified": "Sun, 16 Aug 2026 02:35:05 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/using_logprobs.md": {
+      "etag": "\"515f20b416dc4f8726df26af2426d639\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:37 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/vector_databases/oracle_db/deep_research_openai_agents.md": {
+      "etag": "\"105e550e5314204f2be6ffc91eeb6339\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:37 GMT"
+    },
+    "https://developers.openai.com/cookbook/examples/voice_solutions/realtime_translation_guide.md": {
+      "etag": "\"595141e4f7df90efc174ee45cbf1ba8b\"",
+      "last_modified": "Sat, 15 Aug 2026 21:53:57 GMT"
+    },
+    "https://developers.openai.com/cookbook/llms.txt": {
+      "etag": "\"2e2ce585b4e8443d699179dbde765690\"",
+      "last_modified": "Sun, 16 Aug 2026 03:40:00 GMT"
+    },
+    "https://developers.openai.com/learn/developers-codex-plugin.md": {
+      "etag": "\"73001e3ad8d1844816becf4d7dbfb443\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:37 GMT"
+    },
+    "https://developers.openai.com/learn/docs-mcp.md": {
+      "etag": "\"b7ded141abb323165a86e3e21c59c581\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:37 GMT"
+    },
+    "https://developers.openai.com/learn/llms.txt": {
+      "etag": "\"ac0016db900c38e3516415f1279169c1\"",
+      "last_modified": "Sat, 15 Aug 2026 21:34:35 GMT"
     },
     "https://developers.openai.com/plugins/app-guidelines.md": {
-      "etag": "\"ad9afbdbac7457a677bca7352f7a3961\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"6dfe5ff53dfe8779cd9fbcea61a041f8\"",
+      "last_modified": "Sun, 16 Aug 2026 01:27:24 GMT"
     },
     "https://developers.openai.com/plugins/build/app-quickstart.md": {
-      "etag": "\"d15e73f7f264fd8f68a7ed520cfc9a7d\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"0398de27c706c607fbdf139ff724bb47\"",
+      "last_modified": "Sun, 16 Aug 2026 04:09:16 GMT"
     },
     "https://developers.openai.com/plugins/build/auth.md": {
-      "etag": "\"5a5c59e0969fef0b3e556cf685b6577b\"",
-      "last_modified": "Sun, 26 Jul 2026 05:22:28 GMT"
+      "etag": "\"49330733381361fda736dab8b0c3c6ba\"",
+      "last_modified": "Sat, 15 Aug 2026 01:53:45 GMT"
     },
     "https://developers.openai.com/plugins/build/chatgpt-ui.md": {
-      "etag": "\"ee00faf7f6e8e5adcd015edd3d2a8843\"",
-      "last_modified": "Sun, 26 Jul 2026 03:15:31 GMT"
+      "etag": "\"10f9213e86568912a830e7270d564f5c\"",
+      "last_modified": "Sat, 15 Aug 2026 06:10:49 GMT"
     },
     "https://developers.openai.com/plugins/build/examples.md": {
-      "etag": "\"9294bb86161350a280f882dc0435b217\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"0819fa5fa96ecc03cfa00be6cc1df167\"",
+      "last_modified": "Sat, 15 Aug 2026 03:04:27 GMT"
     },
     "https://developers.openai.com/plugins/build/mcp-server.md": {
-      "etag": "\"465358cb43271fc68abb8d38d7a4078e\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"e06066766904b8eb1e1e9b3224740780\"",
+      "last_modified": "Sat, 15 Aug 2026 02:10:23 GMT"
     },
     "https://developers.openai.com/plugins/build/monetization.md": {
-      "etag": "\"35798c234110bac44dec0d040b1287d4\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"b797e59ab228965b047540a702b5fc9b\"",
+      "last_modified": "Sat, 15 Aug 2026 01:53:06 GMT"
     },
     "https://developers.openai.com/plugins/build/plugins.md": {
-      "etag": "\"e006cb18914dafa1ea1ceb94d32ab5f8\"",
-      "last_modified": "Sun, 26 Jul 2026 09:01:47 GMT"
+      "etag": "\"624127e189eedff9749a68d95b9afed8\"",
+      "last_modified": "Sat, 15 Aug 2026 02:05:15 GMT"
     },
     "https://developers.openai.com/plugins/build/skills.md": {
-      "etag": "\"9ec807aad9b468aba49b41e3030e75a3\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"3751e282acc5cdb5e892ce0683e861e9\"",
+      "last_modified": "Sat, 15 Aug 2026 03:18:32 GMT"
     },
     "https://developers.openai.com/plugins/concepts/mcp-server.md": {
-      "etag": "\"2edc6e7dba80ea05e47cb028419d6c1e\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"78c20c499758e0492c9e2b4a211e01c0\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/plugins/concepts/plugins.md": {
-      "etag": "\"1e87b0875e700762aae64978ab033549\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"093ebe0341b71a1b008adf3ff0304c87\"",
+      "last_modified": "Sun, 16 Aug 2026 01:10:04 GMT"
     },
     "https://developers.openai.com/plugins/concepts/skills.md": {
-      "etag": "\"b2d10c3a74e34247ab01f17ff0ca29e8\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:20 GMT"
+      "etag": "\"f2b147686cf0fc4052121af144a689eb\"",
+      "last_modified": "Sat, 15 Aug 2026 21:19:53 GMT"
     },
     "https://developers.openai.com/plugins/concepts/ui-guidelines.md": {
-      "etag": "\"0ab8e0caef70ef9ee968408d94835156\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"c8cd56e5edfae3acb1bd82f03cf1d144\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/plugins/deploy/app-review.md": {
-      "etag": "\"a81ad8ed952d803066438bbc2f94de49\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"b08be3aa4c2ba3f58a8f85813b08c41a\"",
+      "last_modified": "Sat, 15 Aug 2026 01:53:44 GMT"
     },
     "https://developers.openai.com/plugins/deploy/connect-chatgpt.md": {
-      "etag": "\"3c7573af34ade098363fe9d748cfd5a8\"",
-      "last_modified": "Sun, 26 Jul 2026 04:26:51 GMT"
+      "etag": "\"60f32553db914db4f88a7a53bffea499\"",
+      "last_modified": "Sun, 16 Aug 2026 01:25:59 GMT"
     },
     "https://developers.openai.com/plugins/deploy/submission-errors.md": {
-      "etag": "\"0efff906d1a2578e2a1b5fb3a78662ac\"",
-      "last_modified": "Sat, 25 Jul 2026 09:15:28 GMT"
+      "etag": "\"70bfb921f2f6cde9b745402d875f984d\"",
+      "last_modified": "Sat, 15 Aug 2026 15:06:10 GMT"
     },
     "https://developers.openai.com/plugins/deploy/submission.md": {
-      "etag": "\"15605935dfbb3c7305d7c12e5c7b494d\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"a493eee4cd842ea0299fafe3b4ef48d9\"",
+      "last_modified": "Sat, 15 Aug 2026 01:53:06 GMT"
     },
     "https://developers.openai.com/plugins/deploy/troubleshooting.md": {
-      "etag": "\"8264f6d3374c1c582b3966eb436dbabb\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"3d9f9e55284a5be27dedd00cc9e72598\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
+    },
+    "https://developers.openai.com/plugins/guides/local-services-request-quote-conversion-spec.md": {
+      "etag": "\"cdb9eed163b4c65a5919cc2601346c98\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/plugins/guides/optimize-metadata.md": {
-      "etag": "\"34245f2ae39edafc771c3400e5383082\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"a27f17ff38146579dda57c32d6b3923c\"",
+      "last_modified": "Sun, 16 Aug 2026 02:15:50 GMT"
     },
     "https://developers.openai.com/plugins/guides/product-checkout-conversion-spec.md": {
-      "etag": "\"9fd221cc00ecd5d9e8c4b46c82853555\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"58bfd2bd838ca905f3483e5c761f9ccb\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/plugins/guides/restaurant-reservation-conversion-spec.md": {
-      "etag": "\"bc2e642f3095b3c8f303ab10f58247f4\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"95eca2d40eb0a7f093879cf4ff61a755\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/plugins/guides/security-privacy.md": {
-      "etag": "\"dc7f99308b21bf881d166970d83d30bb\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:28 GMT"
+      "etag": "\"9f27dfffc3a321653763944f5b8a0977\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
+    },
+    "https://developers.openai.com/plugins/guides/submit-claude-plugin.md": {
+      "etag": "\"dfd9354131ee06ab644f5c91202871a4\"",
+      "last_modified": "Sat, 15 Aug 2026 02:01:57 GMT"
     },
     "https://developers.openai.com/plugins/llms.txt": {
-      "etag": "\"e0d7914a2369bda1c1cdcdd776720aad\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:55 GMT"
+      "etag": "\"87d8675453631a20693ea69adff19e71\"",
+      "last_modified": "Sat, 15 Aug 2026 02:21:19 GMT"
     },
     "https://developers.openai.com/plugins/plan/tools.md": {
-      "etag": "\"31822653225100ac3730582124b1e5e0\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:28 GMT"
+      "etag": "\"f88b22e612e2a9231edd458a58027a1e\"",
+      "last_modified": "Sat, 15 Aug 2026 04:42:44 GMT"
     },
     "https://developers.openai.com/plugins/plan/use-case.md": {
-      "etag": "\"c91b296c8e3a27b1abbcb9f6f9828d28\"",
-      "last_modified": "Sat, 25 Jul 2026 10:26:28 GMT"
+      "etag": "\"b2b1213f35c07cdec5a6e90b6cd269ea\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/plugins/quickstart.md": {
-      "etag": "\"eec07e8d7fb4f6e1309744e102699dfe\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:19 GMT"
+      "etag": "\"ced61a404763feb984a00a056d0d3135\"",
+      "last_modified": "Sat, 15 Aug 2026 01:53:44 GMT"
     },
     "https://developers.openai.com/plugins/reference.md": {
-      "etag": "\"b5dca761ea0f57281b48fa0eb34b60b9\"",
-      "last_modified": "Sat, 25 Jul 2026 05:52:47 GMT"
+      "etag": "\"8f607a0539027b36db3318bdf8e7cfa9\"",
+      "last_modified": "Sun, 16 Aug 2026 01:27:45 GMT"
+    },
+    "https://developers.openai.com/showcase/llms.txt": {
+      "etag": "\"adf0028e8e79477aced33fa597a1d1ea\"",
+      "last_modified": "Sat, 15 Aug 2026 05:50:17 GMT"
+    },
+    "https://developers.openai.com/tracks.md": {
+      "etag": "\"4c9cbb58d7d7ec5e82aba18437519f5c\"",
+      "last_modified": "Sat, 15 Aug 2026 05:50:18 GMT"
+    },
+    "https://developers.openai.com/tracks/ai-application-development.md": {
+      "etag": "\"882621875e46f9cdf93060f3fe55df75\"",
+      "last_modified": "Sat, 15 Aug 2026 03:55:38 GMT"
+    },
+    "https://developers.openai.com/tracks/building-agents.md": {
+      "etag": "\"74394cb7450608b40a4fd94157181706\"",
+      "last_modified": "Sun, 16 Aug 2026 01:07:21 GMT"
+    },
+    "https://developers.openai.com/tracks/model-optimization.md": {
+      "etag": "\"9254cc869bc34a4eb6e0014802dc6c39\"",
+      "last_modified": "Sat, 15 Aug 2026 04:29:45 GMT"
     },
     "https://developers.openai.com/workspace-agents/authentication.md": {
-      "etag": "\"ea2c73a47b9da7c9630db26a0beef35a\"",
-      "last_modified": "Sat, 11 Jul 2026 17:54:24 GMT"
+      "etag": "\"fbb00dcc8242921d45696df0b8c38e3e\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:43 GMT"
     },
     "https://developers.openai.com/workspace-agents/llms.txt": {
       "etag": "\"a2a2e194669068b5afd9f52c56943078\"",
       "last_modified": "Sat, 25 Jul 2026 10:25:57 GMT"
     },
     "https://developers.openai.com/workspace-agents/trigger-runs.md": {
-      "etag": "\"061f56f6e77b9a26dadfaf7eeabc7c03\"",
-      "last_modified": "Sun, 26 Jul 2026 11:51:20 GMT"
+      "etag": "\"a1ab1e042750ffdb4c2e35828adde584\"",
+      "last_modified": "Sun, 16 Aug 2026 04:16:31 GMT"
+    },
+    "https://learn.chatgpt.com/docs/codex-manual.md": {
+      "etag": "\"4b3cc416f25992ecab05fa048802b026\"",
+      "last_modified": "Sun, 16 Aug 2026 01:08:29 GMT"
     }
   }
 }
