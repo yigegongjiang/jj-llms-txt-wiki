@@ -2,7 +2,7 @@
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Update an existing category by its identifier.
+Partially updates a threat event category in Cloudforce One, modifying specific fields without replacing the entire category.
 
 ### Path Parameters
 

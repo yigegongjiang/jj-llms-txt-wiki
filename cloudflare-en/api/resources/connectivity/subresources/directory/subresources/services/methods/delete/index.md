@@ -2,7 +2,7 @@
 
 **delete** `/accounts/{account_id}/connectivity/directory/services/{service_id}`
 
-Delete Workers VPC connectivity service
+Removes a single Workers VPC connectivity service by its ID.
 
 ### Path Parameters
 

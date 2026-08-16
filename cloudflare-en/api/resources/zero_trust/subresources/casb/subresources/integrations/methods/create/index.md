@@ -10,11 +10,12 @@ Creates a new integration for the specified application. Integration creation wi
 
 ### Body Parameters
 
-- `application: "ANTHROPIC" or "BITBUCKET" or "BOX" or 10 more`
+- `application: "ANTHROPIC" or "AWS" or "BITBUCKET" or 12 more`
 
   Vendor/application slug (e.g., GOOGLE_WORKSPACE).
 
   * `ANTHROPIC` - ANTHROPIC
+  * `AWS` - AWS
   * `BITBUCKET` - BITBUCKET
   * `BOX` - BOX
   * `CONFLUENCE` - CONFLUENCE
@@ -26,9 +27,12 @@ Creates a new integration for the specified application. Integration creation wi
   * `MICROSOFT_INTERNAL` - MICROSOFT_INTERNAL
   * `OPENAI` - OPENAI
   * `SALESFORCE` - SALESFORCE
+  * `SERVICENOW` - SERVICENOW
   * `SLACK` - SLACK
 
   - `"ANTHROPIC"`
+
+  - `"AWS"`
 
   - `"BITBUCKET"`
 
@@ -51,6 +55,8 @@ Creates a new integration for the specified application. Integration creation wi
   - `"OPENAI"`
 
   - `"SALESFORCE"`
+
+  - `"SERVICENOW"`
 
   - `"SLACK"`
 
@@ -86,67 +92,79 @@ Creates a new integration for the specified application. Integration creation wi
 
 ### Returns
 
-- `id: string`
+- `result: object { id, application, auth_method, 11 more }`
 
-  Integration ID.
+  The requested item.
 
-- `application: map[string]`
+  - `id: string`
 
-- `auth_method: map[string]`
+    Integration ID.
 
-  The integration's authentication method.
+  - `application: map[string]`
 
-- `authorization_link: object { components, link }`
+  - `auth_method: map[string]`
 
-  Authorization link for the integration.
+    The integration's authentication method.
 
-  - `components: map[unknown]`
+  - `authorization_link: object { components, link }`
 
-  - `link: string`
+    Authorization link for the integration.
 
-- `created: string`
+    - `components: map[unknown]`
 
-  When the integration was created.
+    - `link: string`
 
-- `credentials_expiry: string`
+  - `created: string`
 
-  Credentials expiry time.
+    When the integration was created.
 
-- `dlp_profiles: array of string`
+  - `credentials_expiry: string`
 
-  DLP Profiles enabled for the integration.
+    Credentials expiry time.
 
-- `health_details: array of map[unknown]`
+  - `dlp_profiles: array of string`
 
-  Health details with remediation hints.
+    DLP Profiles enabled for the integration.
 
-- `is_paused: boolean`
+  - `health_details: array of map[unknown]`
 
-  Whether the user paused the integration.
+    Health details with remediation hints.
 
-- `last_hydrated: string`
+  - `is_paused: boolean`
 
-  Last time the integration was hydrated.
+    Whether the user paused the integration.
 
-- `name: string`
+  - `last_hydrated: string`
 
-  Name of the integration.
+    Last time the integration was hydrated.
 
-- `organization_id: number`
+  - `name: string`
 
-  Organization ID.
+    Name of the integration.
 
-- `status: string`
+  - `status: string`
 
-  Integration status.
+    Integration status.
 
-- `updated: string`
+  - `updated: string`
 
-  When the integration was last updated.
+    When the integration was last updated.
 
-- `use_cases: array of map[unknown]`
+  - `use_cases: array of map[unknown]`
 
-  Use cases enabled for the integration.
+    Use cases enabled for the integration.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
+- `errors: optional array of map[unknown]`
+
+  List of errors.
+
+- `messages: optional array of string`
+
+  List of messages.
 
 ### Example
 
@@ -167,39 +185,81 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations 
 
 ```json
 {
-  "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-  "application": {
-    "foo": "string"
-  },
-  "auth_method": {
-    "foo": "string"
-  },
-  "authorization_link": {
-    "components": {
-      "foo": "bar"
+  "errors": [],
+  "messages": [],
+  "result": {
+    "application": {
+      "category": "Productivity",
+      "display_name": "Google Workspace",
+      "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
     },
-    "link": "link"
+    "auth_method": {
+      "display_name": "OAuth 2.0",
+      "id": "oauth"
+    },
+    "authorization_link": {
+      "components": {
+        "client_id": "abc",
+        "instance_name": "example"
+      },
+      "link": "https://example.cloudflare.com/authorize"
+    },
+    "created": "2025-01-01T00:00:00Z",
+    "credentials_expiry": "2026-01-01T00:00:00Z",
+    "dlp_profiles": [
+      "e91a2360-da51-4fdf-9711-bcdecd462614"
+    ],
+    "health_details": [],
+    "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",
+    "is_paused": false,
+    "last_hydrated": "2025-04-10T08:30:00Z",
+    "name": "My Google Workspace",
+    "status": "Healthy",
+    "updated": "2025-04-10T08:30:00Z",
+    "use_cases": [
+      {
+        "description": "Discover and secure SaaS applications",
+        "features": [
+          {
+            "description": "Automatically remediate security issues (requires write permissions)",
+            "id": "auto_remediation",
+            "is_enabled": true,
+            "name": "Auto Remediation",
+            "permissions": [
+              {
+                "display_name": "Manage users",
+                "scope": "https://www.googleapis.com/auth/admin.directory.user",
+                "status": "granted"
+              }
+            ]
+          }
+        ],
+        "id": "casb",
+        "is_enabled": true,
+        "name": "Cloud Access Security Broker",
+        "permissions": [
+          {
+            "display_name": "Drive (Read Only)",
+            "scope": "https://www.googleapis.com/auth/drive.readonly",
+            "status": "granted"
+          },
+          {
+            "display_name": "Gmail (Read Only)",
+            "scope": "https://www.googleapis.com/auth/gmail.readonly",
+            "status": "missing"
+          }
+        ]
+      },
+      {
+        "description": "Protect against email-based threats",
+        "features": [],
+        "id": "ces",
+        "is_enabled": false,
+        "name": "Cloud Email Security",
+        "permissions": []
+      }
+    ]
   },
-  "created": "2019-12-27T18:11:19.117Z",
-  "credentials_expiry": "2019-12-27T18:11:19.117Z",
-  "dlp_profiles": [
-    "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"
-  ],
-  "health_details": [
-    {
-      "foo": "bar"
-    }
-  ],
-  "is_paused": true,
-  "last_hydrated": "2019-12-27T18:11:19.117Z",
-  "name": "name",
-  "organization_id": 0,
-  "status": "status",
-  "updated": "2019-12-27T18:11:19.117Z",
-  "use_cases": [
-    {
-      "foo": "bar"
-    }
-  ]
+  "success": true
 }
 ```

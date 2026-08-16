@@ -16,13 +16,21 @@ Aggregate threat indicators by one or more columns (e.g., indicatorType, value) 
 
   Column(s) to aggregate by - single column or comma-separated list (e.g., 'indicatorType', 'value', 'indicatorType,value')
 
-- `createdAfter: optional string`
+- `createdAfter: optional string or string`
 
-  Filter indicators created after this date (ISO 8601 format, e.g., '2024-01-01')
+  Filter indicators created after this date/datetime (ISO 8601, e.g., '2024-01-01' or '2024-01-01T00:00:00Z')
 
-- `createdBefore: optional string`
+  - `string`
 
-  Filter indicators created before this date (ISO 8601 format, e.g., '2024-12-31')
+  - `string`
+
+- `createdBefore: optional string or string`
+
+  Filter indicators created before this date/datetime (ISO 8601, e.g., '2024-12-31' or '2024-12-31T23:59:59Z')
+
+  - `string`
+
+  - `string`
 
 - `datasetIds: optional array of string`
 

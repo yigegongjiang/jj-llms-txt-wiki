@@ -52,11 +52,11 @@ Starts a crawl job for the provided URL and its children. Check available option
 
     - `allowRequestPattern: optional array of string`
 
-      Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+      Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
     - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-      Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+      Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
       - `"document"`
 
@@ -238,19 +238,9 @@ Starts a crawl job for the provided URL and its children. Check available option
 
         - `type: string`
 
-        - `json_schema: optional map[string or number or boolean or 2 more]`
+        - `json_schema: optional map[unknown]`
 
           Schema for the response format. More information here: https://developers.cloudflare.com/workers-ai/json-mode/
-
-          - `string`
-
-          - `number`
-
-          - `boolean`
-
-          - `unknown`
-
-          - `array of string`
 
     - `limit: optional number`
 
@@ -442,19 +432,9 @@ Starts a crawl job for the provided URL and its children. Check available option
 
         - `type: string`
 
-        - `json_schema: optional map[string or number or boolean or 2 more]`
+        - `json_schema: optional map[unknown]`
 
           Schema for the response format. More information here: https://developers.cloudflare.com/workers-ai/json-mode/
-
-          - `string`
-
-          - `number`
-
-          - `boolean`
-
-          - `unknown`
-
-          - `array of string`
 
     - `limit: optional number`
 

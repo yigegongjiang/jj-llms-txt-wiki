@@ -27,7 +27,7 @@ The folder of static assets to be served. For many frameworks, this is the `./pu
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28",
+	"compatibility_date": "2026-08-14",
 	"assets": {
 		"directory": "./public/",
 	},
@@ -38,7 +38,7 @@ The folder of static assets to be served. For many frameworks, this is the `./pu
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 
 [assets]
 directory = "./public/"
@@ -73,7 +73,7 @@ Controls whether to invoke the Worker script regardless of a request which would
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28",
+	"compatibility_date": "2026-08-14",
 	"main": "src/index.ts",
 	// The following configuration unconditionally invokes the Worker script at
 	// `src/index.ts`, which can programmatically fetch assets via the ASSETS binding
@@ -89,7 +89,7 @@ Controls whether to invoke the Worker script regardless of a request which would
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 main = "src/index.ts"
 
 [assets]
@@ -112,7 +112,7 @@ The order in which the patterns are listed is not significant.
 {
 	"name": "my-spa-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28",
+	"compatibility_date": "2026-08-14",
 	"main": "./src/index.ts",
 	"assets": {
 		"directory": "./dist/",
@@ -126,7 +126,7 @@ The order in which the patterns are listed is not significant.
 ```toml
 name = "my-spa-worker"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 main = "./src/index.ts"
 
 [assets]
@@ -150,7 +150,7 @@ Configuring the optional [binding](https://developers.cloudflare.com/workers/run
 	"name": "my-worker",
 	"main": "./src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28",
+	"compatibility_date": "2026-08-14",
 	"assets": {
 		"directory": "./public/",
 		"binding": "ASSETS",
@@ -163,7 +163,7 @@ Configuring the optional [binding](https://developers.cloudflare.com/workers/run
 name = "my-worker"
 main = "./src/index.js"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 
 [assets]
 directory = "./public/"
@@ -258,7 +258,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/binding/#page","headline":"Configuration and Bindings · Cloudflare Workers docs","description":"Details on how to configure Workers static assets and its binding.","url":"https://developers.cloudflare.com/workers/static-assets/binding/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Bindings"]}

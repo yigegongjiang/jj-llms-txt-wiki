@@ -6,7 +6,8 @@
 
 **get** `/accounts/{account_id}/cni/cnis`
 
-List existing CNI objects
+Lists all Cloud Network Interconnects (CNIs) configured for the account, showing connection
+status and parameters.
 
 ### Path Parameters
 
@@ -30,7 +31,7 @@ List existing CNI objects
 
 ### Returns
 
-- `items: array of object { id, account, cust_ip, 4 more }`
+- `items: array of object { id, account, cust_ip, 5 more }`
 
   - `id: string`
 
@@ -84,10 +85,24 @@ List existing CNI objects
       * ASCII alphanumerics: `[a-zA-Z0-9]`
       * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-      In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-      quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-      (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-      these disallowed characters will be rejected.
+      In other words, MD5 keys may contain any printable ASCII character aside from newline
+      (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+      form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+      or more of these disallowed characters will be rejected.
+
+  - `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+    The BGP mode for a CNI.
+
+    Controls the customer-facing data path:
+
+    * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+      bgp-bridge-receiver.
+    * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+    - `"dynamic_route_exchange"`
+
+    - `"advertise_only"`
 
 - `next: optional number`
 
@@ -120,7 +135,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis \
           "string"
         ],
         "md5_key": "md5_key"
-      }
+      },
+      "bgp_mode": "dynamic_route_exchange"
     }
   ],
   "next": 0
@@ -131,7 +147,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis \
 
 **get** `/accounts/{account_id}/cni/cnis/{cni}`
 
-Get information about a CNI object
+Retrieves configuration details for a specific Cloud Network Interconnect (CNI), including
+connection status and parameters.
 
 ### Path Parameters
 
@@ -195,10 +212,24 @@ Get information about a CNI object
     * ASCII alphanumerics: `[a-zA-Z0-9]`
     * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-    these disallowed characters will be rejected.
+    In other words, MD5 keys may contain any printable ASCII character aside from newline
+    (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+    form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+    or more of these disallowed characters will be rejected.
+
+- `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+  The BGP mode for a CNI.
+
+  Controls the customer-facing data path:
+
+  * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+    bgp-bridge-receiver.
+  * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+  - `"dynamic_route_exchange"`
+
+  - `"advertise_only"`
 
 ### Example
 
@@ -227,7 +258,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
       "string"
     ],
     "md5_key": "md5_key"
-  }
+  },
+  "bgp_mode": "dynamic_route_exchange"
 }
 ```
 
@@ -235,7 +267,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
 
 **post** `/accounts/{account_id}/cni/cnis`
 
-Create a new CNI object
+Creates a new Cloud Network Interconnect (CNI) for private network connectivity between
+Cloudflare and your infrastructure. CNIs enable dedicated, high-performance network links.
 
 ### Path Parameters
 
@@ -283,10 +316,10 @@ Create a new CNI object
     * ASCII alphanumerics: `[a-zA-Z0-9]`
     * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-    these disallowed characters will be rejected.
+    In other words, MD5 keys may contain any printable ASCII character aside from newline
+    (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+    form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+    or more of these disallowed characters will be rejected.
 
 ### Returns
 
@@ -342,10 +375,24 @@ Create a new CNI object
     * ASCII alphanumerics: `[a-zA-Z0-9]`
     * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-    these disallowed characters will be rejected.
+    In other words, MD5 keys may contain any printable ASCII character aside from newline
+    (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+    form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+    or more of these disallowed characters will be rejected.
+
+- `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+  The BGP mode for a CNI.
+
+  Controls the customer-facing data path:
+
+  * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+    bgp-bridge-receiver.
+  * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+  - `"dynamic_route_exchange"`
+
+  - `"advertise_only"`
 
 ### Example
 
@@ -384,7 +431,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis \
       "string"
     ],
     "md5_key": "md5_key"
-  }
+  },
+  "bgp_mode": "dynamic_route_exchange"
 }
 ```
 
@@ -392,7 +440,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis \
 
 **put** `/accounts/{account_id}/cni/cnis/{cni}`
 
-Modify stored information about a CNI object
+Updates the configuration of an existing Cloud Network Interconnect (CNI), including
+connection parameters and routing settings.
 
 ### Path Parameters
 
@@ -456,10 +505,24 @@ Modify stored information about a CNI object
     * ASCII alphanumerics: `[a-zA-Z0-9]`
     * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-    these disallowed characters will be rejected.
+    In other words, MD5 keys may contain any printable ASCII character aside from newline
+    (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+    form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+    or more of these disallowed characters will be rejected.
+
+- `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+  The BGP mode for a CNI.
+
+  Controls the customer-facing data path:
+
+  * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+    bgp-bridge-receiver.
+  * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+  - `"dynamic_route_exchange"`
+
+  - `"advertise_only"`
 
 ### Returns
 
@@ -515,10 +578,24 @@ Modify stored information about a CNI object
     * ASCII alphanumerics: `[a-zA-Z0-9]`
     * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-    these disallowed characters will be rejected.
+    In other words, MD5 keys may contain any printable ASCII character aside from newline
+    (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+    form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+    or more of these disallowed characters will be rejected.
+
+- `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+  The BGP mode for a CNI.
+
+  Controls the customer-facing data path:
+
+  * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+    bgp-bridge-receiver.
+  * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+  - `"dynamic_route_exchange"`
+
+  - `"advertise_only"`
 
 ### Example
 
@@ -561,7 +638,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
       "string"
     ],
     "md5_key": "md5_key"
-  }
+  },
+  "bgp_mode": "dynamic_route_exchange"
 }
 ```
 
@@ -569,7 +647,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
 
 **delete** `/accounts/{account_id}/cni/cnis/{cni}`
 
-Delete a specified CNI object
+Permanently removes a Cloud Network Interconnect (CNI) configuration. The private network
+connection will be terminated.
 
 ### Path Parameters
 
@@ -593,7 +672,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
 
 - `CNIListResponse object { items, next }`
 
-  - `items: array of object { id, account, cust_ip, 4 more }`
+  - `items: array of object { id, account, cust_ip, 5 more }`
 
     - `id: string`
 
@@ -647,16 +726,30 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
         * ASCII alphanumerics: `[a-zA-Z0-9]`
         * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-        these disallowed characters will be rejected.
+        In other words, MD5 keys may contain any printable ASCII character aside from newline
+        (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+        form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+        or more of these disallowed characters will be rejected.
+
+    - `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+      The BGP mode for a CNI.
+
+      Controls the customer-facing data path:
+
+      * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+        bgp-bridge-receiver.
+      * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+      - `"dynamic_route_exchange"`
+
+      - `"advertise_only"`
 
   - `next: optional number`
 
 ### CNI Get Response
 
-- `CNIGetResponse object { id, account, cust_ip, 4 more }`
+- `CNIGetResponse object { id, account, cust_ip, 5 more }`
 
   - `id: string`
 
@@ -710,14 +803,28 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
       * ASCII alphanumerics: `[a-zA-Z0-9]`
       * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-      In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-      quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-      (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-      these disallowed characters will be rejected.
+      In other words, MD5 keys may contain any printable ASCII character aside from newline
+      (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+      form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+      or more of these disallowed characters will be rejected.
+
+  - `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+    The BGP mode for a CNI.
+
+    Controls the customer-facing data path:
+
+    * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+      bgp-bridge-receiver.
+    * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+    - `"dynamic_route_exchange"`
+
+    - `"advertise_only"`
 
 ### CNI Create Response
 
-- `CNICreateResponse object { id, account, cust_ip, 4 more }`
+- `CNICreateResponse object { id, account, cust_ip, 5 more }`
 
   - `id: string`
 
@@ -771,14 +878,28 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
       * ASCII alphanumerics: `[a-zA-Z0-9]`
       * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-      In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-      quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-      (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-      these disallowed characters will be rejected.
+      In other words, MD5 keys may contain any printable ASCII character aside from newline
+      (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+      form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+      or more of these disallowed characters will be rejected.
+
+  - `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+    The BGP mode for a CNI.
+
+    Controls the customer-facing data path:
+
+    * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+      bgp-bridge-receiver.
+    * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+    - `"dynamic_route_exchange"`
+
+    - `"advertise_only"`
 
 ### CNI Update Response
 
-- `CNIUpdateResponse object { id, account, cust_ip, 4 more }`
+- `CNIUpdateResponse object { id, account, cust_ip, 5 more }`
 
   - `id: string`
 
@@ -832,10 +953,24 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
       * ASCII alphanumerics: `[a-zA-Z0-9]`
       * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-      In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-      quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-      (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-      these disallowed characters will be rejected.
+      In other words, MD5 keys may contain any printable ASCII character aside from newline
+      (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+      form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+      or more of these disallowed characters will be rejected.
+
+  - `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+    The BGP mode for a CNI.
+
+    Controls the customer-facing data path:
+
+    * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+      bgp-bridge-receiver.
+    * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+    - `"dynamic_route_exchange"`
+
+    - `"advertise_only"`
 
 # Interconnects
 
@@ -843,7 +978,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis/$CNI \
 
 **get** `/accounts/{account_id}/cni/interconnects`
 
-List existing interconnects
+Lists all network interconnects configured for the account, including physical and virtual
+connections.
 
 ### Path Parameters
 
@@ -867,9 +1003,9 @@ List existing interconnects
 
 ### Returns
 
-- `items: array of object { account, facility, name, 5 more }  or object { account, name, region, 3 more }`
+- `items: array of object { account, facility, name, 7 more }  or object { account, name, region, 4 more }`
 
-  - `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+  - `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
     - `account: string`
 
@@ -891,9 +1027,13 @@ List existing interconnects
 
     - `type: string`
 
+    - `virtual_port_reservation_id: string`
+
+    - `ccr_device_name: optional string`
+
     - `owner: optional string`
 
-  - `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+  - `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
     - `account: string`
 
@@ -902,6 +1042,8 @@ List existing interconnects
     - `region: string`
 
     - `type: string`
+
+    - `virtual_port_reservation_id: string`
 
     - `owner: optional string`
 
@@ -960,6 +1102,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
       "slot_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
       "speed": "speed",
       "type": "type",
+      "virtual_port_reservation_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+      "ccr_device_name": "ccr_device_name",
       "owner": "owner"
     }
   ],
@@ -971,7 +1115,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 **get** `/accounts/{account_id}/cni/interconnects/{icon}`
 
-Get information about an interconnect object
+Retrieves configuration and status details for a specific network interconnect.
 
 ### Path Parameters
 
@@ -983,7 +1127,7 @@ Get information about an interconnect object
 
 ### Returns
 
-- `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+- `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
   - `account: string`
 
@@ -1005,9 +1149,13 @@ Get information about an interconnect object
 
   - `type: string`
 
+  - `virtual_port_reservation_id: string`
+
+  - `ccr_device_name: optional string`
+
   - `owner: optional string`
 
-- `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+- `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
   - `account: string`
 
@@ -1016,6 +1164,8 @@ Get information about an interconnect object
   - `region: string`
 
   - `type: string`
+
+  - `virtual_port_reservation_id: string`
 
   - `owner: optional string`
 
@@ -1070,6 +1220,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
   "slot_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
   "speed": "speed",
   "type": "type",
+  "virtual_port_reservation_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+  "ccr_device_name": "ccr_device_name",
   "owner": "owner"
 }
 ```
@@ -1078,7 +1230,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 **post** `/accounts/{account_id}/cni/interconnects`
 
-Create a new interconnect
+Creates a new network interconnect for connecting Cloudflare's network to external networks.
+Interconnects provide dedicated bandwidth and reduced latency for traffic exchange.
 
 ### Path Parameters
 
@@ -1140,7 +1293,7 @@ Create a new interconnect
 
 ### Returns
 
-- `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+- `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
   - `account: string`
 
@@ -1162,9 +1315,13 @@ Create a new interconnect
 
   - `type: string`
 
+  - `virtual_port_reservation_id: string`
+
+  - `ccr_device_name: optional string`
+
   - `owner: optional string`
 
-- `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+- `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
   - `account: string`
 
@@ -1173,6 +1330,8 @@ Create a new interconnect
   - `region: string`
 
   - `type: string`
+
+  - `virtual_port_reservation_id: string`
 
   - `owner: optional string`
 
@@ -1233,6 +1392,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
   "slot_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
   "speed": "speed",
   "type": "type",
+  "virtual_port_reservation_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+  "ccr_device_name": "ccr_device_name",
   "owner": "owner"
 }
 ```
@@ -1241,7 +1402,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 **delete** `/accounts/{account_id}/cni/interconnects/{icon}`
 
-Delete an interconnect object
+Permanently removes a network interconnect configuration. The physical or virtual connection
+will be terminated.
 
 ### Path Parameters
 
@@ -1263,7 +1425,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 **get** `/accounts/{account_id}/cni/interconnects/{icon}/loa`
 
-Generate the Letter of Authorization (LOA) for a given interconnect
+Downloads the Letter of Authorization (LOA) for a network interconnect, required for
+physical cross-connect provisioning.
 
 ### Path Parameters
 
@@ -1272,6 +1435,12 @@ Generate the Letter of Authorization (LOA) for a given interconnect
   Customer account tag
 
 - `icon: string`
+
+### Query Parameters
+
+- `name: optional string`
+
+  Custom name to use in the LOA instead of the account name (200 Character limit)
 
 ### Example
 
@@ -1284,7 +1453,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 **get** `/accounts/{account_id}/cni/interconnects/{icon}/status`
 
-Get the current status of an interconnect object
+Gets the current operational status of a network interconnect, including link state and
+traffic metrics.
 
 ### Path Parameters
 
@@ -1349,9 +1519,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 - `InterconnectListResponse object { items, next }`
 
-  - `items: array of object { account, facility, name, 5 more }  or object { account, name, region, 3 more }`
+  - `items: array of object { account, facility, name, 7 more }  or object { account, name, region, 4 more }`
 
-    - `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+    - `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
       - `account: string`
 
@@ -1373,9 +1543,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
       - `type: string`
 
+      - `virtual_port_reservation_id: string`
+
+      - `ccr_device_name: optional string`
+
       - `owner: optional string`
 
-    - `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+    - `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
       - `account: string`
 
@@ -1384,6 +1558,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
       - `region: string`
 
       - `type: string`
+
+      - `virtual_port_reservation_id: string`
 
       - `owner: optional string`
 
@@ -1419,9 +1595,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 ### Interconnect Get Response
 
-- `InterconnectGetResponse = object { account, facility, name, 5 more }  or object { account, name, region, 3 more }`
+- `InterconnectGetResponse = object { account, facility, name, 7 more }  or object { account, name, region, 4 more }`
 
-  - `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+  - `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
     - `account: string`
 
@@ -1443,9 +1619,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
     - `type: string`
 
+    - `virtual_port_reservation_id: string`
+
+    - `ccr_device_name: optional string`
+
     - `owner: optional string`
 
-  - `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+  - `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
     - `account: string`
 
@@ -1454,6 +1634,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
     - `region: string`
 
     - `type: string`
+
+    - `virtual_port_reservation_id: string`
 
     - `owner: optional string`
 
@@ -1487,9 +1669,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 ### Interconnect Create Response
 
-- `InterconnectCreateResponse = object { account, facility, name, 5 more }  or object { account, name, region, 3 more }`
+- `InterconnectCreateResponse = object { account, facility, name, 7 more }  or object { account, name, region, 4 more }`
 
-  - `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+  - `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
     - `account: string`
 
@@ -1511,9 +1693,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
     - `type: string`
 
+    - `virtual_port_reservation_id: string`
+
+    - `ccr_device_name: optional string`
+
     - `owner: optional string`
 
-  - `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+  - `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
     - `account: string`
 
@@ -1522,6 +1708,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
     - `region: string`
 
     - `type: string`
+
+    - `virtual_port_reservation_id: string`
 
     - `owner: optional string`
 
@@ -1595,7 +1783,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
 
 **get** `/accounts/{account_id}/cni/settings`
 
-Get the current settings for the active account
+Retrieves current settings configuration for the specified resource or service.
 
 ### Path Parameters
 
@@ -1624,7 +1812,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/settings \
 
 **put** `/accounts/{account_id}/cni/settings`
 
-Update the current settings for the active account
+Updates configuration settings for the specified resource or service.
 
 ### Path Parameters
 
@@ -1676,7 +1864,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/settings \
 
 **get** `/accounts/{account_id}/cni/slots`
 
-Retrieve a list of all slots matching the specified parameters
+Lists all available infrastructure slots for the account, showing allocation status and
+capacity.
 
 ### Path Parameters
 
@@ -1708,7 +1897,7 @@ Retrieve a list of all slots matching the specified parameters
 
 ### Returns
 
-- `items: array of object { id, facility, occupied, 3 more }`
+- `items: array of object { id, facility, occupied, 4 more }`
 
   - `id: string`
 
@@ -1731,6 +1920,8 @@ Retrieve a list of all slots matching the specified parameters
   - `account: optional string`
 
     Customer account tag
+
+  - `ccr_device_name: optional string`
 
 - `next: optional number`
 
@@ -1757,7 +1948,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots \
       "occupied": true,
       "site": "site",
       "speed": "speed",
-      "account": "account"
+      "account": "account",
+      "ccr_device_name": "ccr_device_name"
     }
   ],
   "next": 0
@@ -1768,7 +1960,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots \
 
 **get** `/accounts/{account_id}/cni/slots/{slot}`
 
-Get information about the specified slot
+Gets information about a specific infrastructure slot allocation.
 
 ### Path Parameters
 
@@ -1802,6 +1994,8 @@ Get information about the specified slot
 
   Customer account tag
 
+- `ccr_device_name: optional string`
+
 ### Example
 
 ```http
@@ -1823,7 +2017,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
   "occupied": true,
   "site": "site",
   "speed": "speed",
-  "account": "account"
+  "account": "account",
+  "ccr_device_name": "ccr_device_name"
 }
 ```
 
@@ -1833,7 +2028,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
 
 - `SlotListResponse object { items, next }`
 
-  - `items: array of object { id, facility, occupied, 3 more }`
+  - `items: array of object { id, facility, occupied, 4 more }`
 
     - `id: string`
 
@@ -1857,11 +2052,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
 
       Customer account tag
 
+    - `ccr_device_name: optional string`
+
   - `next: optional number`
 
 ### Slot Get Response
 
-- `SlotGetResponse object { id, facility, occupied, 3 more }`
+- `SlotGetResponse object { id, facility, occupied, 4 more }`
 
   - `id: string`
 
@@ -1884,3 +2081,5 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
   - `account: optional string`
 
     Customer account tag
+
+  - `ccr_device_name: optional string`

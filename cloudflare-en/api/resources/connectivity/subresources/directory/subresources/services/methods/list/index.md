@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/connectivity/directory/services`
 
-List Workers VPC connectivity services
+Lists the Workers VPC connectivity services in the account.
 
 ### Path Parameters
 

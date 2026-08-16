@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/access/ai-controls/mcp/servers`
 
-Lists all MCP portals configured for the account.
+Lists all MCP servers configured for the account.
 
 ### Path Parameters
 
@@ -22,13 +22,15 @@ Lists all MCP portals configured for the account.
 
 ### Returns
 
-- `result: array of object { id, auth_type, hostname, 18 more }`
+- `result: array of object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -38,7 +40,11 @@ Lists all MCP portals configured for the account.
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -80,11 +86,27 @@ Lists all MCP portals configured for the account.
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -112,7 +134,7 @@ Lists all MCP portals configured for the account.
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -124,7 +146,7 @@ Lists all MCP portals configured for the account.
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -140,23 +162,43 @@ Lists all MCP portals configured for the account.
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 - `success: boolean`
 
@@ -207,9 +249,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
           "token_endpoint_auth_method": "token_endpoint_auth_method"
         }
       },
+      "authentication_status": "not_required",
       "created_at": "2019-12-27T18:11:19.117Z",
       "created_by": "created_by",
-      "description": "This is one remote mcp server",
+      "description": "This is one remote MCP server",
       "error": "error",
       "error_details": {
         "cause": "cause",
@@ -251,7 +294,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
 **post** `/accounts/{account_id}/access/ai-controls/mcp/servers`
 
-Creates a new MCP portal for managing AI tool access through Cloudflare Access.
+Creates a new MCP server for connecting to an upstream MCP endpoint.
 
 ### Path Parameters
 
@@ -261,9 +304,11 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
 - `id: string`
 
-  server id
+  Unique identifier for the MCP server.
 
 - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+  Authentication method used to connect to the upstream MCP server.
 
   - `"oauth"`
 
@@ -273,9 +318,15 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
 - `hostname: string`
 
+  URL of the upstream MCP endpoint.
+
 - `name: string`
 
+  Display name for the MCP server.
+
 - `auth_credentials: optional string`
+
+  Static credential for the upstream MCP server. For auth_type "bearer", either a raw token string (e.g. "sk-abc123"), which is wrapped server-side as `Authorization: Bearer <token>`, or a JSON-encoded object of the form `{"headers":{"Header-Name":"value",...}}` for custom or multiple static headers (e.g. Cloudflare Access service tokens: `{"headers":{"cf-access-client-id":"...","cf-access-client-secret":"..."}}`).
 
 - `client_secret: optional string`
 
@@ -283,43 +334,67 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
 - `description: optional string`
 
+  Optional description of the MCP server.
+
 - `is_shared_oauth_callback_enabled: optional boolean`
 
-  When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+  When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
 - `secure_web_gateway: optional boolean`
 
-  Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+  Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
 - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+  Server-wide prompt capability overrides.
+
   - `name: string`
+
+    Name of the tool or prompt capability to override.
 
   - `alias: optional string`
 
+    Custom name exposed for the capability.
+
   - `description: optional string`
 
+    Custom description exposed for the capability.
+
   - `enabled: optional boolean`
+
+    Whether the capability is available through the MCP server.
 
 - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+  Server-wide tool capability overrides.
+
   - `name: string`
+
+    Name of the tool or prompt capability to override.
 
   - `alias: optional string`
 
+    Custom name exposed for the capability.
+
   - `description: optional string`
+
+    Custom description exposed for the capability.
 
   - `enabled: optional boolean`
 
+    Whether the capability is available through the MCP server.
+
 ### Returns
 
-- `result: object { id, auth_type, hostname, 18 more }`
+- `result: object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -329,7 +404,11 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -371,11 +450,27 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -403,7 +498,7 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -415,7 +510,7 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -431,23 +526,43 @@ Creates a new MCP portal for managing AI tool access through Cloudflare Access.
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 - `success: boolean`
 
@@ -462,7 +577,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
           "auth_type": "unauthenticated",
           "hostname": "https://example.com/mcp",
           "name": "My MCP Server",
-          "description": "This is one remote mcp server"
+          "auth_credentials": "sk-my-bearer-token",
+          "description": "This is one remote MCP server"
         }'
 ```
 
@@ -505,9 +621,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
         "token_endpoint_auth_method": "token_endpoint_auth_method"
       }
     },
+    "authentication_status": "not_required",
     "created_at": "2019-12-27T18:11:19.117Z",
     "created_by": "created_by",
-    "description": "This is one remote mcp server",
+    "description": "This is one remote MCP server",
     "error": "error",
     "error_details": {
       "cause": "cause",
@@ -544,11 +661,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 }
 ```
 
-## Read the details of a MCP Server
+## Read the details of an MCP Server
 
 **get** `/accounts/{account_id}/access/ai-controls/mcp/servers/{id}`
 
-Retrieves gateway configuration for MCP portals.
+Retrieves an MCP server's configuration and capability sync state.
 
 ### Path Parameters
 
@@ -556,17 +673,19 @@ Retrieves gateway configuration for MCP portals.
 
 - `id: string`
 
-  server id
+  Unique identifier for the MCP server.
 
 ### Returns
 
-- `result: object { id, auth_type, hostname, 18 more }`
+- `result: object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -576,7 +695,11 @@ Retrieves gateway configuration for MCP portals.
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -618,11 +741,27 @@ Retrieves gateway configuration for MCP portals.
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -650,7 +789,7 @@ Retrieves gateway configuration for MCP portals.
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -662,7 +801,7 @@ Retrieves gateway configuration for MCP portals.
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -678,23 +817,43 @@ Retrieves gateway configuration for MCP portals.
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 - `success: boolean`
 
@@ -744,9 +903,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
         "token_endpoint_auth_method": "token_endpoint_auth_method"
       }
     },
+    "authentication_status": "not_required",
     "created_at": "2019-12-27T18:11:19.117Z",
     "created_by": "created_by",
-    "description": "This is one remote mcp server",
+    "description": "This is one remote MCP server",
     "error": "error",
     "error_details": {
       "cause": "cause",
@@ -783,11 +943,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 }
 ```
 
-## Update a MCP Server
+## Update an MCP Server
 
 **put** `/accounts/{account_id}/access/ai-controls/mcp/servers/{id}`
 
-Updates an MCP portal configuration.
+Updates an MCP server's configuration and credentials.
 
 ### Path Parameters
 
@@ -795,11 +955,13 @@ Updates an MCP portal configuration.
 
 - `id: string`
 
-  server id
+  Unique identifier for the MCP server.
 
 ### Body Parameters
 
 - `auth_credentials: optional string`
+
+  Static credential for the upstream MCP server. For auth_type "bearer", either a raw token string (e.g. "sk-abc123"), which is wrapped server-side as `Authorization: Bearer <token>`, or a JSON-encoded object of the form `{"headers":{"Header-Name":"value",...}}` for custom or multiple static headers (e.g. Cloudflare Access service tokens: `{"headers":{"cf-access-client-id":"...","cf-access-client-secret":"..."}}`).
 
 - `client_secret: optional string`
 
@@ -807,45 +969,71 @@ Updates an MCP portal configuration.
 
 - `description: optional string`
 
+  Optional description of the MCP server.
+
 - `is_shared_oauth_callback_enabled: optional boolean`
 
-  When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+  When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
 - `name: optional string`
 
+  Display name for the MCP server.
+
 - `secure_web_gateway: optional boolean`
 
-  Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+  Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
 - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+  Server-wide prompt capability overrides.
+
   - `name: string`
+
+    Name of the tool or prompt capability to override.
 
   - `alias: optional string`
 
+    Custom name exposed for the capability.
+
   - `description: optional string`
 
+    Custom description exposed for the capability.
+
   - `enabled: optional boolean`
+
+    Whether the capability is available through the MCP server.
 
 - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+  Server-wide tool capability overrides.
+
   - `name: string`
+
+    Name of the tool or prompt capability to override.
 
   - `alias: optional string`
 
+    Custom name exposed for the capability.
+
   - `description: optional string`
+
+    Custom description exposed for the capability.
 
   - `enabled: optional boolean`
 
+    Whether the capability is available through the MCP server.
+
 ### Returns
 
-- `result: object { id, auth_type, hostname, 18 more }`
+- `result: object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -855,7 +1043,11 @@ Updates an MCP portal configuration.
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -897,11 +1089,27 @@ Updates an MCP portal configuration.
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -929,7 +1137,7 @@ Updates an MCP portal configuration.
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -941,7 +1149,7 @@ Updates an MCP portal configuration.
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -957,23 +1165,43 @@ Updates an MCP portal configuration.
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 - `success: boolean`
 
@@ -1024,9 +1252,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
         "token_endpoint_auth_method": "token_endpoint_auth_method"
       }
     },
+    "authentication_status": "not_required",
     "created_at": "2019-12-27T18:11:19.117Z",
     "created_by": "created_by",
-    "description": "This is one remote mcp server",
+    "description": "This is one remote MCP server",
     "error": "error",
     "error_details": {
       "cause": "cause",
@@ -1063,11 +1292,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 }
 ```
 
-## Delete a MCP Server
+## Delete an MCP Server
 
 **delete** `/accounts/{account_id}/access/ai-controls/mcp/servers/{id}`
 
-Deletes an MCP portal from the account.
+Deletes an MCP server from the account.
 
 ### Path Parameters
 
@@ -1075,17 +1304,19 @@ Deletes an MCP portal from the account.
 
 - `id: string`
 
-  server id
+  Unique identifier for the MCP server.
 
 ### Returns
 
-- `result: object { id, auth_type, hostname, 18 more }`
+- `result: object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -1095,7 +1326,11 @@ Deletes an MCP portal from the account.
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -1137,11 +1372,27 @@ Deletes an MCP portal from the account.
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -1169,7 +1420,7 @@ Deletes an MCP portal from the account.
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -1181,7 +1432,7 @@ Deletes an MCP portal from the account.
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -1197,23 +1448,43 @@ Deletes an MCP portal from the account.
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 - `success: boolean`
 
@@ -1264,9 +1535,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
         "token_endpoint_auth_method": "token_endpoint_auth_method"
       }
     },
+    "authentication_status": "not_required",
     "created_at": "2019-12-27T18:11:19.117Z",
     "created_by": "created_by",
-    "description": "This is one remote mcp server",
+    "description": "This is one remote MCP server",
     "error": "error",
     "error_details": {
       "cause": "cause",
@@ -1315,7 +1587,7 @@ Syncs an MCP server's capabilities and returns the updated server state, includi
 
 - `id: string`
 
-  portal id
+  Unique identifier for the MCP server.
 
 ### Returns
 
@@ -1388,13 +1660,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
 ### Server List Response
 
-- `ServerListResponse object { id, auth_type, hostname, 18 more }`
+- `ServerListResponse object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -1404,7 +1678,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -1446,11 +1724,27 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -1478,7 +1772,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -1490,7 +1784,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -1506,33 +1800,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 ### Server Create Response
 
-- `ServerCreateResponse object { id, auth_type, hostname, 18 more }`
+- `ServerCreateResponse object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -1542,7 +1858,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -1584,11 +1904,27 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -1616,7 +1952,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -1628,7 +1964,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -1644,33 +1980,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 ### Server Read Response
 
-- `ServerReadResponse object { id, auth_type, hostname, 18 more }`
+- `ServerReadResponse object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -1680,7 +2038,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -1722,11 +2084,27 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -1754,7 +2132,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -1766,7 +2144,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -1782,33 +2160,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 ### Server Update Response
 
-- `ServerUpdateResponse object { id, auth_type, hostname, 18 more }`
+- `ServerUpdateResponse object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -1818,7 +2218,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -1860,11 +2264,27 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -1892,7 +2312,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -1904,7 +2324,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -1920,33 +2340,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 ### Server Delete Response
 
-- `ServerDeleteResponse object { id, auth_type, hostname, 18 more }`
+- `ServerDeleteResponse object { id, auth_type, hostname, 19 more }`
 
   - `id: string`
 
-    server id
+    Unique identifier for the MCP server.
 
   - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+    Authentication method used to connect to the upstream MCP server.
 
     - `"oauth"`
 
@@ -1956,7 +2398,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `hostname: string`
 
+    URL of the upstream MCP endpoint.
+
   - `name: string`
+
+    Display name for the MCP server.
 
   - `prompts: array of map[unknown]`
 
@@ -1998,11 +2444,27 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
       - `token_endpoint_auth_method: optional string`
 
+  - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+    Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+    - `"not_required"`
+
+    - `"required"`
+
+    - `"connected"`
+
+    - `"stale"`
+
+    - `"manual"`
+
   - `created_at: optional string`
 
   - `created_by: optional string`
 
   - `description: optional string`
+
+    Optional description of the MCP server.
 
   - `error: optional string`
 
@@ -2030,7 +2492,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `is_shared_oauth_callback_enabled: optional boolean`
 
-    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+    When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
   - `last_successful_sync: optional string`
 
@@ -2042,7 +2504,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+    Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
   - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -2058,23 +2520,43 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 
   - `updated_prompts: optional array of object { name, alias, description, enabled }`
 
+    Server-wide prompt capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
   - `updated_tools: optional array of object { name, alias, description, enabled }`
 
+    Server-wide tool capability overrides.
+
     - `name: string`
+
+      Name of the tool or prompt capability to override.
 
     - `alias: optional string`
 
+      Custom name exposed for the capability.
+
     - `description: optional string`
 
+      Custom description exposed for the capability.
+
     - `enabled: optional boolean`
+
+      Whether the capability is available through the MCP server.
 
 ### Server Sync Response
 

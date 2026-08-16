@@ -18,7 +18,7 @@ View tutorials to help you get started with D1.
 
 | Name                                                                                                                                      | Last Updated | Difficulty   |
 | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ------------ |
-| [Build a Comments API](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/)                                              | 4 months ago | Intermediate |
+| [Build a Comments API](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/)                                              | 5 months ago | Intermediate |
 | [Query D1 using Prisma ORM](https://developers.cloudflare.com/d1/tutorials/d1-and-prisma-orm/)                                            | last year    | Beginner     |
 | [Using D1 Read Replication for your e-commerce website](https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/) | last year    | Beginner     |
 | [Bulk import to D1 using REST API](https://developers.cloudflare.com/d1/tutorials/import-to-d1-with-rest-api/)                            | 2 years ago  | Beginner     |
@@ -31,7 +31,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/d1/tutorials/#page","headline":"Tutorials · Cloudflare D1 docs","description":"Step-by-step D1 tutorials for building applications, importing data, and using read replication.","url":"https://developers.cloudflare.com/d1/tutorials/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-19","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

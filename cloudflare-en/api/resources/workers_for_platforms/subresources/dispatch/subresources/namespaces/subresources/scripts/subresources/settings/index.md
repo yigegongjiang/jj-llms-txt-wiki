@@ -56,7 +56,7 @@ Get script settings from a script uploaded to a Workers for Platforms namespace.
 
   Script and version settings for Workers for Platforms namespace scripts. Same as script-and-version-settings-item but without annotations, which are not supported for namespace scripts.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -107,6 +107,22 @@ Get script settings from a script uploaded to a Workers for Platforms namespace.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -1715,7 +1731,7 @@ Patch script metadata, such as bindings.
 
   Script and version settings for Workers for Platforms namespace scripts. Same as script-and-version-settings-item but without annotations, which are not supported for namespace scripts.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -1766,6 +1782,22 @@ Patch script metadata, such as bindings.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -3328,7 +3360,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/dispatch/
 
   Script and version settings for Workers for Platforms namespace scripts. Same as script-and-version-settings-item but without annotations, which are not supported for namespace scripts.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -3379,6 +3411,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/dispatch/
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -4791,7 +4839,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/dispatch/
 
   Script and version settings for Workers for Platforms namespace scripts. Same as script-and-version-settings-item but without annotations, which are not supported for namespace scripts.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -4842,6 +4890,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/dispatch/
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 

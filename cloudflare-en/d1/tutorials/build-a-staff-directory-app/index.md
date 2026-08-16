@@ -77,7 +77,7 @@ This binding enables your application to interact with Cloudflare resources such
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "staff-directory",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28"
+	"compatibility_date": "2026-08-14"
 }
 ```
 
@@ -85,7 +85,7 @@ This binding enables your application to interact with Cloudflare resources such
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "staff-directory"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 ```
 
 Next, add the database binding details to your Wrangler file. This involves specifying a binding name (in this case, `DB`), which will be used to reference the database within your application, along with the `database_name` and `database_id` provided when you created the database:
@@ -451,7 +451,7 @@ After successful login, confirm that your Wrangler file is configured similarly 
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "staff-directory",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28",
+	"compatibility_date": "2026-08-14",
 	"r2_buckets": [
 		{
 			"binding": "MY_BUCKET",
@@ -472,7 +472,7 @@ After successful login, confirm that your Wrangler file is configured similarly 
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "staff-directory"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 
 [[r2_buckets]]
 binding = "MY_BUCKET"
@@ -498,7 +498,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/#page","headline":"Build a Staff Directory Application · Cloudflare D1 docs","description":"Build a staff directory using D1. Users access employee info; admins add new employees within the app.","url":"https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-02-02","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","TypeScript","SQL"]}

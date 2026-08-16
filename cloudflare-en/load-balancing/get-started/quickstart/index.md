@@ -586,6 +586,7 @@ You may want to further customize how your load balancer routes traffic or integ
 * [DNS persistence](https://developers.cloudflare.com/load-balancing/additional-options/dns-persistence/)
 * [Load Balancing with the China Network](https://developers.cloudflare.com/load-balancing/additional-options/load-balancing-china/)
 * [Override HTTP Host headers](https://developers.cloudflare.com/load-balancing/additional-options/override-http-host-headers/)
+* [CNAME flattening for endpoints](https://developers.cloudflare.com/load-balancing/additional-options/cname-flattening/)
 * [Custom load balancing rules](https://developers.cloudflare.com/load-balancing/additional-options/load-balancing-rules/)
 * [Integrate with PagerDuty](https://developers.cloudflare.com/load-balancing/additional-options/pagerduty-integration/)
 * [Additional DNS records](https://developers.cloudflare.com/load-balancing/additional-options/additional-dns-records/)
@@ -596,7 +597,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/get-started/quickstart/#page","headline":"Quickstart · Cloudflare Load Balancing docs","description":"Create a load balancer with pools and monitors in a few steps.","url":"https://developers.cloudflare.com/load-balancing/get-started/quickstart/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

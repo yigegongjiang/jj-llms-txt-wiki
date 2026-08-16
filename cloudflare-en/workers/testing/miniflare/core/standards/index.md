@@ -78,7 +78,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/core/standards/#page","headline":"Web Standards · Cloudflare Workers docs","description":"When using the API, Miniflare allows you to substitute custom Responses for\nfetch() calls using undici's\nMockAgent API.\nThis is useful for testing Workers that make HTTP requests to other services. To\nenable fetch mocking, create a\nMockAgent\nusing the createFetchMock() function, then set this using the fetchMock\noption.","url":"https://developers.cloudflare.com/workers/testing/miniflare/core/standards/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-01-28","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

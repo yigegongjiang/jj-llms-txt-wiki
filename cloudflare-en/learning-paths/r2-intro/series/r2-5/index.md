@@ -49,7 +49,7 @@ Was this helpful?
 
 YesNo
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/#page","headline":"Accessing your bucket from Cloudflare Workers · Cloudflare Learning Paths","description":"In this video, you will set up a Cloudflare Workers project and connect it to an existing or new R2 bucket. You will secure file uploads using authentication tokens, configure the Wrangler settings, and enable Smart Tiered Cache for optimal performance. Finally, you will deploy and test your serverless API to upload and retrieve files such as podcast episodes.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

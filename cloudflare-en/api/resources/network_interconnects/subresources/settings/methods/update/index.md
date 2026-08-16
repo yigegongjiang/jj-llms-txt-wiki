@@ -2,7 +2,7 @@
 
 **put** `/accounts/{account_id}/cni/settings`
 
-Update the current settings for the active account
+Updates configuration settings for the specified resource or service.
 
 ### Path Parameters
 

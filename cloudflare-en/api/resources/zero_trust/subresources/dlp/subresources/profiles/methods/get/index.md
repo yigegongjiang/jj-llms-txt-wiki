@@ -112,7 +112,7 @@ Fetches a DLP profile by ID.
 
       The description of the profile.
 
-    - `entries: optional array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 4 more }  or 4 more`
+    - `entries: optional array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
 
       - `CustomEntry object { id, created_at, enabled, 6 more }`
 
@@ -162,7 +162,7 @@ Fetches a DLP profile by ID.
 
           The optional description of the custom prompt topic entry.
 
-      - `PredefinedEntry object { id, confidence, enabled, 4 more }`
+      - `PredefinedEntry object { id, confidence, enabled, 5 more }`
 
         - `id: string`
 
@@ -183,6 +183,11 @@ Fetches a DLP profile by ID.
         - `type: "predefined"`
 
           - `"predefined"`
+
+        - `deprecated: optional boolean`
+
+          Whether this entry is deprecated for new use. This is computed from the static catalog and
+          emitted only when true.
 
         - `profile_id: optional string`
 
@@ -314,7 +319,7 @@ Fetches a DLP profile by ID.
 
       - `level_id: string`
 
-    - `shared_entries: optional array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 4 more }  or 4 more`
+    - `shared_entries: optional array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
 
       - `CustomEntry object { id, created_at, enabled, 6 more }`
 
@@ -358,7 +363,7 @@ Fetches a DLP profile by ID.
 
           The optional description of the custom prompt topic entry.
 
-      - `PredefinedEntry object { id, confidence, enabled, 4 more }`
+      - `PredefinedEntry object { id, confidence, enabled, 5 more }`
 
         - `id: string`
 
@@ -379,6 +384,11 @@ Fetches a DLP profile by ID.
         - `type: "predefined"`
 
           - `"predefined"`
+
+        - `deprecated: optional boolean`
+
+          Whether this entry is deprecated for new use. This is computed from the static catalog and
+          emitted only when true.
 
         - `profile_id: optional string`
 
@@ -510,7 +520,7 @@ Fetches a DLP profile by ID.
 
     - `allowed_match_count: number`
 
-    - `entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 4 more }  or 4 more`
+    - `entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
 
       - `CustomEntry object { id, created_at, enabled, 6 more }`
 
@@ -554,7 +564,7 @@ Fetches a DLP profile by ID.
 
           The optional description of the custom prompt topic entry.
 
-      - `PredefinedEntry object { id, confidence, enabled, 4 more }`
+      - `PredefinedEntry object { id, confidence, enabled, 5 more }`
 
         - `id: string`
 
@@ -575,6 +585,11 @@ Fetches a DLP profile by ID.
         - `type: "predefined"`
 
           - `"predefined"`
+
+        - `deprecated: optional boolean`
+
+          Whether this entry is deprecated for new use. This is computed from the static catalog and
+          emitted only when true.
 
         - `profile_id: optional string`
 
@@ -734,7 +749,7 @@ Fetches a DLP profile by ID.
 
     - `created_at: string`
 
-    - `entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 4 more }  or 4 more`
+    - `entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
 
       - `CustomEntry object { id, created_at, enabled, 6 more }`
 
@@ -778,7 +793,7 @@ Fetches a DLP profile by ID.
 
           The optional description of the custom prompt topic entry.
 
-      - `PredefinedEntry object { id, confidence, enabled, 4 more }`
+      - `PredefinedEntry object { id, confidence, enabled, 5 more }`
 
         - `id: string`
 
@@ -799,6 +814,11 @@ Fetches a DLP profile by ID.
         - `type: "predefined"`
 
           - `"predefined"`
+
+        - `deprecated: optional boolean`
+
+          Whether this entry is deprecated for new use. This is computed from the static catalog and
+          emitted only when true.
 
         - `profile_id: optional string`
 
@@ -924,7 +944,7 @@ Fetches a DLP profile by ID.
 
     - `name: string`
 
-    - `shared_entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 4 more }  or 4 more`
+    - `shared_entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
 
       - `CustomEntry object { id, created_at, enabled, 6 more }`
 
@@ -968,7 +988,7 @@ Fetches a DLP profile by ID.
 
           The optional description of the custom prompt topic entry.
 
-      - `PredefinedEntry object { id, confidence, enabled, 4 more }`
+      - `PredefinedEntry object { id, confidence, enabled, 5 more }`
 
         - `id: string`
 
@@ -989,6 +1009,11 @@ Fetches a DLP profile by ID.
         - `type: "predefined"`
 
           - `"predefined"`
+
+        - `deprecated: optional boolean`
+
+          Whether this entry is deprecated for new use. This is computed from the static catalog and
+          emitted only when true.
 
         - `profile_id: optional string`
 

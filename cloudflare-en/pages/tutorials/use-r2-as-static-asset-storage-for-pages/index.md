@@ -43,7 +43,7 @@ The first step is creating an R2 bucket to store the static assets. A new bucket
 
 Using the dashboard, navigate to the R2 tab, then click on _Create bucket._ We will name the bucket for our blog _cat-media_. Always remember to give your buckets descriptive names:
 
-![Dashboard](https://developers.cloudflare.com/_astro/dash.B3yWT1et_jlQ8M.webp) 
+![Dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2468,height=1282,format=webp/_astro/dash.B3yWT1et.png) 
 
 With the bucket created, we can upload media files to R2\. I’ll drag and drop two folders with a few cat images and videos into the R2 bucket:
 
@@ -172,7 +172,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/#page","headline":"Use R2 as static asset storage with Cloudflare Pages · Cloudflare Pages docs","description":"This tutorial will teach you how to use R2 as a static asset storage bucket for your Pages app.","url":"https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-01-29","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","JavaScript"]}

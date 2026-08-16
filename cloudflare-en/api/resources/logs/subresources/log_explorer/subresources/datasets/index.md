@@ -58,6 +58,10 @@ use the single-dataset endpoint to retrieve field configuration.
 
     Unique dataset ID.
 
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
   - `enabled: boolean`
 
     Whether log ingest is currently active for this dataset.
@@ -108,6 +112,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
       "created_at": "2019-12-27T18:11:19.117Z",
       "dataset": "dataset",
       "dataset_id": "dataset_id",
+      "deletion_protection": true,
       "enabled": true,
       "object_id": "object_id",
       "object_type": "account",
@@ -170,9 +175,25 @@ Retrieve a single Log Explorer dataset by ID for the account or zone.
 
     Unique dataset ID.
 
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
   - `enabled: boolean`
 
     Whether log ingest is currently active for this dataset.
+
+  - `fields: array of object { enabled, name }`
+
+    The field configuration for this dataset.
+
+    - `enabled: boolean`
+
+      Whether the API includes this field in log ingest.
+
+    - `name: string`
+
+      Field name in lowercase.
 
   - `object_id: string`
 
@@ -190,17 +211,10 @@ Retrieve a single Log Explorer dataset by ID for the account or zone.
 
     RFC3339 timestamp recording when the API last updated this dataset.
 
-  - `fields: optional array of object { enabled, name }`
+  - `filter: optional string`
 
-    The field configuration for this dataset.
-
-    - `enabled: boolean`
-
-      Whether the API includes this field in log ingest.
-
-    - `name: string`
-
-      Field name in lowercase.
+    The Logpush filter predicate applied to this dataset. Omitted
+    when no filter is set.
 
 ### Example
 
@@ -231,16 +245,18 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "created_at": "2019-12-27T18:11:19.117Z",
     "dataset": "dataset",
     "dataset_id": "dataset_id",
+    "deletion_protection": true,
     "enabled": true,
-    "object_id": "object_id",
-    "object_type": "account",
-    "updated_at": "2019-12-27T18:11:19.117Z",
     "fields": [
       {
         "enabled": true,
         "name": "name"
       }
-    ]
+    ],
+    "object_id": "object_id",
+    "object_type": "account",
+    "updated_at": "2019-12-27T18:11:19.117Z",
+    "filter": "filter"
   }
 }
 ```
@@ -288,6 +304,13 @@ For dataset field definitions, see: https://developers.cloudflare.com/logs/logpu
 
     Field name in lowercase.
 
+- `filter: optional string`
+
+  Optional Logpush filter predicate to restrict which events are ingested.
+  If provided, replaces the dataset's default filter entirely.
+  See [Logpush filters](https://developers.cloudflare.com/logs/reference/filters/)
+  for syntax and examples.
+
 ### Returns
 
 - `errors: array of ResponseInfo`
@@ -323,9 +346,25 @@ For dataset field definitions, see: https://developers.cloudflare.com/logs/logpu
 
     Unique dataset ID.
 
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
   - `enabled: boolean`
 
     Whether log ingest is currently active for this dataset.
+
+  - `fields: array of object { enabled, name }`
+
+    The field configuration for this dataset.
+
+    - `enabled: boolean`
+
+      Whether the API includes this field in log ingest.
+
+    - `name: string`
+
+      Field name in lowercase.
 
   - `object_id: string`
 
@@ -343,17 +382,10 @@ For dataset field definitions, see: https://developers.cloudflare.com/logs/logpu
 
     RFC3339 timestamp recording when the API last updated this dataset.
 
-  - `fields: optional array of object { enabled, name }`
+  - `filter: optional string`
 
-    The field configuration for this dataset.
-
-    - `enabled: boolean`
-
-      Whether the API includes this field in log ingest.
-
-    - `name: string`
-
-      Field name in lowercase.
+    The Logpush filter predicate applied to this dataset. Omitted
+    when no filter is set.
 
 ### Example
 
@@ -388,16 +420,18 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "created_at": "2019-12-27T18:11:19.117Z",
     "dataset": "dataset",
     "dataset_id": "dataset_id",
+    "deletion_protection": true,
     "enabled": true,
-    "object_id": "object_id",
-    "object_type": "account",
-    "updated_at": "2019-12-27T18:11:19.117Z",
     "fields": [
       {
         "enabled": true,
         "name": "name"
       }
-    ]
+    ],
+    "object_id": "object_id",
+    "object_type": "account",
+    "updated_at": "2019-12-27T18:11:19.117Z",
+    "filter": "filter"
   }
 }
 ```
@@ -426,6 +460,10 @@ Updates the enabled state and/or field configuration of an account or zone datas
 
   Whether to enable or disable log ingest for this dataset.
 
+- `deletion_protection: optional boolean`
+
+  Set to `false` to allow deletion of this dataset.
+
 - `fields: optional array of object { enabled, name }`
 
   Controls which fields the API ingests after the update. Defaults
@@ -438,6 +476,15 @@ Updates the enabled state and/or field configuration of an account or zone datas
   - `name: string`
 
     Field name in lowercase.
+
+- `filter: optional string`
+
+  Optional Logpush filter predicate to restrict which events are
+  ingested. If omitted, the existing filter is left unchanged. Set
+  to an empty string (`""`) to clear the filter. Otherwise,
+  replaces the dataset's filter entirely.
+  See [Logpush filters](https://developers.cloudflare.com/logs/reference/filters/)
+  for syntax and examples.
 
 ### Returns
 
@@ -474,9 +521,25 @@ Updates the enabled state and/or field configuration of an account or zone datas
 
     Unique dataset ID.
 
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
   - `enabled: boolean`
 
     Whether log ingest is currently active for this dataset.
+
+  - `fields: array of object { enabled, name }`
+
+    The field configuration for this dataset.
+
+    - `enabled: boolean`
+
+      Whether the API includes this field in log ingest.
+
+    - `name: string`
+
+      Field name in lowercase.
 
   - `object_id: string`
 
@@ -494,17 +557,10 @@ Updates the enabled state and/or field configuration of an account or zone datas
 
     RFC3339 timestamp recording when the API last updated this dataset.
 
-  - `fields: optional array of object { enabled, name }`
+  - `filter: optional string`
 
-    The field configuration for this dataset.
-
-    - `enabled: boolean`
-
-      Whether the API includes this field in log ingest.
-
-    - `name: string`
-
-      Field name in lowercase.
+    The Logpush filter predicate applied to this dataset. Omitted
+    when no filter is set.
 
 ### Example
 
@@ -540,16 +596,159 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "created_at": "2019-12-27T18:11:19.117Z",
     "dataset": "dataset",
     "dataset_id": "dataset_id",
+    "deletion_protection": true,
     "enabled": true,
-    "object_id": "object_id",
-    "object_type": "account",
-    "updated_at": "2019-12-27T18:11:19.117Z",
     "fields": [
       {
         "enabled": true,
         "name": "name"
       }
-    ]
+    ],
+    "object_id": "object_id",
+    "object_type": "account",
+    "updated_at": "2019-12-27T18:11:19.117Z",
+    "filter": "filter"
+  }
+}
+```
+
+## Delete an account or zone dataset
+
+**delete** `/{accounts_or_zones}/{account_or_zone_id}/logs/explorer/datasets/{dataset_id}`
+
+Deletes a Log Explorer dataset for the account or zone. Dataset deletion must not
+be protected.
+
+### Path Parameters
+
+- `dataset_id: string`
+
+- `account_id: optional string`
+
+  The Account ID to use for this endpoint. Mutually exclusive with the Zone ID.
+
+- `zone_id: optional string`
+
+  The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
+
+### Returns
+
+- `errors: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+    - `pointer: optional string`
+
+- `messages: array of string`
+
+- `success: boolean`
+
+- `result: optional Dataset`
+
+  A Log Explorer dataset summary. List endpoints return this type and omit
+  field configuration; use the single-dataset endpoint to retrieve it.
+
+  - `created_at: string`
+
+    RFC3339 timestamp recording when the API created this dataset.
+
+  - `dataset: string`
+
+    Dataset type name (e.g. `http_requests`).
+
+  - `dataset_id: string`
+
+    Unique dataset ID.
+
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
+  - `enabled: boolean`
+
+    Whether log ingest is currently active for this dataset.
+
+  - `fields: array of object { enabled, name }`
+
+    The field configuration for this dataset.
+
+    - `enabled: boolean`
+
+      Whether the API includes this field in log ingest.
+
+    - `name: string`
+
+      Field name in lowercase.
+
+  - `object_id: string`
+
+    Public ID of the account or zone that owns this dataset.
+
+  - `object_type: "account" or "zone"`
+
+    Whether this dataset belongs to an account or a zone.
+
+    - `"account"`
+
+    - `"zone"`
+
+  - `updated_at: string`
+
+    RFC3339 timestamp recording when the API last updated this dataset.
+
+  - `filter: optional string`
+
+    The Logpush filter predicate applied to this dataset. Omitted
+    when no filter is set.
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID/logs/explorer/datasets/$DATASET_ID \
+    -X DELETE \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+```
+
+#### Response
+
+```json
+{
+  "errors": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "messages": [
+    "string"
+  ],
+  "success": true,
+  "result": {
+    "created_at": "2019-12-27T18:11:19.117Z",
+    "dataset": "dataset",
+    "dataset_id": "dataset_id",
+    "deletion_protection": true,
+    "enabled": true,
+    "fields": [
+      {
+        "enabled": true,
+        "name": "name"
+      }
+    ],
+    "object_id": "object_id",
+    "object_type": "account",
+    "updated_at": "2019-12-27T18:11:19.117Z",
+    "filter": "filter"
   }
 }
 ```
@@ -558,7 +757,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
 
 ### Create Request
 
-- `CreateRequest object { dataset, fields }`
+- `CreateRequest object { dataset, fields, filter }`
 
   - `dataset: string`
 
@@ -577,9 +776,16 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
 
       Field name in lowercase.
 
+  - `filter: optional string`
+
+    Optional Logpush filter predicate to restrict which events are ingested.
+    If provided, replaces the dataset's default filter entirely.
+    See [Logpush filters](https://developers.cloudflare.com/logs/reference/filters/)
+    for syntax and examples.
+
 ### Dataset
 
-- `Dataset object { created_at, dataset, dataset_id, 5 more }`
+- `Dataset object { created_at, dataset, dataset_id, 7 more }`
 
   A Log Explorer dataset summary. List endpoints return this type and omit
   field configuration; use the single-dataset endpoint to retrieve it.
@@ -596,9 +802,25 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
 
     Unique dataset ID.
 
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
   - `enabled: boolean`
 
     Whether log ingest is currently active for this dataset.
+
+  - `fields: array of object { enabled, name }`
+
+    The field configuration for this dataset.
+
+    - `enabled: boolean`
+
+      Whether the API includes this field in log ingest.
+
+    - `name: string`
+
+      Field name in lowercase.
 
   - `object_id: string`
 
@@ -616,21 +838,14 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
 
     RFC3339 timestamp recording when the API last updated this dataset.
 
-  - `fields: optional array of object { enabled, name }`
+  - `filter: optional string`
 
-    The field configuration for this dataset.
-
-    - `enabled: boolean`
-
-      Whether the API includes this field in log ingest.
-
-    - `name: string`
-
-      Field name in lowercase.
+    The Logpush filter predicate applied to this dataset. Omitted
+    when no filter is set.
 
 ### Dataset Summary
 
-- `DatasetSummary object { created_at, dataset, dataset_id, 4 more }`
+- `DatasetSummary object { created_at, dataset, dataset_id, 5 more }`
 
   A Log Explorer dataset summary. List endpoints return this type and omit
   field configuration; use the single-dataset endpoint to retrieve it.
@@ -646,6 +861,10 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
   - `dataset_id: string`
 
     Unique dataset ID.
+
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
 
   - `enabled: boolean`
 
@@ -669,11 +888,15 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
 
 ### Update Request
 
-- `UpdateRequest object { enabled, fields }`
+- `UpdateRequest object { enabled, deletion_protection, fields, filter }`
 
   - `enabled: boolean`
 
     Whether to enable or disable log ingest for this dataset.
+
+  - `deletion_protection: optional boolean`
+
+    Set to `false` to allow deletion of this dataset.
 
   - `fields: optional array of object { enabled, name }`
 
@@ -687,6 +910,15 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     - `name: string`
 
       Field name in lowercase.
+
+  - `filter: optional string`
+
+    Optional Logpush filter predicate to restrict which events are
+    ingested. If omitted, the existing filter is left unchanged. Set
+    to an empty string (`""`) to clear the filter. Otherwise,
+    replaces the dataset's filter entirely.
+    See [Logpush filters](https://developers.cloudflare.com/logs/reference/filters/)
+    for syntax and examples.
 
 # Available
 

@@ -39,7 +39,7 @@ Both methods return the same Markdown output, powered by [Markdown for Agents](h
 In the top right of this page, you will see a `Page options` button where you can copy the current page as Markdown that can be given to your LLM of choice.
 
 ![Page options
-button](https://developers.cloudflare.com/_astro/page-options.T2MlgPLy_Z1s8r6.webp)
+button](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=624,height=762,format=webp/_astro/page-options.T2MlgPLy.png)
 
 ## Textual representation of interactive elements
 
@@ -136,7 +136,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/ai-consumability/#page","headline":"AI consumability · Cloudflare Style Guide","description":"Optimize documentation for AI consumption.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/ai-consumability/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

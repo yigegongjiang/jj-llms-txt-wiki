@@ -60,7 +60,7 @@ Identify and address your API vulnerabilities
 - [API Routing](https://developers.cloudflare.com/api-shield/management-and-monitoring/api-routing/index.md): Route API requests to different back-end services using API Shield Routing.
 - [Build developer portals](https://developers.cloudflare.com/api-shield/management-and-monitoring/developer-portal/index.md): Create interactive API documentation portals from saved endpoints or schemas.
 - [Endpoint labeling service](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-labels/index.md): Organize API endpoints and address vulnerabilities with managed and custom labels.
-- [Endpoint Management](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/index.md): Save, organize, and monitor API endpoints in API Shield.
+- [Endpoint Management](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/index.md): Promote, learn, and monitor API endpoints with API Shield and Web Assets.
 - [Schema learning](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/schema-learning/index.md): Automatically learn API schema parameters from traffic and export in OpenAPI format.
 - [Session identifiers](https://developers.cloudflare.com/api-shield/management-and-monitoring/session-identifiers/index.md): Configure session identifiers to track authenticated API traffic per user.
 

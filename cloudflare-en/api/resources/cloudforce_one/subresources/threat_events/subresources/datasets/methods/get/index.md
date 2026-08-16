@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}`
 
-Retrieve metadata for a specific dataset.
+Retrieves details for a specific threat event dataset.
 
 ### Path Parameters
 
@@ -16,13 +16,13 @@ Retrieve metadata for a specific dataset.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -35,9 +35,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```

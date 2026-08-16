@@ -1300,43 +1300,54 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/r2-catalog/$BUCKE
 
 ```json
 {
-  "errors": [
-    {
-      "code": 0,
-      "message": "message"
-    }
-  ],
-  "messages": [
-    {
-      "code": 0,
-      "message": "message"
-    }
-  ],
-  "success": true,
+  "errors": [],
+  "messages": [],
   "result": {
-    "namespaces": [
-      [
-        "bronze",
-        "analytics"
-      ]
-    ],
     "details": [
       {
+        "created_at": "2025-10-07T10:00:00Z",
         "namespace": [
-          "bronze",
-          "analytics"
+          "bronze"
         ],
-        "namespace_uuid": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        "created_at": "2019-12-27T18:11:19.117Z",
-        "updated_at": "2019-12-27T18:11:19.117Z"
+        "namespace_uuid": "0199b999-6869-7383-bb1f-d30e059d5326",
+        "updated_at": "2025-10-07T12:00:00Z"
+      },
+      {
+        "created_at": "2025-10-07T10:15:00Z",
+        "namespace": [
+          "silver"
+        ],
+        "namespace_uuid": "0199b99b-2c88-73b3-8dbb-421e0e8f2757",
+        "updated_at": null
+      },
+      {
+        "created_at": "2025-10-07T10:30:00Z",
+        "namespace": [
+          "gold"
+        ],
+        "namespace_uuid": "0199b99c-3d99-73c4-9dcc-532f1f9f3868",
+        "updated_at": "2025-10-07T11:00:00Z"
       }
     ],
     "namespace_uuids": [
       "0199b999-6869-7383-bb1f-d30e059d5326",
-      "0199b99b-2c88-73b3-8dbb-421e0e8f2757"
+      "0199b99b-2c88-73b3-8dbb-421e0e8f2757",
+      "0199b99c-3d99-73c4-9dcc-532f1f9f3868"
     ],
-    "next_page_token": "MSYxNzU5NzU1NTc4NTA0MTk0JjAxOTliOTliLTJjODgtNzNiMy04ZGJiLTQyMWUwZThmMjc1Nw"
-  }
+    "namespaces": [
+      [
+        "bronze"
+      ],
+      [
+        "silver"
+      ],
+      [
+        "gold"
+      ]
+    ],
+    "next_page_token": null
+  },
+  "success": true
 }
 ```
 
@@ -1820,11 +1831,11 @@ enable or disable compaction and adjust target file sizes for optimization.
 
 - `compaction: optional object { state, target_size_mb }`
 
-  Updates compaction configuration (all fields optional).
+  Updates table compaction configuration; all fields are optional.
 
   - `state: optional "enabled" or "disabled"`
 
-    Updates the state optionally.
+    Specifies the state of maintenance operations.
 
     - `"enabled"`
 
@@ -1832,7 +1843,7 @@ enable or disable compaction and adjust target file sizes for optimization.
 
   - `target_size_mb: optional "64" or "128" or "256" or "512"`
 
-    Updates the target file size optionally.
+    Sets the target file size for compaction in megabytes. Defaults to "128".
 
     - `"64"`
 

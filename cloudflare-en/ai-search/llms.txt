@@ -23,6 +23,13 @@ Create fully managed RAG pipelines for your AI applications
 
 - [Wrangler CLI](https://developers.cloudflare.com/ai-search/wrangler-commands/index.md): Manage AI Search instances from the command line using Wrangler.
 
+## Agents
+
+- [Agents](https://developers.cloudflare.com/ai-search/agent-sdks/index.md): Use AI Search from agent and application frameworks, including the Vercel AI SDK, the Cloudflare Agents SDK, and LangChain.
+- [Agents SDK](https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/index.md): Build a Cloudflare Agent that provisions an AI Search instance, indexes content, and searches it with a tool.
+- [AI SDK](https://developers.cloudflare.com/ai-search/agent-sdks/ai-sdk/index.md): Use AI Search from the Vercel AI SDK to create an instance, index content, and generate grounded responses in a TypeScript project.
+- [LangChain](https://developers.cloudflare.com/ai-search/agent-sdks/langchain/index.md): Use AI Search from LangChain to create an instance, index content, and search it with the CloudflareAISearchRetriever.
+
 ## Configuration
 
 - [Configuration](https://developers.cloudflare.com/ai-search/configuration/index.md): Customize how your AI Search instance indexes data, retrieves results, and generates responses.
@@ -30,6 +37,10 @@ Create fully managed RAG pipelines for your AI applications
 - [Built-in storage](https://developers.cloudflare.com/ai-search/configuration/data-source/built-in-storage/index.md): Upload files directly to an AI Search instance using built-in storage powered by R2 and Vectorize.
 - [R2](https://developers.cloudflare.com/ai-search/configuration/data-source/r2/index.md): Connect a Cloudflare R2 bucket as a data source to index stored documents with AI Search.
 - [Website](https://developers.cloudflare.com/ai-search/configuration/data-source/website/index.md): Connect a domain you own as a data source so AI Search can crawl and index your website pages.
+- [Authentication headers](https://developers.cloudflare.com/ai-search/configuration/data-source/website/authentication-headers/index.md): Send custom HTTP headers with every crawl request so AI Search can index pages that sit behind authentication.
+- [Content selectors](https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/index.md): Control which parts of a crawled page are indexed by pairing URL glob patterns with CSS selectors.
+- [Custom metadata](https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/index.md): Extract metadata from the HTML meta tags on crawled pages so you can filter search results by it.
+- [Parse types](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/index.md): Choose how AI Search finds pages on a website data source.
 - [Chunking](https://developers.cloudflare.com/ai-search/configuration/indexing/chunking/index.md): Configure how AI Search splits content into chunks for embedding and retrieval.
 - [Hybrid search](https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/index.md): Combine vector and keyword search in AI Search for broader, more accurate retrieval results.
 - [Keyword search](https://developers.cloudflare.com/ai-search/configuration/indexing/keyword-search/index.md): Enable BM25 keyword search in AI Search to match documents containing exact query terms.
@@ -43,9 +54,12 @@ Create fully managed RAG pipelines for your AI applications
 - [Supported models](https://developers.cloudflare.com/ai-search/configuration/models/supported-models/index.md): View all AI models supported by AI Search, including text generation, embedding, and reranking models.
 - [Relevance boosting](https://developers.cloudflare.com/ai-search/configuration/retrieval/boosting/index.md): Bias AI Search results toward documents with specific metadata using relevance boosting.
 - [Similarity cache](https://developers.cloudflare.com/ai-search/configuration/retrieval/cache/index.md): Speed up AI Search responses by caching and reusing answers for semantically similar queries.
-- [UI snippets](https://developers.cloudflare.com/ai-search/configuration/retrieval/embed-search-snippets/index.md): Add AI Search to your website using pre-built, customizable web components for search and chat.
 - [Filtering](https://developers.cloudflare.com/ai-search/configuration/retrieval/filtering/index.md): Filter AI Search results by metadata attributes at query time.
 - [Public endpoint settings](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/index.md): Expose AI Search instances through public MCP, chat, and search endpoints without authentication.
+- [Cloudflare Access](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/cloudflare-access/index.md): Require users and agents to authenticate with your identity provider before they can query an AI Search public endpoint.
+- [Custom domains](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/custom-domains/index.md): Serve an AI Search public endpoint from a hostname that you own, such as search.example.com.
+- [UI snippets](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/embed-search-snippets/index.md): Add AI Search to your website using pre-built, customizable web components for search and chat.
+- [Namespace public endpoints](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/namespace/index.md): Expose several AI Search instances through a single public endpoint scoped to a namespace.
 - [Query rewriting](https://developers.cloudflare.com/ai-search/configuration/retrieval/query-rewriting/index.md): Improve AI Search retrieval quality by enabling query rewriting to rephrase user queries.
 - [Reranking](https://developers.cloudflare.com/ai-search/configuration/retrieval/reranking/index.md): Enable reranking in AI Search to reorder retrieved results by semantic relevance.
 - [Result controls](https://developers.cloudflare.com/ai-search/configuration/retrieval/result-controls/index.md): Control AI Search result count and minimum score thresholds for returned results.

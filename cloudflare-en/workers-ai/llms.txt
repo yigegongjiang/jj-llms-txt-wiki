@@ -17,9 +17,9 @@ Run AI models in Workers, Pages, or via API
 - [REST API](https://developers.cloudflare.com/workers-ai/get-started/rest-api/index.md): Use the Cloudflare Workers AI REST API to deploy a large language model (LLM).
 - [Workers Bindings](https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/index.md): Deploy your first Cloudflare Workers AI project using the CLI.
 
-## Models
+## Workers AI Models
 
-- [Models](https://developers.cloudflare.com/workers-ai/models/index.md): Browse the catalog of machine learning models available on Workers AI.
+- [Workers AI Models](https://developers.cloudflare.com/workers-ai/models/index.md): Browse the catalog of machine learning models available on Workers AI.
 
 ## Agents
 
@@ -86,7 +86,7 @@ Run AI models in Workers, Pages, or via API
 
 ## platform
 
-- [AI Gateway](https://developers.cloudflare.com/ai-gateway/index.md): Use AI Gateway to manage, monitor, and cache your Workers AI requests.
+- [AI Gateway](https://developers.cloudflare.com/ai-gateway/index.md): Route Workers AI through a unified control layer for observability, billing, caching, security, and routing.
 - [Data usage](https://developers.cloudflare.com/workers-ai/platform/data-usage/index.md): How Cloudflare handles your data, inputs, and outputs when using Workers AI.
 - [Errors](https://developers.cloudflare.com/workers-ai/platform/errors/index.md): Reference table of Workers AI error codes, HTTP statuses, and descriptions.
 - [Event subscriptions](https://developers.cloudflare.com/workers-ai/platform/event-subscriptions/index.md): Subscribe to Workers AI events using Cloudflare Queues for asynchronous processing.

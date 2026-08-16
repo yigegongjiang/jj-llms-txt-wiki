@@ -56,13 +56,15 @@ Returns a list of D1 databases.
 
     Specifies the timestamp the resource was created as an ISO8601 string.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 
@@ -225,13 +227,15 @@ Returns the specified D1 database.
 
     The D1 database's size, in bytes.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 
@@ -328,13 +332,15 @@ Returns the created D1 database.
 
   D1 database name.
 
-- `jurisdiction: optional "eu" or "fedramp"`
+- `jurisdiction: optional "eu" or "fedramp" or "us"`
 
   Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
   - `"eu"`
 
   - `"fedramp"`
+
+  - `"us"`
 
 - `primary_location_hint: optional "wnam" or "enam" or "weur" or 3 more`
 
@@ -400,13 +406,15 @@ Returns the created D1 database.
 
     The D1 database's size, in bytes.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 
@@ -557,13 +565,15 @@ Updates the specified D1 database.
 
     The D1 database's size, in bytes.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 
@@ -715,13 +725,15 @@ Updates partially the specified D1 database.
 
     The D1 database's size, in bytes.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 
@@ -1832,13 +1844,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/d1/database/$DATA
 
     Specifies the timestamp the resource was created as an ISO8601 string.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 

@@ -1,8 +1,8 @@
-## List TLS setting for hostnames
+## Get TLS setting for hostname
 
-**get** `/zones/{zone_id}/hostnames/settings/{setting_id}`
+**get** `/zones/{zone_id}/hostnames/settings/{setting_id}/{hostname}`
 
-List the requested TLS setting for the hostnames under this zone.
+Get the requested TLS setting for the hostname.
 
 ### Path Parameters
 
@@ -24,6 +24,10 @@ List the requested TLS setting for the hostnames under this zone.
   - `"min_tls_version"`
 
   - `"http2"`
+
+- `hostname: string`
+
+  The hostname for which the tls settings are set.
 
 ### Returns
 
@@ -57,7 +61,7 @@ List the requested TLS setting for the hostnames under this zone.
 
   - `true`
 
-- `result: optional array of object { created_at, hostname, status, 2 more }`
+- `result: optional Setting`
 
   - `created_at: optional string`
 
@@ -102,32 +106,10 @@ List the requested TLS setting for the hostnames under this zone.
 
       Used when `setting_id` is `ciphers`. An array of allowed cipher suite strings.
 
-- `result_info: optional object { count, page, per_page, 2 more }`
-
-  - `count: optional number`
-
-    Total number of results for the requested service.
-
-  - `page: optional number`
-
-    Current page within paginated list of results.
-
-  - `per_page: optional number`
-
-    Number of results per page of results.
-
-  - `total_count: optional number`
-
-    Total results available without any search parameters.
-
-  - `total_pages: optional number`
-
-    Total pages available of results.
-
 ### Example
 
 ```http
-curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/hostnames/settings/$SETTING_ID \
+curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/hostnames/settings/$SETTING_ID/$HOSTNAME \
     -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
 ```
 
@@ -156,24 +138,15 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/hostnames/settings/$SET
     }
   ],
   "success": true,
-  "result": [
-    {
-      "created_at": "2023-07-10T20:01:50.219171Z",
-      "hostname": "app.example.com",
-      "status": "pending_deployment",
-      "updated_at": "2023-07-10T20:01:50.219171Z",
-      "value": [
-        "ECDHE-RSA-AES128-GCM-SHA256",
-        "AES128-GCM-SHA256"
-      ]
-    }
-  ],
-  "result_info": {
-    "count": 1,
-    "page": 1,
-    "per_page": 50,
-    "total_count": 1,
-    "total_pages": 1
+  "result": {
+    "created_at": "2023-07-10T20:01:50.219171Z",
+    "hostname": "app.example.com",
+    "status": "pending_deployment",
+    "updated_at": "2023-07-10T20:01:50.219171Z",
+    "value": [
+      "ECDHE-RSA-AES128-GCM-SHA256",
+      "AES128-GCM-SHA256"
+    ]
   }
 }
 ```

@@ -14,17 +14,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/link-cards/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `LinkCard` component is used `417` times on `121` pages.
+The `LinkCard` component is used `450` times on `132` pages.
 
 See all examples of pages that use LinkCard
 
-Used **417** times.
+Used **450** times.
 
 **Pages**
 
 * [/agent-memory/api/workers-api/](https://developers.cloudflare.com/agent-memory/api/workers-api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-memory/api/workers-api.mdx)
 * [/agent-memory/concepts/how-agent-memory-works/](https://developers.cloudflare.com/agent-memory/concepts/how-agent-memory-works/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-memory/concepts/how-agent-memory-works.mdx)
 * [/agent-memory/get-started/](https://developers.cloudflare.com/agent-memory/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-memory/get-started.mdx)
+* [/agent-setup/claude-code/](https://developers.cloudflare.com/agent-setup/claude-code/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/claude-code.mdx)
+* [/agent-setup/codex/](https://developers.cloudflare.com/agent-setup/codex/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/codex.mdx)
+* [/agent-setup/cursor/](https://developers.cloudflare.com/agent-setup/cursor/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agent-setup/cursor.mdx)
 * [/agents/communication-channels/chat/autonomous-responses/](https://developers.cloudflare.com/agents/communication-channels/chat/autonomous-responses/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/communication-channels/chat/autonomous-responses.mdx)
 * [/agents/communication-channels/chat/chat-agents/](https://developers.cloudflare.com/agents/communication-channels/chat/chat-agents/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/communication-channels/chat/chat-agents.mdx)
 * [/agents/communication-channels/chat/client-sdk/](https://developers.cloudflare.com/agents/communication-channels/chat/client-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/communication-channels/chat/client-sdk.mdx)
@@ -70,15 +73,23 @@ Used **417** times.
 * [/agents/runtime/lifecycle/state/](https://developers.cloudflare.com/agents/runtime/lifecycle/state/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/lifecycle/state.mdx)
 * [/agents/runtime/operations/configuration/](https://developers.cloudflare.com/agents/runtime/operations/configuration/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/configuration.mdx)
 * [/agents/runtime/operations/cross-domain-authentication/](https://developers.cloudflare.com/agents/runtime/operations/cross-domain-authentication/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/cross-domain-authentication.mdx)
-* [/agents/runtime/operations/observability/](https://developers.cloudflare.com/agents/runtime/operations/observability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/observability.mdx)
+* [/agents/runtime/operations/observability/diagnostics-channels/](https://developers.cloudflare.com/agents/runtime/operations/observability/diagnostics-channels/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/observability/diagnostics-channels.mdx)
+* [/agents/runtime/operations/observability/tracing/](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/observability/tracing.mdx)
 * [/agents/tools/ai-search/](https://developers.cloudflare.com/agents/tools/ai-search/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/ai-search.mdx)
 * [/agents/tools/browser/](https://developers.cloudflare.com/agents/tools/browser/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/browser.mdx)
 * [/agents/tools/codemode/](https://developers.cloudflare.com/agents/tools/codemode/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/index.mdx)
 * [/agents/tools/mcp/](https://developers.cloudflare.com/agents/tools/mcp/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/mcp.mdx)
 * [/agents/tools/payments/](https://developers.cloudflare.com/agents/tools/payments/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/payments/index.mdx)
-* [/agents/tools/payments/mpp/](https://developers.cloudflare.com/agents/tools/payments/mpp/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/payments/mpp.mdx)
+* [/agents/tools/payments/mpp/](https://developers.cloudflare.com/agents/tools/payments/mpp/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/payments/mpp/index.mdx)
 * [/agents/tools/payments/x402/](https://developers.cloudflare.com/agents/tools/payments/x402/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/payments/x402/index.mdx)
 * [/agents/tools/sandbox/](https://developers.cloudflare.com/agents/tools/sandbox/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/sandbox.mdx)
+* [/ai-search/agent-sdks/agents-sdk/](https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/agents-sdk.mdx)
+* [/ai-search/agent-sdks/ai-sdk/](https://developers.cloudflare.com/ai-search/agent-sdks/ai-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/ai-sdk.mdx)
+* [/ai-search/agent-sdks/langchain/](https://developers.cloudflare.com/ai-search/agent-sdks/langchain/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/langchain.mdx)
+* [/ai-search/configuration/retrieval/public-endpoint/cloudflare-access/](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/cloudflare-access/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/configuration/retrieval/public-endpoint/cloudflare-access.mdx)
+* [/ai-search/configuration/retrieval/public-endpoint/custom-domains/](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/custom-domains/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/configuration/retrieval/public-endpoint/custom-domains.mdx)
+* [/ai-search/configuration/retrieval/public-endpoint/](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/configuration/retrieval/public-endpoint/index.mdx)
+* [/ai-search/configuration/retrieval/public-endpoint/namespace/](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/namespace/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/configuration/retrieval/public-endpoint/namespace.mdx)
 * [/ai-search/get-started/api/](https://developers.cloudflare.com/ai-search/get-started/api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/get-started/api.mdx)
 * [/ai-search/get-started/dashboard/](https://developers.cloudflare.com/ai-search/get-started/dashboard/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/get-started/dashboard.mdx)
 * [/ai-search/get-started/](https://developers.cloudflare.com/ai-search/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/get-started/index.mdx)
@@ -110,14 +121,14 @@ Used **417** times.
 * [/pipelines/streams/](https://developers.cloudflare.com/pipelines/streams/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/pipelines/streams/index.mdx)
 * [/queues/event-subscriptions/](https://developers.cloudflare.com/queues/event-subscriptions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/queues/event-subscriptions/index.mdx)
 * [/queues/event-subscriptions/manage-event-subscriptions/](https://developers.cloudflare.com/queues/event-subscriptions/manage-event-subscriptions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/queues/event-subscriptions/manage-event-subscriptions.mdx)
+* [/r2-data-catalog/get-started/](https://developers.cloudflare.com/r2-data-catalog/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-data-catalog/get-started.mdx)
+* [/r2-data-catalog/](https://developers.cloudflare.com/r2-data-catalog/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-data-catalog/index.mdx)
+* [/r2-data-catalog/manage-catalogs/](https://developers.cloudflare.com/r2-data-catalog/manage-catalogs/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-data-catalog/manage-catalogs.mdx)
 * [/r2-sql/get-started/](https://developers.cloudflare.com/r2-sql/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-sql/get-started.mdx)
 * [/r2-sql/query-data/](https://developers.cloudflare.com/r2-sql/query-data/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-sql/query-data.mdx)
 * [/r2/api/s3/presigned-urls/](https://developers.cloudflare.com/r2/api/s3/presigned-urls/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/api/s3/presigned-urls.mdx)
 * [/r2/api/s3/temporary-credentials/](https://developers.cloudflare.com/r2/api/s3/temporary-credentials/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/api/s3/temporary-credentials.mdx)
 * [/r2/buckets/delete-buckets/](https://developers.cloudflare.com/r2/buckets/delete-buckets/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/buckets/delete-buckets.mdx)
-* [/r2/data-catalog/get-started/](https://developers.cloudflare.com/r2/data-catalog/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-catalog/get-started.mdx)
-* [/r2/data-catalog/](https://developers.cloudflare.com/r2/data-catalog/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-catalog/index.mdx)
-* [/r2/data-catalog/manage-catalogs/](https://developers.cloudflare.com/r2/data-catalog/manage-catalogs/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-catalog/manage-catalogs.mdx)
 * [/r2/get-started/cli/](https://developers.cloudflare.com/r2/get-started/cli/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/get-started/cli.mdx)
 * [/r2/get-started/](https://developers.cloudflare.com/r2/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/get-started/index.mdx)
 * [/r2/get-started/s3/](https://developers.cloudflare.com/r2/get-started/s3/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/get-started/s3.mdx)
@@ -173,7 +184,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/link-cards/#page","headline":"Link cards · Cloudflare Style Guide","description":"Display navigation cards with titles and descriptions.","url":"https://developers.cloudflare.com/style-guide/components/link-cards/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

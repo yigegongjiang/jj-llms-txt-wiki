@@ -30,7 +30,10 @@ Then, create a new AI Gateway.
 2. Go to **AI** \> **AI Gateway**.
 3. Select **Create Gateway**.
 4. Enter your **Gateway name**. Note: Gateway name has a 64 character limit.
-5. Select **Create**.
+5. In **Workers AI Billing**, choose how Workers AI requests through this gateway are billed:  
+  * **Standard billing** charges your Cloudflare account at the end of each billing cycle.
+  * **Unified billing** deducts from your prepaid AI Gateway credit balance in real time.
+6. Select **Create**.
 
 To set up an AI Gateway using the API:
 
@@ -89,7 +92,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/#page","headline":"Create your first AI Gateway using Workers AI · Cloudflare AI Gateway docs","description":"This tutorial guides you through creating your first AI Gateway using Workers AI on the Cloudflare dashboard.","url":"https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

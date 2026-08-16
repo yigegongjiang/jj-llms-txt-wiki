@@ -22,6 +22,12 @@ Deletes an existing version of an account or zone ruleset.
 
   The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
 
+### Query Parameters
+
+- `dry_run: optional boolean`
+
+  Validates the request without persisting changes when set to `true`. Responses that normally return 200 return `result: null`; endpoints that normally return 204 continue to return 204.
+
 ### Example
 
 ```http

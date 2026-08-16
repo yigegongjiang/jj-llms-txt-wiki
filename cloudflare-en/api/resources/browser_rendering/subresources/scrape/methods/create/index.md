@@ -18,6 +18,10 @@ Get meta attributes like height, width, text and others of selected elements.
 
 ### Body Parameters
 
+- `elements: array of object { selector }`
+
+  - `selector: string`
+
 - `actionTimeout: optional number`
 
   The maximum duration allowed for the browser action to complete after the page has loaded (such as taking screenshots, extracting content, or generating PDFs). If this time limit is exceeded, the action stops and returns a timeout error.
@@ -44,11 +48,11 @@ Get meta attributes like height, width, text and others of selected elements.
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -149,10 +153,6 @@ Get meta attributes like height, width, text and others of selected elements.
     - `"Secure"`
 
   - `url: optional string`
-
-- `elements: optional array of object { selector }`
-
-  - `selector: string`
 
 - `emulateMediaType: optional string`
 
@@ -284,6 +284,40 @@ Get meta attributes like height, width, text and others of selected elements.
 
 ### Returns
 
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
+
+  - `status: optional number`
+
+    HTTP status returned by the origin.
+
+  - `title: optional string`
+
+    Page title.
+
 - `result: array of object { results, selector }`
 
   - `results: object { attributes, height, html, 4 more }`
@@ -347,6 +381,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
     -d '{
+          "elements": [
+            {
+              "selector": "h1"
+            }
+          ],
           "html": "<h1>Hello World!</h1>",
           "url": "https://www.example.com/"
         }'
@@ -356,6 +395,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 ```json
 {
+  "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
+    "status": 0,
+    "title": "title"
+  },
   "result": [
     {
       "results": {

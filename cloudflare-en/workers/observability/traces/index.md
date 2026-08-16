@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Traces
 
-Last updated Jun 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/traces/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 11, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/traces/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ### What is Workers tracing?
 
@@ -21,7 +21,7 @@ Tracing gives you end-to-end visibility into the life of a request as it travels
 * What is the cause of a long-running request?
 * How long do subrequests from my Worker take?
 * How long are my calls to my KV Namespace or R2 bucket taking?
-![Example trace showing a POST request to a cake shop with multiple spans including fetch requests and durable object operations](https://developers.cloudflare.com/_astro/wobs_waterfall_trace_122.BveqL__z_Q1Dwz.webp) 
+![Example trace showing a POST request to a cake shop with multiple spans including fetch requests and durable object operations](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1348,height=414,format=webp/_astro/wobs_waterfall_trace_122.BveqL__z.png) 
 
 ### Automatic instrumentation
 
@@ -73,6 +73,8 @@ An updated [compatibility\_date](https://developers.cloudflare.com/workers/confi
 
 Workers tracing follows [OpenTelemetry (OTel) standards ↗](https://opentelemetry.io/). This makes it compatible with popular observability platforms, such as [Honeycomb](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/honeycomb/), [Grafana Cloud](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/grafana-cloud/), and [Axiom](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/axiom/), while requiring zero development effort from you. If your observability provider has an available OpenTelemetry endpoint, you can export traces (and logs)!
 
+You can also set `persist: false` to export traces to your destination without persisting them in the Cloudflare dashboard. This allows you to use a third-party observability provider as your sole traces destination.
+
 Learn more about exporting OpenTelemetry data from Workers [here](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/).
 
 ### Sampling
@@ -122,12 +124,12 @@ Sampling is [head-based ↗](https://opentelemetry.io/docs/concepts/sampling/#he
 
 Workers tracing is currently **free** during the initial beta period. This includes all tracing functionality such as collecting traces, storing them, and viewing them in the Cloudflare dashboard.
 
-Starting on March 1, 2026, tracing will be billed as part of your usage on the Workers Free Paid and Enterprise plans. Each span in a trace represents one observability event, sharing the same monthly quota and pricing as [Workers logs](https://developers.cloudflare.com/workers/platform/pricing/#workers-logs):
+Starting on October 1, 2026, tracing will be billed as part of your usage on the Workers Free Paid and Enterprise plans. Each span in a trace represents one observability event, sharing the same monthly quota and pricing as [Workers logs](https://developers.cloudflare.com/workers/platform/pricing/#workers-logs):
 
 |                  | Events (trace spans or log events)                                 | Retention |
 | ---------------- | ------------------------------------------------------------------ | --------- |
 | **Workers Free** | 200,000 per day                                                    | 3 Days    |
-| **Workers Paid** | 10 million included per month +$0.60 per additional million events | 7 Days    |
+| **Workers Paid** | 20 million included per month +$0.60 per additional million events | 7 Days    |
 
 Was this helpful?
 
@@ -135,8 +137,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/observability/traces/#page","headline":"Traces · Cloudflare Workers docs","description":"Gain end-to-end visibility into request flows across your Workers application with automatic tracing instrumentation.","url":"https://developers.cloudflare.com/workers/observability/traces/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/observability/traces/#page","headline":"Traces · Cloudflare Workers docs","description":"Gain end-to-end visibility into request flows across your Workers application with automatic tracing instrumentation.","url":"https://developers.cloudflare.com/workers/observability/traces/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-11","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

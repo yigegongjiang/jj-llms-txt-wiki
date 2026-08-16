@@ -44,11 +44,11 @@ Fetches rendered PDF from provided URL or HTML. Check available options like `go
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 

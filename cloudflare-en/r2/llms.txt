@@ -61,28 +61,6 @@ Store large amounts of unstructured data without egress fees
 - [Use R2 from Workers](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/index.md): Bind an R2 bucket to a Worker and perform read, write, and list operations.
 - [Use the R2 multipart API from Workers](https://developers.cloudflare.com/r2/api/workers/workers-multipart-usage/index.md): Upload large objects to R2 using the multipart API through a Cloudflare Worker.
 
-## R2 Data Catalog
-
-- [R2 Data Catalog](https://developers.cloudflare.com/r2/data-catalog/index.md): A managed Apache Iceberg data catalog built directly into R2 buckets.
-- [DuckDB](https://developers.cloudflare.com/r2/data-catalog/config-examples/duckdb/index.md): Connect DuckDB to R2 Data Catalog to query and manage Iceberg tables.
-- [PyIceberg](https://developers.cloudflare.com/r2/data-catalog/config-examples/pyiceberg/index.md): Connect PyIceberg to R2 Data Catalog to create and query Iceberg tables in Python.
-- [Snowflake](https://developers.cloudflare.com/r2/data-catalog/config-examples/snowflake/index.md): Query R2 Data Catalog tables from Snowflake using a catalog integration.
-- [Spark (PySpark)](https://developers.cloudflare.com/r2/data-catalog/config-examples/spark-python/index.md): Connect PySpark to R2 Data Catalog to read and write Iceberg tables.
-- [Spark (Scala)](https://developers.cloudflare.com/r2/data-catalog/config-examples/spark-scala/index.md): Build a Scala Spark application that connects to R2 Data Catalog for Iceberg table operations.
-- [StarRocks](https://developers.cloudflare.com/r2/data-catalog/config-examples/starrocks/index.md): Connect StarRocks to R2 Data Catalog to query and modify Iceberg tables.
-- [Trino](https://developers.cloudflare.com/r2/data-catalog/config-examples/trino/index.md): Connect Trino to R2 Data Catalog using the Iceberg REST catalog connector.
-- [Deleting data](https://developers.cloudflare.com/r2/data-catalog/deleting-data/index.md): How to properly delete data from R2 Data Catalog
-- [Getting started](https://developers.cloudflare.com/r2/data-catalog/get-started/index.md): Learn how to enable the R2 Data Catalog on your bucket, load sample data, and run your first query.
-- [Manage catalogs](https://developers.cloudflare.com/r2/data-catalog/manage-catalogs/index.md): Understand how to manage Iceberg REST catalogs associated with R2 buckets
-- [Metrics and analytics](https://developers.cloudflare.com/r2/data-catalog/observability/metrics/index.md): Query R2 Data Catalog metrics for Iceberg REST API operations and table maintenance jobs via the GraphQL Analytics API.
-- [Platform](https://developers.cloudflare.com/r2/data-catalog/platform/index.md): R2 Data Catalog platform details including pricing.
-- [Pricing](https://developers.cloudflare.com/r2/data-catalog/platform/pricing/index.md): R2 Data Catalog pricing for catalog operations, compaction, and included usage details.
-- [Table maintenance](https://developers.cloudflare.com/r2/data-catalog/table-maintenance/index.md): Learn how R2 Data Catalog automates table maintenance
-
-## R2 SQL
-
-- [R2 SQL](https://developers.cloudflare.com/r2-sql/index.md): R2 SQL is a serverless SQL interface for Cloudflare R2, enabling querying and analyzing data.
-
 ## Tutorials
 
 - [Tutorials](https://developers.cloudflare.com/r2/tutorials/index.md): Step-by-step R2 tutorials for building applications with object storage.
@@ -114,6 +92,14 @@ Store large amounts of unstructured data without egress fees
 ## Pricing
 
 - [Pricing](https://developers.cloudflare.com/r2/pricing/index.md): R2 pricing for storage, Class A and Class B operations, and free tier details.
+
+## R2 Data Catalog
+
+- [R2 Data Catalog](https://developers.cloudflare.com/r2-data-catalog/index.md): R2 Data Catalog is a managed Apache Iceberg data catalog built directly into your R2 bucket.
+
+## R2 SQL
+
+- [R2 SQL](https://developers.cloudflare.com/r2-sql/index.md): R2 SQL is a serverless SQL interface for Cloudflare R2, enabling querying and analyzing data.
 
 ## examples
 

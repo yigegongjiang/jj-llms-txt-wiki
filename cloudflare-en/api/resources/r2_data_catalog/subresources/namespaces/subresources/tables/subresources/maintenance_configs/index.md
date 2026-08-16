@@ -161,11 +161,11 @@ enable or disable compaction and adjust target file sizes for optimization.
 
 - `compaction: optional object { state, target_size_mb }`
 
-  Updates compaction configuration (all fields optional).
+  Updates table compaction configuration; all fields are optional.
 
   - `state: optional "enabled" or "disabled"`
 
-    Updates the state optionally.
+    Specifies the state of maintenance operations.
 
     - `"enabled"`
 
@@ -173,7 +173,7 @@ enable or disable compaction and adjust target file sizes for optimization.
 
   - `target_size_mb: optional "64" or "128" or "256" or "512"`
 
-    Updates the target file size optionally.
+    Sets the target file size for compaction in megabytes. Defaults to "128".
 
     - `"64"`
 

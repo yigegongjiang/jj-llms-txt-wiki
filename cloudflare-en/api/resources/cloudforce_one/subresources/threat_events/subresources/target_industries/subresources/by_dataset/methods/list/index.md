@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}/targetIndustries`
 
-List all target industries referenced in events for a specific dataset.
+Lists all target industries for a specific dataset
 
 ### Path Parameters
 

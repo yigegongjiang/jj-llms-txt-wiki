@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/targetIndustries`
 
-List target industries referenced in events across one or more datasets.
+Retrieves the catalog of industry classifications used in Cloudforce One threat intelligence.
 
 ### Path Parameters
 
@@ -62,7 +62,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}/targetIndustries`
 
-List all target industries referenced in events for a specific dataset.
+Lists all target industries for a specific dataset
 
 ### Path Parameters
 
@@ -118,7 +118,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/targetIndustries/catalog`
 
-List all predefined target industries from the industry map catalog.
+Lists all target industries from industry map catalog
 
 ### Path Parameters
 

@@ -35,7 +35,35 @@ Cloudflare tests new Cloudflare One Client features and improvements in an unsta
 
 Latest release
 
-**Version:** Windows2026.5.1155.1**Date:** 2026-05-29**Size:** 56 MB
+**Version:** Windows 2026.7.1210.1**Date:** 2026-07-31**Size:** 59.5 MB
+
+[Download](https://downloads.cloudflareclient.com/v1/download/windows/version/2026.7.1210.1)
+
+#### Release notes
+
+This beta release includes the following changes and improvements:
+
+* Improved connection reliability: the client now swaps protocol order after repeated connectivity-check failures, which helps when HTTP/3 is blocked after the QUIC handshake.
+* Fixed issue where a certificate error could be incorrectly displayed right after the connection is established.
+* A [DNS search domain](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/#dns-search-suffixes) parsing failure no longer prevents connection.
+* Fixed a [MASQUE](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/#device-tunnel-protocol) issue where the tunnel could stall while uploading at a high rate.
+* Fixed being unable to [switch organizations](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/switch-organizations/) when the client was stuck in the "Device not in organization" state.
+* Fixed the Home Screen dropdown popup not anchoring correctly.
+* Fixed a crash during dialog dismissal.
+* Increased tolerance for configurations with a large number of [local domain fallback](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/local-domains/) resolver IPs, so DNS resolution behaves correctly even when more fallback resolvers are configured than recommended.
+* Fixed a networking issue where IPv6 multicast routes were being assigned to the WARP tunnel interface.
+* Fixed fatal errors on UI load on Windows 10.
+* Fixed a crash during Windows notification initialization.
+* Made the Windows [domain-joined posture check](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/domain-joined/) more reliable.
+* Fixed orphaned credentials left behind on multi-user uninstall.
+* A successful re-authentication will cause the [device profile](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/device-profiles/) to be re-evaluated.
+* Improved [dashboard-managed client updates](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/client-version-assignments/) by running the updater only when needed.
+
+Previous version history (6)
+
+Windows 2026.5.1155.1
+
+**Version:** Windows 2026.5.1155.1**Date:** 2026-05-29**Size:** 56 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/windows/version/2026.5.1155.1)
 
@@ -72,11 +100,9 @@ This release introduces the new Cloudflare One Client UI for Windows! You can ex
   * The custom DNS server address on the primary network adapter is changed while the client is connected.  
   To work around this issue, please reconnect the client by selecting "disconnect" and then "connect" in the client user interface.
 
-Previous version history (5)
-
 Windows 2026.3.566.1
 
-**Version:** Windows2026.3.566.1**Date:** 2026-03-10**Size:** 51.4 MB
+**Version:** Windows 2026.3.566.1**Date:** 2026-03-10**Size:** 51.4 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/windows/version/2026.3.566.1)
 
@@ -115,7 +141,7 @@ This release contains minor fixes and introduces a brand new visual style for th
 
 Windows 2026.1.89.1
 
-**Version:** Windows2026.1.89.1**Date:** 2026-01-27**Size:** 137 MB
+**Version:** Windows 2026.1.89.1**Date:** 2026-01-27**Size:** 137 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/windows/version/2026.1.89.1)
 
@@ -144,7 +170,7 @@ To work around this issue, reconnect the WARP client by toggling off and back on
 
 Windows 2025.10.118.1
 
-**Version:** Windows2025.10.118.1**Date:** 2025-12-09**Size:** 136 MB
+**Version:** Windows 2025.10.118.1**Date:** 2025-12-09**Size:** 136 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/windows/version/2025.10.118.1)
 
@@ -171,7 +197,7 @@ To work around this issue, reconnect the WARP client by toggling off and back on
 
 Windows 2025.9.173.1
 
-**Version:** Windows2025.9.173.1**Date:** 2025-10-16**Size:** 135 MB
+**Version:** Windows 2025.9.173.1**Date:** 2025-10-16**Size:** 135 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/windows/version/2025.9.173.1)
 
@@ -200,7 +226,7 @@ To work around this issue, reconnect the WARP client by toggling off and back on
 
 Windows 2025.7.106.1
 
-**Version:** Windows2025.7.106.1**Date:** 2025-09-10**Size:** 135 MB
+**Version:** Windows 2025.7.106.1**Date:** 2025-09-10**Size:** 135 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/windows/version/2025.7.106.1)
 
@@ -246,7 +272,33 @@ To work around this issue, reconnect the WARP client by toggling off and back on
 
 Latest release
 
-**Version:** macOS2026.6.782.1**Date:** 2026-06-24**Size:** 152 MB
+**Version:** macOS 2026.7.1210.1**Date:** 2026-07-31**Size:** 153 MB
+
+[Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2026.7.1210.1)
+
+#### Release notes
+
+This beta release includes the following changes and improvements:
+
+* Improved connection reliability: the client now swaps protocol order after repeated connectivity-check failures, which helps when HTTP/3 is blocked after the QUIC handshake.
+* Fixed issue where a certificate error could be incorrectly displayed right after the connection is established.
+* A [DNS search domain](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/#dns-search-suffixes) parsing failure no longer prevents connection.
+* Fixed a [MASQUE](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/#device-tunnel-protocol) issue where the tunnel could stall while uploading at a high rate.
+* Fixed being unable to [switch organizations](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/switch-organizations/) when the client was stuck in the "Device not in organization" state.
+* Fixed the Home Screen dropdown popup not anchoring correctly.
+* Fixed a crash during dialog dismissal.
+* Increased tolerance for configurations with a large number of [local domain fallback](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/local-domains/) resolver IPs, so DNS resolution behaves correctly even when more fallback resolvers are configured than recommended.
+* Fixed the WARP client stealing window focus (for example, during reauth).
+* Fixed a client crash when connecting to a captive portal over Wi-Fi.
+* Fixed the system tray icon showing "disconnected" while the UI showed "connected".
+* A successful re-authentication will cause the [device profile](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/device-profiles/) to be re-evaluated.
+* Improved [dashboard-managed client updates](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/client-version-assignments/) by running the updater only when needed.
+
+Previous version history (7)
+
+macOS 2026.6.782.1
+
+**Version:** macOS 2026.6.782.1**Date:** 2026-06-24**Size:** 152 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2026.6.782.1)
 
@@ -275,11 +327,9 @@ This release also introduces multiple fixes and improvements including:
 
 * Registration may hang at "Checking your organization configuration" due to IPC errors. A system reboot should resolve the error, allowing registration to proceed.
 
-Previous version history (6)
-
 macOS 2026.5.1155.1
 
-**Version:** macOS2026.5.1155.1**Date:** 2026-05-29**Size:** 143 MB
+**Version:** macOS 2026.5.1155.1**Date:** 2026-05-29**Size:** 143 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2026.5.1155.1)
 
@@ -309,7 +359,7 @@ This release introduces the new Cloudflare One Client UI for macOS! You can expe
 
 macOS 2026.3.566.1
 
-**Version:** macOS2026.3.566.1**Date:** 2026-03-10**Size:** 128 MB
+**Version:** macOS 2026.3.566.1**Date:** 2026-03-10**Size:** 128 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2026.3.566.1)
 
@@ -336,7 +386,7 @@ This release contains minor fixes and introduces a brand new visual style for th
 
 macOS 2026.1.89.1
 
-**Version:** macOS2026.1.89.1**Date:** 2026-01-27**Size:** 115 MB
+**Version:** macOS 2026.1.89.1**Date:** 2026-01-27**Size:** 115 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2026.1.89.1)
 
@@ -351,7 +401,7 @@ This release contains minor fixes and improvements.
 
 macOS 2025.10.118.1
 
-**Version:** macOS2025.10.118.1**Date:** 2025-12-09**Size:** 111 MB
+**Version:** macOS 2025.10.118.1**Date:** 2025-12-09**Size:** 111 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2025.10.118.1)
 
@@ -366,7 +416,7 @@ This release contains minor fixes and improvements.
 
 macOS 2025.9.173.1
 
-**Version:** macOS2025.9.173.1**Date:** 2025-10-16**Size:** 111 MB
+**Version:** macOS 2025.9.173.1**Date:** 2025-10-16**Size:** 111 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2025.9.173.1)
 
@@ -387,7 +437,7 @@ This release contains minor fixes, improvements, and new features including Path
 
 macOS 2025.7.106.1
 
-**Version:** macOS2025.7.106.1**Date:** 2025-09-10**Size:** 108 MB
+**Version:** macOS 2025.7.106.1**Date:** 2025-09-10**Size:** 108 MB
 
 [Download](https://downloads.cloudflareclient.com/v1/download/macos/version/2025.7.106.1)
 
@@ -414,7 +464,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/beta-releases/#page","headline":"Download Cloudflare One Client beta releases · Cloudflare One docs","description":"Reference information for Download Cloudflare One Client beta releases in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/beta-releases/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

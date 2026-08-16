@@ -54,6 +54,7 @@ Build your own multi-tenant platform using Cloudflare as infrastructure
 - [Cache for SaaS](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/performance/cache-for-saas/index.md): Cache static content on custom hostnames to reduce latency for end users.
 - [Early Hints for SaaS](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/performance/early-hints-for-saas/index.md): Enable Early Hints per custom hostname to preload resources and speed up page loads.
 - [Plans](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/plans/index.md): Learn what features and limits are part of various Cloudflare plans.
+- [Quotas and billing](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/quotas-and-billing/index.md): Understand custom hostname quotas, monitor usage with the API, and determine which hostnames count toward billing.
 - [Certificate authorities](https://developers.cloudflare.com/ssl/reference/certificate-authorities/index.md): Certificate authorities available for custom hostname certificate issuance.
 - [Certificate statuses](https://developers.cloudflare.com/ssl/reference/certificate-statuses/index.md): Certificate lifecycle statuses for custom hostname TLS certificates.
 - [Connection request details](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/connection-details/index.md): How Cloudflare sets Host headers and SNI when forwarding connections to your origin.

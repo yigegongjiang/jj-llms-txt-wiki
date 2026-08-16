@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/cloudforce-one/events/categories/create`
 
-Create a new event category for the account.
+Creates a new threat event category in Cloudforce One for organizing and classifying threat events.
 
 ### Path Parameters
 

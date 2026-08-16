@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cni/slots/{slot}`
 
-Get information about the specified slot
+Gets information about a specific infrastructure slot allocation.
 
 ### Path Parameters
 
@@ -36,6 +36,8 @@ Get information about the specified slot
 
   Customer account tag
 
+- `ccr_device_name: optional string`
+
 ### Example
 
 ```http
@@ -57,6 +59,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
   "occupied": true,
   "site": "site",
   "speed": "speed",
-  "account": "account"
+  "account": "account",
+  "ccr_device_name": "ccr_device_name"
 }
 ```

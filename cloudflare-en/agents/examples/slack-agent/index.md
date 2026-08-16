@@ -138,7 +138,7 @@ The `OPENAI_BASE_URL` is optional but recommended. Using [Cloudflare AI Gateway]
 	"name": "my-slack-agent",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28",
+	"compatibility_date": "2026-08-14",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
@@ -167,7 +167,7 @@ The `OPENAI_BASE_URL` is optional but recommended. Using [Cloudflare AI Gateway]
 name = "my-slack-agent"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[durable_objects.bindings]]
@@ -507,7 +507,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/examples/slack-agent/#page","headline":"Slack agent · Cloudflare Agents docs","description":"Build and deploy an AI-powered Slack bot on Cloudflare Workers using the Agents SDK.","url":"https://developers.cloudflare.com/agents/examples/slack-agent/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

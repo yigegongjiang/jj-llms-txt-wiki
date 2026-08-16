@@ -76,7 +76,7 @@ Updates a DLP predefined profile. Only supports enabling/disabling entries.
 
     Entries to enable for this predefined profile. Any entries not provided will be disabled.
 
-  - `entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 4 more }  or 4 more`
+  - `entries: array of object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
 
     This field has been deprecated for `enabled_entries`.
 
@@ -128,7 +128,7 @@ Updates a DLP predefined profile. Only supports enabling/disabling entries.
 
         The optional description of the custom prompt topic entry.
 
-    - `PredefinedEntry object { id, confidence, enabled, 4 more }`
+    - `PredefinedEntry object { id, confidence, enabled, 5 more }`
 
       - `id: string`
 
@@ -149,6 +149,11 @@ Updates a DLP predefined profile. Only supports enabling/disabling entries.
       - `type: "predefined"`
 
         - `"predefined"`
+
+      - `deprecated: optional boolean`
+
+        Whether this entry is deprecated for new use. This is computed from the static catalog and
+        emitted only when true.
 
       - `profile_id: optional string`
 

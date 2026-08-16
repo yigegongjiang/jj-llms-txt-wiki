@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/targetIndustries`
 
-List target industries referenced in events across one or more datasets.
+Retrieves the catalog of industry classifications used in Cloudforce One threat intelligence.
 
 ### Path Parameters
 

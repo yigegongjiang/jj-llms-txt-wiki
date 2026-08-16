@@ -25,6 +25,12 @@ upload carry several GiB of decompressed STIX.
 
   Indicator feed ID
 
+### Header Parameters
+
+- `"Cf-Async-Upload": optional "1"`
+
+  - `"1"`
+
 ### Returns
 
 - `errors: array of object { code, message, documentation_url, source }`
@@ -57,7 +63,7 @@ upload carry several GiB of decompressed STIX.
 
   - `true`
 
-- `result: optional object { file_id, filename, status }`
+- `result: optional object { file_id, filename, poll_url, 2 more }`
 
   - `file_id: optional number`
 
@@ -67,9 +73,25 @@ upload carry several GiB of decompressed STIX.
 
     Name of the file unified in our system
 
+  - `poll_url: optional string`
+
+    Account-relative polling path. Prepend `/accounts/{account_id}`
+    using the same account identifier and API host as the upload
+    request. The path omits the account segment because the service
+    does not have your account identifier in this context.
+
   - `status: optional string`
 
-    Current status of upload, should be unified
+    Current status of the upload at the moment the request returned.
+    This is NOT a terminal state: the file is unified inline, but the
+    durable loader has only accepted it, so the upload is still
+    `Unifying`. Poll `poll_url` until the status reaches a terminal
+    value (`Unified` or `Error`).
+
+  - `upload_id: optional number`
+
+    Identifier of the upload row, for polling this upload to a
+    terminal state via `poll_url`.
 
 ### Example
 
@@ -110,7 +132,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/intel/indicator-f
   "result": {
     "file_id": 1,
     "filename": "snapshot_file.unified",
-    "status": "unified"
+    "poll_url": "/intel/indicator-feeds/12/uploads/12345",
+    "status": "Unifying",
+    "upload_id": 12345
   }
 }
 ```
@@ -119,7 +143,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/intel/indicator-f
 
 ### Snapshot Update Response
 
-- `SnapshotUpdateResponse object { file_id, filename, status }`
+- `SnapshotUpdateResponse object { file_id, filename, poll_url, 2 more }`
 
   - `file_id: optional number`
 
@@ -129,6 +153,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/intel/indicator-f
 
     Name of the file unified in our system
 
+  - `poll_url: optional string`
+
+    Account-relative polling path. Prepend `/accounts/{account_id}`
+    using the same account identifier and API host as the upload
+    request. The path omits the account segment because the service
+    does not have your account identifier in this context.
+
   - `status: optional string`
 
-    Current status of upload, should be unified
+    Current status of the upload at the moment the request returned.
+    This is NOT a terminal state: the file is unified inline, but the
+    durable loader has only accepted it, so the upload is still
+    `Unifying`. Poll `poll_url` until the status reaches a terminal
+    value (`Unified` or `Error`).
+
+  - `upload_id: optional number`
+
+    Identifier of the upload row, for polling this upload to a
+    terminal state via `poll_url`.

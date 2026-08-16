@@ -338,17 +338,21 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -698,17 +702,21 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -1408,17 +1416,21 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -1940,17 +1952,21 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -2318,17 +2334,21 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -2472,17 +2492,21 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -2622,17 +2646,21 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -2772,17 +2800,21 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -2906,17 +2938,21 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -3026,7 +3062,7 @@ Updates an Access application.
 
       The application type.
 
-  - `InfrastructureApplication object { target_criteria, type, name, policies }`
+  - `InfrastructureApplication object { target_criteria, type, mfa_config, 2 more }`
 
     - `target_criteria: array of object { port, protocol, target_attributes }`
 
@@ -3047,6 +3083,26 @@ Updates an Access application.
     - `type: ApplicationType`
 
       The application type.
+
+    - `mfa_config: optional object { allowed_authenticators, mfa_disabled, session_duration }`
+
+      Configures multi-factor authentication (MFA) settings for infrastructure applications.
+
+      - `allowed_authenticators: optional array of "piv_key" or "ssh_fido2_key"`
+
+        Lists the MFA methods that users can authenticate with. For infrastructure applications, supported values are `piv_key` and `ssh_fido2_key`.
+
+        - `"piv_key"`
+
+        - `"ssh_fido2_key"`
+
+      - `mfa_disabled: optional boolean`
+
+        Indicates whether to disable MFA for this resource. This option is available at the application and policy level.
+
+      - `session_duration: optional string`
+
+        Defines the duration of an MFA session. Must be in minutes (m) or hours (h). Minimum: 0m. Maximum: 720h (30 days). Examples: `5m` or `24h`.
 
     - `name: optional string`
 
@@ -3528,11 +3584,13 @@ Updates an Access application.
 
         Configures multi-factor authentication (MFA) settings for infrastructure applications.
 
-        - `allowed_authenticators: optional array of "piv_key"`
+        - `allowed_authenticators: optional array of "piv_key" or "ssh_fido2_key"`
 
-          Lists the MFA methods that users can authenticate with. For infrastructure applications, only `piv_key` is supported.
+          Lists the MFA methods that users can authenticate with. For infrastructure applications, supported values are `piv_key` and `ssh_fido2_key`.
 
           - `"piv_key"`
+
+          - `"ssh_fido2_key"`
 
         - `mfa_disabled: optional boolean`
 
@@ -3912,17 +3970,21 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -4368,17 +4430,21 @@ Updates an Access application.
 
       Allows options preflight requests to bypass Access authentication and go directly to the origin. Cannot turn on if cors_headers is set.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -4800,17 +4866,21 @@ Updates an Access application.
 
       Allows options preflight requests to bypass Access authentication and go directly to the origin. Cannot turn on if cors_headers is set.
 
-    - `policies: optional array of object { id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
+    - `policies: optional array of object { id, account_id, precedence }  or string or object { id, approval_groups, approval_required, 7 more }`
 
       The policies that Access applies to the application, in ascending order of precedence. Items can reference existing policies or create new policies exclusive to the application. Reusable and inline policies are mutually exclusive.
 
-      - `AccessAppPolicyLink object { id, precedence }`
+      - `AccessAppPolicyLink object { id, account_id, precedence }`
 
         A JSON that links a reusable policy to an application.
 
         - `id: optional string`
 
           The UUID of the policy
+
+        - `account_id: optional string`
+
+          Identifier.
 
         - `precedence: optional number`
 
@@ -5396,11 +5466,15 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -6316,11 +6390,15 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -7374,11 +7452,15 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -8254,11 +8336,15 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -8980,11 +9066,15 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -9482,11 +9572,15 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -9980,11 +10074,15 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -10478,11 +10576,15 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -10960,11 +11062,15 @@ Updates an Access application.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -11420,7 +11526,7 @@ Updates an Access application.
 
       The application type.
 
-  - `InfrastructureApplication object { target_criteria, type, id, 3 more }`
+  - `InfrastructureApplication object { target_criteria, type, id, 4 more }`
 
     - `target_criteria: array of object { port, protocol, target_attributes }`
 
@@ -11449,6 +11555,26 @@ Updates an Access application.
     - `aud: optional string`
 
       Audience tag.
+
+    - `mfa_config: optional object { allowed_authenticators, mfa_disabled, session_duration }`
+
+      Configures multi-factor authentication (MFA) settings for infrastructure applications.
+
+      - `allowed_authenticators: optional array of "piv_key" or "ssh_fido2_key"`
+
+        Lists the MFA methods that users can authenticate with. For infrastructure applications, supported values are `piv_key` and `ssh_fido2_key`.
+
+        - `"piv_key"`
+
+        - `"ssh_fido2_key"`
+
+      - `mfa_disabled: optional boolean`
+
+        Indicates whether to disable MFA for this resource. This option is available at the application and policy level.
+
+      - `session_duration: optional string`
+
+        Defines the duration of an MFA session. Must be in minutes (m) or hours (h). Minimum: 0m. Maximum: 720h (30 days). Examples: `5m` or `24h`.
 
     - `name: optional string`
 
@@ -11718,11 +11844,13 @@ Updates an Access application.
 
         Configures multi-factor authentication (MFA) settings for infrastructure applications.
 
-        - `allowed_authenticators: optional array of "piv_key"`
+        - `allowed_authenticators: optional array of "piv_key" or "ssh_fido2_key"`
 
-          Lists the MFA methods that users can authenticate with. For infrastructure applications, only `piv_key` is supported.
+          Lists the MFA methods that users can authenticate with. For infrastructure applications, supported values are `piv_key` and `ssh_fido2_key`.
 
           - `"piv_key"`
+
+          - `"ssh_fido2_key"`
 
         - `mfa_disabled: optional boolean`
 
@@ -12114,11 +12242,15 @@ Updates an Access application.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -12918,11 +13050,15 @@ Updates an Access application.
 
       Allows options preflight requests to bypass Access authentication and go directly to the origin. Cannot turn on if cors_headers is set.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -13698,11 +13834,15 @@ Updates an Access application.
 
       Allows options preflight requests to bypass Access authentication and go directly to the origin. Cannot turn on if cors_headers is set.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -14498,6 +14638,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "policies": [
       {
         "id": "f174e90a-fafe-4643-bbbc-4a0ed4fc8415",
+        "account_id": "023e105f4ecef8ad9ca31a8372d0c353",
         "approval_groups": [
           {
             "approvals_needed": 1,

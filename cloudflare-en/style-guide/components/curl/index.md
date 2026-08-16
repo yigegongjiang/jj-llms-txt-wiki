@@ -12,20 +12,22 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # CURL
 
-Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/curl/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/curl/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `CURL` component is used `40` times on `13` pages.
+The `CURL` component is used `46` times on `15` pages.
 
 See all examples of pages that use CURL
 
-Used **40** times.
+Used **46** times.
 
 **Pages**
 
+* [/ai-gateway/configuration/custom-domains/](https://developers.cloudflare.com/ai-gateway/configuration/custom-domains/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/configuration/custom-domains.mdx)
 * [/browser-run/cdp/session-management/](https://developers.cloudflare.com/browser-run/cdp/session-management/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/browser-run/cdp/session-management.mdx)
 * [/browser-run/features/live-view/](https://developers.cloudflare.com/browser-run/features/live-view/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/browser-run/features/live-view.mdx)
 * [/cloudflare-one/access-controls/ai-controls/mcp-portals/](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/mcp-portals/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/ai-controls/mcp-portals.mdx)
 * [/cloudflare-one/integrations/identity-providers/idp-federation/](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/idp-federation/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/integrations/identity-providers/idp-federation.mdx)
+* [/cloudflare-one/networks/routes/configure-initial-resolved-ips/](https://developers.cloudflare.com/cloudflare-one/networks/routes/configure-initial-resolved-ips/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/routes/configure-initial-resolved-ips.mdx)
 * [/data-localization/regional-services/ip-bindings/](https://developers.cloudflare.com/data-localization/regional-services/ip-bindings/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/data-localization/regional-services/ip-bindings.mdx)
 * [/magic-transit/network-health/run-endpoint-health-checks/](https://developers.cloudflare.com/magic-transit/network-health/run-endpoint-health-checks/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/magic-transit/network-health/run-endpoint-health-checks.mdx)
 * [/speed/optimization/content/shared-dictionaries/](https://developers.cloudflare.com/speed/optimization/content/shared-dictionaries/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/speed/optimization/content/shared-dictionaries.mdx)
@@ -124,11 +126,7 @@ URL query parameters to append to the request URL.
 
 **type:** `object`
 
-An object of Expressive Code props, the following props are available:
-
-* [Base Props ↗](https://expressive-code.com/key-features/code-component/#available-props)
-* [Line Marker Props ↗](https://expressive-code.com/key-features/text-markers/#props)
-* [Collapsible Sections Props ↗](https://expressive-code.com/plugins/collapsible-sections/#props)
+An object of Astro `Code` props. Refer to the [Astro Code component documentation ↗](https://docs.astro.build/en/reference/api-reference/#code-) for available props.
 
 Was this helpful?
 
@@ -136,8 +134,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/curl/#page","headline":"CURL · Cloudflare Style Guide","description":"Display formatted curl command examples.","url":"https://developers.cloudflare.com/style-guide/components/curl/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/curl/#page","headline":"CURL · Cloudflare Style Guide","description":"Display formatted curl command examples.","url":"https://developers.cloudflare.com/style-guide/components/curl/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

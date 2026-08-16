@@ -54,6 +54,10 @@ Control and interact with headless browser instances programmatically
 
 - [Stagehand](https://developers.cloudflare.com/browser-run/stagehand/index.md): Deploy a Stagehand server that uses Browser Run to provide browser automation capabilities to your agents.
 
+## Kitesurf
+
+- [Kitesurf](https://developers.cloudflare.com/browser-run/kitesurf/index.md): Use Kitesurf, Cloudflare's stateless, agent-first browser that runs entirely on Workers, with Browser Run for screenshots, HTML extraction, and automation.
+
 ## FAQ
 
 - [FAQ](https://developers.cloudflare.com/browser-run/faq/index.md): Find answers to frequently asked questions about Browser Run, including errors, troubleshooting, and session management.

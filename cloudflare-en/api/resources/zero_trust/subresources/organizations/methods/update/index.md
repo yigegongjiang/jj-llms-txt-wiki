@@ -76,9 +76,9 @@ Updates the configuration for your Zero Trust organization.
 
   Configures multi-factor authentication (MFA) settings for an organization.
 
-  - `allowed_authenticators: optional array of "totp" or "biometrics" or "security_key" or "piv_key"`
+  - `allowed_authenticators: optional array of "totp" or "biometrics" or "security_key" or 2 more`
 
-    Lists the MFA methods that users can authenticate with.
+    Lists the MFA methods that users can authenticate with. The `piv_key` and `ssh_fido2_key` values are supported only for infrastructure applications.
 
     - `"totp"`
 
@@ -87,6 +87,8 @@ Updates the configuration for your Zero Trust organization.
     - `"security_key"`
 
     - `"piv_key"`
+
+    - `"ssh_fido2_key"`
 
   - `amr_matching_session_duration: optional string`
 
@@ -156,7 +158,7 @@ Updates the configuration for your Zero Trust organization.
 
 - `mfa_required_for_all_apps: optional boolean`
 
-  Determines whether global MFA settings apply to applications by default. The organization must have MFA enabled with at least one authentication method and a session duration configured. Note: 'allowed_authenticators' cannot only contain 'piv_key' if the organization has any non-infrastructure applications because PIV keys are only compatible with infrastructure apps.
+  Determines whether global MFA settings apply to applications by default. The organization must have MFA enabled with at least one authentication method and a session duration configured. Note: 'allowed_authenticators' cannot contain only the infrastructure SSH authenticators ('piv_key' and 'ssh_fido2_key') if the organization has any non-infrastructure applications.
 
 - `name: optional string`
 
@@ -173,6 +175,10 @@ Updates the configuration for your Zero Trust organization.
 - `user_seat_expiration_inactive_time: optional string`
 
   The amount of time a user seat is inactive before it expires. When the user seat exceeds the set time of inactivity, the user is removed as an active seat and no longer counts against your Teams seat count.  Minimum value for this setting is 1 month (730h). Must be in the format `300ms` or `2h45m`. Valid time units are: `ns`, `us` (or `µs`), `ms`, `s`, `m`, `h`.
+
+- `warp_auth_non_browser_401: optional boolean`
+
+  When enabled, unsuccessful WARP authentication requests with a non-HTML Accept header return a 401 response instead of redirecting to the login page.
 
 - `warp_auth_session_duration: optional string`
 
@@ -272,9 +278,9 @@ Updates the configuration for your Zero Trust organization.
 
     Configures multi-factor authentication (MFA) settings for an organization.
 
-    - `allowed_authenticators: optional array of "totp" or "biometrics" or "security_key" or "piv_key"`
+    - `allowed_authenticators: optional array of "totp" or "biometrics" or "security_key" or 2 more`
 
-      Lists the MFA methods that users can authenticate with.
+      Lists the MFA methods that users can authenticate with. The `piv_key` and `ssh_fido2_key` values are supported only for infrastructure applications.
 
       - `"totp"`
 
@@ -283,6 +289,8 @@ Updates the configuration for your Zero Trust organization.
       - `"security_key"`
 
       - `"piv_key"`
+
+      - `"ssh_fido2_key"`
 
     - `amr_matching_session_duration: optional string`
 
@@ -352,7 +360,7 @@ Updates the configuration for your Zero Trust organization.
 
   - `mfa_required_for_all_apps: optional boolean`
 
-    Determines whether global MFA settings apply to applications by default. The organization must have MFA enabled with at least one authentication method and a session duration configured. Note: 'allowed_authenticators' cannot only contain 'piv_key' if the organization has any non-infrastructure applications because PIV keys are only compatible with infrastructure apps.
+    Determines whether global MFA settings apply to applications by default. The organization must have MFA enabled with at least one authentication method and a session duration configured. Note: 'allowed_authenticators' cannot contain only the infrastructure SSH authenticators ('piv_key' and 'ssh_fido2_key') if the organization has any non-infrastructure applications.
 
   - `name: optional string`
 
@@ -369,6 +377,10 @@ Updates the configuration for your Zero Trust organization.
   - `user_seat_expiration_inactive_time: optional string`
 
     The amount of time a user seat is inactive before it expires. When the user seat exceeds the set time of inactivity, the user is removed as an active seat and no longer counts against your Teams seat count.  Minimum value for this setting is 1 month (730h). Must be in the format `300ms` or `2h45m`. Valid time units are: `ns`, `us` (or `µs`), `ms`, `s`, `m`, `h`.
+
+  - `warp_auth_non_browser_401: optional boolean`
+
+    When enabled, unsuccessful WARP authentication requests with a non-HTML Accept header return a 401 response instead of redirecting to the login page.
 
   - `warp_auth_session_duration: optional string`
 
@@ -469,6 +481,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "ui_read_only_toggle_reason": "Temporarily turn off the UI read only lock to make a change via the UI",
     "updated_at": "2014-01-01T05:20:00.12345Z",
     "user_seat_expiration_inactive_time": "730h",
+    "warp_auth_non_browser_401": false,
     "warp_auth_session_duration": "24h"
   }
 }

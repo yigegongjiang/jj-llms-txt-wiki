@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/directory-listing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `DirectoryListing` component is used `595` times on `589` pages.
+The `DirectoryListing` component is used `597` times on `591` pages.
 
 See all examples of pages that use DirectoryListing
 
-Used **595** times.
+Used **597** times.
 
 **Pages**
 
@@ -44,6 +44,7 @@ Used **595** times.
 * [/agents/runtime/](https://developers.cloudflare.com/agents/runtime/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/index.mdx)
 * [/agents/runtime/lifecycle/](https://developers.cloudflare.com/agents/runtime/lifecycle/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/lifecycle/index.mdx)
 * [/agents/runtime/operations/](https://developers.cloudflare.com/agents/runtime/operations/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/index.mdx)
+* [/agents/runtime/operations/observability/](https://developers.cloudflare.com/agents/runtime/operations/observability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/observability/index.mdx)
 * [/agents/tools/](https://developers.cloudflare.com/agents/tools/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/index.mdx)
 * [/ai-crawl-control/configuration/](https://developers.cloudflare.com/ai-crawl-control/configuration/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-crawl-control/configuration/index.mdx)
 * [/ai-crawl-control/features/](https://developers.cloudflare.com/ai-crawl-control/features/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-crawl-control/features/index.mdx)
@@ -55,6 +56,7 @@ Used **595** times.
 * [/ai-gateway/observability/](https://developers.cloudflare.com/ai-gateway/observability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/observability/index.mdx)
 * [/ai-gateway/reference/](https://developers.cloudflare.com/ai-gateway/reference/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/reference/index.mdx)
 * [/ai-gateway/usage/providers/](https://developers.cloudflare.com/ai-gateway/usage/providers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/usage/providers/index.mdx)
+* [/ai-search/agent-sdks/](https://developers.cloudflare.com/ai-search/agent-sdks/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/index.mdx)
 * [/ai-search/api/](https://developers.cloudflare.com/ai-search/api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/api/index.mdx)
 * [/ai-search/api/instances/](https://developers.cloudflare.com/ai-search/api/instances/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/api/instances/index.mdx)
 * [/ai-search/api/items/](https://developers.cloudflare.com/ai-search/api/items/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/api/items/index.mdx)
@@ -380,11 +382,11 @@ Used **595** times.
 * [/queues/observability/](https://developers.cloudflare.com/queues/observability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/queues/observability/index.mdx)
 * [/queues/platform/](https://developers.cloudflare.com/queues/platform/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/queues/platform/index.mdx)
 * [/queues/reference/](https://developers.cloudflare.com/queues/reference/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/queues/reference/index.mdx)
+* [/r2-data-catalog/config-examples/](https://developers.cloudflare.com/r2-data-catalog/config-examples/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-data-catalog/config-examples/index.mdx)
+* [/r2-data-catalog/observability/](https://developers.cloudflare.com/r2-data-catalog/observability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-data-catalog/observability/index.mdx)
 * [/r2/api/s3/](https://developers.cloudflare.com/r2/api/s3/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/api/s3/index.mdx)
 * [/r2/api/workers/](https://developers.cloudflare.com/r2/api/workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/api/workers/index.mdx)
 * [/r2/buckets/](https://developers.cloudflare.com/r2/buckets/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/buckets/index.mdx)
-* [/r2/data-catalog/config-examples/](https://developers.cloudflare.com/r2/data-catalog/config-examples/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-catalog/config-examples/index.mdx)
-* [/r2/data-catalog/observability/](https://developers.cloudflare.com/r2/data-catalog/observability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-catalog/observability/index.mdx)
 * [/r2/examples/aws/](https://developers.cloudflare.com/r2/examples/aws/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/examples/aws/index.mdx)
 * [/r2/examples/](https://developers.cloudflare.com/r2/examples/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/examples/index.mdx)
 * [/r2/objects/](https://developers.cloudflare.com/r2/objects/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/objects/index.mdx)
@@ -687,7 +689,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/directory-listing/#page","headline":"Directory listing · Cloudflare Style Guide","description":"Auto-generate listings of child pages.","url":"https://developers.cloudflare.com/style-guide/components/directory-listing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

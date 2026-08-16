@@ -82,7 +82,7 @@ Updates a DLP entry.
 
   - `true`
 
-- `result: optional object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 4 more }  or 4 more`
+- `result: optional object { id, created_at, enabled, 6 more }  or object { id, created_at, enabled, 4 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
 
   - `CustomEntry object { id, created_at, enabled, 6 more }`
 
@@ -132,7 +132,7 @@ Updates a DLP entry.
 
       The optional description of the custom prompt topic entry.
 
-  - `PredefinedEntry object { id, confidence, enabled, 4 more }`
+  - `PredefinedEntry object { id, confidence, enabled, 5 more }`
 
     - `id: string`
 
@@ -153,6 +153,11 @@ Updates a DLP entry.
     - `type: "predefined"`
 
       - `"predefined"`
+
+    - `deprecated: optional boolean`
+
+      Whether this entry is deprecated for new use. This is computed from the static catalog and
+      emitted only when true.
 
     - `profile_id: optional string`
 

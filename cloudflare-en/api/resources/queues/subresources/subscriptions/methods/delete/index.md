@@ -70,7 +70,7 @@ Delete an existing event subscription
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -137,6 +137,18 @@ Delete an existing event subscription
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 

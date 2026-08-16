@@ -826,7 +826,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares \
 
 **put** `/accounts/{account_id}/shares/{share_id}`
 
-Updating is not immediate, an updated share object with a new status will be returned.
+Updates the share's display name and tags. This endpoint does **not**
+modify recipients or resources — those are managed via dedicated
+subresource endpoints:
+
+- **Recipients**: Use `POST /accounts/{account_id}/shares/{share_id}/recipients`
+  to add a single recipient, `PUT /accounts/{account_id}/shares/{share_id}/recipients`
+  to replace the full recipient list, or
+  `DELETE /accounts/{account_id}/shares/{share_id}/recipients/{recipient_id}`
+  to remove a recipient.
+- **Resources**: Use the share's resource subresource endpoints.
+
+Updating is not immediate; an updated share object with a new status
+will be returned.
 
 ### Path Parameters
 
@@ -1898,7 +1910,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID 
 
 **get** `/accounts/{account_id}/shares/{share_id}/recipients`
 
-List share recipients by share ID.
+List share recipients by share ID. Returns **all** recipients
+regardless of their `association_status` (associating, associated,
+disassociating, disassociated). Callers that want only "active"
+recipients must filter client-side on the `association_status` field.
 
 ### Path Parameters
 
@@ -1958,7 +1973,20 @@ List share recipients by share ID.
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 
@@ -2112,6 +2140,11 @@ Get share recipient by ID.
 
 - `result: optional object { id, account_id, association_status, 3 more }`
 
+  A recipient of a share. The `association_status` field tracks the
+  lifecycle of the shared resources in the recipient account. All
+  recipients are returned by the list endpoint regardless of status;
+  filter client-side if only active recipients are needed.
+
   - `id: string`
 
     Share Recipient identifier tag.
@@ -2122,7 +2155,20 @@ Get share recipient by ID.
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 
@@ -2203,7 +2249,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
 **post** `/accounts/{account_id}/shares/{share_id}/recipients`
 
-Adds a recipient to a resource share, granting them access to the shared resources.
+Adds a single recipient to an account-targeted resource share, granting
+them access to the shared resources. The recipient account must belong
+to the same organization as the share owner.
+
+To replace the entire recipient list in one call, use
+`PUT /accounts/{account_id}/shares/{share_id}/recipients` instead.
 
 ### Path Parameters
 
@@ -2250,6 +2301,11 @@ Adds a recipient to a resource share, granting them access to the shared resourc
 
 - `result: optional object { id, account_id, association_status, 3 more }`
 
+  A recipient of a share. The `association_status` field tracks the
+  lifecycle of the shared resources in the recipient account. All
+  recipients are returned by the list endpoint regardless of status;
+  filter client-side if only active recipients are needed.
+
   - `id: string`
 
     Share Recipient identifier tag.
@@ -2260,7 +2316,20 @@ Adds a recipient to a resource share, granting them access to the shared resourc
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 
@@ -2347,7 +2416,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
 **delete** `/accounts/{account_id}/shares/{share_id}/recipients/{recipient_id}`
 
-Deletion is not immediate, an updated share recipient object with a new status will be returned.
+Performs a **soft delete**: sets the recipient's
+`desired_association_status` to `disassociated`, which signals the
+background reconciliation workflow (Temporal) to remove the shared
+resources from the recipient account. The recipient record remains in
+the database for audit purposes and is still returned by
+`GET /accounts/{account_id}/shares/{share_id}/recipients` with its
+updated status.
+
+Resource access is not fully removed until the workflow completes and
+`current_association_status` transitions to `disassociated`. The
+recipient record itself is never physically deleted.
 
 ### Path Parameters
 
@@ -2383,6 +2462,11 @@ Deletion is not immediate, an updated share recipient object with a new status w
 
 - `result: optional object { id, account_id, association_status, 3 more }`
 
+  A recipient of a share. The `association_status` field tracks the
+  lifecycle of the shared resources in the recipient account. All
+  recipients are returned by the list endpoint regardless of status;
+  filter client-side if only active recipients are needed.
+
   - `id: string`
 
     Share Recipient identifier tag.
@@ -2393,7 +2477,20 @@ Deletion is not immediate, an updated share recipient object with a new status w
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 
@@ -2477,6 +2574,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
 - `RecipientListResponse object { id, account_id, association_status, 3 more }`
 
+  A recipient of a share. The `association_status` field tracks the
+  lifecycle of the shared resources in the recipient account. All
+  recipients are returned by the list endpoint regardless of status;
+  filter client-side if only active recipients are needed.
+
   - `id: string`
 
     Share Recipient identifier tag.
@@ -2487,7 +2589,20 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 
@@ -2527,6 +2642,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
 - `RecipientGetResponse object { id, account_id, association_status, 3 more }`
 
+  A recipient of a share. The `association_status` field tracks the
+  lifecycle of the shared resources in the recipient account. All
+  recipients are returned by the list endpoint regardless of status;
+  filter client-side if only active recipients are needed.
+
   - `id: string`
 
     Share Recipient identifier tag.
@@ -2537,7 +2657,20 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 
@@ -2577,6 +2710,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
 - `RecipientCreateResponse object { id, account_id, association_status, 3 more }`
 
+  A recipient of a share. The `association_status` field tracks the
+  lifecycle of the shared resources in the recipient account. All
+  recipients are returned by the list endpoint regardless of status;
+  filter client-side if only active recipients are needed.
+
   - `id: string`
 
     Share Recipient identifier tag.
@@ -2587,7 +2725,20 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 
@@ -2627,6 +2778,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
 - `RecipientDeleteResponse object { id, account_id, association_status, 3 more }`
 
+  A recipient of a share. The `association_status` field tracks the
+  lifecycle of the shared resources in the recipient account. All
+  recipients are returned by the list endpoint regardless of status;
+  filter client-side if only active recipients are needed.
+
   - `id: string`
 
     Share Recipient identifier tag.
@@ -2637,7 +2793,20 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/shares/$SHARE_ID/
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 

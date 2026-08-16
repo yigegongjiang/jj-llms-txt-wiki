@@ -18,6 +18,11 @@ This is a detailed changelog of every update to Browser Run (formerly Browser Re
 
 [Subscribe to RSS](https://developers.cloudflare.com/browser-run/changelog/index.xml)
 
+## 2026-07-28
+
+**Structured handoff for Human in the Loop**
+* [Human in the Loop](https://developers.cloudflare.com/browser-run/features/human-in-the-loop/) now supports structured handoff using Cloudflare-specific CDP commands. Your script calls `Cloudflare.handoff` with instructions for the human operator and waits for a `Cloudflare.handoffComplete` event, replacing the need to manually poll for completion. Refer to the [Human in the Loop documentation](https://developers.cloudflare.com/browser-run/features/human-in-the-loop/) for examples and best practices.
+
 ## 2026-07-07
 
 **New endpoint: /accessibilityTree**
@@ -283,7 +288,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/browser-run/changelog/#page","headline":"Changelog · Cloudflare Browser Run docs","description":"Review recent changes to Browser Run.","url":"https://developers.cloudflare.com/browser-run/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

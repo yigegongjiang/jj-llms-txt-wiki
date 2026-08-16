@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Custom Domains
 
-Last updated Jun 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Background
 
@@ -24,7 +24,7 @@ Custom Domains are recommended if you want to connect your Worker to the Interne
 
 Custom Domains can stack on top of each other. For example, if you have Worker A attached to `app.example.com` and Worker B attached to `api.example.com`, Worker A can call `fetch()` on `api.example.com` and invoke Worker B.
 
-![Custom Domains can stack on top of each other, like any external dependencies](https://developers.cloudflare.com/_astro/custom-domains-subrequest.C6c84jN5_1oQWRD.webp) 
+![Custom Domains can stack on top of each other, like any external dependencies](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=863,height=96,format=webp/_astro/custom-domains-subrequest.C6c84jN5.png) 
 
 Custom Domains can also be invoked within the same zone via `fetch()`, unlike Routes.
 
@@ -53,6 +53,12 @@ To set up a Custom Domain in the dashboard:
 5. Select **Add Custom Domain**.
 
 After you have added the domain or subdomain, Cloudflare will create a new DNS record for you. You can add multiple Custom Domains.
+
+### Require sign-in for a Custom Domain
+
+To require visitors to sign in before they can access a Custom Domain, use [Cloudflare Access](https://developers.cloudflare.com/workers/configuration/cloudflare-access/#protect-a-specific-hostname-custom-domain-or-path).
+
+You can protect a Custom Domain with hostname-based Access, or protect the Worker itself across its routes, Custom Domains, `workers.dev` hostname, and previews. For more information, refer to [Cloudflare Access](https://developers.cloudflare.com/workers/configuration/cloudflare-access/).
 
 ### Set up a Custom Domain in your Wrangler configuration file
 
@@ -119,9 +125,9 @@ If `worker-a` sends a fetch request to `worker-b`, the request will fail, becaus
 export default {
 	fetch(request) {
 		// This will fail
-		return fetch("https://shop.example.com")
-	}
-}
+		return fetch("https://shop.example.com");
+	},
+};
 ```
 
 However, if `worker-b` was instead set up to run on the Custom Domain `shop.example.com`, the fetch request would succeed.
@@ -130,7 +136,7 @@ However, if `worker-b` was instead set up to run on the Custom Domain `shop.exam
 
 Custom Domains do not support [wildcard DNS records](https://developers.cloudflare.com/dns/manage-dns-records/reference/wildcard-dns-records/). An incoming request must exactly match the domain or subdomain your Custom Domain is registered to. Other parts (path, query parameters) of the URL are not considered when executing this matching logic. For example, if you create a Custom Domain on `api.example.com` attached to your `api-gateway` Worker, a request to either `api.example.com/login` or `api.example.com/user` would invoke the same `api-gateway` Worker.
 
-![Custom Domains follow standard DNS ordering and matching logic](https://developers.cloudflare.com/_astro/custom-domains-api-gateway.DmeJZDoL_Z1d0vv1.webp) 
+![Custom Domains follow standard DNS ordering and matching logic](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=876,height=224,format=webp/_astro/custom-domains-api-gateway.DmeJZDoL.png) 
 
 ## Interaction with Routes
 
@@ -146,15 +152,15 @@ For example, consider the following workflow:
 ```js
 export default {
 	fetch(request) {
-		const url = new URL(request.url)
-		if(url.searchParams.get("auth") !== "SECRET_TOKEN") {
-			return new Response(null, { status: 401 })
+		const url = new URL(request.url);
+		if (url.searchParams.get("auth") !== "SECRET_TOKEN") {
+			return new Response(null, { status: 401 });
 		} else {
 			// This will invoke `api-worker`
-			return fetch(request)
+			return fetch(request);
 		}
-	}
-}
+	},
+};
 ```
 
 ## Certificates
@@ -230,8 +236,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/routing/custom-domains/#page","headline":"Custom Domains · Cloudflare Workers docs","description":"Connect a Cloudflare Worker to a domain or subdomain with automatic DNS and certificate management.","url":"https://developers.cloudflare.com/workers/configuration/routing/custom-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/routing/custom-domains/#page","headline":"Custom Domains · Cloudflare Workers docs","description":"Connect a Cloudflare Worker to a domain or subdomain with automatic DNS and certificate management.","url":"https://developers.cloudflare.com/workers/configuration/routing/custom-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

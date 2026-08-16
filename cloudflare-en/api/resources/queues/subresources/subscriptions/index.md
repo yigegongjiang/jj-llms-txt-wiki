@@ -98,7 +98,7 @@ Get a paginated list of event subscriptions with optional sorting and filtering
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -165,6 +165,18 @@ Get a paginated list of event subscriptions with optional sorting and filtering
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -332,7 +344,7 @@ Get details about an existing event subscription
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -399,6 +411,18 @@ Get details about an existing event subscription
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -503,7 +527,7 @@ Create a new event subscription for a queue
 
   Name of the subscription
 
-- `source: optional object { type }  or object { type }  or object { type }  or 5 more`
+- `source: optional object { type }  or object { type }  or object { type }  or 6 more`
 
   Source configuration for the subscription
 
@@ -570,6 +594,18 @@ Create a new event subscription for a queue
     - `worker_name: optional string`
 
       Name of the worker
+
+  - `MqEventSourceWorkersScript object { script_tag, type }`
+
+    - `script_tag: optional string`
+
+      Tag of the Worker script
+
+    - `type: optional "workers.script"`
+
+      Type of source
+
+      - `"workers.script"`
 
   - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -639,7 +675,7 @@ Create a new event subscription for a queue
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -706,6 +742,18 @@ Create a new event subscription for a queue
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -872,7 +920,7 @@ Update an existing event subscription
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -939,6 +987,18 @@ Update an existing event subscription
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -1078,7 +1138,7 @@ Delete an existing event subscription
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -1145,6 +1205,18 @@ Delete an existing event subscription
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -1254,7 +1326,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -1321,6 +1393,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -1376,7 +1460,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -1443,6 +1527,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -1498,7 +1594,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -1565,6 +1661,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -1620,7 +1728,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -1687,6 +1795,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -1742,7 +1862,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -1809,6 +1929,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 

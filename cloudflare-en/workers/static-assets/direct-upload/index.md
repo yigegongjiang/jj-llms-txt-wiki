@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Direct Uploads
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/static-assets/direct-upload/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/static-assets/direct-upload/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -341,7 +341,7 @@ function generateWorkerScript(exampleFile) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    
+
     // Serve a simple index page at the root
     if (url.pathname === '/') {
       return new Response(
@@ -369,7 +369,7 @@ export default {
         }
       );
     }
-    
+
     // Serve static assets for all other paths
     return env.ASSETS.fetch(request);
   }
@@ -594,11 +594,11 @@ main();
 
 /**
  * Create a Worker that serves static assets
- * 
+ *
  * This example demonstrates how to:
  * - Upload static assets to Cloudflare Workers
  * - Create and deploy a Worker that serves those assets
- * 
+ *
  * Docs:
  * - https://developers.cloudflare.com/workers/static-assets/direct-upload
  *
@@ -609,7 +609,7 @@ main();
  *
  * Environment variables:
  *   - CLOUDFLARE_API_TOKEN (required)
- *   - CLOUDFLARE_ACCOUNT_ID (required) 
+ *   - CLOUDFLARE_ACCOUNT_ID (required)
  *   - ASSETS_DIRECTORY (required)
  *   - CLOUDFLARE_SUBDOMAIN (optional)
  *
@@ -691,11 +691,11 @@ const client = new Cloudflare({
  */
 function createManifest(directory: string): AssetManifest {
   const manifest: AssetManifest = {};
-  
+
   function processDirectory(currentDir: string, basePath = ''): void {
     try {
       const entries = fs.readdirSync(currentDir, { withFileTypes: true });
-      
+
       for (const entry of entries) {
         const fullPath = path.join(currentDir, entry.name);
         const relativePath = path.join(basePath, entry.name);
@@ -716,12 +716,12 @@ function createManifest(directory: string): AssetManifest {
 
             // Normalize path separators to forward slashes
             const manifestPath = `/${relativePath.replace(/\\/g, '/')}`;
-            
+
             manifest[manifestPath] = {
               hash,
               size: fileContent.length,
             };
-            
+
             console.log(`Added to manifest: ${manifestPath} (${fileContent.length} bytes)`);
           } catch (error) {
             console.warn(`Failed to process file ${fullPath}:`, error);
@@ -732,13 +732,13 @@ function createManifest(directory: string): AssetManifest {
       throw new Error(`Failed to read directory ${currentDir}: ${error}`);
     }
   }
-  
+
   processDirectory(directory);
-  
+
   if (Object.keys(manifest).length === 0) {
     throw new Error(`No files found in assets directory: ${directory}`);
   }
-  
+
   console.log(`Created manifest with ${Object.keys(manifest).length} files`);
   return manifest;
 }
@@ -751,7 +751,7 @@ function generateWorkerScript(exampleFile: string): string {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    
+
     // Serve a simple index page at the root
     if (url.pathname === '/') {
       return new Response(
@@ -779,7 +779,7 @@ export default {
         }
       );
     }
-    
+
     // Serve static assets for all other paths
     return env.ASSETS.fetch(request);
   }
@@ -796,23 +796,23 @@ async function createUploadPayloads(
   assetsDirectory: string
 ): Promise<UploadPayload[]> {
   const payloads: UploadPayload[] = [];
-  
+
   for (const bucket of buckets) {
     const payload: UploadPayload = {};
-    
+
     for (const hash of bucket) {
       // Find the file path for this hash
       const manifestEntry = Object.entries(manifest).find(
         ([_, data]) => data.hash === hash
       );
-      
+
       if (!manifestEntry) {
         throw new Error(`Could not find file for hash: ${hash}`);
       }
-      
+
       const [relativePath] = manifestEntry;
       const fullPath = path.join(assetsDirectory, relativePath);
-      
+
       try {
         const fileContent = await readFile(fullPath);
         payload[hash] = fileContent.toString('base64');
@@ -821,10 +821,10 @@ async function createUploadPayloads(
         throw new Error(`Failed to read file ${fullPath}: ${error}`);
       }
     }
-    
+
     payloads.push(payload);
   }
-  
+
   return payloads;
 }
 
@@ -837,13 +837,13 @@ async function uploadAssets(
   accountId: string
 ): Promise<string> {
   let completionJwt: string | undefined;
-  
+
   console.log(`Uploading ${payloads.length} payload(s)...`);
-  
+
   for (let i = 0; i < payloads.length; i++) {
     const payload = payloads[i]!;
     console.log(`Uploading payload ${i + 1}/${payloads.length}...`);
-    
+
     try {
       const response = await client.workers.assets.upload.create(
         {
@@ -855,7 +855,7 @@ async function uploadAssets(
           headers: { Authorization: `Bearer ${uploadJwt}` },
         }
       );
-      
+
       if (response?.jwt) {
         completionJwt = response.jwt;
       }
@@ -863,11 +863,11 @@ async function uploadAssets(
       throw new Error(`Failed to upload payload ${i + 1}: ${error}`);
     }
   }
-  
+
   if (!completionJwt) {
     throw new Error('Upload completed but no completion JWT received');
   }
-  
+
   console.log('✅ All assets uploaded successfully');
   return completionJwt;
 }
@@ -876,13 +876,13 @@ async function main(): Promise<void> {
   try {
     console.log('🚀 Starting Worker creation and deployment with static assets...');
     console.log(`📁 Assets directory: ${config.assetsDirectory}`);
-    
+
     console.log('📝 Creating asset manifest...');
     const manifest = createManifest(config.assetsDirectory);
     const exampleFile = Object.keys(manifest)[0]?.replace(/^\//, '') || 'file.txt';
 
     const scriptContent = generateWorkerScript(exampleFile);
-    
+
     let worker;
     try {
       worker = await client.workers.beta.workers.get(config.workerName, {
@@ -906,7 +906,7 @@ async function main(): Promise<void> {
 
     console.log(`⚙️  Worker id: ${worker.id}`);
     console.log('🔄 Starting asset upload session...');
-    
+
     const uploadResponse = await client.workers.scripts.assets.upload.create(
       config.workerName,
       {
@@ -914,15 +914,15 @@ async function main(): Promise<void> {
         manifest,
       }
     );
-    
+
     const { buckets, jwt: uploadJwt } = uploadResponse;
-    
+
     if (!uploadJwt || !buckets) {
       throw new Error('Failed to start asset upload session');
     }
-    
+
     let completionJwt: string;
-    
+
     if (buckets.length === 0) {
       console.log('✅ No new assets to upload!');
       // Use the initial upload JWT as completion JWT when no uploads are needed
@@ -933,7 +933,7 @@ async function main(): Promise<void> {
         manifest,
         config.assetsDirectory
       );
-      
+
       completionJwt = await uploadAssets(
         payloads,
         uploadJwt,
@@ -965,9 +965,9 @@ async function main(): Promise<void> {
         },
       ],
     });
-    
+
     console.log('🚚 Creating Worker deployment...');
-    
+
     // Create a deployment and point all traffic to the version we created
     await client.workers.scripts.deployments.create(config.workerName, {
       account_id: config.accountId,
@@ -981,7 +981,7 @@ async function main(): Promise<void> {
     });
 
     console.log('✅ Deployment successful!');
-    
+
     if (config.subdomain) {
       console.log(`
 🌍 Your Worker is live!
@@ -1009,8 +1009,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/direct-upload/#page","headline":"Direct Uploads · Cloudflare Workers docs","description":"Upload assets through the Workers API.","url":"https://developers.cloudflare.com/workers/static-assets/direct-upload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/direct-upload/#page","headline":"Direct Uploads · Cloudflare Workers docs","description":"Upload assets through the Workers API.","url":"https://developers.cloudflare.com/workers/static-assets/direct-upload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

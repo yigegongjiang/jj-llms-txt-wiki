@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/targetIndustries/catalog`
 
-List all predefined target industries from the industry map catalog.
+Lists all target industries from industry map catalog
 
 ### Path Parameters
 

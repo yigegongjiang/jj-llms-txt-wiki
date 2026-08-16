@@ -4,7 +4,7 @@
 
 **post** `/accounts/{account_id}/cloudforce-one/events/event_tag/{event_id}/create`
 
-Add one or more tags to an event.
+Adds a tag to a threat event in Cloudforce One for classification and filtering.
 
 ### Path Parameters
 
@@ -56,7 +56,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/event_tag/{event_id}`
 
-Remove one or more tags from an event.
+Removes a tag from a threat event in Cloudforce One.
 
 ### Path Parameters
 

@@ -64,6 +64,10 @@ Deletes a service token.
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
 
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
+
   - `expires_at: optional string`
 
   - `name: optional string`
@@ -108,6 +112,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "client_id": "88bf3b6d86161464f6509f7219099e57.access.example.com",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "expires_at": "2014-01-01T05:20:00.12345Z",
     "last_seen_at": "2014-01-01T05:20:00.12345Z",
     "name": "CI/CD token",

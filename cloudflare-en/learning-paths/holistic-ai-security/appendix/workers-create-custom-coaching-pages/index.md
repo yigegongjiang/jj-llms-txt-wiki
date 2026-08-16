@@ -210,7 +210,7 @@ We encourage you to use our officially approved and secure solution, the
 
 If successful, your custom user coaching page will look like the image below. It will appear anytime a user attempts to access an unapproved AI tool.
 
-![Example of a custom coaching page utilizing the code example above.](https://developers.cloudflare.com/_astro/custom-coaching-page.BN8XQVn6_ZKoGWg.webp)
+![Example of a custom coaching page utilizing the code example above.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=623,height=557,format=webp/_astro/custom-coaching-page.BN8XQVn6.png)
 
 Was this helpful?
 
@@ -218,7 +218,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/#page","headline":"Use Cloudflare Workers to create custom user coaching pages · Cloudflare Learning Paths","description":"Build custom user coaching pages with Workers.","url":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

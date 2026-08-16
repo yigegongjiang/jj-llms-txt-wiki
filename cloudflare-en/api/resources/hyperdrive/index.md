@@ -268,6 +268,7 @@
 
     Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
     If not specified, defaults to 20 for free tier and 60 for paid tier.
+    Certain Cloudflare-managed origins may be permitted a higher limit.
     Contact Cloudflare if you need a higher limit.
 
   - `restarted_on: optional string`
@@ -482,6 +483,7 @@ Returns a list of Hyperdrives.
 
     Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
     If not specified, defaults to 20 for free tier and 60 for paid tier.
+    Certain Cloudflare-managed origins may be permitted a higher limit.
     Contact Cloudflare if you need a higher limit.
 
   - `restarted_on: optional string`
@@ -778,6 +780,7 @@ Returns the specified Hyperdrive configuration.
 
     Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
     If not specified, defaults to 20 for free tier and 60 for paid tier.
+    Certain Cloudflare-managed origins may be permitted a higher limit.
     Contact Cloudflare if you need a higher limit.
 
   - `restarted_on: optional string`
@@ -1008,6 +1011,7 @@ Creates and returns a new Hyperdrive configuration.
 
   Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
   If not specified, defaults to 20 for free tier and 60 for paid tier.
+  Certain Cloudflare-managed origins may be permitted a higher limit.
   Contact Cloudflare if you need a higher limit.
 
 ### Returns
@@ -1194,6 +1198,7 @@ Creates and returns a new Hyperdrive configuration.
 
     Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
     If not specified, defaults to 20 for free tier and 60 for paid tier.
+    Certain Cloudflare-managed origins may be permitted a higher limit.
     Contact Cloudflare if you need a higher limit.
 
   - `restarted_on: optional string`
@@ -1277,11 +1282,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/hyperdrive/config
 }
 ```
 
-## Update Hyperdrive
+## Replace Hyperdrive
 
 **put** `/accounts/{account_id}/hyperdrive/configs/{hyperdrive_id}`
 
-Updates and returns the specified Hyperdrive configuration.
+Replaces and returns the specified Hyperdrive configuration. The request must include the name and complete origin connection details. Omitted caching settings are reset to their defaults, while omitted mTLS settings and origin connection limits are preserved. Use the update operation to modify only selected fields.
 
 ### Path Parameters
 
@@ -1441,6 +1446,7 @@ Updates and returns the specified Hyperdrive configuration.
 
   Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
   If not specified, defaults to 20 for free tier and 60 for paid tier.
+  Certain Cloudflare-managed origins may be permitted a higher limit.
   Contact Cloudflare if you need a higher limit.
 
 ### Returns
@@ -1627,6 +1633,7 @@ Updates and returns the specified Hyperdrive configuration.
 
     Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
     If not specified, defaults to 20 for free tier and 60 for paid tier.
+    Certain Cloudflare-managed origins may be permitted a higher limit.
     Contact Cloudflare if you need a higher limit.
 
   - `restarted_on: optional string`
@@ -1711,11 +1718,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/hyperdrive/config
 }
 ```
 
-## Patch Hyperdrive
+## Update Hyperdrive
 
 **patch** `/accounts/{account_id}/hyperdrive/configs/{hyperdrive_id}`
 
-Patches and returns the specified Hyperdrive configuration. Custom caching settings are not kept if caching is disabled.
+Updates and returns the specified fields of the Hyperdrive configuration. Custom caching settings are not kept if caching is disabled.
 
 ### Path Parameters
 
@@ -1837,6 +1844,7 @@ Patches and returns the specified Hyperdrive configuration. Custom caching setti
 
   Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
   If not specified, defaults to 20 for free tier and 60 for paid tier.
+  Certain Cloudflare-managed origins may be permitted a higher limit.
   Contact Cloudflare if you need a higher limit.
 
 ### Returns
@@ -2023,6 +2031,7 @@ Patches and returns the specified Hyperdrive configuration. Custom caching setti
 
     Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
     If not specified, defaults to 20 for free tier and 60 for paid tier.
+    Certain Cloudflare-managed origins may be permitted a higher limit.
     Contact Cloudflare if you need a higher limit.
 
   - `restarted_on: optional string`

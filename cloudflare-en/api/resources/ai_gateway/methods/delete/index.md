@@ -14,7 +14,7 @@ Deletes an AI Gateway dataset.
 
 ### Returns
 
-- `result: object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `result: object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -250,6 +250,8 @@ Deletes an AI Gateway dataset.
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -366,11 +368,13 @@ Deletes an AI Gateway dataset.
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
@@ -440,6 +444,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
       }
     },
     "is_default": true,
+    "log_classification": true,
     "log_management": 10000,
     "log_management_strategy": "STOP_INSERTING",
     "logpush": true,

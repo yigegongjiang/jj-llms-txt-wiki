@@ -94,7 +94,7 @@ In your project root, create a Wrangler configuration file with the following co
 		"name": "my-docusaurus-app",  
 		// Update to today's date  
 		// Set this to today's date  
-		"compatibility_date": "2026-07-28",  
+		"compatibility_date": "2026-08-14",  
 		"assets": {  
 			"directory": "./build"  
 		}  
@@ -103,7 +103,7 @@ In your project root, create a Wrangler configuration file with the following co
 ```toml  
 name = "my-docusaurus-app"  
 # Set this to today's date  
-compatibility_date = "2026-07-28"  
+compatibility_date = "2026-08-14"  
 [assets]  
 directory = "./build"  
 ```  
@@ -149,7 +149,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/#page","headline":"Docusaurus · Cloudflare Workers docs","description":"Create a Docusaurus application and deploy it to Cloudflare Workers with Workers Assets.","url":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["ssg"]}

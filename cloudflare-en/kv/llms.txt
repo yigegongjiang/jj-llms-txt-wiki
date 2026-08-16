@@ -66,6 +66,7 @@ Global, low-latency, key-value data storage
 
 ## reference
 
+- [Data location](https://developers.cloudflare.com/kv/reference/data-location/index.md)
 - [Data security](https://developers.cloudflare.com/kv/reference/data-security/index.md): Workers KV encryption at rest, encryption in transit, and Cloudflare compliance certifications.
 - [Environments](https://developers.cloudflare.com/kv/reference/environments/index.md): Bind different Workers KV namespaces to the same Worker across staging and production environments.
 - [FAQ](https://developers.cloudflare.com/kv/reference/faq/index.md): Frequently asked questions about Workers KV, including consistency, rate limits, and access methods.

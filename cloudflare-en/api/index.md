@@ -88,6 +88,10 @@
 
 - [Speed Settings](/api/resources/accounts/subresources/speed_settings/index.md)
 
+  - [Transformations](/api/resources/accounts/subresources/speed_settings/subresources/transformations/index.md)
+
+    - [Get](/api/resources/accounts/subresources/speed_settings/subresources/transformations/methods/get/index.md)
+
 ## [Organizations](/api/resources/organizations/index.md)
 
 - [List](/api/resources/organizations/methods/list/index.md)
@@ -273,6 +277,18 @@
   - [Edit](/api/resources/zones/subresources/settings/methods/edit/index.md)
 
   - [Bulk Edit](/api/resources/zones/subresources/settings/methods/bulk_edit/index.md)
+
+- [Transformations Allowed Origins](/api/resources/zones/subresources/transformations_allowed_origins/index.md)
+
+  - [Get](/api/resources/zones/subresources/transformations_allowed_origins/methods/get/index.md)
+
+  - [Edit](/api/resources/zones/subresources/transformations_allowed_origins/methods/edit/index.md)
+
+- [Transformations C2pa](/api/resources/zones/subresources/transformations_c2pa/index.md)
+
+  - [Get](/api/resources/zones/subresources/transformations_c2pa/methods/get/index.md)
+
+  - [Edit](/api/resources/zones/subresources/transformations_c2pa/methods/edit/index.md)
 
 - [Environments](/api/resources/zones/subresources/environments/index.md)
 
@@ -672,6 +688,10 @@
 
     - [Delete](/api/resources/custom_hostnames/subresources/certificate_pack/subresources/certificates/methods/delete/index.md)
 
+- [Quota](/api/resources/custom_hostnames/subresources/quota/index.md)
+
+  - [Get](/api/resources/custom_hostnames/subresources/quota/methods/get/index.md)
+
 ## [Account Custom Nameservers](/api/resources/custom_nameservers/index.md)
 
 - [Get](/api/resources/custom_nameservers/methods/get/index.md)
@@ -725,6 +745,10 @@
   - [Edit](/api/resources/dns/subresources/dnssec/methods/edit/index.md)
 
   - [Delete](/api/resources/dns/subresources/dnssec/methods/delete/index.md)
+
+  - [Zsk](/api/resources/dns/subresources/dnssec/subresources/zsk/index.md)
+
+    - [List](/api/resources/dns/subresources/dnssec/subresources/zsk/methods/list/index.md)
 
 - [Records](/api/resources/dns/subresources/records/index.md)
 
@@ -1324,6 +1348,8 @@
 
     - [Update](/api/resources/logs/subresources/log_explorer/subresources/datasets/methods/update/index.md)
 
+    - [Delete](/api/resources/logs/subresources/log_explorer/subresources/datasets/methods/delete/index.md)
+
     - [Available](/api/resources/logs/subresources/log_explorer/subresources/datasets/subresources/available/index.md)
 
       - [List](/api/resources/logs/subresources/log_explorer/subresources/datasets/subresources/available/methods/list/index.md)
@@ -1818,6 +1844,10 @@
 
   - [Bulk Push](/api/resources/queues/subresources/messages/methods/bulk_push/index.md)
 
+  - [Peek](/api/resources/queues/subresources/messages/methods/peek/index.md)
+
+  - [Purge](/api/resources/queues/subresources/messages/methods/purge/index.md)
+
 - [Purge](/api/resources/queues/subresources/purge/index.md)
 
   - [Status](/api/resources/queues/subresources/purge/methods/status/index.md)
@@ -2170,6 +2200,8 @@
 
   - [Delete](/api/resources/addressing/subresources/prefixes/methods/delete/index.md)
 
+  - [Validate](/api/resources/addressing/subresources/prefixes/methods/validate/index.md)
+
   - [Service Bindings](/api/resources/addressing/subresources/prefixes/subresources/service_bindings/index.md)
 
     - [List](/api/resources/addressing/subresources/prefixes/subresources/service_bindings/methods/list/index.md)
@@ -2243,6 +2275,12 @@
   - [Paygo](/api/resources/billing/subresources/usage/methods/paygo/index.md)
 
   - [Get](/api/resources/billing/subresources/usage/methods/get/index.md)
+
+  - [Get Account Usage Info V1](/api/resources/billing/subresources/usage/methods/get_account_usage_info_v1/index.md)
+
+  - [Get Account Usage V1](/api/resources/billing/subresources/usage/methods/get_account_usage_v1/index.md)
+
+  - [Get Account Usage V2](/api/resources/billing/subresources/usage/methods/get_account_usage_v2/index.md)
 
 ## [Brand Protection](/api/resources/brand_protection/index.md)
 
@@ -2406,6 +2444,10 @@
 
   - [Get](/api/resources/intel/subresources/whois/methods/get/index.md)
 
+- [URLs](/api/resources/intel/subresources/urls/index.md)
+
+  - [Get](/api/resources/intel/subresources/urls/methods/get/index.md)
+
 - [Indicator Feeds](/api/resources/intel/subresources/indicator_feeds/index.md)
 
   - [List](/api/resources/intel/subresources/indicator_feeds/methods/list/index.md)
@@ -2434,6 +2476,24 @@
 
   - [List](/api/resources/intel/subresources/sinkholes/methods/list/index.md)
 
+  - [Get](/api/resources/intel/subresources/sinkholes/methods/get/index.md)
+
+  - [Create](/api/resources/intel/subresources/sinkholes/methods/create/index.md)
+
+  - [Update](/api/resources/intel/subresources/sinkholes/methods/update/index.md)
+
+  - [Delete](/api/resources/intel/subresources/sinkholes/methods/delete/index.md)
+
+  - [Ingresses](/api/resources/intel/subresources/sinkholes/subresources/ingresses/index.md)
+
+    - [Create](/api/resources/intel/subresources/sinkholes/subresources/ingresses/methods/create/index.md)
+
+    - [Get](/api/resources/intel/subresources/sinkholes/subresources/ingresses/methods/get/index.md)
+
+    - [Update](/api/resources/intel/subresources/sinkholes/subresources/ingresses/methods/update/index.md)
+
+    - [Delete](/api/resources/intel/subresources/sinkholes/subresources/ingresses/methods/delete/index.md)
+
 - [Attack Surface Report](/api/resources/intel/subresources/attack_surface_report/index.md)
 
   - [Issue Types](/api/resources/intel/subresources/attack_surface_report/subresources/issue_types/index.md)
@@ -2449,8 +2509,6 @@
     - [Severity](/api/resources/intel/subresources/attack_surface_report/subresources/issues/methods/severity/index.md)
 
     - [Type](/api/resources/intel/subresources/attack_surface_report/subresources/issues/methods/type/index.md)
-
-    - [Dismiss](/api/resources/intel/subresources/attack_surface_report/subresources/issues/methods/dismiss/index.md)
 
 ## [Magic Transit](/api/resources/magic_transit/index.md)
 
@@ -2974,6 +3032,8 @@
 
   - [Get](/api/resources/pages/subresources/projects/methods/get/index.md)
 
+  - [Get Upload Token](/api/resources/pages/subresources/projects/methods/get_upload_token/index.md)
+
   - [Create](/api/resources/pages/subresources/projects/methods/create/index.md)
 
   - [Edit](/api/resources/pages/subresources/projects/methods/edit/index.md)
@@ -3002,6 +3062,12 @@
 
         - [Get](/api/resources/pages/subresources/projects/subresources/deployments/subresources/history/subresources/logs/methods/get/index.md)
 
+    - [Tails](/api/resources/pages/subresources/projects/subresources/deployments/subresources/tails/index.md)
+
+      - [Create](/api/resources/pages/subresources/projects/subresources/deployments/subresources/tails/methods/create/index.md)
+
+      - [Delete](/api/resources/pages/subresources/projects/subresources/deployments/subresources/tails/methods/delete/index.md)
+
   - [Domains](/api/resources/pages/subresources/projects/subresources/domains/index.md)
 
     - [List](/api/resources/pages/subresources/projects/subresources/domains/methods/list/index.md)
@@ -3013,6 +3079,14 @@
     - [Edit](/api/resources/pages/subresources/projects/subresources/domains/methods/edit/index.md)
 
     - [Delete](/api/resources/pages/subresources/projects/subresources/domains/methods/delete/index.md)
+
+- [Assets](/api/resources/pages/subresources/assets/index.md)
+
+  - [Upsert Hashes](/api/resources/pages/subresources/assets/methods/upsert_hashes/index.md)
+
+  - [Check Missing](/api/resources/pages/subresources/assets/methods/check_missing/index.md)
+
+  - [Upload](/api/resources/pages/subresources/assets/methods/upload/index.md)
 
 ## [Registrar](/api/resources/registrar/index.md)
 
@@ -4750,6 +4824,12 @@
 
       - [Update](/api/resources/zero_trust/subresources/networks/subresources/subnets/subresources/cloudflare_source/methods/update/index.md)
 
+    - [Initial Resolved IP](/api/resources/zero_trust/subresources/networks/subresources/subnets/subresources/initial_resolved_ip/index.md)
+
+      - [Get](/api/resources/zero_trust/subresources/networks/subresources/subnets/subresources/initial_resolved_ip/methods/get/index.md)
+
+      - [Update](/api/resources/zero_trust/subresources/networks/subresources/subnets/subresources/initial_resolved_ip/methods/update/index.md)
+
   - [Hostname Routes](/api/resources/zero_trust/subresources/networks/subresources/hostname_routes/index.md)
 
     - [List](/api/resources/zero_trust/subresources/networks/subresources/hostname_routes/methods/list/index.md)
@@ -5117,6 +5197,14 @@
     - [Ases](/api/resources/radar/subresources/bgp/subresources/routes/methods/ases/index.md)
 
     - [Realtime](/api/resources/radar/subresources/bgp/subresources/routes/methods/realtime/index.md)
+
+    - [Upstreams](/api/resources/radar/subresources/bgp/subresources/routes/subresources/upstreams/index.md)
+
+      - [Timeseries](/api/resources/radar/subresources/bgp/subresources/routes/subresources/upstreams/methods/timeseries/index.md)
+
+    - [Paths](/api/resources/radar/subresources/bgp/subresources/routes/subresources/paths/index.md)
+
+      - [List](/api/resources/radar/subresources/bgp/subresources/routes/subresources/paths/methods/list/index.md)
 
   - [IPs](/api/resources/radar/subresources/bgp/subresources/ips/index.md)
 
@@ -5802,6 +5890,12 @@
 
 - [Update](/api/resources/fraud/methods/update/index.md)
 
+## [Precursor](/api/resources/precursor/index.md)
+
+- [Get](/api/resources/precursor/methods/get/index.md)
+
+- [Update](/api/resources/precursor/methods/update/index.md)
+
 ## [Origin Post Quantum Encryption](/api/resources/origin_post_quantum_encryption/index.md)
 
 - [Get](/api/resources/origin_post_quantum_encryption/methods/get/index.md)
@@ -5901,6 +5995,8 @@
 - [Settings](/api/resources/hostnames/subresources/settings/index.md)
 
   - [TLS](/api/resources/hostnames/subresources/settings/subresources/tls/index.md)
+
+    - [List](/api/resources/hostnames/subresources/settings/subresources/tls/methods/list/index.md)
 
     - [Get](/api/resources/hostnames/subresources/settings/subresources/tls/methods/get/index.md)
 

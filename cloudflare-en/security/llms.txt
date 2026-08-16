@@ -31,7 +31,7 @@ Documentation for the Security dashboard with an updated user interface.
 - [Define security protections](https://developers.cloudflare.com/security/web-assets/define-security-protections/index.md): Use Web Assets operations and labels with Cloudflare detections, then create rules to act on risky traffic.
 - [Get started](https://developers.cloudflare.com/security/web-assets/get-started/index.md): Use Web Assets to review operations, labels, matched traffic, learned schemas, and risks.
 - [Label operations](https://developers.cloudflare.com/security/web-assets/label-operations/index.md): Use labels to describe the application use case for Web Assets operations.
-- [Manage operations](https://developers.cloudflare.com/security/web-assets/manage-operations/index.md): Add, review, refine, and delete HTTP request operations in Web Assets.
+- [Manage operations](https://developers.cloudflare.com/security/web-assets/manage-operations/index.md): Add, promote, review, refine, and delete HTTP request operations in Web Assets.
 
 ## Security rules
 

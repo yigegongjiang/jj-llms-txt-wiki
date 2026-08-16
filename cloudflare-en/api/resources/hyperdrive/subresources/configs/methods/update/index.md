@@ -1,8 +1,8 @@
-## Update Hyperdrive
+## Replace Hyperdrive
 
 **put** `/accounts/{account_id}/hyperdrive/configs/{hyperdrive_id}`
 
-Updates and returns the specified Hyperdrive configuration.
+Replaces and returns the specified Hyperdrive configuration. The request must include the name and complete origin connection details. Omitted caching settings are reset to their defaults, while omitted mTLS settings and origin connection limits are preserved. Use the update operation to modify only selected fields.
 
 ### Path Parameters
 
@@ -162,6 +162,7 @@ Updates and returns the specified Hyperdrive configuration.
 
   Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
   If not specified, defaults to 20 for free tier and 60 for paid tier.
+  Certain Cloudflare-managed origins may be permitted a higher limit.
   Contact Cloudflare if you need a higher limit.
 
 ### Returns
@@ -348,6 +349,7 @@ Updates and returns the specified Hyperdrive configuration.
 
     Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts.
     If not specified, defaults to 20 for free tier and 60 for paid tier.
+    Certain Cloudflare-managed origins may be permitted a higher limit.
     Contact Cloudflare if you need a higher limit.
 
   - `restarted_on: optional string`

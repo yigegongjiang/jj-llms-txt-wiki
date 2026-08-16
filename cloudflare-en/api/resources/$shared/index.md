@@ -132,7 +132,7 @@
 
     - `"cloudflare"`
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -151,10 +151,6 @@
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 

@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/{event_id}/raw/{raw_id}`
 
-Retrieve raw data for a specific event.
+Retrieves raw threat event data for a specific event in Cloudforce One.
 
 ### Path Parameters
 
@@ -58,7 +58,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/{event_id}/raw/{raw_id}`
 
-Update raw data for a specific event.
+Partially updates raw threat event data in Cloudforce One, modifying specific fields of the event.
 
 ### Path Parameters
 

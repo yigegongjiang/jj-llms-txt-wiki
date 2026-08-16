@@ -46,7 +46,7 @@ Retrieves the full, untruncated output for a specific step on a workflow instanc
 
   - `message: string`
 
-- `result: object { error, status, output }`
+- `result: object { error, status, event_type, output }`
 
   - `error: object { message, name }`
 
@@ -75,6 +75,10 @@ Retrieves the full, untruncated output for a specific step on a workflow instanc
     - `"waiting"`
 
     - `"rollingBack"`
+
+  - `event_type: optional string`
+
+    The event type the step is waiting on, as supplied to step.waitForEvent. Only present when type='waitForEvent'.
 
   - `output: optional unknown`
 
@@ -127,6 +131,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows/$WORKFL
       "name": "name"
     },
     "status": "queued",
+    "event_type": "event_type",
     "output": {}
   },
   "success": true,

@@ -16,6 +16,24 @@ Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 This release notes section covers regular updates and minor fixes. For major feature releases or significant updates, see the [changelog](https://developers.cloudflare.com/changelog).
 
+## 2026-08-06
+
+**Custom domains, Cloudflare Access, and namespace public endpoints**
+
+An AI Search [public endpoint](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/) can now be served from a hostname that you own, such as `https://search.example.com/search`. Because a [custom domain](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/custom-domains/) routes through your own zone, you can protect the endpoint with [Cloudflare Access](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/cloudflare-access/) so users authenticate with your identity provider before any request reaches AI Search. A namespace can also expose its own [public endpoint](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/namespace/), so one URL searches across the instances you choose and merges the results.
+
+## 2026-08-06
+
+**Discover parse type for website crawling**
+
+Website data sources support a new `discover` [parse type](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/) that starts at the source URL and collects pages from both your sitemaps and the links it finds while crawling, so a site without a complete sitemap can still be indexed.
+
+## 2026-07-30
+
+**Use AI Search with the Agents SDK, Vercel AI SDK, and LangChain**
+
+New guides show how to use an AI Search instance from popular frameworks: the [Cloudflare Agents SDK](https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/), the [Vercel AI SDK](https://developers.cloudflare.com/ai-search/agent-sdks/ai-sdk/), and [LangChain](https://developers.cloudflare.com/ai-search/agent-sdks/langchain/). The AI SDK integration is a new `ai-search-provider` package, and the LangChain integration is a new retriever in the existing `langchain-cloudflare` package. Refer to the [Agents](https://developers.cloudflare.com/ai-search/agent-sdks/) section.
+
 ## 2026-07-08
 
 **GIF and BMP image support**
@@ -104,7 +122,7 @@ Define up to 5 custom metadata fields per AI Search instance and filter search r
 
 **Public endpoint, UI snippets, and MCP support**
 
-AI Search now supports [public endpoints](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/), [UI snippets](https://developers.cloudflare.com/ai-search/configuration/retrieval/embed-search-snippets/), and [MCP](https://developers.cloudflare.com/ai-search/api/search/mcp/), making it easy to add search to your website or connect AI agents.
+AI Search now supports [public endpoints](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/), [UI snippets](https://developers.cloudflare.com/ai-search/configuration/retrieval/public-endpoint/embed-search-snippets/), and [MCP](https://developers.cloudflare.com/ai-search/api/search/mcp/), making it easy to add search to your website or connect AI agents.
 
 ## 2026-03-23
 
@@ -304,7 +322,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/platform/release-note/#page","headline":"Release note · Cloudflare AI Search docs","description":"Review recent changes to Cloudflare AI Search.","url":"https://developers.cloudflare.com/ai-search/platform/release-note/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

@@ -310,6 +310,8 @@ Return matches for string queries based on ID
 
 - `id: optional string`
 
+- `include_dismissed: optional boolean`
+
 - `include_domain_id: optional boolean`
 
 - `limit: optional number`
@@ -355,6 +357,8 @@ Return matches as CSV for string queries based on ID
 ### Query Parameters
 
 - `id: optional string`
+
+- `include_dismissed: optional boolean`
 
 - `include_domain_id: optional boolean`
 

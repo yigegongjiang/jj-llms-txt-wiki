@@ -24,6 +24,55 @@ Updates a specific interconnect associated with an account. Use `?validate_only=
 
   True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
 
+- `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+  - `as_no: optional number`
+
+    Deprecated. Use customer_asn.
+
+  - `cloudflare_endpoint: optional string`
+
+    Read-only for v1.5; derived from interface_address.
+
+  - `customer_asn: optional number`
+
+    ASN used on the customer end of the BGP session.
+
+  - `customer_endpoint: optional string`
+
+    Read-only for v1.5; derived from interface_address.
+
+  - `export_filter_id: optional string`
+
+    ID of the BGP filter profile applied to routes advertised to the customer.
+
+  - `extra_prefixes: optional array of string`
+
+    Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+  - `import_filter_id: optional string`
+
+    ID of the BGP filter profile applied to routes received from the customer.
+
+  - `md5_key: optional string`
+
+    MD5 key to use for session authentication.
+
+    Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+    key is not treated as a secret value. This is *only* supported for preventing
+    misconfiguration, not for defending against malicious attacks.
+
+    The MD5 key, if set, must be of non-zero length and consist only of the following types of
+    character:
+
+    * ASCII alphanumerics: `[a-zA-Z0-9]`
+    * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+    these disallowed characters will be rejected.
+
 - `description: optional string`
 
   An optional description of the interconnect.
@@ -127,7 +176,7 @@ Updates a specific interconnect associated with an account. Use `?validate_only=
 
   - `modified: optional boolean`
 
-  - `modified_interconnect: optional object { id, automatic_return_routing, colo_name, 11 more }`
+  - `modified_interconnect: optional object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -136,6 +185,55 @@ Updates a specific interconnect associated with an account. Use `?validate_only=
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -287,6 +385,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
     "modified_interconnect": {
       "id": "c4a7362d577a6c3019a474fd6f485821",
       "automatic_return_routing": true,
+      "bgp": {
+        "as_no": 0,
+        "cloudflare_endpoint": "192.168.1.1",
+        "customer_asn": 0,
+        "customer_endpoint": "192.168.1.1",
+        "export_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+        "extra_prefixes": [
+          "string"
+        ],
+        "import_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+        "md5_key": "md5_key"
+      },
       "colo_name": "pni_ord",
       "created_on": "2017-06-14T00:00:00Z",
       "description": "Tunnel for Interconnect to ORD",

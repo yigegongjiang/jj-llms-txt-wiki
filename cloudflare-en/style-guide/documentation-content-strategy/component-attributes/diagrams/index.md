@@ -40,7 +40,7 @@ We optimize SVG files with a [recurring script ↗](https://github.com/cloudflar
 
 ### Example
 
-![A simple flow diagram shows interactions between important elements of the design.](https://developers.cloudflare.com/_astro/simple-flow.DifdHPUG_Z1uWBix.webp "An example flow diagram")
+![A simple flow diagram shows interactions between important elements of the design.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=441,height=261,format=webp/_astro/simple-flow.DifdHPUG.png "An example flow diagram")
 
 An example flow diagram
 
@@ -102,7 +102,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/diagrams/#page","headline":"Diagrams · Cloudflare Style Guide","description":"Create and format diagrams in documentation.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/diagrams/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

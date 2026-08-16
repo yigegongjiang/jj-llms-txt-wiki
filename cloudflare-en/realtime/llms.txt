@@ -12,7 +12,7 @@ RealtimeKit, SFU and TURN
 
 ## RealtimeKit
 
-- [RealtimeKit](https://developers.cloudflare.com/realtime/realtimekit/index.md): Add live video and voice to web or mobile apps with RealtimeKit SDKs and APIs.
+- [RealtimeKit](https://developers.cloudflare.com/realtime/realtimekit/index.md): Build in-app audio and video with RealtimeKit SDKs and customizable UI components.
 - [AI](https://developers.cloudflare.com/realtime/realtimekit/ai/index.md): Add AI-powered transcription and summarization to RealtimeKit meetings.
 - [Summary](https://developers.cloudflare.com/realtime/realtimekit/ai/summary/index.md): Generate AI-powered meeting summaries from transcript data in RealtimeKit.
 - [Transcription](https://developers.cloudflare.com/realtime/realtimekit/ai/transcription/index.md): Turn on real-time and post-meeting speech-to-text transcription in RealtimeKit.
@@ -710,7 +710,7 @@ RealtimeKit, SFU and TURN
 - [Realtime SFU](https://developers.cloudflare.com/realtime/sfu/index.md): Build real-time serverless video, audio, and data applications with Cloudflare Realtime SFU.
 - [Realtime vs Regular SFUs](https://developers.cloudflare.com/realtime/sfu/calls-vs-sfus/index.md): Compare Cloudflare Realtime SFU with traditional centralized SFUs for WebRTC applications.
 - [Changelog](https://developers.cloudflare.com/realtime/sfu/changelog/index.md): Changelog and release notes for the Cloudflare Realtime SFU platform.
-- [DataChannels](https://developers.cloudflare.com/realtime/sfu/datachannels/index.md): Send arbitrary real-time data between clients using Realtime SFU DataChannels.
+- [DataChannels](https://developers.cloudflare.com/realtime/sfu/datachannels/index.md): Send low-latency application data between clients with Realtime SFU DataChannels.
 - [Demos](https://developers.cloudflare.com/realtime/sfu/demos/index.md): Explore demo applications and interactive visualizations for Cloudflare Realtime SFU.
 - [Example architecture](https://developers.cloudflare.com/realtime/sfu/example-architecture/index.md): Reference architecture for building a video calling application with Realtime SFU.
 - [Quickstart guide](https://developers.cloudflare.com/realtime/sfu/get-started/index.md): Create your first Realtime SFU app and get your App ID and secret.

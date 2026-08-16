@@ -48,6 +48,7 @@ Maximize application performance and availability
 - [Additional configuration](https://developers.cloudflare.com/load-balancing/additional-options/index.md): Additional load balancing features and integrations.
 - [Additional DNS records](https://developers.cloudflare.com/load-balancing/additional-options/additional-dns-records/index.md): Use additional DNS records with load balancers.
 - [Cloudflare Tunnel (published applications)](https://developers.cloudflare.com/load-balancing/additional-options/cloudflare-tunnel/index.md): Load balance traffic to Cloudflare Tunnel applications.
+- [CNAME flattening for endpoints](https://developers.cloudflare.com/load-balancing/additional-options/cname-flattening/index.md): Choose whether a DNS-only load balancer returns the endpoint hostname as a CNAME, or resolves it to an A/AAAA record.
 - [DNS persistence](https://developers.cloudflare.com/load-balancing/additional-options/dns-persistence/index.md): Maintain consistent DNS responses for load balanced hostnames.
 - [Load Balancing with the China Network](https://developers.cloudflare.com/load-balancing/additional-options/load-balancing-china/index.md): Use Load Balancing with the China Network.
 - [Custom load balancing rules](https://developers.cloudflare.com/load-balancing/additional-options/load-balancing-rules/index.md): Customize load balancing behavior with custom rules.

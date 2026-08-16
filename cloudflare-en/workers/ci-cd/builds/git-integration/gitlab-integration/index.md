@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # GitLab integration
 
-Last updated Jul 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/gitlab-integration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/gitlab-integration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare supports connecting your GitLab repository to your Cloudflare Worker, and will automatically deploy your code every time you push a change.
 
@@ -24,9 +24,13 @@ Beyond automatic builds and deployments, the Cloudflare GitLab integration lets 
 
 If a commit is on a merge request, Cloudflare will automatically post a comment on the merge request with the status of the build.
 
-![GitLab merge request comment](https://developers.cloudflare.com/_astro/gitlab-pull-request-comment.CQVsQ21r_jud8J.webp) 
+![GitLab merge request comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1890,height=586,format=webp/_astro/gitlab-pull-request-comment.CQVsQ21r.png) 
 
 A [preview URL](https://developers.cloudflare.com/workers/versions-and-deployments/preview-urls/) will be provided for any builds which perform `wrangler versions upload`. This is particularly useful when reviewing your pull request, as it allows you to compare the code changes alongside an updated version of your Worker.
+
+Note
+
+Preview URLs are not generated for Workers that implement a [Durable Object](https://developers.cloudflare.com/durable-objects/), including [Containers](https://developers.cloudflare.com/containers/) and [Sandbox](https://developers.cloudflare.com/sandbox/) Workers. Refer to [Preview URL limitations](https://developers.cloudflare.com/workers/versions-and-deployments/preview-urls/#limitations).
 
 Enabling GitLab Merge Request events for existing connections
 
@@ -38,11 +42,11 @@ If you have one or multiple Workers connected to a repository (i.e. a [monorepo]
 
 You can see the statuses by selecting the status icon next to a commit or by going to **Build** \> **Pipelines** within your GitLab repository. In the example below, you can select on the green check mark to see the results of the check run.
 
-![GitLab Status](https://developers.cloudflare.com/_astro/gl-status-checks.B9jgSbf7_Z1XRFYR.webp) 
+![GitLab Status](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2510,height=152,format=webp/_astro/gl-status-checks.B9jgSbf7.png) 
 
 Check runs will appear like the following in your repository. You can select one of the statuses to view the build on the Cloudflare Dashboard.
 
-![GitLab Commit Status](https://developers.cloudflare.com/_astro/gl-commit-status.BghMWpYX_Za7rrg.webp) 
+![GitLab Commit Status](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=610,height=270,format=webp/_astro/gl-commit-status.BghMWpYX.png) 
 
 Note that when using [build watch paths](https://developers.cloudflare.com/workers/ci-cd/builds/build-watch-paths/), only projects that trigger a build will generate a commit status.
 
@@ -75,8 +79,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/gitlab-integration/#page","headline":"GitLab integration · Cloudflare Workers docs","description":"Learn how to manage your GitLab integration for Workers Builds","url":"https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/gitlab-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/gitlab-integration/#page","headline":"GitLab integration · Cloudflare Workers docs","description":"Learn how to manage your GitLab integration for Workers Builds","url":"https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/gitlab-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-13","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

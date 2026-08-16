@@ -2,7 +2,8 @@
 
 **get** `/accounts/{account_id}/cni/interconnects/{icon}/status`
 
-Get the current status of an interconnect object
+Gets the current operational status of a network interconnect, including link state and
+traffic metrics.
 
 ### Path Parameters
 

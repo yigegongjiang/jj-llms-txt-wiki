@@ -99,7 +99,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Local Explorer](https://developers.cloudflare.com/workers/local-development/local-explorer/index.md): Browse and edit local binding data from your browser during development.
 - [Developing with multiple Workers](https://developers.cloudflare.com/workers/local-development/multi-workers/index.md): Learn how to develop with multiple Workers using different approaches and configurations.
 - [Vite Plugin](https://developers.cloudflare.com/workers/vite-plugin/index.md): Develop and build Cloudflare Workers projects using the Workers Vite plugin.
-- [Choosing between Wrangler & Vite](https://developers.cloudflare.com/workers/local-development/wrangler-vs-vite/index.md): Choosing between Wrangler and Vite for local development
+- [Choosing between Wrangler & Vite](https://developers.cloudflare.com/workers/local-development/wrangler-vs-vite/index.md): Choose between Wrangler and the Cloudflare Vite plugin for local development.
 
 ## Playground
 
@@ -109,6 +109,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 
 - [Configuration](https://developers.cloudflare.com/workers/configuration/index.md): Manage Cloudflare Workers project settings, bindings, and deployment options.
 - [Bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/index.md): The various bindings that are available to Cloudflare Workers.
+- [Cloudflare Access](https://developers.cloudflare.com/workers/configuration/cloudflare-access/index.md): Require sign-in before visitors can reach Cloudflare Workers, preview deployments, or all Workers in an account.
 - [Compatibility dates](https://developers.cloudflare.com/workers/configuration/compatibility-dates/index.md): Opt into a specific version of the Workers runtime for your Workers project.
 - [Compatibility flags](https://developers.cloudflare.com/workers/configuration/compatibility-flags/index.md): Opt into a specific features of the Workers runtime for your Workers project.
 - [Cron Triggers](https://developers.cloudflare.com/workers/configuration/cron-triggers/index.md): Enable your Worker to be executed on a schedule.
@@ -286,6 +287,33 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Static Site Generation (SSG) and custom 404 pages](https://developers.cloudflare.com/workers/static-assets/routing/static-site-generation/index.md): How to configure a Static Site Generation (SSG) application and custom 404 pages with Workers.
 - [Worker script](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/index.md): How the presence of a Worker script influences static asset routing and the related configuration options.
 
+## Observability
+
+- [Observability](https://developers.cloudflare.com/workers/observability/index.md): Understand how your Worker projects are performing via logs, traces, metrics, and other data sources.
+- [DevTools](https://developers.cloudflare.com/workers/observability/dev-tools/index.md): Use Chrome DevTools to debug, profile, and inspect Cloudflare Workers locally.
+- [Breakpoints](https://developers.cloudflare.com/workers/observability/dev-tools/breakpoints/index.md): Debug your local and deployed Workers using breakpoints.
+- [Profiling CPU usage](https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/index.md): Learn how to profile CPU usage and ensure CPU-time per request stays under Workers limits
+- [Profiling Memory](https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/index.md): Profile memory usage with DevTools snapshots to optimize Workers and avoid OOM errors.
+- [Errors and exceptions](https://developers.cloudflare.com/workers/observability/errors/index.md): Review Workers errors and exceptions.
+- [Exporting OpenTelemetry Data](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/index.md): Export traces and logs from Cloudflare Workers to any OpenTelemetry-compatible destination.
+- [Export to Axiom](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/axiom/index.md): Send OpenTelemetry traces and logs from Cloudflare Workers to Axiom.
+- [Export to Grafana Cloud](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/grafana-cloud/index.md): Send OpenTelemetry traces and logs from Cloudflare Workers to Grafana Cloud.
+- [Export to Honeycomb](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/honeycomb/index.md): Send OpenTelemetry traces and logs from Cloudflare Workers to Honeycomb.
+- [Export to PostHog](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/index.md): Send OpenTelemetry logs from Cloudflare Workers to PostHog for analytics.
+- [Export to Sentry](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/index.md): Export OpenTelemetry traces and logs from Cloudflare Workers to Sentry for monitoring and debugging.
+- [Logs](https://developers.cloudflare.com/workers/observability/logs/index.md): Access, filter, and export logs from Cloudflare Workers for troubleshooting.
+- [Workers Logpush](https://developers.cloudflare.com/workers/observability/logs/logpush/index.md): Send Workers Trace Event Logs to a supported third party, such as a storage or logging provider.
+- [Real-time logs](https://developers.cloudflare.com/workers/observability/logs/real-time-logs/index.md): Debug your Worker application by accessing logs and exceptions through the Cloudflare dashboard or `wrangler tail`.
+- [Tail Workers](https://developers.cloudflare.com/workers/observability/logs/tail-workers/index.md): Track and log Workers on invocation by assigning a Tail Worker to your projects.
+- [Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/index.md): Store, filter, and analyze log data emitted from Cloudflare Workers.
+- [Metrics and analytics](https://developers.cloudflare.com/workers/observability/metrics-and-analytics/index.md): Diagnose issues with Workers metrics, and review request data for a zone with Workers analytics.
+- [Query Builder](https://developers.cloudflare.com/workers/observability/query-builder/index.md): Write structured queries to investigate and visualize your telemetry data.
+- [Source maps and stack traces](https://developers.cloudflare.com/workers/observability/source-maps/index.md): Adding source maps and generating stack traces for Workers.
+- [Traces](https://developers.cloudflare.com/workers/observability/traces/index.md): Gain end-to-end visibility into request flows across your Workers application with automatic tracing instrumentation.
+- [Custom spans](https://developers.cloudflare.com/workers/observability/traces/custom-spans/index.md): Create custom spans to trace your own application logic alongside Cloudflare's automatic instrumentation.
+- [Known limitations](https://developers.cloudflare.com/workers/observability/traces/known-limitations/index.md)
+- [Spans and attributes](https://developers.cloudflare.com/workers/observability/traces/spans-and-attributes/index.md): Review the spans and attributes automatically captured by Workers tracing, including fetch calls, bindings, and handler invocations.
+
 ## Testing
 
 - [Testing](https://developers.cloudflare.com/workers/testing/index.md): Choose testing tools for Cloudflare Workers, including createTestHarness and the Vitest integration.
@@ -327,33 +355,6 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Recipes and examples](https://developers.cloudflare.com/workers/testing/vitest-integration/recipes/index.md): Examples that demonstrate how to write unit and integration tests with the Workers Vitest integration.
 - [Test APIs](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/index.md): Runtime helpers for writing tests, exported from `cloudflare:workers` and `cloudflare:test`.
 - [Write your first test](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/index.md): Write tests against Workers using Vitest
-
-## Observability
-
-- [Observability](https://developers.cloudflare.com/workers/observability/index.md): Understand how your Worker projects are performing via logs, traces, metrics, and other data sources.
-- [DevTools](https://developers.cloudflare.com/workers/observability/dev-tools/index.md): Use Chrome DevTools to debug, profile, and inspect Cloudflare Workers locally.
-- [Breakpoints](https://developers.cloudflare.com/workers/observability/dev-tools/breakpoints/index.md): Debug your local and deployed Workers using breakpoints.
-- [Profiling CPU usage](https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/index.md): Learn how to profile CPU usage and ensure CPU-time per request stays under Workers limits
-- [Profiling Memory](https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/index.md): Profile memory usage with DevTools snapshots to optimize Workers and avoid OOM errors.
-- [Errors and exceptions](https://developers.cloudflare.com/workers/observability/errors/index.md): Review Workers errors and exceptions.
-- [Exporting OpenTelemetry Data](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/index.md): Export traces and logs from Cloudflare Workers to any OpenTelemetry-compatible destination.
-- [Export to Axiom](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/axiom/index.md): Send OpenTelemetry traces and logs from Cloudflare Workers to Axiom.
-- [Export to Grafana Cloud](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/grafana-cloud/index.md): Send OpenTelemetry traces and logs from Cloudflare Workers to Grafana Cloud.
-- [Export to Honeycomb](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/honeycomb/index.md): Send OpenTelemetry traces and logs from Cloudflare Workers to Honeycomb.
-- [Export to PostHog](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/index.md): Send OpenTelemetry logs from Cloudflare Workers to PostHog for analytics.
-- [Export to Sentry](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/index.md): Export OpenTelemetry traces and logs from Cloudflare Workers to Sentry for monitoring and debugging.
-- [Logs](https://developers.cloudflare.com/workers/observability/logs/index.md): Access, filter, and export logs from Cloudflare Workers for troubleshooting.
-- [Workers Logpush](https://developers.cloudflare.com/workers/observability/logs/logpush/index.md): Send Workers Trace Event Logs to a supported third party, such as a storage or logging provider.
-- [Real-time logs](https://developers.cloudflare.com/workers/observability/logs/real-time-logs/index.md): Debug your Worker application by accessing logs and exceptions through the Cloudflare dashboard or `wrangler tail`.
-- [Tail Workers](https://developers.cloudflare.com/workers/observability/logs/tail-workers/index.md): Track and log Workers on invocation by assigning a Tail Worker to your projects.
-- [Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/index.md): Store, filter, and analyze log data emitted from Cloudflare Workers.
-- [Metrics and analytics](https://developers.cloudflare.com/workers/observability/metrics-and-analytics/index.md): Diagnose issues with Workers metrics, and review request data for a zone with Workers analytics.
-- [Query Builder](https://developers.cloudflare.com/workers/observability/query-builder/index.md): Write structured queries to investigate and visualize your telemetry data.
-- [Source maps and stack traces](https://developers.cloudflare.com/workers/observability/source-maps/index.md): Adding source maps and generating stack traces for Workers.
-- [Traces](https://developers.cloudflare.com/workers/observability/traces/index.md): Gain end-to-end visibility into request flows across your Workers application with automatic tracing instrumentation.
-- [Custom spans](https://developers.cloudflare.com/workers/observability/traces/custom-spans/index.md): Create custom spans to trace your own application logic alongside Cloudflare's automatic instrumentation.
-- [Known limitations](https://developers.cloudflare.com/workers/observability/traces/known-limitations/index.md)
-- [Spans and attributes](https://developers.cloudflare.com/workers/observability/traces/spans-and-attributes/index.md): Review the spans and attributes automatically captured by Workers tracing, including fetch calls, bindings, and handler invocations.
 
 ## Vite plugin
 

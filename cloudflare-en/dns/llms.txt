@@ -46,7 +46,7 @@ Deliver excellent performance and reliability to your domain
 - [Cannot add domain](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/cannot-add-domain/index.md): Troubleshoot issues when adding a domain to Cloudflare, including DNSSEC conflicts, registrar errors, and restriction codes.
 - [Delete all DNS records](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/delete-all-records/index.md): Learn how to bulk delete DNS records in Cloudflare with a script so you can start from zero instead of using the quick scan results.
 - [Domain deleted from Cloudflare](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/domain-deleted/index.md): Learn why a domain may be removed from Cloudflare and how to recover it using audit logs and registrar verification.
-- [Zone stuck in Pending Nameserver Update](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/pending-nameservers/index.md): Troubleshoot a Cloudflare zone that stays in Pending Nameserver Update status after changing nameservers, including stale DNSSEC DS records.
+- [Zone stuck in Pending Nameserver Update](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/pending-nameservers/index.md): Troubleshoot a Cloudflare zone that stays in Pending Nameserver Update status, including how to verify the delegation at your registrar and check for stale DNSSEC DS records.
 - [DNS Zone transfers](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/index.md): Transfer DNS zones between Cloudflare and other providers.
 - [Access Control Lists (ACLs)](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/access-control-lists/index.md): Manage access control lists for DNS zone transfers.
 - [Cloudflare IP addresses](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/access-control-lists/cloudflare-ip-addresses/index.md): IP addresses used by Cloudflare for DNS zone transfers and NOTIFY messages.
@@ -187,7 +187,6 @@ Deliver excellent performance and reliability to your domain
 
 ## reference
 
-- [Features and plans](https://developers.cloudflare.com/dns/reference/all-features/index.md): Review information on all Cloudflare DNS features and their availability.
 - [Analytics API properties](https://developers.cloudflare.com/dns/reference/analytics-api-properties/index.md): API properties that you can use in API requests for Cloudflare DNS analytics.
 - [Migrate DNS from BIND](https://developers.cloudflare.com/learning-paths/dns-best-practices/concepts/index.md): Best practices for migrating DNS from BIND to Cloudflare.
 - [Domain Connect](https://developers.cloudflare.com/dns/reference/domain-connect/index.md): Learn how to onboard your templates to use Domain Connect with Cloudflare as DNS provider.

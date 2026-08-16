@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/infrastructure/targets/{target_id}`
 
-Get target
+Fetches a single infrastructure access target by its ID.
 
 ### Path Parameters
 

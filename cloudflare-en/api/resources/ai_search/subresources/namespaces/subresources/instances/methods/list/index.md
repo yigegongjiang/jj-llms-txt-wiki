@@ -248,7 +248,29 @@ List all AI Search instances in the account.
 
     - `r2_jurisdiction: optional string`
 
-    - `web_crawler: optional object { parse_options, parse_type }`
+    - `web_crawler: optional object { discover_options, parse_options, parse_type }`
+
+      - `discover_options: optional object { depth, include_external_links, include_subdomains, 3 more }`
+
+        - `depth: optional number`
+
+        - `include_external_links: optional boolean`
+
+        - `include_subdomains: optional boolean`
+
+        - `limit: optional number`
+
+          Maximum number of pages to crawl. New values are capped at 100000; instances configured before that cap may report a higher stored value, which the crawler clamps at run time.
+
+        - `max_age: optional number`
+
+        - `source: optional "all" or "sitemaps" or "links"`
+
+          - `"all"`
+
+          - `"sitemaps"`
+
+          - `"links"`
 
       - `parse_options: optional object { content_selector, include_headers, include_images, 2 more }`
 
@@ -428,6 +450,14 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/namespa
         "prefix": "prefix",
         "r2_jurisdiction": "r2_jurisdiction",
         "web_crawler": {
+          "discover_options": {
+            "depth": 1,
+            "include_external_links": true,
+            "include_subdomains": true,
+            "limit": 1,
+            "max_age": 0,
+            "source": "all"
+          },
           "parse_options": {
             "content_selector": [
               {

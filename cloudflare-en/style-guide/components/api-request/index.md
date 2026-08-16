@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # API request
 
-Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/api-request/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/api-request/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `APIRequest` component is used `618` times on `244` pages.
+The `APIRequest` component is used `619` times on `245` pages.
 
 See all examples of pages that use APIRequest
 
-Used **618** times.
+Used **619** times.
 
 **Pages**
 
@@ -108,6 +108,7 @@ Used **618** times.
 * [/learning-paths/secure-internet-traffic/build-http-policies/recommended-http-policies/](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/recommended-http-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/learning-paths/secure-internet-traffic/build-http-policies/recommended-http-policies.mdx)
 * [/learning-paths/secure-internet-traffic/build-http-policies/tls-inspection/](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/tls-inspection/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/learning-paths/secure-internet-traffic/build-http-policies/tls-inspection.mdx)
 * [/learning-paths/secure-internet-traffic/build-network-policies/recommended-network-policies/](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-network-policies/recommended-network-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/learning-paths/secure-internet-traffic/build-network-policies/recommended-network-policies.mdx)
+* [/load-balancing/additional-options/cname-flattening/](https://developers.cloudflare.com/load-balancing/additional-options/cname-flattening/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/load-balancing/additional-options/cname-flattening.mdx)
 * [/load-balancing/private-network/warp-to-tunnel/](https://developers.cloudflare.com/load-balancing/private-network/warp-to-tunnel/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/load-balancing/private-network/warp-to-tunnel.mdx)
 * [/load-balancing/reference/migration-guides/health-monitor-notifications/](https://developers.cloudflare.com/load-balancing/reference/migration-guides/health-monitor-notifications/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/load-balancing/reference/migration-guides/health-monitor-notifications.mdx)
 * [/logs/instant-logs/](https://developers.cloudflare.com/logs/instant-logs/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/logs/instant-logs.mdx)
@@ -393,11 +394,7 @@ This field is not currently validated against the schema.
 
 **type:** `object`
 
-An object of Expressive Code props, the following props are available:
-
-* [Base Props ↗](https://expressive-code.com/key-features/code-component/#available-props)
-* [Line Marker Props ↗](https://expressive-code.com/key-features/text-markers/#props)
-* [Collapsible Sections Props ↗](https://expressive-code.com/plugins/collapsible-sections/#props)
+An object of Astro `Code` props. Refer to the [Astro Code component documentation ↗](https://docs.astro.build/en/reference/api-reference/#code-) for available props.
 
 ### `roles`
 
@@ -417,8 +414,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/api-request/#page","headline":"API request · Cloudflare Style Guide","description":"Generate curl commands from OpenAPI schema.","url":"https://developers.cloudflare.com/style-guide/components/api-request/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/api-request/#page","headline":"API request · Cloudflare Style Guide","description":"Generate curl commands from OpenAPI schema.","url":"https://developers.cloudflare.com/style-guide/components/api-request/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

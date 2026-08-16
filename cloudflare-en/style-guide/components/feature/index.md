@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/feature/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Feature` component is used `233` times on `65` pages.
+The `Feature` component is used `242` times on `66` pages.
 
 See all examples of pages that use Feature
 
-Used **233** times.
+Used **242** times.
 
 **Pages**
 
@@ -66,6 +66,7 @@ Used **233** times.
 * [/queues/](https://developers.cloudflare.com/queues/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/queues/index.mdx)
 * [/r2/](https://developers.cloudflare.com/r2/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/index.mdx)
 * [/radar/](https://developers.cloudflare.com/radar/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/radar/index.mdx)
+* [/realtime/realtimekit/](https://developers.cloudflare.com/realtime/realtimekit/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/realtime/realtimekit/index.mdx)
 * [/registrar/](https://developers.cloudflare.com/registrar/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/registrar/index.mdx)
 * [/rules/](https://developers.cloudflare.com/rules/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/rules/index.mdx)
 * [/sandbox/](https://developers.cloudflare.com/sandbox/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/index.mdx)
@@ -115,7 +116,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/feature/#page","headline":"Feature · Cloudflare Style Guide","description":"Display a feature card on overview pages.","url":"https://developers.cloudflare.com/style-guide/components/feature/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

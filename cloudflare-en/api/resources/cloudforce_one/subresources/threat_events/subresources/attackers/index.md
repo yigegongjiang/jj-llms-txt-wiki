@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/attackers`
 
-List attacker names referenced in events across one or more datasets.
+Lists known threat attackers tracked in Cloudforce One threat intelligence.
 
 ### Path Parameters
 

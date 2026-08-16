@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories/catalog`
 
-List all categories stored in the account catalog.
+Lists categories
 
 ### Path Parameters
 

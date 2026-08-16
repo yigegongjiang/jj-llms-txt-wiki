@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/details/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Details` component is used `923` times on `327` pages.
+The `Details` component is used `923` times on `328` pages.
 
 See all examples of pages that use Details
 
@@ -82,6 +82,7 @@ Used **923** times.
 * [/cloudflare-one/insights/dex/tests/traceroute/](https://developers.cloudflare.com/cloudflare-one/insights/dex/tests/traceroute/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/insights/dex/tests/traceroute.mdx)
 * [/cloudflare-one/insights/network-visibility/diagnostics/packet-captures/](https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/diagnostics/packet-captures/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/insights/network-visibility/diagnostics/packet-captures.mdx)
 * [/cloudflare-one/integrations/cloud-and-saas/findings/](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/findings/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/integrations/cloud-and-saas/findings/index.mdx)
+* [/cloudflare-one/networks/connectors/cloudflare-mesh/containers/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/containers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-mesh/containers.mdx)
 * [/cloudflare-one/networks/connectors/cloudflare-mesh/get-started/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-mesh/get-started.mdx)
 * [/cloudflare-one/networks/connectors/cloudflare-mesh/high-availability/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/high-availability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-mesh/high-availability.mdx)
 * [/cloudflare-one/networks/connectors/cloudflare-mesh/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-mesh/index.mdx)
@@ -389,7 +390,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/details/#page","headline":"Details · Cloudflare Style Guide","description":"Create collapsible content sections.","url":"https://developers.cloudflare.com/style-guide/components/details/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

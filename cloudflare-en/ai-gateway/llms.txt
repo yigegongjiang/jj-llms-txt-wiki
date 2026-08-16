@@ -62,7 +62,7 @@ Observe and control your AI applications
 - [Set up Data Loss Prevention (DLP)](https://developers.cloudflare.com/ai-gateway/features/dlp/set-up-dlp/index.md): Enable and configure DLP policies on your AI Gateway to scan prompts and responses for sensitive data.
 - [Dynamic routing](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/index.md): Route AI Gateway requests based on conditions, quotas, and fallbacks using a visual interface or JSON configuration.
 - [JSON Configuration](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/json-configuration/index.md): Define AI Gateway dynamic routing flows using the REST API and JSON element structure.
-- [Using a dynamic route](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/usage/index.md): Send requests through an AI Gateway dynamic route using the OpenAI SDK or REST API.
+- [Using a dynamic route](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/usage/index.md): Send requests through an AI Gateway dynamic route using the OpenAI SDK, a direct HTTP request, or the Workers AI binding.
 - [Guardrails](https://developers.cloudflare.com/ai-gateway/features/guardrails/index.md): Evaluate AI Gateway prompts and responses for harmful content and enforce safety policies across providers.
 - [Set up Guardrails](https://developers.cloudflare.com/ai-gateway/features/guardrails/set-up-guardrail/index.md): Enable and configure AI Gateway Guardrails to flag or block harmful content in prompts and responses.
 - [Supported model types](https://developers.cloudflare.com/ai-gateway/features/guardrails/supported-model-types/index.md): Review which AI model types AI Gateway Guardrails evaluates for text generation, embeddings, and unknown models.
@@ -118,7 +118,9 @@ Observe and control your AI applications
 
 - [Authenticated Gateway](https://developers.cloudflare.com/ai-gateway/configuration/authentication/index.md): Add security by requiring a valid authorization token for each request.
 - [BYOK (Store Keys)](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/index.md): Securely store AI provider API keys in AI Gateway and reference them in your gateway configuration.
+- [Cloudflare Access](https://developers.cloudflare.com/ai-gateway/configuration/cloudflare-access/index.md): Add identity-aware controls to AI Gateway so users authenticate with your identity provider before they can call your gateway.
 - [Custom costs](https://developers.cloudflare.com/ai-gateway/configuration/custom-costs/index.md): Override default or public model costs on a per-request basis.
+- [Custom domains](https://developers.cloudflare.com/ai-gateway/configuration/custom-domains/index.md): Send AI Gateway requests through a hostname that you own, such as ai.example.com.
 - [Custom Providers](https://developers.cloudflare.com/ai-gateway/configuration/custom-providers/index.md): Create and manage custom AI providers for your account.
 - [Fallbacks](https://developers.cloudflare.com/ai-gateway/configuration/fallbacks/index.md): Specify model or provider fallbacks in AI Gateway to handle request failures and ensure reliability.
 - [Manage gateways](https://developers.cloudflare.com/ai-gateway/configuration/manage-gateway/index.md): Create, edit, and delete AI Gateway instances using the dashboard or API.
@@ -132,6 +134,7 @@ Observe and control your AI applications
 - [Logging](https://developers.cloudflare.com/ai-gateway/observability/logging/index.md): Store and inspect AI Gateway request logs including prompts, responses, tokens, costs, and DLP actions.
 - [Workers Logpush](https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/index.md): Export encrypted AI Gateway logs to external storage using Workers Logpush.
 - [OpenTelemetry](https://developers.cloudflare.com/ai-gateway/observability/otel-integration/index.md): Export AI Gateway trace spans to OpenTelemetry-compatible backends for distributed tracing and performance monitoring.
+- [User Insights](https://developers.cloudflare.com/ai-gateway/observability/user-insights/index.md): Track organization-wide AI spend, attribute usage to identities, and detect anomalous sessions in AI Gateway.
 
 ## reference
 

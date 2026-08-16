@@ -60,23 +60,9 @@ Returns the result of a crawl job.
 
     Total number of URLs that have been crawled so far.
 
-  - `records: array of object { metadata, status, url, 3 more }`
+  - `records: array of object { status, url, html, 3 more }`
 
     List of crawl job records.
-
-    - `metadata: object { status, url, title }`
-
-      - `status: number`
-
-        HTTP status code of the crawled page.
-
-      - `url: string`
-
-        Final URL of the crawled page.
-
-      - `title: optional string`
-
-        Title of the crawled page.
 
     - `status: "queued" or "errored" or "completed" or 3 more`
 
@@ -109,6 +95,22 @@ Returns the result of a crawl job.
     - `markdown: optional string`
 
       Markdown of the content of the crawled URL.
+
+    - `metadata: optional object { status, url, title }`
+
+      Absent for urls that never reached a fetch.
+
+      - `status: number`
+
+        HTTP status code of the crawled page.
+
+      - `url: string`
+
+        Final URL of the crawled page.
+
+      - `title: optional string`
+
+        Title of the crawled page.
 
   - `skipped: number`
 
@@ -157,18 +159,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
     "finished": 0,
     "records": [
       {
-        "metadata": {
-          "status": 0,
-          "url": "url",
-          "title": "title"
-        },
         "status": "queued",
         "url": "url",
         "html": "html",
         "json": {
           "foo": {}
         },
-        "markdown": "markdown"
+        "markdown": "markdown",
+        "metadata": {
+          "status": 0,
+          "url": "url",
+          "title": "title"
+        }
       }
     ],
     "skipped": 0,

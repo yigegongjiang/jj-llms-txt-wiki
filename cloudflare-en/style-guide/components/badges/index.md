@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/badges/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Badge` component is used `80` times on `30` pages.
+The `Badge` component is used `85` times on `31` pages.
 
 See all examples of pages that use Badge
 
-Used **80** times.
+Used **85** times.
 
 **Pages**
 
@@ -40,6 +40,7 @@ Used **80** times.
 * [/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/index.mdx)
 * [/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/windows-no-auth-no-internet/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/windows-no-auth-no-internet/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/windows-no-auth-no-internet.mdx)
 * [/cloudflare-one/traffic-policies/egress-policies/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/egress-policies/index.mdx)
+* [/cloudflare-one/traffic-policies/http-policies/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/http-policies/index.mdx)
 * [/cloudflare-one/traffic-policies/network-policies/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/network-policies/index.mdx)
 * [/dns/dns-firewall/analytics/](https://developers.cloudflare.com/dns/dns-firewall/analytics/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/dns/dns-firewall/analytics.mdx)
 * [/email-service/](https://developers.cloudflare.com/email-service/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/email-service/index.mdx)
@@ -101,7 +102,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/badges/#page","headline":"Badges · Cloudflare Style Guide","description":"Display sidebar and inline badges.","url":"https://developers.cloudflare.com/style-guide/components/badges/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

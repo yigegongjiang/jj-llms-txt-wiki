@@ -51,7 +51,7 @@ bun add @cloudflare/codemode agents @modelcontextprotocol/sdk zod
   "name": "codemode-mcp-server",  
   "main": "src/server.ts",  
   // Set this to today's date  
-  "compatibility_date": "2026-07-28",  
+  "compatibility_date": "2026-08-14",  
   "compatibility_flags": [  
     "nodejs_compat"  
   ],  
@@ -66,7 +66,7 @@ bun add @cloudflare/codemode agents @modelcontextprotocol/sdk zod
 name = "codemode-mcp-server"  
 main = "src/server.ts"  
 # Set this to today's date  
-compatibility_date = "2026-07-28"  
+compatibility_date = "2026-08-14"  
 compatibility_flags = ["nodejs_compat"]  
 [[worker_loaders]]  
 binding = "LOADER"  
@@ -216,7 +216,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/#page","headline":"Build a single-tool Code Mode MCP server · Cloudflare Agents docs","description":"Replace an MCP server's individual tools with one sandboxed Code Mode tool on Cloudflare Workers.","url":"https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","MCP"]}

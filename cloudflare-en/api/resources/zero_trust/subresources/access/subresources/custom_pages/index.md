@@ -60,7 +60,7 @@ List custom pages
 
     Custom page name.
 
-  - `type: "identity_denied" or "forbidden"`
+  - `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
     Custom page type.
 
@@ -68,9 +68,33 @@ List custom pages
 
     - `"forbidden"`
 
+    - `"login"`
+
+    - `"interstitial"`
+
+  - `contract_version: optional number`
+
+    Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
+
   - `uid: optional string`
 
     UUID.
+
+  - `warnings: optional array of object { message, tier, ref }`
+
+    Advisory validation findings returned when creating or updating a template. Omitted when empty.
+
+    - `message: string`
+
+      Human-readable description of the finding.
+
+    - `tier: string`
+
+      The validation tier that produced the finding (e.g. html, liquid).
+
+    - `ref: optional string`
+
+      Optional pointer to the part of the template the finding refers to.
 
 - `result_info: optional object { count, page, per_page, 2 more }`
 
@@ -131,9 +155,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
       "name": "name",
       "type": "identity_denied",
       "app_count": 0,
+      "contract_version": 0,
       "created_at": "2014-01-01T05:20:00.12345Z",
       "uid": "f174e90a-fafe-4643-bbbc-4a0ed4fc8415",
-      "updated_at": "2014-01-01T05:20:00.12345Z"
+      "updated_at": "2014-01-01T05:20:00.12345Z",
+      "warnings": [
+        {
+          "message": "message",
+          "tier": "tier",
+          "ref": "ref"
+        }
+      ]
     }
   ],
   "result_info": {
@@ -204,13 +236,21 @@ Fetches a custom page and also returns its HTML.
 
     Custom page name.
 
-  - `type: "identity_denied" or "forbidden"`
+  - `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
     Custom page type.
 
     - `"identity_denied"`
 
     - `"forbidden"`
+
+    - `"login"`
+
+    - `"interstitial"`
+
+  - `contract_version: optional number`
+
+    Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
 
   - `uid: optional string`
 
@@ -253,6 +293,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
     "name": "name",
     "type": "identity_denied",
     "app_count": 0,
+    "contract_version": 0,
     "created_at": "2014-01-01T05:20:00.12345Z",
     "uid": "f174e90a-fafe-4643-bbbc-4a0ed4fc8415",
     "updated_at": "2014-01-01T05:20:00.12345Z"
@@ -282,13 +323,21 @@ Create a custom page
 
   Custom page name.
 
-- `type: "identity_denied" or "forbidden"`
+- `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
   Custom page type.
 
   - `"identity_denied"`
 
   - `"forbidden"`
+
+  - `"login"`
+
+  - `"interstitial"`
+
+- `contract_version: optional number`
+
+  Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
 
 ### Returns
 
@@ -328,7 +377,7 @@ Create a custom page
 
     Custom page name.
 
-  - `type: "identity_denied" or "forbidden"`
+  - `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
     Custom page type.
 
@@ -336,9 +385,33 @@ Create a custom page
 
     - `"forbidden"`
 
+    - `"login"`
+
+    - `"interstitial"`
+
+  - `contract_version: optional number`
+
+    Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
+
   - `uid: optional string`
 
     UUID.
+
+  - `warnings: optional array of object { message, tier, ref }`
+
+    Advisory validation findings returned when creating or updating a template. Omitted when empty.
+
+    - `message: string`
+
+      Human-readable description of the finding.
+
+    - `tier: string`
+
+      The validation tier that produced the finding (e.g. html, liquid).
+
+    - `ref: optional string`
+
+      Optional pointer to the part of the template the finding refers to.
 
 ### Example
 
@@ -382,9 +455,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
     "name": "name",
     "type": "identity_denied",
     "app_count": 0,
+    "contract_version": 0,
     "created_at": "2014-01-01T05:20:00.12345Z",
     "uid": "f174e90a-fafe-4643-bbbc-4a0ed4fc8415",
-    "updated_at": "2014-01-01T05:20:00.12345Z"
+    "updated_at": "2014-01-01T05:20:00.12345Z",
+    "warnings": [
+      {
+        "message": "message",
+        "tier": "tier",
+        "ref": "ref"
+      }
+    ]
   }
 }
 ```
@@ -415,13 +496,21 @@ Update a custom page
 
   Custom page name.
 
-- `type: "identity_denied" or "forbidden"`
+- `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
   Custom page type.
 
   - `"identity_denied"`
 
   - `"forbidden"`
+
+  - `"login"`
+
+  - `"interstitial"`
+
+- `contract_version: optional number`
+
+  Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
 
 ### Returns
 
@@ -461,7 +550,7 @@ Update a custom page
 
     Custom page name.
 
-  - `type: "identity_denied" or "forbidden"`
+  - `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
     Custom page type.
 
@@ -469,9 +558,33 @@ Update a custom page
 
     - `"forbidden"`
 
+    - `"login"`
+
+    - `"interstitial"`
+
+  - `contract_version: optional number`
+
+    Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
+
   - `uid: optional string`
 
     UUID.
+
+  - `warnings: optional array of object { message, tier, ref }`
+
+    Advisory validation findings returned when creating or updating a template. Omitted when empty.
+
+    - `message: string`
+
+      Human-readable description of the finding.
+
+    - `tier: string`
+
+      The validation tier that produced the finding (e.g. html, liquid).
+
+    - `ref: optional string`
+
+      Optional pointer to the part of the template the finding refers to.
 
 ### Example
 
@@ -516,9 +629,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
     "name": "name",
     "type": "identity_denied",
     "app_count": 0,
+    "contract_version": 0,
     "created_at": "2014-01-01T05:20:00.12345Z",
     "uid": "f174e90a-fafe-4643-bbbc-4a0ed4fc8415",
-    "updated_at": "2014-01-01T05:20:00.12345Z"
+    "updated_at": "2014-01-01T05:20:00.12345Z",
+    "warnings": [
+      {
+        "message": "message",
+        "tier": "tier",
+        "ref": "ref"
+      }
+    ]
   }
 }
 ```
@@ -620,7 +741,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
 
 ### Custom Page
 
-- `CustomPage object { custom_html, name, type, uid }`
+- `CustomPage object { custom_html, name, type, 2 more }`
 
   - `custom_html: string`
 
@@ -630,13 +751,21 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
 
     Custom page name.
 
-  - `type: "identity_denied" or "forbidden"`
+  - `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
     Custom page type.
 
     - `"identity_denied"`
 
     - `"forbidden"`
+
+    - `"login"`
+
+    - `"interstitial"`
+
+  - `contract_version: optional number`
+
+    Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
 
   - `uid: optional string`
 
@@ -644,13 +773,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
 
 ### Custom Page Without HTML
 
-- `CustomPageWithoutHTML object { name, type, uid }`
+- `CustomPageWithoutHTML object { name, type, contract_version, 2 more }`
 
   - `name: string`
 
     Custom page name.
 
-  - `type: "identity_denied" or "forbidden"`
+  - `type: "identity_denied" or "forbidden" or "login" or "interstitial"`
 
     Custom page type.
 
@@ -658,9 +787,33 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/custom_pag
 
     - `"forbidden"`
 
+    - `"login"`
+
+    - `"interstitial"`
+
+  - `contract_version: optional number`
+
+    Contract version of the page's Liquid template. Present (>= 1) marks a sanitized template; absent or 0 marks a legacy page served verbatim.
+
   - `uid: optional string`
 
     UUID.
+
+  - `warnings: optional array of object { message, tier, ref }`
+
+    Advisory validation findings returned when creating or updating a template. Omitted when empty.
+
+    - `message: string`
+
+      Human-readable description of the finding.
+
+    - `tier: string`
+
+      The validation tier that produced the finding (e.g. html, liquid).
+
+    - `ref: optional string`
+
+      Optional pointer to the part of the template the finding refers to.
 
 ### Custom Page Delete Response
 

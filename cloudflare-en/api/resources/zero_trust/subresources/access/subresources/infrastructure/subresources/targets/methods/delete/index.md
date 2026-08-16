@@ -2,7 +2,7 @@
 
 **delete** `/accounts/{account_id}/infrastructure/targets/{target_id}`
 
-Delete target
+Removes a single infrastructure access target by its ID.
 
 ### Path Parameters
 

@@ -6,7 +6,7 @@
 
 **get** `/accounts/{account_id}/infrastructure/targets`
 
-Lists and sorts an account’s targets. Filters are optional and are ANDed
+Lists and sorts an account's targets. Filters are optional and are ANDed
 together.
 
 ### Path Parameters
@@ -277,7 +277,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/infrastructure/ta
 
 **get** `/accounts/{account_id}/infrastructure/targets/{target_id}`
 
-Get target
+Fetches a single infrastructure access target by its ID.
 
 ### Path Parameters
 
@@ -422,7 +422,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/infrastructure/ta
 
 **post** `/accounts/{account_id}/infrastructure/targets`
 
-Create new target
+Creates a new infrastructure access target in the account.
 
 ### Path Parameters
 
@@ -605,7 +605,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/infrastructure/ta
 
 **put** `/accounts/{account_id}/infrastructure/targets/{target_id}`
 
-Update target
+Updates an existing infrastructure access target by its ID.
 
 ### Path Parameters
 
@@ -793,7 +793,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/infrastructure/ta
 
 **delete** `/accounts/{account_id}/infrastructure/targets/{target_id}`
 
-Delete target
+Removes a single infrastructure access target by its ID.
 
 ### Path Parameters
 

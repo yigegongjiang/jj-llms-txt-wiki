@@ -18,6 +18,42 @@ List all available finding types with pagination support.
 
   Number of results to return per page.
 
+- `vendors: optional array of "ANTHROPIC" or "AWS" or "BITBUCKET" or 13 more`
+
+  Filter finding types by vendor. Supports multiple comma-separated values.
+
+  - `"ANTHROPIC"`
+
+  - `"AWS"`
+
+  - `"BITBUCKET"`
+
+  - `"BOX"`
+
+  - `"CONFLUENCE"`
+
+  - `"DROPBOX"`
+
+  - `"GITHUB"`
+
+  - `"GOOGLE_CLOUD_PLATFORM"`
+
+  - `"GOOGLE_WORKSPACE"`
+
+  - `"JIRA"`
+
+  - `"MICROSOFT"`
+
+  - `"MICROSOFT_INTERNAL"`
+
+  - `"OPENAI"`
+
+  - `"SALESFORCE"`
+
+  - `"SERVICENOW"`
+
+  - `"SLACK"`
+
 ### Returns
 
 - `errors: array of object { code, message, documentation_url, source }`

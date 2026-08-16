@@ -16,4 +16,4 @@ Protocol for live media
 
 ## MoQ Feature Matrix
 
-- [MoQ Feature Matrix](https://developers.cloudflare.com/moq/feature-matrix/index.md)
+- [MoQ Feature Matrix](https://developers.cloudflare.com/moq/feature-matrix/index.md): Supported and unsupported MoQ Transport messages for each draft version deployed by Cloudflare.

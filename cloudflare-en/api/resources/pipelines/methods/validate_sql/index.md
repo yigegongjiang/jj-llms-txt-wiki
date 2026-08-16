@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/pipelines/v1/validate_sql`
 
-Validate Arroyo SQL.
+Validates that the Pipelines SQL is correct.
 
 ### Path Parameters
 

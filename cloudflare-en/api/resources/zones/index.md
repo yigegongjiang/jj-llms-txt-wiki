@@ -2090,7 +2090,7 @@ Available settings for your user in relation to a zone.
 
   Whether the API call was successful
 
-- `result: optional array of ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 59 more`
+- `result: optional array of ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 61 more`
 
   - `ZeroRTT object { id, value, editable, modified_on }`
 
@@ -3998,6 +3998,70 @@ Available settings for your user in relation to a zone.
       - `"on"`
 
       - `"off"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
 
     - `editable: optional true or false`
 
@@ -4158,7 +4222,7 @@ Fetch a single zone setting by name
 
   Whether the API call was successful
 
-- `result: optional ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 60 more`
+- `result: optional ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 62 more`
 
   0-RTT session resumption enabled for this zone.
 
@@ -6098,6 +6162,70 @@ Fetch a single zone setting by name
       - `"on"`
 
       - `"off"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
 
     - `editable: optional true or false`
 
@@ -6240,7 +6368,7 @@ Updates a single zone setting by the identifier
 
   - `Value object { value }`
 
-    - `value: optional unknown or object { enabled, pool_id }  or array of string or 4 more`
+    - `value: optional unknown or object { enabled, pool_id }  or array of string or 5 more`
 
       Value of the zone setting.
 
@@ -6325,6 +6453,13 @@ Updates a single zone setting by the identifier
 
             Enable automatic preload of the HSTS configuration.
 
+      - `ZonesWebmcpPacksValue = string`
+
+        Comma-separated list of WebMCP tool-pack names to activate for this
+        zone (for example, "c2pa,mcp-server-client"), surfaced to the injected
+        bridge as the data-packs attribute. An empty value clears the override
+        so the bridge uses its built-in default pack set.
+
 ### Returns
 
 - `errors: array of ResponseInfo`
@@ -6353,7 +6488,7 @@ Updates a single zone setting by the identifier
 
   Whether the API call was successful
 
-- `result: optional ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 60 more`
+- `result: optional ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 62 more`
 
   0-RTT session resumption enabled for this zone.
 
@@ -8306,6 +8441,70 @@ Updates a single zone setting by the identifier
 
       last time this setting was modified.
 
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
   - `WebP object { id, value, editable, modified_on }`
 
     When the client requesting the image supports the WebP image codec, and WebP offers a performance advantage over the original image format, Cloudflare will serve a WebP version of the original image.
@@ -8424,7 +8623,7 @@ Edit settings for a zone.
 
 ### Body Parameters
 
-- `body: array of ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 57 more`
+- `body: array of ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 59 more`
 
   - `ZeroRTT object { id, value, editable, modified_on }`
 
@@ -10285,6 +10484,70 @@ Edit settings for a zone.
 
       last time this setting was modified.
 
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
   - `WebP object { id, value, editable, modified_on }`
 
     When the client requesting the image supports the WebP image codec, and WebP offers a performance advantage over the original image format, Cloudflare will serve a WebP version of the original image.
@@ -10373,7 +10636,7 @@ Edit settings for a zone.
 
   Whether the API call was successful
 
-- `result: optional array of ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 59 more`
+- `result: optional array of ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 61 more`
 
   - `ZeroRTT object { id, value, editable, modified_on }`
 
@@ -12281,6 +12544,70 @@ Edit settings for a zone.
       - `"on"`
 
       - `"off"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
 
     - `editable: optional true or false`
 
@@ -13804,7 +14131,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
 
 ### Setting List Response
 
-- `SettingListResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 59 more`
+- `SettingListResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 61 more`
 
   0-RTT session resumption enabled for this zone.
 
@@ -15714,6 +16041,70 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
       - `"on"`
 
       - `"off"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
 
     - `editable: optional true or false`
 
@@ -15789,7 +16180,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
 
 ### Setting Get Response
 
-- `SettingGetResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 60 more`
+- `SettingGetResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 62 more`
 
   0-RTT session resumption enabled for this zone.
 
@@ -17729,6 +18120,70 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
       - `"on"`
 
       - `"off"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
 
     - `editable: optional true or false`
 
@@ -17804,7 +18259,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
 
 ### Setting Edit Response
 
-- `SettingEditResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 60 more`
+- `SettingEditResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 62 more`
 
   0-RTT session resumption enabled for this zone.
 
@@ -19757,6 +20212,70 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
 
       last time this setting was modified.
 
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
   - `WebP object { id, value, editable, modified_on }`
 
     When the client requesting the image supports the WebP image codec, and WebP offers a performance advantage over the original image format, Cloudflare will serve a WebP version of the original image.
@@ -19819,7 +20338,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
 
 ### Setting Bulk Edit Response
 
-- `SettingBulkEditResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 59 more`
+- `SettingBulkEditResponse = ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 61 more`
 
   0-RTT session resumption enabled for this zone.
 
@@ -21742,6 +22261,70 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
 
       last time this setting was modified.
 
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
   - `WebP object { id, value, editable, modified_on }`
 
     When the client requesting the image supports the WebP image codec, and WebP offers a performance advantage over the original image format, Cloudflare will serve a WebP version of the original image.
@@ -21804,7 +22387,557 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
 
 # Transformations Allowed Origins
 
+## Get Image Transformations Allowed Origins setting
+
+**get** `/zones/{zone_id}/settings/transformations_allowed_origins`
+
+Media Transformations Allowed Origins restricts transformations for images and video served through
+Cloudflare's network to requests originating from specified domains. Refer to the
+Image Transformations and Video Transformations documentation for more information.
+
+### Path Parameters
+
+- `zone_id: string`
+
+  Identifier.
+
+### Returns
+
+- `errors: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+    - `pointer: optional string`
+
+- `messages: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+- `success: boolean`
+
+  Whether the API call was successful.
+
+- `result: optional TransformationsAllowedOrigins`
+
+  Controls which origins are allowed to request image and video transformations.
+
+  - `id: optional "image_resizing_allowed_origins"`
+
+    ID of the zone setting.
+
+    - `"image_resizing_allowed_origins"`
+
+  - `editable: optional true or false`
+
+    Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+    - `true`
+
+    - `false`
+
+  - `modified_on: optional string`
+
+    last time this setting was modified.
+
+  - `value: optional "on" or "off"`
+
+    Comma-separated list of allowed origin domains for image and video transformations.
+    Use "*" to allow all origins (default).
+
+    - `"on"`
+
+    - `"off"`
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings/transformations_allowed_origins \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+```
+
+#### Response
+
+```json
+{
+  "errors": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "messages": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "success": true,
+  "result": {
+    "id": "image_resizing_allowed_origins",
+    "editable": true,
+    "modified_on": "2014-01-01T05:20:00.12345Z",
+    "value": "on"
+  }
+}
+```
+
+## Change Image Transformations Allowed Origins setting
+
+**patch** `/zones/{zone_id}/settings/transformations_allowed_origins`
+
+Media Transformations Allowed Origins restricts transformations for images and video served through
+Cloudflare's network to requests originating from specified domains. Refer to the
+Image Transformations and Video Transformations documentation for more information.
+
+### Path Parameters
+
+- `zone_id: string`
+
+  Identifier.
+
+### Body Parameters
+
+- `value: string`
+
+  Comma-separated list of allowed origin domains for image and video transformations.
+  Use "*" to allow all origins (default).
+
+### Returns
+
+- `errors: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+    - `pointer: optional string`
+
+- `messages: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+- `success: boolean`
+
+  Whether the API call was successful.
+
+- `result: optional TransformationsAllowedOrigins`
+
+  Controls which origins are allowed to request image and video transformations.
+
+  - `id: optional "image_resizing_allowed_origins"`
+
+    ID of the zone setting.
+
+    - `"image_resizing_allowed_origins"`
+
+  - `editable: optional true or false`
+
+    Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+    - `true`
+
+    - `false`
+
+  - `modified_on: optional string`
+
+    last time this setting was modified.
+
+  - `value: optional "on" or "off"`
+
+    Comma-separated list of allowed origin domains for image and video transformations.
+    Use "*" to allow all origins (default).
+
+    - `"on"`
+
+    - `"off"`
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings/transformations_allowed_origins \
+    -X PATCH \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+    -d '{
+          "value": "example.com,cdn.example.com"
+        }'
+```
+
+#### Response
+
+```json
+{
+  "errors": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "messages": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "success": true,
+  "result": {
+    "id": "image_resizing_allowed_origins",
+    "editable": true,
+    "modified_on": "2014-01-01T05:20:00.12345Z",
+    "value": "on"
+  }
+}
+```
+
+## Domain Types
+
+### Transformations Allowed Origins
+
+- `TransformationsAllowedOrigins object { id, editable, modified_on, value }`
+
+  Controls which origins are allowed to request image and video transformations.
+
+  - `id: optional "image_resizing_allowed_origins"`
+
+    ID of the zone setting.
+
+    - `"image_resizing_allowed_origins"`
+
+  - `editable: optional true or false`
+
+    Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+    - `true`
+
+    - `false`
+
+  - `modified_on: optional string`
+
+    last time this setting was modified.
+
+  - `value: optional "on" or "off"`
+
+    Comma-separated list of allowed origin domains for image and video transformations.
+    Use "*" to allow all origins (default).
+
+    - `"on"`
+
+    - `"off"`
+
 # Transformations C2pa
+
+## Get Image Transformations C2PA setting
+
+**get** `/zones/{zone_id}/settings/transformations_c2pa`
+
+C2PA (Coalition for Content Provenance and Authenticity) signing adds cryptographic metadata
+to images processed through Cloudflare Image Transformations, enabling verification of image
+authenticity and provenance.
+
+### Path Parameters
+
+- `zone_id: string`
+
+  Identifier.
+
+### Returns
+
+- `errors: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+    - `pointer: optional string`
+
+- `messages: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+- `success: boolean`
+
+  Whether the API call was successful.
+
+- `result: optional TransformationsC2pa`
+
+  Controls C2PA signing for images processed through Cloudflare Image Transformations.
+
+  - `id: optional "image_resizing_c2pa"`
+
+    ID of the zone setting.
+
+    - `"image_resizing_c2pa"`
+
+  - `editable: optional true or false`
+
+    Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+    - `true`
+
+    - `false`
+
+  - `modified_on: optional string`
+
+    last time this setting was modified.
+
+  - `value: optional "on" or "off"`
+
+    Current value of the zone setting.
+
+    - `"on"`
+
+    - `"off"`
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings/transformations_c2pa \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+```
+
+#### Response
+
+```json
+{
+  "errors": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "messages": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "success": true,
+  "result": {
+    "id": "image_resizing_c2pa",
+    "editable": true,
+    "modified_on": "2014-01-01T05:20:00.12345Z",
+    "value": "on"
+  }
+}
+```
+
+## Change Image Transformations C2PA setting
+
+**patch** `/zones/{zone_id}/settings/transformations_c2pa`
+
+C2PA (Coalition for Content Provenance and Authenticity) signing adds cryptographic metadata
+to images processed through Cloudflare Image Transformations, enabling verification of image
+authenticity and provenance.
+
+### Path Parameters
+
+- `zone_id: string`
+
+  Identifier.
+
+### Body Parameters
+
+- `value: "off" or "on"`
+
+  Whether C2PA signing is enabled for image transformations.
+
+  - `"off"`
+
+  - `"on"`
+
+### Returns
+
+- `errors: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+    - `pointer: optional string`
+
+- `messages: array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+- `success: boolean`
+
+  Whether the API call was successful.
+
+- `result: optional TransformationsC2pa`
+
+  Controls C2PA signing for images processed through Cloudflare Image Transformations.
+
+  - `id: optional "image_resizing_c2pa"`
+
+    ID of the zone setting.
+
+    - `"image_resizing_c2pa"`
+
+  - `editable: optional true or false`
+
+    Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+    - `true`
+
+    - `false`
+
+  - `modified_on: optional string`
+
+    last time this setting was modified.
+
+  - `value: optional "on" or "off"`
+
+    Current value of the zone setting.
+
+    - `"on"`
+
+    - `"off"`
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings/transformations_c2pa \
+    -X PATCH \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+    -d '{
+          "value": "off"
+        }'
+```
+
+#### Response
+
+```json
+{
+  "errors": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "messages": [
+    {
+      "code": 1000,
+      "message": "message",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "success": true,
+  "result": {
+    "id": "image_resizing_c2pa",
+    "editable": true,
+    "modified_on": "2014-01-01T05:20:00.12345Z",
+    "value": "on"
+  }
+}
+```
+
+## Domain Types
+
+### Transformations C2pa
+
+- `TransformationsC2pa object { id, editable, modified_on, value }`
+
+  Controls C2PA signing for images processed through Cloudflare Image Transformations.
+
+  - `id: optional "image_resizing_c2pa"`
+
+    ID of the zone setting.
+
+    - `"image_resizing_c2pa"`
+
+  - `editable: optional true or false`
+
+    Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+    - `true`
+
+    - `false`
+
+  - `modified_on: optional string`
+
+    last time this setting was modified.
+
+  - `value: optional "on" or "off"`
+
+    Current value of the zone setting.
+
+    - `"on"`
+
+    - `"off"`
 
 # Environments
 
@@ -25152,7 +26285,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/available_rate_plans \
 
 **get** `/zones/{zone_id}/ct/alerting`
 
-Retrieve the Certificate Transparency alerting subscription settings for a zone. Returns whether CT monitoring is enabled and, for Business and Enterprise zones, the list of email addresses that receive alerts.
+Retrieve the Certificate Transparency alerting subscription settings for a zone. Returns whether CT monitoring is enabled and the list of email addresses that receive alerts, if any have been configured.
 
 ### Path Parameters
 
@@ -25192,7 +26325,7 @@ Retrieve the Certificate Transparency alerting subscription settings for a zone.
 
   - `true`
 
-- `result: optional object { enabled, emails }`
+- `result: optional CTAlertingSubscription`
 
   Certificate Transparency alerting subscription settings for a zone.
 
@@ -25202,7 +26335,7 @@ Retrieve the Certificate Transparency alerting subscription settings for a zone.
 
   - `emails: optional array of string`
 
-    Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
+    Email addresses that receive CT alert notifications for the zone. A maximum of 100 addresses may be configured. Each address must be a valid RFC 5322 email address and must not contain a comma.
 
 ### Example
 
@@ -25251,8 +26384,9 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/ct/alerting \
 **patch** `/zones/{zone_id}/ct/alerting`
 
 Create or update the Certificate Transparency alerting subscription for a zone. Enables or disables email notifications when certificates are issued for the zone's domains.
-For Free and Pro zones, the subscription is toggled on or off using the enabled field. Notification emails are sent to all users with SSL permissions on the zone.
-For Business and Enterprise zones, the emails field is required and controls which addresses receive alerts. Setting emails to an empty list disables the subscription regardless of the enabled field. A maximum of 10 email addresses may be configured.
+The `enabled` field is required on every request and controls whether the subscription is active. The `emails` field is optional and, when provided, replaces the stored recipient list for the zone. When `emails` is omitted, the stored recipient list is preserved and only the enabled state is toggled. A maximum of 100 email addresses may be configured per zone.
+Requests that omit `enabled` are rejected with error code 1008.
+Subscribe and unsubscribe notification emails are only sent for recipients whose effective subscription state changes. Idempotent requests (no state change) send no notification email.
 
 ### Path Parameters
 
@@ -25268,7 +26402,7 @@ For Business and Enterprise zones, the emails field is required and controls whi
 
 - `emails: optional array of string`
 
-  Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
+  Email addresses that receive CT alert notifications for the zone. A maximum of 100 addresses may be configured. Each address must be a valid RFC 5322 email address and must not contain a comma.
 
 ### Returns
 
@@ -25302,7 +26436,7 @@ For Business and Enterprise zones, the emails field is required and controls whi
 
   - `true`
 
-- `result: optional object { enabled, emails }`
+- `result: optional CTAlertingSubscription`
 
   Certificate Transparency alerting subscription settings for a zone.
 
@@ -25312,7 +26446,7 @@ For Business and Enterprise zones, the emails field is required and controls whi
 
   - `emails: optional array of string`
 
-    Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
+    Email addresses that receive CT alert notifications for the zone. A maximum of 100 addresses may be configured. Each address must be a valid RFC 5322 email address and must not contain a comma.
 
 ### Example
 
@@ -25367,23 +26501,9 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/ct/alerting \
 
 ## Domain Types
 
-### Alerting Get Response
+### CT Alerting Subscription
 
-- `AlertingGetResponse object { enabled, emails }`
-
-  Certificate Transparency alerting subscription settings for a zone.
-
-  - `enabled: boolean`
-
-    Whether CT alerting is enabled for the zone.
-
-  - `emails: optional array of string`
-
-    Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
-
-### Alerting Edit Response
-
-- `AlertingEditResponse object { enabled, emails }`
+- `CTAlertingSubscription object { enabled, emails }`
 
   Certificate Transparency alerting subscription settings for a zone.
 
@@ -25393,4 +26513,4 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/ct/alerting \
 
   - `emails: optional array of string`
 
-    Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
+    Email addresses that receive CT alert notifications for the zone. A maximum of 100 addresses may be configured. Each address must be a valid RFC 5322 email address and must not contain a comma.

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Metadata
 
-Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/metadata/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/metadata/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Page-level metadata - content type, associated products, last updated, word count - lets you take a broader, more strategic view of your content.
 
@@ -159,7 +159,7 @@ We utilize [Zod schemas ↗](https://zod.dev/) heavily in our Astro site, which 
 
 These allow us to provide [Intellisense guidance ↗](https://docs.astro.build/en/reference/experimental-flags/content-intellisense/) for contributors using IDEs for local development.
 
-![Intellisense in action](https://developers.cloudflare.com/_astro/intellisense.An5j893x_Z1QY0z6.webp)
+![Intellisense in action](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1196,height=196,format=webp/_astro/intellisense.An5j893x.png)
 
 Was this helpful?
 
@@ -167,8 +167,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/#page","headline":"Metadata · Cloudflare Style Guide","description":"Manage documentation page metadata.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/#page","headline":"Metadata · Cloudflare Style Guide","description":"Manage documentation page metadata.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

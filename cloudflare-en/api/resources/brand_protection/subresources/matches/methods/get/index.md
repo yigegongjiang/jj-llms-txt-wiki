@@ -12,6 +12,8 @@ Return matches for string queries based on ID
 
 - `id: optional string`
 
+- `include_dismissed: optional boolean`
+
 - `include_domain_id: optional boolean`
 
 - `limit: optional number`

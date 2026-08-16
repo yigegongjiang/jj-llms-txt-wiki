@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/glossary-tooltip/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `GlossaryTooltip` component is used `582` times on `420` pages.
+The `GlossaryTooltip` component is used `584` times on `423` pages.
 
 See all examples of pages that use GlossaryTooltip
 
-Used **582** times.
+Used **584** times.
 
 **Pages**
 
@@ -127,6 +127,7 @@ Used **582** times.
 * [/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/rdp/rdp-browser/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/rdp/rdp-browser/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/rdp/rdp-browser.mdx)
 * [/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-device-client/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-device-client/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-device-client.mdx)
 * [/cloudflare-one/networks/resolvers-and-proxies/dns/dns-over-https/](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/dns/dns-over-https/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/resolvers-and-proxies/dns/dns-over-https.mdx)
+* [/cloudflare-one/networks/routes/configure-initial-resolved-ips/](https://developers.cloudflare.com/cloudflare-one/networks/routes/configure-initial-resolved-ips/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/routes/configure-initial-resolved-ips.mdx)
 * [/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation.mdx)
 * [/cloudflare-one/setup/replace-vpn/device-to-network/](https://developers.cloudflare.com/cloudflare-one/setup/replace-vpn/device-to-network/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/setup/replace-vpn/device-to-network.mdx)
 * [/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/index.mdx)
@@ -140,6 +141,7 @@ Used **582** times.
 * [/cloudflare-one/team-and-resources/users/users/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/users/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/users/users.mdx)
 * [/cloudflare-one/traffic-policies/application-app-types/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/application-app-types/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/application-app-types.mdx)
 * [/cloudflare-one/traffic-policies/egress-policies/egress-cloudflared/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/egress-cloudflared/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/egress-policies/egress-cloudflared.mdx)
+* [/cloudflare-one/traffic-policies/egress-policies/host-selectors/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/host-selectors/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/egress-policies/host-selectors.mdx)
 * [/cloudflare-one/traffic-policies/get-started/dns/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/dns/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/get-started/dns.mdx)
 * [/cloudflare-one/traffic-policies/get-started/http/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/http/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/get-started/http.mdx)
 * [/cloudflare-one/traffic-policies/get-started/network/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/network/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/get-started/network.mdx)
@@ -474,7 +476,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/glossary-tooltip/#page","headline":"Glossary tooltip · Cloudflare Style Guide","description":"Show glossary term definitions on hover.","url":"https://developers.cloudflare.com/style-guide/components/glossary-tooltip/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

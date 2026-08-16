@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/package-managers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `PackageManagers` component is used `445` times on `224` pages.
+The `PackageManagers` component is used `465` times on `234` pages.
 
 See all examples of pages that use PackageManagers
 
-Used **445** times.
+Used **465** times.
 
 **Pages**
 
@@ -42,7 +42,11 @@ Used **445** times.
 * [/agents/tools/codemode/durable-runtime/](https://developers.cloudflare.com/agents/tools/codemode/durable-runtime/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/durable-runtime.mdx)
 * [/agents/tools/codemode/mcp/](https://developers.cloudflare.com/agents/tools/codemode/mcp/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/mcp.mdx)
 * [/agents/tools/codemode/tanstack-ai/](https://developers.cloudflare.com/agents/tools/codemode/tanstack-ai/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/tanstack-ai.mdx)
+* [/agents/tools/payments/mpp/accept-payments/](https://developers.cloudflare.com/agents/tools/payments/mpp/accept-payments/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/payments/mpp/accept-payments.mdx)
+* [/agents/tools/payments/mpp/pay-from-agents-sdk/](https://developers.cloudflare.com/agents/tools/payments/mpp/pay-from-agents-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/payments/mpp/pay-from-agents-sdk.mdx)
 * [/ai-gateway/integrations/aig-workers-ai-binding/](https://developers.cloudflare.com/ai-gateway/integrations/aig-workers-ai-binding/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/integrations/aig-workers-ai-binding.mdx)
+* [/ai-search/agent-sdks/agents-sdk/](https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/agents-sdk.mdx)
+* [/ai-search/agent-sdks/ai-sdk/](https://developers.cloudflare.com/ai-search/agent-sdks/ai-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/ai-sdk.mdx)
 * [/ai-search/get-started/workers/](https://developers.cloudflare.com/ai-search/get-started/workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/get-started/workers.mdx)
 * [/ai-search/get-started/wrangler/](https://developers.cloudflare.com/ai-search/get-started/wrangler/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/get-started/wrangler.mdx)
 * [/ai-search/how-to/add-search-to-your-website/](https://developers.cloudflare.com/ai-search/how-to/add-search-to-your-website/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/how-to/add-search-to-your-website.mdx)
@@ -69,6 +73,7 @@ Used **445** times.
 * [/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/cors/](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/cors/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/cors.mdx)
 * [/cloudflare-one/tutorials/extend-sso-with-workers/](https://developers.cloudflare.com/cloudflare-one/tutorials/extend-sso-with-workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/tutorials/extend-sso-with-workers.mdx)
 * [/containers/container-class/](https://developers.cloudflare.com/containers/container-class/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/container-class.mdx)
+* [/containers/deploy/](https://developers.cloudflare.com/containers/deploy/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/deploy.mdx)
 * [/containers/examples/env-vars-and-secrets/](https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/examples/env-vars-and-secrets.mdx)
 * [/containers/get-started/](https://developers.cloudflare.com/containers/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/get-started.mdx)
 * [/containers/platform-details/image-management/](https://developers.cloudflare.com/containers/platform-details/image-management/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform-details/image-management.mdx)
@@ -133,9 +138,13 @@ Used **445** times.
 * [/radar/investigate/bgp-anomalies/](https://developers.cloudflare.com/radar/investigate/bgp-anomalies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/radar/investigate/bgp-anomalies.mdx)
 * [/realtime/realtimekit/core/video-effects/](https://developers.cloudflare.com/realtime/realtimekit/core/video-effects/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/realtime/realtimekit/core/video-effects.mdx)
 * [/realtime/realtimekit/ui-kit/addons/](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/realtime/realtimekit/ui-kit/addons.mdx)
+* [/sandbox/1-0-preview/get-started/](https://developers.cloudflare.com/sandbox/1-0-preview/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/1-0-preview/get-started.mdx)
+* [/sandbox/1-0-preview/](https://developers.cloudflare.com/sandbox/1-0-preview/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/1-0-preview/index.mdx)
+* [/sandbox/1-0-preview/migrate/](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/1-0-preview/migrate.mdx)
+* [/sandbox/1-0-preview/terminals/](https://developers.cloudflare.com/sandbox/1-0-preview/terminals/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/1-0-preview/terminals.mdx)
 * [/sandbox/get-started/](https://developers.cloudflare.com/sandbox/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/get-started.mdx)
 * [/sandbox/guides/browser-terminals/](https://developers.cloudflare.com/sandbox/guides/browser-terminals/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/browser-terminals.mdx)
-* [/sandbox/guides/proxy-requests/](https://developers.cloudflare.com/sandbox/guides/proxy-requests/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/proxy-requests.mdx)
+* [/sandbox/guides/deploy/](https://developers.cloudflare.com/sandbox/guides/deploy/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/deploy.mdx)
 * [/sandbox/tutorials/ai-code-executor/](https://developers.cloudflare.com/sandbox/tutorials/ai-code-executor/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/tutorials/ai-code-executor.mdx)
 * [/sandbox/tutorials/analyze-data-with-ai/](https://developers.cloudflare.com/sandbox/tutorials/analyze-data-with-ai/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/tutorials/analyze-data-with-ai.mdx)
 * [/sandbox/tutorials/automated-testing-pipeline/](https://developers.cloudflare.com/sandbox/tutorials/automated-testing-pipeline/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/tutorials/automated-testing-pipeline.mdx)
@@ -251,7 +260,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/package-managers/#page","headline":"Package Managers · Cloudflare Style Guide","description":"Show commands across npm, yarn, and pnpm.","url":"https://developers.cloudflare.com/style-guide/components/package-managers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

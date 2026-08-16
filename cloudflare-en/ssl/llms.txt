@@ -24,7 +24,7 @@ Encrypt your web traffic to prevent data theft and other tampering
 - [Always Use HTTPS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/index.md): Redirect all HTTP requests to HTTPS for your domain.
 - [Automatic HTTPS Rewrites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/automatic-https-rewrites/index.md): Fix mixed content by rewriting HTTP URLs to HTTPS in page responses.
 - [Certificate Signing Requests (CSRs)](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/certificate-signing-requests/index.md): Generate CSRs for use with custom certificates.
-- [Certificate Transparency Monitoring](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/certificate-transparency-monitoring/index.md): Certificate Transparency (CT) Monitoring is an opt-in feature in public beta that aims at improving security by allowing you to double-check any SSL/TLS certificates issued for your domain.
+- [Certificate Transparency Monitoring](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/certificate-transparency-monitoring/index.md): Certificate Transparency (CT) Monitoring emails you when a new SSL/TLS certificate is issued for your domain, so you can spot unauthorized or mis-issued certificates.
 - [Cipher suites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/index.md): Control which encryption algorithms are used in TLS connections to your domain.
 - [Compliance standards](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/index.md): Cipher suite compliance with FIPS 140-3, PCI DSS, and other standards.
 - [Customize cipher suites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/index.md): Restrict which cipher suites Cloudflare uses for edge connections.
@@ -95,6 +95,7 @@ Encrypt your web traffic to prevent data theft and other tampering
 - [Keyless SSL](https://developers.cloudflare.com/ssl/keyless-ssl/index.md): Keep private keys on your own infrastructure while using Cloudflare TLS.
 - [Cloudflare Tunnel](https://developers.cloudflare.com/ssl/keyless-ssl/configuration/cloudflare-tunnel/index.md): Deploy Keyless SSL with Cloudflare Tunnel for private connectivity.
 - [Public DNS](https://developers.cloudflare.com/ssl/keyless-ssl/configuration/public-dns/index.md): Deploy Keyless SSL with public DNS resolution.
+- [Run with Docker](https://developers.cloudflare.com/ssl/keyless-ssl/configuration/run-with-docker/index.md): Run a Keyless SSL key server as a container using environment variables.
 - [Glossary](https://developers.cloudflare.com/ssl/keyless-ssl/glossary/index.md): Learn more about the common terms related to Keyless SSL.
 - [Hardware security modules](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/index.md): Store private keys in hardware security modules for Keyless SSL.
 - [AWS cloud HSM](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/aws-cloud-hsm/index.md): Learn how to use Keyless SSL with AWS CloudHSM.
@@ -163,7 +164,6 @@ Encrypt your web traffic to prevent data theft and other tampering
 
 ## reference
 
-- [Features and plans](https://developers.cloudflare.com/ssl/reference/all-features/index.md): Review information on all Cloudflare SSL/TLS features and their availability.
 - [Browser compatibility](https://developers.cloudflare.com/ssl/reference/browser-compatibility/index.md): Review information about browser compatibility for the different Cloudflare SSL/TLS offerings.
 - [Certificate and hostname priority](https://developers.cloudflare.com/ssl/reference/certificate-and-hostname-priority/index.md): Learn about how Cloudflare decides which certificate and associated SSL/TLS settings to apply to individual hostnames.
 - [Certificate authorities](https://developers.cloudflare.com/ssl/reference/certificate-authorities/index.md): For publicly trusted certificates, Cloudflare partners with different certificate authorities (CAs). Refer to this page to check what CAs are used for each Cloudflare offering and for more details about the CAs features, limitations, and browser compatibility.

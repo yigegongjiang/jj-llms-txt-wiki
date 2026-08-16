@@ -80,6 +80,10 @@ Lists all service tokens.
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
 
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
+
   - `expires_at: optional string`
 
   - `name: optional string`
@@ -146,6 +150,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
       "client_id": "88bf3b6d86161464f6509f7219099e57.access.example.com",
       "created_at": "2014-01-01T05:20:00.12345Z",
       "duration": "60m",
+      "enabled": true,
       "expires_at": "2014-01-01T05:20:00.12345Z",
       "last_seen_at": "2014-01-01T05:20:00.12345Z",
       "name": "CI/CD token",
@@ -228,6 +233,10 @@ Fetches a single service token.
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
 
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
+
   - `expires_at: optional string`
 
   - `name: optional string`
@@ -271,6 +280,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "client_id": "88bf3b6d86161464f6509f7219099e57.access.example.com",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "expires_at": "2014-01-01T05:20:00.12345Z",
     "last_seen_at": "2014-01-01T05:20:00.12345Z",
     "name": "CI/CD token",
@@ -309,6 +319,10 @@ Generates a new service token. **Note:** This is the only time you can get the C
 
   The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
 
+- `enabled: optional boolean`
+
+  Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
+
 - `previous_client_secret_expires_at: optional string`
 
   The expiration of the previous `client_secret`. This can be modified at any point after a rotation. For example, you may extend it further into the future if you need more time to update services with the new secret; or move it into the past to immediately invalidate the previous token in case of compromise.
@@ -345,7 +359,7 @@ Generates a new service token. **Note:** This is the only time you can get the C
 
   - `true`
 
-- `result: optional object { id, client_id, client_secret, 2 more }`
+- `result: optional object { id, client_id, client_secret, 3 more }`
 
   - `id: optional string`
 
@@ -362,6 +376,10 @@ Generates a new service token. **Note:** This is the only time you can get the C
   - `duration: optional string`
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
+
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
 
   - `name: optional string`
 
@@ -411,6 +429,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "client_secret": "bdd31cbc4dec990953e39163fbbb194c93313ca9f0a6e420346af9d326b1d2a5",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "name": "CI/CD token",
     "updated_at": "2014-01-01T05:20:00.12345Z"
   }
@@ -446,6 +465,10 @@ Updates a configured service token.
 - `duration: optional string`
 
   The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
+
+- `enabled: optional boolean`
+
+  Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
 
 - `name: optional string`
 
@@ -501,6 +524,10 @@ Updates a configured service token.
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
 
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
+
   - `expires_at: optional string`
 
   - `name: optional string`
@@ -551,6 +578,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "client_id": "88bf3b6d86161464f6509f7219099e57.access.example.com",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "expires_at": "2014-01-01T05:20:00.12345Z",
     "last_seen_at": "2014-01-01T05:20:00.12345Z",
     "name": "CI/CD token",
@@ -625,6 +653,10 @@ Deletes a service token.
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
 
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
+
   - `expires_at: optional string`
 
   - `name: optional string`
@@ -669,6 +701,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "client_id": "88bf3b6d86161464f6509f7219099e57.access.example.com",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "expires_at": "2014-01-01T05:20:00.12345Z",
     "last_seen_at": "2014-01-01T05:20:00.12345Z",
     "name": "CI/CD token",
@@ -739,6 +772,10 @@ Refreshes the expiration of a service token.
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
 
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
+
   - `expires_at: optional string`
 
   - `name: optional string`
@@ -783,6 +820,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
     "client_id": "88bf3b6d86161464f6509f7219099e57.access.example.com",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "expires_at": "2014-01-01T05:20:00.12345Z",
     "last_seen_at": "2014-01-01T05:20:00.12345Z",
     "name": "CI/CD token",
@@ -845,7 +883,7 @@ Generates a new Client Secret for a service token and revokes the old one.
 
   - `true`
 
-- `result: optional object { id, client_id, client_secret, 2 more }`
+- `result: optional object { id, client_id, client_secret, 3 more }`
 
   - `id: optional string`
 
@@ -862,6 +900,10 @@ Generates a new Client Secret for a service token and revokes the old one.
   - `duration: optional string`
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
+
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
 
   - `name: optional string`
 
@@ -906,6 +948,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
     "client_secret": "bdd31cbc4dec990953e39163fbbb194c93313ca9f0a6e420346af9d326b1d2a5",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "name": "CI/CD token",
     "updated_at": "2014-01-01T05:20:00.12345Z"
   }
@@ -916,7 +959,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
 
 ### Service Token
 
-- `ServiceToken object { id, client_id, duration, 2 more }`
+- `ServiceToken object { id, client_id, duration, 3 more }`
 
   - `id: optional string`
 
@@ -929,6 +972,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
   - `duration: optional string`
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
+
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
 
   - `expires_at: optional string`
 
@@ -938,7 +985,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
 
 ### Service Token Create Response
 
-- `ServiceTokenCreateResponse object { id, client_id, client_secret, 2 more }`
+- `ServiceTokenCreateResponse object { id, client_id, client_secret, 3 more }`
 
   - `id: optional string`
 
@@ -955,6 +1002,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
   - `duration: optional string`
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
+
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
 
   - `name: optional string`
 
@@ -962,7 +1013,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
 
 ### Service Token Rotate Response
 
-- `ServiceTokenRotateResponse object { id, client_id, client_secret, 2 more }`
+- `ServiceTokenRotateResponse object { id, client_id, client_secret, 3 more }`
 
   - `id: optional string`
 
@@ -979,6 +1030,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
   - `duration: optional string`
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
+
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
 
   - `name: optional string`
 

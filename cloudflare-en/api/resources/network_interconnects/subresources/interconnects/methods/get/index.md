@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cni/interconnects/{icon}`
 
-Get information about an interconnect object
+Retrieves configuration and status details for a specific network interconnect.
 
 ### Path Parameters
 
@@ -14,7 +14,7 @@ Get information about an interconnect object
 
 ### Returns
 
-- `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+- `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
   - `account: string`
 
@@ -36,9 +36,13 @@ Get information about an interconnect object
 
   - `type: string`
 
+  - `virtual_port_reservation_id: string`
+
+  - `ccr_device_name: optional string`
+
   - `owner: optional string`
 
-- `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+- `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
   - `account: string`
 
@@ -47,6 +51,8 @@ Get information about an interconnect object
   - `region: string`
 
   - `type: string`
+
+  - `virtual_port_reservation_id: string`
 
   - `owner: optional string`
 
@@ -101,6 +107,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
   "slot_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
   "speed": "speed",
   "type": "type",
+  "virtual_port_reservation_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+  "ccr_device_name": "ccr_device_name",
   "owner": "owner"
 }
 ```

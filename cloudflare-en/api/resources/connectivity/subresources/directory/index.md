@@ -6,7 +6,7 @@
 
 **get** `/accounts/{account_id}/connectivity/directory/services`
 
-List Workers VPC connectivity services
+Lists the Workers VPC connectivity services in the account.
 
 ### Path Parameters
 
@@ -300,7 +300,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/connectivity/dire
 
 **post** `/accounts/{account_id}/connectivity/directory/services`
 
-Create Workers VPC connectivity service
+Creates a new Workers VPC connectivity service in the account.
 
 ### Path Parameters
 
@@ -689,7 +689,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/connectivity/dire
 
 **get** `/accounts/{account_id}/connectivity/directory/services/{service_id}`
 
-Get Workers VPC connectivity service
+Fetches a single Workers VPC connectivity service by its ID.
 
 ### Path Parameters
 
@@ -936,7 +936,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/connectivity/dire
 
 **put** `/accounts/{account_id}/connectivity/directory/services/{service_id}`
 
-Update Workers VPC connectivity service
+Updates an existing Workers VPC connectivity service by its ID.
 
 ### Path Parameters
 
@@ -1349,7 +1349,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/connectivity/dire
 
 **delete** `/accounts/{account_id}/connectivity/directory/services/{service_id}`
 
-Delete Workers VPC connectivity service
+Removes a single Workers VPC connectivity service by its ID.
 
 ### Path Parameters
 

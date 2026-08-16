@@ -60,7 +60,7 @@ month through today. The maximum date range is 31 days.
 
     Identifies the error or notice type.
 
-- `result: array of object { BillingAccountId, BillingAccountName, ChargeCategory, 31 more }`
+- `result: array of object { BillingAccountId, BillingAccountName, ChargeCategory, 32 more }`
 
   Contains the array of cost and usage records.
 
@@ -115,6 +115,10 @@ month through today. The maximum date range is 31 days.
   - `ServiceProviderName: string`
 
     Name of the entity that made the services available for purchase.
+
+  - `x_BillableMetricId: string`
+
+    The unique identifier for the billable metric in the Cloudflare catalog. Cloudflare extension; replaces FOCUS SkuId.
 
   - `x_BillableMetricName: string`
 
@@ -186,13 +190,13 @@ month through today. The maximum date range is 31 days.
 
     Name assigned to a grouping of services. For Cloudflare, this is the subscription or contract display name.
 
-  - `x_BillableMetricId: optional string`
-
-    The unique identifier for the billable metric in the Cloudflare catalog. Cloudflare extension; replaces FOCUS SkuId.
-
   - `x_ProductCategoryName: optional string`
 
     The product category the charge belongs to (e.g., "Developer", "Cloudflare One"). Cloudflare extension; replaces FOCUS ServiceCategory.
+
+  - `x_ProductFamilyId: optional string`
+
+    The unique identifier for the product family in the Cloudflare catalog. Cloudflare extension; replaces FOCUS ServiceId.
 
   - `x_ProductFamilyName: optional string`
 
@@ -249,6 +253,7 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID/billabl
       "HostProviderName": "Cloudflare",
       "InvoiceIssuerName": "Cloudflare",
       "ServiceProviderName": "Cloudflare",
+      "x_BillableMetricId": "workers_standard_requests",
       "x_BillableMetricName": "Workers Standard Requests",
       "BilledCost": 0,
       "BillingCurrency": "USD",
@@ -266,8 +271,8 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID/billabl
       "RegionName": "Eastern Europe",
       "SubAccountId": "c9bd752d-9ca8-411d-b804-be44a758057f",
       "SubAccountName": "My Subscription",
-      "x_BillableMetricId": "workers_standard_requests",
       "x_ProductCategoryName": "Developer",
+      "x_ProductFamilyId": "workers",
       "x_ProductFamilyName": "Workers",
       "x_ZoneId": "023e105f4ecef8ad9ca31a8372d0c353",
       "x_ZoneName": "example.com"

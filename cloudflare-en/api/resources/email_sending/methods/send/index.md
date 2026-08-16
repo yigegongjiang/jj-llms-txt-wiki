@@ -50,7 +50,7 @@ Send an email for the specified account using the structured builder. Provide th
 
     - `disposition: "inline"`
 
-      Must be 'inline'. Embeds the attachment in the email body.
+      Use 'inline' to embed the attachment in the email body.
 
       - `"inline"`
 
@@ -70,7 +70,7 @@ Send an email for the specified account using the structured builder. Provide th
 
     - `disposition: "attachment"`
 
-      Must be 'attachment'. Adds a standard file attachment.
+      Use 'attachment' for a standard file attachment.
 
       - `"attachment"`
 
@@ -84,7 +84,7 @@ Send an email for the specified account using the structured builder. Provide th
 
 - `bcc: optional string or object { address, name }  or array of string or object { address, name }`
 
-  BCC recipient(s). A single email string, a named address object, or an array of either.
+  Recipient(s). Optional if cc or bcc is provided. A single email string, a named address object, or an array of either.
 
   - `EmailSendingEmailAddressString = string`
 
@@ -118,7 +118,7 @@ Send an email for the specified account using the structured builder. Provide th
 
 - `cc: optional string or object { address, name }  or array of string or object { address, name }`
 
-  CC recipient(s). A single email string, a named address object, or an array of either.
+  Recipient(s). Optional if cc or bcc is provided. A single email string, a named address object, or an array of either.
 
   - `EmailSendingEmailAddressString = string`
 

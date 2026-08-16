@@ -12,9 +12,11 @@ Creates multiple workflow instances in a single batch operation.
 
 ### Body Parameters
 
-- `body: optional array of object { instance_id, instance_retention, params }`
+- `body: optional array of object { instance_id, instance_retention, location_hint, params }`
 
   - `instance_id: optional string`
+
+    An id of exactly `cf_` followed by 64 lowercase hex characters is reserved for system-generated instances.
 
   - `instance_retention: optional object { error_retention, success_retention }`
 
@@ -37,6 +39,26 @@ Creates multiple workflow instances in a single batch operation.
         Specifies the duration in milliseconds.
 
       - `string`
+
+  - `location_hint: optional "wnam" or "weur" or "enam" or 6 more`
+
+    - `"wnam"`
+
+    - `"weur"`
+
+    - `"enam"`
+
+    - `"eeur"`
+
+    - `"apac"`
+
+    - `"oc"`
+
+    - `"sam"`
+
+    - `"afr"`
+
+    - `"me"`
 
   - `params: optional string`
 

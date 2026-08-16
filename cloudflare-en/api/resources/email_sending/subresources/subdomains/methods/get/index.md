@@ -54,7 +54,7 @@ Gets information for a specific sending subdomain.
 
   - `name: string`
 
-    The subdomain domain name.
+    The exact domain name or a leftmost wildcard such as `*.example.com`.
 
   - `tag: string`
 
@@ -66,7 +66,7 @@ Gets information for a specific sending subdomain.
 
   - `dkim_selector: optional string`
 
-    The DKIM selector used for email signing.
+    The DKIM selector used for email signing. Wildcard rows publish the selector and sign with `d=<base>`.
 
   - `modified: optional string`
 
@@ -78,7 +78,7 @@ Gets information for a specific sending subdomain.
 
   - `return_path_domain: optional string`
 
-    The return-path domain used for bounce handling.
+    The return-path domain used for bounce handling. Wildcard rows use `cf-bounce.<base>`.
 
 ### Example
 

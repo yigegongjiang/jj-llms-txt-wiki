@@ -54,6 +54,16 @@ Apply changes to an existing pool, overwriting the supplied properties.
 
   Whether to enable (the default) or disable this pool. Disabled pools will not receive traffic and are excluded from health checks. Disabling a pool will cause any load balancers using it to failover to the next pool (if any).
 
+- `health_sources: optional array of "local" or "regional" or "global"`
+
+  A list of health sources, ordered from highest to lowest priority, used to evaluate individual origin health and overall pool health. The load balancer uses the first source that has data and falls back to the next. Currently accepted values are null or the exact array ["regional", "global"]; any other combination is rejected. Null (the default) behaves like ["local", "global"]. ["regional", "global"] makes each region steer on its own health, falling back to the global decision when a region has no fresh data. Setting regional requires at least one region in check_regions.
+
+  - `"local"`
+
+  - `"regional"`
+
+  - `"global"`
+
 - `latitude: optional number`
 
   The latitude of the data center containing the origins used in this pool in decimal degrees. If this is set, longitude must also be set.
@@ -270,6 +280,16 @@ Apply changes to an existing pool, overwriting the supplied properties.
 
     Whether to enable (the default) or disable this pool. Disabled pools will not receive traffic and are excluded from health checks. Disabling a pool will cause any load balancers using it to failover to the next pool (if any).
 
+  - `health_sources: optional array of "local" or "regional" or "global"`
+
+    A list of health sources, ordered from highest to lowest priority, used to evaluate individual origin health and overall pool health. The load balancer uses the first source that has data and falls back to the next. Currently accepted values are null or the exact array ["regional", "global"]; any other combination is rejected. Null (the default) behaves like ["local", "global"]. ["regional", "global"] makes each region steer on its own health, falling back to the global decision when a region has no fresh data. Setting regional requires at least one region in check_regions.
+
+    - `"local"`
+
+    - `"regional"`
+
+    - `"global"`
+
   - `latitude: optional number`
 
     The latitude of the data center containing the origins used in this pool in decimal degrees. If this is set, longitude must also be set.
@@ -437,6 +457,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/load_balancers/po
             "ENAM"
           ],
           "description": "Primary data center - Provider XYZ",
+          "health_sources": [
+            "regional",
+            "global"
+          ],
           "name": "primary-dc-1",
           "notification_email": "someone@example.com,sometwo@example.com",
           "notification_filter": {
@@ -484,6 +508,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/load_balancers/po
     "description": "Primary data center - Provider XYZ",
     "disabled_at": "2019-12-27T18:11:19.117Z",
     "enabled": false,
+    "health_sources": [
+      "regional",
+      "global"
+    ],
     "latitude": 0,
     "load_shedding": {
       "default_percent": 0,

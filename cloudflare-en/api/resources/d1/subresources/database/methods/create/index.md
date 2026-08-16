@@ -16,13 +16,15 @@ Returns the created D1 database.
 
   D1 database name.
 
-- `jurisdiction: optional "eu" or "fedramp"`
+- `jurisdiction: optional "eu" or "fedramp" or "us"`
 
   Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
   - `"eu"`
 
   - `"fedramp"`
+
+  - `"us"`
 
 - `primary_location_hint: optional "wnam" or "enam" or "weur" or 3 more`
 
@@ -88,13 +90,15 @@ Returns the created D1 database.
 
     The D1 database's size, in bytes.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 

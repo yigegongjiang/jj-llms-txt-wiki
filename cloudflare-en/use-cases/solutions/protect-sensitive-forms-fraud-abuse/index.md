@@ -178,10 +178,6 @@ Bot Fight Mode challenges requests that match known bot patterns across your ent
 3. Go to **Bot fight mode**.
 4. Turn **Bot fight mode** on.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/login), and select your account and domain.
-2. Go to **Security** \> **Bots**.
-3. For **Bot Fight Mode**, select **On**.
-
 Bot Fight Mode protects your entire domain without endpoint restrictions. You cannot create exceptions using custom rules to bypass Bot Fight Mode.
 
 Pro, Business, and Enterprise
@@ -257,7 +253,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/solutions/protect-sensitive-forms-fraud-abuse/#page","headline":"Protect your forms from spam and abuse (Free, Pro, and Business) · Cloudflare use cases","description":"Block spam submissions, fake account creation, and card testing on your web forms using a layered defense.","url":"https://developers.cloudflare.com/use-cases/solutions/protect-sensitive-forms-fraud-abuse/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

@@ -46,7 +46,7 @@ Updates a DLP entry.
 
   - `true`
 
-- `result: optional object { id, confidence, enabled, 3 more }`
+- `result: optional object { id, confidence, enabled, 4 more }`
 
   - `id: string`
 
@@ -63,6 +63,11 @@ Updates a DLP entry.
   - `enabled: boolean`
 
   - `name: string`
+
+  - `deprecated: optional boolean`
+
+    Whether this entry is deprecated for new use. This is computed from the static catalog and
+    emitted only when true.
 
   - `profile_id: optional string`
 
@@ -145,6 +150,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/dlp/entries/prede
     },
     "enabled": true,
     "name": "name",
+    "deprecated": true,
     "profile_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
     "variant": {
       "topic_type": "Intent",

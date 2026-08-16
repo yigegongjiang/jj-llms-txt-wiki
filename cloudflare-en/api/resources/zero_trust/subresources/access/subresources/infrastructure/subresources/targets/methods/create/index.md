@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/infrastructure/targets`
 
-Create new target
+Creates a new infrastructure access target in the account.
 
 ### Path Parameters
 

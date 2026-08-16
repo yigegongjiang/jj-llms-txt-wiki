@@ -40,6 +40,9 @@ Gets latest Magic WAN Connector Telemetry Events
       - `StartUpgrade`: Started upgrade
       - `FinishUpgradeSuccess`: Finished upgrade
       - `FinishUpgradeFailure`: Failed upgrade
+      - `BlessSlotSuccess`: Blessed boot entry slot
+      - `BlessSlotPending`: Boot entry slot is not yet blessed
+      - `BlessSlotFailure`: Failed to bless boot entry slot
       - `Reconcile`: Reconciled
       - `ConfigureCloudflaredTunnel`: Configured Cloudflared tunnel
       - `RekeyInstallBoth`: Installed initial inbound and outbound keys
@@ -48,8 +51,12 @@ Gets latest Magic WAN Connector Telemetry Events
       - `RekeyAdvance`: Confirmed traffic on new inbound key, swapped outbound to new
       - `RekeyComplete`: Deleted old keys
       - `RekeyReset`: Deleted all keys after receiving an unexpected key
+      - `HaTransition`: Completed HA state transition
+      - `HaError`: Received unexpected HA error
+      - `HaInit`: Initialized HA subsystem
+      - `HaLeave`: Stopped HA subsystem
 
-      - `k: "Init" or "Leave" or "StartAttestation" or 19 more`
+      - `k: "Init" or "Leave" or "StartAttestation" or 26 more`
 
         Event kind
 
@@ -81,6 +88,12 @@ Gets latest Magic WAN Connector Telemetry Events
 
         - `"FinishUpgradeFailure"`
 
+        - `"BlessSlotSuccess"`
+
+        - `"BlessSlotPending"`
+
+        - `"BlessSlotFailure"`
+
         - `"Reconcile"`
 
         - `"ConfigureCloudflaredTunnel"`
@@ -96,6 +109,14 @@ Gets latest Magic WAN Connector Telemetry Events
         - `"RekeyComplete"`
 
         - `"RekeyReset"`
+
+        - `"HaTransition"`
+
+        - `"HaError"`
+
+        - `"HaInit"`
+
+        - `"HaLeave"`
 
     - `n: number`
 

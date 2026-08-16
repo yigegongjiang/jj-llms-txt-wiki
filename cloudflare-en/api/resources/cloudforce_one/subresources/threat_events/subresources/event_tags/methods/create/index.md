@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/cloudforce-one/events/event_tag/{event_id}/create`
 
-Add one or more tags to an event.
+Adds a tag to a threat event in Cloudforce One for classification and filtering.
 
 ### Path Parameters
 

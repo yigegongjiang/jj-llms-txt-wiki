@@ -18,16 +18,16 @@ UI elements are the interactive parts of a product. They are used to build the s
 
 To clarify instructions for complex interfaces, you may need to identify elements by name.
 
-| UI element                                                | Usage                                                                              | Example                                                                                                                     |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Button                                                    | Select **Add a Site**.                                                             | ![Blue button to add a site.](https://developers.cloudflare.com/_astro/button.CukzAuRs_ZRJI1i.webp)                         |
-| Checkboxes and radio buttons                              | Turn **Set as Default DNS Location** on.                                           | ![Two checkboxes for setting DNS options.](https://developers.cloudflare.com/_astro/checkbox.C5zEt3Gs_ZY131X.webp)          |
-| Commands                                                  | Go to **File**, then select **Delete**.                                            | ![Command options to edit or delete.](https://developers.cloudflare.com/_astro/command.BrUyCUbA_1McmS8.webp)                |
-| Error message                                             | If you receive the error message Invalid IP, start the process from the beginning. | ![Invalid IP address input.](https://developers.cloudflare.com/_astro/error-message.BSYNSeRJ_1byFln.webp)                   |
-| Menu                                                      | In the menu, go to your account > **Websites**.                                    | ![List of website options.](https://developers.cloudflare.com/_astro/menu.BjerjH23_2aHpRD.webp)                             |
-| Tab                                                       | Go to **Action**.                                                                  | ![Tabs with security event categories.](https://developers.cloudflare.com/_astro/tab.CoV0ZLwZ_Z1q6LID.webp)                 |
-| Toggle                                                    | Turn **AV inspection** on.                                                         | ![Toggle to turn anti-virus inspection on.](https://developers.cloudflare.com/_astro/toggle.BE_wg5zq_TslLO.webp)            |
-| Containers (windows, screens, pages, sections, and cards) | Refer to your site's traffic statistics for more information.                      | ![Information container with website statistics.](https://developers.cloudflare.com/_astro/container.CwJ0MSRs_Z2t4QSy.webp) |
+| UI element                                                | Usage                                                                              | Example                                                                                                                                                                            |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Button                                                    | Select **Add a Site**.                                                             | ![Blue button to add a site.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=290,height=117,format=webp/_astro/button.CukzAuRs.png)                        |
+| Checkboxes and radio buttons                              | Turn **Set as Default DNS Location** on.                                           | ![Two checkboxes for setting DNS options.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=536,height=120,format=webp/_astro/checkbox.C5zEt3Gs.png)         |
+| Commands                                                  | Go to **File**, then select **Delete**.                                            | ![Command options to edit or delete.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=229,height=96,format=webp/_astro/command.BrUyCUbA.png)                |
+| Error message                                             | If you receive the error message Invalid IP, start the process from the beginning. | ![Invalid IP address input.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=532,height=212,format=webp/_astro/error-message.BSYNSeRJ.png)                  |
+| Menu                                                      | In the menu, go to your account > **Websites**.                                    | ![List of website options.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=502,height=554,format=webp/_astro/menu.BjerjH23.png)                            |
+| Tab                                                       | Go to **Action**.                                                                  | ![Tabs with security event categories.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=665,height=83,format=webp/_astro/tab.CoV0ZLwZ.png)                  |
+| Toggle                                                    | Turn **AV inspection** on.                                                         | ![Toggle to turn anti-virus inspection on.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=266,height=88,format=webp/_astro/toggle.BE_wg5zq.png)           |
+| Containers (windows, screens, pages, sections, and cards) | Refer to your site's traffic statistics for more information.                      | ![Information container with website statistics.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=586,height=828,format=webp/_astro/container.CwJ0MSRs.png) |
 
 ## Interactions
 
@@ -53,7 +53,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/formatting/ui-elements/#page","headline":"UI elements · Cloudflare Style Guide","description":"Format UI element references correctly.","url":"https://developers.cloudflare.com/style-guide/formatting/ui-elements/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

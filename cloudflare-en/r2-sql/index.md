@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # R2 SQL
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2-sql/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2-sql/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
-R2 SQL is in **open beta**, and any developer with an [R2 subscription](https://developers.cloudflare.com/r2/pricing/) can start using it. Currently, outside of standard R2 storage and operations, you will not be billed for your use of R2 SQL. We will update [the pricing page](https://developers.cloudflare.com/r2-sql/platform/pricing) and provide at least 30 days notice before enabling billing.
+R2 SQL is in **open beta**, and any developer with an [R2 subscription](https://developers.cloudflare.com/r2/pricing/) can start using it.
 
 Query Apache Iceberg tables managed by R2 Data Catalog using SQL.
 
-R2 SQL is Cloudflare's serverless, distributed, analytics query engine for querying [Apache Iceberg ↗](https://iceberg.apache.org/) tables stored in [R2 Data Catalog](https://developers.cloudflare.com/r2/data-catalog/). R2 SQL is designed to efficiently query large amounts of data by automatically utilizing file pruning, Cloudflare's distributed compute, and R2 object storage.
+R2 SQL is Cloudflare's serverless, distributed, analytics query engine for querying [Apache Iceberg ↗](https://iceberg.apache.org/) tables stored in [R2 Data Catalog](https://developers.cloudflare.com/r2-data-catalog/). R2 SQL is designed to efficiently query large amounts of data by automatically utilizing file pruning, Cloudflare's distributed compute, and R2 object storage.
 
 ```sh
 ❯ npx wrangler r2 sql query "3373912de3f5202317188ae01300bd6_data-catalog" \
@@ -64,8 +64,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/r2-sql/#page","headline":"R2 SQL · R2 SQL docs","description":"A distributed SQL engine for R2 Data Catalog","url":"https://developers.cloudflare.com/r2-sql/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/r2-sql/#page","headline":"R2 SQL · R2 SQL docs","description":"A distributed SQL engine for R2 Data Catalog","url":"https://developers.cloudflare.com/r2-sql/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

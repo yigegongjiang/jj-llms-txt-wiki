@@ -2,9 +2,10 @@
 
 **get** `/accounts/{account_id}/moq/relays/{relay_id}/tokens`
 
-Returns metadata for every token in the relay's registry. Secrets are
-never returned. The dashboard derives an `expired` flag by comparing
-each token's `expires` to the current time.
+Returns metadata for every token the relay accepts. Secrets are never
+returned, so a token that has been lost cannot be recovered here. There
+is no expiry filter: compare each token's `expires` to the current time
+to tell which ones have lapsed.
 
 ### Path Parameters
 

@@ -2,7 +2,7 @@
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/{event_id}/raw/{raw_id}`
 
-Update raw data for a specific event.
+Partially updates raw threat event data in Cloudforce One, modifying specific fields of the event.
 
 ### Path Parameters
 

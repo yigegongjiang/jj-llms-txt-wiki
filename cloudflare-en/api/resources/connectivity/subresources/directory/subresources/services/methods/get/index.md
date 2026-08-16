@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/connectivity/directory/services/{service_id}`
 
-Get Workers VPC connectivity service
+Fetches a single Workers VPC connectivity service by its ID.
 
 ### Path Parameters
 

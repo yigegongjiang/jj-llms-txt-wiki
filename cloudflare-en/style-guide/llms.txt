@@ -30,9 +30,7 @@ Style guide to follow for contributing to Cloudflare docs.
 - [Directory listing](https://developers.cloudflare.com/style-guide/components/directory-listing/index.md): Auto-generate listings of child pages.
 - [Example](https://developers.cloudflare.com/style-guide/components/example/index.md): Highlight example content in a styled block.
 - [Feature](https://developers.cloudflare.com/style-guide/components/feature/index.md): Display a feature card on overview pages.
-- [Feature table](https://developers.cloudflare.com/style-guide/components/feature-table/index.md): Display feature availability by plan in a table.
 - [File tree](https://developers.cloudflare.com/style-guide/components/file-tree/index.md): Display a file and directory tree structure.
-- [GitHubCode](https://developers.cloudflare.com/style-guide/components/github-code/index.md): Fetch and display code from a GitHub repository.
 - [Glossary](https://developers.cloudflare.com/style-guide/components/glossary/index.md): Display a filterable glossary of terms.
 - [Glossary definition](https://developers.cloudflare.com/style-guide/components/glossary-definition/index.md): Show a single glossary term definition inline.
 - [Glossary tooltip](https://developers.cloudflare.com/style-guide/components/glossary-tooltip/index.md): Show glossary term definitions on hover.
@@ -46,7 +44,6 @@ Style guide to follow for contributing to Cloudflare docs.
 - [Plan](https://developers.cloudflare.com/style-guide/components/plan/index.md): Display plan availability information.
 - [Product availability text](https://developers.cloudflare.com/style-guide/components/product-availability-text/index.md): Show product availability by plan type.
 - [Product changelog](https://developers.cloudflare.com/style-guide/components/product-changelog/index.md): Display product changelog entries.
-- [Product features](https://developers.cloudflare.com/style-guide/components/product-features/index.md): Display a product feature comparison table.
 - [Public stats](https://developers.cloudflare.com/style-guide/components/public-stats/index.md): Display public statistics from Cloudflare data.
 - [Related product](https://developers.cloudflare.com/style-guide/components/related-product/index.md): Show related product links on overview pages.
 - [Render](https://developers.cloudflare.com/style-guide/components/render/index.md): Render reusable partial content from other files.

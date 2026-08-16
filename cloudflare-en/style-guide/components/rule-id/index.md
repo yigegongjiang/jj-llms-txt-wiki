@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/rule-id/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `RuleID` component is used `720` times on `110` pages.
+The `RuleID` component is used `743` times on `113` pages.
 
 See all examples of pages that use RuleID
 
-Used **720** times.
+Used **743** times.
 
 **Pages**
 
@@ -54,7 +54,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/rule-id/#page","headline":"Rule ID · Cloudflare Style Guide","description":"Display a copyable rule ID component.","url":"https://developers.cloudflare.com/style-guide/components/rule-id/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

@@ -115,7 +115,7 @@ The clientless address bar has three views: hostname notch, full address bar and
 
 By default the isolated domain name appears in the notch positioned at the top and center of an isolated page.
 
-![Viewing hostname of an isolated page in the clientless remote browser](https://developers.cloudflare.com/_astro/rbi-address-bar-notch.BsghmuIS_ZhyMH.webp) 
+![Viewing hostname of an isolated page in the clientless remote browser](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=1099,format=webp/_astro/rbi-address-bar-notch.BsghmuIS.png) 
 
 Selecting **Expand** or the hostname text will expand the notch to the full address bar view. If isolated page content is obscured by the notch, expanding to the full address bar view will make the content accessible.
 
@@ -123,7 +123,7 @@ Selecting **Expand** or the hostname text will expand the notch to the full addr
 
 The full address bar allows users to search and go to isolated websites. Users can jump to the address bar at any time by pressing `CTRL + L` on the keyboard.
 
-![Viewing full address of an isolated page in the clientless remote browser](https://developers.cloudflare.com/_astro/rbi-address-bar-full.BDXQJUgz_Z1cD7Aj.webp) 
+![Viewing full address of an isolated page in the clientless remote browser](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=1099,format=webp/_astro/rbi-address-bar-full.BDXQJUgz.png) 
 
 ### Hidden view
 
@@ -181,7 +181,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/#page","headline":"Clientless Web Isolation · Cloudflare One docs","description":"How Clientless Web Isolation works in Browser Isolation.","url":"https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}

@@ -66,7 +66,7 @@ Retrieves the Cloud Connector rules configured for a zone. Rules define how traf
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -77,6 +77,8 @@ Retrieves the Cloud Connector rules configured for a zone. Rules define how traf
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`
 
 ### Example
 
@@ -158,7 +160,7 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -169,6 +171,8 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`
 
 ### Returns
 
@@ -222,7 +226,7 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -233,6 +237,8 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`
 
 ### Example
 
@@ -305,7 +311,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/cloud_connector/rules \
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -316,6 +322,8 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/cloud_connector/rules \
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`
 
 ### Rule Update Response
 
@@ -337,7 +345,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/cloud_connector/rules \
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -348,3 +356,5 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/cloud_connector/rules \
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`

@@ -19,13 +19,12 @@ List applications with different filters.
   Filter applications using key:value format. Supported filter keys:
 
   - name: Filter by application name (e.g., name:HR)
-  - id: Filter by application ID (e.g., id:0b63249c-95bf-4cc0-a7cc-d7faaaf1dac0)
+  - id: Filter by application ID (e.g., id:498)
   - human_id: Filter by human-readable ID (e.g., human_id:HR)
   - hostname: Filter by hostname or support domain (e.g., hostname:portal.example.com)
   - source: Filter by application source name (e.g., source:cloudflare)
   - ip_subnet: Filter by IP subnet using CIDR containment — returns applications where any stored subnet contains the search value (e.g., ip_subnet:10.0.1.5/32 matches apps with 10.0.0.0/16)
-  - intel_id: Filter by Intel API ID (e.g., intel_id:498). also supports multiple values (e.g., intel_id:498,1001)
-  - category_id: Filter by category ID (e.g., category_id:37f8ec03-8766-49d4-9a15-369b044c842c).
+  - category_id: Filter by category ID (e.g., category_id:12).
   - category_name: Filter by category name (e.g., category_name:HR).
   - supported: Filter by supported Cloudflare product (e.g., supported:ACCESS). Values: GATEWAY, ACCESS, CASB.
     .
@@ -82,7 +81,7 @@ List applications with different filters.
 
   Returns the list of applications.
 
-  - `id: string`
+  - `id: number`
 
     Returns the application ID.
 
@@ -102,6 +101,10 @@ List applications with different filters.
 
     Returns the application type description.
 
+  - `category_id: number`
+
+    Returns the category ID.
+
   - `created_at: string`
 
     Returns the application creation time.
@@ -112,7 +115,7 @@ List applications with different filters.
 
   - `hostnames: array of string`
 
-    Returns the list of hostnames for the application.
+    Hostnames matched by the application.
 
   - `human_id: string`
 
@@ -120,7 +123,7 @@ List applications with different filters.
 
   - `ip_subnets: array of string`
 
-    Returns the list of IP subnets for the application.
+    IP subnets matched by the application.
 
   - `name: string`
 
@@ -128,11 +131,11 @@ List applications with different filters.
 
   - `port_protocols: array of string`
 
-    Returns the list of port protocols for the application.
+    Port and protocol pairs matched by the application.
 
   - `support_domains: array of string`
 
-    Returns the list of support domains for the application.
+    Support domains matched by the application.
 
   - `supported: array of "GATEWAY" or "ACCESS" or "CASB"`
 
@@ -155,10 +158,6 @@ List applications with different filters.
   - `application_score_composition: optional unknown`
 
     Returns the score composition breakdown for the application.
-
-  - `intel_id: optional number`
-
-    Returns the Intel API ID for the application.
 
 - `result_info: optional object { count, page, per_page, total_count }`
 
@@ -212,11 +211,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   "success": true,
   "result": [
     {
-      "id": "12345678-1234-1234-1234-123456789012",
+      "id": 498,
       "application_confidence_score": 0.92,
       "application_source": "cloudflare",
       "application_type": "Human Resources",
       "application_type_description": "Applications used to manage employees and workforce tools.",
+      "category_id": 12,
       "created_at": "2025-01-01T00:00:00Z",
       "gen_ai_score": 1.5,
       "hostnames": [
@@ -251,8 +251,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
           }
         ],
         "plan": "free"
-      },
-      "intel_id": 498
+      }
     }
   ],
   "result_info": {
@@ -274,7 +273,7 @@ Get application by ID.
 
 - `account_id: string`
 
-- `id: string`
+- `id: number`
 
 ### Returns
 
@@ -310,7 +309,7 @@ Get application by ID.
 
 - `result: optional object { id, application_confidence_score, application_source, 15 more }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the application ID.
 
@@ -330,6 +329,10 @@ Get application by ID.
 
     Returns the application type description.
 
+  - `category_id: number`
+
+    Returns the category ID.
+
   - `created_at: string`
 
     Returns the application creation time.
@@ -340,7 +343,7 @@ Get application by ID.
 
   - `hostnames: array of string`
 
-    Returns the list of hostnames for the application.
+    Hostnames matched by the application.
 
   - `human_id: string`
 
@@ -348,7 +351,7 @@ Get application by ID.
 
   - `ip_subnets: array of string`
 
-    Returns the list of IP subnets for the application.
+    IP subnets matched by the application.
 
   - `name: string`
 
@@ -356,11 +359,11 @@ Get application by ID.
 
   - `port_protocols: array of string`
 
-    Returns the list of port protocols for the application.
+    Port and protocol pairs matched by the application.
 
   - `support_domains: array of string`
 
-    Returns the list of support domains for the application.
+    Support domains matched by the application.
 
   - `supported: array of "GATEWAY" or "ACCESS" or "CASB"`
 
@@ -383,10 +386,6 @@ Get application by ID.
   - `application_score_composition: optional unknown`
 
     Returns the score composition breakdown for the application.
-
-  - `intel_id: optional number`
-
-    Returns the Intel API ID for the application.
 
 ### Example
 
@@ -421,11 +420,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   ],
   "success": true,
   "result": {
-    "id": "12345678-1234-1234-1234-123456789012",
+    "id": 498,
     "application_confidence_score": 0.92,
     "application_source": "cloudflare",
     "application_type": "Human Resources",
     "application_type_description": "Applications used to manage employees and workforce tools.",
+    "category_id": 12,
     "created_at": "2025-01-01T00:00:00Z",
     "gen_ai_score": 1.5,
     "hostnames": [
@@ -460,8 +460,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
         }
       ],
       "plan": "free"
-    },
-    "intel_id": 498
+    }
   }
 }
 ```
@@ -472,7 +471,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
 - `ApplicationListResponse object { id, application_confidence_score, application_source, 15 more }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the application ID.
 
@@ -492,6 +491,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
     Returns the application type description.
 
+  - `category_id: number`
+
+    Returns the category ID.
+
   - `created_at: string`
 
     Returns the application creation time.
@@ -502,7 +505,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
   - `hostnames: array of string`
 
-    Returns the list of hostnames for the application.
+    Hostnames matched by the application.
 
   - `human_id: string`
 
@@ -510,7 +513,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
   - `ip_subnets: array of string`
 
-    Returns the list of IP subnets for the application.
+    IP subnets matched by the application.
 
   - `name: string`
 
@@ -518,11 +521,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
   - `port_protocols: array of string`
 
-    Returns the list of port protocols for the application.
+    Port and protocol pairs matched by the application.
 
   - `support_domains: array of string`
 
-    Returns the list of support domains for the application.
+    Support domains matched by the application.
 
   - `supported: array of "GATEWAY" or "ACCESS" or "CASB"`
 
@@ -545,16 +548,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   - `application_score_composition: optional unknown`
 
     Returns the score composition breakdown for the application.
-
-  - `intel_id: optional number`
-
-    Returns the Intel API ID for the application.
 
 ### Application Get Response
 
 - `ApplicationGetResponse object { id, application_confidence_score, application_source, 15 more }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the application ID.
 
@@ -574,6 +573,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
     Returns the application type description.
 
+  - `category_id: number`
+
+    Returns the category ID.
+
   - `created_at: string`
 
     Returns the application creation time.
@@ -584,7 +587,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
   - `hostnames: array of string`
 
-    Returns the list of hostnames for the application.
+    Hostnames matched by the application.
 
   - `human_id: string`
 
@@ -592,7 +595,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
   - `ip_subnets: array of string`
 
-    Returns the list of IP subnets for the application.
+    IP subnets matched by the application.
 
   - `name: string`
 
@@ -600,11 +603,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
   - `port_protocols: array of string`
 
-    Returns the list of port protocols for the application.
+    Port and protocol pairs matched by the application.
 
   - `support_domains: array of string`
 
-    Returns the list of support domains for the application.
+    Support domains matched by the application.
 
   - `supported: array of "GATEWAY" or "ACCESS" or "CASB"`
 
@@ -627,10 +630,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   - `application_score_composition: optional unknown`
 
     Returns the score composition breakdown for the application.
-
-  - `intel_id: optional number`
-
-    Returns the Intel API ID for the application.
 
 # Categories
 
@@ -690,7 +689,7 @@ List application categories.
 
   Returns the list of categories.
 
-  - `id: string`
+  - `id: number`
 
     Returns the category ID.
 
@@ -740,7 +739,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   "success": true,
   "result": [
     {
-      "id": "12345678-1234-1234-1234-123456789012",
+      "id": 12,
       "created_at": "2025-01-01T00:00:00Z",
       "description": "Category description",
       "name": "Category name"
@@ -759,7 +758,7 @@ Get application category by ID.
 
 - `account_id: string`
 
-- `id: string`
+- `id: number`
 
 ### Returns
 
@@ -795,7 +794,7 @@ Get application category by ID.
 
 - `result: optional object { id, created_at, description, name }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the category ID.
 
@@ -844,7 +843,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   ],
   "success": true,
   "result": {
-    "id": "12345678-1234-1234-1234-123456789012",
+    "id": 12,
     "created_at": "2025-01-01T00:00:00Z",
     "description": "Category description",
     "name": "Category name"
@@ -858,7 +857,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
 - `CategoryListResponse object { id, created_at, description, name }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the category ID.
 
@@ -878,7 +877,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
 
 - `CategoryGetResponse object { id, created_at, description, name }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the category ID.
 

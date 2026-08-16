@@ -30,7 +30,7 @@ Was this helpful?
 
 YesNo
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/guides/tutorials/image-generation-playground/image-generator-flux/#page","headline":"Build an AI Image Generator Playground (Part 1) · Cloudflare Workers AI docs","description":"The new flux models on Workers AI are our most powerful text-to-image AI models yet. Using Workers AI, you can get access to the best models in the industry without having to worry about inference, ops, or deployment.","url":"https://developers.cloudflare.com/workers-ai/guides/tutorials/image-generation-playground/image-generator-flux/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","TypeScript"]}

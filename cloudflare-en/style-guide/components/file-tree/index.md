@@ -30,8 +30,8 @@ Used **31** times.
 * [/d1/tutorials/d1-and-prisma-orm/](https://developers.cloudflare.com/d1/tutorials/d1-and-prisma-orm/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/tutorials/d1-and-prisma-orm.mdx)
 * [/kv/get-started/](https://developers.cloudflare.com/kv/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/kv/get-started.mdx)
 * [/pages/functions/routing/](https://developers.cloudflare.com/pages/functions/routing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/pages/functions/routing.mdx)
-* [/r2/data-catalog/config-examples/spark-scala/](https://developers.cloudflare.com/r2/data-catalog/config-examples/spark-scala/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-catalog/config-examples/spark-scala.mdx)
-* [/r2/data-catalog/deleting-data/](https://developers.cloudflare.com/r2/data-catalog/deleting-data/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-catalog/deleting-data.mdx)
+* [/r2-data-catalog/config-examples/spark-scala/](https://developers.cloudflare.com/r2-data-catalog/config-examples/spark-scala/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-data-catalog/config-examples/spark-scala.mdx)
+* [/r2-data-catalog/deleting-data/](https://developers.cloudflare.com/r2-data-catalog/deleting-data/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2-data-catalog/deleting-data.mdx)
 * [/r2/data-migration/migration-strategies/](https://developers.cloudflare.com/r2/data-migration/migration-strategies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/data-migration/migration-strategies.mdx)
 * [/r2/platform/troubleshooting/](https://developers.cloudflare.com/r2/platform/troubleshooting/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/r2/platform/troubleshooting.mdx)
 * [/style-guide/frontmatter/sidebar/](https://developers.cloudflare.com/style-guide/frontmatter/sidebar/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/style-guide/frontmatter/sidebar.mdx)
@@ -67,7 +67,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/file-tree/#page","headline":"File tree · Cloudflare Style Guide","description":"Display a file and directory tree structure.","url":"https://developers.cloudflare.com/style-guide/components/file-tree/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

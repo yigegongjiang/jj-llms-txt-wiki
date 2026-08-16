@@ -1555,11 +1555,11 @@ Creates webhook jobs to send a finding instance to one or more configured webhoo
 
 - `finding_instance_ids: array of string`
 
-  Array of finding instance IDs to send to the webhooks
+  Array of finding instance IDs to send to the webhooks.
 
 - `webhook_ids: array of string`
 
-  Array of webhook IDs to trigger jobs for
+  Array of webhook IDs to trigger jobs for.
 
 ### Returns
 

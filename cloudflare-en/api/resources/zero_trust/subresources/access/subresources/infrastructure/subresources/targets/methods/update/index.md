@@ -2,7 +2,7 @@
 
 **put** `/accounts/{account_id}/infrastructure/targets/{target_id}`
 
-Update target
+Updates an existing infrastructure access target by its ID.
 
 ### Path Parameters
 

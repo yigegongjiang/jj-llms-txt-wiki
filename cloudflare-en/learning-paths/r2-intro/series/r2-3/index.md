@@ -49,7 +49,7 @@ Was this helpful?
 
 YesNo
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-3/#page","headline":"S3 API compatibility · Cloudflare Learning Paths","description":"In this video, you'll learn how to use S3 API commands and tools with R2, set up and configure R2 for S3 API compatibility, and integrate R2 into your existing workflows with minimal changes.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-3/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

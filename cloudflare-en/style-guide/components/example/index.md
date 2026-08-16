@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/example/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Example` component is used `204` times on `115` pages.
+The `Example` component is used `204` times on `116` pages.
 
 See all examples of pages that use Example
 
@@ -42,6 +42,7 @@ Used **204** times.
 * [/cloudflare-for-platforms/cloudflare-for-saas/start/getting-started/](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/getting-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-for-platforms/cloudflare-for-saas/start/getting-started.mdx)
 * [/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication.mdx)
 * [/cloudflare-one/email-security/settings/detection-settings/allow-policies/](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/allow-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/email-security/settings/detection-settings/allow-policies.mdx)
+* [/cloudflare-one/email-security/settings/detection-settings/blocked-content/](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/blocked-content/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/email-security/settings/detection-settings/blocked-content.mdx)
 * [/d1/observability/debug-d1/](https://developers.cloudflare.com/d1/observability/debug-d1/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/observability/debug-d1.mdx)
 * [/dns/additional-options/reverse-zones/](https://developers.cloudflare.com/dns/additional-options/reverse-zones/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/dns/additional-options/reverse-zones.mdx)
 * [/dns/cname-flattening/cname-flattening-diagram/](https://developers.cloudflare.com/dns/cname-flattening/cname-flattening-diagram/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/dns/cname-flattening/cname-flattening-diagram.mdx)
@@ -163,7 +164,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/example/#page","headline":"Example · Cloudflare Style Guide","description":"Highlight example content in a styled block.","url":"https://developers.cloudflare.com/style-guide/components/example/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

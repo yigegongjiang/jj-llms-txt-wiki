@@ -93,7 +93,7 @@ npm install -D @cloudflare/vite-plugin @vitejs/plugin-react vite vite-plugin-sin
 	"name": "my-chess-app",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-07-28",
+	"compatibility_date": "2026-08-14",
 	"compatibility_flags": ["nodejs_compat"],
 	"durable_objects": {
 		"bindings": [
@@ -120,7 +120,7 @@ npm install -D @cloudflare/vite-plugin @vitejs/plugin-react vite vite-plugin-sin
 name = "my-chess-app"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[durable_objects.bindings]]
@@ -915,7 +915,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/demos/chatgpt-app/#page","headline":"Build an Interactive ChatGPT App · Cloudflare Workers docs","description":"Build and deploy an interactive ChatGPT App on Cloudflare Workers with real-time multiplayer state using MCP.","url":"https://developers.cloudflare.com/workers/demos/chatgpt-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

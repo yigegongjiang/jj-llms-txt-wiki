@@ -376,17 +376,51 @@ Retrieve the configuration and status of an AI Search instance.
 
     - `exclude_items: optional array of string`
 
-      List of path patterns to exclude. Uses micromatch glob syntax: * matches within a path segment, ** matches across path segments (e.g., /admin/** matches /admin/users and /admin/settings/advanced)
+      List of path patterns to exclude. Uses micromatch glob syntax: * matches within a path segment, ** matches across path segments (e.g., /admin/** matches /admin/users and /admin/settings/advanced). Most accounts are limited to 10 rules; contact support to raise it.
 
     - `include_items: optional array of string`
 
-      List of path patterns to include. Uses micromatch glob syntax: * matches within a path segment, ** matches across path segments (e.g., /blog/** matches /blog/post and /blog/2024/post)
+      List of path patterns to include. Uses micromatch glob syntax: * matches within a path segment, ** matches across path segments (e.g., /blog/** matches /blog/post and /blog/2024/post). Most accounts are limited to 10 rules; contact support to raise it.
 
     - `prefix: optional string`
 
     - `r2_jurisdiction: optional string`
 
-    - `web_crawler: optional object { parse_options, parse_type }`
+    - `web_crawler: optional object { discover_options, parse_options, parse_type }`
+
+      - `discover_options: optional object { depth, include_external_links, include_subdomains, 3 more }`
+
+        Options for parse_type 'discover', where Browser Run discovers URLs by link following and sitemaps. Ignored for 'sitemap'.
+
+        - `depth: optional number`
+
+          Maximum link-follow depth from the seed URL.
+
+        - `include_external_links: optional boolean`
+
+          Follow links that point outside the source domain. Must stay `false` — discover crawls are restricted to the zone you own.
+
+        - `include_subdomains: optional boolean`
+
+          Follow links to subdomains of the source host.
+
+        - `limit: optional number`
+
+          Maximum number of pages to crawl (1-100000).
+
+        - `max_age: optional number`
+
+          Maximum content age in seconds to accept (0–604800).
+
+        - `source: optional "all" or "sitemaps" or "links"`
+
+          Where the crawler looks for URLs: 'sitemaps' reads sitemap XML only, 'links' follows page links only, 'all' does both.
+
+          - `"all"`
+
+          - `"sitemaps"`
+
+          - `"links"`
 
       - `parse_options: optional object { content_selector, include_headers, include_images, 2 more }`
 
@@ -415,6 +449,8 @@ Retrieve the configuration and status of an AI Search instance.
         - `use_browser_rendering: optional boolean`
 
       - `parse_type: optional "sitemap" or "discover"`
+
+        How URLs are discovered. 'sitemap' reads XML sitemaps; 'discover' follows links recursively and requires the source to be a Verified zone on this account.
 
         - `"sitemap"`
 
@@ -557,6 +593,14 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/instanc
       "prefix": "prefix",
       "r2_jurisdiction": "r2_jurisdiction",
       "web_crawler": {
+        "discover_options": {
+          "depth": 5,
+          "include_external_links": false,
+          "include_subdomains": false,
+          "limit": 10000,
+          "max_age": 86400,
+          "source": "all"
+        },
         "parse_options": {
           "content_selector": [
             {

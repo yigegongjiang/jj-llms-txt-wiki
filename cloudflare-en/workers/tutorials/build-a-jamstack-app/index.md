@@ -16,7 +16,7 @@ Last updated Mar 30, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 In this tutorial, you will build a todo list application using HTML, CSS, and JavaScript. The application data will be stored in [Workers KV](https://developers.cloudflare.com/kv/api/).
 
-![Preview of a finished todo list. Continue reading for instructions on how to set up a todo list.](https://developers.cloudflare.com/_astro/finished.CHDh55j7_Z2saS5S.webp) 
+![Preview of a finished todo list. Continue reading for instructions on how to set up a todo list.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1378,height=730,format=webp/_astro/finished.CHDh55j7.png) 
 
 Before starting this project, you should have some experience with HTML, CSS, and JavaScript. You will learn:
 
@@ -727,7 +727,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/#page","headline":"Build a todo list Jamstack application · Cloudflare Workers docs","description":"This tutorial explains how to build a todo list application using HTML, CSS, and JavaScript.","url":"https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-03-30","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}

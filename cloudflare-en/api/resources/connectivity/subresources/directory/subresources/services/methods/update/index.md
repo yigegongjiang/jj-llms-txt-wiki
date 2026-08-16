@@ -2,7 +2,7 @@
 
 **put** `/accounts/{account_id}/connectivity/directory/services/{service_id}`
 
-Update Workers VPC connectivity service
+Updates an existing Workers VPC connectivity service by its ID.
 
 ### Path Parameters
 

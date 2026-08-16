@@ -10,10 +10,6 @@ Make websites faster by caching content across our global server network
 
 - [Cloudflare Cache](https://developers.cloudflare.com/cache/index.md): Cache and serve static and dynamic content from Cloudflare edge servers.
 
-## Plans
-
-- [Plans](https://developers.cloudflare.com/cache/plans/index.md): Compare cache features available on each Cloudflare plan.
-
 ## Get started
 
 - [Get started](https://developers.cloudflare.com/cache/get-started/index.md): Set up and configure Cloudflare caching for your website.
@@ -123,4 +119,5 @@ Make websites faster by caching content across our global server network
 - [Bot Management cookie causes cache bypass in O2O setups](https://developers.cloudflare.com/cache/troubleshooting/bot-management-o2o-cache-bypass/index.md)
 - [Dynamic content and login issues](https://developers.cloudflare.com/cache/troubleshooting/dynamic-content-and-login-issues/index.md): Troubleshoot login failures, missing session cookies, and challenge loops caused by caching dynamic content.
 - [edgeResponseBytes and cacheResponseBytes discrepancy](https://developers.cloudflare.com/cache/troubleshooting/edge-vs-cache-response-bytes/index.md)
+- [Investigate uncached responses](https://developers.cloudflare.com/cache/troubleshooting/investigating-uncached-responses/index.md): Diagnose why a URL you expected to be cached is served from the origin, using the cf-cache-status header to isolate the cause.
 - [Issues with MP4 videos on iOS and Safari](https://developers.cloudflare.com/cache/troubleshooting/mp4-videos-on-ios-and-safari/index.md): Learn how to resolve issues with MP4 videos not playing on iOS and Safari.

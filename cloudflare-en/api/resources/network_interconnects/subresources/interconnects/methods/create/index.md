@@ -2,7 +2,8 @@
 
 **post** `/accounts/{account_id}/cni/interconnects`
 
-Create a new interconnect
+Creates a new network interconnect for connecting Cloudflare's network to external networks.
+Interconnects provide dedicated bandwidth and reduced latency for traffic exchange.
 
 ### Path Parameters
 
@@ -64,7 +65,7 @@ Create a new interconnect
 
 ### Returns
 
-- `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+- `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
   - `account: string`
 
@@ -86,9 +87,13 @@ Create a new interconnect
 
   - `type: string`
 
+  - `virtual_port_reservation_id: string`
+
+  - `ccr_device_name: optional string`
+
   - `owner: optional string`
 
-- `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+- `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
   - `account: string`
 
@@ -97,6 +102,8 @@ Create a new interconnect
   - `region: string`
 
   - `type: string`
+
+  - `virtual_port_reservation_id: string`
 
   - `owner: optional string`
 
@@ -157,6 +164,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
   "slot_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
   "speed": "speed",
   "type": "type",
+  "virtual_port_reservation_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+  "ccr_device_name": "ccr_device_name",
   "owner": "owner"
 }
 ```

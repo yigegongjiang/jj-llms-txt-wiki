@@ -2,7 +2,7 @@
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/event_tag/{event_id}`
 
-Remove one or more tags from an event.
+Removes a tag from a threat event in Cloudforce One.
 
 ### Path Parameters
 

@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories`
 
-List categories across one or more datasets for the account.
+Lists all threat event categories configured for classifying and organizing threat events.
 
 ### Path Parameters
 
@@ -62,7 +62,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Retrieve a single category by its identifier.
+Retrieves details for a specific threat event category.
 
 ### Path Parameters
 
@@ -116,7 +116,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **post** `/accounts/{account_id}/cloudforce-one/events/categories/create`
 
-Create a new event category for the account.
+Creates a new threat event category in Cloudforce One for organizing and classifying threat events.
 
 ### Path Parameters
 
@@ -184,7 +184,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Update an existing category by its identifier.
+Partially updates a threat event category in Cloudforce One, modifying specific fields without replacing the entire category.
 
 ### Path Parameters
 
@@ -251,7 +251,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Delete a category by its identifier.
+Removes a threat event category from Cloudforce One.
 
 ### Path Parameters
 
@@ -361,7 +361,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories/catalog`
 
-List all categories stored in the account catalog.
+Lists categories
 
 ### Path Parameters
 

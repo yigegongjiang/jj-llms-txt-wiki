@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How-to guides
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 These guides show you how to solve specific problems and implement features with the Sandbox SDK. Each guide focuses on a particular task and provides practical, production-ready solutions.
 
-[**2026 deprecation migration guide**Migrate away from Sandbox SDK features deprecated in June 2026.](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/)
+[**2026 deprecation migration guide**Migrate away from deprecated Sandbox SDK features on the current stable package.](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/)
 
 [**Run background processes**Start and manage long-running services and applications.](https://developers.cloudflare.com/sandbox/guides/background-processes/)
 
@@ -25,6 +25,8 @@ These guides show you how to solve specific problems and implement features with
 [**Browser terminals**Connect browser-based terminals to sandbox shells using xterm.js or raw WebSockets.](https://developers.cloudflare.com/sandbox/guides/browser-terminals/)
 
 [**Use code interpreter**Execute Python and JavaScript code with rich outputs.](https://developers.cloudflare.com/sandbox/guides/code-execution/)
+
+[**Deploy a Sandbox application**Deploy a Sandbox Worker and keep the npm package and container image on the same release line.](https://developers.cloudflare.com/sandbox/guides/deploy/)
 
 [**Run Docker-in-Docker**Run Docker commands inside a sandbox container.](https://developers.cloudflare.com/sandbox/guides/docker-in-docker/)
 
@@ -42,9 +44,7 @@ These guides show you how to solve specific problems and implement features with
 
 [**Handle outbound traffic**Intercept and handle outbound HTTP from sandboxes using Workers.](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/)
 
-[**Deploy to production**Set up custom domains for preview URLs in production.](https://developers.cloudflare.com/sandbox/guides/production-deployment/)
-
-[**Proxy requests to external APIs**Keep credentials secure by routing sandbox requests through a Worker proxy that injects authentication at request time.](https://developers.cloudflare.com/sandbox/guides/proxy-requests/)
+[**Configure preview URLs on a custom domain**Set up wildcard DNS, routes, and TLS so exposePort preview URLs work on your domain.](https://developers.cloudflare.com/sandbox/guides/preview-urls-custom-domain/)
 
 [**Stream output**Handle real-time output from commands and processes.](https://developers.cloudflare.com/sandbox/guides/streaming-output/)
 
@@ -63,8 +63,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/sandbox/guides/#page","headline":"How-to guides · Cloudflare Sandbox SDK docs","description":"Practical guides for solving specific tasks with the Sandbox SDK.","url":"https://developers.cloudflare.com/sandbox/guides/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/sandbox/guides/#page","headline":"How-to guides · Cloudflare Sandbox SDK docs","description":"Practical guides for solving specific tasks with the Sandbox SDK.","url":"https://developers.cloudflare.com/sandbox/guides/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

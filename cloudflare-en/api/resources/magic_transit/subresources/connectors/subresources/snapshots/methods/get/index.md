@@ -16,7 +16,7 @@ Gets Magic WAN Connector Telemetry Snapshot
 
 ### Returns
 
-- `result: object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 170 more }`
+- `result: object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 171 more }`
 
   Snapshot
 
@@ -666,6 +666,10 @@ Gets Magic WAN Connector Telemetry Snapshot
 
     Platform identifier
 
+  - `site_id: optional string`
+
+    Site identifier
+
   - `snmp_icmp_in_addr_mask_reps: optional number`
 
     Number of ICMP Address Mask Reply messages received
@@ -944,7 +948,7 @@ Gets Magic WAN Connector Telemetry Snapshot
 
       Maximum temperature of the component (degrees Celsius)
 
-  - `tunnels: optional array of object { health_state, health_value, interface_name, 7 more }`
+  - `tunnels: optional array of object { health_state, health_value, interface_name, 9 more }`
 
     - `health_state: string`
 
@@ -961,6 +965,14 @@ Gets Magic WAN Connector Telemetry Snapshot
     - `tunnel_id: string`
 
       Tunnel identifier
+
+    - `jitter_ms: optional number`
+
+      Tunnel round-trip latency variation in milliseconds
+
+    - `latency_ms: optional number`
+
+      50th percentile tunnel round-trip latency in milliseconds
 
     - `natd_result: optional string`
 
@@ -1206,6 +1218,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
       }
     ],
     "platform": "platform",
+    "site_id": "site_id",
     "snmp_icmp_in_addr_mask_reps": 0,
     "snmp_icmp_in_addr_masks": 0,
     "snmp_icmp_in_csum_errors": 0,
@@ -1285,6 +1298,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
         "health_value": 0,
         "interface_name": "interface_name",
         "tunnel_id": "tunnel_id",
+        "jitter_ms": 0,
+        "latency_ms": 0,
         "natd_result": "natd_result",
         "natd_state": 0,
         "natd_target": "natd_target",

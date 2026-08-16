@@ -45,7 +45,7 @@ Add a Browser Run binding to your Wrangler configuration:
   "name": "my-prerender-worker",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-28",
+  "compatibility_date": "2026-08-14",
   "browser": {
     "binding": "BROWSER"
   }
@@ -56,7 +56,7 @@ Add a Browser Run binding to your Wrangler configuration:
 name = "my-prerender-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 
 [browser]
 binding = "BROWSER"
@@ -299,7 +299,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/how-to/pre-render-pages/#page","headline":"Pre-render pages for crawlers · Cloudflare Browser Run docs","description":"Use Browser Run to render JavaScript-heavy pages and return crawler-ready HTML from a Worker.","url":"https://developers.cloudflare.com/browser-run/how-to/pre-render-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-12","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

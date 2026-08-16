@@ -43,7 +43,7 @@ To quickly create a pull request using the edit button:
 3. Select  
 
 **Edit** or **Edit page**  
-Every page in the Cloudflare Docs (including this one) has an **Edit** button on the right sidebar and an **Edit page** button on the very bottom of the page. ![Edit icon](https://developers.cloudflare.com/_astro/edit.DvF1pGC__Zw6GUx.webp)The page's Markdown opens.  
+Every page in the Cloudflare Docs (including this one) has an **Edit** button on the right sidebar and an **Edit page** button on the very bottom of the page. ![Edit icon](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=951,height=664,format=webp/_astro/edit.DvF1pGC_.png)The page's Markdown opens.  
 Note  
 The first time you create a pull request in the cloudflare-docs repo, you will see a GitHub landing page that says "You need to fork this repository to propose changes." Select **Fork this repository**. All of your future pull requests for cloudflare-docs will write to a new branch on your fork.
 4. Make your edits and select **Commit changes**.
@@ -119,7 +119,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/contributions/#page","headline":"Contributions · Cloudflare Style Guide","description":"Learn how to contribute to the Cloudflare Docs.","url":"https://developers.cloudflare.com/style-guide/contributions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories`
 
-List categories across one or more datasets for the account.
+Lists all threat event categories configured for classifying and organizing threat events.
 
 ### Path Parameters
 

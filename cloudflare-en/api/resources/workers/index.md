@@ -344,7 +344,7 @@ List all Workers for an account.
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -352,9 +352,17 @@ List all Workers for an account.
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -505,7 +513,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers \
       },
       "subdomain": {
         "enabled": true,
-        "previews_enabled": true
+        "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+        "previews_enabled": true,
+        "url": "https://my-worker.my-subdomain.workers.dev"
       },
       "tags": [
         "my-team",
@@ -751,7 +761,7 @@ Get details about a specific Worker.
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -759,9 +769,17 @@ Get details about a specific Worker.
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -889,7 +907,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -993,7 +1013,7 @@ Create a new Worker.
 
       - `"accept"`
 
-- `subdomain: optional object { enabled, previews_enabled }`
+- `subdomain: optional object { enabled, preview_url_suffix, previews_enabled, url }`
 
   Subdomain settings for the Worker.
 
@@ -1001,9 +1021,17 @@ Create a new Worker.
 
     Whether the *.workers.dev subdomain is enabled for the Worker.
 
+  - `preview_url_suffix: optional string`
+
+    Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
   - `previews_enabled: optional boolean`
 
     Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+  - `url: optional string`
+
+    The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
 - `tags: optional array of string`
 
@@ -1221,7 +1249,7 @@ Create a new Worker.
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -1229,9 +1257,17 @@ Create a new Worker.
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -1367,7 +1403,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers \
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -1475,7 +1513,7 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
       - `"accept"`
 
-- `subdomain: optional object { enabled, previews_enabled }`
+- `subdomain: optional object { enabled, preview_url_suffix, previews_enabled, url }`
 
   Subdomain settings for the Worker.
 
@@ -1483,9 +1521,17 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
     Whether the *.workers.dev subdomain is enabled for the Worker.
 
+  - `preview_url_suffix: optional string`
+
+    Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
   - `previews_enabled: optional boolean`
 
     Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+  - `url: optional string`
+
+    The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
 - `tags: optional array of string`
 
@@ -1703,7 +1749,7 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -1711,9 +1757,17 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -1850,7 +1904,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -1958,7 +2014,7 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
       - `"accept"`
 
-- `subdomain: object { enabled, previews_enabled }`
+- `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
   Subdomain settings for the Worker.
 
@@ -1966,9 +2022,17 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
     Whether the *.workers.dev subdomain is enabled for the Worker.
 
+  - `preview_url_suffix: optional string`
+
+    Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
   - `previews_enabled: optional boolean`
 
     Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+  - `url: optional string`
+
+    The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
 - `tags: array of string`
 
@@ -2186,7 +2250,7 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -2194,9 +2258,17 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -2341,7 +2413,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -2625,7 +2699,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -2633,9 +2707,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -2829,7 +2911,7 @@ List all versions for a Worker.
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -2880,6 +2962,22 @@ List all versions for a Worker.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -4620,7 +4718,7 @@ Get details about a specific version.
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -4671,6 +4769,22 @@ Get details about a specific version.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -6332,7 +6446,7 @@ Create a new version.
 
     Token provided upon successful upload of all files from a registered manifest.
 
-- `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+- `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
   List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -6383,6 +6497,22 @@ Create a new version.
       The kind of resource that the binding provides.
 
       - `"ai_search_namespace"`
+
+  - `Messaging object { name, namespace, type }`
+
+    - `name: string`
+
+      A JavaScript variable name for the binding.
+
+    - `namespace: string`
+
+      The Messaging namespace to bind to.
+
+    - `type: "messaging"`
+
+      The kind of resource that the binding provides.
+
+      - `"messaging"`
 
   - `AnalyticsEngine object { dataset, name, type }`
 
@@ -7615,7 +7745,7 @@ Create a new version.
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -7666,6 +7796,22 @@ Create a new version.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -9457,7 +9603,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -9508,6 +9654,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -18767,7 +18929,7 @@ Retrieves detailed information about a specific version of a Workers script.
 
   - `resources: object { bindings, script, script_runtime }`
 
-    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
       List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -18818,6 +18980,22 @@ Retrieves detailed information about a specific version of a Workers script.
           The kind of resource that the binding provides.
 
           - `"ai_search_namespace"`
+
+      - `Messaging object { name, namespace, type }`
+
+        - `name: string`
+
+          A JavaScript variable name for the binding.
+
+        - `namespace: string`
+
+          The Messaging namespace to bind to.
+
+        - `type: "messaging"`
+
+          The kind of resource that the binding provides.
+
+          - `"messaging"`
 
       - `AnalyticsEngine object { dataset, name, type }`
 
@@ -19939,7 +20117,7 @@ Upload a Worker Version without deploying to Cloudflare's network. You can find 
 
   - `resources: object { bindings, script, script_runtime }`
 
-    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
       List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -19990,6 +20168,22 @@ Upload a Worker Version without deploying to Cloudflare's network. You can find 
           The kind of resource that the binding provides.
 
           - `"ai_search_namespace"`
+
+      - `Messaging object { name, namespace, type }`
+
+        - `name: string`
+
+          A JavaScript variable name for the binding.
+
+        - `namespace: string`
+
+          The Messaging namespace to bind to.
+
+        - `type: "messaging"`
+
+          The kind of resource that the binding provides.
+
+          - `"messaging"`
 
       - `AnalyticsEngine object { dataset, name, type }`
 
@@ -21435,7 +21629,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
 
   - `resources: object { bindings, script, script_runtime }`
 
-    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
       List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -21486,6 +21680,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
           The kind of resource that the binding provides.
 
           - `"ai_search_namespace"`
+
+      - `Messaging object { name, namespace, type }`
+
+        - `name: string`
+
+          A JavaScript variable name for the binding.
+
+        - `namespace: string`
+
+          The Messaging namespace to bind to.
+
+        - `type: "messaging"`
+
+          The kind of resource that the binding provides.
+
+          - `"messaging"`
 
       - `AnalyticsEngine object { dataset, name, type }`
 
@@ -22445,7 +22655,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
 
   - `resources: object { bindings, script, script_runtime }`
 
-    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+    - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
       List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -22496,6 +22706,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
           The kind of resource that the binding provides.
 
           - `"ai_search_namespace"`
+
+      - `Messaging object { name, namespace, type }`
+
+        - `name: string`
+
+          A JavaScript variable name for the binding.
+
+        - `namespace: string`
+
+          The Messaging namespace to bind to.
+
+        - `type: "messaging"`
+
+          The kind of resource that the binding provides.
+
+          - `"messaging"`
 
       - `AnalyticsEngine object { dataset, name, type }`
 
@@ -25027,7 +25253,7 @@ Get metadata and config, such as bindings or usage model.
 
       Operation that triggered the creation of the version. This is read-only and set by the server.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -25078,6 +25304,22 @@ Get metadata and config, such as bindings or usage model.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -26701,7 +26943,7 @@ Patch metadata or config, such as bindings or usage model.
 
       Operation that triggered the creation of the version. This is read-only and set by the server.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -26752,6 +26994,22 @@ Patch metadata or config, such as bindings or usage model.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -28339,7 +28597,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
 
       Operation that triggered the creation of the version. This is read-only and set by the server.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -28390,6 +28648,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -29816,7 +30090,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
 
       Operation that triggered the creation of the version. This is read-only and set by the server.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -29867,6 +30141,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -32805,107 +33095,133 @@ Run a temporary or saved query.
 
   Query parameters defining what data to retrieve — filters, calculations, group-bys, and ordering. In practice this should always be provided for ad-hoc queries. Only omit when executing a previously saved query by queryId. Use the keys and values endpoints to discover available fields before building filters.
 
-  - `calculations: optional array of object { operator, alias, key, keyType }`
+  - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
     Aggregation calculations to compute (e.g. count, avg, p99). Each calculation produces aggregate values and optional time-series data.
 
-    - `operator: "uniq" or "count" or "max" or 35 more`
+    - `object { operator, alias, key, keyType }`
 
-      Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
+      - `operator: "count" or "COUNT"`
 
-      - `"uniq"`
+        Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
 
-      - `"count"`
+        - `"count"`
 
-      - `"max"`
+        - `"COUNT"`
 
-      - `"min"`
+      - `alias: optional string`
 
-      - `"sum"`
+        Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
 
-      - `"avg"`
+      - `key: optional string`
 
-      - `"median"`
+        Field name to calculate over. Must exist in the data — verify with the keys endpoint. Required for every operator except `count`, which aggregates whole rows and may omit it.
 
-      - `"p001"`
+      - `keyType: optional "string" or "number" or "boolean"`
 
-      - `"p01"`
+        Data type of the key. Required when key is provided to ensure correct aggregation.
 
-      - `"p05"`
+        - `"string"`
 
-      - `"p10"`
+        - `"number"`
 
-      - `"p25"`
+        - `"boolean"`
 
-      - `"p75"`
+    - `object { key, operator, alias, keyType }`
 
-      - `"p90"`
+      - `key: string`
 
-      - `"p95"`
+        Field name to calculate over. Must exist in the data — verify with the keys endpoint. Required for every operator except `count`, which aggregates whole rows and may omit it.
 
-      - `"p99"`
+      - `operator: "uniq" or "max" or "min" or 33 more`
 
-      - `"p999"`
+        Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
 
-      - `"stddev"`
+        - `"uniq"`
 
-      - `"variance"`
+        - `"max"`
 
-      - `"COUNT_DISTINCT"`
+        - `"min"`
 
-      - `"COUNT"`
+        - `"sum"`
 
-      - `"MAX"`
+        - `"avg"`
 
-      - `"MIN"`
+        - `"median"`
 
-      - `"SUM"`
+        - `"p001"`
 
-      - `"AVG"`
+        - `"p01"`
 
-      - `"MEDIAN"`
+        - `"p05"`
 
-      - `"P001"`
+        - `"p10"`
 
-      - `"P01"`
+        - `"p25"`
 
-      - `"P05"`
+        - `"p75"`
 
-      - `"P10"`
+        - `"p90"`
 
-      - `"P25"`
+        - `"p95"`
 
-      - `"P75"`
+        - `"p99"`
 
-      - `"P90"`
+        - `"p999"`
 
-      - `"P95"`
+        - `"stddev"`
 
-      - `"P99"`
+        - `"variance"`
 
-      - `"P999"`
+        - `"COUNT_DISTINCT"`
 
-      - `"STDDEV"`
+        - `"MAX"`
 
-      - `"VARIANCE"`
+        - `"MIN"`
 
-    - `alias: optional string`
+        - `"SUM"`
 
-      Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
+        - `"AVG"`
 
-    - `key: optional string`
+        - `"MEDIAN"`
 
-      Field name to calculate over. Must exist in the data — verify with the keys endpoint. Omit for operators that don't require a key (e.g. count).
+        - `"P001"`
 
-    - `keyType: optional "string" or "number" or "boolean"`
+        - `"P01"`
 
-      Data type of the key. Required when key is provided to ensure correct aggregation.
+        - `"P05"`
 
-      - `"string"`
+        - `"P10"`
 
-      - `"number"`
+        - `"P25"`
 
-      - `"boolean"`
+        - `"P75"`
+
+        - `"P90"`
+
+        - `"P95"`
+
+        - `"P99"`
+
+        - `"P999"`
+
+        - `"STDDEV"`
+
+        - `"VARIANCE"`
+
+      - `alias: optional string`
+
+        Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
+
+      - `keyType: optional "string" or "number" or "boolean"`
+
+        Data type of the key. Required when key is provided to ensure correct aggregation.
+
+        - `"string"`
+
+        - `"number"`
+
+        - `"boolean"`
 
   - `datasets: optional array of string`
 
@@ -33321,99 +33637,117 @@ Run a temporary or saved query.
 
       - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-        - `calculations: optional array of object { operator, alias, key, keyType }`
+        - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
           Create Calculations to compute as part of the query.
 
-          - `operator: "uniq" or "count" or "max" or 35 more`
+          - `object { operator, alias, key, keyType }`
 
-            - `"uniq"`
+            - `operator: "count" or "COUNT"`
 
-            - `"count"`
+              - `"count"`
 
-            - `"max"`
+              - `"COUNT"`
 
-            - `"min"`
+            - `alias: optional string`
 
-            - `"sum"`
+            - `key: optional string`
 
-            - `"avg"`
+            - `keyType: optional "string" or "number" or "boolean"`
 
-            - `"median"`
+              - `"string"`
 
-            - `"p001"`
+              - `"number"`
 
-            - `"p01"`
+              - `"boolean"`
 
-            - `"p05"`
+          - `object { key, operator, alias, keyType }`
 
-            - `"p10"`
+            - `key: string`
 
-            - `"p25"`
+            - `operator: "uniq" or "max" or "min" or 33 more`
 
-            - `"p75"`
+              - `"uniq"`
 
-            - `"p90"`
+              - `"max"`
 
-            - `"p95"`
+              - `"min"`
 
-            - `"p99"`
+              - `"sum"`
 
-            - `"p999"`
+              - `"avg"`
 
-            - `"stddev"`
+              - `"median"`
 
-            - `"variance"`
+              - `"p001"`
 
-            - `"COUNT_DISTINCT"`
+              - `"p01"`
 
-            - `"COUNT"`
+              - `"p05"`
 
-            - `"MAX"`
+              - `"p10"`
 
-            - `"MIN"`
+              - `"p25"`
 
-            - `"SUM"`
+              - `"p75"`
 
-            - `"AVG"`
+              - `"p90"`
 
-            - `"MEDIAN"`
+              - `"p95"`
 
-            - `"P001"`
+              - `"p99"`
 
-            - `"P01"`
+              - `"p999"`
 
-            - `"P05"`
+              - `"stddev"`
 
-            - `"P10"`
+              - `"variance"`
 
-            - `"P25"`
+              - `"COUNT_DISTINCT"`
 
-            - `"P75"`
+              - `"MAX"`
 
-            - `"P90"`
+              - `"MIN"`
 
-            - `"P95"`
+              - `"SUM"`
 
-            - `"P99"`
+              - `"AVG"`
 
-            - `"P999"`
+              - `"MEDIAN"`
 
-            - `"STDDEV"`
+              - `"P001"`
 
-            - `"VARIANCE"`
+              - `"P01"`
 
-          - `alias: optional string`
+              - `"P05"`
 
-          - `key: optional string`
+              - `"P10"`
 
-          - `keyType: optional "string" or "number" or "boolean"`
+              - `"P25"`
 
-            - `"string"`
+              - `"P75"`
 
-            - `"number"`
+              - `"P90"`
 
-            - `"boolean"`
+              - `"P95"`
+
+              - `"P99"`
+
+              - `"P999"`
+
+              - `"STDDEV"`
+
+              - `"VARIANCE"`
+
+            - `alias: optional string`
+
+            - `keyType: optional "string" or "number" or "boolean"`
+
+              - `"string"`
+
+              - `"number"`
+
+              - `"boolean"`
 
         - `datasets: optional array of string`
 
@@ -34677,7 +35011,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
         "parameters": {
           "calculations": [
             {
-              "operator": "uniq",
+              "operator": "count",
               "alias": "alias",
               "key": "key",
               "keyType": "string"
@@ -35890,99 +36224,117 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
 
       - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-        - `calculations: optional array of object { operator, alias, key, keyType }`
+        - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
           Create Calculations to compute as part of the query.
 
-          - `operator: "uniq" or "count" or "max" or 35 more`
+          - `object { operator, alias, key, keyType }`
 
-            - `"uniq"`
+            - `operator: "count" or "COUNT"`
 
-            - `"count"`
+              - `"count"`
 
-            - `"max"`
+              - `"COUNT"`
 
-            - `"min"`
+            - `alias: optional string`
 
-            - `"sum"`
+            - `key: optional string`
 
-            - `"avg"`
+            - `keyType: optional "string" or "number" or "boolean"`
 
-            - `"median"`
+              - `"string"`
 
-            - `"p001"`
+              - `"number"`
 
-            - `"p01"`
+              - `"boolean"`
 
-            - `"p05"`
+          - `object { key, operator, alias, keyType }`
 
-            - `"p10"`
+            - `key: string`
 
-            - `"p25"`
+            - `operator: "uniq" or "max" or "min" or 33 more`
 
-            - `"p75"`
+              - `"uniq"`
 
-            - `"p90"`
+              - `"max"`
 
-            - `"p95"`
+              - `"min"`
 
-            - `"p99"`
+              - `"sum"`
 
-            - `"p999"`
+              - `"avg"`
 
-            - `"stddev"`
+              - `"median"`
 
-            - `"variance"`
+              - `"p001"`
 
-            - `"COUNT_DISTINCT"`
+              - `"p01"`
 
-            - `"COUNT"`
+              - `"p05"`
 
-            - `"MAX"`
+              - `"p10"`
 
-            - `"MIN"`
+              - `"p25"`
 
-            - `"SUM"`
+              - `"p75"`
 
-            - `"AVG"`
+              - `"p90"`
 
-            - `"MEDIAN"`
+              - `"p95"`
 
-            - `"P001"`
+              - `"p99"`
 
-            - `"P01"`
+              - `"p999"`
 
-            - `"P05"`
+              - `"stddev"`
 
-            - `"P10"`
+              - `"variance"`
 
-            - `"P25"`
+              - `"COUNT_DISTINCT"`
 
-            - `"P75"`
+              - `"MAX"`
 
-            - `"P90"`
+              - `"MIN"`
 
-            - `"P95"`
+              - `"SUM"`
 
-            - `"P99"`
+              - `"AVG"`
 
-            - `"P999"`
+              - `"MEDIAN"`
 
-            - `"STDDEV"`
+              - `"P001"`
 
-            - `"VARIANCE"`
+              - `"P01"`
 
-          - `alias: optional string`
+              - `"P05"`
 
-          - `key: optional string`
+              - `"P10"`
 
-          - `keyType: optional "string" or "number" or "boolean"`
+              - `"P25"`
 
-            - `"string"`
+              - `"P75"`
 
-            - `"number"`
+              - `"P90"`
 
-            - `"boolean"`
+              - `"P95"`
+
+              - `"P99"`
+
+              - `"P999"`
+
+              - `"STDDEV"`
+
+              - `"VARIANCE"`
+
+            - `alias: optional string`
+
+            - `keyType: optional "string" or "number" or "boolean"`
+
+              - `"string"`
+
+              - `"number"`
+
+              - `"boolean"`
 
         - `datasets: optional array of string`
 
@@ -37887,99 +38239,117 @@ Persist query for later use.
 
 - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-  - `calculations: optional array of object { operator, alias, key, keyType }`
+  - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
     Create Calculations to compute as part of the query.
 
-    - `operator: "uniq" or "count" or "max" or 35 more`
+    - `object { operator, alias, key, keyType }`
 
-      - `"uniq"`
+      - `operator: "count" or "COUNT"`
 
-      - `"count"`
+        - `"count"`
 
-      - `"max"`
+        - `"COUNT"`
 
-      - `"min"`
+      - `alias: optional string`
 
-      - `"sum"`
+      - `key: optional string`
 
-      - `"avg"`
+      - `keyType: optional "string" or "number" or "boolean"`
 
-      - `"median"`
+        - `"string"`
 
-      - `"p001"`
+        - `"number"`
 
-      - `"p01"`
+        - `"boolean"`
 
-      - `"p05"`
+    - `object { key, operator, alias, keyType }`
 
-      - `"p10"`
+      - `key: string`
 
-      - `"p25"`
+      - `operator: "uniq" or "max" or "min" or 33 more`
 
-      - `"p75"`
+        - `"uniq"`
 
-      - `"p90"`
+        - `"max"`
 
-      - `"p95"`
+        - `"min"`
 
-      - `"p99"`
+        - `"sum"`
 
-      - `"p999"`
+        - `"avg"`
 
-      - `"stddev"`
+        - `"median"`
 
-      - `"variance"`
+        - `"p001"`
 
-      - `"COUNT_DISTINCT"`
+        - `"p01"`
 
-      - `"COUNT"`
+        - `"p05"`
 
-      - `"MAX"`
+        - `"p10"`
 
-      - `"MIN"`
+        - `"p25"`
 
-      - `"SUM"`
+        - `"p75"`
 
-      - `"AVG"`
+        - `"p90"`
 
-      - `"MEDIAN"`
+        - `"p95"`
 
-      - `"P001"`
+        - `"p99"`
 
-      - `"P01"`
+        - `"p999"`
 
-      - `"P05"`
+        - `"stddev"`
 
-      - `"P10"`
+        - `"variance"`
 
-      - `"P25"`
+        - `"COUNT_DISTINCT"`
 
-      - `"P75"`
+        - `"MAX"`
 
-      - `"P90"`
+        - `"MIN"`
 
-      - `"P95"`
+        - `"SUM"`
 
-      - `"P99"`
+        - `"AVG"`
 
-      - `"P999"`
+        - `"MEDIAN"`
 
-      - `"STDDEV"`
+        - `"P001"`
 
-      - `"VARIANCE"`
+        - `"P01"`
 
-    - `alias: optional string`
+        - `"P05"`
 
-    - `key: optional string`
+        - `"P10"`
 
-    - `keyType: optional "string" or "number" or "boolean"`
+        - `"P25"`
 
-      - `"string"`
+        - `"P75"`
 
-      - `"number"`
+        - `"P90"`
 
-      - `"boolean"`
+        - `"P95"`
+
+        - `"P99"`
+
+        - `"P999"`
+
+        - `"STDDEV"`
+
+        - `"VARIANCE"`
+
+      - `alias: optional string`
+
+      - `keyType: optional "string" or "number" or "boolean"`
+
+        - `"string"`
+
+        - `"number"`
+
+        - `"boolean"`
 
   - `datasets: optional array of string`
 
@@ -38221,99 +38591,117 @@ Persist query for later use.
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 
@@ -38569,7 +38957,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
     "parameters": {
       "calculations": [
         {
-          "operator": "uniq",
+          "operator": "count",
           "alias": "alias",
           "key": "key",
           "keyType": "string"
@@ -38679,99 +39067,117 @@ List saved queries.
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 
@@ -39022,7 +39428,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
       "parameters": {
         "calculations": [
           {
-            "operator": "uniq",
+            "operator": "count",
             "alias": "alias",
             "key": "key",
             "keyType": "string"
@@ -39097,99 +39503,117 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 
@@ -39425,99 +39849,117 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 
@@ -39813,107 +40255,133 @@ Shared queries store the results of a previously run query, allowing you to shar
 
   Query parameters defining what data to retrieve — filters, calculations, group-bys, and ordering. In practice this should always be provided for ad-hoc queries. Only omit when executing a previously saved query by queryId. Use the keys and values endpoints to discover available fields before building filters.
 
-  - `calculations: optional array of object { operator, alias, key, keyType }`
+  - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
     Aggregation calculations to compute (e.g. count, avg, p99). Each calculation produces aggregate values and optional time-series data.
 
-    - `operator: "uniq" or "count" or "max" or 35 more`
+    - `object { operator, alias, key, keyType }`
 
-      Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
+      - `operator: "count" or "COUNT"`
 
-      - `"uniq"`
+        Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
 
-      - `"count"`
+        - `"count"`
 
-      - `"max"`
+        - `"COUNT"`
 
-      - `"min"`
+      - `alias: optional string`
 
-      - `"sum"`
+        Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
 
-      - `"avg"`
+      - `key: optional string`
 
-      - `"median"`
+        Field name to calculate over. Must exist in the data — verify with the keys endpoint. Required for every operator except `count`, which aggregates whole rows and may omit it.
 
-      - `"p001"`
+      - `keyType: optional "string" or "number" or "boolean"`
 
-      - `"p01"`
+        Data type of the key. Required when key is provided to ensure correct aggregation.
 
-      - `"p05"`
+        - `"string"`
 
-      - `"p10"`
+        - `"number"`
 
-      - `"p25"`
+        - `"boolean"`
 
-      - `"p75"`
+    - `object { key, operator, alias, keyType }`
 
-      - `"p90"`
+      - `key: string`
 
-      - `"p95"`
+        Field name to calculate over. Must exist in the data — verify with the keys endpoint. Required for every operator except `count`, which aggregates whole rows and may omit it.
 
-      - `"p99"`
+      - `operator: "uniq" or "max" or "min" or 33 more`
 
-      - `"p999"`
+        Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
 
-      - `"stddev"`
+        - `"uniq"`
 
-      - `"variance"`
+        - `"max"`
 
-      - `"COUNT_DISTINCT"`
+        - `"min"`
 
-      - `"COUNT"`
+        - `"sum"`
 
-      - `"MAX"`
+        - `"avg"`
 
-      - `"MIN"`
+        - `"median"`
 
-      - `"SUM"`
+        - `"p001"`
 
-      - `"AVG"`
+        - `"p01"`
 
-      - `"MEDIAN"`
+        - `"p05"`
 
-      - `"P001"`
+        - `"p10"`
 
-      - `"P01"`
+        - `"p25"`
 
-      - `"P05"`
+        - `"p75"`
 
-      - `"P10"`
+        - `"p90"`
 
-      - `"P25"`
+        - `"p95"`
 
-      - `"P75"`
+        - `"p99"`
 
-      - `"P90"`
+        - `"p999"`
 
-      - `"P95"`
+        - `"stddev"`
 
-      - `"P99"`
+        - `"variance"`
 
-      - `"P999"`
+        - `"COUNT_DISTINCT"`
 
-      - `"STDDEV"`
+        - `"MAX"`
 
-      - `"VARIANCE"`
+        - `"MIN"`
 
-    - `alias: optional string`
+        - `"SUM"`
 
-      Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
+        - `"AVG"`
 
-    - `key: optional string`
+        - `"MEDIAN"`
 
-      Field name to calculate over. Must exist in the data — verify with the keys endpoint. Omit for operators that don't require a key (e.g. count).
+        - `"P001"`
 
-    - `keyType: optional "string" or "number" or "boolean"`
+        - `"P01"`
 
-      Data type of the key. Required when key is provided to ensure correct aggregation.
+        - `"P05"`
 
-      - `"string"`
+        - `"P10"`
 
-      - `"number"`
+        - `"P25"`
 
-      - `"boolean"`
+        - `"P75"`
+
+        - `"P90"`
+
+        - `"P95"`
+
+        - `"P99"`
+
+        - `"P999"`
+
+        - `"STDDEV"`
+
+        - `"VARIANCE"`
+
+      - `alias: optional string`
+
+        Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
+
+      - `keyType: optional "string" or "number" or "boolean"`
+
+        Data type of the key. Required when key is provided to ensure correct aggregation.
+
+        - `"string"`
+
+        - `"number"`
+
+        - `"boolean"`
 
   - `datasets: optional array of string`
 
@@ -40414,99 +40882,117 @@ Shared queries store the results of a previously run query, allowing you to shar
 
       - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-        - `calculations: optional array of object { operator, alias, key, keyType }`
+        - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
           Create Calculations to compute as part of the query.
 
-          - `operator: "uniq" or "count" or "max" or 35 more`
+          - `object { operator, alias, key, keyType }`
 
-            - `"uniq"`
+            - `operator: "count" or "COUNT"`
 
-            - `"count"`
+              - `"count"`
 
-            - `"max"`
+              - `"COUNT"`
 
-            - `"min"`
+            - `alias: optional string`
 
-            - `"sum"`
+            - `key: optional string`
 
-            - `"avg"`
+            - `keyType: optional "string" or "number" or "boolean"`
 
-            - `"median"`
+              - `"string"`
 
-            - `"p001"`
+              - `"number"`
 
-            - `"p01"`
+              - `"boolean"`
 
-            - `"p05"`
+          - `object { key, operator, alias, keyType }`
 
-            - `"p10"`
+            - `key: string`
 
-            - `"p25"`
+            - `operator: "uniq" or "max" or "min" or 33 more`
 
-            - `"p75"`
+              - `"uniq"`
 
-            - `"p90"`
+              - `"max"`
 
-            - `"p95"`
+              - `"min"`
 
-            - `"p99"`
+              - `"sum"`
 
-            - `"p999"`
+              - `"avg"`
 
-            - `"stddev"`
+              - `"median"`
 
-            - `"variance"`
+              - `"p001"`
 
-            - `"COUNT_DISTINCT"`
+              - `"p01"`
 
-            - `"COUNT"`
+              - `"p05"`
 
-            - `"MAX"`
+              - `"p10"`
 
-            - `"MIN"`
+              - `"p25"`
 
-            - `"SUM"`
+              - `"p75"`
 
-            - `"AVG"`
+              - `"p90"`
 
-            - `"MEDIAN"`
+              - `"p95"`
 
-            - `"P001"`
+              - `"p99"`
 
-            - `"P01"`
+              - `"p999"`
 
-            - `"P05"`
+              - `"stddev"`
 
-            - `"P10"`
+              - `"variance"`
 
-            - `"P25"`
+              - `"COUNT_DISTINCT"`
 
-            - `"P75"`
+              - `"MAX"`
 
-            - `"P90"`
+              - `"MIN"`
 
-            - `"P95"`
+              - `"SUM"`
 
-            - `"P99"`
+              - `"AVG"`
 
-            - `"P999"`
+              - `"MEDIAN"`
 
-            - `"STDDEV"`
+              - `"P001"`
 
-            - `"VARIANCE"`
+              - `"P01"`
 
-          - `alias: optional string`
+              - `"P05"`
 
-          - `key: optional string`
+              - `"P10"`
 
-          - `keyType: optional "string" or "number" or "boolean"`
+              - `"P25"`
 
-            - `"string"`
+              - `"P75"`
 
-            - `"number"`
+              - `"P90"`
 
-            - `"boolean"`
+              - `"P95"`
+
+              - `"P99"`
+
+              - `"P999"`
+
+              - `"STDDEV"`
+
+              - `"VARIANCE"`
+
+            - `alias: optional string`
+
+            - `keyType: optional "string" or "number" or "boolean"`
+
+              - `"string"`
+
+              - `"number"`
+
+              - `"boolean"`
 
         - `datasets: optional array of string`
 
@@ -41762,7 +42248,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
         "parameters": {
           "calculations": [
             {
-              "operator": "uniq",
+              "operator": "count",
               "alias": "alias",
               "key": "key",
               "keyType": "string"
@@ -42215,99 +42701,117 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
 
       - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-        - `calculations: optional array of object { operator, alias, key, keyType }`
+        - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
           Create Calculations to compute as part of the query.
 
-          - `operator: "uniq" or "count" or "max" or 35 more`
+          - `object { operator, alias, key, keyType }`
 
-            - `"uniq"`
+            - `operator: "count" or "COUNT"`
 
-            - `"count"`
+              - `"count"`
 
-            - `"max"`
+              - `"COUNT"`
 
-            - `"min"`
+            - `alias: optional string`
 
-            - `"sum"`
+            - `key: optional string`
 
-            - `"avg"`
+            - `keyType: optional "string" or "number" or "boolean"`
 
-            - `"median"`
+              - `"string"`
 
-            - `"p001"`
+              - `"number"`
 
-            - `"p01"`
+              - `"boolean"`
 
-            - `"p05"`
+          - `object { key, operator, alias, keyType }`
 
-            - `"p10"`
+            - `key: string`
 
-            - `"p25"`
+            - `operator: "uniq" or "max" or "min" or 33 more`
 
-            - `"p75"`
+              - `"uniq"`
 
-            - `"p90"`
+              - `"max"`
 
-            - `"p95"`
+              - `"min"`
 
-            - `"p99"`
+              - `"sum"`
 
-            - `"p999"`
+              - `"avg"`
 
-            - `"stddev"`
+              - `"median"`
 
-            - `"variance"`
+              - `"p001"`
 
-            - `"COUNT_DISTINCT"`
+              - `"p01"`
 
-            - `"COUNT"`
+              - `"p05"`
 
-            - `"MAX"`
+              - `"p10"`
 
-            - `"MIN"`
+              - `"p25"`
 
-            - `"SUM"`
+              - `"p75"`
 
-            - `"AVG"`
+              - `"p90"`
 
-            - `"MEDIAN"`
+              - `"p95"`
 
-            - `"P001"`
+              - `"p99"`
 
-            - `"P01"`
+              - `"p999"`
 
-            - `"P05"`
+              - `"stddev"`
 
-            - `"P10"`
+              - `"variance"`
 
-            - `"P25"`
+              - `"COUNT_DISTINCT"`
 
-            - `"P75"`
+              - `"MAX"`
 
-            - `"P90"`
+              - `"MIN"`
 
-            - `"P95"`
+              - `"SUM"`
 
-            - `"P99"`
+              - `"AVG"`
 
-            - `"P999"`
+              - `"MEDIAN"`
 
-            - `"STDDEV"`
+              - `"P001"`
 
-            - `"VARIANCE"`
+              - `"P01"`
 
-          - `alias: optional string`
+              - `"P05"`
 
-          - `key: optional string`
+              - `"P10"`
 
-          - `keyType: optional "string" or "number" or "boolean"`
+              - `"P25"`
 
-            - `"string"`
+              - `"P75"`
 
-            - `"number"`
+              - `"P90"`
 
-            - `"boolean"`
+              - `"P95"`
+
+              - `"P99"`
+
+              - `"P999"`
+
+              - `"STDDEV"`
+
+              - `"VARIANCE"`
+
+            - `alias: optional string`
+
+            - `keyType: optional "string" or "number" or "boolean"`
+
+              - `"string"`
+
+              - `"number"`
+
+              - `"boolean"`
 
         - `datasets: optional array of string`
 

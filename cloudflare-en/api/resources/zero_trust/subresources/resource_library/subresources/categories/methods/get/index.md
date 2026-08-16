@@ -8,7 +8,7 @@ Get application category by ID.
 
 - `account_id: string`
 
-- `id: string`
+- `id: number`
 
 ### Returns
 
@@ -44,7 +44,7 @@ Get application category by ID.
 
 - `result: optional object { id, created_at, description, name }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the category ID.
 
@@ -93,7 +93,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   ],
   "success": true,
   "result": {
-    "id": "12345678-1234-1234-1234-123456789012",
+    "id": 12,
     "created_at": "2025-01-01T00:00:00Z",
     "description": "Category description",
     "name": "Category name"

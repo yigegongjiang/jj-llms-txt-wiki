@@ -50,7 +50,7 @@ Was this helpful?
 
 YesNo
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/#page","headline":"Migrating your bucket data · Cloudflare Learning Paths","description":"In this video, you will learn how to use Cloudflare R2's data migration tools to transfer data from other cloud providers such as Amazon S3 and Google Cloud Storage to R2. The video will demonstrate the step-by-step process of setting up and executing a data migration.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

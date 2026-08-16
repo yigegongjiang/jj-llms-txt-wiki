@@ -2,7 +2,7 @@
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/{event_id}`
 
-Update an existing event by its identifier.
+Partially updates a threat event in Cloudforce One, modifying specific fields without replacing the entire event.
 
 ### Path Parameters
 

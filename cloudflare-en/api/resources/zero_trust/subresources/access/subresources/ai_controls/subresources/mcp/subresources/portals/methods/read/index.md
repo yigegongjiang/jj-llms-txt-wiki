@@ -10,27 +10,33 @@ Read the details of a single MCP Portal, including its configured servers.
 
 - `id: string`
 
-  portal id
+  Unique identifier for the MCP portal.
 
 ### Returns
 
-- `result: object { id, hostname, name, 8 more }`
+- `result: object { id, hostname, name, 9 more }`
 
   - `id: string`
 
-    portal id
+    Unique identifier for the MCP portal.
 
   - `hostname: string`
 
+    Hostname where the MCP portal is available.
+
   - `name: string`
 
-  - `servers: array of object { id, auth_type, hostname, 21 more }`
+    Display name for the MCP portal.
+
+  - `servers: array of object { id, auth_type, hostname, 22 more }`
 
     - `id: string`
 
-      server id
+      Unique identifier for the MCP server.
 
     - `auth_type: "oauth" or "bearer" or "unauthenticated"`
+
+      Authentication method used to connect to the upstream MCP server.
 
       - `"oauth"`
 
@@ -40,13 +46,17 @@ Read the details of a single MCP Portal, including its configured servers.
 
     - `hostname: string`
 
+      URL of the upstream MCP endpoint.
+
     - `name: string`
+
+      Display name for the MCP server.
 
     - `prompts: array of map[unknown]`
 
     - `server_id: string`
 
-      server id
+      Unique identifier for the MCP server.
 
     - `tools: array of map[unknown]`
 
@@ -86,6 +96,20 @@ Read the details of a single MCP Portal, including its configured servers.
 
         - `token_endpoint_auth_method: optional string`
 
+    - `authentication_status: optional "not_required" or "required" or "connected" or 2 more`
+
+      Whether administrative authentication is required before capabilities can be synced. Manual OAuth is user-managed and has no administrative authentication flow.
+
+      - `"not_required"`
+
+      - `"required"`
+
+      - `"connected"`
+
+      - `"stale"`
+
+      - `"manual"`
+
     - `created_at: optional string`
 
     - `created_by: optional string`
@@ -93,6 +117,8 @@ Read the details of a single MCP Portal, including its configured servers.
     - `default_disabled: optional boolean`
 
     - `description: optional string`
+
+      Optional description of the MCP server.
 
     - `error: optional string`
 
@@ -120,7 +146,7 @@ Read the details of a single MCP Portal, including its configured servers.
 
     - `is_shared_oauth_callback_enabled: optional boolean`
 
-      When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true. Effective behavior is gated by the gateway worker's per-env rollout mode KV key.
+      When true, the gateway worker uses the shared Cloudflare-owned OAuth callback endpoint as the redirect_uri for upstream on-behalf OAuth, instead of the customer portal hostname. Defaults to false (off); opt in per server by setting true.
 
     - `last_successful_sync: optional string`
 
@@ -134,7 +160,7 @@ Read the details of a single MCP Portal, including its configured servers.
 
     - `secure_web_gateway: optional boolean`
 
-      Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway
+      Route outbound traffic to this MCP server through Zero Trust Secure Web Gateway.
 
     - `status: optional "waiting" or "ready" or "stale" or "error"`
 
@@ -178,7 +204,19 @@ Read the details of a single MCP Portal, including its configured servers.
 
   - `allow_code_mode: optional boolean`
 
-    Allow remote code execution in Dynamic Workers (beta)
+    Deprecated: use `code_mode` for new integrations. `true` maps to any non-off Code Mode policy; `false` maps to `code_mode: off`. If both fields are sent, they must be consistent or the request returns a 400.
+
+  - `code_mode: optional "off" or "opt_in" or "default_on" or "enforced"`
+
+    Code Mode policy for this portal. `off`: Code Mode is unavailable; query parameters are ignored. `opt_in`: Code Mode is off by default; clients turn it on with `?codemode=search_and_execute`. `default_on`: Code Mode is on by default; clients can opt out with `?codemode=off`. `enforced`: Code Mode is always on; query parameters are ignored. Defaults to `opt_in` when omitted on create. If both `code_mode` and `allow_code_mode` are sent, they must be consistent or the request returns a 400.
+
+    - `"off"`
+
+    - `"opt_in"`
+
+    - `"default_on"`
+
+    - `"enforced"`
 
   - `created_at: optional string`
 
@@ -186,13 +224,15 @@ Read the details of a single MCP Portal, including its configured servers.
 
   - `description: optional string`
 
+    Optional description of the MCP portal.
+
   - `modified_at: optional string`
 
   - `modified_by: optional string`
 
   - `secure_web_gateway: optional boolean`
 
-    Route outbound MCP traffic through Zero Trust Secure Web Gateway
+    Route outbound MCP traffic through Zero Trust Secure Web Gateway.
 
 - `success: boolean`
 
@@ -209,7 +249,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
 {
   "result": {
     "id": "my-mcp-portal",
-    "hostname": "exmaple.com",
+    "hostname": "example.com",
     "name": "My MCP Portal",
     "servers": [
       {
@@ -248,10 +288,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
             "token_endpoint_auth_method": "token_endpoint_auth_method"
           }
         },
+        "authentication_status": "not_required",
         "created_at": "2019-12-27T18:11:19.117Z",
         "created_by": "created_by",
         "default_disabled": true,
-        "description": "This is one remote mcp server",
+        "description": "This is one remote MCP server",
         "error": "error",
         "error_details": {
           "cause": "cause",
@@ -291,6 +332,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/ai-control
       }
     ],
     "allow_code_mode": true,
+    "code_mode": "opt_in",
     "created_at": "2019-12-27T18:11:19.117Z",
     "created_by": "created_by",
     "description": "This is my custom MCP Portal",

@@ -173,7 +173,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -204,7 +204,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -235,7 +235,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -262,7 +262,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -289,7 +289,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -316,7 +316,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -343,7 +343,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -370,7 +370,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -397,7 +397,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -428,7 +428,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -455,7 +455,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -486,7 +486,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -517,7 +517,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -544,7 +544,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -575,7 +575,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -602,7 +602,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -629,7 +629,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -656,7 +656,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -687,7 +687,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -714,7 +714,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -741,7 +741,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -768,7 +768,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -799,7 +799,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -826,7 +826,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -853,7 +853,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -884,7 +884,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -911,7 +911,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -938,7 +938,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -965,7 +965,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -992,7 +992,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -1019,7 +1019,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -1046,7 +1046,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -1073,7 +1073,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -1100,7 +1100,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -1131,7 +1131,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -1162,7 +1162,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -1193,7 +1193,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -1294,7 +1294,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -1325,7 +1325,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -1356,7 +1356,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -1383,7 +1383,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -1410,7 +1410,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -1437,7 +1437,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -1464,7 +1464,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -1491,7 +1491,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -1518,7 +1518,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -1549,7 +1549,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -1576,7 +1576,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -1607,7 +1607,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -1638,7 +1638,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -1665,7 +1665,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -1696,7 +1696,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -1723,7 +1723,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -1750,7 +1750,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -1777,7 +1777,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -1808,7 +1808,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -1835,7 +1835,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -1862,7 +1862,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -1889,7 +1889,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -1920,7 +1920,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -1947,7 +1947,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -1974,7 +1974,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -2005,7 +2005,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -2032,7 +2032,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -2059,7 +2059,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -2086,7 +2086,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -2113,7 +2113,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -2140,7 +2140,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -2167,7 +2167,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -2194,7 +2194,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -2221,7 +2221,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -2252,7 +2252,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -2283,7 +2283,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -2314,7 +2314,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags/resources \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -2461,7 +2461,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -2492,7 +2492,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -2523,7 +2523,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -2550,7 +2550,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -2577,7 +2577,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -2604,7 +2604,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -2631,7 +2631,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -2658,7 +2658,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -2685,7 +2685,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -2716,7 +2716,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -2743,7 +2743,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -2774,7 +2774,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -2805,7 +2805,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -2832,7 +2832,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -2863,7 +2863,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -2890,7 +2890,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -2917,7 +2917,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -2944,7 +2944,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -2975,7 +2975,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -3002,7 +3002,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -3029,7 +3029,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -3056,7 +3056,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -3087,7 +3087,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -3114,7 +3114,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -3141,7 +3141,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -3172,7 +3172,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -3199,7 +3199,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -3226,7 +3226,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -3253,7 +3253,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -3280,7 +3280,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -3307,7 +3307,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -3334,7 +3334,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -3361,7 +3361,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -3388,7 +3388,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -3419,7 +3419,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -3450,7 +3450,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -3481,7 +3481,7 @@ Retrieves tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -3629,7 +3629,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: optional map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
   - `ResourceTaggingSetTagsRequestAccountLevelBase object { resource_id, resource_type, tags }`
 
@@ -3695,7 +3695,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: optional map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
 ### Returns
 
@@ -3754,7 +3754,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -3785,7 +3785,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -3816,7 +3816,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -3843,7 +3843,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -3870,7 +3870,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -3897,7 +3897,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -3924,7 +3924,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -3951,7 +3951,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -3978,7 +3978,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -4009,7 +4009,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -4036,7 +4036,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -4067,7 +4067,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -4098,7 +4098,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -4125,7 +4125,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -4156,7 +4156,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -4183,7 +4183,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -4210,7 +4210,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -4237,7 +4237,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -4268,7 +4268,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -4295,7 +4295,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -4322,7 +4322,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -4349,7 +4349,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -4380,7 +4380,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -4407,7 +4407,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -4434,7 +4434,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -4465,7 +4465,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -4492,7 +4492,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -4519,7 +4519,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -4546,7 +4546,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -4573,7 +4573,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -4600,7 +4600,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -4627,7 +4627,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -4654,7 +4654,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -4681,7 +4681,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -4712,7 +4712,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -4743,7 +4743,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -4774,7 +4774,7 @@ Creates or updates tags for a specific account-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -4895,7 +4895,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -4926,7 +4926,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -4957,7 +4957,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -4984,7 +4984,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -5011,7 +5011,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -5038,7 +5038,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -5065,7 +5065,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -5092,7 +5092,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -5119,7 +5119,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -5150,7 +5150,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -5177,7 +5177,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -5208,7 +5208,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -5239,7 +5239,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -5266,7 +5266,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -5297,7 +5297,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -5324,7 +5324,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -5351,7 +5351,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -5378,7 +5378,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -5409,7 +5409,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -5436,7 +5436,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -5463,7 +5463,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -5490,7 +5490,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -5521,7 +5521,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -5548,7 +5548,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -5575,7 +5575,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -5606,7 +5606,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -5633,7 +5633,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -5660,7 +5660,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -5687,7 +5687,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -5714,7 +5714,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -5741,7 +5741,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -5768,7 +5768,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -5795,7 +5795,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -5822,7 +5822,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -5853,7 +5853,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -5884,7 +5884,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -5915,7 +5915,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -5952,7 +5952,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -5983,7 +5983,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -6014,7 +6014,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -6041,7 +6041,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -6068,7 +6068,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -6095,7 +6095,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -6122,7 +6122,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -6149,7 +6149,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -6176,7 +6176,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -6207,7 +6207,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -6234,7 +6234,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -6265,7 +6265,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -6296,7 +6296,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -6323,7 +6323,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -6354,7 +6354,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -6381,7 +6381,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -6408,7 +6408,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -6435,7 +6435,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -6466,7 +6466,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -6493,7 +6493,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -6520,7 +6520,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -6547,7 +6547,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -6578,7 +6578,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -6605,7 +6605,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -6632,7 +6632,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -6663,7 +6663,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -6690,7 +6690,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -6717,7 +6717,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -6744,7 +6744,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -6771,7 +6771,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -6798,7 +6798,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -6825,7 +6825,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -6852,7 +6852,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -6879,7 +6879,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -6910,7 +6910,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -6941,7 +6941,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -6972,7 +6972,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -7089,7 +7089,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -7120,7 +7120,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -7151,7 +7151,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -7178,7 +7178,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -7205,7 +7205,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -7232,7 +7232,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -7259,7 +7259,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -7286,7 +7286,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -7313,7 +7313,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -7344,7 +7344,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -7371,7 +7371,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -7402,7 +7402,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -7433,7 +7433,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -7460,7 +7460,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -7491,7 +7491,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -7518,7 +7518,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -7545,7 +7545,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -7572,7 +7572,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -7603,7 +7603,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -7630,7 +7630,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -7657,7 +7657,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -7684,7 +7684,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -7715,7 +7715,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -7742,7 +7742,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -7769,7 +7769,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -7800,7 +7800,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -7827,7 +7827,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -7854,7 +7854,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -7881,7 +7881,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -7908,7 +7908,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -7935,7 +7935,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -7962,7 +7962,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -7989,7 +7989,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -8016,7 +8016,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -8047,7 +8047,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -8078,7 +8078,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -8109,7 +8109,7 @@ Retrieves tags for a specific zone-level resource.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -8221,7 +8221,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: optional map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
   - `ResourceTaggingSetTagsRequestZoneLevelAccessApplicationPolicy object { access_application_id, resource_id, resource_type, tags }`
 
@@ -8263,7 +8263,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: optional map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
 ### Returns
 
@@ -8322,7 +8322,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -8353,7 +8353,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -8384,7 +8384,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -8411,7 +8411,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -8438,7 +8438,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -8465,7 +8465,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -8492,7 +8492,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -8519,7 +8519,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -8546,7 +8546,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -8577,7 +8577,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -8604,7 +8604,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -8635,7 +8635,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -8666,7 +8666,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -8693,7 +8693,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -8724,7 +8724,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -8751,7 +8751,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -8778,7 +8778,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -8805,7 +8805,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -8836,7 +8836,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -8863,7 +8863,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -8890,7 +8890,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -8917,7 +8917,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -8948,7 +8948,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -8975,7 +8975,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -9002,7 +9002,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -9033,7 +9033,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -9060,7 +9060,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -9087,7 +9087,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -9114,7 +9114,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -9141,7 +9141,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -9168,7 +9168,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -9195,7 +9195,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -9222,7 +9222,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -9249,7 +9249,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -9280,7 +9280,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -9311,7 +9311,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -9342,7 +9342,7 @@ Creates or updates tags for a specific zone-level resource. Replaces all existin
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -9462,7 +9462,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -9493,7 +9493,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -9524,7 +9524,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -9551,7 +9551,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -9578,7 +9578,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -9605,7 +9605,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -9632,7 +9632,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -9659,7 +9659,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -9686,7 +9686,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -9717,7 +9717,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -9744,7 +9744,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -9775,7 +9775,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -9806,7 +9806,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -9833,7 +9833,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -9864,7 +9864,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -9891,7 +9891,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -9918,7 +9918,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -9945,7 +9945,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -9976,7 +9976,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -10003,7 +10003,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -10030,7 +10030,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -10057,7 +10057,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -10088,7 +10088,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -10115,7 +10115,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -10142,7 +10142,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -10173,7 +10173,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -10200,7 +10200,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -10227,7 +10227,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -10254,7 +10254,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -10281,7 +10281,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -10308,7 +10308,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -10335,7 +10335,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -10362,7 +10362,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -10389,7 +10389,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -10420,7 +10420,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -10451,7 +10451,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -10482,7 +10482,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 
@@ -10519,7 +10519,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -10550,7 +10550,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -10581,7 +10581,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -10608,7 +10608,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -10635,7 +10635,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -10662,7 +10662,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -10689,7 +10689,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -10716,7 +10716,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -10743,7 +10743,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -10774,7 +10774,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -10801,7 +10801,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -10832,7 +10832,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -10863,7 +10863,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -10890,7 +10890,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -10921,7 +10921,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -10948,7 +10948,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -10975,7 +10975,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -11002,7 +11002,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -11033,7 +11033,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -11060,7 +11060,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -11087,7 +11087,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -11114,7 +11114,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -11145,7 +11145,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -11172,7 +11172,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -11199,7 +11199,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -11230,7 +11230,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -11257,7 +11257,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -11284,7 +11284,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -11311,7 +11311,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -11338,7 +11338,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -11365,7 +11365,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -11392,7 +11392,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -11419,7 +11419,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -11446,7 +11446,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -11477,7 +11477,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -11508,7 +11508,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -11539,7 +11539,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/tags \
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 

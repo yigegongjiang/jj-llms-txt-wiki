@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Content reviews
 
-Last updated Jun 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/reviews/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 4, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/reviews/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 We work (and appreciate working) in [GitHub ↗](https://github.com/cloudflare/cloudflare-docs), but it's not a perfect tool by any means.
 
@@ -27,26 +27,7 @@ To help our writers triage work (and help with backend reporting), we automate a
 For pull requests, we use a specific [GitHub action ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/pr-label-assign.yml) to add labels and assign codeowners.
 
 * [Label products ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/actions/label-products/): We add labels for the top-level product folder, which helps writers scan incoming pull requests and see which are relevant to them.
-* [Label size ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/actions/label-size/): We add labels for the size of the pull request, which helps writers see the relative size of the difference. It's not a perfect measure, but we use the lines changed to estimate the size of the pull request:  
-```ts  
-		switch (true) {  
-			case changes <= 10:  
-				label = "size/xs";  
-				break;  
-			case changes <= 100:  
-				label = "size/s";  
-				break;  
-			case changes <= 500:  
-				label = "size/m";  
-				break;  
-			case changes <= 1000:  
-				label = "size/l";  
-				break;  
-			default:  
-				label = "size/xl";  
-				break;  
-		}  
-```
+* [Label size ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/actions/label-size/): We add labels for the size of the pull request, which helps writers see the relative size of the difference. It's not a perfect measure, but we use the lines changed to estimate the size of the pull request:
 * [Assign codeowners ↗](https://github.com/cloudflare/cloudflare-docs/tree/production/.github/actions/assign-pr): We use our [CODEOWNERS ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/CODEOWNERS) file to automatically assign people to pull requests based on the files changed. This assignment helps writers scan and filter to see which pull requests are relevant to them.
 
 ### Issues
@@ -76,7 +57,7 @@ We commonly get questions about approvals, especially for pull requests that tou
 
 We have a specific part of [CI ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/ci.yml#L32) that [posts a comment ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/bin/post-codeowners-comment/index.ts) with the relevant codeowners.
 
-![Codeowners comment](https://developers.cloudflare.com/_astro/codeowners-comment.DDCh7twA_k05RS.webp) 
+![Codeowners comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2288,height=818,format=webp/_astro/codeowners-comment.DDCh7twA.png) 
 
 ### What changed?
 
@@ -86,7 +67,7 @@ We are in the process of migrating to [Workers Builds](https://developers.cloudf
 
 Based on feedback, we have also added a before/after table of links to help reviewers easily find links in the preview builds.
 
-![Before/after table](https://developers.cloudflare.com/_astro/preview-comment.Bgnu4w0p_XX6Eq.webp) 
+![Before/after table](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2280,height=666,format=webp/_astro/preview-comment.Bgnu4w0p.png) 
 
 ### Is there anything else I need to check?
 
@@ -94,7 +75,7 @@ One difficult thing to check is potential redirects when a pull request renames 
 
 We have a [specific action ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/comment-changed-filenames.yml) that posts a comment to help reviewers identify and then check these paths.
 
-![GitHub Actions redirect comment](https://developers.cloudflare.com/_astro/redirects-github.D5I7CV0r_ZOcVgN.webp) 
+![GitHub Actions redirect comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1239,height=442,format=webp/_astro/redirects-github.D5I7CV0r.png) 
 
 ## Automate communication
 
@@ -106,7 +87,7 @@ The ones without enough context, however, are often painful (especially in a [bu
 
 To help avoid some of this mental toil, we'll ask a question and then apply the `more-information-needed` label. This label starts a [14-day clock ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/no-response.yml) for the author to respond. If they do respond, the label gets removed and the conversation can continue. If they don't respond, the issue automatically gets closed with a [comment explaining why ↗](https://github.com/cloudflare/cloudflare-docs/issues/22943#issuecomment-3002211164).
 
-![No response comment](https://developers.cloudflare.com/_astro/no-response-comment.BLo5VxlU_ZseSNY.webp) 
+![No response comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2398,height=572,format=webp/_astro/no-response-comment.BLo5VxlU.png) 
 
 This workflow - we hope - balances the needs our of team with a healthy respect for our contributors.
 
@@ -122,8 +103,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/reviews/#page","headline":"Content reviews · Cloudflare Style Guide","description":"Review and maintain documentation quality.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/reviews/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/reviews/#page","headline":"Content reviews · Cloudflare Style Guide","description":"Review and maintain documentation quality.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/reviews/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-04","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

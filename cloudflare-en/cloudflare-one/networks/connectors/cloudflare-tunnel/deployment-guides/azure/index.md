@@ -36,12 +36,12 @@ To complete the following procedure, you will need to:
 
 1. In the Azure portal, go to **Virtual Machines** \> **Create** \> **Azure virtual machine**.
 2. Select a **Resource group** or create a new one.  
-![Azure group](https://developers.cloudflare.com/_astro/azure-1.f9lJ2gl2_Z9H61D.webp)
+![Azure group](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1920,height=240,format=webp/_astro/azure-1.f9lJ2gl2.png)
 3. Enter a name for the VM and select a region. For **Image**, select _Ubuntu Server 24.04 LTS_. For **Size**, select an appropriate size (for example, _Standard\_B1s_).
 4. Under **Administrator account**, select **SSH public key** and enter your key pair.  
-![Azure keypair](https://developers.cloudflare.com/_astro/azure-2.TRbZo2Tb_28kqwy.webp)
+![Azure keypair](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1830,height=894,format=webp/_astro/azure-2.TRbZo2Tb.png)
 5. Under **Inbound port rules**, allow SSH (`22`). For testing purposes, also allow HTTP (`80`) and HTTPS (`443`).  
-![Azure ports](https://developers.cloudflare.com/_astro/azure-3.MZiED3ci_1bszbc.webp)
+![Azure ports](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1788,height=642,format=webp/_astro/azure-3.MZiED3ci.png)
 6. Select **Review + create**, then **Create**.
 7. Once the VM is running, copy its **Public IP address** from the VM overview page. Also record the **Private IP address** — Azure by default uses the `10.0.0.0/8` subnet.
 8. SSH into the instance:  
@@ -128,7 +128,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/#page","headline":"Deploy cloudflared in Azure · Cloudflare One docs","description":"Azure in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Azure"]}

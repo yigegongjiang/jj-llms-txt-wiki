@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Redirects
 
-Last updated Jun 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/redirects/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/redirects/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 As your content changes (and it will change), redirects preserve continuity for your users and (friendly) bots.
 
@@ -145,7 +145,7 @@ main();
 
 Contributors often struggle to know when they should add redirects. We try to help them by [adding a comment ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/comment-changed-filenames.yml) to any pull requests that modify or delete content file paths.
 
-![GitHub Actions redirect comment](https://developers.cloudflare.com/_astro/redirects-github.D5I7CV0r_ZOcVgN.webp) 
+![GitHub Actions redirect comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1239,height=442,format=webp/_astro/redirects-github.D5I7CV0r.png) 
 
 ---
 
@@ -196,8 +196,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/#page","headline":"Redirects · Cloudflare Style Guide","description":"Manage URL redirects for documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/#page","headline":"Redirects · Cloudflare Style Guide","description":"Manage URL redirects for documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

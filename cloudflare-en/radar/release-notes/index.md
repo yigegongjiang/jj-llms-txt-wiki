@@ -16,6 +16,15 @@ Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 [Subscribe to RSS](https://developers.cloudflare.com/radar/release-notes/index.xml)
 
+## 2026-08-07
+
+**Add AS-level connectivity and upstream providers widgets to Cloudflare Radar**
+* Added an **AS-level connectivity** graph to AS [routing pages](https://radar.cloudflare.com/routing/as13335), aggregating the BGP paths an AS uses to reach the Tier-1 networks across every prefix it announces, as observed by selected RouteViews collectors. A **Show full paths** toggle switches between the simplified view and all observed paths, and an IP version selector switches between IPv4 and IPv6.
+* Added an **Upstream providers** timeseries widget to AS routing pages, tracking the share of an AS's observed paths carried by each direct upstream network over time. Up to 10 upstreams appear as their own series, with the remainder grouped into **Other**.
+* Added two new endpoints to the [BGP](https://developers.cloudflare.com/api/resources/radar/subresources/bgp/) API:
+  * [/bgp/routes/paths/{asn}](https://developers.cloudflare.com/api/resources/radar/subresources/bgp/subresources/routes/subresources/paths/methods/list/) \- Returns the ordered AS path segments an AS uses to reach the Tier-1 networks, each with its observed path count, peer count, and contributing collectors.
+  * [/bgp/routes/upstreams/{asn}/timeseries](https://developers.cloudflare.com/api/resources/radar/subresources/bgp/subresources/routes/subresources/upstreams/methods/timeseries/) \- Returns the share of an AS's observed paths carried by each direct upstream over time, split by IP version.
+
 ## 2026-05-29
 
 **Add TLS bug detection to the Radar post-quantum TLS support checker**
@@ -282,7 +291,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/radar/release-notes/#page","headline":"Release notes · Cloudflare Radar docs","description":"Review recent changes to Cloudflare Radar.","url":"https://developers.cloudflare.com/radar/release-notes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

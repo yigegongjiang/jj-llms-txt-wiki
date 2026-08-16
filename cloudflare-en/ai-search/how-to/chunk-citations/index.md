@@ -75,7 +75,7 @@ Add an AI Search namespace binding to your Wrangler configuration:
   "name": "ai-search-citations",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-07-28",
+  "compatibility_date": "2026-08-14",
   "ai_search_namespaces": [
     {
       "binding": "AI_SEARCH",
@@ -89,7 +89,7 @@ Add an AI Search namespace binding to your Wrangler configuration:
 name = "ai-search-citations"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-07-28"
+compatibility_date = "2026-08-14"
 
 [[ai_search_namespaces]]
 binding = "AI_SEARCH"
@@ -585,7 +585,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/how-to/chunk-citations/#page","headline":"Show source citations in responses · Cloudflare AI Search docs","description":"Display source citations alongside AI-generated answers.","url":"https://developers.cloudflare.com/ai-search/how-to/chunk-citations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-08","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

@@ -284,7 +284,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 **post** `/accounts/{account_id}/browser-rendering/devtools/browser`
 
-Acquires a browser and returns its session ID and websocket URL.
+Acquires a browser and returns its session ID and websocket URL. Optionally accepts a JSON body with session guardrails to restrict outbound HTTP/S traffic.
 
 ### Path Parameters
 
@@ -311,6 +311,18 @@ Acquires a browser and returns its session ID and websocket URL.
 - `targets: optional boolean`
 
   Include browser targets in response.
+
+### Body Parameters
+
+- `guardrails: optional object { allowedDomains, allowedDomainSets }`
+
+  - `allowedDomains: optional array of string`
+
+    Hostname patterns, max 50. Supports exact hosts (example.com) or a single * wildcard anywhere. Prefer *.example.com (subdomain wildcard) over *example.com (prefix wildcard) to avoid matching overbroad lookalikes like evilexample.com.
+
+  - `allowedDomainSets: optional array of string`
+
+    Max 4 entries: curated preset names (common-cdns) and/or https URLs of newline-separated hostname lists.
 
 ### Returns
 
@@ -343,7 +355,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 **get** `/accounts/{account_id}/browser-rendering/devtools/browser`
 
-Acquires and establishes a WebSocket connection to a browser session.
+Acquires and establishes a WebSocket connection to a browser session. Session guardrails may be supplied in the `cf-brapi-guardrails` header as base64url-encoded JSON of the same `guardrails` object the POST body accepts (for example `{"allowedDomains":["*.example.com"]}`).
 
 ### Path Parameters
 
@@ -362,6 +374,12 @@ Acquires and establishes a WebSocket connection to a browser session.
   Use experimental browser.
 
 - `recording: optional boolean`
+
+### Header Parameters
+
+- `"cf-brapi-guardrails": optional string`
+
+  Optional base64url-encoded JSON session guardrails (allowedDomains and allowedDomainSets)
 
 ### Example
 

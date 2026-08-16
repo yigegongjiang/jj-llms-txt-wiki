@@ -42,7 +42,7 @@ Fetches a DLP entry by ID.
 
   - `true`
 
-- `result: optional object { id, created_at, enabled, 8 more }  or object { id, created_at, enabled, 6 more }  or object { id, confidence, enabled, 6 more }  or 4 more`
+- `result: optional object { id, created_at, enabled, 8 more }  or object { id, created_at, enabled, 6 more }  or object { id, confidence, enabled, 7 more }  or 4 more`
 
   - `object { id, created_at, enabled, 8 more }`
 
@@ -132,7 +132,7 @@ Fetches a DLP entry by ID.
 
       - `"complete"`
 
-  - `object { id, confidence, enabled, 6 more }`
+  - `object { id, confidence, enabled, 7 more }`
 
     - `id: string`
 
@@ -153,6 +153,11 @@ Fetches a DLP entry by ID.
     - `type: "predefined"`
 
       - `"predefined"`
+
+    - `deprecated: optional boolean`
+
+      Whether this entry is deprecated for new use. This is computed from the static catalog and
+      emitted only when true.
 
     - `profile_id: optional string`
 

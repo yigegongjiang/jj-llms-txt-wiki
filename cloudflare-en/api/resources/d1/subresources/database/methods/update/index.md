@@ -64,13 +64,15 @@ Updates the specified D1 database.
 
     The D1 database's size, in bytes.
 
-  - `jurisdiction: optional "eu" or "fedramp"`
+  - `jurisdiction: optional "eu" or "fedramp" or "us"`
 
     Specify the location to restrict the D1 database to run and store data. If this option is present, the location hint is ignored.
 
     - `"eu"`
 
     - `"fedramp"`
+
+    - `"us"`
 
   - `name: optional string`
 

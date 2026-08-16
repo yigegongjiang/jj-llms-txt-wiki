@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Website
 
-Last updated Jun 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/website/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/website/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can connect a website you own as a data source for your AI Search instance. AI Search crawls and indexes the pages automatically.
 
@@ -28,26 +28,12 @@ You can connect a website when creating a new instance through the [dashboard](h
 
 ## How website crawling works
 
-When you connect a domain, the crawler looks for your website's sitemap to determine which pages to visit:
+AI Search finds the pages on your site, fetches each one, converts it to Markdown, splits it into chunks, and adds it to the index. The [parse type](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/) controls how pages are found:
 
-1. If you configure one or more custom sitemap URLs in the dashboard under **Parser options** \> **Specific sitemap**, AI Search crawls only those sitemap URLs.
-2. Otherwise, the crawler checks `robots.txt` for listed sitemaps.
-3. If no `robots.txt` is found, the crawler checks for a sitemap at `/sitemap.xml`.
-4. If no sitemap is available, the domain cannot be crawled.
+* **Sitemap** (default): reads the XML sitemaps your site publishes.
+* **Discover**: starts at the source URL and, by default, uses both your sitemaps and the links it finds on the pages it crawls.
 
-### Indexing order
-
-If your sitemaps include `<priority>` attributes, AI Search reads all sitemaps and indexes pages based on each page's priority value, regardless of which sitemap the page is in.
-
-If no `<priority>` is specified, pages are indexed in the order the sitemaps are provided, either from the configured custom sitemap URLs or from `robots.txt` from top to bottom.
-
-AI Search supports `.gz` compressed sitemaps. Both `robots.txt` and sitemaps can use partial URLs.
-
-### Sync and updates
-
-During scheduled or manual [sync jobs](https://developers.cloudflare.com/ai-search/configuration/indexing/syncing/), the crawler will check for changes to the `<lastmod>` attribute in your sitemap. If it has been changed to a date occurring after the last sync date, then the page is crawled, the updated version is stored, and the page is automatically reindexed so that your search results always reflect the latest content.
-
-If the `<lastmod>` attribute is not defined, AI Search uses the `<changefreq>` attribute to determine how often to re-crawl the URL. If neither `<lastmod>` nor `<changefreq>` is defined, AI Search automatically crawls each link once a day.
+Refer to [Parse types](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/) for how each type finds pages, how each one handles sitemaps and syncing, and which settings apply to only one of them.
 
 ## Storage
 
@@ -56,6 +42,19 @@ Crawled pages are stored in built-in storage automatically.
 To see the items parsed from your website, [list the instance's items](https://developers.cloudflare.com/ai-search/api/items/workers-binding/#itemslist) with the Items API, or open the **Items** tab in the dashboard (**AI** \> **AI Search** \> your instance > **Items**).
 
 ## Configuration
+
+Configure these options during onboarding, or later in your instance settings under **Parser options**.
+
+| Option                                                                                                                          | Description                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Path filtering](#path-filtering)                                                                                               | Include and exclude URL patterns that decide which pages are crawled.                                                                                                    |
+| [Parse type](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/)                        | How the crawler finds pages. **Sitemap** reads your XML sitemaps. **Discover** starts at the source URL and, by default, uses both your sitemaps and the links it finds. |
+| [Specific sitemap](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/#specific-sitemap) | Crawl a set of sitemap URLs that you choose instead of the ones AI Search discovers. Up to five URLs. Applies to the sitemap parse type only.                            |
+| [Discover options](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/#discover-options) | Discovery source, page limit, crawl depth, cache age, and whether to follow external links and subdomains. Applies to the discover parse type only.                      |
+| [Rendering mode](#rendering-mode)                                                                                               | Whether pages are downloaded as raw HTML or loaded in a headless browser first.                                                                                          |
+| [Authentication headers](https://developers.cloudflare.com/ai-search/configuration/data-source/website/authentication-headers/) | Custom HTTP headers sent with each request, so the crawler can reach pages behind authentication. Up to five headers.                                                    |
+| [Content selectors](https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/)           | Restrict indexing to the elements that a CSS selector matches, so you skip navigation, sidebars, and footers.                                                            |
+| [Custom metadata](https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/)               | Values extracted from the <meta> tags in each page's <head>, stored alongside the indexed content.                                                                       |
 
 ### Path filtering
 
@@ -74,324 +73,16 @@ Refer to [Path filtering](https://developers.cloudflare.com/ai-search/configurat
 
 For supported file types and size limits, refer to [Data source](https://developers.cloudflare.com/ai-search/configuration/data-source/#supported-file-types).
 
-### Parsing options
-
-You can configure parsing options during onboarding or in your instance settings under **Parser options**.
-
-#### Specific sitemap
-
-By default, AI Search crawls all sitemaps listed in your `robots.txt` in the order they appear (top to bottom). If you do not want the crawler to index everything, or if your sitemap is hosted at a non-standard path, you can configure custom sitemap URLs in the dashboard under **Parser options** \> **Specific sitemap**.
-
-When custom sitemap URLs are configured, AI Search uses those sitemap URLs instead of auto-discovering sitemaps from `robots.txt` or `/sitemap.xml`. You can add up to five sitemap URLs.
-
-#### Rendering mode
+### Rendering mode
 
 You can choose how pages are parsed during crawling:
 
 * **Static sites**: Downloads the raw HTML for each page.
 * **Rendered sites**: Loads pages with a headless browser and downloads the fully rendered version, including dynamic JavaScript content.
 
-### Extra headers
+## Allow AI Search through WAF
 
-If your website has pages behind authentication or pages that are only visible to logged-in users, you can configure custom HTTP headers to allow the AI Search crawler to access this protected content. You can add up to five custom HTTP headers to the requests AI Search sends when crawling your site.
-
-#### Providing access to sites protected by Cloudflare Access
-
-To allow AI Search to crawl a site protected by [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/access-controls/), you need to create service token credentials and configure them as custom headers.
-
-Service tokens bypass user authentication, so ensure your Access policies are configured appropriately for the content you want to index. The service token will allow the AI Search crawler to access all content covered by the Service Auth policy.
-
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), [create a service token](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/service-tokens/#create-a-service-token). Once the Client ID and Client Secret are generated, save them for the next steps. For example they can look like:  
-```plaintext  
-CF-Access-Client-Id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.access  
-CF-Access-Client-Secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
-```
-2. [Create a policy](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/policy-management/#create-a-policy) with the following configuration:
-
-  * Add an **Include** rule with **Selector** set to **Service token**.
-  * In **Value**, select the Service Token you created in step 1.
-3. [Add your self-hosted application to Access](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) with the following configuration:
-
-  * In Access policies, click **Select existing policies**.
-  * Select the policy that you have just created and select **Confirm**.
-4. In the Cloudflare dashboard, go to the **AI Search** page.  
-[Go to **AI Search** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search)
-5. Select **Create**.
-6. Select **Website** as your data source.
-7. Under **Parse options**, locate **Extra headers** and add the following two headers using your saved credentials:
-
-  * Header 1:  
-    * **Key**: `CF-Access-Client-Id`
-    * **Value**: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.access`
-  * Header 2:  
-    * **Key**: `CF-Access-Client-Secret`
-    * **Value**: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-8. Complete the AI Search setup process to create your search instance.
-
-## Custom metadata
-
-You can attach custom metadata to web pages using HTML `<meta>` tags. AI Search extracts metadata from the `<head>` section of each crawled page.
-
-Before custom metadata can be extracted, you must [define a schema](https://developers.cloudflare.com/ai-search/configuration/indexing/metadata/#define-a-schema) in your AI Search configuration.
-
-### Add metadata to web pages
-
-Add `<meta>` tags using either the `name` or `property` attribute:
-
-```html
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta name="title" content="Getting Started Guide" />
-		<meta name="description" content="Learn how to set up the application" />
-		<meta property="og:title" content="Getting Started Guide" />
-		<meta property="og:image" content="https://example.com/og-image.png" />
-		<meta name="category" content="documentation" />
-		<meta name="version" content="2.5" />
-		<meta name="is_public" content="true" />
-	</head>
-	<body>
-		<!-- Page content -->
-	</body>
-</html>
-```
-
-### Recognized fields
-
-For the following fields, AI Search knows which meta tags to extract from. You must still define these in your schema to enable extraction.
-
-| Field       | Source                                                        |
-| ----------- | ------------------------------------------------------------- |
-| title       | <meta name="title"> or <meta property="og:title">             |
-| description | <meta name="description"> or <meta property="og:description"> |
-| image       | <meta property="og:image">                                    |
-
-When both a standard meta tag and an Open Graph tag are present, the standard meta tag takes precedence.
-
-### How metadata extraction works
-
-When the crawler fetches a page:
-
-1. All `<meta>` tags with `name` or `property` attributes are parsed from the `<head>` section.
-2. Tag names are matched against your schema (case-insensitive).
-3. The `content` attribute value is cast to the configured data type.
-4. Extracted metadata is stored alongside the cached HTML.
-5. On subsequent processing, metadata flows into the vector index.
-
-### Boolean value parsing
-
-For `boolean` fields, the following values are accepted (case-insensitive):
-
-| True values  | False values |
-| ------------ | ------------ |
-| true, 1, yes | false, 0, no |
-
-Any other value is treated as invalid and the field is omitted.
-
-## Content selectors
-
-Content selectors let you control which parts of a crawled page are indexed. Each entry pairs a URL glob pattern with a CSS selector. When a page URL matches a glob pattern, only the elements matching the corresponding CSS selector — and their descendants — are extracted and converted to Markdown for indexing.
-
-The list is ordered and the **first matching path wins**. If a page URL matches multiple glob patterns, only the selector from the first match is applied. Order your entries from most specific to least specific.
-
-### Default behavior
-
-Without content selectors, AI Search applies a default processing pipeline that removes elements such as `<header>`, `<footer>`, and `<head>` before converting the remaining content to Markdown. For more details on how HTML is processed, refer to [How HTML is processed](https://developers.cloudflare.com/workers-ai/features/markdown-conversion/how-it-works/#html).
-
-### Configure content selectors in the dashboard
-
-1. Go to the [AI Search ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search) page in the Cloudflare dashboard.  
-[Go to **AI Search** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search)
-2. Select your AI Search instance, or select **Create** to create a new one with a **Website** data source.
-3. Under the data source settings, locate the **Content selectors** section.
-4. Select **Add selector**.
-5. In the **Path** field, enter a glob pattern to match page URLs. For example, `**/blog/**`.
-6. In the **Selector** field, enter a CSS selector to extract content from matching pages. For example, `article .post-body`.
-7. To add more entries, select **Add selector** again. Entries are evaluated in order from top to bottom.
-
-### Configure content selectors via the API
-
-Content selectors are configured in the `source_params.web_crawler.parse_options.content_selector` field when creating or updating an AI Search instance. The field accepts an array of objects, each with a `path` and `selector` property.
-
-```bash
-curl "https://api.cloudflare.com/client/v4/accounts/{account_id}/ai-search/instances" \
-  -H "Authorization: Bearer {api_token}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "id": "my-ai-search",
-    "source": "https://example.com",
-    "type": "web-crawler",
-    "source_params": {
-      "web_crawler": {
-        "parse_options": {
-          "content_selector": [
-            {
-              "path": "**/blog/**",
-              "selector": "article .post-body"
-            },
-            {
-              "path": "**/docs/**",
-              "selector": "main .content"
-            }
-          ]
-        }
-      }
-    }
-  }'
-```
-
-| Field    | Type   | Description                                                                                                                                                                                                                                                         |
-| -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| path     | string | Glob pattern to match against the full page URL. Uses the same glob syntax as [path filtering](https://developers.cloudflare.com/ai-search/configuration/indexing/path-filtering/) — \* matches within a segment, \*\* crosses directories. Maximum 200 characters. |
-| selector | string | CSS selector to extract content from pages matching the path pattern. Supports standard CSS selectors including element, class, ID, and attribute selectors. Maximum 200 characters.                                                                                |
-
-### Examples
-
-#### Extract main content from blog pages
-
-To index only the article body on blog pages and ignore navigation, sidebars, and footers:
-
-| Path           | Selector           |
-| -------------- | ------------------ |
-| \*\*/blog/\*\* | article .post-body |
-
-#### Target documentation content
-
-To index the main content area of a documentation site:
-
-| Path           | Selector      |
-| -------------- | ------------- |
-| \*\*/docs/\*\* | main .content |
-
-#### Different selectors for different sections
-
-You can define multiple entries to apply different selectors to different parts of your site. The first matching path wins, so place more specific patterns first:
-
-| Path                    | Selector           |
-| ----------------------- | ------------------ |
-| \*\*/blog/releases/\*\* | .release-notes     |
-| \*\*/blog/\*\*          | article .post-body |
-| \*\*/docs/\*\*          | main .content      |
-
-In this example, a page at `https://example.com/blog/releases/v2` matches the first pattern and uses the `.release-notes` selector. A page at `https://example.com/blog/my-post` skips the first pattern and matches the second.
-
-Caution
-
-If a CSS selector does not match any elements on a page, the resulting Markdown is empty and AI Search marks the item as errored. Verify that your selectors match the expected elements before applying them to a broad set of pages.
-
-### Interaction with other features
-
-* **Path filtering**: [Path filtering](https://developers.cloudflare.com/ai-search/configuration/indexing/path-filtering/) takes priority over content selectors. Pages excluded by path filters are never crawled, so content selectors do not apply to them.
-* **Rendering mode**: Content selectors apply to the HTML that AI Search receives. For sites that render content with JavaScript, use [Rendered sites](#rendering-mode) mode so that selectors can target the fully rendered DOM.
-* **Automatic re-indexing**: Updating content selectors triggers a new [sync job](https://developers.cloudflare.com/ai-search/configuration/indexing/) immediately, so changes are applied to all indexed pages.
-
-### Limits
-
-| Limit                            | Value          |
-| -------------------------------- | -------------- |
-| Maximum content selector entries | 10             |
-| Maximum path pattern length      | 200 characters |
-| Maximum selector length          | 200 characters |
-
-## Best practices for robots.txt and sitemap
-
-Configure your `robots.txt` and sitemap to help AI Search crawl your site efficiently.
-
-### robots.txt
-
-The AI Search crawler uses the user agent `Cloudflare-AI-Search`. Your `robots.txt` file should reference your sitemap and allow the crawler:
-
-```txt
-User-agent: *
-Allow: /
-
-Sitemap: https://example.com/sitemap.xml
-```
-
-You can list multiple sitemaps or use a sitemap index file:
-
-```txt
-User-agent: *
-Allow: /
-
-Sitemap: https://example.com/sitemap.xml
-Sitemap: https://example.com/blog-sitemap.xml
-Sitemap: https://example.com/sitemap.xml.gz
-```
-
-To block all other crawlers but allow only AI Search:
-
-```txt
-User-agent: *
-Disallow: /
-
-User-agent: Cloudflare-AI-Search
-Allow: /
-
-Sitemap: https://example.com/sitemap.xml
-```
-
-### Sitemap
-
-Structure your sitemap to give AI Search the information it needs to crawl efficiently:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://example.com/important-page</loc>
-    <lastmod>2026-01-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://example.com/other-page</loc>
-    <lastmod>2026-01-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-</urlset>
-```
-
-Use these attributes to control crawling behavior:
-
-| Attribute    | Purpose                       | Recommendation                                                                                      |
-| ------------ | ----------------------------- | --------------------------------------------------------------------------------------------------- |
-| <loc>        | URL of the page               | Required. Use full or partial URLs.                                                                 |
-| <lastmod>    | Last modification date        | Include to enable change detection. AI Search re-crawls pages when this date changes.               |
-| <changefreq> | Expected change frequency     | Use when <lastmod> is not available. Values: always, hourly, daily, weekly, monthly, yearly, never. |
-| <priority>   | Relative importance (0.0-1.0) | Set higher values for important pages. AI Search indexes pages in priority order.                   |
-
-You can also use a Sitemap Index to bundle other domain-specific sitemaps:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>https://www.example.com/sitemap-blog.xml</loc>
-    <lastmod>2024-08-15T10:00:00+00:00</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://www.example.com/sitemap-docs.xml</loc>
-    <lastmod>2024-08-10T12:00:00+00:00</lastmod>
-  </sitemap>
-</sitemapindex>
-```
-
-When parsing a Sitemap Index, AI Search collects all child sitemaps and then crawls them recursively, collecting all relevant URLs present in your sitemaps.
-
-### Recommendations
-
-* Include `<lastmod>` on all URLs to enable efficient change detection during syncs.
-* Set `<priority>` to control indexing order. Pages with higher priority are indexed first.
-* Use `<changefreq>` as a fallback when `<lastmod>` is not available.
-* Use sitemap index files for large sites with multiple sitemaps.
-* Compress large sitemaps using `.gz` format to reduce bandwidth.
-* Keep sitemaps under 50MB and 50,000 URLs per file (standard sitemap limits).
-
-## Allow the AI Search crawler through WAF
-
-If you have Security rules configured to block bot activity, you can add a rule to allowlist the crawler bot.
+If you have Security rules configured to block bot activity on your own site, you can add a rule to allowlist the AI Search bot. Refer to [AI Search in the Cloudflare Radar bot directory ↗](https://radar.cloudflare.com/bots/directory/cloudflare-ai-search) for its verified identity and user agent.
 
 1. In the Cloudflare dashboard, go to the **Security rules** page.  
 [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules)
@@ -402,13 +93,21 @@ If you have Security rules configured to block bot activity, you can add a rule 
 6. Under **Place at**, select the order of the rule in the **Select order** dropdown to be _First_. Setting the order as _First_ allows this rule to be applied before subsequent rules.
 7. To save and deploy your rule, select **Deploy**.
 
-## Limits and pricing
+## Limits
 
-The regular AI Search [limits](https://developers.cloudflare.com/ai-search/platform/limits-pricing/) apply when using the Website data source.
+The regular AI Search [limits](https://developers.cloudflare.com/ai-search/platform/limits-pricing/) apply when using the Website data source. The following limits apply to website data sources on both Workers plans:
 
-The crawler will download and index pages only up to the maximum object limit supported for an AI Search instance, and it processes the first set of pages it visits until that limit is reached. In addition, any files that are downloaded but exceed the file size limit will not be indexed.
+| Limit                                                                                                                                               | Value                             |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| Pages per crawl, [discover parse type](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/#discover)         | 100,000                           |
+| Crawl depth, [discover parse type](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/#page-limit-and-depth) | 100,000 link hops (defaults to 5) |
+| Cached page age, [discover parse type](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/#cache-age)        | 604,800 seconds (7 days)          |
+| [Specific sitemap](https://developers.cloudflare.com/ai-search/configuration/data-source/website/parse-types/#specific-sitemap) URLs                | 5 per instance                    |
+| [Authentication headers](https://developers.cloudflare.com/ai-search/configuration/data-source/website/authentication-headers/)                     | 5 per instance                    |
+| [Content selector](https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/) entries                        | 10 per instance                   |
+| Content selector path pattern and selector length                                                                                                   | 200 characters each               |
 
-Browser Run and storage are included for AI Search crawling. For full pricing details, refer to [Limits and pricing](https://developers.cloudflare.com/ai-search/platform/limits-pricing/).
+The [files per instance](https://developers.cloudflare.com/ai-search/platform/limits-pricing/#limits) limit also applies, so the effective cap is whichever value is lower. The crawler indexes the first pages it visits until it reaches that cap, and any file it downloads that exceeds the maximum file size is not indexed.
 
 Was this helpful?
 
@@ -416,8 +115,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/#page","headline":"Website · Cloudflare AI Search docs","description":"Connect a domain you own as a data source so AI Search can crawl and index your website pages.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-19","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/#page","headline":"Website · Cloudflare AI Search docs","description":"Connect a domain you own as a data source so AI Search can crawl and index your website pages.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-06","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -52,7 +52,7 @@ Lists all sending-enabled subdomains for the zone.
 
   - `name: string`
 
-    The subdomain domain name.
+    The exact domain name or a leftmost wildcard such as `*.example.com`.
 
   - `tag: string`
 
@@ -64,7 +64,7 @@ Lists all sending-enabled subdomains for the zone.
 
   - `dkim_selector: optional string`
 
-    The DKIM selector used for email signing.
+    The DKIM selector used for email signing. Wildcard rows publish the selector and sign with `d=<base>`.
 
   - `modified: optional string`
 
@@ -76,7 +76,7 @@ Lists all sending-enabled subdomains for the zone.
 
   - `return_path_domain: optional string`
 
-    The return-path domain used for bounce handling.
+    The return-path domain used for bounce handling. Wildcard rows use `cf-bounce.<base>`.
 
 - `result_info: optional object { count, page, per_page, 2 more }`
 
@@ -211,7 +211,7 @@ Gets information for a specific sending subdomain.
 
   - `name: string`
 
-    The subdomain domain name.
+    The exact domain name or a leftmost wildcard such as `*.example.com`.
 
   - `tag: string`
 
@@ -223,7 +223,7 @@ Gets information for a specific sending subdomain.
 
   - `dkim_selector: optional string`
 
-    The DKIM selector used for email signing.
+    The DKIM selector used for email signing. Wildcard rows publish the selector and sign with `d=<base>`.
 
   - `modified: optional string`
 
@@ -235,7 +235,7 @@ Gets information for a specific sending subdomain.
 
   - `return_path_domain: optional string`
 
-    The return-path domain used for bounce handling.
+    The return-path domain used for bounce handling. Wildcard rows use `cf-bounce.<base>`.
 
 ### Example
 
@@ -287,7 +287,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
 **post** `/zones/{zone_id}/email/sending/subdomains`
 
-Creates a new sending subdomain or re-enables sending on an existing subdomain that had it disabled. If zone-level Email Sending has not been enabled yet, the zone flag is automatically set when the entitlement is present.
+Creates a new sending subdomain or re-enables sending on an existing subdomain that had it disabled. If zone-level Email Sending has not been enabled yet, the zone flag is automatically set when the entitlement is present. A leftmost wildcard such as `*.example.com` is accepted only for accounts with wildcard Email Sending enabled. Wildcard senders share the base domain's DKIM signing identity and `cf-bounce.<base>` return path.
 
 ### Path Parameters
 
@@ -299,7 +299,7 @@ Creates a new sending subdomain or re-enables sending on an existing subdomain t
 
 - `name: string`
 
-  The subdomain name. Must be within the zone.
+  The domain name within the zone. A wildcard is allowed only as the complete leftmost label (`*.example.com`) and requires the account wildcard Email Sending entitlement.
 
 ### Returns
 
@@ -341,7 +341,7 @@ Creates a new sending subdomain or re-enables sending on an existing subdomain t
 
   - `name: string`
 
-    The subdomain domain name.
+    The exact domain name or a leftmost wildcard such as `*.example.com`.
 
   - `tag: string`
 
@@ -353,7 +353,7 @@ Creates a new sending subdomain or re-enables sending on an existing subdomain t
 
   - `dkim_selector: optional string`
 
-    The DKIM selector used for email signing.
+    The DKIM selector used for email signing. Wildcard rows publish the selector and sign with `d=<base>`.
 
   - `modified: optional string`
 
@@ -365,7 +365,7 @@ Creates a new sending subdomain or re-enables sending on an existing subdomain t
 
   - `return_path_domain: optional string`
 
-    The return-path domain used for bounce handling.
+    The return-path domain used for bounce handling. Wildcard rows use `cf-bounce.<base>`.
 
 ### Example
 
@@ -514,7 +514,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `name: string`
 
-    The subdomain domain name.
+    The exact domain name or a leftmost wildcard such as `*.example.com`.
 
   - `tag: string`
 
@@ -526,7 +526,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `dkim_selector: optional string`
 
-    The DKIM selector used for email signing.
+    The DKIM selector used for email signing. Wildcard rows publish the selector and sign with `d=<base>`.
 
   - `modified: optional string`
 
@@ -538,7 +538,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `return_path_domain: optional string`
 
-    The return-path domain used for bounce handling.
+    The return-path domain used for bounce handling. Wildcard rows use `cf-bounce.<base>`.
 
 ### Subdomain Get Response
 
@@ -550,7 +550,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `name: string`
 
-    The subdomain domain name.
+    The exact domain name or a leftmost wildcard such as `*.example.com`.
 
   - `tag: string`
 
@@ -562,7 +562,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `dkim_selector: optional string`
 
-    The DKIM selector used for email signing.
+    The DKIM selector used for email signing. Wildcard rows publish the selector and sign with `d=<base>`.
 
   - `modified: optional string`
 
@@ -574,7 +574,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `return_path_domain: optional string`
 
-    The return-path domain used for bounce handling.
+    The return-path domain used for bounce handling. Wildcard rows use `cf-bounce.<base>`.
 
 ### Subdomain Create Response
 
@@ -586,7 +586,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `name: string`
 
-    The subdomain domain name.
+    The exact domain name or a leftmost wildcard such as `*.example.com`.
 
   - `tag: string`
 
@@ -598,7 +598,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `dkim_selector: optional string`
 
-    The DKIM selector used for email signing.
+    The DKIM selector used for email signing. Wildcard rows publish the selector and sign with `d=<base>`.
 
   - `modified: optional string`
 
@@ -610,7 +610,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/sending/subdomain
 
   - `return_path_domain: optional string`
 
-    The return-path domain used for bounce handling.
+    The return-path domain used for bounce handling. Wildcard rows use `cf-bounce.<base>`.
 
 ### Subdomain Delete Response
 

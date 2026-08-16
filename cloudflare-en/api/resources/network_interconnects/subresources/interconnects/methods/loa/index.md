@@ -2,7 +2,8 @@
 
 **get** `/accounts/{account_id}/cni/interconnects/{icon}/loa`
 
-Generate the Letter of Authorization (LOA) for a given interconnect
+Downloads the Letter of Authorization (LOA) for a network interconnect, required for
+physical cross-connect provisioning.
 
 ### Path Parameters
 
@@ -11,6 +12,12 @@ Generate the Letter of Authorization (LOA) for a given interconnect
   Customer account tag
 
 - `icon: string`
+
+### Query Parameters
+
+- `name: optional string`
+
+  Custom name to use in the LOA instead of the account name (200 Character limit)
 
 ### Example
 

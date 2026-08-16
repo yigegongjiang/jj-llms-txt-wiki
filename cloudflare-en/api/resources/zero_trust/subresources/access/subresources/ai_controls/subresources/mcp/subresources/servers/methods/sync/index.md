@@ -10,7 +10,7 @@ Syncs an MCP server's capabilities and returns the updated server state, includi
 
 - `id: string`
 
-  portal id
+  Unique identifier for the MCP server.
 
 ### Returns
 

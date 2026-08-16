@@ -122,7 +122,7 @@ Lists and filters all types of Tunnels in an account.
 
       - `"cloudflare"`
 
-    - `connections: optional array of object { id, client_id, client_version, 5 more }`
+    - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
       The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -141,10 +141,6 @@ Lists and filters all types of Tunnels in an account.
       - `colo_name: optional string`
 
         The Cloudflare data center used for this connection.
-
-      - `is_pending_reconnect: optional boolean`
-
-        Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
       - `opened_at: optional string`
 
@@ -228,7 +224,7 @@ Lists and filters all types of Tunnels in an account.
 
       Cloudflare account ID
 
-    - `connections: optional array of object { id, client_id, client_version, 5 more }`
+    - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
       The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -247,10 +243,6 @@ Lists and filters all types of Tunnels in an account.
       - `colo_name: optional string`
 
         The Cloudflare data center used for this connection.
-
-      - `is_pending_reconnect: optional boolean`
-
-        Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
       - `opened_at: optional string`
 
@@ -384,7 +376,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tunnels \
           "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
           "client_version": "2022.7.1",
           "colo_name": "DFW",
-          "is_pending_reconnect": false,
           "opened_at": "2021-01-25T18:22:34.317854Z",
           "origin_ip": "10.1.0.137",
           "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -415,15 +406,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tunnels \
 
 ### Connection
 
-- `Connection object { colo_name, is_pending_reconnect, uuid }`
+- `Connection object { colo_name, uuid }`
 
   - `colo_name: optional string`
 
     The Cloudflare data center used for this connection.
-
-  - `is_pending_reconnect: optional boolean`
-
-    Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
   - `uuid: optional string`
 
@@ -455,7 +442,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tunnels \
 
       - `"cloudflare"`
 
-    - `connections: optional array of object { id, client_id, client_version, 5 more }`
+    - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
       The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -474,10 +461,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tunnels \
       - `colo_name: optional string`
 
         The Cloudflare data center used for this connection.
-
-      - `is_pending_reconnect: optional boolean`
-
-        Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
       - `opened_at: optional string`
 
@@ -561,7 +544,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tunnels \
 
       Cloudflare account ID
 
-    - `connections: optional array of object { id, client_id, client_version, 5 more }`
+    - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
       The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -580,10 +563,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/tunnels \
       - `colo_name: optional string`
 
         The Cloudflare data center used for this connection.
-
-      - `is_pending_reconnect: optional boolean`
-
-        Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
       - `opened_at: optional string`
 
@@ -753,7 +732,7 @@ Lists and filters Cloudflare Tunnels in an account.
 
     - `"cloudflare"`
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -772,10 +751,6 @@ Lists and filters Cloudflare Tunnels in an account.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -913,7 +888,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel \
           "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
           "client_version": "2022.7.1",
           "colo_name": "DFW",
-          "is_pending_reconnect": false,
           "opened_at": "2021-01-25T18:22:34.317854Z",
           "origin_ip": "10.1.0.137",
           "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -1000,7 +974,7 @@ Fetches a single Cloudflare Tunnel.
 
     - `"cloudflare"`
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -1019,10 +993,6 @@ Fetches a single Cloudflare Tunnel.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -1141,7 +1111,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel/$TUNNE
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -1235,7 +1204,7 @@ Creates a new Cloudflare Tunnel in an account.
 
     - `"cloudflare"`
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -1254,10 +1223,6 @@ Creates a new Cloudflare Tunnel in an account.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -1382,7 +1347,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel \
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -1472,7 +1436,7 @@ Updates an existing Cloudflare Tunnel.
 
     - `"cloudflare"`
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -1491,10 +1455,6 @@ Updates an existing Cloudflare Tunnel.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -1619,7 +1579,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel/$TUNNE
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -1699,7 +1658,7 @@ Deletes a Cloudflare Tunnel from an account.
 
     - `"cloudflare"`
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -1718,10 +1677,6 @@ Deletes a Cloudflare Tunnel from an account.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -1841,7 +1796,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel/$TUNNE
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -3170,7 +3124,7 @@ Fetches connection details for a Cloudflare Tunnel.
 
     The version of the remote tunnel configuration. Used internally to sync cloudflared with the Zero Trust dashboard.
 
-  - `conns: optional array of object { id, client_id, client_version, 5 more }`
+  - `conns: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -3189,10 +3143,6 @@ Fetches connection details for a Cloudflare Tunnel.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -3284,7 +3234,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel/$TUNNE
           "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
           "client_version": "2022.7.1",
           "colo_name": "DFW",
-          "is_pending_reconnect": false,
           "opened_at": "2021-01-25T18:22:34.317854Z",
           "origin_ip": "10.1.0.137",
           "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -3418,7 +3367,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel/$TUNNE
 
     The version of the remote tunnel configuration. Used internally to sync cloudflared with the Zero Trust dashboard.
 
-  - `conns: optional array of object { id, client_id, client_version, 5 more }`
+  - `conns: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -3437,10 +3386,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel/$TUNNE
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -3628,7 +3573,7 @@ Fetches connector and connection details for a Cloudflare Tunnel.
 
     The version of the remote tunnel configuration. Used internally to sync cloudflared with the Zero Trust dashboard.
 
-  - `conns: optional array of object { id, client_id, client_version, 5 more }`
+  - `conns: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -3647,10 +3592,6 @@ Fetches connector and connection details for a Cloudflare Tunnel.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -3723,7 +3664,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel/$TUNNE
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -3941,7 +3881,7 @@ Lists and filters Warp Connector Tunnels in an account.
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -3960,10 +3900,6 @@ Lists and filters Warp Connector Tunnels in an account.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -4096,7 +4032,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector \
           "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
           "client_version": "2022.7.1",
           "colo_name": "DFW",
-          "is_pending_reconnect": false,
           "opened_at": "2021-01-25T18:22:34.317854Z",
           "origin_ip": "10.1.0.137",
           "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -4174,7 +4109,7 @@ Fetches a single Warp Connector Tunnel.
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -4193,10 +4128,6 @@ Fetches a single Warp Connector Tunnel.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -4310,7 +4241,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -4387,7 +4317,7 @@ Creates a new Warp Connector Tunnel in an account.
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -4406,10 +4336,6 @@ Creates a new Warp Connector Tunnel in an account.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -4527,7 +4453,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector \
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -4608,7 +4533,7 @@ Updates an existing Warp Connector Tunnel.
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -4627,10 +4552,6 @@ Updates an existing Warp Connector Tunnel.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -4750,7 +4671,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -4821,7 +4741,7 @@ Deletes a Warp Connector Tunnel from an account.
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -4840,10 +4760,6 @@ Deletes a Warp Connector Tunnel from an account.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -4958,7 +4874,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
         "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
         "client_version": "2022.7.1",
         "colo_name": "DFW",
-        "is_pending_reconnect": false,
         "opened_at": "2021-01-25T18:22:34.317854Z",
         "origin_ip": "10.1.0.137",
         "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"
@@ -4993,7 +4908,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -5012,10 +4927,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -5097,7 +5008,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -5116,10 +5027,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -5201,7 +5108,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -5220,10 +5127,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -5305,7 +5208,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -5324,10 +5227,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -5409,7 +5308,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -5428,10 +5327,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector/$T
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 

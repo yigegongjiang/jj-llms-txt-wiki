@@ -119,7 +119,7 @@ Lists waiting rooms for account or zone.
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -168,6 +168,8 @@ Lists waiting rooms for account or zone.
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 
@@ -586,7 +588,7 @@ Fetches a single configured waiting room.
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -635,6 +637,8 @@ Fetches a single configured waiting room.
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 
@@ -1009,7 +1013,7 @@ Creates a new waiting room.
 
   To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-- `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+- `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
   The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -1058,6 +1062,8 @@ Creates a new waiting room.
   - `"fi-FI"`
 
   - `"lt-LT"`
+
+  - `"lv-LV"`
 
   - `"ms-MY"`
 
@@ -1332,7 +1338,7 @@ Creates a new waiting room.
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -1381,6 +1387,8 @@ Creates a new waiting room.
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 
@@ -1772,7 +1780,7 @@ Updates a configured waiting room.
 
   To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-- `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+- `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
   The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -1821,6 +1829,8 @@ Updates a configured waiting room.
   - `"fi-FI"`
 
   - `"lt-LT"`
+
+  - `"lv-LV"`
 
   - `"ms-MY"`
 
@@ -2095,7 +2105,7 @@ Updates a configured waiting room.
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -2144,6 +2154,8 @@ Updates a configured waiting room.
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 
@@ -2536,7 +2548,7 @@ Patches a configured waiting room.
 
   To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-- `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+- `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
   The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -2585,6 +2597,8 @@ Patches a configured waiting room.
   - `"fi-FI"`
 
   - `"lt-LT"`
+
+  - `"lv-LV"`
 
   - `"ms-MY"`
 
@@ -2859,7 +2873,7 @@ Patches a configured waiting room.
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -2908,6 +2922,8 @@ Patches a configured waiting room.
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 
@@ -3368,7 +3384,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING_
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -3417,6 +3433,8 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING_
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 
@@ -3691,7 +3709,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING_
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -3740,6 +3758,8 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING_
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 

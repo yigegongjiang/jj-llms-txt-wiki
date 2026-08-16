@@ -3,8 +3,9 @@
 **patch** `/zones/{zone_id}/ct/alerting`
 
 Create or update the Certificate Transparency alerting subscription for a zone. Enables or disables email notifications when certificates are issued for the zone's domains.
-For Free and Pro zones, the subscription is toggled on or off using the enabled field. Notification emails are sent to all users with SSL permissions on the zone.
-For Business and Enterprise zones, the emails field is required and controls which addresses receive alerts. Setting emails to an empty list disables the subscription regardless of the enabled field. A maximum of 10 email addresses may be configured.
+The `enabled` field is required on every request and controls whether the subscription is active. The `emails` field is optional and, when provided, replaces the stored recipient list for the zone. When `emails` is omitted, the stored recipient list is preserved and only the enabled state is toggled. A maximum of 100 email addresses may be configured per zone.
+Requests that omit `enabled` are rejected with error code 1008.
+Subscribe and unsubscribe notification emails are only sent for recipients whose effective subscription state changes. Idempotent requests (no state change) send no notification email.
 
 ### Path Parameters
 
@@ -20,7 +21,7 @@ For Business and Enterprise zones, the emails field is required and controls whi
 
 - `emails: optional array of string`
 
-  Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
+  Email addresses that receive CT alert notifications for the zone. A maximum of 100 addresses may be configured. Each address must be a valid RFC 5322 email address and must not contain a comma.
 
 ### Returns
 
@@ -54,7 +55,7 @@ For Business and Enterprise zones, the emails field is required and controls whi
 
   - `true`
 
-- `result: optional object { enabled, emails }`
+- `result: optional CTAlertingSubscription`
 
   Certificate Transparency alerting subscription settings for a zone.
 
@@ -64,7 +65,7 @@ For Business and Enterprise zones, the emails field is required and controls whi
 
   - `emails: optional array of string`
 
-    Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
+    Email addresses that receive CT alert notifications for the zone. A maximum of 100 addresses may be configured. Each address must be a valid RFC 5322 email address and must not contain a comma.
 
 ### Example
 

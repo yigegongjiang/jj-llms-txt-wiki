@@ -4,7 +4,8 @@
 
 **get** `/accounts/{account_id}/cni/slots`
 
-Retrieve a list of all slots matching the specified parameters
+Lists all available infrastructure slots for the account, showing allocation status and
+capacity.
 
 ### Path Parameters
 
@@ -36,7 +37,7 @@ Retrieve a list of all slots matching the specified parameters
 
 ### Returns
 
-- `items: array of object { id, facility, occupied, 3 more }`
+- `items: array of object { id, facility, occupied, 4 more }`
 
   - `id: string`
 
@@ -59,6 +60,8 @@ Retrieve a list of all slots matching the specified parameters
   - `account: optional string`
 
     Customer account tag
+
+  - `ccr_device_name: optional string`
 
 - `next: optional number`
 
@@ -85,7 +88,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots \
       "occupied": true,
       "site": "site",
       "speed": "speed",
-      "account": "account"
+      "account": "account",
+      "ccr_device_name": "ccr_device_name"
     }
   ],
   "next": 0
@@ -96,7 +100,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots \
 
 **get** `/accounts/{account_id}/cni/slots/{slot}`
 
-Get information about the specified slot
+Gets information about a specific infrastructure slot allocation.
 
 ### Path Parameters
 
@@ -130,6 +134,8 @@ Get information about the specified slot
 
   Customer account tag
 
+- `ccr_device_name: optional string`
+
 ### Example
 
 ```http
@@ -151,7 +157,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
   "occupied": true,
   "site": "site",
   "speed": "speed",
-  "account": "account"
+  "account": "account",
+  "ccr_device_name": "ccr_device_name"
 }
 ```
 
@@ -161,7 +168,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
 
 - `SlotListResponse object { items, next }`
 
-  - `items: array of object { id, facility, occupied, 3 more }`
+  - `items: array of object { id, facility, occupied, 4 more }`
 
     - `id: string`
 
@@ -185,11 +192,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
 
       Customer account tag
 
+    - `ccr_device_name: optional string`
+
   - `next: optional number`
 
 ### Slot Get Response
 
-- `SlotGetResponse object { id, facility, occupied, 3 more }`
+- `SlotGetResponse object { id, facility, occupied, 4 more }`
 
   - `id: string`
 
@@ -212,3 +221,5 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/slots/$SLOT \
   - `account: optional string`
 
     Customer account tag
+
+  - `ccr_device_name: optional string`

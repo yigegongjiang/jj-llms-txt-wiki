@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/countries`
 
-Retrieve country code information for all supported countries.
+Lists countries referenced in Cloudforce One threat intelligence data.
 
 ### Path Parameters
 

@@ -68,6 +68,78 @@ Returns a paginated list of integrations for the account.
 
   Filter by enabled use cases (e.g., casb, ces). Matches integrations enrolled in any of the specified values. Can be specified multiple times.
 
+### Returns
+
+- `errors: array of unknown`
+
+  List of errors.
+
+- `messages: array of string`
+
+  List of messages.
+
+- `result: array of object { id, application, created, 4 more }`
+
+  List of items.
+
+  - `id: string`
+
+    Integration ID.
+
+  - `application: map[string]`
+
+  - `created: string`
+
+    When the integration was created.
+
+  - `is_paused: boolean`
+
+    Whether the user paused the integration.
+
+  - `name: string`
+
+    Name of the integration.
+
+  - `status: string`
+
+    Integration status.
+
+  - `updated: string`
+
+    When the integration was last updated.
+
+- `result_info: object { count, next, page, 3 more }`
+
+  Pagination metadata.
+
+  - `count: optional number`
+
+    Number of items in current page.
+
+  - `next: optional string`
+
+    URL for next page.
+
+  - `page: optional number`
+
+    Current page number.
+
+  - `per_page: optional number`
+
+    Number of items per page.
+
+  - `previous: optional string`
+
+    URL for previous page.
+
+  - `total_count: optional number`
+
+    Total number of items.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
 ### Example
 
 ```http
@@ -86,7 +158,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations 
       "application": {
         "category": "Productivity",
         "display_name": "Google Workspace",
-        "logo": "https://onprem.cloudflare.com/static/google_workspace.png"
+        "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
       },
       "created": "2025-01-15T10:00:00Z",
       "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",
@@ -122,67 +194,79 @@ Returns full integration details including use cases and permissions.
 
 ### Returns
 
-- `id: string`
+- `result: object { id, application, auth_method, 11 more }`
 
-  Integration ID.
+  The requested item.
 
-- `application: map[string]`
+  - `id: string`
 
-- `auth_method: map[string]`
+    Integration ID.
 
-  The integration's authentication method.
+  - `application: map[string]`
 
-- `authorization_link: object { components, link }`
+  - `auth_method: map[string]`
 
-  Authorization link for the integration.
+    The integration's authentication method.
 
-  - `components: map[unknown]`
+  - `authorization_link: object { components, link }`
 
-  - `link: string`
+    Authorization link for the integration.
 
-- `created: string`
+    - `components: map[unknown]`
 
-  When the integration was created.
+    - `link: string`
 
-- `credentials_expiry: string`
+  - `created: string`
 
-  Credentials expiry time.
+    When the integration was created.
 
-- `dlp_profiles: array of string`
+  - `credentials_expiry: string`
 
-  DLP Profiles enabled for the integration.
+    Credentials expiry time.
 
-- `health_details: array of map[unknown]`
+  - `dlp_profiles: array of string`
 
-  Health details with remediation hints.
+    DLP Profiles enabled for the integration.
 
-- `is_paused: boolean`
+  - `health_details: array of map[unknown]`
 
-  Whether the user paused the integration.
+    Health details with remediation hints.
 
-- `last_hydrated: string`
+  - `is_paused: boolean`
 
-  Last time the integration was hydrated.
+    Whether the user paused the integration.
 
-- `name: string`
+  - `last_hydrated: string`
 
-  Name of the integration.
+    Last time the integration was hydrated.
 
-- `organization_id: number`
+  - `name: string`
 
-  Organization ID.
+    Name of the integration.
 
-- `status: string`
+  - `status: string`
 
-  Integration status.
+    Integration status.
 
-- `updated: string`
+  - `updated: string`
 
-  When the integration was last updated.
+    When the integration was last updated.
 
-- `use_cases: array of map[unknown]`
+  - `use_cases: array of map[unknown]`
 
-  Use cases enabled for the integration.
+    Use cases enabled for the integration.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
+- `errors: optional array of map[unknown]`
+
+  List of errors.
+
+- `messages: optional array of string`
+
+  List of messages.
 
 ### Example
 
@@ -195,40 +279,82 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
 ```json
 {
-  "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-  "application": {
-    "foo": "string"
-  },
-  "auth_method": {
-    "foo": "string"
-  },
-  "authorization_link": {
-    "components": {
-      "foo": "bar"
+  "errors": [],
+  "messages": [],
+  "result": {
+    "application": {
+      "category": "Productivity",
+      "display_name": "Google Workspace",
+      "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
     },
-    "link": "link"
+    "auth_method": {
+      "display_name": "OAuth 2.0",
+      "id": "oauth"
+    },
+    "authorization_link": {
+      "components": {
+        "client_id": "abc",
+        "instance_name": "example"
+      },
+      "link": "https://example.cloudflare.com/authorize"
+    },
+    "created": "2025-01-01T00:00:00Z",
+    "credentials_expiry": "2026-01-01T00:00:00Z",
+    "dlp_profiles": [
+      "e91a2360-da51-4fdf-9711-bcdecd462614"
+    ],
+    "health_details": [],
+    "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",
+    "is_paused": false,
+    "last_hydrated": "2025-04-10T08:30:00Z",
+    "name": "My Google Workspace",
+    "status": "Healthy",
+    "updated": "2025-04-10T08:30:00Z",
+    "use_cases": [
+      {
+        "description": "Discover and secure SaaS applications",
+        "features": [
+          {
+            "description": "Automatically remediate security issues (requires write permissions)",
+            "id": "auto_remediation",
+            "is_enabled": true,
+            "name": "Auto Remediation",
+            "permissions": [
+              {
+                "display_name": "Manage users",
+                "scope": "https://www.googleapis.com/auth/admin.directory.user",
+                "status": "granted"
+              }
+            ]
+          }
+        ],
+        "id": "casb",
+        "is_enabled": true,
+        "name": "Cloud Access Security Broker",
+        "permissions": [
+          {
+            "display_name": "Drive (Read Only)",
+            "scope": "https://www.googleapis.com/auth/drive.readonly",
+            "status": "granted"
+          },
+          {
+            "display_name": "Gmail (Read Only)",
+            "scope": "https://www.googleapis.com/auth/gmail.readonly",
+            "status": "missing"
+          }
+        ]
+      },
+      {
+        "description": "Protect against email-based threats",
+        "features": [],
+        "id": "ces",
+        "is_enabled": false,
+        "name": "Cloud Email Security",
+        "permissions": []
+      }
+    ]
   },
-  "created": "2019-12-27T18:11:19.117Z",
-  "credentials_expiry": "2019-12-27T18:11:19.117Z",
-  "dlp_profiles": [
-    "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"
-  ],
-  "health_details": [
-    {
-      "foo": "bar"
-    }
-  ],
-  "is_paused": true,
-  "last_hydrated": "2019-12-27T18:11:19.117Z",
-  "name": "name",
-  "organization_id": 0,
-  "status": "status",
-  "updated": "2019-12-27T18:11:19.117Z",
-  "use_cases": [
-    {
-      "foo": "bar"
-    }
-  ]
+  "success": true
 }
 ```
 
@@ -244,11 +370,12 @@ Creates a new integration for the specified application. Integration creation wi
 
 ### Body Parameters
 
-- `application: "ANTHROPIC" or "BITBUCKET" or "BOX" or 10 more`
+- `application: "ANTHROPIC" or "AWS" or "BITBUCKET" or 12 more`
 
   Vendor/application slug (e.g., GOOGLE_WORKSPACE).
 
   * `ANTHROPIC` - ANTHROPIC
+  * `AWS` - AWS
   * `BITBUCKET` - BITBUCKET
   * `BOX` - BOX
   * `CONFLUENCE` - CONFLUENCE
@@ -260,9 +387,12 @@ Creates a new integration for the specified application. Integration creation wi
   * `MICROSOFT_INTERNAL` - MICROSOFT_INTERNAL
   * `OPENAI` - OPENAI
   * `SALESFORCE` - SALESFORCE
+  * `SERVICENOW` - SERVICENOW
   * `SLACK` - SLACK
 
   - `"ANTHROPIC"`
+
+  - `"AWS"`
 
   - `"BITBUCKET"`
 
@@ -285,6 +415,8 @@ Creates a new integration for the specified application. Integration creation wi
   - `"OPENAI"`
 
   - `"SALESFORCE"`
+
+  - `"SERVICENOW"`
 
   - `"SLACK"`
 
@@ -320,67 +452,79 @@ Creates a new integration for the specified application. Integration creation wi
 
 ### Returns
 
-- `id: string`
+- `result: object { id, application, auth_method, 11 more }`
 
-  Integration ID.
+  The requested item.
 
-- `application: map[string]`
+  - `id: string`
 
-- `auth_method: map[string]`
+    Integration ID.
 
-  The integration's authentication method.
+  - `application: map[string]`
 
-- `authorization_link: object { components, link }`
+  - `auth_method: map[string]`
 
-  Authorization link for the integration.
+    The integration's authentication method.
 
-  - `components: map[unknown]`
+  - `authorization_link: object { components, link }`
 
-  - `link: string`
+    Authorization link for the integration.
 
-- `created: string`
+    - `components: map[unknown]`
 
-  When the integration was created.
+    - `link: string`
 
-- `credentials_expiry: string`
+  - `created: string`
 
-  Credentials expiry time.
+    When the integration was created.
 
-- `dlp_profiles: array of string`
+  - `credentials_expiry: string`
 
-  DLP Profiles enabled for the integration.
+    Credentials expiry time.
 
-- `health_details: array of map[unknown]`
+  - `dlp_profiles: array of string`
 
-  Health details with remediation hints.
+    DLP Profiles enabled for the integration.
 
-- `is_paused: boolean`
+  - `health_details: array of map[unknown]`
 
-  Whether the user paused the integration.
+    Health details with remediation hints.
 
-- `last_hydrated: string`
+  - `is_paused: boolean`
 
-  Last time the integration was hydrated.
+    Whether the user paused the integration.
 
-- `name: string`
+  - `last_hydrated: string`
 
-  Name of the integration.
+    Last time the integration was hydrated.
 
-- `organization_id: number`
+  - `name: string`
 
-  Organization ID.
+    Name of the integration.
 
-- `status: string`
+  - `status: string`
 
-  Integration status.
+    Integration status.
 
-- `updated: string`
+  - `updated: string`
 
-  When the integration was last updated.
+    When the integration was last updated.
 
-- `use_cases: array of map[unknown]`
+  - `use_cases: array of map[unknown]`
 
-  Use cases enabled for the integration.
+    Use cases enabled for the integration.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
+- `errors: optional array of map[unknown]`
+
+  List of errors.
+
+- `messages: optional array of string`
+
+  List of messages.
 
 ### Example
 
@@ -401,40 +545,82 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations 
 
 ```json
 {
-  "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-  "application": {
-    "foo": "string"
-  },
-  "auth_method": {
-    "foo": "string"
-  },
-  "authorization_link": {
-    "components": {
-      "foo": "bar"
+  "errors": [],
+  "messages": [],
+  "result": {
+    "application": {
+      "category": "Productivity",
+      "display_name": "Google Workspace",
+      "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
     },
-    "link": "link"
+    "auth_method": {
+      "display_name": "OAuth 2.0",
+      "id": "oauth"
+    },
+    "authorization_link": {
+      "components": {
+        "client_id": "abc",
+        "instance_name": "example"
+      },
+      "link": "https://example.cloudflare.com/authorize"
+    },
+    "created": "2025-01-01T00:00:00Z",
+    "credentials_expiry": "2026-01-01T00:00:00Z",
+    "dlp_profiles": [
+      "e91a2360-da51-4fdf-9711-bcdecd462614"
+    ],
+    "health_details": [],
+    "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",
+    "is_paused": false,
+    "last_hydrated": "2025-04-10T08:30:00Z",
+    "name": "My Google Workspace",
+    "status": "Healthy",
+    "updated": "2025-04-10T08:30:00Z",
+    "use_cases": [
+      {
+        "description": "Discover and secure SaaS applications",
+        "features": [
+          {
+            "description": "Automatically remediate security issues (requires write permissions)",
+            "id": "auto_remediation",
+            "is_enabled": true,
+            "name": "Auto Remediation",
+            "permissions": [
+              {
+                "display_name": "Manage users",
+                "scope": "https://www.googleapis.com/auth/admin.directory.user",
+                "status": "granted"
+              }
+            ]
+          }
+        ],
+        "id": "casb",
+        "is_enabled": true,
+        "name": "Cloud Access Security Broker",
+        "permissions": [
+          {
+            "display_name": "Drive (Read Only)",
+            "scope": "https://www.googleapis.com/auth/drive.readonly",
+            "status": "granted"
+          },
+          {
+            "display_name": "Gmail (Read Only)",
+            "scope": "https://www.googleapis.com/auth/gmail.readonly",
+            "status": "missing"
+          }
+        ]
+      },
+      {
+        "description": "Protect against email-based threats",
+        "features": [],
+        "id": "ces",
+        "is_enabled": false,
+        "name": "Cloud Email Security",
+        "permissions": []
+      }
+    ]
   },
-  "created": "2019-12-27T18:11:19.117Z",
-  "credentials_expiry": "2019-12-27T18:11:19.117Z",
-  "dlp_profiles": [
-    "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"
-  ],
-  "health_details": [
-    {
-      "foo": "bar"
-    }
-  ],
-  "is_paused": true,
-  "last_hydrated": "2019-12-27T18:11:19.117Z",
-  "name": "name",
-  "organization_id": 0,
-  "status": "status",
-  "updated": "2019-12-27T18:11:19.117Z",
-  "use_cases": [
-    {
-      "foo": "bar"
-    }
-  ]
+  "success": true
 }
 ```
 
@@ -480,67 +666,79 @@ Updates an integration's name, permissions, DLP profiles, use cases, or credenti
 
 ### Returns
 
-- `id: string`
+- `result: object { id, application, auth_method, 11 more }`
 
-  Integration ID.
+  The requested item.
 
-- `application: map[string]`
+  - `id: string`
 
-- `auth_method: map[string]`
+    Integration ID.
 
-  The integration's authentication method.
+  - `application: map[string]`
 
-- `authorization_link: object { components, link }`
+  - `auth_method: map[string]`
 
-  Authorization link for the integration.
+    The integration's authentication method.
 
-  - `components: map[unknown]`
+  - `authorization_link: object { components, link }`
 
-  - `link: string`
+    Authorization link for the integration.
 
-- `created: string`
+    - `components: map[unknown]`
 
-  When the integration was created.
+    - `link: string`
 
-- `credentials_expiry: string`
+  - `created: string`
 
-  Credentials expiry time.
+    When the integration was created.
 
-- `dlp_profiles: array of string`
+  - `credentials_expiry: string`
 
-  DLP Profiles enabled for the integration.
+    Credentials expiry time.
 
-- `health_details: array of map[unknown]`
+  - `dlp_profiles: array of string`
 
-  Health details with remediation hints.
+    DLP Profiles enabled for the integration.
 
-- `is_paused: boolean`
+  - `health_details: array of map[unknown]`
 
-  Whether the user paused the integration.
+    Health details with remediation hints.
 
-- `last_hydrated: string`
+  - `is_paused: boolean`
 
-  Last time the integration was hydrated.
+    Whether the user paused the integration.
 
-- `name: string`
+  - `last_hydrated: string`
 
-  Name of the integration.
+    Last time the integration was hydrated.
 
-- `organization_id: number`
+  - `name: string`
 
-  Organization ID.
+    Name of the integration.
 
-- `status: string`
+  - `status: string`
 
-  Integration status.
+    Integration status.
 
-- `updated: string`
+  - `updated: string`
 
-  When the integration was last updated.
+    When the integration was last updated.
 
-- `use_cases: array of map[unknown]`
+  - `use_cases: array of map[unknown]`
 
-  Use cases enabled for the integration.
+    Use cases enabled for the integration.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
+- `errors: optional array of map[unknown]`
+
+  List of errors.
+
+- `messages: optional array of string`
+
+  List of messages.
 
 ### Example
 
@@ -554,40 +752,82 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
 ```json
 {
-  "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-  "application": {
-    "foo": "string"
-  },
-  "auth_method": {
-    "foo": "string"
-  },
-  "authorization_link": {
-    "components": {
-      "foo": "bar"
+  "errors": [],
+  "messages": [],
+  "result": {
+    "application": {
+      "category": "Productivity",
+      "display_name": "Google Workspace",
+      "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
     },
-    "link": "link"
+    "auth_method": {
+      "display_name": "OAuth 2.0",
+      "id": "oauth"
+    },
+    "authorization_link": {
+      "components": {
+        "client_id": "abc",
+        "instance_name": "example"
+      },
+      "link": "https://example.cloudflare.com/authorize"
+    },
+    "created": "2025-01-01T00:00:00Z",
+    "credentials_expiry": "2026-01-01T00:00:00Z",
+    "dlp_profiles": [
+      "e91a2360-da51-4fdf-9711-bcdecd462614"
+    ],
+    "health_details": [],
+    "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",
+    "is_paused": false,
+    "last_hydrated": "2025-04-10T08:30:00Z",
+    "name": "My Google Workspace",
+    "status": "Healthy",
+    "updated": "2025-04-10T08:30:00Z",
+    "use_cases": [
+      {
+        "description": "Discover and secure SaaS applications",
+        "features": [
+          {
+            "description": "Automatically remediate security issues (requires write permissions)",
+            "id": "auto_remediation",
+            "is_enabled": true,
+            "name": "Auto Remediation",
+            "permissions": [
+              {
+                "display_name": "Manage users",
+                "scope": "https://www.googleapis.com/auth/admin.directory.user",
+                "status": "granted"
+              }
+            ]
+          }
+        ],
+        "id": "casb",
+        "is_enabled": true,
+        "name": "Cloud Access Security Broker",
+        "permissions": [
+          {
+            "display_name": "Drive (Read Only)",
+            "scope": "https://www.googleapis.com/auth/drive.readonly",
+            "status": "granted"
+          },
+          {
+            "display_name": "Gmail (Read Only)",
+            "scope": "https://www.googleapis.com/auth/gmail.readonly",
+            "status": "missing"
+          }
+        ]
+      },
+      {
+        "description": "Protect against email-based threats",
+        "features": [],
+        "id": "ces",
+        "is_enabled": false,
+        "name": "Cloud Email Security",
+        "permissions": []
+      }
+    ]
   },
-  "created": "2019-12-27T18:11:19.117Z",
-  "credentials_expiry": "2019-12-27T18:11:19.117Z",
-  "dlp_profiles": [
-    "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"
-  ],
-  "health_details": [
-    {
-      "foo": "bar"
-    }
-  ],
-  "is_paused": true,
-  "last_hydrated": "2019-12-27T18:11:19.117Z",
-  "name": "name",
-  "organization_id": 0,
-  "status": "status",
-  "updated": "2019-12-27T18:11:19.117Z",
-  "use_cases": [
-    {
-      "foo": "bar"
-    }
-  ]
+  "success": true
 }
 ```
 
@@ -625,67 +865,79 @@ Pauses an integration, stopping all crawlers.
 
 ### Returns
 
-- `id: string`
+- `result: object { id, application, auth_method, 11 more }`
 
-  Integration ID.
+  The requested item.
 
-- `application: map[string]`
+  - `id: string`
 
-- `auth_method: map[string]`
+    Integration ID.
 
-  The integration's authentication method.
+  - `application: map[string]`
 
-- `authorization_link: object { components, link }`
+  - `auth_method: map[string]`
 
-  Authorization link for the integration.
+    The integration's authentication method.
 
-  - `components: map[unknown]`
+  - `authorization_link: object { components, link }`
 
-  - `link: string`
+    Authorization link for the integration.
 
-- `created: string`
+    - `components: map[unknown]`
 
-  When the integration was created.
+    - `link: string`
 
-- `credentials_expiry: string`
+  - `created: string`
 
-  Credentials expiry time.
+    When the integration was created.
 
-- `dlp_profiles: array of string`
+  - `credentials_expiry: string`
 
-  DLP Profiles enabled for the integration.
+    Credentials expiry time.
 
-- `health_details: array of map[unknown]`
+  - `dlp_profiles: array of string`
 
-  Health details with remediation hints.
+    DLP Profiles enabled for the integration.
 
-- `is_paused: boolean`
+  - `health_details: array of map[unknown]`
 
-  Whether the user paused the integration.
+    Health details with remediation hints.
 
-- `last_hydrated: string`
+  - `is_paused: boolean`
 
-  Last time the integration was hydrated.
+    Whether the user paused the integration.
 
-- `name: string`
+  - `last_hydrated: string`
 
-  Name of the integration.
+    Last time the integration was hydrated.
 
-- `organization_id: number`
+  - `name: string`
 
-  Organization ID.
+    Name of the integration.
 
-- `status: string`
+  - `status: string`
 
-  Integration status.
+    Integration status.
 
-- `updated: string`
+  - `updated: string`
 
-  When the integration was last updated.
+    When the integration was last updated.
 
-- `use_cases: array of map[unknown]`
+  - `use_cases: array of map[unknown]`
 
-  Use cases enabled for the integration.
+    Use cases enabled for the integration.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
+- `errors: optional array of map[unknown]`
+
+  List of errors.
+
+- `messages: optional array of string`
+
+  List of messages.
 
 ### Example
 
@@ -699,40 +951,82 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
 ```json
 {
-  "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-  "application": {
-    "foo": "string"
-  },
-  "auth_method": {
-    "foo": "string"
-  },
-  "authorization_link": {
-    "components": {
-      "foo": "bar"
+  "errors": [],
+  "messages": [],
+  "result": {
+    "application": {
+      "category": "Productivity",
+      "display_name": "Google Workspace",
+      "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
     },
-    "link": "link"
+    "auth_method": {
+      "display_name": "OAuth 2.0",
+      "id": "oauth"
+    },
+    "authorization_link": {
+      "components": {
+        "client_id": "abc",
+        "instance_name": "example"
+      },
+      "link": "https://example.cloudflare.com/authorize"
+    },
+    "created": "2025-01-01T00:00:00Z",
+    "credentials_expiry": "2026-01-01T00:00:00Z",
+    "dlp_profiles": [
+      "e91a2360-da51-4fdf-9711-bcdecd462614"
+    ],
+    "health_details": [],
+    "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",
+    "is_paused": true,
+    "last_hydrated": "2025-04-10T08:30:00Z",
+    "name": "My Google Workspace",
+    "status": "Healthy",
+    "updated": "2025-04-10T08:30:00Z",
+    "use_cases": [
+      {
+        "description": "Discover and secure SaaS applications",
+        "features": [
+          {
+            "description": "Automatically remediate security issues (requires write permissions)",
+            "id": "auto_remediation",
+            "is_enabled": true,
+            "name": "Auto Remediation",
+            "permissions": [
+              {
+                "display_name": "Manage users",
+                "scope": "https://www.googleapis.com/auth/admin.directory.user",
+                "status": "granted"
+              }
+            ]
+          }
+        ],
+        "id": "casb",
+        "is_enabled": true,
+        "name": "Cloud Access Security Broker",
+        "permissions": [
+          {
+            "display_name": "Drive (Read Only)",
+            "scope": "https://www.googleapis.com/auth/drive.readonly",
+            "status": "granted"
+          },
+          {
+            "display_name": "Gmail (Read Only)",
+            "scope": "https://www.googleapis.com/auth/gmail.readonly",
+            "status": "missing"
+          }
+        ]
+      },
+      {
+        "description": "Protect against email-based threats",
+        "features": [],
+        "id": "ces",
+        "is_enabled": false,
+        "name": "Cloud Email Security",
+        "permissions": []
+      }
+    ]
   },
-  "created": "2019-12-27T18:11:19.117Z",
-  "credentials_expiry": "2019-12-27T18:11:19.117Z",
-  "dlp_profiles": [
-    "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"
-  ],
-  "health_details": [
-    {
-      "foo": "bar"
-    }
-  ],
-  "is_paused": true,
-  "last_hydrated": "2019-12-27T18:11:19.117Z",
-  "name": "name",
-  "organization_id": 0,
-  "status": "status",
-  "updated": "2019-12-27T18:11:19.117Z",
-  "use_cases": [
-    {
-      "foo": "bar"
-    }
-  ]
+  "success": true
 }
 ```
 
@@ -750,128 +1044,9 @@ Resumes a paused integration, restarting crawlers.
 
 ### Returns
 
-- `id: string`
+- `result: object { id, application, auth_method, 11 more }`
 
-  Integration ID.
-
-- `application: map[string]`
-
-- `auth_method: map[string]`
-
-  The integration's authentication method.
-
-- `authorization_link: object { components, link }`
-
-  Authorization link for the integration.
-
-  - `components: map[unknown]`
-
-  - `link: string`
-
-- `created: string`
-
-  When the integration was created.
-
-- `credentials_expiry: string`
-
-  Credentials expiry time.
-
-- `dlp_profiles: array of string`
-
-  DLP Profiles enabled for the integration.
-
-- `health_details: array of map[unknown]`
-
-  Health details with remediation hints.
-
-- `is_paused: boolean`
-
-  Whether the user paused the integration.
-
-- `last_hydrated: string`
-
-  Last time the integration was hydrated.
-
-- `name: string`
-
-  Name of the integration.
-
-- `organization_id: number`
-
-  Organization ID.
-
-- `status: string`
-
-  Integration status.
-
-- `updated: string`
-
-  When the integration was last updated.
-
-- `use_cases: array of map[unknown]`
-
-  Use cases enabled for the integration.
-
-### Example
-
-```http
-curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/$ID/resume \
-    -X POST \
-    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
-```
-
-#### Response
-
-```json
-{
-  "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-  "application": {
-    "foo": "string"
-  },
-  "auth_method": {
-    "foo": "string"
-  },
-  "authorization_link": {
-    "components": {
-      "foo": "bar"
-    },
-    "link": "link"
-  },
-  "created": "2019-12-27T18:11:19.117Z",
-  "credentials_expiry": "2019-12-27T18:11:19.117Z",
-  "dlp_profiles": [
-    "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"
-  ],
-  "health_details": [
-    {
-      "foo": "bar"
-    }
-  ],
-  "is_paused": true,
-  "last_hydrated": "2019-12-27T18:11:19.117Z",
-  "name": "name",
-  "organization_id": 0,
-  "status": "status",
-  "updated": "2019-12-27T18:11:19.117Z",
-  "use_cases": [
-    {
-      "foo": "bar"
-    }
-  ]
-}
-```
-
-## Domain Types
-
-### Integration List Response
-
-- `IntegrationListResponse = unknown`
-
-### Integration Get Response
-
-- `IntegrationGetResponse object { id, application, auth_method, 12 more }`
-
-  Serializer for v2 integration detail response with use cases.
+  The requested item.
 
   - `id: string`
 
@@ -919,9 +1094,206 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
     Name of the integration.
 
-  - `organization_id: number`
+  - `status: string`
 
-    Organization ID.
+    Integration status.
+
+  - `updated: string`
+
+    When the integration was last updated.
+
+  - `use_cases: array of map[unknown]`
+
+    Use cases enabled for the integration.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
+- `errors: optional array of map[unknown]`
+
+  List of errors.
+
+- `messages: optional array of string`
+
+  List of messages.
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/$ID/resume \
+    -X POST \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+```
+
+#### Response
+
+```json
+{
+  "errors": [],
+  "messages": [],
+  "result": {
+    "application": {
+      "category": "Productivity",
+      "display_name": "Google Workspace",
+      "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
+    },
+    "auth_method": {
+      "display_name": "OAuth 2.0",
+      "id": "oauth"
+    },
+    "authorization_link": {
+      "components": {
+        "client_id": "abc",
+        "instance_name": "example"
+      },
+      "link": "https://example.cloudflare.com/authorize"
+    },
+    "created": "2025-01-01T00:00:00Z",
+    "credentials_expiry": "2026-01-01T00:00:00Z",
+    "dlp_profiles": [
+      "e91a2360-da51-4fdf-9711-bcdecd462614"
+    ],
+    "health_details": [],
+    "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",
+    "is_paused": false,
+    "last_hydrated": "2025-04-10T08:30:00Z",
+    "name": "My Google Workspace",
+    "status": "Healthy",
+    "updated": "2025-04-10T08:30:00Z",
+    "use_cases": [
+      {
+        "description": "Discover and secure SaaS applications",
+        "features": [
+          {
+            "description": "Automatically remediate security issues (requires write permissions)",
+            "id": "auto_remediation",
+            "is_enabled": true,
+            "name": "Auto Remediation",
+            "permissions": [
+              {
+                "display_name": "Manage users",
+                "scope": "https://www.googleapis.com/auth/admin.directory.user",
+                "status": "granted"
+              }
+            ]
+          }
+        ],
+        "id": "casb",
+        "is_enabled": true,
+        "name": "Cloud Access Security Broker",
+        "permissions": [
+          {
+            "display_name": "Drive (Read Only)",
+            "scope": "https://www.googleapis.com/auth/drive.readonly",
+            "status": "granted"
+          },
+          {
+            "display_name": "Gmail (Read Only)",
+            "scope": "https://www.googleapis.com/auth/gmail.readonly",
+            "status": "missing"
+          }
+        ]
+      },
+      {
+        "description": "Protect against email-based threats",
+        "features": [],
+        "id": "ces",
+        "is_enabled": false,
+        "name": "Cloud Email Security",
+        "permissions": []
+      }
+    ]
+  },
+  "success": true
+}
+```
+
+## Domain Types
+
+### Integration List Response
+
+- `IntegrationListResponse object { id, application, created, 4 more }`
+
+  Serializer for v2 integration list responses.
+
+  - `id: string`
+
+    Integration ID.
+
+  - `application: map[string]`
+
+  - `created: string`
+
+    When the integration was created.
+
+  - `is_paused: boolean`
+
+    Whether the user paused the integration.
+
+  - `name: string`
+
+    Name of the integration.
+
+  - `status: string`
+
+    Integration status.
+
+  - `updated: string`
+
+    When the integration was last updated.
+
+### Integration Get Response
+
+- `IntegrationGetResponse object { id, application, auth_method, 11 more }`
+
+  The requested item.
+
+  - `id: string`
+
+    Integration ID.
+
+  - `application: map[string]`
+
+  - `auth_method: map[string]`
+
+    The integration's authentication method.
+
+  - `authorization_link: object { components, link }`
+
+    Authorization link for the integration.
+
+    - `components: map[unknown]`
+
+    - `link: string`
+
+  - `created: string`
+
+    When the integration was created.
+
+  - `credentials_expiry: string`
+
+    Credentials expiry time.
+
+  - `dlp_profiles: array of string`
+
+    DLP Profiles enabled for the integration.
+
+  - `health_details: array of map[unknown]`
+
+    Health details with remediation hints.
+
+  - `is_paused: boolean`
+
+    Whether the user paused the integration.
+
+  - `last_hydrated: string`
+
+    Last time the integration was hydrated.
+
+  - `name: string`
+
+    Name of the integration.
 
   - `status: string`
 
@@ -937,9 +1309,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
 ### Integration Create Response
 
-- `IntegrationCreateResponse object { id, application, auth_method, 12 more }`
+- `IntegrationCreateResponse object { id, application, auth_method, 11 more }`
 
-  Serializer for v2 integration detail response with use cases.
+  The requested item.
 
   - `id: string`
 
@@ -986,10 +1358,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
   - `name: string`
 
     Name of the integration.
-
-  - `organization_id: number`
-
-    Organization ID.
 
   - `status: string`
 
@@ -1005,9 +1373,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
 ### Integration Update Response
 
-- `IntegrationUpdateResponse object { id, application, auth_method, 12 more }`
+- `IntegrationUpdateResponse object { id, application, auth_method, 11 more }`
 
-  Serializer for v2 integration detail response with use cases.
+  The requested item.
 
   - `id: string`
 
@@ -1054,10 +1422,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
   - `name: string`
 
     Name of the integration.
-
-  - `organization_id: number`
-
-    Organization ID.
 
   - `status: string`
 
@@ -1073,9 +1437,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
 ### Integration Pause Response
 
-- `IntegrationPauseResponse object { id, application, auth_method, 12 more }`
+- `IntegrationPauseResponse object { id, application, auth_method, 11 more }`
 
-  Serializer for v2 integration detail response with use cases.
+  The requested item.
 
   - `id: string`
 
@@ -1122,10 +1486,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
   - `name: string`
 
     Name of the integration.
-
-  - `organization_id: number`
-
-    Organization ID.
 
   - `status: string`
 
@@ -1141,9 +1501,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
 
 ### Integration Resume Response
 
-- `IntegrationResumeResponse object { id, application, auth_method, 12 more }`
+- `IntegrationResumeResponse object { id, application, auth_method, 11 more }`
 
-  Serializer for v2 integration detail response with use cases.
+  The requested item.
 
   - `id: string`
 
@@ -1190,10 +1550,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations/
   - `name: string`
 
     Name of the integration.
-
-  - `organization_id: number`
-
-    Organization ID.
 
   - `status: string`
 

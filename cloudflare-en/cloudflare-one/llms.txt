@@ -167,6 +167,7 @@ Replace legacy security perimeters with Cloudflare's network to protect your org
 - [Applications and app types](https://developers.cloudflare.com/cloudflare-one/traffic-policies/application-app-types/index.md): Reference information for Applications and app types in Gateway.
 - [DNS policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/index.md): Configure DNS policies in Gateway.
 - [Common policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/common-policies/index.md): Reference information for Common policies in Gateway.
+- [Maximum DNS TTL](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/maximum-dns-ttl/index.md): Set a maximum time-to-live (TTL) for DNS responses returned by Gateway to ensure policy changes propagate faster.
 - [Test DNS filtering](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/test-dns-filtering/index.md): Test DNS filtering in Gateway.
 - [Timed DNS policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/timed-policies/index.md): Reference information for Timed DNS policies in Gateway.
 - [Domain categories](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/index.md): Reference information for Domain categories in Gateway.
@@ -187,6 +188,7 @@ Replace legacy security perimeters with Cloudflare's network to protect your org
 - [File sandboxing](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/file-sandboxing/index.md): How File sandboxing works in Gateway.
 - [Application Granular Controls](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/granular-controls/index.md): How Application Granular Controls works in Gateway.
 - [HTTP/3 inspection](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/http3/index.md): How HTTP/3 inspection works in Gateway.
+- [Package registry security](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/package-registry-security/index.md): Use Gateway HTTP policies to detect and control software package downloads across seven major package ecosystems.
 - [Modify HTTP request headers in Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tenant-control/index.md): Add, overwrite, and remove HTTP request headers in Gateway HTTP policies using static or dynamic values.
 - [TLS decryption](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/index.md): How TLS decryption works in Gateway.
 - [Identity-based policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/identity-selectors/index.md): Reference information for Identity-based policies in Gateway.
@@ -245,6 +247,7 @@ Replace legacy security perimeters with Cloudflare's network to protect your org
 - [Additional detections](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/additional-detections/index.md): Additional detections in Email Security.
 - [Allow policies](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/allow-policies/index.md): Allow policies in Email Security.
 - [Detection settings best practices](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/best-practices/index.md): Detection settings best practices in Email Security.
+- [Blocked content](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/blocked-content/index.md): Blocked content rules in Email Security.
 - [Blocked senders](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/blocked-senders/index.md): Blocked senders in Email Security.
 - [Configure link actions](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/configure-link-actions/index.md): Configure link actions in Email Security.
 - [Configure text add-ons](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/configure-text-add-ons/index.md): Configure text add-ons in Email Security.
@@ -501,6 +504,7 @@ Replace legacy security perimeters with Cloudflare's network to protect your org
 - [Connectivity options](https://developers.cloudflare.com/cloudflare-one/networks/connectivity-options/index.md): Connectivity options in Zero Trust networking.
 - [Cloudflare Mesh](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/index.md): How Cloudflare Mesh works in Zero Trust networking.
 - [Connect client devices](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/client-devices/index.md): Connect client devices in Zero Trust networking.
+- [Run Mesh in Docker / Kubernetes](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/containers/index.md): Run a Cloudflare Mesh node as a Docker container for Docker Compose, Kubernetes, and CI/CD environments.
 - [Get started](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/get-started/index.md): Get started in Zero Trust networking.
 - [High availability](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/high-availability/index.md): High availability for Cloudflare Mesh nodes.
 - [Routes](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/routes/index.md): Routes in Zero Trust networking.
@@ -588,6 +592,7 @@ Replace legacy security perimeters with Cloudflare's network to protect your org
 - [Configure Virtual Appliance](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/appliance/configure-virtual-appliance/index.md): Learn how to configure Virtual Appliance on VMWare ESXi or Proxmox Virtual Environment
 - [Device metrics](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/appliance/device-metrics/index.md): Device metrics in Zero Trust networking.
 - [Activate Connector](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/appliance/maintenance/activate-appliance/index.md): Activate Connector in Zero Trust networking.
+- [Appliance operations](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/appliance/maintenance/appliance-operations/index.md): Restart, reboot, or shut down a Cloudflare One Appliance from the dashboard or via API.
 - [Deactivate Connector](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/appliance/maintenance/deactivate-appliance/index.md): Deactivate Connector in Zero Trust networking.
 - [Default password](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/appliance/maintenance/default-password/index.md): Learn how to edit Cloudflare One Appliance's default password.
 - [Edit basic information](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/appliance/maintenance/edit-basic-info/index.md): Edit basic information in Zero Trust networking.
@@ -676,6 +681,7 @@ Replace legacy security perimeters with Cloudflare's network to protect your org
 - [PAC file best practices](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/index.md): PAC file best practices in Zero Trust networking.
 - [Configure a PAC file on your device](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/configure-pac-file-on-device/index.md): Configure your operating system or browser to use a Proxy Auto-Configuration (PAC) file with Cloudflare Gateway. Includes steps for Windows, macOS, Linux, iOS, Android, ChromeOS, and enterprise deployment.
 - [Add routes](https://developers.cloudflare.com/cloudflare-one/networks/routes/add-routes/index.md): Add routes in Zero Trust networking.
+- [Configure initial resolved IPs](https://developers.cloudflare.com/cloudflare-one/networks/routes/configure-initial-resolved-ips/index.md): Configure the IPv4 range Gateway uses to assign initial resolved IPs for hostname-based traffic.
 - [Reserved IP addresses](https://developers.cloudflare.com/cloudflare-one/networks/routes/reserved-ips/index.md): Reference information for Reserved IP addresses in Zero Trust networking.
 - [Virtual networks](https://developers.cloudflare.com/cloudflare-one/networks/virtual-networks/index.md): How Virtual networks works in Zero Trust networking.
 

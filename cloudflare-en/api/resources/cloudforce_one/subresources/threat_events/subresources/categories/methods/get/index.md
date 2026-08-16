@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Retrieve a single category by its identifier.
+Retrieves details for a specific threat event category.
 
 ### Path Parameters
 

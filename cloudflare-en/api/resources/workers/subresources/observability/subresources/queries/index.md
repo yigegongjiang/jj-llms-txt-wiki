@@ -20,99 +20,117 @@ Persist query for later use.
 
 - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-  - `calculations: optional array of object { operator, alias, key, keyType }`
+  - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
     Create Calculations to compute as part of the query.
 
-    - `operator: "uniq" or "count" or "max" or 35 more`
+    - `object { operator, alias, key, keyType }`
 
-      - `"uniq"`
+      - `operator: "count" or "COUNT"`
 
-      - `"count"`
+        - `"count"`
 
-      - `"max"`
+        - `"COUNT"`
 
-      - `"min"`
+      - `alias: optional string`
 
-      - `"sum"`
+      - `key: optional string`
 
-      - `"avg"`
+      - `keyType: optional "string" or "number" or "boolean"`
 
-      - `"median"`
+        - `"string"`
 
-      - `"p001"`
+        - `"number"`
 
-      - `"p01"`
+        - `"boolean"`
 
-      - `"p05"`
+    - `object { key, operator, alias, keyType }`
 
-      - `"p10"`
+      - `key: string`
 
-      - `"p25"`
+      - `operator: "uniq" or "max" or "min" or 33 more`
 
-      - `"p75"`
+        - `"uniq"`
 
-      - `"p90"`
+        - `"max"`
 
-      - `"p95"`
+        - `"min"`
 
-      - `"p99"`
+        - `"sum"`
 
-      - `"p999"`
+        - `"avg"`
 
-      - `"stddev"`
+        - `"median"`
 
-      - `"variance"`
+        - `"p001"`
 
-      - `"COUNT_DISTINCT"`
+        - `"p01"`
 
-      - `"COUNT"`
+        - `"p05"`
 
-      - `"MAX"`
+        - `"p10"`
 
-      - `"MIN"`
+        - `"p25"`
 
-      - `"SUM"`
+        - `"p75"`
 
-      - `"AVG"`
+        - `"p90"`
 
-      - `"MEDIAN"`
+        - `"p95"`
 
-      - `"P001"`
+        - `"p99"`
 
-      - `"P01"`
+        - `"p999"`
 
-      - `"P05"`
+        - `"stddev"`
 
-      - `"P10"`
+        - `"variance"`
 
-      - `"P25"`
+        - `"COUNT_DISTINCT"`
 
-      - `"P75"`
+        - `"MAX"`
 
-      - `"P90"`
+        - `"MIN"`
 
-      - `"P95"`
+        - `"SUM"`
 
-      - `"P99"`
+        - `"AVG"`
 
-      - `"P999"`
+        - `"MEDIAN"`
 
-      - `"STDDEV"`
+        - `"P001"`
 
-      - `"VARIANCE"`
+        - `"P01"`
 
-    - `alias: optional string`
+        - `"P05"`
 
-    - `key: optional string`
+        - `"P10"`
 
-    - `keyType: optional "string" or "number" or "boolean"`
+        - `"P25"`
 
-      - `"string"`
+        - `"P75"`
 
-      - `"number"`
+        - `"P90"`
 
-      - `"boolean"`
+        - `"P95"`
+
+        - `"P99"`
+
+        - `"P999"`
+
+        - `"STDDEV"`
+
+        - `"VARIANCE"`
+
+      - `alias: optional string`
+
+      - `keyType: optional "string" or "number" or "boolean"`
+
+        - `"string"`
+
+        - `"number"`
+
+        - `"boolean"`
 
   - `datasets: optional array of string`
 
@@ -354,99 +372,117 @@ Persist query for later use.
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 
@@ -702,7 +738,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
     "parameters": {
       "calculations": [
         {
-          "operator": "uniq",
+          "operator": "count",
           "alias": "alias",
           "key": "key",
           "keyType": "string"
@@ -812,99 +848,117 @@ List saved queries.
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 
@@ -1155,7 +1209,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
       "parameters": {
         "calculations": [
           {
-            "operator": "uniq",
+            "operator": "count",
             "alias": "alias",
             "key": "key",
             "keyType": "string"
@@ -1230,99 +1284,117 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 
@@ -1558,99 +1630,117 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/observabi
 
   - `parameters: object { calculations, datasets, filterCombination, 6 more }`
 
-    - `calculations: optional array of object { operator, alias, key, keyType }`
+    - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
       Create Calculations to compute as part of the query.
 
-      - `operator: "uniq" or "count" or "max" or 35 more`
+      - `object { operator, alias, key, keyType }`
 
-        - `"uniq"`
+        - `operator: "count" or "COUNT"`
 
-        - `"count"`
+          - `"count"`
 
-        - `"max"`
+          - `"COUNT"`
 
-        - `"min"`
+        - `alias: optional string`
 
-        - `"sum"`
+        - `key: optional string`
 
-        - `"avg"`
+        - `keyType: optional "string" or "number" or "boolean"`
 
-        - `"median"`
+          - `"string"`
 
-        - `"p001"`
+          - `"number"`
 
-        - `"p01"`
+          - `"boolean"`
 
-        - `"p05"`
+      - `object { key, operator, alias, keyType }`
 
-        - `"p10"`
+        - `key: string`
 
-        - `"p25"`
+        - `operator: "uniq" or "max" or "min" or 33 more`
 
-        - `"p75"`
+          - `"uniq"`
 
-        - `"p90"`
+          - `"max"`
 
-        - `"p95"`
+          - `"min"`
 
-        - `"p99"`
+          - `"sum"`
 
-        - `"p999"`
+          - `"avg"`
 
-        - `"stddev"`
+          - `"median"`
 
-        - `"variance"`
+          - `"p001"`
 
-        - `"COUNT_DISTINCT"`
+          - `"p01"`
 
-        - `"COUNT"`
+          - `"p05"`
 
-        - `"MAX"`
+          - `"p10"`
 
-        - `"MIN"`
+          - `"p25"`
 
-        - `"SUM"`
+          - `"p75"`
 
-        - `"AVG"`
+          - `"p90"`
 
-        - `"MEDIAN"`
+          - `"p95"`
 
-        - `"P001"`
+          - `"p99"`
 
-        - `"P01"`
+          - `"p999"`
 
-        - `"P05"`
+          - `"stddev"`
 
-        - `"P10"`
+          - `"variance"`
 
-        - `"P25"`
+          - `"COUNT_DISTINCT"`
 
-        - `"P75"`
+          - `"MAX"`
 
-        - `"P90"`
+          - `"MIN"`
 
-        - `"P95"`
+          - `"SUM"`
 
-        - `"P99"`
+          - `"AVG"`
 
-        - `"P999"`
+          - `"MEDIAN"`
 
-        - `"STDDEV"`
+          - `"P001"`
 
-        - `"VARIANCE"`
+          - `"P01"`
 
-      - `alias: optional string`
+          - `"P05"`
 
-      - `key: optional string`
+          - `"P10"`
 
-      - `keyType: optional "string" or "number" or "boolean"`
+          - `"P25"`
 
-        - `"string"`
+          - `"P75"`
 
-        - `"number"`
+          - `"P90"`
 
-        - `"boolean"`
+          - `"P95"`
+
+          - `"P99"`
+
+          - `"P999"`
+
+          - `"STDDEV"`
+
+          - `"VARIANCE"`
+
+        - `alias: optional string`
+
+        - `keyType: optional "string" or "number" or "boolean"`
+
+          - `"string"`
+
+          - `"number"`
+
+          - `"boolean"`
 
     - `datasets: optional array of string`
 

@@ -16,6 +16,17 @@ Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/cloudflare-network-firewall.xml)
 
+## 2026-07-08
+
+  
+**IP lists, IDS, and SIP rules supported in Unified Routing**  
+
+[Cloudflare Advanced Network Firewall](https://developers.cloudflare.com/cloudflare-network-firewall/) IP lists, IDS, and SIP rules are now supported for accounts using [Unified Routing](https://developers.cloudflare.com/cloudflare-wan/reference/traffic-steering/#unified-routing-mode-beta) mode. These features require a Cloudflare Advanced Network Firewall subscription.
+
+Support for additional features - Threat Intel Lists, Rate Limiting, and Managed Rulesets - is planned.
+
+For the full list of current beta limitations, refer to [Traffic steering beta limitations](https://developers.cloudflare.com/cloudflare-wan/reference/traffic-steering/#beta-limitations).
+
 ## 2026-04-21
 
   
@@ -77,7 +88,7 @@ The changes visible in your dashboard may vary based on the products you use. Ov
 
 If you would like to provide feedback, complete [this form ↗](https://forms.gle/htWyjRsTjw1usdis5). You can also find these details in the January 7, 2026 email titled **\[FYI\] Upcoming Network Services Dashboard Navigation Update**.
 
-Preview: ![Networking Navigation](https://developers.cloudflare.com/_astro/networking-overview-and-navigation.CeMgEFaZ_Z20HKl.webp)
+Preview: ![Networking Navigation](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3000,height=1052,format=webp/_astro/networking-overview-and-navigation.CeMgEFaZ.png)
 
 ## 2025-03-13
 
@@ -88,7 +99,7 @@ Magic Firewall now supports a new managed list of Cloudflare IP ranges. This lis
 
 This list is based on the IPs listed in the Cloudflare [IP ranges ↗](https://www.cloudflare.com/en-gb/ips/). Updates to this managed list are applied automatically.
 
-![Cloudflare IPs Managed List](https://developers.cloudflare.com/_astro/cloudflare-ips.DetyOndL_10JG5B.webp) 
+![Cloudflare IPs Managed List](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1102,height=677,format=webp/_astro/cloudflare-ips.DetyOndL.png) 
 
 Note: IP Lists require a Cloudflare Advanced Network Firewall subscription. For more details about Cloudflare Network Firewall plans, refer to [Plans](https://developers.cloudflare.com/cloudflare-network-firewall/plans).
 
@@ -103,7 +114,7 @@ The Magic Firewall dashboard now allows you to search custom rules using the rul
 2. Go to **Analytics & Logs** \> **Network Analytics**.
 3. Select **Magic Firewall**.
 4. Add a filter for **Rule ID**.
-![Search for firewall rules with rule IDs](https://developers.cloudflare.com/_astro/search-with-rule-id.DJgzqgKk_2jJ9x8.webp) 
+![Search for firewall rules with rule IDs](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1032,height=801,format=webp/_astro/search-with-rule-id.DJgzqgKk.png) 
 
 Additionally, the rule ID URL link has been added to Network Analytics.
 
@@ -125,7 +136,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/changelog/#page","headline":"Changelog · Cloudflare Network Firewall docs","description":"Track updates and changes to Network Firewall features.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

@@ -2,7 +2,8 @@
 
 **delete** `/accounts/{account_id}/cni/cnis/{cni}`
 
-Delete a specified CNI object
+Permanently removes a Cloud Network Interconnect (CNI) configuration. The private network
+connection will be terminated.
 
 ### Path Parameters
 

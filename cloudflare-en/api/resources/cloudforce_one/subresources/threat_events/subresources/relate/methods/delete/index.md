@@ -2,7 +2,7 @@
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/relate/{event_id}`
 
-Remove one or more references from an event.
+Removes a reference link between related threat events in Cloudforce One.
 
 ### Path Parameters
 

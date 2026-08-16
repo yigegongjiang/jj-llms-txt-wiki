@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/cloudforce-one/events/dataset/create`
 
-Create a new dataset in the account.
+Creates a new threat event dataset in Cloudforce One for organizing related threat events.
 
 ### Path Parameters
 
@@ -22,13 +22,13 @@ Create a new dataset in the account.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -46,9 +46,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```

@@ -66,6 +66,78 @@ Returns a paginated list of integrations for the account.
 
   Filter by enabled use cases (e.g., casb, ces). Matches integrations enrolled in any of the specified values. Can be specified multiple times.
 
+### Returns
+
+- `errors: array of unknown`
+
+  List of errors.
+
+- `messages: array of string`
+
+  List of messages.
+
+- `result: array of object { id, application, created, 4 more }`
+
+  List of items.
+
+  - `id: string`
+
+    Integration ID.
+
+  - `application: map[string]`
+
+  - `created: string`
+
+    When the integration was created.
+
+  - `is_paused: boolean`
+
+    Whether the user paused the integration.
+
+  - `name: string`
+
+    Name of the integration.
+
+  - `status: string`
+
+    Integration status.
+
+  - `updated: string`
+
+    When the integration was last updated.
+
+- `result_info: object { count, next, page, 3 more }`
+
+  Pagination metadata.
+
+  - `count: optional number`
+
+    Number of items in current page.
+
+  - `next: optional string`
+
+    URL for next page.
+
+  - `page: optional number`
+
+    Current page number.
+
+  - `per_page: optional number`
+
+    Number of items per page.
+
+  - `previous: optional string`
+
+    URL for previous page.
+
+  - `total_count: optional number`
+
+    Total number of items.
+
+- `success: boolean`
+
+  Whether the request succeeded.
+
 ### Example
 
 ```http
@@ -84,7 +156,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/integrations 
       "application": {
         "category": "Productivity",
         "display_name": "Google Workspace",
-        "logo": "https://onprem.cloudflare.com/static/google_workspace.png"
+        "logo": "https://dash.cloudflare.com/v2/static/google_workspace.png"
       },
       "created": "2025-01-15T10:00:00Z",
       "id": "019d2e6a-d995-7185-afbd-4feead9e42ec",

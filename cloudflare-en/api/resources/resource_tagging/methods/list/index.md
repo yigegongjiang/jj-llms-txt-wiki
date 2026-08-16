@@ -171,7 +171,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application"`
 
@@ -202,7 +202,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_application_policy"`
 
@@ -233,7 +233,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "access_group"`
 
@@ -260,7 +260,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account"`
 
@@ -287,7 +287,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "account_ruleset"`
 
@@ -314,7 +314,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "ai_gateway"`
 
@@ -341,7 +341,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_policy"`
 
@@ -368,7 +368,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "alerting_webhook"`
 
@@ -395,7 +395,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "api_gateway_operation"`
 
@@ -426,7 +426,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "cloudflared_tunnel"`
 
@@ -453,7 +453,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_certificate"`
 
@@ -484,7 +484,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "custom_hostname"`
 
@@ -515,7 +515,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "d1_database"`
 
@@ -542,7 +542,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "dns_record"`
 
@@ -573,7 +573,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "durable_object_namespace"`
 
@@ -600,7 +600,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_list"`
 
@@ -627,7 +627,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "gateway_rule"`
 
@@ -654,7 +654,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "healthcheck"`
 
@@ -685,7 +685,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "image"`
 
@@ -712,7 +712,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "infrastructure_target"`
 
@@ -739,7 +739,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "kv_namespace"`
 
@@ -766,7 +766,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer"`
 
@@ -797,7 +797,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_monitor"`
 
@@ -824,7 +824,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "load_balancer_pool"`
 
@@ -851,7 +851,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "managed_client_certificate"`
 
@@ -882,7 +882,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "pages_project"`
 
@@ -909,7 +909,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "queue"`
 
@@ -936,7 +936,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "r2_bucket"`
 
@@ -963,7 +963,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "resource_share"`
 
@@ -990,7 +990,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_live_input"`
 
@@ -1017,7 +1017,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "stream_video"`
 
@@ -1044,7 +1044,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "vectorize_index"`
 
@@ -1071,7 +1071,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker"`
 
@@ -1098,7 +1098,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_route"`
 
@@ -1129,7 +1129,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "worker_version"`
 
@@ -1160,7 +1160,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone"`
 
@@ -1191,7 +1191,7 @@ Lists all tagged resources for an account.
 
     - `tags: map[string]`
 
-      Contains key-value pairs of tags. Values may be empty strings for key-only tags.
+      Contains key-value pairs of tags. Keys may contain at most 256 characters. Values may contain at most 1024 characters and may be empty for key-only tags.
 
     - `type: "zone_ruleset"`
 

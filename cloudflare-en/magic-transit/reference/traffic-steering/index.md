@@ -140,15 +140,15 @@ For Magic Transit customers, the primary reason to consider Unified Routing is t
 
 The following limitations apply to accounts using Unified Routing mode. This list will get shorter as Cloudflare adds support for additional features.
 
-| Current beta limitations                                                                                                          | Details                                                                                                                                       |
-| --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Performance                                                                                                                       | Typically around 150 Mbps for each onramp                                                                                                     |
-| Basic packet captures                                                                                                             | Captures exclude Automatic Return Routing or BGP-over-tunnels traffic                                                                         |
-| Full packet captures                                                                                                              | Not yet supported                                                                                                                             |
-| Cloudflare Advanced Network Firewall features: IP Lists, ASN Lists, Threat Intel Lists, IDS, Rate Limiting, SIP, Managed Rulesets | Not yet supported                                                                                                                             |
-| Gateway filtering rules                                                                                                           | Not supported on traffic where both the onramp and offramp is IPsec/GRE/CNI                                                                   |
-| Load Balancer                                                                                                                     | Public-to-private use case is supported to IPsec/GRE/CNI destinations. Private-to-private use case does not yet support Cloudflare Source IPs |
-| IPv6 Support                                                                                                                      | IPv6 is supported for IPsec and GRE. Basic Network Firewall support for IPv6 is limited to src/dst IP filtering                               |
+| Current beta limitations                                                                                      | Details                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Performance                                                                                                   | Typically around 150 Mbps for each onramp                                                                                                     |
+| Basic packet captures                                                                                         | Captures exclude Automatic Return Routing or BGP-over-tunnels traffic                                                                         |
+| Full packet captures                                                                                          | Not yet supported                                                                                                                             |
+| Cloudflare Advanced Network Firewall features: ASN Lists, Threat Intel Lists, Rate Limiting, Managed Rulesets | Not yet supported                                                                                                                             |
+| Gateway filtering rules                                                                                       | Not supported on traffic where both the onramp and offramp is IPsec/GRE/CNI                                                                   |
+| Load Balancer                                                                                                 | Public-to-private use case is supported to IPsec/GRE/CNI destinations. Private-to-private use case does not yet support Cloudflare Source IPs |
+| IPv6 Support                                                                                                  | IPv6 is supported for IPsec and GRE. Basic Network Firewall support for IPv6 is limited to src/dst IP filtering                               |
 
 ### Enroll in the Unified Routing beta
 
@@ -465,7 +465,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/magic-transit/reference/traffic-steering/#page","headline":"Traffic steering · Cloudflare Magic Transit docs","description":"Magic Transit uses a static configuration to route traffic through anycast tunnels using the Generic Routing Encapsulation (GRE) and Internet Protocol Security (IPsec) protocols from Cloudflare's global network to your network.","url":"https://developers.cloudflare.com/magic-transit/reference/traffic-steering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}

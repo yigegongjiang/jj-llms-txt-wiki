@@ -2,7 +2,7 @@
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}`
 
-Update an existing dataset by its identifier.
+Partially updates a threat event dataset in Cloudforce One, modifying specific fields without replacing the entire dataset configuration.
 
 ### Path Parameters
 
@@ -26,13 +26,13 @@ Update an existing dataset by its identifier.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -51,9 +51,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```

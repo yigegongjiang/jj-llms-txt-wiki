@@ -26,7 +26,7 @@ Updates a single zone setting by the identifier
 
   - `Value object { value }`
 
-    - `value: optional unknown or object { enabled, pool_id }  or array of string or 4 more`
+    - `value: optional unknown or object { enabled, pool_id }  or array of string or 5 more`
 
       Value of the zone setting.
 
@@ -111,6 +111,13 @@ Updates a single zone setting by the identifier
 
             Enable automatic preload of the HSTS configuration.
 
+      - `ZonesWebmcpPacksValue = string`
+
+        Comma-separated list of WebMCP tool-pack names to activate for this
+        zone (for example, "c2pa,mcp-server-client"), surfaced to the injected
+        bridge as the data-packs attribute. An empty value clears the override
+        so the bridge uses its built-in default pack set.
+
 ### Returns
 
 - `errors: array of ResponseInfo`
@@ -139,7 +146,7 @@ Updates a single zone setting by the identifier
 
   Whether the API call was successful
 
-- `result: optional ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 60 more`
+- `result: optional ZeroRTT or AdvancedDDoS or object { id, modified_on, value }  or 62 more`
 
   0-RTT session resumption enabled for this zone.
 
@@ -2079,6 +2086,70 @@ Updates a single zone setting by the identifier
       - `"on"`
 
       - `"off"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpEnabled object { id, value, editable, modified_on }`
+
+    When enabled, Cloudflare injects the WebMCP bridge (bridge.js) into HTML
+    responses for this zone, exposing DOM and Content Credentials tools to an
+    in-browser AI agent via navigator.modelContext. No origin-side code
+    changes are required. This setting is currently in beta and its behavior
+    may change.
+
+    - `id: "webmcp_enabled"`
+
+      ID of the zone setting.
+
+      - `"webmcp_enabled"`
+
+    - `value: "off" or "on"`
+
+      Current value of the zone setting.
+
+      - `"off"`
+
+      - `"on"`
+
+    - `editable: optional true or false`
+
+      Whether or not this setting can be modified for this zone (based on your Cloudflare plan level).
+
+      - `true`
+
+      - `false`
+
+    - `modified_on: optional string`
+
+      last time this setting was modified.
+
+  - `ZonesWebmcpPacks object { id, value, editable, modified_on }`
+
+    Optional per-zone override of which bundled WebMCP tool packs the
+    injected bridge.js activates. Only takes effect when webmcp_enabled is
+    on. Leave empty to use the bridge's default pack set. Unknown pack names
+    are ignored by the bridge. This setting is currently in beta and its
+    behavior may change.
+
+    - `id: "webmcp_packs"`
+
+      ID of the zone setting.
+
+      - `"webmcp_packs"`
+
+    - `value: string`
+
+      Current value of the zone setting.
 
     - `editable: optional true or false`
 

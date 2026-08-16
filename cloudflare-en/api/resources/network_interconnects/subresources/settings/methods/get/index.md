@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cni/settings`
 
-Get the current settings for the active account
+Retrieves current settings configuration for the specified resource or service.
 
 ### Path Parameters
 

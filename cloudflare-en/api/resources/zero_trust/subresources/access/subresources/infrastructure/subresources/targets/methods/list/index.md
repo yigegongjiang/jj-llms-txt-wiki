@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/infrastructure/targets`
 
-Lists and sorts an account’s targets. Filters are optional and are ANDed
+Lists and sorts an account's targets. Filters are optional and are ANDed
 together.
 
 ### Path Parameters

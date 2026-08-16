@@ -28,21 +28,7 @@ Retrieves list of tenants the authenticated user / method has access to.
 
   - `create_time: string`
 
-  - `meta: object { flags, hierarchy_tags, managed_by }`
-
-    - `flags: optional object { account_creation, account_deletion, account_migration, 2 more }`
-
-      Enable features for Organizations.
-
-      - `account_creation: string`
-
-      - `account_deletion: string`
-
-      - `account_migration: string`
-
-      - `account_mobility: string`
-
-      - `sub_org_creation: string`
+  - `meta: object { hierarchy_tags, managed_by, tenant_flags }`
 
     - `hierarchy_tags: optional array of string`
 
@@ -54,6 +40,24 @@ Retrieves list of tenants the authenticated user / method has access to.
       in the hierarchy.
 
     - `managed_by: optional string`
+
+    - `tenant_flags: optional object { account_creation, account_deletion, account_migration, 4 more }`
+
+      Enable features for Organizations.
+
+      - `account_creation: string`
+
+      - `account_deletion: string`
+
+      - `account_migration: string`
+
+      - `account_mobility: string`
+
+      - `enterprise_capability: string`
+
+      - `member_management: string`
+
+      - `sub_org_creation: string`
 
   - `name: string`
 
@@ -107,17 +111,19 @@ curl https://api.cloudflare.com/client/v4/user/tenants \
       "id": "a7b9c3d2e8f4g1h5i6j0k9l2m3n7o4p8",
       "create_time": "2019-12-27T18:11:19.117Z",
       "meta": {
-        "flags": {
+        "hierarchy_tags": [
+          "string"
+        ],
+        "managed_by": "managed_by",
+        "tenant_flags": {
           "account_creation": "account_creation",
           "account_deletion": "account_deletion",
           "account_migration": "account_migration",
           "account_mobility": "account_mobility",
+          "enterprise_capability": "enterprise_capability",
+          "member_management": "member_management",
           "sub_org_creation": "sub_org_creation"
-        },
-        "hierarchy_tags": [
-          "string"
-        ],
-        "managed_by": "managed_by"
+        }
       },
       "name": "name",
       "parent": {

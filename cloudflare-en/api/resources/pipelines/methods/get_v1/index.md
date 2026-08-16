@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/pipelines/v1/pipelines/{pipeline_id}`
 
-Get Pipelines Details.
+Get Pipeline details.
 
 ### Path Parameters
 

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Security Events
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/analytics/security-events/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/analytics/security-events/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Security Events allows you to review mitigated requests and helps you tailor your security configurations. Use Security Events to investigate requests that Cloudflare security products acted on or flagged, identify false positives, and fine-tune your security rules.
 
@@ -49,8 +49,6 @@ To open Security Events for a given zone:
 [Go to **Analytics** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/analytics)
 2. Select the **Events** tab.
 
-* In the Cloudflare dashboard, go to **Security** \> **Events**.
-
 Additionally, Enterprise customers have access to the account-level dashboard:
 
 [Go to **Security events** ↗](https://dash.cloudflare.com/?to=/:account/security-center/events) 
@@ -59,7 +57,7 @@ Additionally, Enterprise customers have access to the account-level dashboard:
 
 You can apply multiple filters and exclusions to narrow the scope of Security Events and adjust the report duration. Modifying the duration, filters, or exclusions affects the analytics data displayed on the entire page including **Sampled logs** and all graphs.
 
-![Example of adding a new filter in Security Events for the Block action](https://developers.cloudflare.com/_astro/events-add-filter.DDUuZ0g7_ZC975W.webp) 
+![Example of adding a new filter in Security Events for the Block action](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=929,height=281,format=webp/_astro/events-add-filter.DDUuZ0g7.png) 
 
 ### Add filters
 
@@ -85,16 +83,13 @@ The available report duration values depend on your Cloudflare plan. Refer to [A
 
 ## Create security rule from current filters
 
-To create a [custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) based on your current filters and exclusions:
-
-* Old dashboard: Select **Create custom rule**.
-* New security dashboard: Select **Create custom security rule**.
+To create a [custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) based on your current filters and exclusions, select **Create custom security rule**.
 
 ## Events summary
 
 The **Events summary** section provides the number of security events on traffic during the selected time period, grouped according to the selected dimension (for example, **Action**, **Host**, **Country**, or **ASN**).
 
-![Filter by action by selecting Filter when hovering the desired action in Events summary](https://developers.cloudflare.com/_astro/events-summary.DvNySzEm_1T8SJq.webp) 
+![Filter by action by selecting Filter when hovering the desired action in Events summary](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1068,height=598,format=webp/_astro/events-summary.DvNySzEm.png) 
 
 You can adjust the displayed data according to one of the values by selecting **Filter** or **Exclude** when hovering the legend.
 
@@ -118,7 +113,7 @@ A deleted custom rule or rate limiting rule will show as `Rule unavailable` unde
 
 **Sampled logs** shows a subset of security events for the selected time period, listed by date with the action taken and the applied Cloudflare security feature. For large volumes of traffic, Cloudflare uses [sampling](https://developers.cloudflare.com/analytics/graphql-api/sampling/) to return results faster. This means that not every individual event may appear in the list.
 
-![Example list of events in Sampled logs, with one of the events expanded to show its details](https://developers.cloudflare.com/_astro/events-sampled-logs.BZ-7P-U7_Z1eOiG1.webp) 
+![Example list of events in Sampled logs, with one of the events expanded to show its details](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1132,height=1367,format=webp/_astro/events-sampled-logs.BZ-7P-U7.png) 
 
 Security events are shown by individual event rather than by request. For example, if a single request triggers three different security features, the security events will show three individual events in **Sampled logs**.
 
@@ -159,10 +154,7 @@ For example, after adding a filter for `Action equals Managed Challenge` and set
 
 ## Print or download PDF report
 
-To print or download a snapshot report:
-
-* Old dashboard: Select **Print report**.
-* New security dashboard: Select the three dots > **Print report**.
+To print or download a snapshot report, select the three dots > **Print report**.
 
 Your web browser's printing interface will present you with options for printing or downloading the PDF report.
 
@@ -208,8 +200,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/analytics/security-events/#page","headline":"Security Events · Cloudflare Web Application Firewall (WAF) docs","description":"Review individual security events triggered by WAF rules.","url":"https://developers.cloudflare.com/waf/analytics/security-events/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging","SIEM"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/analytics/security-events/#page","headline":"Security Events · Cloudflare Web Application Firewall (WAF) docs","description":"Review individual security events triggered by WAF rules.","url":"https://developers.cloudflare.com/waf/analytics/security-events/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging","SIEM"]}
 ```

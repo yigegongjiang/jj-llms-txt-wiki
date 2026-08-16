@@ -40,7 +40,7 @@ Lists all DLP entries in an account.
 
   - `true`
 
-- `result: optional array of object { id, created_at, enabled, 7 more }  or object { id, created_at, enabled, 5 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
+- `result: optional array of object { id, created_at, enabled, 7 more }  or object { id, created_at, enabled, 5 more }  or object { id, confidence, enabled, 6 more }  or 4 more`
 
   - `object { id, created_at, enabled, 7 more }`
 
@@ -118,7 +118,7 @@ Lists all DLP entries in an account.
 
       - `"complete"`
 
-  - `object { id, confidence, enabled, 5 more }`
+  - `object { id, confidence, enabled, 6 more }`
 
     - `id: string`
 
@@ -139,6 +139,11 @@ Lists all DLP entries in an account.
     - `type: "predefined"`
 
       - `"predefined"`
+
+    - `deprecated: optional boolean`
+
+      Whether this entry is deprecated for new use. This is computed from the static catalog and
+      emitted only when true.
 
     - `profile_id: optional string`
 

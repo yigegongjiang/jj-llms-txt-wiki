@@ -1179,7 +1179,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/pipelines/v1/pipe
 
 **get** `/accounts/{account_id}/pipelines/v1/pipelines/{pipeline_id}`
 
-Get Pipelines Details.
+Get Pipeline details.
 
 ### Path Parameters
 
@@ -1362,7 +1362,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/pipelines/v1/pipe
 }
 ```
 
-## Delete Pipelines
+## Delete Pipeline
 
 **delete** `/accounts/{account_id}/pipelines/v1/pipelines/{pipeline_id}`
 
@@ -1407,7 +1407,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/pipelines/v1/pipe
 
 **post** `/accounts/{account_id}/pipelines/v1/validate_sql`
 
-Validate Arroyo SQL.
+Validates that the Pipelines SQL is correct.
 
 ### Path Parameters
 
@@ -3927,7 +3927,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/pipelines/v1/sink
 
 **delete** `/accounts/{account_id}/pipelines/v1/sinks/{sink_id}`
 
-Delete Pipeline in Account.
+Delete Sink in Account.
 
 ### Path Parameters
 

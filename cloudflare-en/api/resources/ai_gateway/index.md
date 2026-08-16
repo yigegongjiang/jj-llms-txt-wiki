@@ -22,7 +22,7 @@ Lists all AI Gateway evaluator types configured for the account.
 
 ### Returns
 
-- `result: array of object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `result: array of object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -258,6 +258,8 @@ Lists all AI Gateway evaluator types configured for the account.
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -374,11 +376,13 @@ Lists all AI Gateway evaluator types configured for the account.
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
@@ -448,6 +452,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
         }
       },
       "is_default": true,
+      "log_classification": true,
       "log_management": 10000,
       "log_management_strategy": "STOP_INSERTING",
       "logpush": true,
@@ -529,7 +534,7 @@ Retrieves details for a specific AI Gateway dataset.
 
 ### Returns
 
-- `result: object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `result: object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -765,6 +770,8 @@ Retrieves details for a specific AI Gateway dataset.
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -881,11 +888,13 @@ Retrieves details for a specific AI Gateway dataset.
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
@@ -954,6 +963,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
       }
     },
     "is_default": true,
+    "log_classification": true,
     "log_management": 10000,
     "log_management_strategy": "STOP_INSERTING",
     "logpush": true,
@@ -1082,17 +1092,21 @@ Creates a new AI Gateway.
 
   Maximum number of retry attempts for failed requests (1-5)
 
-- `workers_ai_billing_mode: optional "postpaid"`
+- `store_id: optional string`
 
-  Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+- `workers_ai_billing_mode: optional "postpaid" or "unified"`
+
+  Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
   - `"postpaid"`
+
+  - `"unified"`
 
 - `zdr: optional boolean`
 
 ### Returns
 
-- `result: object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `result: object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -1328,6 +1342,8 @@ Creates a new AI Gateway.
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -1444,11 +1460,13 @@ Creates a new AI Gateway.
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
@@ -1526,6 +1544,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
       }
     },
     "is_default": true,
+    "log_classification": true,
     "log_management": 10000,
     "log_management_strategy": "STOP_INSERTING",
     "logpush": true,
@@ -1830,6 +1849,8 @@ Updates an existing AI Gateway dataset.
 
       - `"BLOCK"`
 
+- `log_classification: optional boolean`
+
 - `log_management: optional number`
 
 - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -1946,17 +1967,19 @@ Updates an existing AI Gateway dataset.
 
     - `payload: string`
 
-- `workers_ai_billing_mode: optional "postpaid"`
+- `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-  Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+  Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
   - `"postpaid"`
+
+  - `"unified"`
 
 - `zdr: optional boolean`
 
 ### Returns
 
-- `result: object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `result: object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -2192,6 +2215,8 @@ Updates an existing AI Gateway dataset.
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -2308,11 +2333,13 @@ Updates an existing AI Gateway dataset.
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
@@ -2390,6 +2417,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
       }
     },
     "is_default": true,
+    "log_classification": true,
     "log_management": 10000,
     "log_management_strategy": "STOP_INSERTING",
     "logpush": true,
@@ -2470,7 +2498,7 @@ Deletes an AI Gateway dataset.
 
 ### Returns
 
-- `result: object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `result: object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -2706,6 +2734,8 @@ Deletes an AI Gateway dataset.
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -2822,11 +2852,13 @@ Deletes an AI Gateway dataset.
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
@@ -2896,6 +2928,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
       }
     },
     "is_default": true,
+    "log_classification": true,
     "log_management": 10000,
     "log_management_strategy": "STOP_INSERTING",
     "logpush": true,
@@ -2964,7 +2997,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
 ### AI Gateway List Response
 
-- `AIGatewayListResponse object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `AIGatewayListResponse object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -3200,6 +3233,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -3316,17 +3351,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
 ### AI Gateway Get Response
 
-- `AIGatewayGetResponse object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `AIGatewayGetResponse object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -3562,6 +3599,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -3678,17 +3717,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
 ### AI Gateway Create Response
 
-- `AIGatewayCreateResponse object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `AIGatewayCreateResponse object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -3924,6 +3965,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -4040,17 +4083,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
 ### AI Gateway Update Response
 
-- `AIGatewayUpdateResponse object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `AIGatewayUpdateResponse object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -4286,6 +4331,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -4402,17 +4449,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
 ### AI Gateway Delete Response
 
-- `AIGatewayDeleteResponse object { id, cache_invalidate_on_update, cache_ttl, 23 more }`
+- `AIGatewayDeleteResponse object { id, cache_invalidate_on_update, cache_ttl, 24 more }`
 
   - `id: string`
 
@@ -4648,6 +4697,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
   - `is_default: optional boolean`
 
+  - `log_classification: optional boolean`
+
   - `log_management: optional number`
 
   - `log_management_strategy: optional "STOP_INSERTING" or "DELETE_OLDEST"`
@@ -4764,11 +4815,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/gatewa
 
       - `payload: string`
 
-  - `workers_ai_billing_mode: optional "postpaid"`
+  - `workers_ai_billing_mode: optional "postpaid" or "unified"`
 
-    Controls how Workers AI inference calls routed through this gateway are billed. Only 'postpaid' is currently supported.
+    Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.
 
     - `"postpaid"`
+
+    - `"unified"`
 
   - `zdr: optional boolean`
 
@@ -12780,7 +12833,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-gateway/billin
 
 **post** `/accounts/{account_id}/ai-gateway/billing/topup`
 
-Create a credit top-up via Stripe PaymentIntent for the given account.
+Create a credit top-up for the given account, charged to the account's default payment method.
 
 ### Path Parameters
 

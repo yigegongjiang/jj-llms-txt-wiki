@@ -22,6 +22,10 @@ Updates the enabled state and/or field configuration of an account or zone datas
 
   Whether to enable or disable log ingest for this dataset.
 
+- `deletion_protection: optional boolean`
+
+  Set to `false` to allow deletion of this dataset.
+
 - `fields: optional array of object { enabled, name }`
 
   Controls which fields the API ingests after the update. Defaults
@@ -34,6 +38,15 @@ Updates the enabled state and/or field configuration of an account or zone datas
   - `name: string`
 
     Field name in lowercase.
+
+- `filter: optional string`
+
+  Optional Logpush filter predicate to restrict which events are
+  ingested. If omitted, the existing filter is left unchanged. Set
+  to an empty string (`""`) to clear the filter. Otherwise,
+  replaces the dataset's filter entirely.
+  See [Logpush filters](https://developers.cloudflare.com/logs/reference/filters/)
+  for syntax and examples.
 
 ### Returns
 
@@ -70,9 +83,25 @@ Updates the enabled state and/or field configuration of an account or zone datas
 
     Unique dataset ID.
 
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
   - `enabled: boolean`
 
     Whether log ingest is currently active for this dataset.
+
+  - `fields: array of object { enabled, name }`
+
+    The field configuration for this dataset.
+
+    - `enabled: boolean`
+
+      Whether the API includes this field in log ingest.
+
+    - `name: string`
+
+      Field name in lowercase.
 
   - `object_id: string`
 
@@ -90,17 +119,10 @@ Updates the enabled state and/or field configuration of an account or zone datas
 
     RFC3339 timestamp recording when the API last updated this dataset.
 
-  - `fields: optional array of object { enabled, name }`
+  - `filter: optional string`
 
-    The field configuration for this dataset.
-
-    - `enabled: boolean`
-
-      Whether the API includes this field in log ingest.
-
-    - `name: string`
-
-      Field name in lowercase.
+    The Logpush filter predicate applied to this dataset. Omitted
+    when no filter is set.
 
 ### Example
 
@@ -136,16 +158,18 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
     "created_at": "2019-12-27T18:11:19.117Z",
     "dataset": "dataset",
     "dataset_id": "dataset_id",
+    "deletion_protection": true,
     "enabled": true,
-    "object_id": "object_id",
-    "object_type": "account",
-    "updated_at": "2019-12-27T18:11:19.117Z",
     "fields": [
       {
         "enabled": true,
         "name": "name"
       }
-    ]
+    ],
+    "object_id": "object_id",
+    "object_type": "account",
+    "updated_at": "2019-12-27T18:11:19.117Z",
+    "filter": "filter"
   }
 }
 ```

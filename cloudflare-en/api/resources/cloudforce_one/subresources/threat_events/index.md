@@ -102,14 +102,6 @@ Use `datasetId=all` or `datasetId=*` to query all event datasets for the account
 
       - `number`
 
-- `source: optional "do" or "r2catalog"`
-
-  Read backend. 'do' (default) reads Durable Object storage. 'r2catalog' reads R2 Data Catalog (admin-only, experimental; supports a subset of search fields — no 'tags').
-
-  - `"do"`
-
-  - `"r2catalog"`
-
 ### Returns
 
 - `attacker: string`
@@ -566,7 +558,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/{event_id}`
 
-Update an existing event by its identifier.
+Partially updates a threat event in Cloudforce One, modifying specific fields without replacing the entire event.
 
 ### Path Parameters
 
@@ -2756,7 +2748,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/indicators`
 
-Retrieves a paginated list of indicators across specified datasets. Use datasetIds=all or datasetIds=* to query all datasets for the account. If no datasetIds provided, uses the default dataset.
+Retrieves indicators across specified datasets, ordered by createdAt descending then UUID, dataset ID, and shard ID ascending. Use datasetIds=all or datasetIds=* to query all datasets for the account. If no datasetIds provided, uses the default dataset.
 
 ### Path Parameters
 
@@ -2768,7 +2760,7 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
 - `cache: optional "from-graph"`
 
-  Cache strategy. 'from-graph' serves results from the graph-node KV cache when all requested UUIDs are cached; falls back to normal path on partial/zero hit.
+  Cache strategy. 'from-graph' serves results from the graph-node KV cache when all requested UUIDs are cached; falls back to normal path on partial/zero hit. Cannot be combined with `cursor`.
 
   - `"from-graph"`
 
@@ -2779,6 +2771,10 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 - `createdBefore: optional string`
 
   Filter indicators created on or before this date. Must use ISO 8601 format (e.g., '2024-12-31T23:59:59Z').
+
+- `cursor: optional string`
+
+  Opaque cursor from a previous response's `pagination.cursor`. When provided, all filters, datasetIds, page, `pageSize`, `includeTags` and `relatedEventsLimit` come from the cursor — do not resend them. Sending any filter, `page`, `pageSize`, `includeTags`, `relatedEventsLimit`, `includeTotalCount=true`, or `cache=from-graph` alongside a cursor yields a 400 `CursorFilterConflictError`. A cursor issued for a different entity, an unsupported version, or a dataset that has since been reconfigured as analytics-only yields a 400 `InvalidCursorError`.
 
 - `datasetIds: optional array of string`
 
@@ -2800,7 +2796,7 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
 - `includeTotalCount: optional boolean`
 
-  Whether to compute accurate total count via COUNT(*). Defaults to false for performance. When false, total_count is an approximation.
+  Whether to compute total count via COUNT(*). Defaults to false for performance. total_count is null unless this is true and the complete fan-out succeeds.
 
 - `indicatorType: optional string`
 
@@ -2869,14 +2865,6 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
     - `string`
 
     - `array of string`
-
-- `source: optional "do" or "r2catalog"`
-
-  Read backend. 'do' (default) reads Durable Object storage. 'r2catalog' reads R2 Data Catalog (admin-only, experimental; supports a subset of search fields).
-
-  - `"do"`
-
-  - `"r2catalog"`
 
 - `tags: optional array of string`
 
@@ -2958,7 +2946,51 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
 ### Returns
 
-- `properties: object { indicators, pagination }`
+- `properties: object { completeness, indicators, pagination }`
+
+  - `completeness: object { properties, type }`
+
+    - `properties: object { complete, failedDatasets, failedShards, warnings }`
+
+      - `complete: object { type }`
+
+        - `type: string`
+
+      - `failedDatasets: object { items, type }`
+
+        - `items: object { type }`
+
+          - `type: string`
+
+        - `type: string`
+
+      - `failedShards: object { items, type }`
+
+        - `items: object { properties, type }`
+
+          - `properties: object { datasetId, shardId }`
+
+            - `datasetId: object { type }`
+
+              - `type: string`
+
+            - `shardId: object { type }`
+
+              - `type: string`
+
+          - `type: string`
+
+        - `type: string`
+
+      - `warnings: object { items, type }`
+
+        - `items: object { type }`
+
+          - `type: string`
+
+        - `type: string`
+
+    - `type: string`
 
   - `indicators: object { items, type }`
 
@@ -2978,11 +3010,15 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
         The dataset ID this indicator belongs to. Included in list responses.
 
-      - `relatedEvents: optional array of object { datasetId, eventId }`
+      - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
         - `datasetId: string`
 
         - `eventId: string`
+
+        - `eventDate: optional string`
+
+          ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
       - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -2996,9 +3032,23 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
   - `pagination: object { properties, type }`
 
-    - `properties: object { count, page, per_page, total_count }`
+    - `properties: object { count, cursor, has_more, 4 more }`
 
       - `count: object { type }`
+
+        - `type: string`
+
+      - `cursor: object { description, nullable, type }`
+
+        - `description: string`
+
+        - `nullable: boolean`
+
+        - `type: string`
+
+      - `has_more: object { description, type }`
+
+        - `description: string`
 
         - `type: string`
 
@@ -3010,7 +3060,17 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
         - `type: string`
 
-      - `total_count: object { type }`
+      - `total_count: object { description, nullable, type }`
+
+        - `description: string`
+
+        - `nullable: boolean`
+
+        - `type: string`
+
+      - `total_count_is_exact: object { description, type }`
+
+        - `description: string`
 
         - `type: string`
 
@@ -3030,6 +3090,40 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 ```json
 {
   "properties": {
+    "completeness": {
+      "properties": {
+        "complete": {
+          "type": "boolean"
+        },
+        "failedDatasets": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "failedShards": {
+          "items": {
+            "properties": {
+              "datasetId": {
+                "type": "string"
+              },
+              "shardId": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "indicators": {
       "items": {
         "createdAt": "2022-04-01T00:00:00Z",
@@ -3041,7 +3135,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
         "relatedEvents": [
           {
             "datasetId": "dataset-uuid-123",
-            "eventId": "event-uuid-456"
+            "eventId": "event-uuid-456",
+            "eventDate": "2024-06-15T00:00:00Z"
           }
         ],
         "tags": [
@@ -3059,6 +3154,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
         "count": {
           "type": "number"
         },
+        "cursor": {
+          "description": "Opaque cursor for the next page. Pass back as the `cursor` query param on the next request. `null` when the sequence has ended, when the encoded cursor would exceed the safe URL length, or when this endpoint served the request from a backend that does not support cursor pagination (analytics R2 path).",
+          "nullable": true,
+          "type": "string"
+        },
+        "has_more": {
+          "description": "True when more pages exist after this one. Present on both offset and cursor paths.",
+          "type": "boolean"
+        },
         "page": {
           "type": "number"
         },
@@ -3066,7 +3170,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
           "type": "number"
         },
         "total_count": {
+          "description": "Exact matching count when requested and fan-out is complete; otherwise null.",
+          "nullable": true,
           "type": "number"
+        },
+        "total_count_is_exact": {
+          "description": "Whether total_count is exact across the complete query fan-out.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -3082,7 +3192,51 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 - `IndicatorListResponse object { properties, type }`
 
-  - `properties: object { indicators, pagination }`
+  - `properties: object { completeness, indicators, pagination }`
+
+    - `completeness: object { properties, type }`
+
+      - `properties: object { complete, failedDatasets, failedShards, warnings }`
+
+        - `complete: object { type }`
+
+          - `type: string`
+
+        - `failedDatasets: object { items, type }`
+
+          - `items: object { type }`
+
+            - `type: string`
+
+          - `type: string`
+
+        - `failedShards: object { items, type }`
+
+          - `items: object { properties, type }`
+
+            - `properties: object { datasetId, shardId }`
+
+              - `datasetId: object { type }`
+
+                - `type: string`
+
+              - `shardId: object { type }`
+
+                - `type: string`
+
+            - `type: string`
+
+          - `type: string`
+
+        - `warnings: object { items, type }`
+
+          - `items: object { type }`
+
+            - `type: string`
+
+          - `type: string`
+
+      - `type: string`
 
     - `indicators: object { items, type }`
 
@@ -3102,11 +3256,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
           The dataset ID this indicator belongs to. Included in list responses.
 
-        - `relatedEvents: optional array of object { datasetId, eventId }`
+        - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
           - `datasetId: string`
 
           - `eventId: string`
+
+          - `eventDate: optional string`
+
+            ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
         - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -3120,9 +3278,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
     - `pagination: object { properties, type }`
 
-      - `properties: object { count, page, per_page, total_count }`
+      - `properties: object { count, cursor, has_more, 4 more }`
 
         - `count: object { type }`
+
+          - `type: string`
+
+        - `cursor: object { description, nullable, type }`
+
+          - `description: string`
+
+          - `nullable: boolean`
+
+          - `type: string`
+
+        - `has_more: object { description, type }`
+
+          - `description: string`
 
           - `type: string`
 
@@ -3134,7 +3306,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
           - `type: string`
 
-        - `total_count: object { type }`
+        - `total_count: object { description, nullable, type }`
+
+          - `description: string`
+
+          - `nullable: boolean`
+
+          - `type: string`
+
+        - `total_count_is_exact: object { description, type }`
+
+          - `description: string`
 
           - `type: string`
 
@@ -3162,13 +3344,21 @@ Aggregate threat indicators by one or more columns (e.g., indicatorType, value) 
 
   Column(s) to aggregate by - single column or comma-separated list (e.g., 'indicatorType', 'value', 'indicatorType,value')
 
-- `createdAfter: optional string`
+- `createdAfter: optional string or string`
 
-  Filter indicators created after this date (ISO 8601 format, e.g., '2024-01-01')
+  Filter indicators created after this date/datetime (ISO 8601, e.g., '2024-01-01' or '2024-01-01T00:00:00Z')
 
-- `createdBefore: optional string`
+  - `string`
 
-  Filter indicators created before this date (ISO 8601 format, e.g., '2024-12-31')
+  - `string`
+
+- `createdBefore: optional string or string`
+
+  Filter indicators created before this date/datetime (ISO 8601, e.g., '2024-12-31' or '2024-12-31T23:59:59Z')
+
+  - `string`
+
+  - `string`
 
 - `datasetIds: optional array of string`
 
@@ -3274,7 +3464,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/indicator-types`
 
-List indicator types across one or more datasets for the account.
+Lists indicator types across multiple datasets
 
 ### Path Parameters
 
@@ -3378,11 +3568,15 @@ This method is deprecated. Please use /events/indicators to retrieve a paginated
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -3424,7 +3618,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
       "relatedEvents": [
         {
           "datasetId": "dataset-uuid-123",
-          "eventId": "event-uuid-456"
+          "eventId": "event-uuid-456",
+          "eventDate": "2024-06-15T00:00:00Z"
         }
       ],
       "tags": [
@@ -3481,11 +3676,15 @@ Retrieves a specific indicator by its UUID.
 
   The dataset ID this indicator belongs to. Included in list responses.
 
-- `relatedEvents: optional array of object { datasetId, eventId }`
+- `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
   - `datasetId: string`
 
   - `eventId: string`
+
+  - `eventDate: optional string`
+
+    ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
 - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -3515,7 +3714,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
   "relatedEvents": [
     {
       "datasetId": "dataset-uuid-123",
-      "eventId": "event-uuid-456"
+      "eventId": "event-uuid-456",
+      "eventDate": "2024-06-15T00:00:00Z"
     }
   ],
   "tags": [
@@ -3550,11 +3750,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
       The dataset ID this indicator belongs to. Included in list responses.
 
-    - `relatedEvents: optional array of object { datasetId, eventId }`
+    - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
       - `datasetId: string`
 
       - `eventId: string`
+
+      - `eventDate: optional string`
+
+        ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
     - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -3592,11 +3796,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -3653,7 +3861,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/attackers`
 
-List attacker names referenced in events across one or more datasets.
+Lists known threat attackers tracked in Cloudforce One threat intelligence.
 
 ### Path Parameters
 
@@ -3711,7 +3919,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories`
 
-List categories across one or more datasets for the account.
+Lists all threat event categories configured for classifying and organizing threat events.
 
 ### Path Parameters
 
@@ -3769,7 +3977,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Retrieve a single category by its identifier.
+Retrieves details for a specific threat event category.
 
 ### Path Parameters
 
@@ -3823,7 +4031,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **post** `/accounts/{account_id}/cloudforce-one/events/categories/create`
 
-Create a new event category for the account.
+Creates a new threat event category in Cloudforce One for organizing and classifying threat events.
 
 ### Path Parameters
 
@@ -3891,7 +4099,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Update an existing category by its identifier.
+Partially updates a threat event category in Cloudforce One, modifying specific fields without replacing the entire category.
 
 ### Path Parameters
 
@@ -3958,7 +4166,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Delete a category by its identifier.
+Removes a threat event category from Cloudforce One.
 
 ### Path Parameters
 
@@ -4068,7 +4276,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/categories/catalog`
 
-List all categories stored in the account catalog.
+Lists categories
 
 ### Path Parameters
 
@@ -4140,7 +4348,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/countries`
 
-Retrieve country code information for all supported countries.
+Lists countries referenced in Cloudforce One threat intelligence data.
 
 ### Path Parameters
 
@@ -4208,7 +4416,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset`
 
-List all datasets accessible to the account.
+Lists all threat event datasets configured in Cloudforce One.
 
 ### Path Parameters
 
@@ -4223,6 +4431,18 @@ List all datasets accessible to the account.
   When true, include soft-deleted datasets in the response. Each item includes a `deletedAt` field (ISO 8601 or null). Default: false.
 
 ### Returns
+
+- `indicatorWriteMode: "read_only" or "create_only" or "full"`
+
+  Effective indicator mutation capability after account/dataset authorization and dataset storage capability are applied. API Gateway method permissions are separate and must also allow the requested operation.
+
+  - `"read_only"`
+
+  - `"create_only"`
+
+  - `"full"`
+
+- `isAnalytics: boolean`
 
 - `isPublic: boolean`
 
@@ -4244,6 +4464,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 ```json
 [
   {
+    "indicatorWriteMode": "full",
+    "isAnalytics": true,
     "isPublic": true,
     "name": "friendly dataset name",
     "uuid": "12345678-1234-1234-1234-1234567890ab",
@@ -4256,7 +4478,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}`
 
-Retrieve metadata for a specific dataset.
+Retrieves details for a specific threat event dataset.
 
 ### Path Parameters
 
@@ -4270,13 +4492,13 @@ Retrieve metadata for a specific dataset.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -4289,10 +4511,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```
 
@@ -4300,7 +4522,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **post** `/accounts/{account_id}/cloudforce-one/events/dataset/create`
 
-Create a new dataset in the account.
+Creates a new threat event dataset in Cloudforce One for organizing related threat events.
 
 ### Path Parameters
 
@@ -4320,13 +4542,13 @@ Create a new dataset in the account.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -4344,10 +4566,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```
 
@@ -4355,7 +4577,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}`
 
-Update an existing dataset by its identifier.
+Partially updates a threat event dataset in Cloudforce One, modifying specific fields without replacing the entire dataset configuration.
 
 ### Path Parameters
 
@@ -4379,13 +4601,13 @@ Update an existing dataset by its identifier.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -4404,10 +4626,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```
 
@@ -4508,7 +4730,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ### Dataset List Response
 
-- `DatasetListResponse = array of object { isPublic, name, uuid, deletedAt }`
+- `DatasetListResponse = array of object { indicatorWriteMode, isAnalytics, isPublic, 3 more }`
+
+  - `indicatorWriteMode: "read_only" or "create_only" or "full"`
+
+    Effective indicator mutation capability after account/dataset authorization and dataset storage capability are applied. API Gateway method permissions are separate and must also allow the requested operation.
+
+    - `"read_only"`
+
+    - `"create_only"`
+
+    - `"full"`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
@@ -4520,39 +4754,39 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ### Dataset Get Response
 
-- `DatasetGetResponse object { isPublic, name, uuid, deletedAt }`
+- `DatasetGetResponse object { isAnalytics, isPublic, name, uuid }`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
   - `name: string`
 
   - `uuid: string`
-
-  - `deletedAt: optional string`
 
 ### Dataset Create Response
 
-- `DatasetCreateResponse object { isPublic, name, uuid, deletedAt }`
+- `DatasetCreateResponse object { isAnalytics, isPublic, name, uuid }`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
   - `name: string`
 
   - `uuid: string`
-
-  - `deletedAt: optional string`
 
 ### Dataset Edit Response
 
-- `DatasetEditResponse object { isPublic, name, uuid, deletedAt }`
+- `DatasetEditResponse object { isAnalytics, isPublic, name, uuid }`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
   - `name: string`
 
   - `uuid: string`
-
-  - `deletedAt: optional string`
 
 ### Dataset Delete Response
 
@@ -4789,7 +5023,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/{event_id}/raw/{raw_id}`
 
-Retrieve raw data for a specific event.
+Retrieves raw threat event data for a specific event in Cloudforce One.
 
 ### Path Parameters
 
@@ -4843,7 +5077,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/{event_id}/raw/{raw_id}`
 
-Update raw data for a specific event.
+Partially updates raw threat event data in Cloudforce One, modifying specific fields of the event.
 
 ### Path Parameters
 
@@ -4922,7 +5156,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/relate/{event_id}`
 
-Remove one or more references from an event.
+Removes a reference link between related threat events in Cloudforce One.
 
 ### Path Parameters
 
@@ -6654,11 +6888,15 @@ Returns indicators associated with the provided tag UUID, with pagination. By de
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -6700,7 +6938,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
       "relatedEvents": [
         {
           "datasetId": "dataset-uuid-123",
-          "eventId": "event-uuid-456"
+          "eventId": "event-uuid-456",
+          "eventDate": "2024-06-15T00:00:00Z"
         }
       ],
       "tags": [
@@ -6743,11 +6982,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
       The dataset ID this indicator belongs to. Included in list responses.
 
-    - `relatedEvents: optional array of object { datasetId, eventId }`
+    - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
       - `datasetId: string`
 
       - `eventId: string`
+
+      - `eventDate: optional string`
+
+        ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
     - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -6869,11 +7112,15 @@ This endpoint is deprecated. Use GET /:account_id/events/tags/:tag_uuid/indicato
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -6915,7 +7162,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
       "relatedEvents": [
         {
           "datasetId": "dataset-uuid-123",
-          "eventId": "event-uuid-456"
+          "eventId": "event-uuid-456",
+          "eventDate": "2024-06-15T00:00:00Z"
         }
       ],
       "tags": [
@@ -6958,11 +7206,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
       The dataset ID this indicator belongs to. Included in list responses.
 
-    - `relatedEvents: optional array of object { datasetId, eventId }`
+    - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
       - `datasetId: string`
 
       - `eventId: string`
+
+      - `eventDate: optional string`
+
+        ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
     - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -6988,7 +7240,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **post** `/accounts/{account_id}/cloudforce-one/events/event_tag/{event_id}/create`
 
-Add one or more tags to an event.
+Adds a tag to a threat event in Cloudforce One for classification and filtering.
 
 ### Path Parameters
 
@@ -7040,7 +7292,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/event_tag/{event_id}`
 
-Remove one or more tags from an event.
+Removes a tag from a threat event in Cloudforce One.
 
 ### Path Parameters
 
@@ -7099,7 +7351,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/targetIndustries`
 
-List target industries referenced in events across one or more datasets.
+Retrieves the catalog of industry classifications used in Cloudforce One threat intelligence.
 
 ### Path Parameters
 
@@ -7157,7 +7409,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}/targetIndustries`
 
-List all target industries referenced in events for a specific dataset.
+Lists all target industries for a specific dataset
 
 ### Path Parameters
 
@@ -7213,7 +7465,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/targetIndustries/catalog`
 
-List all predefined target industries from the industry map catalog.
+Lists all target industries from industry map catalog
 
 ### Path Parameters
 

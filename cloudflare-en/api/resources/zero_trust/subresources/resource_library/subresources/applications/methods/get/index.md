@@ -8,7 +8,7 @@ Get application by ID.
 
 - `account_id: string`
 
-- `id: string`
+- `id: number`
 
 ### Returns
 
@@ -44,7 +44,7 @@ Get application by ID.
 
 - `result: optional object { id, application_confidence_score, application_source, 15 more }`
 
-  - `id: string`
+  - `id: number`
 
     Returns the application ID.
 
@@ -64,6 +64,10 @@ Get application by ID.
 
     Returns the application type description.
 
+  - `category_id: number`
+
+    Returns the category ID.
+
   - `created_at: string`
 
     Returns the application creation time.
@@ -74,7 +78,7 @@ Get application by ID.
 
   - `hostnames: array of string`
 
-    Returns the list of hostnames for the application.
+    Hostnames matched by the application.
 
   - `human_id: string`
 
@@ -82,7 +86,7 @@ Get application by ID.
 
   - `ip_subnets: array of string`
 
-    Returns the list of IP subnets for the application.
+    IP subnets matched by the application.
 
   - `name: string`
 
@@ -90,11 +94,11 @@ Get application by ID.
 
   - `port_protocols: array of string`
 
-    Returns the list of port protocols for the application.
+    Port and protocol pairs matched by the application.
 
   - `support_domains: array of string`
 
-    Returns the list of support domains for the application.
+    Support domains matched by the application.
 
   - `supported: array of "GATEWAY" or "ACCESS" or "CASB"`
 
@@ -117,10 +121,6 @@ Get application by ID.
   - `application_score_composition: optional unknown`
 
     Returns the score composition breakdown for the application.
-
-  - `intel_id: optional number`
-
-    Returns the Intel API ID for the application.
 
 ### Example
 
@@ -155,11 +155,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
   ],
   "success": true,
   "result": {
-    "id": "12345678-1234-1234-1234-123456789012",
+    "id": 498,
     "application_confidence_score": 0.92,
     "application_source": "cloudflare",
     "application_type": "Human Resources",
     "application_type_description": "Applications used to manage employees and workforce tools.",
+    "category_id": 12,
     "created_at": "2025-01-01T00:00:00Z",
     "gen_ai_score": 1.5,
     "hostnames": [
@@ -194,8 +195,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/resource-library/
         }
       ],
       "plan": "free"
-    },
-    "intel_id": 498
+    }
   }
 }
 ```

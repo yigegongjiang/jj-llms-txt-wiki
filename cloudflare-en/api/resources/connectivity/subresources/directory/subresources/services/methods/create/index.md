@@ -2,7 +2,7 @@
 
 **post** `/accounts/{account_id}/connectivity/directory/services`
 
-Create Workers VPC connectivity service
+Creates a new Workers VPC connectivity service in the account.
 
 ### Path Parameters
 

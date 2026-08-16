@@ -112,11 +112,11 @@ To create a Formspree form, sign up for [an account on Formspree ↗](https://fo
 
 Next, create a new form with the **\+ New form** button. Name it `Contact-us form` and update the recipient email to an email where you wish to receive your form submissions. Then select **Create Form**.
 
-![Creating a Formspree form](https://developers.cloudflare.com/_astro/new-form-dialog.0SL1Ns7t_Z1K2neT.webp) 
+![Creating a Formspree form](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=500,height=479,format=webp/_astro/new-form-dialog.0SL1Ns7t.png) 
 
 You will then be presented with instructions on how to integrate your new form.
 
-![Formspree endpoint](https://developers.cloudflare.com/_astro/form-endpoint.Be94Kac0_Z1Ugplb.webp) 
+![Formspree endpoint](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=698,height=129,format=webp/_astro/form-endpoint.Be94Kac0.png) 
 
 Copy the `Form Endpoint` URL and paste it into the `action` attribute of the form you created above.
 
@@ -178,7 +178,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/#page","headline":"Add an HTML form with Formspree · Cloudflare Pages docs","description":"Learn how to add an HTML form with Formspree, a back-end service that handles form processing and storage.","url":"https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Forms"]}

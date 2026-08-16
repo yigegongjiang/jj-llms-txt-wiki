@@ -109,7 +109,7 @@ Returns the RUA prefix, enabled status, approved sources, and DNS records.
 
     Last modification timestamp
 
-  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 4 more }`
+  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 5 more }`
 
     Live DNS records for the zone, grouped by type
 
@@ -163,7 +163,7 @@ Returns the RUA prefix, enabled status, approved sources, and DNS records.
 
     - `cname_dmarc_records: optional array of object { id, content, name, 2 more }`
 
-      CNAME records at _dmarc (problematic)
+      CNAME records at _dmarc. When such a CNAME resolves to a DMARC TXT record, the API returns that record in resolved_dmarc_records.
 
       - `id: optional string`
 
@@ -257,6 +257,18 @@ Returns the RUA prefix, enabled status, approved sources, and DNS records.
 
         Record type
 
+    - `resolved_dmarc_records: optional array of object { content, name }`
+
+      DMARC records that a recursive lookup of _dmarc.{zone} returned. The API populates this only when the zone lacks a DMARC TXT record of its own, which usually means a CNAME delegates DMARC to another zone.
+
+      - `content: optional string`
+
+        The TXT record value. The API joins all character-strings into a single string.
+
+      - `name: optional string`
+
+        The name the API queried.
+
     - `spf_records: optional array of object { id, content, name, 2 more }`
 
       SPF TXT records
@@ -291,7 +303,7 @@ Returns the RUA prefix, enabled status, approved sources, and DNS records.
 
   - `status: optional "missing-dmarc-report" or "multiple-dmarc-reports" or "missing-dmarc-rua" or "cname-on-dmarc-record"`
 
-    DMARC configuration status
+    DMARC configuration status. The API omits this field when DMARC is correctly configured. If the zone lacks a DMARC TXT record of its own, the API resolves _dmarc.{zone} recursively and evaluates whatever that lookup returns. A CNAME at _dmarc.{zone} that points to a valid DMARC record is therefore healthy; the cname-on-dmarc-record value means the CNAME resolves to no DMARC record at all.
 
     - `"missing-dmarc-report"`
 
@@ -416,6 +428,12 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
           "name": "_dmarc.example.com",
           "ttl": 300,
           "type": "TXT"
+        }
+      ],
+      "resolved_dmarc_records": [
+        {
+          "content": "v=DMARC1; p=reject; rua=mailto:rua@dmarc-reports.cloudflare.net",
+          "name": "_dmarc.example.com"
         }
       ],
       "spf_records": [
@@ -557,7 +575,7 @@ When enabling, the handler will ensure the DMARC RUA record exists in DNS.
 
     Last modification timestamp
 
-  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 4 more }`
+  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 5 more }`
 
     Live DNS records for the zone, grouped by type
 
@@ -611,7 +629,7 @@ When enabling, the handler will ensure the DMARC RUA record exists in DNS.
 
     - `cname_dmarc_records: optional array of object { id, content, name, 2 more }`
 
-      CNAME records at _dmarc (problematic)
+      CNAME records at _dmarc. When such a CNAME resolves to a DMARC TXT record, the API returns that record in resolved_dmarc_records.
 
       - `id: optional string`
 
@@ -705,6 +723,18 @@ When enabling, the handler will ensure the DMARC RUA record exists in DNS.
 
         Record type
 
+    - `resolved_dmarc_records: optional array of object { content, name }`
+
+      DMARC records that a recursive lookup of _dmarc.{zone} returned. The API populates this only when the zone lacks a DMARC TXT record of its own, which usually means a CNAME delegates DMARC to another zone.
+
+      - `content: optional string`
+
+        The TXT record value. The API joins all character-strings into a single string.
+
+      - `name: optional string`
+
+        The name the API queried.
+
     - `spf_records: optional array of object { id, content, name, 2 more }`
 
       SPF TXT records
@@ -739,7 +769,7 @@ When enabling, the handler will ensure the DMARC RUA record exists in DNS.
 
   - `status: optional "missing-dmarc-report" or "multiple-dmarc-reports" or "missing-dmarc-rua" or "cname-on-dmarc-record"`
 
-    DMARC configuration status
+    DMARC configuration status. The API omits this field when DMARC is correctly configured. If the zone lacks a DMARC TXT record of its own, the API resolves _dmarc.{zone} recursively and evaluates whatever that lookup returns. A CNAME at _dmarc.{zone} that points to a valid DMARC record is therefore healthy; the cname-on-dmarc-record value means the CNAME resolves to no DMARC record at all.
 
     - `"missing-dmarc-report"`
 
@@ -871,6 +901,12 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
           "type": "TXT"
         }
       ],
+      "resolved_dmarc_records": [
+        {
+          "content": "v=DMARC1; p=reject; rua=mailto:rua@dmarc-reports.cloudflare.net",
+          "name": "_dmarc.example.com"
+        }
+      ],
       "spf_records": [
         {
           "id": "e5bb46707a802688812d5d1c9f7977d4",
@@ -958,7 +994,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
     Last modification timestamp
 
-  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 4 more }`
+  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 5 more }`
 
     Live DNS records for the zone, grouped by type
 
@@ -1012,7 +1048,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
     - `cname_dmarc_records: optional array of object { id, content, name, 2 more }`
 
-      CNAME records at _dmarc (problematic)
+      CNAME records at _dmarc. When such a CNAME resolves to a DMARC TXT record, the API returns that record in resolved_dmarc_records.
 
       - `id: optional string`
 
@@ -1106,6 +1142,18 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
         Record type
 
+    - `resolved_dmarc_records: optional array of object { content, name }`
+
+      DMARC records that a recursive lookup of _dmarc.{zone} returned. The API populates this only when the zone lacks a DMARC TXT record of its own, which usually means a CNAME delegates DMARC to another zone.
+
+      - `content: optional string`
+
+        The TXT record value. The API joins all character-strings into a single string.
+
+      - `name: optional string`
+
+        The name the API queried.
+
     - `spf_records: optional array of object { id, content, name, 2 more }`
 
       SPF TXT records
@@ -1140,7 +1188,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
   - `status: optional "missing-dmarc-report" or "multiple-dmarc-reports" or "missing-dmarc-rua" or "cname-on-dmarc-record"`
 
-    DMARC configuration status
+    DMARC configuration status. The API omits this field when DMARC is correctly configured. If the zone lacks a DMARC TXT record of its own, the API resolves _dmarc.{zone} recursively and evaluates whatever that lookup returns. A CNAME at _dmarc.{zone} that points to a valid DMARC record is therefore healthy; the cname-on-dmarc-record value means the CNAME resolves to no DMARC record at all.
 
     - `"missing-dmarc-report"`
 
@@ -1224,7 +1272,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
     Last modification timestamp
 
-  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 4 more }`
+  - `records: optional object { bimi_records, cname_dkim_records, cname_dmarc_records, 5 more }`
 
     Live DNS records for the zone, grouped by type
 
@@ -1278,7 +1326,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
     - `cname_dmarc_records: optional array of object { id, content, name, 2 more }`
 
-      CNAME records at _dmarc (problematic)
+      CNAME records at _dmarc. When such a CNAME resolves to a DMARC TXT record, the API returns that record in resolved_dmarc_records.
 
       - `id: optional string`
 
@@ -1372,6 +1420,18 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
         Record type
 
+    - `resolved_dmarc_records: optional array of object { content, name }`
+
+      DMARC records that a recursive lookup of _dmarc.{zone} returned. The API populates this only when the zone lacks a DMARC TXT record of its own, which usually means a CNAME delegates DMARC to another zone.
+
+      - `content: optional string`
+
+        The TXT record value. The API joins all character-strings into a single string.
+
+      - `name: optional string`
+
+        The name the API queried.
+
     - `spf_records: optional array of object { id, content, name, 2 more }`
 
       SPF TXT records
@@ -1406,7 +1466,7 @@ curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/email/auth/dmarc-report
 
   - `status: optional "missing-dmarc-report" or "multiple-dmarc-reports" or "missing-dmarc-rua" or "cname-on-dmarc-record"`
 
-    DMARC configuration status
+    DMARC configuration status. The API omits this field when DMARC is correctly configured. If the zone lacks a DMARC TXT record of its own, the API resolves _dmarc.{zone} recursively and evaluates whatever that lookup returns. A CNAME at _dmarc.{zone} that points to a valid DMARC record is therefore healthy; the cname-on-dmarc-record value means the CNAME resolves to no DMARC record at all.
 
     - `"missing-dmarc-report"`
 

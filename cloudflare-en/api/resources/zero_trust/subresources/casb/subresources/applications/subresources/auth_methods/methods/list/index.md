@@ -8,9 +8,11 @@ Returns available auth methods for the specified vendor, including credential sc
 
 - `account_id: string`
 
-- `application_id: "ANTHROPIC" or "BITBUCKET" or "BOX" or 10 more`
+- `application_id: "ANTHROPIC" or "AWS" or "BITBUCKET" or 12 more`
 
   - `"ANTHROPIC"`
+
+  - `"AWS"`
 
   - `"BITBUCKET"`
 
@@ -34,41 +36,97 @@ Returns available auth methods for the specified vendor, including credential sc
 
   - `"SALESFORCE"`
 
+  - `"SERVICENOW"`
+
   - `"SLACK"`
+
+### Query Parameters
+
+- `page: optional number`
+
+  A page number within the paginated result set.
+
+- `page_size: optional number`
+
+  Number of results to return per page.
 
 ### Returns
 
-- `id: string`
+- `errors: array of unknown`
 
-  Auth method identifier.
+  List of errors.
 
-- `display_name: string`
+- `messages: array of string`
 
-  Human-readable auth method name.
+  List of messages.
 
-- `human_interaction_required: boolean`
+- `result: array of object { id, display_name, human_interaction_required, 4 more }`
 
-  Whether setup requires human interaction or integration can be created purely using API (e.g., For OAuth can not be created without user interaction).
+  List of items.
 
-- `instructions: object { markdown }`
+  - `id: string`
 
-  Step-by-step instructions for obtaining credentials.
+    Auth method identifier.
 
-  - `markdown: string`
+  - `display_name: string`
 
-    Detailed instructions in markdown format.
+    Human-readable auth method name.
 
-- `payload_example: map[unknown]`
+  - `human_interaction_required: boolean`
 
-  Example credentials payload with placeholder values.
+    Whether setup requires human interaction or integration can be created purely using API (e.g., For OAuth can not be created without user interaction).
 
-- `payload_schema: map[unknown]`
+  - `instructions: object { markdown }`
 
-  JSON Schema for the credentials object in POST /v2/integrations request.
+    Step-by-step instructions for obtaining credentials.
 
-- `redirect_url: string`
+    - `markdown: string`
 
-  OAuth redirect URL for vendors requiring human interaction.
+      Detailed instructions in markdown format.
+
+  - `payload_example: map[unknown]`
+
+    Example credentials payload with placeholder values.
+
+  - `payload_schema: map[unknown]`
+
+    JSON Schema for the credentials object in POST /v2/integrations request.
+
+  - `redirect_url: string`
+
+    OAuth redirect URL for vendors requiring human interaction.
+
+- `result_info: object { count, next, page, 3 more }`
+
+  Pagination metadata.
+
+  - `count: optional number`
+
+    Number of items in current page.
+
+  - `next: optional string`
+
+    URL for next page.
+
+  - `page: optional number`
+
+    Current page number.
+
+  - `per_page: optional number`
+
+    Number of items per page.
+
+  - `previous: optional string`
+
+    URL for previous page.
+
+  - `total_count: optional number`
+
+    Total number of items.
+
+- `success: boolean`
+
+  Whether the request succeeded.
 
 ### Example
 
@@ -80,21 +138,43 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/one/applications/
 #### Response
 
 ```json
-[
-  {
-    "id": "id",
-    "display_name": "display_name",
-    "human_interaction_required": true,
-    "instructions": {
-      "markdown": "markdown"
-    },
-    "payload_example": {
-      "foo": "bar"
-    },
-    "payload_schema": {
-      "foo": "bar"
-    },
-    "redirect_url": "redirect_url"
-  }
-]
+{
+  "errors": [],
+  "messages": [],
+  "result": [
+    {
+      "display_name": "API Key",
+      "human_interaction_required": false,
+      "id": "api_key",
+      "instructions": {
+        "markdown": "## Getting your API Key\n\n1. Log in to your admin console\n2. Navigate to Settings > API\n3. Generate a new API key"
+      },
+      "payload_example": {
+        "api_key": "sk-xxxxxxxxxxxxxxxxxxxx"
+      },
+      "payload_schema": {
+        "properties": {
+          "api_key": {
+            "description": "Your API key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "type": "object"
+      },
+      "redirect_url": null
+    }
+  ],
+  "result_info": {
+    "count": 1,
+    "next": null,
+    "page": 1,
+    "per_page": 10,
+    "previous": null,
+    "total_count": 1
+  },
+  "success": true
+}
 ```

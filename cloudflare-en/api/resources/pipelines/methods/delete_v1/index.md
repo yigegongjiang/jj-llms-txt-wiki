@@ -1,4 +1,4 @@
-## Delete Pipelines
+## Delete Pipeline
 
 **delete** `/accounts/{account_id}/pipelines/v1/pipelines/{pipeline_id}`
 

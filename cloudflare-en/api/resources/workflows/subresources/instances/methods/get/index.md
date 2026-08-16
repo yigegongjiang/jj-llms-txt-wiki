@@ -104,7 +104,7 @@ Retrieves logs and execution status for a specific workflow instance.
 
   - `step_count: number`
 
-  - `steps: array of object { attempts, config, end, 5 more }  or object { end, error, finished, 3 more }  or object { trigger, type }  or object { end, error, finished, 4 more }`
+  - `steps: array of object { attempts, config, end, 5 more }  or object { end, error, finished, 3 more }  or object { trigger, type }  or object { end, error, finished, 5 more }`
 
     - `object { attempts, config, end, 5 more }`
 
@@ -204,7 +204,7 @@ Retrieves logs and execution status for a specific workflow instance.
 
         - `"termination"`
 
-    - `object { end, error, finished, 4 more }`
+    - `object { end, error, finished, 5 more }`
 
       - `end: string`
 
@@ -223,6 +223,8 @@ Retrieves logs and execution status for a specific workflow instance.
       - `type: "waitForEvent"`
 
         - `"waitForEvent"`
+
+      - `event_type: optional string`
 
       - `output: optional string`
 

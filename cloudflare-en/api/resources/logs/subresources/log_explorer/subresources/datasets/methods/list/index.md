@@ -56,6 +56,10 @@ use the single-dataset endpoint to retrieve field configuration.
 
     Unique dataset ID.
 
+  - `deletion_protection: boolean`
+
+    Whether deletion is blocked. Set to `false` before deleting the dataset.
+
   - `enabled: boolean`
 
     Whether log ingest is currently active for this dataset.
@@ -106,6 +110,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
       "created_at": "2019-12-27T18:11:19.117Z",
       "dataset": "dataset",
       "dataset_id": "dataset_id",
+      "deletion_protection": true,
       "enabled": true,
       "object_id": "object_id",
       "object_type": "account",

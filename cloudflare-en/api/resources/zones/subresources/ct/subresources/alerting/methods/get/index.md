@@ -2,7 +2,7 @@
 
 **get** `/zones/{zone_id}/ct/alerting`
 
-Retrieve the Certificate Transparency alerting subscription settings for a zone. Returns whether CT monitoring is enabled and, for Business and Enterprise zones, the list of email addresses that receive alerts.
+Retrieve the Certificate Transparency alerting subscription settings for a zone. Returns whether CT monitoring is enabled and the list of email addresses that receive alerts, if any have been configured.
 
 ### Path Parameters
 
@@ -42,7 +42,7 @@ Retrieve the Certificate Transparency alerting subscription settings for a zone.
 
   - `true`
 
-- `result: optional object { enabled, emails }`
+- `result: optional CTAlertingSubscription`
 
   Certificate Transparency alerting subscription settings for a zone.
 
@@ -52,7 +52,7 @@ Retrieve the Certificate Transparency alerting subscription settings for a zone.
 
   - `emails: optional array of string`
 
-    Email addresses that receive CT alert notifications. Only present and configurable for Business and Enterprise zones. Maximum of 10 addresses. For Free and Pro zones, notifications are sent to all users with SSL permissions on the zone.
+    Email addresses that receive CT alert notifications for the zone. A maximum of 100 addresses may be configured. Each address must be a valid RFC 5322 email address and must not contain a comma.
 
 ### Example
 

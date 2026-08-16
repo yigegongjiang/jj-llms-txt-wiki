@@ -2,7 +2,7 @@
 
 **delete** `/accounts/{account_id}/pipelines/v1/sinks/{sink_id}`
 
-Delete Pipeline in Account.
+Delete Sink in Account.
 
 ### Path Parameters
 

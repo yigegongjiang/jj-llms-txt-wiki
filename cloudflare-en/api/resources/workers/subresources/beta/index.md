@@ -248,7 +248,7 @@ List all Workers for an account.
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -256,9 +256,17 @@ List all Workers for an account.
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -409,7 +417,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers \
       },
       "subdomain": {
         "enabled": true,
-        "previews_enabled": true
+        "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+        "previews_enabled": true,
+        "url": "https://my-worker.my-subdomain.workers.dev"
       },
       "tags": [
         "my-team",
@@ -655,7 +665,7 @@ Get details about a specific Worker.
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -663,9 +673,17 @@ Get details about a specific Worker.
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -793,7 +811,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -897,7 +917,7 @@ Create a new Worker.
 
       - `"accept"`
 
-- `subdomain: optional object { enabled, previews_enabled }`
+- `subdomain: optional object { enabled, preview_url_suffix, previews_enabled, url }`
 
   Subdomain settings for the Worker.
 
@@ -905,9 +925,17 @@ Create a new Worker.
 
     Whether the *.workers.dev subdomain is enabled for the Worker.
 
+  - `preview_url_suffix: optional string`
+
+    Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
   - `previews_enabled: optional boolean`
 
     Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+  - `url: optional string`
+
+    The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
 - `tags: optional array of string`
 
@@ -1125,7 +1153,7 @@ Create a new Worker.
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -1133,9 +1161,17 @@ Create a new Worker.
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -1271,7 +1307,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers \
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -1379,7 +1417,7 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
       - `"accept"`
 
-- `subdomain: optional object { enabled, previews_enabled }`
+- `subdomain: optional object { enabled, preview_url_suffix, previews_enabled, url }`
 
   Subdomain settings for the Worker.
 
@@ -1387,9 +1425,17 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
     Whether the *.workers.dev subdomain is enabled for the Worker.
 
+  - `preview_url_suffix: optional string`
+
+    Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
   - `previews_enabled: optional boolean`
 
     Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+  - `url: optional string`
+
+    The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
 - `tags: optional array of string`
 
@@ -1607,7 +1653,7 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -1615,9 +1661,17 @@ Perform a complete replacement of a Worker, where omitted properties are set to 
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -1754,7 +1808,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -1862,7 +1918,7 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
       - `"accept"`
 
-- `subdomain: object { enabled, previews_enabled }`
+- `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
   Subdomain settings for the Worker.
 
@@ -1870,9 +1926,17 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
     Whether the *.workers.dev subdomain is enabled for the Worker.
 
+  - `preview_url_suffix: optional string`
+
+    Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
   - `previews_enabled: optional boolean`
 
     Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+  - `url: optional string`
+
+    The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
 - `tags: array of string`
 
@@ -2090,7 +2154,7 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -2098,9 +2162,17 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -2245,7 +2317,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",
@@ -2529,7 +2603,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -2537,9 +2611,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -2733,7 +2815,7 @@ List all versions for a Worker.
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -2784,6 +2866,22 @@ List all versions for a Worker.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -4524,7 +4622,7 @@ Get details about a specific version.
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -4575,6 +4673,22 @@ Get details about a specific version.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -6236,7 +6350,7 @@ Create a new version.
 
     Token provided upon successful upload of all files from a registered manifest.
 
-- `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+- `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
   List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -6287,6 +6401,22 @@ Create a new version.
       The kind of resource that the binding provides.
 
       - `"ai_search_namespace"`
+
+  - `Messaging object { name, namespace, type }`
+
+    - `name: string`
+
+      A JavaScript variable name for the binding.
+
+    - `namespace: string`
+
+      The Messaging namespace to bind to.
+
+    - `type: "messaging"`
+
+      The kind of resource that the binding provides.
+
+      - `"messaging"`
 
   - `AnalyticsEngine object { dataset, name, type }`
 
@@ -7519,7 +7649,7 @@ Create a new version.
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -7570,6 +7700,22 @@ Create a new version.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 
@@ -9361,7 +9507,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -9412,6 +9558,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 

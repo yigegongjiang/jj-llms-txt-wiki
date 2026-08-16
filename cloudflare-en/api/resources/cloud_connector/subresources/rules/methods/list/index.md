@@ -62,7 +62,7 @@ Retrieves the Cloud Connector rules configured for a zone. Rules define how traf
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -73,6 +73,8 @@ Retrieves the Cloud Connector rules configured for a zone. Rules define how traf
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`
 
 ### Example
 

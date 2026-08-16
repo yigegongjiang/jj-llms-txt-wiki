@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/cni/settings`
 
-Get the current settings for the active account
+Retrieves current settings configuration for the specified resource or service.
 
 ### Path Parameters
 
@@ -33,7 +33,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/settings \
 
 **put** `/accounts/{account_id}/cni/settings`
 
-Update the current settings for the active account
+Updates configuration settings for the specified resource or service.
 
 ### Path Parameters
 

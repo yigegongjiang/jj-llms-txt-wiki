@@ -2,7 +2,10 @@
 
 **get** `/accounts/{account_id}/shares/{share_id}/recipients`
 
-List share recipients by share ID.
+List share recipients by share ID. Returns **all** recipients
+regardless of their `association_status` (associating, associated,
+disassociating, disassociated). Callers that want only "active"
+recipients must filter client-side on the `association_status` field.
 
 ### Path Parameters
 
@@ -62,7 +65,20 @@ List share recipients by share ID.
 
   - `association_status: "associating" or "associated" or "disassociating" or "disassociated"`
 
-    Share Recipient association status.
+    The current state of the recipient relative to the share. The
+    `desired_association_status` (not exposed in the response) tracks the
+    target state set by the API; the background reconciliation workflow
+    drives `current_association_status` toward it.
+
+    - `associating` — The recipient was recently added; the workflow is
+      pushing shared resources into the recipient account.
+    - `associated` — Shared resources have been successfully applied to
+      the recipient account.
+    - `disassociating` — The recipient was removed (via DELETE or PUT
+      replacement); the workflow is removing shared resources from the
+      recipient account.
+    - `disassociated` — Shared resources have been removed from the
+      recipient account. The recipient record remains in the database.
 
     - `"associating"`
 

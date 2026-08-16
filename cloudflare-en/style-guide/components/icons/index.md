@@ -12,20 +12,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Icons
 
-Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/icons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 11, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/icons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 There are two icon components which pull from two different icon sets.
 
-## astro-icon
+## Icon
 
-The [astro-icon ↗](https://www.astroicon.dev/) package is available to use as a standalone component.
+The `Icon` component from Nimbus is available as a standalone component.
 
 Primarily, this is used for Cloudflare product icons which are stored in `/src/icons/*.svg`.
 
 ```mdx
-import { AstroIcon } from "~/components";
+import { Icon } from "~/components";
 
-<AstroIcon name="workers" class="text-5xl text-orange-400" />
+<Icon name="workers" class="text-5xl text-orange-400" />
 ```
 
 ## Card and LinkCard
@@ -51,8 +51,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/icons/#page","headline":"Icons · Cloudflare Style Guide","description":"Browse available product and UI icons.","url":"https://developers.cloudflare.com/style-guide/components/icons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/icons/#page","headline":"Icons · Cloudflare Style Guide","description":"Browse available product and UI icons.","url":"https://developers.cloudflare.com/style-guide/components/icons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-11","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

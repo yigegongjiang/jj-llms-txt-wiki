@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/{event_id}/raw/{raw_id}`
 
-Retrieve raw data for a specific event.
+Retrieves raw threat event data for a specific event in Cloudforce One.
 
 ### Path Parameters
 

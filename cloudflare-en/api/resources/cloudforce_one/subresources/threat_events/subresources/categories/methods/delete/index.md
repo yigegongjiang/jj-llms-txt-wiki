@@ -2,7 +2,7 @@
 
 **delete** `/accounts/{account_id}/cloudforce-one/events/categories/{category_id}`
 
-Delete a category by its identifier.
+Removes a threat event category from Cloudforce One.
 
 ### Path Parameters
 

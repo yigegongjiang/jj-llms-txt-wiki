@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Workers Logs
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/logs/workers-logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 11, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/logs/workers-logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Workers Logs lets you automatically collect, store, filter, and analyze logging data emitted from Cloudflare Workers. Data is written to your Cloudflare Account, and you can query it in the dashboard for each of your Workers. All newly created Workers will come with the observability setting enabled by default.
 
 Logs include [invocation logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/#invocation-logs), [custom logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/#custom-logs), errors, and uncaught exceptions.
 
-![Example showing the Workers Logs Dashboard](https://developers.cloudflare.com/_astro/wobs_workers_events_122.DvoADmO-_Z1V047w.webp) 
+![Example showing the Workers Logs Dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2758,height=778,format=webp/_astro/wobs_workers_events_122.DvoADmO-.png) 
 
-To send logs to a third party, use [Workers Logpush](https://developers.cloudflare.com/workers/observability/logs/logpush/) or [Tail Workers](https://developers.cloudflare.com/workers/observability/logs/tail-workers/).
+To send logs to a third party, use [OpenTelemetry export](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/) (recommended), [Workers Logpush](https://developers.cloudflare.com/workers/observability/logs/logpush/), or [Tail Workers](https://developers.cloudflare.com/workers/observability/logs/tail-workers/).
 
 ## Enable Workers Logs
 
@@ -215,10 +215,6 @@ head_sampling_rate = 0.01
 
 ## Pricing
 
-Billing start date
-
-Workers Logs billing will begin on April 21, 2025.
-
 Workers Logs is included in both the Free and Paid [Workers plans](https://developers.cloudflare.com/workers/platform/pricing/).
 
 |                  | Log Events Written                                           | Retention |
@@ -252,8 +248,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/logs/workers-logs/#page","headline":"Workers Logs · Cloudflare Workers docs","description":"Store, filter, and analyze log data emitted from Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/observability/logs/workers-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/logs/workers-logs/#page","headline":"Workers Logs · Cloudflare Workers docs","description":"Store, filter, and analyze log data emitted from Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/observability/logs/workers-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-11","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

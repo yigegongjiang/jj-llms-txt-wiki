@@ -12,9 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Work with Git
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/git-workflows/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/git-workflows/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows you how to clone repositories, manage branches, and automate Git operations in the sandbox.
+
+Coming soon: Sandbox SDK 1.0
+
+This page documents `sandbox.gitCheckout()` on today's stable `@cloudflare/sandbox` package.
+
+On the **1.0 preview** (`@next`), `gitCheckout` is removed. Run `git` with argv `exec` — for example `sandbox.exec(['git', 'clone', url, dir])` then `await process.output()`. See the [Processes API](https://developers.cloudflare.com/sandbox/1-0-preview/api/processes/) and [Migrate](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/).
 
 ## Clone repositories
 
@@ -86,7 +92,7 @@ await sandbox.gitCheckout(repoUrl);
 
 More secure alternative
 
-Embedding a token in the URL passes the credential directly into the sandbox. For better access control, use a Worker proxy that validates a short-lived JWT and injects the real token at request time — the sandbox never holds the credential. Refer to [Proxy requests to external APIs](https://developers.cloudflare.com/sandbox/guides/proxy-requests/).
+Embedding a token in the URL passes the credential directly into the sandbox. For better access control, use an outbound handler that injects the real token at request time — the sandbox never holds the credential. Refer to [Handle outbound traffic](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/).
 
 ## Clone and build
 
@@ -229,8 +235,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/git-workflows/#page","headline":"Work with Git · Cloudflare Sandbox SDK docs","description":"Clone repositories, manage branches, and automate Git operations.","url":"https://developers.cloudflare.com/sandbox/guides/git-workflows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/git-workflows/#page","headline":"Work with Git · Cloudflare Sandbox SDK docs","description":"Clone repositories, manage branches, and automate Git operations.","url":"https://developers.cloudflare.com/sandbox/guides/git-workflows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

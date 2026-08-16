@@ -117,7 +117,7 @@ Lists waiting rooms for account or zone.
 
     To view the full list of variables, look at the `cfWaitingRoom` object described under the `json_response_enabled` property in other Waiting Room API calls.
 
-  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 35 more`
+  - `default_template_language: optional "en-US" or "es-ES" or "de-DE" or 36 more`
 
     The language of the default page template. If no default_template_language is provided, then `en-US` (English) will be used.
 
@@ -166,6 +166,8 @@ Lists waiting rooms for account or zone.
     - `"fi-FI"`
 
     - `"lt-LT"`
+
+    - `"lv-LV"`
 
     - `"ms-MY"`
 

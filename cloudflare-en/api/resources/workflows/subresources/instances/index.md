@@ -298,7 +298,7 @@ Retrieves logs and execution status for a specific workflow instance.
 
   - `step_count: number`
 
-  - `steps: array of object { attempts, config, end, 5 more }  or object { end, error, finished, 3 more }  or object { trigger, type }  or object { end, error, finished, 4 more }`
+  - `steps: array of object { attempts, config, end, 5 more }  or object { end, error, finished, 3 more }  or object { trigger, type }  or object { end, error, finished, 5 more }`
 
     - `object { attempts, config, end, 5 more }`
 
@@ -398,7 +398,7 @@ Retrieves logs and execution status for a specific workflow instance.
 
         - `"termination"`
 
-    - `object { end, error, finished, 4 more }`
+    - `object { end, error, finished, 5 more }`
 
       - `end: string`
 
@@ -417,6 +417,8 @@ Retrieves logs and execution status for a specific workflow instance.
       - `type: "waitForEvent"`
 
         - `"waitForEvent"`
+
+      - `event_type: optional string`
 
       - `output: optional string`
 
@@ -572,6 +574,8 @@ Creates a new instance of a workflow, starting its execution.
 
 - `instance_id: optional string`
 
+  An id of exactly `cf_` followed by 64 lowercase hex characters is reserved for system-generated instances.
+
 - `instance_retention: optional object { error_retention, success_retention }`
 
   - `error_retention: optional number or string`
@@ -593,6 +597,26 @@ Creates a new instance of a workflow, starting its execution.
       Specifies the duration in milliseconds.
 
     - `string`
+
+- `location_hint: optional "wnam" or "weur" or "enam" or 6 more`
+
+  - `"wnam"`
+
+  - `"weur"`
+
+  - `"enam"`
+
+  - `"eeur"`
+
+  - `"apac"`
+
+  - `"oc"`
+
+  - `"sam"`
+
+  - `"afr"`
+
+  - `"me"`
 
 - `params: optional string`
 
@@ -727,9 +751,11 @@ Creates multiple workflow instances in a single batch operation.
 
 ### Body Parameters
 
-- `body: optional array of object { instance_id, instance_retention, params }`
+- `body: optional array of object { instance_id, instance_retention, location_hint, params }`
 
   - `instance_id: optional string`
+
+    An id of exactly `cf_` followed by 64 lowercase hex characters is reserved for system-generated instances.
 
   - `instance_retention: optional object { error_retention, success_retention }`
 
@@ -752,6 +778,26 @@ Creates multiple workflow instances in a single batch operation.
         Specifies the duration in milliseconds.
 
       - `string`
+
+  - `location_hint: optional "wnam" or "weur" or "enam" or 6 more`
+
+    - `"wnam"`
+
+    - `"weur"`
+
+    - `"enam"`
+
+    - `"eeur"`
+
+    - `"apac"`
+
+    - `"oc"`
+
+    - `"sam"`
+
+    - `"afr"`
+
+    - `"me"`
 
   - `params: optional string`
 
@@ -922,7 +968,7 @@ Retrieves the full, untruncated output for a specific step on a workflow instanc
 
   - `message: string`
 
-- `result: object { error, status, output }`
+- `result: object { error, status, event_type, output }`
 
   - `error: object { message, name }`
 
@@ -951,6 +997,10 @@ Retrieves the full, untruncated output for a specific step on a workflow instanc
     - `"waiting"`
 
     - `"rollingBack"`
+
+  - `event_type: optional string`
+
+    The event type the step is waiting on, as supplied to step.waitForEvent. Only present when type='waitForEvent'.
 
   - `output: optional unknown`
 
@@ -1003,6 +1053,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows/$WORKFL
       "name": "name"
     },
     "status": "queued",
+    "event_type": "event_type",
     "output": {}
   },
   "success": true,
@@ -1129,7 +1180,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows/$WORKFL
 
   - `step_count: number`
 
-  - `steps: array of object { attempts, config, end, 5 more }  or object { end, error, finished, 3 more }  or object { trigger, type }  or object { end, error, finished, 4 more }`
+  - `steps: array of object { attempts, config, end, 5 more }  or object { end, error, finished, 3 more }  or object { trigger, type }  or object { end, error, finished, 5 more }`
 
     - `object { attempts, config, end, 5 more }`
 
@@ -1229,7 +1280,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows/$WORKFL
 
         - `"termination"`
 
-    - `object { end, error, finished, 4 more }`
+    - `object { end, error, finished, 5 more }`
 
       - `end: string`
 
@@ -1248,6 +1299,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows/$WORKFL
       - `type: "waitForEvent"`
 
         - `"waitForEvent"`
+
+      - `event_type: optional string`
 
       - `output: optional string`
 
@@ -1361,7 +1414,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows/$WORKFL
 
 ### Instance Step Response
 
-- `InstanceStepResponse object { error, status, output }`
+- `InstanceStepResponse object { error, status, event_type, output }`
 
   - `error: object { message, name }`
 
@@ -1390,6 +1443,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows/$WORKFL
     - `"waiting"`
 
     - `"rollingBack"`
+
+  - `event_type: optional string`
+
+    The event type the step is waiting on, as supplied to step.waitForEvent. Only present when type='waitForEvent'.
 
   - `output: optional unknown`
 

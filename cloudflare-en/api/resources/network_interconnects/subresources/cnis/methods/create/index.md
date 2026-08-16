@@ -2,7 +2,8 @@
 
 **post** `/accounts/{account_id}/cni/cnis`
 
-Create a new CNI object
+Creates a new Cloud Network Interconnect (CNI) for private network connectivity between
+Cloudflare and your infrastructure. CNIs enable dedicated, high-performance network links.
 
 ### Path Parameters
 
@@ -50,10 +51,10 @@ Create a new CNI object
     * ASCII alphanumerics: `[a-zA-Z0-9]`
     * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-    these disallowed characters will be rejected.
+    In other words, MD5 keys may contain any printable ASCII character aside from newline
+    (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+    form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+    or more of these disallowed characters will be rejected.
 
 ### Returns
 
@@ -109,10 +110,24 @@ Create a new CNI object
     * ASCII alphanumerics: `[a-zA-Z0-9]`
     * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
 
-    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
-    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
-    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
-    these disallowed characters will be rejected.
+    In other words, MD5 keys may contain any printable ASCII character aside from newline
+    (0x0A), quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09),
+    form feed (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one
+    or more of these disallowed characters will be rejected.
+
+- `bgp_mode: optional "dynamic_route_exchange" or "advertise_only"`
+
+  The BGP mode for a CNI.
+
+  Controls the customer-facing data path:
+
+  * `DynamicRouteExchange` — Full BGP: routes flow through to conduit via CRE / bgp-bridge /
+    bgp-bridge-receiver.
+  * `AdvertiseOnly` — static advertisement via taserver, no routes exchanged with Conduit
+
+  - `"dynamic_route_exchange"`
+
+  - `"advertise_only"`
 
 ### Example
 
@@ -151,6 +166,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/cnis \
       "string"
     ],
     "md5_key": "md5_key"
-  }
+  },
+  "bgp_mode": "dynamic_route_exchange"
 }
 ```

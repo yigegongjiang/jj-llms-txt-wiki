@@ -1021,7 +1021,7 @@ Lists interconnects associated with an account.
 
 - `result: object { interconnects }`
 
-  - `interconnects: optional array of object { id, automatic_return_routing, colo_name, 11 more }`
+  - `interconnects: optional array of object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -1030,6 +1030,55 @@ Lists interconnects associated with an account.
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -1172,6 +1221,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
       {
         "id": "c4a7362d577a6c3019a474fd6f485821",
         "automatic_return_routing": true,
+        "bgp": {
+          "as_no": 0,
+          "cloudflare_endpoint": "192.168.1.1",
+          "customer_asn": 0,
+          "customer_endpoint": "192.168.1.1",
+          "export_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+          "extra_prefixes": [
+            "string"
+          ],
+          "import_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+          "md5_key": "md5_key"
+        },
         "colo_name": "pni_ord",
         "created_on": "2017-06-14T00:00:00Z",
         "description": "Tunnel for Interconnect to ORD",
@@ -1247,7 +1308,7 @@ Lists details for a specific interconnect.
 
 - `result: object { interconnect }`
 
-  - `interconnect: optional object { id, automatic_return_routing, colo_name, 11 more }`
+  - `interconnect: optional object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -1256,6 +1317,55 @@ Lists details for a specific interconnect.
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -1397,6 +1507,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
     "interconnect": {
       "id": "c4a7362d577a6c3019a474fd6f485821",
       "automatic_return_routing": true,
+      "bgp": {
+        "as_no": 0,
+        "cloudflare_endpoint": "192.168.1.1",
+        "customer_asn": 0,
+        "customer_endpoint": "192.168.1.1",
+        "export_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+        "extra_prefixes": [
+          "string"
+        ],
+        "import_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+        "md5_key": "md5_key"
+      },
       "colo_name": "pni_ord",
       "created_on": "2017-06-14T00:00:00Z",
       "description": "Tunnel for Interconnect to ORD",
@@ -1450,6 +1572,55 @@ Updates a specific interconnect associated with an account. Use `?validate_only=
 - `automatic_return_routing: optional boolean`
 
   True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+- `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+  - `as_no: optional number`
+
+    Deprecated. Use customer_asn.
+
+  - `cloudflare_endpoint: optional string`
+
+    Read-only for v1.5; derived from interface_address.
+
+  - `customer_asn: optional number`
+
+    ASN used on the customer end of the BGP session.
+
+  - `customer_endpoint: optional string`
+
+    Read-only for v1.5; derived from interface_address.
+
+  - `export_filter_id: optional string`
+
+    ID of the BGP filter profile applied to routes advertised to the customer.
+
+  - `extra_prefixes: optional array of string`
+
+    Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+  - `import_filter_id: optional string`
+
+    ID of the BGP filter profile applied to routes received from the customer.
+
+  - `md5_key: optional string`
+
+    MD5 key to use for session authentication.
+
+    Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+    key is not treated as a secret value. This is *only* supported for preventing
+    misconfiguration, not for defending against malicious attacks.
+
+    The MD5 key, if set, must be of non-zero length and consist only of the following types of
+    character:
+
+    * ASCII alphanumerics: `[a-zA-Z0-9]`
+    * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+    In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+    quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+    (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+    these disallowed characters will be rejected.
 
 - `description: optional string`
 
@@ -1554,7 +1725,7 @@ Updates a specific interconnect associated with an account. Use `?validate_only=
 
   - `modified: optional boolean`
 
-  - `modified_interconnect: optional object { id, automatic_return_routing, colo_name, 11 more }`
+  - `modified_interconnect: optional object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -1563,6 +1734,55 @@ Updates a specific interconnect associated with an account. Use `?validate_only=
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -1714,6 +1934,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
     "modified_interconnect": {
       "id": "c4a7362d577a6c3019a474fd6f485821",
       "automatic_return_routing": true,
+      "bgp": {
+        "as_no": 0,
+        "cloudflare_endpoint": "192.168.1.1",
+        "customer_asn": 0,
+        "customer_endpoint": "192.168.1.1",
+        "export_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+        "extra_prefixes": [
+          "string"
+        ],
+        "import_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+        "md5_key": "md5_key"
+      },
       "colo_name": "pni_ord",
       "created_on": "2017-06-14T00:00:00Z",
       "description": "Tunnel for Interconnect to ORD",
@@ -1790,7 +2022,7 @@ Updates multiple interconnects associated with an account. Use `?validate_only=t
 
   - `modified: optional boolean`
 
-  - `modified_interconnects: optional array of object { id, automatic_return_routing, colo_name, 11 more }`
+  - `modified_interconnects: optional array of object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -1799,6 +2031,55 @@ Updates multiple interconnects associated with an account. Use `?validate_only=t
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -1945,6 +2226,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
       {
         "id": "c4a7362d577a6c3019a474fd6f485821",
         "automatic_return_routing": true,
+        "bgp": {
+          "as_no": 0,
+          "cloudflare_endpoint": "192.168.1.1",
+          "customer_asn": 0,
+          "customer_endpoint": "192.168.1.1",
+          "export_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+          "extra_prefixes": [
+            "string"
+          ],
+          "import_filter_id": "a1b2c3d4e5f647890a1b2c3d4e5f6789",
+          "md5_key": "md5_key"
+        },
         "colo_name": "pni_ord",
         "created_on": "2017-06-14T00:00:00Z",
         "description": "Tunnel for Interconnect to ORD",
@@ -1980,7 +2273,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
 
 - `CfInterconnectListResponse object { interconnects }`
 
-  - `interconnects: optional array of object { id, automatic_return_routing, colo_name, 11 more }`
+  - `interconnects: optional array of object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -1989,6 +2282,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -2093,7 +2435,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
 
 - `CfInterconnectGetResponse object { interconnect }`
 
-  - `interconnect: optional object { id, automatic_return_routing, colo_name, 11 more }`
+  - `interconnect: optional object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -2102,6 +2444,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -2208,7 +2599,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
 
   - `modified: optional boolean`
 
-  - `modified_interconnect: optional object { id, automatic_return_routing, colo_name, 11 more }`
+  - `modified_interconnect: optional object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -2217,6 +2608,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -2323,7 +2763,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
 
   - `modified: optional boolean`
 
-  - `modified_interconnects: optional array of object { id, automatic_return_routing, colo_name, 11 more }`
+  - `modified_interconnects: optional array of object { id, automatic_return_routing, bgp, 12 more }`
 
     - `id: optional string`
 
@@ -2332,6 +2772,55 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/cf_intercon
     - `automatic_return_routing: optional boolean`
 
       True if automatic stateful return routing should be enabled for a tunnel, false otherwise. Requires the `coupler_integration` account flag to be enabled; requests setting this to `true` without that flag will be rejected.
+
+    - `bgp: optional object { as_no, cloudflare_endpoint, customer_asn, 5 more }`
+
+      - `as_no: optional number`
+
+        Deprecated. Use customer_asn.
+
+      - `cloudflare_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `customer_asn: optional number`
+
+        ASN used on the customer end of the BGP session.
+
+      - `customer_endpoint: optional string`
+
+        Read-only for v1.5; derived from interface_address.
+
+      - `export_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes advertised to the customer.
+
+      - `extra_prefixes: optional array of string`
+
+        Prefixes in this list will be advertised to the customer device, in addition to the routes in the Magic routing table.
+
+      - `import_filter_id: optional string`
+
+        ID of the BGP filter profile applied to routes received from the customer.
+
+      - `md5_key: optional string`
+
+        MD5 key to use for session authentication.
+
+        Note that *this is not a security measure*. MD5 is not a valid security mechanism, and the
+        key is not treated as a secret value. This is *only* supported for preventing
+        misconfiguration, not for defending against malicious attacks.
+
+        The MD5 key, if set, must be of non-zero length and consist only of the following types of
+        character:
+
+        * ASCII alphanumerics: `[a-zA-Z0-9]`
+        * Special characters in the set `'!@#$%^&*()+[]{}<>/.,;:_-~`= |`
+
+        In other words, MD5 keys may contain any printable ASCII character aside from newline (0x0A),
+        quotation mark (`"`), vertical tab (0x0B), carriage return (0x0D), tab (0x09), form feed
+        (0x0C), and the question mark (`?`). Requests specifying an MD5 key with one or more of
+        these disallowed characters will be rejected.
 
     - `colo_name: optional string`
 
@@ -19102,6 +19591,9 @@ Gets Magic WAN Connector Telemetry Event
     - `StartUpgrade`: Started upgrade
     - `FinishUpgradeSuccess`: Finished upgrade
     - `FinishUpgradeFailure`: Failed upgrade
+    - `BlessSlotSuccess`: Blessed boot entry slot
+    - `BlessSlotPending`: Boot entry slot is not yet blessed
+    - `BlessSlotFailure`: Failed to bless boot entry slot
     - `Reconcile`: Reconciled
     - `ConfigureCloudflaredTunnel`: Configured Cloudflared tunnel
     - `RekeyInstallBoth`: Installed initial inbound and outbound keys
@@ -19110,8 +19602,12 @@ Gets Magic WAN Connector Telemetry Event
     - `RekeyAdvance`: Confirmed traffic on new inbound key, swapped outbound to new
     - `RekeyComplete`: Deleted old keys
     - `RekeyReset`: Deleted all keys after receiving an unexpected key
+    - `HaTransition`: Completed HA state transition
+    - `HaError`: Received unexpected HA error
+    - `HaInit`: Initialized HA subsystem
+    - `HaLeave`: Stopped HA subsystem
 
-    - `k: "Init" or "Leave" or "StartAttestation" or 19 more`
+    - `k: "Init" or "Leave" or "StartAttestation" or 26 more`
 
       Event kind
 
@@ -19143,6 +19639,12 @@ Gets Magic WAN Connector Telemetry Event
 
       - `"FinishUpgradeFailure"`
 
+      - `"BlessSlotSuccess"`
+
+      - `"BlessSlotPending"`
+
+      - `"BlessSlotFailure"`
+
       - `"Reconcile"`
 
       - `"ConfigureCloudflaredTunnel"`
@@ -19158,6 +19660,14 @@ Gets Magic WAN Connector Telemetry Event
       - `"RekeyComplete"`
 
       - `"RekeyReset"`
+
+      - `"HaTransition"`
+
+      - `"HaError"`
+
+      - `"HaInit"`
+
+      - `"HaLeave"`
 
   - `n: number`
 
@@ -19274,6 +19784,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
     - `StartUpgrade`: Started upgrade
     - `FinishUpgradeSuccess`: Finished upgrade
     - `FinishUpgradeFailure`: Failed upgrade
+    - `BlessSlotSuccess`: Blessed boot entry slot
+    - `BlessSlotPending`: Boot entry slot is not yet blessed
+    - `BlessSlotFailure`: Failed to bless boot entry slot
     - `Reconcile`: Reconciled
     - `ConfigureCloudflaredTunnel`: Configured Cloudflared tunnel
     - `RekeyInstallBoth`: Installed initial inbound and outbound keys
@@ -19282,8 +19795,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
     - `RekeyAdvance`: Confirmed traffic on new inbound key, swapped outbound to new
     - `RekeyComplete`: Deleted old keys
     - `RekeyReset`: Deleted all keys after receiving an unexpected key
+    - `HaTransition`: Completed HA state transition
+    - `HaError`: Received unexpected HA error
+    - `HaInit`: Initialized HA subsystem
+    - `HaLeave`: Stopped HA subsystem
 
-    - `k: "Init" or "Leave" or "StartAttestation" or 19 more`
+    - `k: "Init" or "Leave" or "StartAttestation" or 26 more`
 
       Event kind
 
@@ -19315,6 +19832,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
       - `"FinishUpgradeFailure"`
 
+      - `"BlessSlotSuccess"`
+
+      - `"BlessSlotPending"`
+
+      - `"BlessSlotFailure"`
+
       - `"Reconcile"`
 
       - `"ConfigureCloudflaredTunnel"`
@@ -19330,6 +19853,14 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
       - `"RekeyComplete"`
 
       - `"RekeyReset"`
+
+      - `"HaTransition"`
+
+      - `"HaError"`
+
+      - `"HaInit"`
+
+      - `"HaLeave"`
 
   - `n: number`
 
@@ -19387,6 +19918,9 @@ Gets latest Magic WAN Connector Telemetry Events
       - `StartUpgrade`: Started upgrade
       - `FinishUpgradeSuccess`: Finished upgrade
       - `FinishUpgradeFailure`: Failed upgrade
+      - `BlessSlotSuccess`: Blessed boot entry slot
+      - `BlessSlotPending`: Boot entry slot is not yet blessed
+      - `BlessSlotFailure`: Failed to bless boot entry slot
       - `Reconcile`: Reconciled
       - `ConfigureCloudflaredTunnel`: Configured Cloudflared tunnel
       - `RekeyInstallBoth`: Installed initial inbound and outbound keys
@@ -19395,8 +19929,12 @@ Gets latest Magic WAN Connector Telemetry Events
       - `RekeyAdvance`: Confirmed traffic on new inbound key, swapped outbound to new
       - `RekeyComplete`: Deleted old keys
       - `RekeyReset`: Deleted all keys after receiving an unexpected key
+      - `HaTransition`: Completed HA state transition
+      - `HaError`: Received unexpected HA error
+      - `HaInit`: Initialized HA subsystem
+      - `HaLeave`: Stopped HA subsystem
 
-      - `k: "Init" or "Leave" or "StartAttestation" or 19 more`
+      - `k: "Init" or "Leave" or "StartAttestation" or 26 more`
 
         Event kind
 
@@ -19428,6 +19966,12 @@ Gets latest Magic WAN Connector Telemetry Events
 
         - `"FinishUpgradeFailure"`
 
+        - `"BlessSlotSuccess"`
+
+        - `"BlessSlotPending"`
+
+        - `"BlessSlotFailure"`
+
         - `"Reconcile"`
 
         - `"ConfigureCloudflaredTunnel"`
@@ -19443,6 +19987,14 @@ Gets latest Magic WAN Connector Telemetry Events
         - `"RekeyComplete"`
 
         - `"RekeyReset"`
+
+        - `"HaTransition"`
+
+        - `"HaError"`
+
+        - `"HaInit"`
+
+        - `"HaLeave"`
 
     - `n: number`
 
@@ -19540,6 +20092,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
       - `StartUpgrade`: Started upgrade
       - `FinishUpgradeSuccess`: Finished upgrade
       - `FinishUpgradeFailure`: Failed upgrade
+      - `BlessSlotSuccess`: Blessed boot entry slot
+      - `BlessSlotPending`: Boot entry slot is not yet blessed
+      - `BlessSlotFailure`: Failed to bless boot entry slot
       - `Reconcile`: Reconciled
       - `ConfigureCloudflaredTunnel`: Configured Cloudflared tunnel
       - `RekeyInstallBoth`: Installed initial inbound and outbound keys
@@ -19548,8 +20103,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
       - `RekeyAdvance`: Confirmed traffic on new inbound key, swapped outbound to new
       - `RekeyComplete`: Deleted old keys
       - `RekeyReset`: Deleted all keys after receiving an unexpected key
+      - `HaTransition`: Completed HA state transition
+      - `HaError`: Received unexpected HA error
+      - `HaInit`: Initialized HA subsystem
+      - `HaLeave`: Stopped HA subsystem
 
-      - `k: "Init" or "Leave" or "StartAttestation" or 19 more`
+      - `k: "Init" or "Leave" or "StartAttestation" or 26 more`
 
         Event kind
 
@@ -19581,6 +20140,12 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
         - `"FinishUpgradeFailure"`
 
+        - `"BlessSlotSuccess"`
+
+        - `"BlessSlotPending"`
+
+        - `"BlessSlotFailure"`
+
         - `"Reconcile"`
 
         - `"ConfigureCloudflaredTunnel"`
@@ -19596,6 +20161,14 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
         - `"RekeyComplete"`
 
         - `"RekeyReset"`
+
+        - `"HaTransition"`
+
+        - `"HaError"`
+
+        - `"HaInit"`
+
+        - `"HaLeave"`
 
     - `n: number`
 
@@ -19722,7 +20295,7 @@ Gets Magic WAN Connector Telemetry Snapshot
 
 ### Returns
 
-- `result: object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 170 more }`
+- `result: object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 171 more }`
 
   Snapshot
 
@@ -20372,6 +20945,10 @@ Gets Magic WAN Connector Telemetry Snapshot
 
     Platform identifier
 
+  - `site_id: optional string`
+
+    Site identifier
+
   - `snmp_icmp_in_addr_mask_reps: optional number`
 
     Number of ICMP Address Mask Reply messages received
@@ -20650,7 +21227,7 @@ Gets Magic WAN Connector Telemetry Snapshot
 
       Maximum temperature of the component (degrees Celsius)
 
-  - `tunnels: optional array of object { health_state, health_value, interface_name, 7 more }`
+  - `tunnels: optional array of object { health_state, health_value, interface_name, 9 more }`
 
     - `health_state: string`
 
@@ -20667,6 +21244,14 @@ Gets Magic WAN Connector Telemetry Snapshot
     - `tunnel_id: string`
 
       Tunnel identifier
+
+    - `jitter_ms: optional number`
+
+      Tunnel round-trip latency variation in milliseconds
+
+    - `latency_ms: optional number`
+
+      50th percentile tunnel round-trip latency in milliseconds
 
     - `natd_result: optional string`
 
@@ -20912,6 +21497,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
       }
     ],
     "platform": "platform",
+    "site_id": "site_id",
     "snmp_icmp_in_addr_mask_reps": 0,
     "snmp_icmp_in_addr_masks": 0,
     "snmp_icmp_in_csum_errors": 0,
@@ -20991,6 +21577,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
         "health_value": 0,
         "interface_name": "interface_name",
         "tunnel_id": "tunnel_id",
+        "jitter_ms": 0,
+        "latency_ms": 0,
         "natd_result": "natd_result",
         "natd_state": 0,
         "natd_target": "natd_target",
@@ -21040,7 +21628,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
 ### Snapshot Get Response
 
-- `SnapshotGetResponse object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 170 more }`
+- `SnapshotGetResponse object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 171 more }`
 
   Snapshot
 
@@ -21690,6 +22278,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
     Platform identifier
 
+  - `site_id: optional string`
+
+    Site identifier
+
   - `snmp_icmp_in_addr_mask_reps: optional number`
 
     Number of ICMP Address Mask Reply messages received
@@ -21968,7 +22560,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
       Maximum temperature of the component (degrees Celsius)
 
-  - `tunnels: optional array of object { health_state, health_value, interface_name, 7 more }`
+  - `tunnels: optional array of object { health_state, health_value, interface_name, 9 more }`
 
     - `health_state: string`
 
@@ -21985,6 +22577,14 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
     - `tunnel_id: string`
 
       Tunnel identifier
+
+    - `jitter_ms: optional number`
+
+      Tunnel round-trip latency variation in milliseconds
+
+    - `latency_ms: optional number`
+
+      50th percentile tunnel round-trip latency in milliseconds
 
     - `natd_result: optional string`
 
@@ -22040,7 +22640,7 @@ Gets latest Magic WAN Connector Telemetry Snapshots
 
   - `count: number`
 
-  - `items: array of object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 170 more }`
+  - `items: array of object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 171 more }`
 
     - `count_reclaim_failures: number`
 
@@ -22688,6 +23288,10 @@ Gets latest Magic WAN Connector Telemetry Snapshots
 
       Platform identifier
 
+    - `site_id: optional string`
+
+      Site identifier
+
     - `snmp_icmp_in_addr_mask_reps: optional number`
 
       Number of ICMP Address Mask Reply messages received
@@ -22966,7 +23570,7 @@ Gets latest Magic WAN Connector Telemetry Snapshots
 
         Maximum temperature of the component (degrees Celsius)
 
-    - `tunnels: optional array of object { health_state, health_value, interface_name, 7 more }`
+    - `tunnels: optional array of object { health_state, health_value, interface_name, 9 more }`
 
       - `health_state: string`
 
@@ -22983,6 +23587,14 @@ Gets latest Magic WAN Connector Telemetry Snapshots
       - `tunnel_id: string`
 
         Tunnel identifier
+
+      - `jitter_ms: optional number`
+
+        Tunnel round-trip latency variation in milliseconds
+
+      - `latency_ms: optional number`
+
+        50th percentile tunnel round-trip latency in milliseconds
 
       - `natd_result: optional string`
 
@@ -23231,6 +23843,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
           }
         ],
         "platform": "platform",
+        "site_id": "site_id",
         "snmp_icmp_in_addr_mask_reps": 0,
         "snmp_icmp_in_addr_masks": 0,
         "snmp_icmp_in_csum_errors": 0,
@@ -23310,6 +23923,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
             "health_value": 0,
             "interface_name": "interface_name",
             "tunnel_id": "tunnel_id",
+            "jitter_ms": 0,
+            "latency_ms": 0,
             "natd_result": "natd_result",
             "natd_state": 0,
             "natd_target": "natd_target",
@@ -23347,7 +23962,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
   - `count: number`
 
-  - `items: array of object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 170 more }`
+  - `items: array of object { count_reclaim_failures, count_reclaimed_paths, count_record_failed, 171 more }`
 
     - `count_reclaim_failures: number`
 
@@ -23995,6 +24610,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
       Platform identifier
 
+    - `site_id: optional string`
+
+      Site identifier
+
     - `snmp_icmp_in_addr_mask_reps: optional number`
 
       Number of ICMP Address Mask Reply messages received
@@ -24273,7 +24892,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
 
         Maximum temperature of the component (degrees Celsius)
 
-    - `tunnels: optional array of object { health_state, health_value, interface_name, 7 more }`
+    - `tunnels: optional array of object { health_state, health_value, interface_name, 9 more }`
 
       - `health_state: string`
 
@@ -24290,6 +24909,14 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/connectors/
       - `tunnel_id: string`
 
         Tunnel identifier
+
+      - `jitter_ms: optional number`
+
+        Tunnel round-trip latency variation in milliseconds
+
+      - `latency_ms: optional number`
+
+        50th percentile tunnel round-trip latency in milliseconds
 
       - `natd_result: optional string`
 

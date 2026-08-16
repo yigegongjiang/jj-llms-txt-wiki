@@ -30,7 +30,7 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -41,6 +41,8 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`
 
 ### Returns
 
@@ -94,7 +96,7 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
 
       Host to perform Cloud Connection to
 
-  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or "azure_storage"`
+  - `provider: optional "aws_s3" or "cloudflare_r2" or "gcp_storage" or 2 more`
 
     Cloud Provider type
 
@@ -105,6 +107,8 @@ Updates Cloud Connector rules for a zone, replacing the existing rule configurat
     - `"gcp_storage"`
 
     - `"azure_storage"`
+
+    - `"oci_storage"`
 
 ### Example
 

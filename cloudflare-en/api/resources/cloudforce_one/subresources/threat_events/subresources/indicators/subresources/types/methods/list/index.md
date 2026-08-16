@@ -2,7 +2,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/indicator-types`
 
-List indicator types across one or more datasets for the account.
+Lists indicator types across multiple datasets
 
 ### Path Parameters
 

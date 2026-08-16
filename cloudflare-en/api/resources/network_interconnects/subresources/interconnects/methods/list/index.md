@@ -2,7 +2,8 @@
 
 **get** `/accounts/{account_id}/cni/interconnects`
 
-List existing interconnects
+Lists all network interconnects configured for the account, including physical and virtual
+connections.
 
 ### Path Parameters
 
@@ -26,9 +27,9 @@ List existing interconnects
 
 ### Returns
 
-- `items: array of object { account, facility, name, 5 more }  or object { account, name, region, 3 more }`
+- `items: array of object { account, facility, name, 7 more }  or object { account, name, region, 4 more }`
 
-  - `NscInterconnectPhysicalBody object { account, facility, name, 5 more }`
+  - `NscInterconnectPhysicalBody object { account, facility, name, 7 more }`
 
     - `account: string`
 
@@ -50,9 +51,13 @@ List existing interconnects
 
     - `type: string`
 
+    - `virtual_port_reservation_id: string`
+
+    - `ccr_device_name: optional string`
+
     - `owner: optional string`
 
-  - `NscInterconnectGcpPartnerBody object { account, name, region, 3 more }`
+  - `NscInterconnectGcpPartnerBody object { account, name, region, 4 more }`
 
     - `account: string`
 
@@ -61,6 +66,8 @@ List existing interconnects
     - `region: string`
 
     - `type: string`
+
+    - `virtual_port_reservation_id: string`
 
     - `owner: optional string`
 
@@ -119,6 +126,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cni/interconnects
       "slot_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
       "speed": "speed",
       "type": "type",
+      "virtual_port_reservation_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+      "ccr_device_name": "ccr_device_name",
       "owner": "owner"
     }
   ],

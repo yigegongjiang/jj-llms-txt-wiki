@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset`
 
-List all datasets accessible to the account.
+Lists all threat event datasets configured in Cloudforce One.
 
 ### Path Parameters
 
@@ -19,6 +19,18 @@ List all datasets accessible to the account.
   When true, include soft-deleted datasets in the response. Each item includes a `deletedAt` field (ISO 8601 or null). Default: false.
 
 ### Returns
+
+- `indicatorWriteMode: "read_only" or "create_only" or "full"`
+
+  Effective indicator mutation capability after account/dataset authorization and dataset storage capability are applied. API Gateway method permissions are separate and must also allow the requested operation.
+
+  - `"read_only"`
+
+  - `"create_only"`
+
+  - `"full"`
+
+- `isAnalytics: boolean`
 
 - `isPublic: boolean`
 
@@ -40,6 +52,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 ```json
 [
   {
+    "indicatorWriteMode": "full",
+    "isAnalytics": true,
     "isPublic": true,
     "name": "friendly dataset name",
     "uuid": "12345678-1234-1234-1234-1234567890ab",
@@ -52,7 +66,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}`
 
-Retrieve metadata for a specific dataset.
+Retrieves details for a specific threat event dataset.
 
 ### Path Parameters
 
@@ -66,13 +80,13 @@ Retrieve metadata for a specific dataset.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -85,10 +99,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```
 
@@ -96,7 +110,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **post** `/accounts/{account_id}/cloudforce-one/events/dataset/create`
 
-Create a new dataset in the account.
+Creates a new threat event dataset in Cloudforce One for organizing related threat events.
 
 ### Path Parameters
 
@@ -116,13 +130,13 @@ Create a new dataset in the account.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -140,10 +154,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```
 
@@ -151,7 +165,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **patch** `/accounts/{account_id}/cloudforce-one/events/dataset/{dataset_id}`
 
-Update an existing dataset by its identifier.
+Partially updates a threat event dataset in Cloudforce One, modifying specific fields without replacing the entire dataset configuration.
 
 ### Path Parameters
 
@@ -175,13 +189,13 @@ Update an existing dataset by its identifier.
 
 ### Returns
 
+- `isAnalytics: boolean`
+
 - `isPublic: boolean`
 
 - `name: string`
 
 - `uuid: string`
-
-- `deletedAt: optional string`
 
 ### Example
 
@@ -200,10 +214,10 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ```json
 {
+  "isAnalytics": true,
   "isPublic": true,
   "name": "friendly dataset name",
-  "uuid": "12345678-1234-1234-1234-1234567890ab",
-  "deletedAt": "deletedAt"
+  "uuid": "12345678-1234-1234-1234-1234567890ab"
 }
 ```
 
@@ -304,7 +318,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ### Dataset List Response
 
-- `DatasetListResponse = array of object { isPublic, name, uuid, deletedAt }`
+- `DatasetListResponse = array of object { indicatorWriteMode, isAnalytics, isPublic, 3 more }`
+
+  - `indicatorWriteMode: "read_only" or "create_only" or "full"`
+
+    Effective indicator mutation capability after account/dataset authorization and dataset storage capability are applied. API Gateway method permissions are separate and must also allow the requested operation.
+
+    - `"read_only"`
+
+    - `"create_only"`
+
+    - `"full"`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
@@ -316,39 +342,39 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 ### Dataset Get Response
 
-- `DatasetGetResponse object { isPublic, name, uuid, deletedAt }`
+- `DatasetGetResponse object { isAnalytics, isPublic, name, uuid }`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
   - `name: string`
 
   - `uuid: string`
-
-  - `deletedAt: optional string`
 
 ### Dataset Create Response
 
-- `DatasetCreateResponse object { isPublic, name, uuid, deletedAt }`
+- `DatasetCreateResponse object { isAnalytics, isPublic, name, uuid }`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
   - `name: string`
 
   - `uuid: string`
-
-  - `deletedAt: optional string`
 
 ### Dataset Edit Response
 
-- `DatasetEditResponse object { isPublic, name, uuid, deletedAt }`
+- `DatasetEditResponse object { isAnalytics, isPublic, name, uuid }`
+
+  - `isAnalytics: boolean`
 
   - `isPublic: boolean`
 
   - `name: string`
 
   - `uuid: string`
-
-  - `deletedAt: optional string`
 
 ### Dataset Delete Response
 

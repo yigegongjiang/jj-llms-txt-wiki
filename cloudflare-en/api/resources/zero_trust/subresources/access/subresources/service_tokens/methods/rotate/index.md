@@ -52,7 +52,7 @@ Generates a new Client Secret for a service token and revokes the old one.
 
   - `true`
 
-- `result: optional object { id, client_id, client_secret, 2 more }`
+- `result: optional object { id, client_id, client_secret, 3 more }`
 
   - `id: optional string`
 
@@ -69,6 +69,10 @@ Generates a new Client Secret for a service token and revokes the old one.
   - `duration: optional string`
 
     The duration for how long the service token will be valid. Must be in the format `300ms` or `2h45m`, or the special value `forever` for non-expiring tokens. Valid time units are: ns, us (or µs), ms, s, m, h. The default is 1 year in hours (8760h).
+
+  - `enabled: optional boolean`
+
+    Whether the service token is enabled. A disabled service token cannot be used to authenticate; both its current and previous `client_secret` stop being accepted, but the token itself is preserved and can be re-enabled at any time. Defaults to enabled when omitted on create.
 
   - `name: optional string`
 
@@ -113,6 +117,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/service_to
     "client_secret": "bdd31cbc4dec990953e39163fbbb194c93313ca9f0a6e420346af9d326b1d2a5",
     "created_at": "2014-01-01T05:20:00.12345Z",
     "duration": "60m",
+    "enabled": true,
     "name": "CI/CD token",
     "updated_at": "2014-01-01T05:20:00.12345Z"
   }

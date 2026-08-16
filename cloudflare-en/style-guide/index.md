@@ -65,9 +65,7 @@ To contribute to the documentation, visit the [contributor guide](https://develo
   * [Directory listing](https://developers.cloudflare.com/style-guide/components/directory-listing/)
   * [Example](https://developers.cloudflare.com/style-guide/components/example/)
   * [Feature](https://developers.cloudflare.com/style-guide/components/feature/)
-  * [Feature table](https://developers.cloudflare.com/style-guide/components/feature-table/)
   * [File tree](https://developers.cloudflare.com/style-guide/components/file-tree/)
-  * [GitHubCode](https://developers.cloudflare.com/style-guide/components/github-code/)
   * [Glossary](https://developers.cloudflare.com/style-guide/components/glossary/)
   * [Glossary definition](https://developers.cloudflare.com/style-guide/components/glossary-definition/)
   * [Glossary tooltip](https://developers.cloudflare.com/style-guide/components/glossary-tooltip/)
@@ -81,7 +79,6 @@ To contribute to the documentation, visit the [contributor guide](https://develo
   * [Plan](https://developers.cloudflare.com/style-guide/components/plan/)
   * [Product availability text](https://developers.cloudflare.com/style-guide/components/product-availability-text/)
   * [Product changelog](https://developers.cloudflare.com/style-guide/components/product-changelog/)
-  * [Product features](https://developers.cloudflare.com/style-guide/components/product-features/)
   * [Public stats](https://developers.cloudflare.com/style-guide/components/public-stats/)
   * [Related product](https://developers.cloudflare.com/style-guide/components/related-product/)
   * [Render](https://developers.cloudflare.com/style-guide/components/render/)
@@ -204,7 +201,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/style-guide/#page","headline":"Style Guide · Cloudflare Style Guide","description":"Improve your contributions to Cloudflare's documentation. Ensure consistency, professionalism, and clarity in your content across all products.","url":"https://developers.cloudflare.com/style-guide/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

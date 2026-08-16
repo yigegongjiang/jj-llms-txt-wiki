@@ -14,6 +14,25 @@ Build secure, isolated code execution environments
 
 - [Getting started](https://developers.cloudflare.com/sandbox/get-started/index.md): Create your first Sandbox SDK Worker to execute Python code in isolated containers.
 
+## 1.0 preview
+
+- [1.0 preview](https://developers.cloudflare.com/sandbox/1-0-preview/index.md): Install @cloudflare/sandbox@next — a thinner Sandbox SDK on Cloudflare Containers — and migrate when you are ready for Sandbox SDK 1.0.
+- [API reference](https://developers.cloudflare.com/sandbox/1-0-preview/api/index.md): API reference for @cloudflare/sandbox@next — processes, terminals, errors, and related preview surfaces.
+- [Errors](https://developers.cloudflare.com/sandbox/1-0-preview/api/errors/index.md): Error classes, codes, and context fields for @cloudflare/sandbox@next.
+- [Interpreter](https://developers.cloudflare.com/sandbox/1-0-preview/api/interpreter/index.md): Reference for the code interpreter extension on @cloudflare/sandbox@next.
+- [Processes](https://developers.cloudflare.com/sandbox/1-0-preview/api/processes/index.md): Reference for argv exec, SandboxProcess handles, logs, waits, and related types in the Sandbox SDK 1.0 preview.
+- [Terminals](https://developers.cloudflare.com/sandbox/1-0-preview/api/terminals/index.md): Reference for createTerminal, Terminal handles, output streams, connect, and control methods in the Sandbox SDK 1.0 preview.
+- [Environment variables](https://developers.cloudflare.com/sandbox/1-0-preview/environment/index.md): How processes and terminals get environment variables in the Sandbox SDK 1.0 preview.
+- [Errors and recovery](https://developers.cloudflare.com/sandbox/1-0-preview/errors/index.md): Retry and recover from Sandbox SDK 1.0 preview failures when containers start, stop, or interrupt work.
+- [Extensions](https://developers.cloudflare.com/sandbox/1-0-preview/extensions/index.md): Attach optional Sandbox capabilities on @cloudflare/sandbox@next.
+- [Get started](https://developers.cloudflare.com/sandbox/1-0-preview/get-started/index.md): Install @cloudflare/sandbox@next and run your first process handle in a sandbox.
+- [Code interpreter](https://developers.cloudflare.com/sandbox/1-0-preview/interpreter/index.md): Run Python, JavaScript, or TypeScript in a sandbox with the interpreter extension on @cloudflare/sandbox@next.
+- [Sandbox lifecycle](https://developers.cloudflare.com/sandbox/1-0-preview/lifecycle/index.md): Sandbox IDs, containers, and what survives stop, replace, and destroy in the Sandbox SDK 1.0 preview.
+- [Migrate](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/index.md): Update an existing Sandbox SDK application from the stable package to @cloudflare/sandbox@next.
+- [Process execution](https://developers.cloudflare.com/sandbox/1-0-preview/processes/index.md): How the Sandbox SDK 1.0 preview runs commands — argv launches, process handles, and container lifetime.
+- [Terminals](https://developers.cloudflare.com/sandbox/1-0-preview/terminals/index.md): Interactive PTY terminals in the Sandbox SDK 1.0 preview — resource model and browser connect.
+- [Troubleshooting](https://developers.cloudflare.com/sandbox/1-0-preview/troubleshooting/index.md): Common failures on @cloudflare/sandbox@next and where to fix them.
+
 ## Tutorials
 
 - [Tutorials](https://developers.cloudflare.com/sandbox/tutorials/index.md): Step-by-step Sandbox SDK tutorials for building AI agents, code executors, and testing pipelines.
@@ -27,6 +46,29 @@ Build secure, isolated code execution environments
 - [Build an AI coding agent with OpenAI Agents SDK](https://developers.cloudflare.com/sandbox/tutorials/openai-agents/index.md): Use the OpenAI Agents SDK with Cloudflare Sandbox to build a Python agent that writes, tests, and delivers code in an isolated environment.
 - [Data persistence with R2](https://developers.cloudflare.com/sandbox/tutorials/persistent-storage/index.md): Mount R2 buckets as local filesystem paths to persist data across sandbox lifecycles.
 - [Code interpreter with Workers AI](https://developers.cloudflare.com/sandbox/tutorials/workers-ai-code-interpreter/index.md): Build a code interpreter using Workers AI GPT-OSS model with the official workers-ai-provider package.
+
+## How-to guides
+
+- [How-to guides](https://developers.cloudflare.com/sandbox/guides/index.md): Practical guides for solving specific tasks with the Sandbox SDK.
+- [2026 deprecation migration guide](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/index.md): Migrate away from deprecated Sandbox SDK features on the current stable package.
+- [Run background processes](https://developers.cloudflare.com/sandbox/guides/background-processes/index.md): Start and manage long-running services and applications.
+- [Backup and restore](https://developers.cloudflare.com/sandbox/guides/backup-restore/index.md): Create point-in-time backups and restore sandbox directories.
+- [Browser terminals](https://developers.cloudflare.com/sandbox/guides/browser-terminals/index.md): Connect browser-based terminals to sandbox shells using xterm.js or raw WebSockets.
+- [Use code interpreter](https://developers.cloudflare.com/sandbox/guides/code-execution/index.md): Execute Python and JavaScript code with rich outputs.
+- [Deploy a Sandbox application](https://developers.cloudflare.com/sandbox/guides/deploy/index.md): Deploy a Sandbox Worker and keep the npm package and container image on the same release line.
+- [Run Docker-in-Docker](https://developers.cloudflare.com/sandbox/guides/docker-in-docker/index.md): Run Docker commands inside a sandbox container.
+- [Execute commands](https://developers.cloudflare.com/sandbox/guides/execute-commands/index.md): Run commands with streaming output, error handling, and shell access.
+- [Expose services](https://developers.cloudflare.com/sandbox/guides/expose-services/index.md): Create preview URLs and expose ports for web services.
+- [Watch filesystem changes](https://developers.cloudflare.com/sandbox/guides/file-watching/index.md): Monitor files and directories in real-time to build responsive development tools and automation workflows.
+- [Work with Git](https://developers.cloudflare.com/sandbox/guides/git-workflows/index.md): Clone repositories, manage branches, and automate Git operations.
+- [Manage files](https://developers.cloudflare.com/sandbox/guides/manage-files/index.md): Read, write, organize, and synchronize files in the sandbox.
+- [Mount buckets](https://developers.cloudflare.com/sandbox/guides/mount-buckets/index.md): Mount S3-compatible object storage as local filesystems for persistent data storage.
+- [Handle outbound traffic](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/index.md): Intercept and handle outbound HTTP from sandboxes using Workers.
+- [Configure preview URLs on a custom domain](https://developers.cloudflare.com/sandbox/guides/preview-urls-custom-domain/index.md): Set up wildcard DNS, routes, and TLS so exposePort preview URLs work on your domain.
+- [Proxy requests to external APIs (outdated)](https://developers.cloudflare.com/sandbox/guides/proxy-requests/index.md): This outdated Sandbox SDK guide now points to the current guide for controlling sandbox outbound traffic.
+- [Stream output](https://developers.cloudflare.com/sandbox/guides/streaming-output/index.md): Handle real-time output from commands and processes.
+- [WebSocket connections](https://developers.cloudflare.com/sandbox/guides/websocket-connections/index.md): Connect to WebSocket servers running in sandboxes.
+- [Connect to Workers bindings](https://developers.cloudflare.com/sandbox/guides/workers-connections/index.md): Access KV, R2, Durable Objects, and other bindings from a sandbox.
 
 ## API reference
 
@@ -43,28 +85,6 @@ Build secure, isolated code execution environments
 - [Terminal](https://developers.cloudflare.com/sandbox/api/terminal/index.md): Connect browser-based terminal UIs to sandbox shells via WebSocket.
 - [Tunnels](https://developers.cloudflare.com/sandbox/api/tunnels/index.md): Expose sandbox services on the public internet with quick tunnels (*.trycloudflare.com) or named tunnels bound to a hostname on your Cloudflare zone.
 
-## How-to guides
-
-- [How-to guides](https://developers.cloudflare.com/sandbox/guides/index.md): Practical guides for solving specific tasks with the Sandbox SDK.
-- [2026 deprecation migration guide](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/index.md): Migrate away from Sandbox SDK features deprecated in June 2026.
-- [Run background processes](https://developers.cloudflare.com/sandbox/guides/background-processes/index.md): Start and manage long-running services and applications.
-- [Backup and restore](https://developers.cloudflare.com/sandbox/guides/backup-restore/index.md): Create point-in-time backups and restore sandbox directories.
-- [Browser terminals](https://developers.cloudflare.com/sandbox/guides/browser-terminals/index.md): Connect browser-based terminals to sandbox shells using xterm.js or raw WebSockets.
-- [Use code interpreter](https://developers.cloudflare.com/sandbox/guides/code-execution/index.md): Execute Python and JavaScript code with rich outputs.
-- [Run Docker-in-Docker](https://developers.cloudflare.com/sandbox/guides/docker-in-docker/index.md): Run Docker commands inside a sandbox container.
-- [Execute commands](https://developers.cloudflare.com/sandbox/guides/execute-commands/index.md): Run commands with streaming output, error handling, and shell access.
-- [Expose services](https://developers.cloudflare.com/sandbox/guides/expose-services/index.md): Create preview URLs and expose ports for web services.
-- [Watch filesystem changes](https://developers.cloudflare.com/sandbox/guides/file-watching/index.md): Monitor files and directories in real-time to build responsive development tools and automation workflows.
-- [Work with Git](https://developers.cloudflare.com/sandbox/guides/git-workflows/index.md): Clone repositories, manage branches, and automate Git operations.
-- [Manage files](https://developers.cloudflare.com/sandbox/guides/manage-files/index.md): Read, write, organize, and synchronize files in the sandbox.
-- [Mount buckets](https://developers.cloudflare.com/sandbox/guides/mount-buckets/index.md): Mount S3-compatible object storage as local filesystems for persistent data storage.
-- [Handle outbound traffic](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/index.md): Intercept and handle outbound HTTP from sandboxes using Workers.
-- [Deploy to production](https://developers.cloudflare.com/sandbox/guides/production-deployment/index.md): Set up custom domains for preview URLs in production.
-- [Proxy requests to external APIs](https://developers.cloudflare.com/sandbox/guides/proxy-requests/index.md): Keep credentials secure by routing sandbox requests through a Worker proxy that injects authentication at request time.
-- [Stream output](https://developers.cloudflare.com/sandbox/guides/streaming-output/index.md): Handle real-time output from commands and processes.
-- [WebSocket connections](https://developers.cloudflare.com/sandbox/guides/websocket-connections/index.md): Connect to WebSocket servers running in sandboxes.
-- [Connect to Workers bindings](https://developers.cloudflare.com/sandbox/guides/workers-connections/index.md): Access KV, R2, Durable Objects, and other bindings from a sandbox.
-
 ## Concepts
 
 - [Concepts](https://developers.cloudflare.com/sandbox/concepts/index.md): Learn how the Sandbox SDK works, including architecture, lifecycle, security, and sessions.
@@ -76,6 +96,11 @@ Build secure, isolated code execution environments
 - [Session management](https://developers.cloudflare.com/sandbox/concepts/sessions/index.md): Sandbox SDK sessions are shell execution contexts within a single sandbox.
 - [Terminal connections](https://developers.cloudflare.com/sandbox/concepts/terminal/index.md): Sandbox SDK terminal connections stream bidirectional data between browser UIs and container shells.
 
+## Sandbox bridge
+
+- [Sandbox bridge](https://developers.cloudflare.com/sandbox/bridge/index.md): Deploy the sandbox bridge Worker to control Cloudflare Sandboxes over HTTP from any language or platform.
+- [HTTP API reference](https://developers.cloudflare.com/sandbox/bridge/http-api/index.md): Complete HTTP API reference for the sandbox bridge Worker.
+
 ## Configuration
 
 - [Configuration](https://developers.cloudflare.com/sandbox/configuration/index.md): Configure Sandbox SDK deployments with Wrangler, Dockerfiles, environment variables, and transport modes.
@@ -84,11 +109,6 @@ Build secure, isolated code execution environments
 - [Sandbox options](https://developers.cloudflare.com/sandbox/configuration/sandbox-options/index.md): Configure Sandbox SDK behavior with sleep timeouts, resource limits, and container settings.
 - [Transport modes](https://developers.cloudflare.com/sandbox/configuration/transport/index.md): Configure how Sandbox SDK communicates between Durable Objects and containers.
 - [Wrangler configuration](https://developers.cloudflare.com/sandbox/configuration/wrangler/index.md): Set up Wrangler bindings, Durable Objects, and container settings for Sandbox SDK.
-
-## Sandbox bridge
-
-- [Sandbox bridge](https://developers.cloudflare.com/sandbox/bridge/index.md): Deploy the sandbox bridge Worker to control Cloudflare Sandboxes over HTTP from any language or platform.
-- [HTTP API reference](https://developers.cloudflare.com/sandbox/bridge/http-api/index.md): Complete HTTP API reference for the sandbox bridge Worker.
 
 ## Platform
 

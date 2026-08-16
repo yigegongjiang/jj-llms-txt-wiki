@@ -88,7 +88,7 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
       - `"accept"`
 
-- `subdomain: object { enabled, previews_enabled }`
+- `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
   Subdomain settings for the Worker.
 
@@ -96,9 +96,17 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
     Whether the *.workers.dev subdomain is enabled for the Worker.
 
+  - `preview_url_suffix: optional string`
+
+    Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
   - `previews_enabled: optional boolean`
 
     Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+  - `url: optional string`
+
+    The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
 - `tags: array of string`
 
@@ -316,7 +324,7 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
         Name of the referencing Worker.
 
-  - `subdomain: object { enabled, previews_enabled }`
+  - `subdomain: object { enabled, preview_url_suffix, previews_enabled, url }`
 
     Subdomain settings for the Worker.
 
@@ -324,9 +332,17 @@ Perform a partial update on a Worker, where omitted properties are left unchange
 
       Whether the *.workers.dev subdomain is enabled for the Worker.
 
+    - `preview_url_suffix: optional string`
+
+      Prepend a version or preview prefix to this host suffix to form the *.workers.dev [preview URL](https://developers.cloudflare.com/workers/configuration/previews/) the Worker would serve on once previews are enabled, e.g. `https://<prefix>-my-worker.my-subdomain.workers.dev`. Present whenever the account owns a workers.dev subdomain, regardless of whether `previews_enabled` is true, so presence does not imply preview URLs are currently live. Absent only when the account owns no workers.dev subdomain.
+
     - `previews_enabled: optional boolean`
 
       Whether [preview URLs](https://developers.cloudflare.com/workers/configuration/previews/) are enabled for the Worker.
+
+    - `url: optional string`
+
+      The address the Worker would serve on once its *.workers.dev subdomain is enabled. Present whenever the account owns a workers.dev subdomain, regardless of whether `enabled` is true, so presence does not imply the Worker is currently live at this URL. Absent only when the account owns no workers.dev subdomain.
 
   - `tags: array of string`
 
@@ -471,7 +487,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/workers/$
     },
     "subdomain": {
       "enabled": true,
-      "previews_enabled": true
+      "preview_url_suffix": "-my-worker.my-subdomain.workers.dev",
+      "previews_enabled": true,
+      "url": "https://my-worker.my-subdomain.workers.dev"
     },
     "tags": [
       "my-team",

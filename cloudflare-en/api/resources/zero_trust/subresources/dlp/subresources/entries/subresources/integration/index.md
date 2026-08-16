@@ -353,7 +353,7 @@ Fetches a DLP entry by ID.
 
   - `true`
 
-- `result: optional object { id, created_at, enabled, 8 more }  or object { id, created_at, enabled, 6 more }  or object { id, confidence, enabled, 6 more }  or 4 more`
+- `result: optional object { id, created_at, enabled, 8 more }  or object { id, created_at, enabled, 6 more }  or object { id, confidence, enabled, 7 more }  or 4 more`
 
   - `object { id, created_at, enabled, 8 more }`
 
@@ -443,7 +443,7 @@ Fetches a DLP entry by ID.
 
       - `"complete"`
 
-  - `object { id, confidence, enabled, 6 more }`
+  - `object { id, confidence, enabled, 7 more }`
 
     - `id: string`
 
@@ -464,6 +464,11 @@ Fetches a DLP entry by ID.
     - `type: "predefined"`
 
       - `"predefined"`
+
+    - `deprecated: optional boolean`
+
+      Whether this entry is deprecated for new use. This is computed from the static catalog and
+      emitted only when true.
 
     - `profile_id: optional string`
 
@@ -785,7 +790,7 @@ Lists all DLP entries in an account.
 
   - `true`
 
-- `result: optional array of object { id, created_at, enabled, 7 more }  or object { id, created_at, enabled, 5 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
+- `result: optional array of object { id, created_at, enabled, 7 more }  or object { id, created_at, enabled, 5 more }  or object { id, confidence, enabled, 6 more }  or 4 more`
 
   - `object { id, created_at, enabled, 7 more }`
 
@@ -863,7 +868,7 @@ Lists all DLP entries in an account.
 
       - `"complete"`
 
-  - `object { id, confidence, enabled, 5 more }`
+  - `object { id, confidence, enabled, 6 more }`
 
     - `id: string`
 
@@ -884,6 +889,11 @@ Lists all DLP entries in an account.
     - `type: "predefined"`
 
       - `"predefined"`
+
+    - `deprecated: optional boolean`
+
+      Whether this entry is deprecated for new use. This is computed from the static catalog and
+      emitted only when true.
 
     - `profile_id: optional string`
 
@@ -1169,7 +1179,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/dlp/entries \
 
 ### Integration Get Response
 
-- `IntegrationGetResponse = object { id, created_at, enabled, 8 more }  or object { id, created_at, enabled, 6 more }  or object { id, confidence, enabled, 6 more }  or 4 more`
+- `IntegrationGetResponse = object { id, created_at, enabled, 8 more }  or object { id, created_at, enabled, 6 more }  or object { id, confidence, enabled, 7 more }  or 4 more`
 
   - `object { id, created_at, enabled, 8 more }`
 
@@ -1259,7 +1269,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/dlp/entries \
 
       - `"complete"`
 
-  - `object { id, confidence, enabled, 6 more }`
+  - `object { id, confidence, enabled, 7 more }`
 
     - `id: string`
 
@@ -1280,6 +1290,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/dlp/entries \
     - `type: "predefined"`
 
       - `"predefined"`
+
+    - `deprecated: optional boolean`
+
+      Whether this entry is deprecated for new use. This is computed from the static catalog and
+      emitted only when true.
 
     - `profile_id: optional string`
 
@@ -1505,7 +1520,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/dlp/entries \
 
 ### Integration List Response
 
-- `IntegrationListResponse = object { id, created_at, enabled, 7 more }  or object { id, created_at, enabled, 5 more }  or object { id, confidence, enabled, 5 more }  or 4 more`
+- `IntegrationListResponse = object { id, created_at, enabled, 7 more }  or object { id, created_at, enabled, 5 more }  or object { id, confidence, enabled, 6 more }  or 4 more`
 
   - `object { id, created_at, enabled, 7 more }`
 
@@ -1583,7 +1598,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/dlp/entries \
 
       - `"complete"`
 
-  - `object { id, confidence, enabled, 5 more }`
+  - `object { id, confidence, enabled, 6 more }`
 
     - `id: string`
 
@@ -1604,6 +1619,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/dlp/entries \
     - `type: "predefined"`
 
       - `"predefined"`
+
+    - `deprecated: optional boolean`
+
+      Whether this entry is deprecated for new use. This is computed from the static catalog and
+      emitted only when true.
 
     - `profile_id: optional string`
 

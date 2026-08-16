@@ -2047,6 +2047,216 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/queues/$QUEUE_ID/
 }
 ```
 
+## Peek Queue Messages
+
+**post** `/accounts/{account_id}/queues/{queue_id}/messages/peek`
+
+Peek messages from a Queue without leasing them. Messages remain available for subsequent peek or pull operations.
+
+### Path Parameters
+
+- `account_id: string`
+
+  A Resource identifier.
+
+- `queue_id: string`
+
+  A Resource identifier.
+
+### Body Parameters
+
+- `batch_size: optional number`
+
+  The maximum number of messages to include in a batch.
+
+### Returns
+
+- `errors: optional array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+    - `pointer: optional string`
+
+- `messages: optional array of string`
+
+- `result: optional object { messages }`
+
+  - `messages: optional array of object { id, attempts, body, 3 more }`
+
+    - `id: optional string`
+
+    - `attempts: optional number`
+
+    - `body: optional string`
+
+    - `metadata: optional unknown`
+
+    - `ref: optional string`
+
+      An opaque reference to a peeked message. You must hold on to this value and use it to purge the message.
+
+    - `timestamp_ms: optional number`
+
+- `success: optional true`
+
+  Indicates if the API call was successful or not.
+
+  - `true`
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/queues/$QUEUE_ID/messages/peek \
+    -X POST \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+```
+
+#### Response
+
+```json
+{
+  "errors": [
+    {
+      "code": 7003,
+      "message": "No route for the URI",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "messages": [
+    "string"
+  ],
+  "result": {
+    "messages": [
+      {
+        "id": "b01b5594f784d0165c2985833f5660dd",
+        "attempts": 1,
+        "body": "hello world",
+        "metadata": {
+          "CF-Content-Type": "text",
+          "CF-sourceMessageSource": "dash"
+        },
+        "ref": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIn0..Q8p21d7dceR6vUfwftONdQ.JVqZgAS-Zk7MqmqccYtTHeeMElNHaOMigeWdb8LyMOg.T2_HV99CYzGaQuhTyW8RsgbnpTRZHRM6N7UoSaAKeK0",
+        "timestamp_ms": 1710950954154
+      }
+    ]
+  },
+  "success": true
+}
+```
+
+## Purge Peeked Queue Messages
+
+**post** `/accounts/{account_id}/queues/{queue_id}/messages/purge`
+
+Delete peeked messages from a Queue by their ref. Purged messages aren't considered delivered, they are instantly deleted from this queue and do not affect metrics.
+
+### Path Parameters
+
+- `account_id: string`
+
+  A Resource identifier.
+
+- `queue_id: string`
+
+  A Resource identifier.
+
+### Body Parameters
+
+- `refs: array of object { ref }`
+
+  - `ref: string`
+
+    An opaque reference to a peeked message. You must hold on to this value and use it to purge the message.
+
+### Returns
+
+- `errors: optional array of ResponseInfo`
+
+  - `code: number`
+
+  - `message: string`
+
+  - `documentation_url: optional string`
+
+  - `source: optional object { pointer }`
+
+    - `pointer: optional string`
+
+- `messages: optional array of string`
+
+- `result: optional object { errors, warnings }`
+
+  - `errors: optional array of object { message }`
+
+    Errors encountered while purging messages.
+
+    - `message: optional string`
+
+  - `warnings: optional map[string]`
+
+    Map of refs to warning messages encountered during purge.
+
+- `success: optional true`
+
+  Indicates if the API call was successful or not.
+
+  - `true`
+
+### Example
+
+```http
+curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/queues/$QUEUE_ID/messages/purge \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+    -d '{
+          "refs": [
+            {
+              "ref": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIn0..Q8p21d7dceR6vUfwftONdQ.JVqZgAS-Zk7MqmqccYtTHeeMElNHaOMigeWdb8LyMOg.T2_HV99CYzGaQuhTyW8RsgbnpTRZHRM6N7UoSaAKeK0"
+            }
+          ]
+        }'
+```
+
+#### Response
+
+```json
+{
+  "errors": [
+    {
+      "code": 7003,
+      "message": "No route for the URI",
+      "documentation_url": "documentation_url",
+      "source": {
+        "pointer": "pointer"
+      }
+    }
+  ],
+  "messages": [
+    "string"
+  ],
+  "result": {
+    "errors": [
+      {
+        "message": "message"
+      }
+    ],
+    "warnings": {
+      "foo": "string"
+    }
+  },
+  "success": true
+}
+```
+
 ## Domain Types
 
 ### Message Push Response
@@ -2150,6 +2360,40 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/queues/$QUEUE_ID/
       - `oldest_message_timestamp_ms: number`
 
         Unix timestamp in milliseconds of the oldest unacknowledged message in the queue. Returns 0 if unknown.
+
+### Message Peek Response
+
+- `MessagePeekResponse object { messages }`
+
+  - `messages: optional array of object { id, attempts, body, 3 more }`
+
+    - `id: optional string`
+
+    - `attempts: optional number`
+
+    - `body: optional string`
+
+    - `metadata: optional unknown`
+
+    - `ref: optional string`
+
+      An opaque reference to a peeked message. You must hold on to this value and use it to purge the message.
+
+    - `timestamp_ms: optional number`
+
+### Message Purge Response
+
+- `MessagePurgeResponse object { errors, warnings }`
+
+  - `errors: optional array of object { message }`
+
+    Errors encountered while purging messages.
+
+    - `message: optional string`
+
+  - `warnings: optional map[string]`
+
+    Map of refs to warning messages encountered during purge.
 
 # Purge
 
@@ -3582,7 +3826,7 @@ Get a paginated list of event subscriptions with optional sorting and filtering
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -3649,6 +3893,18 @@ Get a paginated list of event subscriptions with optional sorting and filtering
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -3816,7 +4072,7 @@ Get details about an existing event subscription
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -3883,6 +4139,18 @@ Get details about an existing event subscription
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -3987,7 +4255,7 @@ Create a new event subscription for a queue
 
   Name of the subscription
 
-- `source: optional object { type }  or object { type }  or object { type }  or 5 more`
+- `source: optional object { type }  or object { type }  or object { type }  or 6 more`
 
   Source configuration for the subscription
 
@@ -4054,6 +4322,18 @@ Create a new event subscription for a queue
     - `worker_name: optional string`
 
       Name of the worker
+
+  - `MqEventSourceWorkersScript object { script_tag, type }`
+
+    - `script_tag: optional string`
+
+      Tag of the Worker script
+
+    - `type: optional "workers.script"`
+
+      Type of source
+
+      - `"workers.script"`
 
   - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -4123,7 +4403,7 @@ Create a new event subscription for a queue
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -4190,6 +4470,18 @@ Create a new event subscription for a queue
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -4356,7 +4648,7 @@ Update an existing event subscription
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -4423,6 +4715,18 @@ Update an existing event subscription
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -4562,7 +4866,7 @@ Delete an existing event subscription
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -4629,6 +4933,18 @@ Delete an existing event subscription
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -4738,7 +5054,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -4805,6 +5121,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -4860,7 +5188,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -4927,6 +5255,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -4982,7 +5322,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -5049,6 +5389,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -5104,7 +5456,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -5171,6 +5523,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 
@@ -5226,7 +5590,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
 
     Name of the subscription
 
-  - `source: object { type }  or object { type }  or object { type }  or 5 more`
+  - `source: object { type }  or object { type }  or object { type }  or 6 more`
 
     Source configuration for the subscription
 
@@ -5293,6 +5657,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/event_subscriptio
       - `worker_name: optional string`
 
         Name of the worker
+
+    - `MqEventSourceWorkersScript object { script_tag, type }`
+
+      - `script_tag: optional string`
+
+        Tag of the Worker script
+
+      - `type: optional "workers.script"`
+
+        Type of source
+
+        - `"workers.script"`
 
     - `MqEventSourceWorkflowsWorkflow object { type, workflow_name }`
 

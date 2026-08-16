@@ -404,11 +404,15 @@ Lists all Access applications in an account or zone.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -1324,11 +1328,15 @@ Lists all Access applications in an account or zone.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -2382,11 +2390,15 @@ Lists all Access applications in an account or zone.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -3262,11 +3274,15 @@ Lists all Access applications in an account or zone.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -3988,11 +4004,15 @@ Lists all Access applications in an account or zone.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -4490,11 +4510,15 @@ Lists all Access applications in an account or zone.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -4988,11 +5012,15 @@ Lists all Access applications in an account or zone.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -5486,11 +5514,15 @@ Lists all Access applications in an account or zone.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -5968,11 +6000,15 @@ Lists all Access applications in an account or zone.
 
       The name of the application.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -6428,7 +6464,7 @@ Lists all Access applications in an account or zone.
 
       The application type.
 
-  - `InfrastructureApplication object { target_criteria, type, id, 3 more }`
+  - `InfrastructureApplication object { target_criteria, type, id, 4 more }`
 
     - `target_criteria: array of object { port, protocol, target_attributes }`
 
@@ -6457,6 +6493,26 @@ Lists all Access applications in an account or zone.
     - `aud: optional string`
 
       Audience tag.
+
+    - `mfa_config: optional object { allowed_authenticators, mfa_disabled, session_duration }`
+
+      Configures multi-factor authentication (MFA) settings for infrastructure applications.
+
+      - `allowed_authenticators: optional array of "piv_key" or "ssh_fido2_key"`
+
+        Lists the MFA methods that users can authenticate with. For infrastructure applications, supported values are `piv_key` and `ssh_fido2_key`.
+
+        - `"piv_key"`
+
+        - `"ssh_fido2_key"`
+
+      - `mfa_disabled: optional boolean`
+
+        Indicates whether to disable MFA for this resource. This option is available at the application and policy level.
+
+      - `session_duration: optional string`
+
+        Defines the duration of an MFA session. Must be in minutes (m) or hours (h). Minimum: 0m. Maximum: 720h (30 days). Examples: `5m` or `24h`.
 
     - `name: optional string`
 
@@ -6726,11 +6782,13 @@ Lists all Access applications in an account or zone.
 
         Configures multi-factor authentication (MFA) settings for infrastructure applications.
 
-        - `allowed_authenticators: optional array of "piv_key"`
+        - `allowed_authenticators: optional array of "piv_key" or "ssh_fido2_key"`
 
-          Lists the MFA methods that users can authenticate with. For infrastructure applications, only `piv_key` is supported.
+          Lists the MFA methods that users can authenticate with. For infrastructure applications, supported values are `piv_key` and `ssh_fido2_key`.
 
           - `"piv_key"`
+
+          - `"ssh_fido2_key"`
 
         - `mfa_disabled: optional boolean`
 
@@ -7122,11 +7180,15 @@ Lists all Access applications in an account or zone.
 
       Enables cookie paths to scope an application's JWT to the application path. If disabled, the JWT will scope to the hostname by default
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -7926,11 +7988,15 @@ Lists all Access applications in an account or zone.
 
       Allows options preflight requests to bypass Access authentication and go directly to the origin. Cannot turn on if cors_headers is set.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -8706,11 +8772,15 @@ Lists all Access applications in an account or zone.
 
       Allows options preflight requests to bypass Access authentication and go directly to the origin. Cannot turn on if cors_headers is set.
 
-    - `policies: optional array of object { id, approval_groups, approval_required, 14 more }`
+    - `policies: optional array of object { id, account_id, approval_groups, 15 more }`
 
       - `id: optional string`
 
         The UUID of the policy
+
+      - `account_id: optional string`
+
+        Identifier.
 
       - `approval_groups: optional array of ApprovalGroup`
 
@@ -9463,6 +9533,7 @@ curl https://api.cloudflare.com/client/v4/$ACCOUNTS_OR_ZONES/$ACCOUNT_OR_ZONE_ID
       "policies": [
         {
           "id": "f174e90a-fafe-4643-bbbc-4a0ed4fc8415",
+          "account_id": "023e105f4ecef8ad9ca31a8372d0c353",
           "approval_groups": [
             {
               "approvals_needed": 1,

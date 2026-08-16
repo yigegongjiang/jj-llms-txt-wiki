@@ -90,7 +90,7 @@ Lists and filters Warp Connector Tunnels in an account.
 
     Cloudflare account ID
 
-  - `connections: optional array of object { id, client_id, client_version, 5 more }`
+  - `connections: optional array of object { id, client_id, client_version, 4 more }`
 
     The Cloudflare Tunnel connections between your origin and Cloudflare's edge.
 
@@ -109,10 +109,6 @@ Lists and filters Warp Connector Tunnels in an account.
     - `colo_name: optional string`
 
       The Cloudflare data center used for this connection.
-
-    - `is_pending_reconnect: optional boolean`
-
-      Cloudflare continues to track connections for several minutes after they disconnect. This is an optimization to improve latency and reliability of reconnecting.  If `true`, the connection has disconnected but is still being tracked. If `false`, the connection is actively serving traffic.
 
     - `opened_at: optional string`
 
@@ -245,7 +241,6 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/warp_connector \
           "client_id": "1bedc50d-42b3-473c-b108-ff3d10c0d925",
           "client_version": "2022.7.1",
           "colo_name": "DFW",
-          "is_pending_reconnect": false,
           "opened_at": "2021-01-25T18:22:34.317854Z",
           "origin_ip": "10.1.0.137",
           "uuid": "1bedc50d-42b3-473c-b108-ff3d10c0d925"

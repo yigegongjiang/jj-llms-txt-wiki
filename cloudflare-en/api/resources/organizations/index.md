@@ -108,21 +108,7 @@ Retrieve a list of organizations a particular user has access to. (Currently in 
 
   - `create_time: string`
 
-  - `meta: object { flags, hierarchy_tags, managed_by }`
-
-    - `flags: optional object { account_creation, account_deletion, account_migration, 2 more }`
-
-      Enable features for Organizations.
-
-      - `account_creation: string`
-
-      - `account_deletion: string`
-
-      - `account_migration: string`
-
-      - `account_mobility: string`
-
-      - `sub_org_creation: string`
+  - `meta: object { hierarchy_tags, managed_by, tenant_flags }`
 
     - `hierarchy_tags: optional array of string`
 
@@ -134,6 +120,24 @@ Retrieve a list of organizations a particular user has access to. (Currently in 
       in the hierarchy.
 
     - `managed_by: optional string`
+
+    - `tenant_flags: optional object { account_creation, account_deletion, account_migration, 4 more }`
+
+      Enable features for Organizations.
+
+      - `account_creation: string`
+
+      - `account_deletion: string`
+
+      - `account_migration: string`
+
+      - `account_mobility: string`
+
+      - `enterprise_capability: string`
+
+      - `member_management: string`
+
+      - `sub_org_creation: string`
 
   - `name: string`
 
@@ -200,17 +204,19 @@ curl https://api.cloudflare.com/client/v4/organizations \
       "id": "a7b9c3d2e8f4g1h5i6j0k9l2m3n7o4p8",
       "create_time": "2019-12-27T18:11:19.117Z",
       "meta": {
-        "flags": {
+        "hierarchy_tags": [
+          "string"
+        ],
+        "managed_by": "managed_by",
+        "tenant_flags": {
           "account_creation": "account_creation",
           "account_deletion": "account_deletion",
           "account_migration": "account_migration",
           "account_mobility": "account_mobility",
+          "enterprise_capability": "enterprise_capability",
+          "member_management": "member_management",
           "sub_org_creation": "sub_org_creation"
-        },
-        "hierarchy_tags": [
-          "string"
-        ],
-        "managed_by": "managed_by"
+        }
       },
       "name": "name",
       "parent": {
@@ -268,21 +274,7 @@ Retrieve the details of a certain organization. (Currently in Public Beta - see 
 
   - `create_time: string`
 
-  - `meta: object { flags, hierarchy_tags, managed_by }`
-
-    - `flags: optional object { account_creation, account_deletion, account_migration, 2 more }`
-
-      Enable features for Organizations.
-
-      - `account_creation: string`
-
-      - `account_deletion: string`
-
-      - `account_migration: string`
-
-      - `account_mobility: string`
-
-      - `sub_org_creation: string`
+  - `meta: object { hierarchy_tags, managed_by, tenant_flags }`
 
     - `hierarchy_tags: optional array of string`
 
@@ -294,6 +286,24 @@ Retrieve the details of a certain organization. (Currently in Public Beta - see 
       in the hierarchy.
 
     - `managed_by: optional string`
+
+    - `tenant_flags: optional object { account_creation, account_deletion, account_migration, 4 more }`
+
+      Enable features for Organizations.
+
+      - `account_creation: string`
+
+      - `account_deletion: string`
+
+      - `account_migration: string`
+
+      - `account_mobility: string`
+
+      - `enterprise_capability: string`
+
+      - `member_management: string`
+
+      - `sub_org_creation: string`
 
   - `name: string`
 
@@ -346,17 +356,19 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID \
     "id": "a7b9c3d2e8f4g1h5i6j0k9l2m3n7o4p8",
     "create_time": "2019-12-27T18:11:19.117Z",
     "meta": {
-      "flags": {
+      "hierarchy_tags": [
+        "string"
+      ],
+      "managed_by": "managed_by",
+      "tenant_flags": {
         "account_creation": "account_creation",
         "account_deletion": "account_deletion",
         "account_migration": "account_migration",
         "account_mobility": "account_mobility",
+        "enterprise_capability": "enterprise_capability",
+        "member_management": "member_management",
         "sub_org_creation": "sub_org_creation"
-      },
-      "hierarchy_tags": [
-        "string"
-      ],
-      "managed_by": "managed_by"
+      }
     },
     "name": "name",
     "parent": {
@@ -427,21 +439,7 @@ Create a new organization for a user. (Currently in Public Beta - see https://de
 
   - `create_time: string`
 
-  - `meta: object { flags, hierarchy_tags, managed_by }`
-
-    - `flags: optional object { account_creation, account_deletion, account_migration, 2 more }`
-
-      Enable features for Organizations.
-
-      - `account_creation: string`
-
-      - `account_deletion: string`
-
-      - `account_migration: string`
-
-      - `account_mobility: string`
-
-      - `sub_org_creation: string`
+  - `meta: object { hierarchy_tags, managed_by, tenant_flags }`
 
     - `hierarchy_tags: optional array of string`
 
@@ -453,6 +451,24 @@ Create a new organization for a user. (Currently in Public Beta - see https://de
       in the hierarchy.
 
     - `managed_by: optional string`
+
+    - `tenant_flags: optional object { account_creation, account_deletion, account_migration, 4 more }`
+
+      Enable features for Organizations.
+
+      - `account_creation: string`
+
+      - `account_deletion: string`
+
+      - `account_migration: string`
+
+      - `account_mobility: string`
+
+      - `enterprise_capability: string`
+
+      - `member_management: string`
+
+      - `sub_org_creation: string`
 
   - `name: string`
 
@@ -509,17 +525,19 @@ curl https://api.cloudflare.com/client/v4/organizations \
     "id": "a7b9c3d2e8f4g1h5i6j0k9l2m3n7o4p8",
     "create_time": "2019-12-27T18:11:19.117Z",
     "meta": {
-      "flags": {
+      "hierarchy_tags": [
+        "string"
+      ],
+      "managed_by": "managed_by",
+      "tenant_flags": {
         "account_creation": "account_creation",
         "account_deletion": "account_deletion",
         "account_migration": "account_migration",
         "account_mobility": "account_mobility",
+        "enterprise_capability": "enterprise_capability",
+        "member_management": "member_management",
         "sub_org_creation": "sub_org_creation"
-      },
-      "hierarchy_tags": [
-        "string"
-      ],
-      "managed_by": "managed_by"
+      }
     },
     "name": "name",
     "parent": {
@@ -594,21 +612,7 @@ Modify organization. (Currently in Public Beta - see https://developers.cloudfla
 
   - `create_time: string`
 
-  - `meta: object { flags, hierarchy_tags, managed_by }`
-
-    - `flags: optional object { account_creation, account_deletion, account_migration, 2 more }`
-
-      Enable features for Organizations.
-
-      - `account_creation: string`
-
-      - `account_deletion: string`
-
-      - `account_migration: string`
-
-      - `account_mobility: string`
-
-      - `sub_org_creation: string`
+  - `meta: object { hierarchy_tags, managed_by, tenant_flags }`
 
     - `hierarchy_tags: optional array of string`
 
@@ -620,6 +624,24 @@ Modify organization. (Currently in Public Beta - see https://developers.cloudfla
       in the hierarchy.
 
     - `managed_by: optional string`
+
+    - `tenant_flags: optional object { account_creation, account_deletion, account_migration, 4 more }`
+
+      Enable features for Organizations.
+
+      - `account_creation: string`
+
+      - `account_deletion: string`
+
+      - `account_migration: string`
+
+      - `account_mobility: string`
+
+      - `enterprise_capability: string`
+
+      - `member_management: string`
+
+      - `sub_org_creation: string`
 
   - `name: string`
 
@@ -677,17 +699,19 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID \
     "id": "a7b9c3d2e8f4g1h5i6j0k9l2m3n7o4p8",
     "create_time": "2019-12-27T18:11:19.117Z",
     "meta": {
-      "flags": {
+      "hierarchy_tags": [
+        "string"
+      ],
+      "managed_by": "managed_by",
+      "tenant_flags": {
         "account_creation": "account_creation",
         "account_deletion": "account_deletion",
         "account_migration": "account_migration",
         "account_mobility": "account_mobility",
+        "enterprise_capability": "enterprise_capability",
+        "member_management": "member_management",
         "sub_org_creation": "sub_org_creation"
-      },
-      "hierarchy_tags": [
-        "string"
-      ],
-      "managed_by": "managed_by"
+      }
     },
     "name": "name",
     "parent": {
@@ -786,21 +810,7 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID \
 
   - `create_time: string`
 
-  - `meta: object { flags, hierarchy_tags, managed_by }`
-
-    - `flags: optional object { account_creation, account_deletion, account_migration, 2 more }`
-
-      Enable features for Organizations.
-
-      - `account_creation: string`
-
-      - `account_deletion: string`
-
-      - `account_migration: string`
-
-      - `account_mobility: string`
-
-      - `sub_org_creation: string`
+  - `meta: object { hierarchy_tags, managed_by, tenant_flags }`
 
     - `hierarchy_tags: optional array of string`
 
@@ -812,6 +822,24 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID \
       in the hierarchy.
 
     - `managed_by: optional string`
+
+    - `tenant_flags: optional object { account_creation, account_deletion, account_migration, 4 more }`
+
+      Enable features for Organizations.
+
+      - `account_creation: string`
+
+      - `account_deletion: string`
+
+      - `account_migration: string`
+
+      - `account_mobility: string`
+
+      - `enterprise_capability: string`
+
+      - `member_management: string`
+
+      - `sub_org_creation: string`
 
   - `name: string`
 
@@ -2700,7 +2728,7 @@ month through today. The maximum date range is 31 days.
 
     Identifies the error or notice type.
 
-- `result: array of object { BillingAccountId, BillingAccountName, ChargeCategory, 31 more }`
+- `result: array of object { BillingAccountId, BillingAccountName, ChargeCategory, 32 more }`
 
   Contains the array of cost and usage records.
 
@@ -2755,6 +2783,10 @@ month through today. The maximum date range is 31 days.
   - `ServiceProviderName: string`
 
     Name of the entity that made the services available for purchase.
+
+  - `x_BillableMetricId: string`
+
+    The unique identifier for the billable metric in the Cloudflare catalog. Cloudflare extension; replaces FOCUS SkuId.
 
   - `x_BillableMetricName: string`
 
@@ -2826,13 +2858,13 @@ month through today. The maximum date range is 31 days.
 
     Name assigned to a grouping of services. For Cloudflare, this is the subscription or contract display name.
 
-  - `x_BillableMetricId: optional string`
-
-    The unique identifier for the billable metric in the Cloudflare catalog. Cloudflare extension; replaces FOCUS SkuId.
-
   - `x_ProductCategoryName: optional string`
 
     The product category the charge belongs to (e.g., "Developer", "Cloudflare One"). Cloudflare extension; replaces FOCUS ServiceCategory.
+
+  - `x_ProductFamilyId: optional string`
+
+    The unique identifier for the product family in the Cloudflare catalog. Cloudflare extension; replaces FOCUS ServiceId.
 
   - `x_ProductFamilyName: optional string`
 
@@ -2889,6 +2921,7 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID/billabl
       "HostProviderName": "Cloudflare",
       "InvoiceIssuerName": "Cloudflare",
       "ServiceProviderName": "Cloudflare",
+      "x_BillableMetricId": "workers_standard_requests",
       "x_BillableMetricName": "Workers Standard Requests",
       "BilledCost": 0,
       "BillingCurrency": "USD",
@@ -2906,8 +2939,8 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID/billabl
       "RegionName": "Eastern Europe",
       "SubAccountId": "c9bd752d-9ca8-411d-b804-be44a758057f",
       "SubAccountName": "My Subscription",
-      "x_BillableMetricId": "workers_standard_requests",
       "x_ProductCategoryName": "Developer",
+      "x_ProductFamilyId": "workers",
       "x_ProductFamilyName": "Workers",
       "x_ZoneId": "023e105f4ecef8ad9ca31a8372d0c353",
       "x_ZoneName": "example.com"
@@ -2921,7 +2954,7 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID/billabl
 
 ### Usage Get Response
 
-- `UsageGetResponse = array of object { BillingAccountId, BillingAccountName, ChargeCategory, 31 more }`
+- `UsageGetResponse = array of object { BillingAccountId, BillingAccountName, ChargeCategory, 32 more }`
 
   Contains the array of cost and usage records.
 
@@ -2976,6 +3009,10 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID/billabl
   - `ServiceProviderName: string`
 
     Name of the entity that made the services available for purchase.
+
+  - `x_BillableMetricId: string`
+
+    The unique identifier for the billable metric in the Cloudflare catalog. Cloudflare extension; replaces FOCUS SkuId.
 
   - `x_BillableMetricName: string`
 
@@ -3047,13 +3084,13 @@ curl https://api.cloudflare.com/client/v4/organizations/$ORGANIZATION_ID/billabl
 
     Name assigned to a grouping of services. For Cloudflare, this is the subscription or contract display name.
 
-  - `x_BillableMetricId: optional string`
-
-    The unique identifier for the billable metric in the Cloudflare catalog. Cloudflare extension; replaces FOCUS SkuId.
-
   - `x_ProductCategoryName: optional string`
 
     The product category the charge belongs to (e.g., "Developer", "Cloudflare One"). Cloudflare extension; replaces FOCUS ServiceCategory.
+
+  - `x_ProductFamilyId: optional string`
+
+    The unique identifier for the product family in the Cloudflare catalog. Cloudflare extension; replaces FOCUS ServiceId.
 
   - `x_ProductFamilyName: optional string`
 

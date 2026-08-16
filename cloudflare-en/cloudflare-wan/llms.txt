@@ -74,6 +74,7 @@ Replace legacy WAN and securely connect any traffic source to Cloudflare's netwo
 - [Configure Virtual Appliance](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/configure-virtual-appliance/index.md): Learn how to configure Cloudflare One Virtual Appliance on VMware ESXi or Proxmox Virtual Environment
 - [Device metrics](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/device-metrics/index.md): View hardware Appliance performance metrics.
 - [Activate Cloudflare One Appliance](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/maintenance/activate-appliance/index.md): Activate a Cloudflare One Appliance.
+- [Appliance operations](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/maintenance/appliance-operations/index.md): Restart, reboot, or shut down a Cloudflare One Appliance from the dashboard or via API.
 - [Deactivate Cloudflare One Appliance](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/maintenance/deactivate-appliance/index.md): Deactivate a Cloudflare One Appliance.
 - [Default password](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/maintenance/default-password/index.md): Information about Cloudflare One Appliance's default password.
 - [Edit basic information](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/maintenance/edit-basic-info/index.md): Edit Appliance basic information.

@@ -173,7 +173,7 @@ Rate Limiting features a one-click **Protect your login** tool that creates a ru
 1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), and select your account and domain.
 2. Go to **Security** \> **WAF** \> **Rate limiting rules**.
 3. Select **Create rate limiting rule**. A dialog opens where you specify the details of your new rule.  
-![Create rate limiting rule pop-up dialog with an example rule configuration. The rule will block requests from IP addresses that exceed 150 requests per minute for one hour.](https://developers.cloudflare.com/_astro/old-rate-limiting-create-rule.DWk2_FbN_Z1q4Cap.webp)
+![Create rate limiting rule pop-up dialog with an example rule configuration. The rule will block requests from IP addresses that exceed 150 requests per minute for one hour.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=722,height=650,format=webp/_astro/old-rate-limiting-create-rule.DWk2_FbN.png)
 4. Enter a descriptive name for the rule in **Rule Name**.
 5. For **If Traffic Matching the URL**, select an HTTP scheme from the dropdown and enter a URL.
 6. In **from the same IP address exceeds**, enter an integer greater than 1 to represent the number of requests in a sampling period.
@@ -204,7 +204,7 @@ The **Advanced Criteria** option configures which HTTP methods, header responses
 To configure your advanced criteria for a new or existing rule:
 
 1. Expand **Advanced Criteria**.  
-![Available fields when configuring Advanced Criteria for a rate limiting rule.](https://developers.cloudflare.com/_astro/old-rate-limiting-advanced-criteria.DgGGmROd_mviyc.webp)
+![Available fields when configuring Advanced Criteria for a rate limiting rule.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=720,height=553,format=webp/_astro/old-rate-limiting-advanced-criteria.DgGGmROd.png)
 2. Select a value from **Method(s)**. The default value is _ANY_, which matches all HTTP methods.
 3. Filter by **HTTP Response Header(s)**. Select **Add header response field** to include headers returned by your origin web server.  
 The `CF-Cache-Status` header appears by default so that Cloudflare serves cached resources rather than rate limit those resources. To also rate limit cached resources, remove this header by selecting **X** or enable **Also apply rate limit to cached assets**.  
@@ -222,7 +222,7 @@ The **Advanced Response** option configures the information format returned by C
 To configure a plain text or JSON response:
 
 1. Expand **Advanced Response**.  
-![Available fields when configuring an Advance Response for a rate limiting rule.](https://developers.cloudflare.com/_astro/old-rate-limiting-advanced-response.BNkSJJK-_25G3b7.webp)
+![Available fields when configuring an Advance Response for a rate limiting rule.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=705,height=181,format=webp/_astro/old-rate-limiting-advanced-response.BNkSJJK-.png)
 2. Select a **Response type** format other than the default: _Custom JSON_ or _Custom TEXT_.
 3. Enter the plain text or JSON response you wish to return. The maximum response size is 32 KB.
 4. (Optional) Configure additional rate limiting features, based on your plan.
@@ -275,7 +275,7 @@ To configure **Bypass**:
 
 1. Expand **Bypass**.
 2. In **Bypass rule for these URLs**, enter the URL(s) to exempt from the rate limiting rule. Enter each URL on its own line. An HTTP or HTTPS specified in the URL is automatically removed when the rule is saved and instead applies to both HTTP and HTTPS.  
-![Configuring two URLs to bypass for a rate limiting rule \(one per line\).](https://developers.cloudflare.com/_astro/old-rate-limiting-bypass.BwmW-OaL_LNOqW.webp)
+![Configuring two URLs to bypass for a rate limiting rule \(one per line\).](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=707,height=279,format=webp/_astro/old-rate-limiting-bypass.BwmW-OaL.png)
 3. (Optional) Configure additional rate limiting features, based on your plan.
 4. Select **Save and Deploy**.
 
@@ -325,7 +325,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/rate-limiting-rules/#page","headline":"Rate Limiting (previous version) · Cloudflare Web Application Firewall (WAF) docs","description":"Documentation for the previous version of Rate Limiting.","url":"https://developers.cloudflare.com/waf/rate-limiting-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

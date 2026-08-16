@@ -4,7 +4,7 @@
 
 **get** `/accounts/{account_id}/cloudforce-one/events/indicators`
 
-Retrieves a paginated list of indicators across specified datasets. Use datasetIds=all or datasetIds=* to query all datasets for the account. If no datasetIds provided, uses the default dataset.
+Retrieves indicators across specified datasets, ordered by createdAt descending then UUID, dataset ID, and shard ID ascending. Use datasetIds=all or datasetIds=* to query all datasets for the account. If no datasetIds provided, uses the default dataset.
 
 ### Path Parameters
 
@@ -16,7 +16,7 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
 - `cache: optional "from-graph"`
 
-  Cache strategy. 'from-graph' serves results from the graph-node KV cache when all requested UUIDs are cached; falls back to normal path on partial/zero hit.
+  Cache strategy. 'from-graph' serves results from the graph-node KV cache when all requested UUIDs are cached; falls back to normal path on partial/zero hit. Cannot be combined with `cursor`.
 
   - `"from-graph"`
 
@@ -27,6 +27,10 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 - `createdBefore: optional string`
 
   Filter indicators created on or before this date. Must use ISO 8601 format (e.g., '2024-12-31T23:59:59Z').
+
+- `cursor: optional string`
+
+  Opaque cursor from a previous response's `pagination.cursor`. When provided, all filters, datasetIds, page, `pageSize`, `includeTags` and `relatedEventsLimit` come from the cursor — do not resend them. Sending any filter, `page`, `pageSize`, `includeTags`, `relatedEventsLimit`, `includeTotalCount=true`, or `cache=from-graph` alongside a cursor yields a 400 `CursorFilterConflictError`. A cursor issued for a different entity, an unsupported version, or a dataset that has since been reconfigured as analytics-only yields a 400 `InvalidCursorError`.
 
 - `datasetIds: optional array of string`
 
@@ -48,7 +52,7 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
 - `includeTotalCount: optional boolean`
 
-  Whether to compute accurate total count via COUNT(*). Defaults to false for performance. When false, total_count is an approximation.
+  Whether to compute total count via COUNT(*). Defaults to false for performance. total_count is null unless this is true and the complete fan-out succeeds.
 
 - `indicatorType: optional string`
 
@@ -117,14 +121,6 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
     - `string`
 
     - `array of string`
-
-- `source: optional "do" or "r2catalog"`
-
-  Read backend. 'do' (default) reads Durable Object storage. 'r2catalog' reads R2 Data Catalog (admin-only, experimental; supports a subset of search fields).
-
-  - `"do"`
-
-  - `"r2catalog"`
 
 - `tags: optional array of string`
 
@@ -206,7 +202,51 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
 ### Returns
 
-- `properties: object { indicators, pagination }`
+- `properties: object { completeness, indicators, pagination }`
+
+  - `completeness: object { properties, type }`
+
+    - `properties: object { complete, failedDatasets, failedShards, warnings }`
+
+      - `complete: object { type }`
+
+        - `type: string`
+
+      - `failedDatasets: object { items, type }`
+
+        - `items: object { type }`
+
+          - `type: string`
+
+        - `type: string`
+
+      - `failedShards: object { items, type }`
+
+        - `items: object { properties, type }`
+
+          - `properties: object { datasetId, shardId }`
+
+            - `datasetId: object { type }`
+
+              - `type: string`
+
+            - `shardId: object { type }`
+
+              - `type: string`
+
+          - `type: string`
+
+        - `type: string`
+
+      - `warnings: object { items, type }`
+
+        - `items: object { type }`
+
+          - `type: string`
+
+        - `type: string`
+
+    - `type: string`
 
   - `indicators: object { items, type }`
 
@@ -226,11 +266,15 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
         The dataset ID this indicator belongs to. Included in list responses.
 
-      - `relatedEvents: optional array of object { datasetId, eventId }`
+      - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
         - `datasetId: string`
 
         - `eventId: string`
+
+        - `eventDate: optional string`
+
+          ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
       - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -244,9 +288,23 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
   - `pagination: object { properties, type }`
 
-    - `properties: object { count, page, per_page, total_count }`
+    - `properties: object { count, cursor, has_more, 4 more }`
 
       - `count: object { type }`
+
+        - `type: string`
+
+      - `cursor: object { description, nullable, type }`
+
+        - `description: string`
+
+        - `nullable: boolean`
+
+        - `type: string`
+
+      - `has_more: object { description, type }`
+
+        - `description: string`
 
         - `type: string`
 
@@ -258,7 +316,17 @@ Retrieves a paginated list of indicators across specified datasets. Use datasetI
 
         - `type: string`
 
-      - `total_count: object { type }`
+      - `total_count: object { description, nullable, type }`
+
+        - `description: string`
+
+        - `nullable: boolean`
+
+        - `type: string`
+
+      - `total_count_is_exact: object { description, type }`
+
+        - `description: string`
 
         - `type: string`
 
@@ -278,6 +346,40 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 ```json
 {
   "properties": {
+    "completeness": {
+      "properties": {
+        "complete": {
+          "type": "boolean"
+        },
+        "failedDatasets": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "failedShards": {
+          "items": {
+            "properties": {
+              "datasetId": {
+                "type": "string"
+              },
+              "shardId": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "indicators": {
       "items": {
         "createdAt": "2022-04-01T00:00:00Z",
@@ -289,7 +391,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
         "relatedEvents": [
           {
             "datasetId": "dataset-uuid-123",
-            "eventId": "event-uuid-456"
+            "eventId": "event-uuid-456",
+            "eventDate": "2024-06-15T00:00:00Z"
           }
         ],
         "tags": [
@@ -307,6 +410,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
         "count": {
           "type": "number"
         },
+        "cursor": {
+          "description": "Opaque cursor for the next page. Pass back as the `cursor` query param on the next request. `null` when the sequence has ended, when the encoded cursor would exceed the safe URL length, or when this endpoint served the request from a backend that does not support cursor pagination (analytics R2 path).",
+          "nullable": true,
+          "type": "string"
+        },
+        "has_more": {
+          "description": "True when more pages exist after this one. Present on both offset and cursor paths.",
+          "type": "boolean"
+        },
         "page": {
           "type": "number"
         },
@@ -314,7 +426,13 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
           "type": "number"
         },
         "total_count": {
+          "description": "Exact matching count when requested and fan-out is complete; otherwise null.",
+          "nullable": true,
           "type": "number"
+        },
+        "total_count_is_exact": {
+          "description": "Whether total_count is exact across the complete query fan-out.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -330,7 +448,51 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 - `IndicatorListResponse object { properties, type }`
 
-  - `properties: object { indicators, pagination }`
+  - `properties: object { completeness, indicators, pagination }`
+
+    - `completeness: object { properties, type }`
+
+      - `properties: object { complete, failedDatasets, failedShards, warnings }`
+
+        - `complete: object { type }`
+
+          - `type: string`
+
+        - `failedDatasets: object { items, type }`
+
+          - `items: object { type }`
+
+            - `type: string`
+
+          - `type: string`
+
+        - `failedShards: object { items, type }`
+
+          - `items: object { properties, type }`
+
+            - `properties: object { datasetId, shardId }`
+
+              - `datasetId: object { type }`
+
+                - `type: string`
+
+              - `shardId: object { type }`
+
+                - `type: string`
+
+            - `type: string`
+
+          - `type: string`
+
+        - `warnings: object { items, type }`
+
+          - `items: object { type }`
+
+            - `type: string`
+
+          - `type: string`
+
+      - `type: string`
 
     - `indicators: object { items, type }`
 
@@ -350,11 +512,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
           The dataset ID this indicator belongs to. Included in list responses.
 
-        - `relatedEvents: optional array of object { datasetId, eventId }`
+        - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
           - `datasetId: string`
 
           - `eventId: string`
+
+          - `eventDate: optional string`
+
+            ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
         - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -368,9 +534,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
     - `pagination: object { properties, type }`
 
-      - `properties: object { count, page, per_page, total_count }`
+      - `properties: object { count, cursor, has_more, 4 more }`
 
         - `count: object { type }`
+
+          - `type: string`
+
+        - `cursor: object { description, nullable, type }`
+
+          - `description: string`
+
+          - `nullable: boolean`
+
+          - `type: string`
+
+        - `has_more: object { description, type }`
+
+          - `description: string`
 
           - `type: string`
 
@@ -382,7 +562,17 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
           - `type: string`
 
-        - `total_count: object { type }`
+        - `total_count: object { description, nullable, type }`
+
+          - `description: string`
+
+          - `nullable: boolean`
+
+          - `type: string`
+
+        - `total_count_is_exact: object { description, type }`
+
+          - `description: string`
 
           - `type: string`
 
@@ -410,13 +600,21 @@ Aggregate threat indicators by one or more columns (e.g., indicatorType, value) 
 
   Column(s) to aggregate by - single column or comma-separated list (e.g., 'indicatorType', 'value', 'indicatorType,value')
 
-- `createdAfter: optional string`
+- `createdAfter: optional string or string`
 
-  Filter indicators created after this date (ISO 8601 format, e.g., '2024-01-01')
+  Filter indicators created after this date/datetime (ISO 8601, e.g., '2024-01-01' or '2024-01-01T00:00:00Z')
 
-- `createdBefore: optional string`
+  - `string`
 
-  Filter indicators created before this date (ISO 8601 format, e.g., '2024-12-31')
+  - `string`
+
+- `createdBefore: optional string or string`
+
+  Filter indicators created before this date/datetime (ISO 8601, e.g., '2024-12-31' or '2024-12-31T23:59:59Z')
+
+  - `string`
+
+  - `string`
 
 - `datasetIds: optional array of string`
 
@@ -522,7 +720,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
 **get** `/accounts/{account_id}/cloudforce-one/events/indicator-types`
 
-List indicator types across one or more datasets for the account.
+Lists indicator types across multiple datasets
 
 ### Path Parameters
 
@@ -626,11 +824,15 @@ This method is deprecated. Please use /events/indicators to retrieve a paginated
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -672,7 +874,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
       "relatedEvents": [
         {
           "datasetId": "dataset-uuid-123",
-          "eventId": "event-uuid-456"
+          "eventId": "event-uuid-456",
+          "eventDate": "2024-06-15T00:00:00Z"
         }
       ],
       "tags": [
@@ -729,11 +932,15 @@ Retrieves a specific indicator by its UUID.
 
   The dataset ID this indicator belongs to. Included in list responses.
 
-- `relatedEvents: optional array of object { datasetId, eventId }`
+- `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
   - `datasetId: string`
 
   - `eventId: string`
+
+  - `eventDate: optional string`
+
+    ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
 - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -763,7 +970,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
   "relatedEvents": [
     {
       "datasetId": "dataset-uuid-123",
-      "eventId": "event-uuid-456"
+      "eventId": "event-uuid-456",
+      "eventDate": "2024-06-15T00:00:00Z"
     }
   ],
   "tags": [
@@ -798,11 +1006,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
       The dataset ID this indicator belongs to. Included in list responses.
 
-    - `relatedEvents: optional array of object { datasetId, eventId }`
+    - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
       - `datasetId: string`
 
       - `eventId: string`
+
+      - `eventDate: optional string`
+
+        ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
     - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -840,11 +1052,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 

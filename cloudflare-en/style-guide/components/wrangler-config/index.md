@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/wrangler-config/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `WranglerConfig` component is used `654` times on `360` pages.
+The `WranglerConfig` component is used `668` times on `370` pages.
 
 See all examples of pages that use WranglerConfig
 
-Used **654** times.
+Used **668** times.
 
 **Pages**
 
@@ -47,16 +47,20 @@ Used **654** times.
 * [/agents/runtime/execution/sub-agents/](https://developers.cloudflare.com/agents/runtime/execution/sub-agents/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/execution/sub-agents.mdx)
 * [/agents/runtime/lifecycle/sessions/](https://developers.cloudflare.com/agents/runtime/lifecycle/sessions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/lifecycle/sessions.mdx)
 * [/agents/runtime/operations/configuration/](https://developers.cloudflare.com/agents/runtime/operations/configuration/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/configuration.mdx)
+* [/agents/runtime/operations/observability/tracing/](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/observability/tracing.mdx)
 * [/agents/runtime/operations/using-ai-models/](https://developers.cloudflare.com/agents/runtime/operations/using-ai-models/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/runtime/operations/using-ai-models.mdx)
 * [/agents/tools/ai-search/](https://developers.cloudflare.com/agents/tools/ai-search/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/ai-search.mdx)
 * [/agents/tools/browser/](https://developers.cloudflare.com/agents/tools/browser/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/browser.mdx)
 * [/agents/tools/codemode/ai-sdk/](https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/ai-sdk.mdx)
 * [/agents/tools/codemode/durable-runtime/](https://developers.cloudflare.com/agents/tools/codemode/durable-runtime/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/durable-runtime.mdx)
 * [/agents/tools/codemode/tanstack-ai/](https://developers.cloudflare.com/agents/tools/codemode/tanstack-ai/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/codemode/tanstack-ai.mdx)
+* [/agents/tools/payments/mpp/accept-payments/](https://developers.cloudflare.com/agents/tools/payments/mpp/accept-payments/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/payments/mpp/accept-payments.mdx)
 * [/agents/tools/sandbox/](https://developers.cloudflare.com/agents/tools/sandbox/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/agents/tools/sandbox.mdx)
 * [/ai-gateway/integrations/aig-workers-ai-binding/](https://developers.cloudflare.com/ai-gateway/integrations/aig-workers-ai-binding/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/integrations/aig-workers-ai-binding.mdx)
 * [/ai-gateway/usage/universal/](https://developers.cloudflare.com/ai-gateway/usage/universal/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/usage/universal.mdx)
 * [/ai-gateway/usage/worker-binding-methods/](https://developers.cloudflare.com/ai-gateway/usage/worker-binding-methods/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-gateway/usage/worker-binding-methods.mdx)
+* [/ai-search/agent-sdks/agents-sdk/](https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/agents-sdk.mdx)
+* [/ai-search/agent-sdks/ai-sdk/](https://developers.cloudflare.com/ai-search/agent-sdks/ai-sdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/agent-sdks/ai-sdk.mdx)
 * [/ai-search/api/migration/workers-binding/](https://developers.cloudflare.com/ai-search/api/migration/workers-binding/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/api/migration/workers-binding.mdx)
 * [/ai-search/concepts/namespaces/](https://developers.cloudflare.com/ai-search/concepts/namespaces/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/concepts/namespaces.mdx)
 * [/ai-search/get-started/workers/](https://developers.cloudflare.com/ai-search/get-started/workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/ai-search/get-started/workers.mdx)
@@ -74,6 +78,7 @@ Used **654** times.
 * [/artifacts/concepts/namespaces/](https://developers.cloudflare.com/artifacts/concepts/namespaces/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/artifacts/concepts/namespaces.mdx)
 * [/artifacts/get-started/workers/](https://developers.cloudflare.com/artifacts/get-started/workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/artifacts/get-started/workers.mdx)
 * [/artifacts/guides/authentication/](https://developers.cloudflare.com/artifacts/guides/authentication/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/artifacts/guides/authentication.mdx)
+* [/artifacts/guides/build-and-deploy-on-push/](https://developers.cloudflare.com/artifacts/guides/build-and-deploy-on-push/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/artifacts/guides/build-and-deploy-on-push.mdx)
 * [/browser-run/features/reuse-sessions/](https://developers.cloudflare.com/browser-run/features/reuse-sessions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/browser-run/features/reuse-sessions.mdx)
 * [/browser-run/how-to/browser-run-with-do/](https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/browser-run/how-to/browser-run-with-do.mdx)
 * [/browser-run/how-to/pdf-generation/](https://developers.cloudflare.com/browser-run/how-to/pdf-generation/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/browser-run/how-to/pdf-generation.mdx)
@@ -197,7 +202,7 @@ Used **654** times.
 * [/sandbox/guides/2026-deprecation/](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/2026-deprecation.mdx)
 * [/sandbox/guides/backup-restore/](https://developers.cloudflare.com/sandbox/guides/backup-restore/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/backup-restore.mdx)
 * [/sandbox/guides/mount-buckets/](https://developers.cloudflare.com/sandbox/guides/mount-buckets/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/mount-buckets.mdx)
-* [/sandbox/guides/production-deployment/](https://developers.cloudflare.com/sandbox/guides/production-deployment/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/production-deployment.mdx)
+* [/sandbox/guides/preview-urls-custom-domain/](https://developers.cloudflare.com/sandbox/guides/preview-urls-custom-domain/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/guides/preview-urls-custom-domain.mdx)
 * [/sandbox/platform/limits/](https://developers.cloudflare.com/sandbox/platform/limits/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/platform/limits.mdx)
 * [/sandbox/tutorials/workers-ai-code-interpreter/](https://developers.cloudflare.com/sandbox/tutorials/workers-ai-code-interpreter/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/sandbox/tutorials/workers-ai-code-interpreter.mdx)
 * [/secrets-store/integrations/workers/](https://developers.cloudflare.com/secrets-store/integrations/workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/secrets-store/integrations/workers.mdx)
@@ -226,6 +231,7 @@ Used **654** times.
 * [/workers/cache/examples/](https://developers.cloudflare.com/workers/cache/examples/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/cache/examples.mdx)
 * [/workers/cache/](https://developers.cloudflare.com/workers/cache/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/cache/index.mdx)
 * [/workers/cache/purge/](https://developers.cloudflare.com/workers/cache/purge/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/cache/purge.mdx)
+* [/workers/configuration/cloudflare-access/](https://developers.cloudflare.com/workers/configuration/cloudflare-access/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/configuration/cloudflare-access.mdx)
 * [/workers/configuration/compatibility-dates/](https://developers.cloudflare.com/workers/configuration/compatibility-dates/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/configuration/compatibility-dates.mdx)
 * [/workers/configuration/compatibility-flags/](https://developers.cloudflare.com/workers/configuration/compatibility-flags/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/configuration/compatibility-flags.mdx)
 * [/workers/configuration/cron-triggers/](https://developers.cloudflare.com/workers/configuration/cron-triggers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/configuration/cron-triggers.mdx)
@@ -428,7 +434,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/wrangler-config/#page","headline":"WranglerConfig · Cloudflare Style Guide","description":"Display Wrangler config in TOML and JSON tabs.","url":"https://developers.cloudflare.com/style-guide/components/wrangler-config/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

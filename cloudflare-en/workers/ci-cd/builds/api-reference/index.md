@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Builds API reference
 
-Last updated May 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows you how to use the [Workers Builds REST API](https://developers.cloudflare.com/api/resources/workers%5Fbuilds/) to programmatically trigger builds, manage triggers, and monitor build status. The examples use `curl` commands that you can run directly in your terminal or adapt to your preferred programming language. Some examples pipe output through [jq ↗](https://jqlang.org/) to filter JSON responses — install it if you do not have it already.
 
@@ -68,7 +68,7 @@ A **trigger** is a configuration that defines how your Worker gets built and dep
 
 Most Builds API operations follow this pattern: first get your Worker's tag, then get the trigger UUID, then perform build operations.
 
-![Workflow overview: get Worker tag, then get trigger UUID, then perform build operations.](https://developers.cloudflare.com/_astro/workflow-overview.D-gY5w1T_Z1GR2BL.svg) 
+![Workflow overview: get Worker tag, then get trigger UUID, then perform build operations.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=760,height=100,format=svg/_astro/workflow-overview.DL8TB_t1.svg) 
 
 | Step | Action           | Endpoint                                    |
 | ---- | ---------------- | ------------------------------------------- |
@@ -289,7 +289,7 @@ The following examples show common use cases for the Builds API.
 
 This example walks through the complete process of connecting a GitHub repository to a Worker and setting up automated builds using only the API.
 
-![Setup flow: get GitHub IDs, create repo connection, get Worker tag, create triggers, set env variables, trigger first build.](https://developers.cloudflare.com/_astro/setup-from-scratch.BUpowztp_171tEY.svg) 
+![Setup flow: get GitHub IDs, create repo connection, get Worker tag, create triggers, set env variables, trigger first build.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=820,height=310,format=svg/_astro/setup-from-scratch.BV6HM_4R.svg) 
 
 | Step | Action                      | Endpoint                                                      |
 | ---- | --------------------------- | ------------------------------------------------------------- |
@@ -422,6 +422,10 @@ curl -s "https://api.cloudflare.com/client/v4/accounts/{account_id}/builds/trigg
 
 Note the different `deploy_command`: production uses `wrangler deploy` while preview uses `wrangler versions upload` to create preview URLs without affecting the live deployment.
 
+Note
+
+Preview URLs are not generated for Durable Object Workers, including [Containers](https://developers.cloudflare.com/containers/). Refer to [Preview URL limitations](https://developers.cloudflare.com/workers/versions-and-deployments/preview-urls/#limitations).
+
 #### Step 7: Set environment variables for each trigger
 
 Set production environment variables:
@@ -464,7 +468,7 @@ Your Worker is now connected to GitHub. Future pushes to `main` will automatical
 
 Redeploy your current active deployment to refresh build-time data. This is useful when you need to rebuild without code changes.
 
-![Redeploy flow: get active deployment, find the build for that version, retrigger with same branch and commit.](https://developers.cloudflare.com/_astro/redeploy-flow.WidssEDb_ZM2wet.svg) 
+![Redeploy flow: get active deployment, find the build for that version, retrigger with same branch and commit.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=820,height=100,format=svg/_astro/redeploy-flow.CJhryiKc.svg) 
 
 | Step | Action                            | Endpoint                                       |
 | ---- | --------------------------------- | ---------------------------------------------- |
@@ -535,8 +539,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/#page","headline":"Builds API reference · Cloudflare Workers docs","description":"Learn how to programmatically trigger builds, manage triggers, and monitor your Workers Builds using the API.","url":"https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-29","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/#page","headline":"Builds API reference · Cloudflare Workers docs","description":"Learn how to programmatically trigger builds, manage triggers, and monitor your Workers Builds using the API.","url":"https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-13","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

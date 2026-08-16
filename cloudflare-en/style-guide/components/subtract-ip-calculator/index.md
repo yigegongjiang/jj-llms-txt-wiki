@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Subtract IP calculator
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/subtract-ip-calculator/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/subtract-ip-calculator/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The `SubtractIPCalculator` component is used `6` times on `5` pages.
 
@@ -34,7 +34,7 @@ Used **6** times.
 ## Import
 
 ```mdx
-import SubtractIPCalculator from "~/components/SubtractIPCalculator.tsx";
+import { SubtractIPCalculator } from "~/components";
 ```
 
 ## Usage
@@ -45,7 +45,7 @@ Base CIDRSubtracted CIDRs
 Calculate
 
 ```mdx
-import SubtractIPCalculator from "~/components/SubtractIPCalculator.tsx";
+import { SubtractIPCalculator } from "~/components";
 
 <SubtractIPCalculator client:load />
 ```
@@ -65,7 +65,7 @@ Base CIDRSubtracted CIDRs
 Calculate
 
 ```mdx
-import SubtractIPCalculator from "~/components/SubtractIPCalculator.tsx";
+import { SubtractIPCalculator } from "~/components";
 
 <SubtractIPCalculator
 	client:load
@@ -82,8 +82,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/subtract-ip-calculator/#page","headline":"Subtract IP calculator · Cloudflare Style Guide","description":"Interactive IP subtraction calculator component.","url":"https://developers.cloudflare.com/style-guide/components/subtract-ip-calculator/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/subtract-ip-calculator/#page","headline":"Subtract IP calculator · Cloudflare Style Guide","description":"Interactive IP subtraction calculator component.","url":"https://developers.cloudflare.com/style-guide/components/subtract-ip-calculator/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

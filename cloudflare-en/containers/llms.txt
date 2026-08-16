@@ -43,13 +43,17 @@ Enhance your Workers with serverless containers
 - [Limits and Instance Types](https://developers.cloudflare.com/containers/platform-details/limits/index.md): Available Container instance types and account-level limits for memory, vCPU, disk, and image storage.
 - [Handle outbound traffic](https://developers.cloudflare.com/containers/platform-details/outbound-traffic/index.md): Intercept and handle outbound HTTP from containers using Workers.
 - [Placement](https://developers.cloudflare.com/containers/platform-details/placement/index.md): Control where your containers run with regional and jurisdictional constraints.
-- [Rollouts](https://developers.cloudflare.com/containers/platform-details/rollouts/index.md): Configure rolling deployments for Containers, including step percentages and grace periods for active instances.
+- [Rollouts](https://developers.cloudflare.com/containers/platform-details/rollouts/index.md): How container instances update after a deploy, including step percentages, grace periods, and rollout modes.
 - [Scaling and Routing](https://developers.cloudflare.com/containers/platform-details/scaling-and-routing/index.md): Scale Container instances using explicit IDs or the getRandom helper for stateless load balancing.
 - [Connect to Workers and Bindings](https://developers.cloudflare.com/containers/platform-details/workers-connections/index.md): Access KV, R2, Durable Objects, and other bindings from a container.
 
 ## Local Development
 
 - [Local Development](https://developers.cloudflare.com/containers/local-dev/index.md): Learn how to run Container-enabled Workers locally with `wrangler dev` and `vite dev`.
+
+## Deploy Containers
+
+- [Deploy Containers](https://developers.cloudflare.com/containers/deploy/index.md): Deploy from your machine or Workers Builds, including how images and container instances update.
 
 ## Wrangler Configuration
 

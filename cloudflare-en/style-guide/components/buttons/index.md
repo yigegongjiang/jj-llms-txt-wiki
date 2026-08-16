@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Buttons
 
-Last updated Jun 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/buttons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/components/buttons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `LinkButton` component is used `120` times on `61` pages.
+The `LinkButton` component is used `122` times on `62` pages.
 
 See all examples of pages that use LinkButton
 
-Used **120** times.
+Used **122** times.
 
 **Pages**
 
@@ -76,6 +76,7 @@ Used **120** times.
 * [/workers-ai/agents/](https://developers.cloudflare.com/workers-ai/agents/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers-ai/agents.mdx)
 * [/workers-ai/](https://developers.cloudflare.com/workers-ai/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers-ai/index.mdx)
 * [/workers/configuration/sites/](https://developers.cloudflare.com/workers/configuration/sites/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/configuration/sites/index.mdx)
+* [/workers/get-started/quickstarts/](https://developers.cloudflare.com/workers/get-started/quickstarts/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/get-started/quickstarts.mdx)
 * [/workers/](https://developers.cloudflare.com/workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/index.mdx)
 * [/workers/playground/](https://developers.cloudflare.com/workers/playground/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/playground.mdx)
 * [/workers/testing/miniflare/](https://developers.cloudflare.com/workers/testing/miniflare/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/testing/miniflare/index.mdx)
@@ -94,7 +95,7 @@ import { LinkButton } from "~/components";
 <LinkButton
 	href="/style-guide/components/buttons/"
 	variant="secondary"
-	icon="ph:arrow-square-out"
+	icon
 >
 	More information
 </LinkButton>
@@ -109,8 +110,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/buttons/#page","headline":"Buttons · Cloudflare Style Guide","description":"Add styled link buttons to documentation pages.","url":"https://developers.cloudflare.com/style-guide/components/buttons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-18","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/components/buttons/#page","headline":"Buttons · Cloudflare Style Guide","description":"Add styled link buttons to documentation pages.","url":"https://developers.cloudflare.com/style-guide/components/buttons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

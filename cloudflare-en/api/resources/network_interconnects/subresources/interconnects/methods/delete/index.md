@@ -2,7 +2,8 @@
 
 **delete** `/accounts/{account_id}/cni/interconnects/{icon}`
 
-Delete an interconnect object
+Permanently removes a network interconnect configuration. The physical or virtual connection
+will be terminated.
 
 ### Path Parameters
 

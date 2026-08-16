@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Infrastructure as Code (IaC)
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/platform/infrastructure-as-code/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/platform/infrastructure-as-code/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 While [Wrangler](https://developers.cloudflare.com/workers/wrangler/configuration) makes it easy to upload and manage Workers, there are times when you need a more programmatic approach. This could involve using Infrastructure as Code (IaC) tools or interacting directly with the [Workers API](https://developers.cloudflare.com/api/resources/workers/). Examples include build and deploy scripts, CI/CD pipelines, custom developer tools, and automated testing.
 
@@ -551,11 +551,11 @@ main();
 
 /**
  * Create and deploy a Worker
- * 
+ *
  * Docs:
  * - https://developers.cloudflare.com/workers/configuration/versions-and-deployments/
  * - https://developers.cloudflare.com/workers/platform/infrastructure-as-code/
- * 
+ *
  * Prerequisites:
  * 1. Generate an API token: https://developers.cloudflare.com/fundamentals/api/get-started/create-token/
  * 2. Find your account ID: https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/
@@ -621,7 +621,7 @@ async function main(): Promise<void> {
           return new Response(env.MESSAGE, { status: 200 });
         },
       }`.trim();
-    
+
     let worker;
     try {
       worker = await client.workers.beta.workers.get(config.workerName, {
@@ -645,7 +645,7 @@ async function main(): Promise<void> {
 
     console.log(`⚙️  Worker id: ${worker.id}`);
     console.log('✏️  Creating Worker version...');
-    
+
     // Create the first version of the Worker
     const version = await client.workers.beta.workers.versions.create(worker.id, {
       account_id: config.accountId,
@@ -669,7 +669,7 @@ async function main(): Promise<void> {
 
     console.log(`⚙️  Version id: ${version.id}`);
     console.log('🚚 Creating Worker deployment...');
-    
+
     // Create a deployment and point all traffic to the version we created
     await client.workers.scripts.deployments.create(config.workerName, {
       account_id: config.accountId,
@@ -681,9 +681,9 @@ async function main(): Promise<void> {
           },
         ],
     });
-    
+
     console.log('✅ Deployment successful!');
-    
+
     if (config.subdomain) {
       console.log(`
 🌍 Your Worker is live!
@@ -1086,8 +1086,8 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/platform/infrastructure-as-code/#page","headline":"Infrastructure as Code (IaC) · Cloudflare Workers docs","description":"Deploy and manage Cloudflare Workers using Terraform, Pulumi, and the Cloudflare API SDKs.","url":"https://developers.cloudflare.com/workers/platform/infrastructure-as-code/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/platform/infrastructure-as-code/#page","headline":"Infrastructure as Code (IaC) · Cloudflare Workers docs","description":"Deploy and manage Cloudflare Workers using Terraform, Pulumi, and the Cloudflare API SDKs.","url":"https://developers.cloudflare.com/workers/platform/infrastructure-as-code/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

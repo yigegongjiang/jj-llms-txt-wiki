@@ -1683,11 +1683,15 @@ Returns indicators associated with the provided tag UUID, with pagination. By de
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -1729,7 +1733,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
       "relatedEvents": [
         {
           "datasetId": "dataset-uuid-123",
-          "eventId": "event-uuid-456"
+          "eventId": "event-uuid-456",
+          "eventDate": "2024-06-15T00:00:00Z"
         }
       ],
       "tags": [
@@ -1772,11 +1777,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
       The dataset ID this indicator belongs to. Included in list responses.
 
-    - `relatedEvents: optional array of object { datasetId, eventId }`
+    - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
       - `datasetId: string`
 
       - `eventId: string`
+
+      - `eventDate: optional string`
+
+        ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
     - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -1898,11 +1907,15 @@ This endpoint is deprecated. Use GET /:account_id/events/tags/:tag_uuid/indicato
 
     The dataset ID this indicator belongs to. Included in list responses.
 
-  - `relatedEvents: optional array of object { datasetId, eventId }`
+  - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
     - `datasetId: string`
 
     - `eventId: string`
+
+    - `eventDate: optional string`
+
+      ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
   - `tags: optional array of object { categoryName, uuid, value }`
 
@@ -1944,7 +1957,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
       "relatedEvents": [
         {
           "datasetId": "dataset-uuid-123",
-          "eventId": "event-uuid-456"
+          "eventId": "event-uuid-456",
+          "eventDate": "2024-06-15T00:00:00Z"
         }
       ],
       "tags": [
@@ -1987,11 +2001,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cloudforce-one/ev
 
       The dataset ID this indicator belongs to. Included in list responses.
 
-    - `relatedEvents: optional array of object { datasetId, eventId }`
+    - `relatedEvents: optional array of object { datasetId, eventId, eventDate }`
 
       - `datasetId: string`
 
       - `eventId: string`
+
+      - `eventDate: optional string`
+
+        ISO 8601 date of the related event. Null for legacy relationships created before event-date tracking was added.
 
     - `tags: optional array of object { categoryName, uuid, value }`
 

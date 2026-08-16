@@ -134,7 +134,7 @@ List all versions for a Worker.
 
       Token provided upon successful upload of all files from a registered manifest.
 
-  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 32 more`
+  - `bindings: optional array of object { name, type }  or object { instance_name, name, type, namespace }  or object { name, namespace, type }  or 33 more`
 
     List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings.
 
@@ -185,6 +185,22 @@ List all versions for a Worker.
         The kind of resource that the binding provides.
 
         - `"ai_search_namespace"`
+
+    - `Messaging object { name, namespace, type }`
+
+      - `name: string`
+
+        A JavaScript variable name for the binding.
+
+      - `namespace: string`
+
+        The Messaging namespace to bind to.
+
+      - `type: "messaging"`
+
+        The kind of resource that the binding provides.
+
+        - `"messaging"`
 
     - `AnalyticsEngine object { dataset, name, type }`
 

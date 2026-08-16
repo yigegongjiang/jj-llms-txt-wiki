@@ -72,23 +72,6 @@ Note
 
 The fields in the custom rule are populated as a grouped sequence based on the values that you entered on Builder.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), and select your account and domain.
-2. Go to **Security** \> **WAF** \> **Custom rules**.
-3. To create a new empty rule, select **Create rule**.
-4. Enter a descriptive name for the rule in **Rule name**.
-5. Under **When incoming requests match**, use the **Field** drop-down list and select:  
-  * Current Operation
-  * Previous Operations
-  * Elapsed time
-6. Under **Value**, build a sequence by selecting a hostname for the sequence.
-7. Select the checkbox for each endpoint in the order that you want them to appear in the sequence.
-8. Set the time to complete.
-9. Select **Save**.
-10. Under **Then take action**, select the rule action in the **Choose action** dropdown. For example, selecting _Block_ tells Cloudflare to refuse requests that match the conditions you specified.
-11. (Optional) If you selected the _Block_ action, you can configure a custom response.
-12. Under **Place at**, select the order of when the rule will fire.
-13. To save and deploy your rule, select **Deploy**. If you are not ready to deploy your rule, select **Save as Draft**.
-
 ---
 
 ## Manage sequence rules via the API
@@ -187,7 +170,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/bots/additional-configurations/sequence-rules/#page","headline":"Sequence rules · Cloudflare bot solutions docs","description":"Detect and mitigate bot traffic based on cookie-based request sequences.","url":"https://developers.cloudflare.com/bots/additional-configurations/sequence-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}

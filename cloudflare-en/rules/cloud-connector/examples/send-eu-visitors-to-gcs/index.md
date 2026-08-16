@@ -40,7 +40,7 @@ YesNo
 
 ## On this page
 
-[![](https://developers.cloudflare.com/_astro/logo.DMYpXs3t.svg)Docs](https://developers.cloudflare.com/)
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
 {"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/cloud-connector/examples/send-eu-visitors-to-gcs/#page","headline":"Send EU visitors to a Google Cloud Storage bucket · Cloudflare Rules docs","description":"Route all traffic from EU visitors to a Google Cloud Storage bucket using Cloud Connector.","url":"https://developers.cloudflare.com/rules/cloud-connector/examples/send-eu-visitors-to-gcs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["GCP","Geolocation"]}

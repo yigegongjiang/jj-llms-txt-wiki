@@ -78,107 +78,133 @@ Shared queries store the results of a previously run query, allowing you to shar
 
   Query parameters defining what data to retrieve — filters, calculations, group-bys, and ordering. In practice this should always be provided for ad-hoc queries. Only omit when executing a previously saved query by queryId. Use the keys and values endpoints to discover available fields before building filters.
 
-  - `calculations: optional array of object { operator, alias, key, keyType }`
+  - `calculations: optional array of object { operator, alias, key, keyType }  or object { key, operator, alias, keyType }`
 
     Aggregation calculations to compute (e.g. count, avg, p99). Each calculation produces aggregate values and optional time-series data.
 
-    - `operator: "uniq" or "count" or "max" or 35 more`
+    - `object { operator, alias, key, keyType }`
 
-      Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
+      - `operator: "count" or "COUNT"`
 
-      - `"uniq"`
+        Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
 
-      - `"count"`
+        - `"count"`
 
-      - `"max"`
+        - `"COUNT"`
 
-      - `"min"`
+      - `alias: optional string`
 
-      - `"sum"`
+        Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
 
-      - `"avg"`
+      - `key: optional string`
 
-      - `"median"`
+        Field name to calculate over. Must exist in the data — verify with the keys endpoint. Required for every operator except `count`, which aggregates whole rows and may omit it.
 
-      - `"p001"`
+      - `keyType: optional "string" or "number" or "boolean"`
 
-      - `"p01"`
+        Data type of the key. Required when key is provided to ensure correct aggregation.
 
-      - `"p05"`
+        - `"string"`
 
-      - `"p10"`
+        - `"number"`
 
-      - `"p25"`
+        - `"boolean"`
 
-      - `"p75"`
+    - `object { key, operator, alias, keyType }`
 
-      - `"p90"`
+      - `key: string`
 
-      - `"p95"`
+        Field name to calculate over. Must exist in the data — verify with the keys endpoint. Required for every operator except `count`, which aggregates whole rows and may omit it.
 
-      - `"p99"`
+      - `operator: "uniq" or "max" or "min" or 33 more`
 
-      - `"p999"`
+        Aggregation operator to apply. Examples: count, avg, sum, min, max, median, p90, p95, p99, uniq, stddev, variance.
 
-      - `"stddev"`
+        - `"uniq"`
 
-      - `"variance"`
+        - `"max"`
 
-      - `"COUNT_DISTINCT"`
+        - `"min"`
 
-      - `"COUNT"`
+        - `"sum"`
 
-      - `"MAX"`
+        - `"avg"`
 
-      - `"MIN"`
+        - `"median"`
 
-      - `"SUM"`
+        - `"p001"`
 
-      - `"AVG"`
+        - `"p01"`
 
-      - `"MEDIAN"`
+        - `"p05"`
 
-      - `"P001"`
+        - `"p10"`
 
-      - `"P01"`
+        - `"p25"`
 
-      - `"P05"`
+        - `"p75"`
 
-      - `"P10"`
+        - `"p90"`
 
-      - `"P25"`
+        - `"p95"`
 
-      - `"P75"`
+        - `"p99"`
 
-      - `"P90"`
+        - `"p999"`
 
-      - `"P95"`
+        - `"stddev"`
 
-      - `"P99"`
+        - `"variance"`
 
-      - `"P999"`
+        - `"COUNT_DISTINCT"`
 
-      - `"STDDEV"`
+        - `"MAX"`
 
-      - `"VARIANCE"`
+        - `"MIN"`
 
-    - `alias: optional string`
+        - `"SUM"`
 
-      Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
+        - `"AVG"`
 
-    - `key: optional string`
+        - `"MEDIAN"`
 
-      Field name to calculate over. Must exist in the data — verify with the keys endpoint. Omit for operators that don't require a key (e.g. count).
+        - `"P001"`
 
-    - `keyType: optional "string" or "number" or "boolean"`
+        - `"P01"`
 
-      Data type of the key. Required when key is provided to ensure correct aggregation.
+        - `"P05"`
 
-      - `"string"`
+        - `"P10"`
 
-      - `"number"`
+        - `"P25"`
 
-      - `"boolean"`
+        - `"P75"`
+
+        - `"P90"`
+
+        - `"P95"`
+
+        - `"P99"`
+
+        - `"P999"`
+
+        - `"STDDEV"`
+
+        - `"VARIANCE"`
+
+      - `alias: optional string`
+
+        Custom label for this calculation in the results. Useful for distinguishing multiple calculations.
+
+      - `keyType: optional "string" or "number" or "boolean"`
+
+        Data type of the key. Required when key is provided to ensure correct aggregation.
+
+        - `"string"`
+
+        - `"number"`
+
+        - `"boolean"`
 
   - `datasets: optional array of string`
 

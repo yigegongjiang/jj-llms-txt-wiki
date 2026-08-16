@@ -44,11 +44,11 @@ Gets json from a webpage from a provided URL or HTML. Pass `prompt` or `schema` 
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -250,19 +250,9 @@ Gets json from a webpage from a provided URL or HTML. Pass `prompt` or `schema` 
 
   - `type: string`
 
-  - `json_schema: optional map[string or number or boolean or 2 more]`
+  - `json_schema: optional map[unknown]`
 
     Schema for the response format. More information here: https://developers.cloudflare.com/workers-ai/json-mode/
-
-    - `string`
-
-    - `number`
-
-    - `boolean`
-
-    - `unknown`
-
-    - `array of string`
 
 - `setExtraHTTPHeaders: optional map[string]`
 
@@ -312,6 +302,40 @@ Gets json from a webpage from a provided URL or HTML. Pass `prompt` or `schema` 
 
 ### Returns
 
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
+
+  - `status: optional number`
+
+    HTTP status returned by the origin.
+
+  - `title: optional string`
+
+    Page title.
+
 - `result: map[unknown]`
 
 - `success: boolean`
@@ -344,6 +368,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 ```json
 {
+  "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
+    "status": 0,
+    "title": "title"
+  },
   "result": {
     "foo": {}
   },

@@ -48,11 +48,11 @@ Fetches rendered HTML content from provided URL or HTML. Check available options
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -284,11 +284,39 @@ Fetches rendered HTML content from provided URL or HTML. Check available options
 
 ### Returns
 
-- `meta: object { status, title }`
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
 
   - `status: optional number`
 
+    HTTP status returned by the origin.
+
   - `title: optional string`
+
+    Page title.
 
 - `success: boolean`
 
@@ -325,6 +353,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 ```json
 {
   "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
     "status": 0,
     "title": "title"
   },
@@ -395,11 +436,11 @@ Fetches rendered PDF from provided URL or HTML. Check available options like `go
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -799,6 +840,10 @@ Get meta attributes like height, width, text and others of selected elements.
 
 ### Body Parameters
 
+- `elements: array of object { selector }`
+
+  - `selector: string`
+
 - `actionTimeout: optional number`
 
   The maximum duration allowed for the browser action to complete after the page has loaded (such as taking screenshots, extracting content, or generating PDFs). If this time limit is exceeded, the action stops and returns a timeout error.
@@ -825,11 +870,11 @@ Get meta attributes like height, width, text and others of selected elements.
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -930,10 +975,6 @@ Get meta attributes like height, width, text and others of selected elements.
     - `"Secure"`
 
   - `url: optional string`
-
-- `elements: optional array of object { selector }`
-
-  - `selector: string`
 
 - `emulateMediaType: optional string`
 
@@ -1065,6 +1106,40 @@ Get meta attributes like height, width, text and others of selected elements.
 
 ### Returns
 
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
+
+  - `status: optional number`
+
+    HTTP status returned by the origin.
+
+  - `title: optional string`
+
+    Page title.
+
 - `result: array of object { results, selector }`
 
   - `results: object { attributes, height, html, 4 more }`
@@ -1128,6 +1203,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
     -d '{
+          "elements": [
+            {
+              "selector": "h1"
+            }
+          ],
           "html": "<h1>Hello World!</h1>",
           "url": "https://www.example.com/"
         }'
@@ -1137,6 +1217,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 ```json
 {
+  "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
+    "status": 0,
+    "title": "title"
+  },
   "result": [
     {
       "results": {
@@ -1260,11 +1357,11 @@ Takes a screenshot of a webpage from provided URL or HTML. Control page loading 
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -1650,11 +1747,11 @@ Returns the page's HTML content and screenshot. Control page loading with `gotoO
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -1930,11 +2027,39 @@ Returns the page's HTML content and screenshot. Control page loading with `gotoO
 
 ### Returns
 
-- `meta: object { status, title }`
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
 
   - `status: optional number`
 
+    HTTP status returned by the origin.
+
   - `title: optional string`
+
+    Page title.
 
 - `success: boolean`
 
@@ -2030,7 +2155,7 @@ Returns the page's HTML content and screenshot. Control page loading with `gotoO
 
   - `markdown: optional string`
 
-    Markdown content.
+    Markdown content. Prefixed with YAML frontmatter (e.g. `title`) when the page provides that metadata.
 
   - `screenshot: optional string`
 
@@ -2053,6 +2178,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 ```json
 {
   "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
     "status": 0,
     "title": "title"
   },
@@ -2185,7 +2323,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
   - `markdown: optional string`
 
-    Markdown content.
+    Markdown content. Prefixed with YAML frontmatter (e.g. `title`) when the page provides that metadata.
 
   - `screenshot: optional string`
 
@@ -2239,11 +2377,11 @@ Gets json from a webpage from a provided URL or HTML. Pass `prompt` or `schema` 
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -2445,19 +2583,9 @@ Gets json from a webpage from a provided URL or HTML. Pass `prompt` or `schema` 
 
   - `type: string`
 
-  - `json_schema: optional map[string or number or boolean or 2 more]`
+  - `json_schema: optional map[unknown]`
 
     Schema for the response format. More information here: https://developers.cloudflare.com/workers-ai/json-mode/
-
-    - `string`
-
-    - `number`
-
-    - `boolean`
-
-    - `unknown`
-
-    - `array of string`
 
 - `setExtraHTTPHeaders: optional map[string]`
 
@@ -2507,6 +2635,40 @@ Gets json from a webpage from a provided URL or HTML. Pass `prompt` or `schema` 
 
 ### Returns
 
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
+
+  - `status: optional number`
+
+    HTTP status returned by the origin.
+
+  - `title: optional string`
+
+    Page title.
+
 - `result: map[unknown]`
 
 - `success: boolean`
@@ -2539,6 +2701,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 ```json
 {
+  "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
+    "status": 0,
+    "title": "title"
+  },
   "result": {
     "foo": {}
   },
@@ -2606,11 +2785,11 @@ Get links from a web page.
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -2846,6 +3025,40 @@ Get links from a web page.
 
 ### Returns
 
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
+
+  - `status: optional number`
+
+    HTTP status returned by the origin.
+
+  - `title: optional string`
+
+    Page title.
+
 - `result: array of string`
 
 - `success: boolean`
@@ -2878,6 +3091,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 ```json
 {
+  "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
+    "status": 0,
+    "title": "title"
+  },
   "result": [
     "string"
   ],
@@ -2945,11 +3175,11 @@ Gets markdown of a webpage from provided URL or HTML. Control page loading with 
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -3181,6 +3411,40 @@ Gets markdown of a webpage from provided URL or HTML. Control page loading with 
 
 ### Returns
 
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
+
+  - `status: optional number`
+
+    HTTP status returned by the origin.
+
+  - `title: optional string`
+
+    Page title.
+
 - `success: boolean`
 
   Response status.
@@ -3197,7 +3461,7 @@ Gets markdown of a webpage from provided URL or HTML. Control page loading with 
 
 - `result: optional string`
 
-  Markdown content.
+  Markdown content. Prefixed with YAML frontmatter (e.g. `title`) when the page provides that metadata.
 
 ### Example
 
@@ -3215,6 +3479,23 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 ```json
 {
+  "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
+    "status": 0,
+    "title": "title"
+  },
   "success": true,
   "errors": [
     {
@@ -3232,7 +3513,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 - `MarkdownCreateResponse = string`
 
-  Markdown content.
+  Markdown content. Prefixed with YAML frontmatter (e.g. `title`) when the page provides that metadata.
 
 # Accessibility Tree
 
@@ -3282,11 +3563,11 @@ Returns the page's accessibility tree. Use `interestingOnly` to only return sema
 
 - `allowRequestPattern: optional array of string`
 
-  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+  Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
 - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-  Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+  Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
   - `"document"`
 
@@ -3522,11 +3803,39 @@ Returns the page's accessibility tree. Use `interestingOnly` to only return sema
 
 ### Returns
 
-- `meta: object { status, title }`
+- `meta: object { finalUrl, headers, redirectChain, 2 more }`
+
+  - `finalUrl: optional string`
+
+    URL that served the response, after any redirects the browser followed.
+
+  - `headers: optional map[string]`
+
+    Origin response headers, lowercased. Repeated headers are joined with a newline. Credential and transport-only headers that do not survive rendering are omitted.
+
+  - `redirectChain: optional array of object { headers, status, url }`
+
+    HTTP redirects followed to reach `finalUrl`, oldest first. Omitted for direct navigation and for client-side redirects such as meta refresh. An empty array means redirects occurred but their intermediate responses could not be read.
+
+    - `headers: map[string]`
+
+      Redirect response headers, including `location`.
+
+    - `status: number`
+
+      HTTP status of the redirect.
+
+    - `url: string`
+
+      URL that returned the redirect.
 
   - `status: optional number`
 
+    HTTP status returned by the origin.
+
   - `title: optional string`
+
+    Page title.
 
 - `result: object { accessibilityTree }`
 
@@ -3633,6 +3942,19 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 ```json
 {
   "meta": {
+    "finalUrl": "finalUrl",
+    "headers": {
+      "foo": "string"
+    },
+    "redirectChain": [
+      {
+        "headers": {
+          "foo": "string"
+        },
+        "status": 0,
+        "url": "url"
+      }
+    ],
     "status": 0,
     "title": "title"
   },
@@ -3812,11 +4134,11 @@ Starts a crawl job for the provided URL and its children. Check available option
 
     - `allowRequestPattern: optional array of string`
 
-      Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'.
+      Only allow requests that match the provided regex patterns, eg. '/^.*.(css)'. Reject rules are applied first.
 
     - `allowResourceTypes: optional array of "document" or "stylesheet" or "image" or 15 more`
 
-      Only allow requests that match the provided resource types, eg. 'image' or 'script'.
+      Only allow requests that match the provided resource types, eg. 'image' or 'script'. Reject rules are applied first.
 
       - `"document"`
 
@@ -3998,19 +4320,9 @@ Starts a crawl job for the provided URL and its children. Check available option
 
         - `type: string`
 
-        - `json_schema: optional map[string or number or boolean or 2 more]`
+        - `json_schema: optional map[unknown]`
 
           Schema for the response format. More information here: https://developers.cloudflare.com/workers-ai/json-mode/
-
-          - `string`
-
-          - `number`
-
-          - `boolean`
-
-          - `unknown`
-
-          - `array of string`
 
     - `limit: optional number`
 
@@ -4202,19 +4514,9 @@ Starts a crawl job for the provided URL and its children. Check available option
 
         - `type: string`
 
-        - `json_schema: optional map[string or number or boolean or 2 more]`
+        - `json_schema: optional map[unknown]`
 
           Schema for the response format. More information here: https://developers.cloudflare.com/workers-ai/json-mode/
-
-          - `string`
-
-          - `number`
-
-          - `boolean`
-
-          - `unknown`
-
-          - `array of string`
 
     - `limit: optional number`
 
@@ -4366,23 +4668,9 @@ Returns the result of a crawl job.
 
     Total number of URLs that have been crawled so far.
 
-  - `records: array of object { metadata, status, url, 3 more }`
+  - `records: array of object { status, url, html, 3 more }`
 
     List of crawl job records.
-
-    - `metadata: object { status, url, title }`
-
-      - `status: number`
-
-        HTTP status code of the crawled page.
-
-      - `url: string`
-
-        Final URL of the crawled page.
-
-      - `title: optional string`
-
-        Title of the crawled page.
 
     - `status: "queued" or "errored" or "completed" or 3 more`
 
@@ -4415,6 +4703,22 @@ Returns the result of a crawl job.
     - `markdown: optional string`
 
       Markdown of the content of the crawled URL.
+
+    - `metadata: optional object { status, url, title }`
+
+      Absent for urls that never reached a fetch.
+
+      - `status: number`
+
+        HTTP status code of the crawled page.
+
+      - `url: string`
+
+        Final URL of the crawled page.
+
+      - `title: optional string`
+
+        Title of the crawled page.
 
   - `skipped: number`
 
@@ -4463,18 +4767,18 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
     "finished": 0,
     "records": [
       {
-        "metadata": {
-          "status": 0,
-          "url": "url",
-          "title": "title"
-        },
         "status": "queued",
         "url": "url",
         "html": "html",
         "json": {
           "foo": {}
         },
-        "markdown": "markdown"
+        "markdown": "markdown",
+        "metadata": {
+          "status": 0,
+          "url": "url",
+          "title": "title"
+        }
       }
     ],
     "skipped": 0,
@@ -4584,23 +4888,9 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
     Total number of URLs that have been crawled so far.
 
-  - `records: array of object { metadata, status, url, 3 more }`
+  - `records: array of object { status, url, html, 3 more }`
 
     List of crawl job records.
-
-    - `metadata: object { status, url, title }`
-
-      - `status: number`
-
-        HTTP status code of the crawled page.
-
-      - `url: string`
-
-        Final URL of the crawled page.
-
-      - `title: optional string`
-
-        Title of the crawled page.
 
     - `status: "queued" or "errored" or "completed" or 3 more`
 
@@ -4633,6 +4923,22 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
     - `markdown: optional string`
 
       Markdown of the content of the crawled URL.
+
+    - `metadata: optional object { status, url, title }`
+
+      Absent for urls that never reached a fetch.
+
+      - `status: number`
+
+        HTTP status code of the crawled page.
+
+      - `url: string`
+
+        Final URL of the crawled page.
+
+      - `title: optional string`
+
+        Title of the crawled page.
 
   - `skipped: number`
 
@@ -4948,7 +5254,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 **post** `/accounts/{account_id}/browser-rendering/devtools/browser`
 
-Acquires a browser and returns its session ID and websocket URL.
+Acquires a browser and returns its session ID and websocket URL. Optionally accepts a JSON body with session guardrails to restrict outbound HTTP/S traffic.
 
 ### Path Parameters
 
@@ -4975,6 +5281,18 @@ Acquires a browser and returns its session ID and websocket URL.
 - `targets: optional boolean`
 
   Include browser targets in response.
+
+### Body Parameters
+
+- `guardrails: optional object { allowedDomains, allowedDomainSets }`
+
+  - `allowedDomains: optional array of string`
+
+    Hostname patterns, max 50. Supports exact hosts (example.com) or a single * wildcard anywhere. Prefer *.example.com (subdomain wildcard) over *example.com (prefix wildcard) to avoid matching overbroad lookalikes like evilexample.com.
+
+  - `allowedDomainSets: optional array of string`
+
+    Max 4 entries: curated preset names (common-cdns) and/or https URLs of newline-separated hostname lists.
 
 ### Returns
 
@@ -5007,7 +5325,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/browser-rendering
 
 **get** `/accounts/{account_id}/browser-rendering/devtools/browser`
 
-Acquires and establishes a WebSocket connection to a browser session.
+Acquires and establishes a WebSocket connection to a browser session. Session guardrails may be supplied in the `cf-brapi-guardrails` header as base64url-encoded JSON of the same `guardrails` object the POST body accepts (for example `{"allowedDomains":["*.example.com"]}`).
 
 ### Path Parameters
 
@@ -5026,6 +5344,12 @@ Acquires and establishes a WebSocket connection to a browser session.
   Use experimental browser.
 
 - `recording: optional boolean`
+
+### Header Parameters
+
+- `"cf-brapi-guardrails": optional string`
+
+  Optional base64url-encoded JSON session guardrails (allowedDomains and allowedDomainSets)
 
 ### Example
 
