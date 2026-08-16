@@ -151,29 +151,6 @@ If you are not using functions or multimodal inputs, simple message inputs are c
 
 Reuse simple message input
 
-```bash
-INPUT='[
-  { "role": "system", "content": "You are a helpful assistant." },
-  { "role": "user", "content": "Hello!" }
-]'
-
-curl -s https://api.openai.com/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d "{
-    \"model\": \"gpt-5.6\",
-    \"messages\": $INPUT
-  }"
-
-curl -s https://api.openai.com/v1/responses \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d "{
-    \"model\": \"gpt-5.6\",
-    \"input\": $INPUT
-  }"
-```
-
 ```javascript
 /** @type {OpenAI.ChatCompletionMessageParam[] & OpenAI.Responses.ResponseInput} */
 const context = [
@@ -201,6 +178,91 @@ context = [
 completion = client.chat.completions.create(model="gpt-5.6", messages=context)
 
 response = client.responses.create(model="gpt-5.6", input=context)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model: "gpt-5.6",
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.SystemMessage("You are a helpful assistant."),
+			openai.UserMessage("Hello!"),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(completion.Choices[0].Message.Content)
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
+			responses.ResponseInputItemParamOfMessage("You are a helpful assistant.", responses.EasyInputMessageRoleSystem),
+			responses.ResponseInputItemParamOfMessage("Hello!", responses.EasyInputMessageRoleUser),
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+messages = [
+  {role: :system, content: "You are a helpful assistant."},
+  {role: :user, content: "Hello!"}
+]
+
+completion = client.chat.completions.create(
+  model: "gpt-5.6",
+  messages: messages
+)
+puts(completion.choices.fetch(0).message.content)
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: messages
+)
+puts(response.output_text)
+```
+
+```bash
+INPUT='[
+  { "role": "system", "content": "You are a helpful assistant." },
+  { "role": "user", "content": "Hello!" }
+]'
+
+curl -s https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d "{
+    \"model\": \"gpt-5.6\",
+    \"messages\": $INPUT
+  }"
+
+curl -s https://api.openai.com/v1/responses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d "{
+    \"model\": \"gpt-5.6\",
+    \"input\": $INPUT
+  }"
 ```
 
 
@@ -239,6 +301,49 @@ completion = client.chat.completions.create(
     ],
 )
 print(completion.choices[0].message.content)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model: "gpt-5.6",
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.SystemMessage("You are a helpful assistant."),
+			openai.UserMessage("Hello!"),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(completion.Choices[0].Message.Content)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+completion = client.chat.completions.create(
+  model: "gpt-5.6",
+  messages: [
+    {role: :system, content: "You are a helpful assistant."},
+    {role: :user, content: "Hello!"}
+  ]
+)
+
+puts(completion.choices.fetch(0).message.content)
 ```
 
 ```bash
@@ -288,6 +393,46 @@ response = client.responses.create(
     model="gpt-5.6", instructions="You are a helpful assistant.", input="Hello!"
 )
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:        "gpt-5.6",
+		Instructions: openai.String("You are a helpful assistant."),
+		Input:        responses.ResponseNewParamsInputUnion{OfString: openai.String("Hello!")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  instructions: "You are a helpful assistant.",
+  input: "Hello!"
+)
+
+puts(response.output_text)
 ```
 
 ```bash
@@ -368,6 +513,61 @@ messages += [{"role": "user", "content": "And its population?"}]
 res2 = client.chat.completions.create(model="gpt-5.6", messages=messages)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	messages := []openai.ChatCompletionMessageParamUnion{
+		openai.SystemMessage("You are a helpful assistant."),
+		openai.UserMessage("What is the capital of France?"),
+	}
+
+	first, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{Model: "gpt-5.6", Messages: messages})
+	if err != nil {
+		panic(err)
+	}
+	messages = append(messages, openai.AssistantMessage(first.Choices[0].Message.Content), openai.UserMessage("And its population?"))
+
+	second, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{Model: "gpt-5.6", Messages: messages})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.Choices[0].Message.Content)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+messages = [
+  {role: :system, content: "You are a helpful assistant."},
+  {role: :user, content: "What is the capital of France?"}
+]
+
+first = client.chat.completions.create(
+  model: "gpt-5.6",
+  messages: messages
+)
+messages << {role: :assistant, content: first.choices.fetch(0).message.content}
+messages << {role: :user, content: "And its population?"}
+
+second = client.chat.completions.create(
+  model: "gpt-5.6",
+  messages: messages
+)
+
+puts(second.choices.fetch(0).message.content)
+```
+
 
   
 
@@ -379,25 +579,6 @@ Responses
     With Responses, you can manually pass outputs from one response into the
     input of another.
     Multi-turn conversation
-
-```python
-context = [{"role": "user", "content": "What is the capital of France?"}]
-res1 = client.responses.create(
-    model="gpt-5.6",
-    input=context,
-)
-
-# Append the first response's output to context
-context += res1.output
-
-# Add the next user message
-context += [{"role": "user", "content": "And its population?"}]
-
-res2 = client.responses.create(
-    model="gpt-5.6",
-    input=context,
-)
-```
 
 ```javascript
 /** @type {OpenAI.Responses.ResponseInput} */
@@ -418,6 +599,95 @@ const res2 = await client.responses.create({
   model: "gpt-5.6",
   input: context,
 });
+```
+
+```python
+context = [{"role": "user", "content": "What is the capital of France?"}]
+res1 = client.responses.create(
+    model="gpt-5.6",
+    input=context,
+)
+
+# Append the first response's output to context
+context += res1.output
+
+# Add the next user message
+context += [{"role": "user", "content": "And its population?"}]
+
+res2 = client.responses.create(
+    model="gpt-5.6",
+    input=context,
+)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	contextItems := responses.ResponseInputParam{
+		responses.ResponseInputItemParamOfMessage("What is the capital of France?", responses.EasyInputMessageRoleUser),
+	}
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: contextItems},
+	})
+	if err != nil {
+		panic(err)
+	}
+	contextItems = append(contextItems, outputAsInput(first.Output)...)
+	contextItems = append(contextItems, responses.ResponseInputItemParamOfMessage("And its population?", responses.EasyInputMessageRoleUser))
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: contextItems},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.OutputText())
+}
+
+func outputAsInput(output []responses.ResponseOutputItemUnion) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+context = [{role: :user, content: "What is the capital of France?"}]
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  input: context
+)
+context.concat(first.output.map(&:to_h))
+context << {role: :user, content: "And its population?"}
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  input: context
+)
+
+puts(second.output_text)
 ```
 
     You can also use `previous_response_id` to reference the previous response
@@ -452,6 +722,63 @@ res2 = client.responses.create(
 )
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Store: openai.Bool(true),
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("What is the capital of France?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:              "gpt-5.6",
+		Store:              openai.Bool(true),
+		PreviousResponseID: openai.String(first.ID),
+		Input:              responses.ResponseNewParamsInputUnion{OfString: openai.String("And its population?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  input: "What is the capital of France?",
+  store: true
+)
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  previous_response_id: first.id,
+  input: "And its population?",
+  store: true
+)
+
+puts(second.output_text)
+```
+
 
 
 Even when using `previous_response_id`, all previous input tokens for responses in the chain are billed as input tokens in the API.
@@ -483,7 +810,7 @@ The Responses API function example on the right is functionally equivalent to th
 
 #### Chat Completions API
 
-```javascript
+```json
 {
     "type": "function",
     "function": {
@@ -494,8 +821,8 @@ The Responses API function example on the right is functionally equivalent to th
         "type": "object",
         "properties": {
           "location": {
-            "type": "string",
-          },
+            "type": "string"
+          }
         },
         "additionalProperties": false,
         "required": [
@@ -508,7 +835,7 @@ The Responses API function example on the right is functionally equivalent to th
 
 #### Responses API
 
-```javascript
+```json
 {
     "type": "function",
     "name": "get_weather",
@@ -517,8 +844,8 @@ The Responses API function example on the right is functionally equivalent to th
       "type": "object",
       "properties": {
         "location": {
-          "type": "string",
-        },
+          "type": "string"
+        }
       },
       "additionalProperties": false,
       "required": [
@@ -544,6 +871,144 @@ In the Responses API, Structured Outputs definitions have moved from `response_f
 Chat Completions
 
     Structured Outputs
+
+```javascript
+const completion = await openai.chat.completions.create({
+  model: "gpt-5.6",
+  messages: [
+    {
+      role: "user",
+      content: "Jane, 54 years old",
+    },
+  ],
+  response_format: {
+    type: "json_schema",
+    json_schema: {
+      name: "person",
+      strict: true,
+      schema: {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+          },
+          age: {
+            type: "number",
+            minimum: 0,
+            maximum: 130,
+          },
+        },
+        required: ["name", "age"],
+        additionalProperties: false,
+      },
+    },
+  },
+  reasoning_effort: "medium",
+});
+```
+
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+response = client.chat.completions.create(
+    model="gpt-5.6",
+    messages=[
+        {
+            "role": "user",
+            "content": "Jane, 54 years old",
+        }
+    ],
+    response_format={
+        "type": "json_schema",
+        "json_schema": {
+            "name": "person",
+            "strict": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "age": {"type": "number", "minimum": 0, "maximum": 130},
+                },
+                "required": ["name", "age"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    reasoning_effort="medium",
+)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	schema := map[string]any{
+		"type": "object",
+		"properties": map[string]any{
+			"name": map[string]any{"type": "string", "minLength": 1},
+			"age":  map[string]any{"type": "number", "minimum": 0, "maximum": 130},
+		},
+		"required":             []string{"name", "age"},
+		"additionalProperties": false,
+	}
+
+	completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model:           "gpt-5.6",
+		ReasoningEffort: openai.ReasoningEffortMedium,
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage("Jane, 54 years old"),
+		},
+		ResponseFormat: openai.ChatCompletionNewParamsResponseFormatUnion{
+			OfJSONSchema: &shared.ResponseFormatJSONSchemaParam{JSONSchema: shared.ResponseFormatJSONSchemaJSONSchemaParam{
+				Name: "person", Strict: openai.Bool(true), Schema: schema,
+			}},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(completion.Choices[0].Message.Content)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+schema = {
+  type: "object",
+  properties: {
+    name: {type: "string", minLength: 1},
+    age: {type: "number", minimum: 0, maximum: 130}
+  },
+  required: ["name", "age"],
+  additionalProperties: false
+}
+
+completion = client.chat.completions.create(
+  model: "gpt-5.6",
+  reasoning_effort: :medium,
+  messages: [{role: :user, content: "Jane, 54 years old"}],
+  response_format: {
+    type: :json_schema,
+    json_schema: {name: "person", strict: true, schema: schema}
+  }
+)
+
+puts(completion.choices.fetch(0).message.content)
+```
 
 ```bash
 curl https://api.openai.com/v1/chat/completions \
@@ -587,51 +1052,22 @@ curl https://api.openai.com/v1/chat/completions \
 }'
 ```
 
-```python
-from openai import OpenAI
+  
 
-client = OpenAI()
+  
 
-response = client.chat.completions.create(
-    model="gpt-5.6",
-    messages=[
-        {
-            "role": "user",
-            "content": "Jane, 54 years old",
-        }
-    ],
-    response_format={
-        "type": "json_schema",
-        "json_schema": {
-            "name": "person",
-            "strict": True,
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string", "minLength": 1},
-                    "age": {"type": "number", "minimum": 0, "maximum": 130},
-                },
-                "required": ["name", "age"],
-                "additionalProperties": False,
-            },
-        },
-    },
-    reasoning_effort="medium",
-)
-```
+    
+Responses
+
+    Structured Outputs
 
 ```javascript
-const completion = await openai.chat.completions.create({
+const response = await openai.responses.create({
   model: "gpt-5.6",
-  messages: [
-    {
-      role: "user",
-      content: "Jane, 54 years old",
-    },
-  ],
-  response_format: {
-    type: "json_schema",
-    json_schema: {
+  input: "Jane, 54 years old",
+  text: {
+    format: {
+      type: "json_schema",
       name: "person",
       strict: true,
       schema: {
@@ -652,18 +1088,98 @@ const completion = await openai.chat.completions.create({
       },
     },
   },
-  reasoning_effort: "medium",
 });
 ```
 
-  
+```python
+response = client.responses.create(
+    model="gpt-5.6",
+    input="Jane, 54 years old",
+    text={
+        "format": {
+            "type": "json_schema",
+            "name": "person",
+            "strict": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "age": {"type": "number", "minimum": 0, "maximum": 130},
+                },
+                "required": ["name", "age"],
+                "additionalProperties": False,
+            },
+        }
+    },
+)
+```
 
-  
+```go
+package main
 
-    
-Responses
+import (
+	"context"
+	"fmt"
 
-    Structured Outputs
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	schema := map[string]any{
+		"type": "object",
+		"properties": map[string]any{
+			"name": map[string]any{"type": "string", "minLength": 1},
+			"age":  map[string]any{"type": "number", "minimum": 0, "maximum": 130},
+		},
+		"required":             []string{"name", "age"},
+		"additionalProperties": false,
+	}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Jane, 54 years old")},
+		Text: responses.ResponseTextConfigParam{Format: responses.ResponseFormatTextConfigUnionParam{
+			OfJSONSchema: &responses.ResponseFormatTextJSONSchemaConfigParam{Name: "person", Schema: schema, Strict: openai.Bool(true)},
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+schema = {
+  type: "object",
+  properties: {
+    name: {type: "string", minLength: 1},
+    age: {type: "number", minimum: 0, maximum: 130}
+  },
+  required: ["name", "age"],
+  additionalProperties: false
+}
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Jane, 54 years old",
+  text: {
+    format: {
+      type: :json_schema,
+      name: "person",
+      strict: true,
+      schema: schema
+    }
+  }
+)
+
+puts(response.output_text)
+```
 
 ```bash
 curl https://api.openai.com/v1/responses \
@@ -699,59 +1215,6 @@ curl https://api.openai.com/v1/responses \
     }
   }
 }'
-```
-
-```python
-response = client.responses.create(
-    model="gpt-5.6",
-    input="Jane, 54 years old",
-    text={
-        "format": {
-            "type": "json_schema",
-            "name": "person",
-            "strict": True,
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string", "minLength": 1},
-                    "age": {"type": "number", "minimum": 0, "maximum": 130},
-                },
-                "required": ["name", "age"],
-                "additionalProperties": False,
-            },
-        }
-    },
-)
-```
-
-```javascript
-const response = await openai.responses.create({
-  model: "gpt-5.6",
-  input: "Jane, 54 years old",
-  text: {
-    format: {
-      type: "json_schema",
-      name: "person",
-      strict: true,
-      schema: {
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-            minLength: 1,
-          },
-          age: {
-            type: "number",
-            minimum: 0,
-            maximum: 130,
-          },
-        },
-        required: ["name", "age"],
-        additionalProperties: false,
-      },
-    },
-  },
-});
 ```
 
 
@@ -837,6 +1300,71 @@ completion = client.chat.completions.create(
 )
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model: "gpt-5.6",
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.SystemMessage("You are a helpful assistant."),
+			openai.UserMessage("Who is the current president of France?"),
+		},
+		Functions: []openai.ChatCompletionNewParamsFunction{{
+			Name:        "web_search",
+			Description: openai.String("Search the web for information"),
+			Parameters: map[string]any{
+				"type":       "object",
+				"properties": map[string]any{"query": map[string]any{"type": "string"}},
+				"required":   []string{"query"},
+			},
+		}},
+		ReasoningEffort: shared.ReasoningEffortNone,
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(completion.Choices[0].Message)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+completion = client.chat.completions.create(
+  model: "gpt-5.6",
+  reasoning_effort: :none,
+  messages: [
+    {role: :system, content: "You are a helpful assistant."},
+    {role: :user, content: "Who is the current president of France?"}
+  ],
+  functions: [
+    {
+      name: "web_search",
+      description: "Search the web for information",
+      parameters: {
+        type: "object",
+        properties: {query: {type: "string"}},
+        required: ["query"]
+      }
+    }
+  ]
+)
+
+puts(completion.choices.fetch(0).message)
+```
+
 ```bash
 curl https://api.example.com/search \
   -G \
@@ -872,6 +1400,47 @@ answer = client.responses.create(
 )
 
 print(answer.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Who is the current president of France?")},
+		Tools: []responses.ToolUnionParam{
+			responses.ToolParamOfWebSearch(responses.WebSearchToolTypeWebSearch),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Who is the current president of France?",
+  tools: [{type: :web_search}]
+)
+
+puts(response.output_text)
 ```
 
 ```bash

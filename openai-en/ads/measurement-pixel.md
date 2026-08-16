@@ -1,11 +1,28 @@
-# JavaScript Pixel
+# Measurement Pixel
 
 > For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-The OpenAI Ads Measurement Pixel is a browser SDK for measuring website events
-after someone clicks an ad in ChatGPT. Use the pixel by adding the script to your site, initializing
-it with your Pixel ID, and call `oaiq("measure", ...)` when a conversion
-happens.
+The ChatGPT Ads Measurement Pixel is a browser SDK for measuring website events
+that can be attributed to ads in ChatGPT. Add the script to your site, initialize
+it with your Pixel ID, and call `oaiq("measure", ...)` when a conversion happens.
+
+If a page needs to measure conversions for more than one Pixel ID, see
+[Configure more than one Pixel ID](https://developers.openai.com/ads/multiple-pixels).
+
+## Attribution reporting
+
+The same events support click-through attribution and, when available for your
+account, view-through attribution. Click-through attribution uses the applicable
+configured click window. View-through conversions use a fixed one-day window
+after an eligible ad impression. Whether view-through reporting is available
+does not depend on your configured click window. If a conversion is eligible
+for both, the click takes precedence.
+
+View-through reporting requires no changes to your Pixel integration or event
+payload. Ads Manager reports view-through conversions as a separate,
+campaign-level metric. They are not included in `Conversions`, which remains
+the click-through conversion total. CPA, post-click CVR, bidding, billing, and
+conversion optimization also remain click-through-based.
 
 ## Install the Measurement Pixel
 
@@ -34,7 +51,7 @@ conversions. Put the script near the top of your `<head>` to ensure early conver
 </script>
 ```
 
-`pixelId` is required. Create a new pixelId in the conversions tab of Ads Manager. `debug` is optional and logs SDK activity to the browser
+`pixelId` is required. Create a new Pixel ID in the conversions tab of Ads Manager. `debug` is optional and logs SDK activity to the browser
 console while you test your integration.
 
 ## Control measurement consent
@@ -66,13 +83,14 @@ your existing policy:
 | ------------- | --------------------------- | -------------------------------------------- |
 | `script-src`  | `https://bzrcdn.openai.com` | Load the Measurement Pixel SDK.              |
 | `connect-src` | `https://bzr.openai.com`    | Send events with `fetch` or `sendBeacon`.    |
+| `connect-src` | `https://bzrcdn.openai.com` | Fetch per-pixel configuration.               |
 | `img-src`     | `https://bzr.openai.com`    | Send events with the image request fallback. |
 
 For example, a policy that otherwise allows only same-origin resources and uses
 a nonce would include:
 
 ```http
-Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-<NONCE>' https://bzrcdn.openai.com; connect-src 'self' https://bzr.openai.com; img-src 'self' https://bzr.openai.com;
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-<NONCE>' https://bzrcdn.openai.com; connect-src 'self' https://bzr.openai.com https://bzrcdn.openai.com; img-src 'self' https://bzr.openai.com;
 ```
 
 Replace `<NONCE>` with a fresh nonce for each response and add the same value to
@@ -120,12 +138,28 @@ Send hashes as lowercase, 64-character hexadecimal strings. Don't send raw email
 addresses, raw external IDs, phone numbers, or phone number hashes.
 
 If user data becomes available after the first `init` call, such as after login,
-call `init` again with the complete `user` object. You can omit `pixelId` after
-the first successful initialization.
+call `init` again with the complete `user` object. When a page initializes only
+one pixel, you can omit `pixelId` after the first successful initialization. If
+a page initializes more than one pixel, always include the intended `pixelId`
+when updating user data.
+
+## Automatic advanced matching
+
+Automatic advanced matching improves website conversion measurement by helping
+match more conversions to your ads when a click identifier is unavailable.
+
+When enabled, the OpenAI Pixel automatically detects supported customer
+information from your website. The Pixel normalizes and securely hashes this
+information in the browser using SHA-256 before including it with conversion
+events. Raw customer information is not sent to OpenAI through automatic
+advanced matching.
+
+You do not need to manually pass customer information or make any changes to
+your Pixel implementation.
 
 ## Send events
 
-The JavaScript Pixel does not support `app_installed` or `app_opened`.
+The Measurement Pixel does not support `app_installed` or `app_opened`.
 
 Send these events server-side through the
 [Conversions API](https://developers.openai.com/ads/conversions-api).
@@ -159,7 +193,7 @@ The options object supports these fields:
 
 | Field               | When to use it                                                                                       |
 | ------------------- | ---------------------------------------------------------------------------------------------------- |
-| `event_id`          | Set a unique ID when deduplicating the same event sent from the browser and server.                  |
+| `event_id`          | Set a unique ID to identify the same event sent from the browser and server.                         |
 | `custom_event_name` | Name a custom event. This field is required for custom events and isn't supported for standard ones. |
 | `opt_out`           | Set to `true` to opt out the event from future user-level personalization. Defaults to `false`.      |
 
@@ -317,7 +351,11 @@ oaiq("measure", "trial_started", {
 });
 ```
 
+{/* vale Vale.Spelling = NO */}
+
 ## Deduplicate browser and server events
+
+{/* vale Vale.Spelling = YES */}
 
 If you send the same conversion from both the Measurement Pixel and a
 server-side integration, reuse the same `event_id` in both places.
@@ -340,7 +378,7 @@ oaiq(
 When you need deduplication across browser and server events, generate the
 `event_id` yourself and reuse it on the same pixel and server-sent event. For
 custom events, keep the same `custom_event_name` on both sides as well.
-Deduplication matches on your Pixel ID, the event name, and `event_id`. For
+Duplicate-event matching uses your Pixel ID, the event name, and `event_id`. For
 custom events, `custom_event_name` replaces the standard event name in that
 match.
 
@@ -353,6 +391,9 @@ The Pixel handles several transport details for you:
   reuse it.
 - It adds the current page origin as `source_url`.
 - It timestamps each event and batches closely grouped `measure` calls.
+- When automatic advanced matching is enabled, it detects supported customer
+  information from your website, securely hashes it using SHA-256, and includes
+  the resulting SHA-256 hash with conversion events.
 
 No manual configuration of these details is necessary when using the pixel.
 

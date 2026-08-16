@@ -2,41 +2,23 @@
 
 > For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-## List runs
+## Cancel a run
 
-**get** `/threads/{thread_id}/runs`
+**post** `/threads/{thread_id}/runs/{run_id}/cancel`
 
-Returns a list of runs belonging to a thread.
+Cancels a run that is `in_progress`.
 
 ### Path Parameters
 
 - `thread_id: string`
 
-### Query Parameters
-
-- `after: optional string`
-
-  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-
-- `before: optional string`
-
-  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-
-- `limit: optional number`
-
-  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-
-- `order: optional "asc" or "desc"`
-
-  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
-
-  - `"asc"`
-
-  - `"desc"`
+- `run_id: string`
 
 ### Returns
 
-- `data: array of Run`
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
 
   - `id: string`
 
@@ -46,11 +28,11 @@ Returns a list of runs belonging to a thread.
 
     The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was completed.
 
@@ -58,15 +40,15 @@ Returns a list of runs belonging to a thread.
 
     The Unix timestamp (in seconds) for when the run was created.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     The Unix timestamp (in seconds) for when the run will expire.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run failed.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     Details on why the run is incomplete. Will be `null` if the run is not incomplete.
 
@@ -82,7 +64,7 @@ Returns a list of runs belonging to a thread.
 
     The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run. Will be `null` if there are no errors.
 
@@ -100,15 +82,15 @@ Returns a list of runs belonging to a thread.
 
       A human-readable description of the error.
 
-  - `max_completion_tokens: number`
+  - `max_completion_tokens: number or null`
 
     The maximum number of completion tokens specified to have been used over the course of the run.
 
-  - `max_prompt_tokens: number`
+  - `max_prompt_tokens: number or null`
 
     The maximum number of prompt tokens specified to have been used over the course of the run.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -131,7 +113,7 @@ Returns a list of runs belonging to a thread.
 
     Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-  - `required_action: object { submit_tool_outputs, type }`
+  - `required_action: object { submit_tool_outputs, type }  or null`
 
     Details on the action required to continue the run. Will be `null` if no action is required.
 
@@ -171,7 +153,7 @@ Returns a list of runs belonging to a thread.
 
       - `"submit_tool_outputs"`
 
-  - `response_format: AssistantResponseFormatOption`
+  - `response_format: AssistantResponseFormatOption or null`
 
     Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -234,7 +216,7 @@ Returns a list of runs belonging to a thread.
           The schema for the response format, described as a JSON Schema object.
           Learn how to build JSON schemas [here](https://json-schema.org/).
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the output.
           If set to true, the model will always follow the exact schema defined
@@ -248,7 +230,7 @@ Returns a list of runs belonging to a thread.
 
         - `"json_schema"`
 
-  - `started_at: number`
+  - `started_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was started.
 
@@ -278,7 +260,7 @@ Returns a list of runs belonging to a thread.
 
     The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
 
-  - `tool_choice: AssistantToolChoiceOption`
+  - `tool_choice: AssistantToolChoiceOption or null`
 
     Controls which (if any) tool is called by the model.
     `none` means the model will not call any tools and instead generates a message.
@@ -382,7 +364,7 @@ Returns a list of runs belonging to a thread.
 
           Omitting `parameters` defines a function with an empty parameter list.
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -392,7 +374,7 @@ Returns a list of runs belonging to a thread.
 
         - `"function"`
 
-  - `truncation_strategy: object { type, last_messages }`
+  - `truncation_strategy: object { type, last_messages }  or null`
 
     Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -404,11 +386,11 @@ Returns a list of runs belonging to a thread.
 
       - `"last_messages"`
 
-    - `last_messages: optional number`
+    - `last_messages: optional number or null`
 
       The number of most recent messages from the thread when constructing the context for the run.
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
 
@@ -424,26 +406,19 @@ Returns a list of runs belonging to a thread.
 
       Total number of tokens used (prompt + completion).
 
-  - `temperature: optional number`
+  - `temperature: optional number or null`
 
     The sampling temperature used for this run. If not set, defaults to 1.
 
-  - `top_p: optional number`
+  - `top_p: optional number or null`
 
     The nucleus sampling value used for this run. If not set, defaults to 1.
-
-- `first_id: string`
-
-- `has_more: boolean`
-
-- `last_id: string`
-
-- `object: string`
 
 ### Example
 
 ```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs \
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/cancel \
+    -X POST \
     -H 'OpenAI-Beta: assistants=v2' \
     -H "Authorization: Bearer $OPENAI_API_KEY"
 ```
@@ -452,189 +427,112 @@ curl https://api.openai.com/v1/threads/$THREAD_ID/runs \
 
 ```json
 {
-  "data": [
-    {
-      "id": "id",
-      "assistant_id": "assistant_id",
-      "cancelled_at": 0,
-      "completed_at": 0,
-      "created_at": 0,
-      "expires_at": 0,
-      "failed_at": 0,
-      "incomplete_details": {
-        "reason": "max_completion_tokens"
-      },
-      "instructions": "instructions",
-      "last_error": {
-        "code": "server_error",
-        "message": "message"
-      },
-      "max_completion_tokens": 256,
-      "max_prompt_tokens": 256,
-      "metadata": {
-        "foo": "string"
-      },
-      "model": "model",
-      "object": "thread.run",
-      "parallel_tool_calls": true,
-      "required_action": {
-        "submit_tool_outputs": {
-          "tool_calls": [
-            {
-              "id": "id",
-              "function": {
-                "arguments": "arguments",
-                "name": "name"
-              },
-              "type": "function"
-            }
-          ]
-        },
-        "type": "submit_tool_outputs"
-      },
-      "response_format": "auto",
-      "started_at": 0,
-      "status": "queued",
-      "thread_id": "thread_id",
-      "tool_choice": "none",
-      "tools": [
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "cancelled_at": 0,
+  "completed_at": 0,
+  "created_at": 0,
+  "expires_at": 0,
+  "failed_at": 0,
+  "incomplete_details": {
+    "reason": "max_completion_tokens"
+  },
+  "instructions": "instructions",
+  "last_error": {
+    "code": "server_error",
+    "message": "message"
+  },
+  "max_completion_tokens": 256,
+  "max_prompt_tokens": 256,
+  "metadata": {
+    "foo": "string"
+  },
+  "model": "model",
+  "object": "thread.run",
+  "parallel_tool_calls": true,
+  "required_action": {
+    "submit_tool_outputs": {
+      "tool_calls": [
         {
-          "type": "code_interpreter"
+          "id": "id",
+          "function": {
+            "arguments": "arguments",
+            "name": "name"
+          },
+          "type": "function"
         }
-      ],
-      "truncation_strategy": {
-        "type": "auto",
-        "last_messages": 1
-      },
-      "usage": {
-        "completion_tokens": 0,
-        "prompt_tokens": 0,
-        "total_tokens": 0
-      },
-      "temperature": 0,
-      "top_p": 0
+      ]
+    },
+    "type": "submit_tool_outputs"
+  },
+  "response_format": "auto",
+  "started_at": 0,
+  "status": "queued",
+  "thread_id": "thread_id",
+  "tool_choice": "none",
+  "tools": [
+    {
+      "type": "code_interpreter"
     }
   ],
-  "first_id": "run_abc123",
-  "has_more": false,
-  "last_id": "run_abc456",
-  "object": "list"
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": 1
+  },
+  "usage": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  },
+  "temperature": 0,
+  "top_p": 0
 }
 ```
 
 ### Example
 
 ```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs \
+curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2"
+  -H "OpenAI-Beta: assistants=v2" \
+  -X POST
 ```
 
 #### Response
 
 ```json
 {
-  "object": "list",
-  "data": [
+  "id": "run_abc123",
+  "object": "thread.run",
+  "created_at": 1699076126,
+  "assistant_id": "asst_abc123",
+  "thread_id": "thread_abc123",
+  "status": "cancelling",
+  "started_at": 1699076126,
+  "expires_at": 1699076726,
+  "cancelled_at": null,
+  "failed_at": null,
+  "completed_at": null,
+  "last_error": null,
+  "model": "gpt-4o",
+  "instructions": "You summarize books.",
+  "tools": [
     {
-      "id": "run_abc123",
-      "object": "thread.run",
-      "created_at": 1699075072,
-      "assistant_id": "asst_abc123",
-      "thread_id": "thread_abc123",
-      "status": "completed",
-      "started_at": 1699075072,
-      "expires_at": null,
-      "cancelled_at": null,
-      "failed_at": null,
-      "completed_at": 1699075073,
-      "last_error": null,
-      "model": "gpt-4o",
-      "instructions": null,
-      "incomplete_details": null,
-      "tools": [
-        {
-          "type": "code_interpreter"
-        }
-      ],
-      "tool_resources": {
-        "code_interpreter": {
-          "file_ids": [
-            "file-abc123",
-            "file-abc456"
-          ]
-        }
-      },
-      "metadata": {},
-      "usage": {
-        "prompt_tokens": 123,
-        "completion_tokens": 456,
-        "total_tokens": 579
-      },
-      "temperature": 1.0,
-      "top_p": 1.0,
-      "max_prompt_tokens": 1000,
-      "max_completion_tokens": 1000,
-      "truncation_strategy": {
-        "type": "auto",
-        "last_messages": null
-      },
-      "response_format": "auto",
-      "tool_choice": "auto",
-      "parallel_tool_calls": true
-    },
-    {
-      "id": "run_abc456",
-      "object": "thread.run",
-      "created_at": 1699063290,
-      "assistant_id": "asst_abc123",
-      "thread_id": "thread_abc123",
-      "status": "completed",
-      "started_at": 1699063290,
-      "expires_at": null,
-      "cancelled_at": null,
-      "failed_at": null,
-      "completed_at": 1699063291,
-      "last_error": null,
-      "model": "gpt-4o",
-      "instructions": null,
-      "incomplete_details": null,
-      "tools": [
-        {
-          "type": "code_interpreter"
-        }
-      ],
-      "tool_resources": {
-        "code_interpreter": {
-          "file_ids": [
-            "file-abc123",
-            "file-abc456"
-          ]
-        }
-      },
-      "metadata": {},
-      "usage": {
-        "prompt_tokens": 123,
-        "completion_tokens": 456,
-        "total_tokens": 579
-      },
-      "temperature": 1.0,
-      "top_p": 1.0,
-      "max_prompt_tokens": 1000,
-      "max_completion_tokens": 1000,
-      "truncation_strategy": {
-        "type": "auto",
-        "last_messages": null
-      },
-      "response_format": "auto",
-      "tool_choice": "auto",
-      "parallel_tool_calls": true
+      "type": "file_search"
     }
   ],
-  "first_id": "run_abc123",
-  "last_id": "run_abc456",
-  "has_more": false
+  "tool_resources": {
+    "file_search": {
+      "vector_store_ids": ["vs_123"]
+    }
+  },
+  "metadata": {},
+  "usage": null,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "response_format": "auto",
+  "tool_choice": "auto",
+  "parallel_tool_calls": true
 }
 ```
 
@@ -664,11 +562,11 @@ Create a run.
 
   The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run.
 
-- `additional_instructions: optional string`
+- `additional_instructions: optional string or null`
 
   Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.
 
-- `additional_messages: optional array of object { content, role, attachments, metadata }`
+- `additional_messages: optional array of object { content, role, attachments, metadata }  or null`
 
   Adds additional messages to the thread before creating the run.
 
@@ -761,7 +659,7 @@ Create a run.
 
     - `"assistant"`
 
-  - `attachments: optional array of object { file_id, tools }`
+  - `attachments: optional array of object { file_id, tools }  or null`
 
     A list of files attached to the message, and the tools they should be added to.
 
@@ -789,7 +687,7 @@ Create a run.
 
           - `"file_search"`
 
-  - `metadata: optional Metadata`
+  - `metadata: optional Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -798,19 +696,19 @@ Create a run.
     Keys are strings with a maximum length of 64 characters. Values are strings
     with a maximum length of 512 characters.
 
-- `instructions: optional string`
+- `instructions: optional string or null`
 
   Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
 
-- `max_completion_tokens: optional number`
+- `max_completion_tokens: optional number or null`
 
   The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
 
-- `max_prompt_tokens: optional number`
+- `max_prompt_tokens: optional number or null`
 
   The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
 
-- `metadata: optional Metadata`
+- `metadata: optional Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured
@@ -819,7 +717,7 @@ Create a run.
   Keys are strings with a maximum length of 64 characters. Values are strings
   with a maximum length of 512 characters.
 
-- `model: optional string or "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 39 more`
+- `model: optional string or "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 39 more or null`
 
   The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
 
@@ -917,7 +815,7 @@ Create a run.
 
   Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-- `reasoning_effort: optional ReasoningEffort`
+- `reasoning_effort: optional ReasoningEffort or null`
 
   Constrains effort on reasoning for reasoning models. Currently supported
   values are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.
@@ -941,7 +839,7 @@ Create a run.
 
   - `"max"`
 
-- `response_format: optional AssistantResponseFormatOption`
+- `response_format: optional AssistantResponseFormatOption or null`
 
   Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -1004,7 +902,7 @@ Create a run.
         The schema for the response format, described as a JSON Schema object.
         Learn how to build JSON schemas [here](https://json-schema.org/).
 
-      - `strict: optional boolean`
+      - `strict: optional boolean or null`
 
         Whether to enable strict schema adherence when generating the output.
         If set to true, the model will always follow the exact schema defined
@@ -1018,15 +916,15 @@ Create a run.
 
       - `"json_schema"`
 
-- `stream: optional boolean`
+- `stream: optional boolean or null`
 
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
 
-- `temperature: optional number`
+- `temperature: optional number or null`
 
   What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 
-- `tool_choice: optional AssistantToolChoiceOption`
+- `tool_choice: optional AssistantToolChoiceOption or null`
 
   Controls which (if any) tool is called by the model.
   `none` means the model will not call any tools and instead generates a message.
@@ -1064,7 +962,7 @@ Create a run.
 
         The name of the function to call.
 
-- `tools: optional array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+- `tools: optional array of CodeInterpreterTool or FileSearchTool or FunctionTool or null`
 
   Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
 
@@ -1124,7 +1022,7 @@ Create a run.
 
         Omitting `parameters` defines a function with an empty parameter list.
 
-      - `strict: optional boolean`
+      - `strict: optional boolean or null`
 
         Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -1134,13 +1032,13 @@ Create a run.
 
       - `"function"`
 
-- `top_p: optional number`
+- `top_p: optional number or null`
 
   An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
   We generally recommend altering this or temperature but not both.
 
-- `truncation_strategy: optional object { type, last_messages }`
+- `truncation_strategy: optional object { type, last_messages }  or null`
 
   Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -1152,7 +1050,7 @@ Create a run.
 
     - `"last_messages"`
 
-  - `last_messages: optional number`
+  - `last_messages: optional number or null`
 
     The number of most recent messages from the thread when constructing the context for the run.
 
@@ -1170,11 +1068,11 @@ Create a run.
 
     The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was completed.
 
@@ -1182,15 +1080,15 @@ Create a run.
 
     The Unix timestamp (in seconds) for when the run was created.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     The Unix timestamp (in seconds) for when the run will expire.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run failed.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     Details on why the run is incomplete. Will be `null` if the run is not incomplete.
 
@@ -1206,7 +1104,7 @@ Create a run.
 
     The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run. Will be `null` if there are no errors.
 
@@ -1224,15 +1122,15 @@ Create a run.
 
       A human-readable description of the error.
 
-  - `max_completion_tokens: number`
+  - `max_completion_tokens: number or null`
 
     The maximum number of completion tokens specified to have been used over the course of the run.
 
-  - `max_prompt_tokens: number`
+  - `max_prompt_tokens: number or null`
 
     The maximum number of prompt tokens specified to have been used over the course of the run.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -1255,7 +1153,7 @@ Create a run.
 
     Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-  - `required_action: object { submit_tool_outputs, type }`
+  - `required_action: object { submit_tool_outputs, type }  or null`
 
     Details on the action required to continue the run. Will be `null` if no action is required.
 
@@ -1295,7 +1193,7 @@ Create a run.
 
       - `"submit_tool_outputs"`
 
-  - `response_format: AssistantResponseFormatOption`
+  - `response_format: AssistantResponseFormatOption or null`
 
     Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -1358,7 +1256,7 @@ Create a run.
           The schema for the response format, described as a JSON Schema object.
           Learn how to build JSON schemas [here](https://json-schema.org/).
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the output.
           If set to true, the model will always follow the exact schema defined
@@ -1372,7 +1270,7 @@ Create a run.
 
         - `"json_schema"`
 
-  - `started_at: number`
+  - `started_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was started.
 
@@ -1402,7 +1300,7 @@ Create a run.
 
     The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
 
-  - `tool_choice: AssistantToolChoiceOption`
+  - `tool_choice: AssistantToolChoiceOption or null`
 
     Controls which (if any) tool is called by the model.
     `none` means the model will not call any tools and instead generates a message.
@@ -1506,7 +1404,7 @@ Create a run.
 
           Omitting `parameters` defines a function with an empty parameter list.
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -1516,7 +1414,7 @@ Create a run.
 
         - `"function"`
 
-  - `truncation_strategy: object { type, last_messages }`
+  - `truncation_strategy: object { type, last_messages }  or null`
 
     Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -1528,11 +1426,11 @@ Create a run.
 
       - `"last_messages"`
 
-    - `last_messages: optional number`
+    - `last_messages: optional number or null`
 
       The number of most recent messages from the thread when constructing the context for the run.
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
 
@@ -1548,11 +1446,11 @@ Create a run.
 
       Total number of tokens used (prompt + completion).
 
-  - `temperature: optional number`
+  - `temperature: optional number or null`
 
     The sampling temperature used for this run. If not set, defaults to 1.
 
-  - `top_p: optional number`
+  - `top_p: optional number or null`
 
     The nucleus sampling value used for this run. If not set, defaults to 1.
 
@@ -1833,23 +1731,41 @@ event: done
 data: [DONE]
 ```
 
-## Retrieve run
+## List runs
 
-**get** `/threads/{thread_id}/runs/{run_id}`
+**get** `/threads/{thread_id}/runs`
 
-Retrieves a run.
+Returns a list of runs belonging to a thread.
 
 ### Path Parameters
 
 - `thread_id: string`
 
-- `run_id: string`
+### Query Parameters
+
+- `after: optional string`
+
+  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+
+- `before: optional string`
+
+  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+
+- `limit: optional number`
+
+  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+- `order: optional "asc" or "desc"`
+
+  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+
+  - `"asc"`
+
+  - `"desc"`
 
 ### Returns
 
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
-
-  Represents an execution run on a [thread](/docs/api-reference/threads).
+- `data: array of Run`
 
   - `id: string`
 
@@ -1859,11 +1775,11 @@ Retrieves a run.
 
     The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was completed.
 
@@ -1871,15 +1787,15 @@ Retrieves a run.
 
     The Unix timestamp (in seconds) for when the run was created.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     The Unix timestamp (in seconds) for when the run will expire.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run failed.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     Details on why the run is incomplete. Will be `null` if the run is not incomplete.
 
@@ -1895,7 +1811,7 @@ Retrieves a run.
 
     The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run. Will be `null` if there are no errors.
 
@@ -1913,15 +1829,15 @@ Retrieves a run.
 
       A human-readable description of the error.
 
-  - `max_completion_tokens: number`
+  - `max_completion_tokens: number or null`
 
     The maximum number of completion tokens specified to have been used over the course of the run.
 
-  - `max_prompt_tokens: number`
+  - `max_prompt_tokens: number or null`
 
     The maximum number of prompt tokens specified to have been used over the course of the run.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -1944,7 +1860,7 @@ Retrieves a run.
 
     Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-  - `required_action: object { submit_tool_outputs, type }`
+  - `required_action: object { submit_tool_outputs, type }  or null`
 
     Details on the action required to continue the run. Will be `null` if no action is required.
 
@@ -1984,7 +1900,7 @@ Retrieves a run.
 
       - `"submit_tool_outputs"`
 
-  - `response_format: AssistantResponseFormatOption`
+  - `response_format: AssistantResponseFormatOption or null`
 
     Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -2047,7 +1963,7 @@ Retrieves a run.
           The schema for the response format, described as a JSON Schema object.
           Learn how to build JSON schemas [here](https://json-schema.org/).
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the output.
           If set to true, the model will always follow the exact schema defined
@@ -2061,7 +1977,7 @@ Retrieves a run.
 
         - `"json_schema"`
 
-  - `started_at: number`
+  - `started_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was started.
 
@@ -2091,7 +2007,7 @@ Retrieves a run.
 
     The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
 
-  - `tool_choice: AssistantToolChoiceOption`
+  - `tool_choice: AssistantToolChoiceOption or null`
 
     Controls which (if any) tool is called by the model.
     `none` means the model will not call any tools and instead generates a message.
@@ -2195,7 +2111,7 @@ Retrieves a run.
 
           Omitting `parameters` defines a function with an empty parameter list.
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -2205,7 +2121,7 @@ Retrieves a run.
 
         - `"function"`
 
-  - `truncation_strategy: object { type, last_messages }`
+  - `truncation_strategy: object { type, last_messages }  or null`
 
     Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -2217,11 +2133,11 @@ Retrieves a run.
 
       - `"last_messages"`
 
-    - `last_messages: optional number`
+    - `last_messages: optional number or null`
 
       The number of most recent messages from the thread when constructing the context for the run.
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
 
@@ -2237,11 +2153,629 @@ Retrieves a run.
 
       Total number of tokens used (prompt + completion).
 
-  - `temperature: optional number`
+  - `temperature: optional number or null`
 
     The sampling temperature used for this run. If not set, defaults to 1.
 
-  - `top_p: optional number`
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+- `first_id: string`
+
+- `has_more: boolean`
+
+- `last_id: string`
+
+- `object: string`
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "id",
+      "assistant_id": "assistant_id",
+      "cancelled_at": 0,
+      "completed_at": 0,
+      "created_at": 0,
+      "expires_at": 0,
+      "failed_at": 0,
+      "incomplete_details": {
+        "reason": "max_completion_tokens"
+      },
+      "instructions": "instructions",
+      "last_error": {
+        "code": "server_error",
+        "message": "message"
+      },
+      "max_completion_tokens": 256,
+      "max_prompt_tokens": 256,
+      "metadata": {
+        "foo": "string"
+      },
+      "model": "model",
+      "object": "thread.run",
+      "parallel_tool_calls": true,
+      "required_action": {
+        "submit_tool_outputs": {
+          "tool_calls": [
+            {
+              "id": "id",
+              "function": {
+                "arguments": "arguments",
+                "name": "name"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "type": "submit_tool_outputs"
+      },
+      "response_format": "auto",
+      "started_at": 0,
+      "status": "queued",
+      "thread_id": "thread_id",
+      "tool_choice": "none",
+      "tools": [
+        {
+          "type": "code_interpreter"
+        }
+      ],
+      "truncation_strategy": {
+        "type": "auto",
+        "last_messages": 1
+      },
+      "usage": {
+        "completion_tokens": 0,
+        "prompt_tokens": 0,
+        "total_tokens": 0
+      },
+      "temperature": 0,
+      "top_p": 0
+    }
+  ],
+  "first_id": "run_abc123",
+  "has_more": false,
+  "last_id": "run_abc456",
+  "object": "list"
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2"
+```
+
+#### Response
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "run_abc123",
+      "object": "thread.run",
+      "created_at": 1699075072,
+      "assistant_id": "asst_abc123",
+      "thread_id": "thread_abc123",
+      "status": "completed",
+      "started_at": 1699075072,
+      "expires_at": null,
+      "cancelled_at": null,
+      "failed_at": null,
+      "completed_at": 1699075073,
+      "last_error": null,
+      "model": "gpt-4o",
+      "instructions": null,
+      "incomplete_details": null,
+      "tools": [
+        {
+          "type": "code_interpreter"
+        }
+      ],
+      "tool_resources": {
+        "code_interpreter": {
+          "file_ids": [
+            "file-abc123",
+            "file-abc456"
+          ]
+        }
+      },
+      "metadata": {},
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 456,
+        "total_tokens": 579
+      },
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "max_prompt_tokens": 1000,
+      "max_completion_tokens": 1000,
+      "truncation_strategy": {
+        "type": "auto",
+        "last_messages": null
+      },
+      "response_format": "auto",
+      "tool_choice": "auto",
+      "parallel_tool_calls": true
+    },
+    {
+      "id": "run_abc456",
+      "object": "thread.run",
+      "created_at": 1699063290,
+      "assistant_id": "asst_abc123",
+      "thread_id": "thread_abc123",
+      "status": "completed",
+      "started_at": 1699063290,
+      "expires_at": null,
+      "cancelled_at": null,
+      "failed_at": null,
+      "completed_at": 1699063291,
+      "last_error": null,
+      "model": "gpt-4o",
+      "instructions": null,
+      "incomplete_details": null,
+      "tools": [
+        {
+          "type": "code_interpreter"
+        }
+      ],
+      "tool_resources": {
+        "code_interpreter": {
+          "file_ids": [
+            "file-abc123",
+            "file-abc456"
+          ]
+        }
+      },
+      "metadata": {},
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 456,
+        "total_tokens": 579
+      },
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "max_prompt_tokens": 1000,
+      "max_completion_tokens": 1000,
+      "truncation_strategy": {
+        "type": "auto",
+        "last_messages": null
+      },
+      "response_format": "auto",
+      "tool_choice": "auto",
+      "parallel_tool_calls": true
+    }
+  ],
+  "first_id": "run_abc123",
+  "last_id": "run_abc456",
+  "has_more": false
+}
+```
+
+## Retrieve run
+
+**get** `/threads/{thread_id}/runs/{run_id}`
+
+Retrieves a run.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `run_id: string`
+
+### Returns
+
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
 
     The nucleus sampling value used for this run. If not set, defaults to 1.
 
@@ -2371,573 +2905,6 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
 }
 ```
 
-## Modify run
-
-**post** `/threads/{thread_id}/runs/{run_id}`
-
-Modifies a run.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `run_id: string`
-
-### Body Parameters
-
-- `metadata: optional Metadata`
-
-  Set of 16 key-value pairs that can be attached to an object. This can be
-  useful for storing additional information about the object in a structured
-  format, and querying for objects via API or the dashboard.
-
-  Keys are strings with a maximum length of 64 characters. Values are strings
-  with a maximum length of 512 characters.
-
-### Returns
-
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
-
-  Represents an execution run on a [thread](/docs/api-reference/threads).
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
-
-      - `type: "text"`
-
-        The type of response format being defined. Always `text`.
-
-        - `"text"`
-
-    - `ResponseFormatJSONObject object { type }`
-
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
-
-      - `type: "json_object"`
-
-        The type of response format being defined. Always `json_object`.
-
-        - `"json_object"`
-
-    - `ResponseFormatJSONSchema object { json_schema, type }`
-
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-      - `json_schema: object { name, description, schema, strict }`
-
-        Structured Outputs configuration options, including a JSON Schema.
-
-        - `name: string`
-
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type, file_search }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID \
-    -H 'Content-Type: application/json' \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{}'
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "cancelled_at": 0,
-  "completed_at": 0,
-  "created_at": 0,
-  "expires_at": 0,
-  "failed_at": 0,
-  "incomplete_details": {
-    "reason": "max_completion_tokens"
-  },
-  "instructions": "instructions",
-  "last_error": {
-    "code": "server_error",
-    "message": "message"
-  },
-  "max_completion_tokens": 256,
-  "max_prompt_tokens": 256,
-  "metadata": {
-    "foo": "string"
-  },
-  "model": "model",
-  "object": "thread.run",
-  "parallel_tool_calls": true,
-  "required_action": {
-    "submit_tool_outputs": {
-      "tool_calls": [
-        {
-          "id": "id",
-          "function": {
-            "arguments": "arguments",
-            "name": "name"
-          },
-          "type": "function"
-        }
-      ]
-    },
-    "type": "submit_tool_outputs"
-  },
-  "response_format": "auto",
-  "started_at": 0,
-  "status": "queued",
-  "thread_id": "thread_id",
-  "tool_choice": "none",
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": 1
-  },
-  "usage": {
-    "completion_tokens": 0,
-    "prompt_tokens": 0,
-    "total_tokens": 0
-  },
-  "temperature": 0,
-  "top_p": 0
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-    "metadata": {
-      "user_id": "user_abc123"
-    }
-  }'
-```
-
-#### Response
-
-```json
-{
-  "id": "run_abc123",
-  "object": "thread.run",
-  "created_at": 1699075072,
-  "assistant_id": "asst_abc123",
-  "thread_id": "thread_abc123",
-  "status": "completed",
-  "started_at": 1699075072,
-  "expires_at": null,
-  "cancelled_at": null,
-  "failed_at": null,
-  "completed_at": 1699075073,
-  "last_error": null,
-  "model": "gpt-4o",
-  "instructions": null,
-  "incomplete_details": null,
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "tool_resources": {
-    "code_interpreter": {
-      "file_ids": [
-        "file-abc123",
-        "file-abc456"
-      ]
-    }
-  },
-  "metadata": {
-    "user_id": "user_abc123"
-  },
-  "usage": {
-    "prompt_tokens": 123,
-    "completion_tokens": 456,
-    "total_tokens": 579
-  },
-  "temperature": 1.0,
-  "top_p": 1.0,
-  "max_prompt_tokens": 1000,
-  "max_completion_tokens": 1000,
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": null
-  },
-  "response_format": "auto",
-  "tool_choice": "auto",
-  "parallel_tool_calls": true
-}
-```
-
 ## Submit tool outputs to run
 
 **post** `/threads/{thread_id}/runs/{run_id}/submit_tool_outputs`
@@ -2964,7 +2931,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
     The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
 
-- `stream: optional boolean`
+- `stream: optional boolean or null`
 
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
 
@@ -2982,11 +2949,11 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
     The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was completed.
 
@@ -2994,15 +2961,15 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
     The Unix timestamp (in seconds) for when the run was created.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     The Unix timestamp (in seconds) for when the run will expire.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run failed.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     Details on why the run is incomplete. Will be `null` if the run is not incomplete.
 
@@ -3018,7 +2985,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
     The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run. Will be `null` if there are no errors.
 
@@ -3036,15 +3003,15 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
       A human-readable description of the error.
 
-  - `max_completion_tokens: number`
+  - `max_completion_tokens: number or null`
 
     The maximum number of completion tokens specified to have been used over the course of the run.
 
-  - `max_prompt_tokens: number`
+  - `max_prompt_tokens: number or null`
 
     The maximum number of prompt tokens specified to have been used over the course of the run.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -3067,7 +3034,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
     Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-  - `required_action: object { submit_tool_outputs, type }`
+  - `required_action: object { submit_tool_outputs, type }  or null`
 
     Details on the action required to continue the run. Will be `null` if no action is required.
 
@@ -3107,7 +3074,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
       - `"submit_tool_outputs"`
 
-  - `response_format: AssistantResponseFormatOption`
+  - `response_format: AssistantResponseFormatOption or null`
 
     Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -3170,7 +3137,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
           The schema for the response format, described as a JSON Schema object.
           Learn how to build JSON schemas [here](https://json-schema.org/).
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the output.
           If set to true, the model will always follow the exact schema defined
@@ -3184,7 +3151,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
         - `"json_schema"`
 
-  - `started_at: number`
+  - `started_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was started.
 
@@ -3214,7 +3181,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
     The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
 
-  - `tool_choice: AssistantToolChoiceOption`
+  - `tool_choice: AssistantToolChoiceOption or null`
 
     Controls which (if any) tool is called by the model.
     `none` means the model will not call any tools and instead generates a message.
@@ -3318,7 +3285,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
           Omitting `parameters` defines a function with an empty parameter list.
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -3328,7 +3295,7 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
         - `"function"`
 
-  - `truncation_strategy: object { type, last_messages }`
+  - `truncation_strategy: object { type, last_messages }  or null`
 
     Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -3340,11 +3307,11 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
       - `"last_messages"`
 
-    - `last_messages: optional number`
+    - `last_messages: optional number or null`
 
       The number of most recent messages from the thread when constructing the context for the run.
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
 
@@ -3360,11 +3327,11 @@ When a run has the `status: "requires_action"` and `required_action.type` is `su
 
       Total number of tokens used (prompt + completion).
 
-  - `temperature: optional number`
+  - `temperature: optional number or null`
 
     The sampling temperature used for this run. If not set, defaults to 1.
 
-  - `top_p: optional number`
+  - `top_p: optional number or null`
 
     The nucleus sampling value used for this run. If not set, defaults to 1.
 
@@ -3594,17 +3561,28 @@ event: done
 data: [DONE]
 ```
 
-## Cancel a run
+## Modify run
 
-**post** `/threads/{thread_id}/runs/{run_id}/cancel`
+**post** `/threads/{thread_id}/runs/{run_id}`
 
-Cancels a run that is `in_progress`.
+Modifies a run.
 
 ### Path Parameters
 
 - `thread_id: string`
 
 - `run_id: string`
+
+### Body Parameters
+
+- `metadata: optional Metadata or null`
+
+  Set of 16 key-value pairs that can be attached to an object. This can be
+  useful for storing additional information about the object in a structured
+  format, and querying for objects via API or the dashboard.
+
+  Keys are strings with a maximum length of 64 characters. Values are strings
+  with a maximum length of 512 characters.
 
 ### Returns
 
@@ -3620,11 +3598,11 @@ Cancels a run that is `in_progress`.
 
     The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was completed.
 
@@ -3632,15 +3610,15 @@ Cancels a run that is `in_progress`.
 
     The Unix timestamp (in seconds) for when the run was created.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     The Unix timestamp (in seconds) for when the run will expire.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run failed.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     Details on why the run is incomplete. Will be `null` if the run is not incomplete.
 
@@ -3656,7 +3634,7 @@ Cancels a run that is `in_progress`.
 
     The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run. Will be `null` if there are no errors.
 
@@ -3674,15 +3652,15 @@ Cancels a run that is `in_progress`.
 
       A human-readable description of the error.
 
-  - `max_completion_tokens: number`
+  - `max_completion_tokens: number or null`
 
     The maximum number of completion tokens specified to have been used over the course of the run.
 
-  - `max_prompt_tokens: number`
+  - `max_prompt_tokens: number or null`
 
     The maximum number of prompt tokens specified to have been used over the course of the run.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -3705,7 +3683,7 @@ Cancels a run that is `in_progress`.
 
     Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-  - `required_action: object { submit_tool_outputs, type }`
+  - `required_action: object { submit_tool_outputs, type }  or null`
 
     Details on the action required to continue the run. Will be `null` if no action is required.
 
@@ -3745,7 +3723,7 @@ Cancels a run that is `in_progress`.
 
       - `"submit_tool_outputs"`
 
-  - `response_format: AssistantResponseFormatOption`
+  - `response_format: AssistantResponseFormatOption or null`
 
     Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -3808,7 +3786,7 @@ Cancels a run that is `in_progress`.
           The schema for the response format, described as a JSON Schema object.
           Learn how to build JSON schemas [here](https://json-schema.org/).
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the output.
           If set to true, the model will always follow the exact schema defined
@@ -3822,7 +3800,7 @@ Cancels a run that is `in_progress`.
 
         - `"json_schema"`
 
-  - `started_at: number`
+  - `started_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was started.
 
@@ -3852,7 +3830,7 @@ Cancels a run that is `in_progress`.
 
     The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
 
-  - `tool_choice: AssistantToolChoiceOption`
+  - `tool_choice: AssistantToolChoiceOption or null`
 
     Controls which (if any) tool is called by the model.
     `none` means the model will not call any tools and instead generates a message.
@@ -3956,7 +3934,7 @@ Cancels a run that is `in_progress`.
 
           Omitting `parameters` defines a function with an empty parameter list.
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -3966,7 +3944,7 @@ Cancels a run that is `in_progress`.
 
         - `"function"`
 
-  - `truncation_strategy: object { type, last_messages }`
+  - `truncation_strategy: object { type, last_messages }  or null`
 
     Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -3978,11 +3956,11 @@ Cancels a run that is `in_progress`.
 
       - `"last_messages"`
 
-    - `last_messages: optional number`
+    - `last_messages: optional number or null`
 
       The number of most recent messages from the thread when constructing the context for the run.
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
 
@@ -3998,21 +3976,22 @@ Cancels a run that is `in_progress`.
 
       Total number of tokens used (prompt + completion).
 
-  - `temperature: optional number`
+  - `temperature: optional number or null`
 
     The sampling temperature used for this run. If not set, defaults to 1.
 
-  - `top_p: optional number`
+  - `top_p: optional number or null`
 
     The nucleus sampling value used for this run. If not set, defaults to 1.
 
 ### Example
 
 ```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/cancel \
-    -X POST \
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID \
+    -H 'Content-Type: application/json' \
     -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{}'
 ```
 
 #### Response
@@ -4084,10 +4063,15 @@ curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/cancel \
 ### Example
 
 ```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
+curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
   -H "OpenAI-Beta: assistants=v2" \
-  -X POST
+  -d '{
+    "metadata": {
+      "user_id": "user_abc123"
+    }
+  }'
 ```
 
 #### Response
@@ -4096,32 +4080,48 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 {
   "id": "run_abc123",
   "object": "thread.run",
-  "created_at": 1699076126,
+  "created_at": 1699075072,
   "assistant_id": "asst_abc123",
   "thread_id": "thread_abc123",
-  "status": "cancelling",
-  "started_at": 1699076126,
-  "expires_at": 1699076726,
+  "status": "completed",
+  "started_at": 1699075072,
+  "expires_at": null,
   "cancelled_at": null,
   "failed_at": null,
-  "completed_at": null,
+  "completed_at": 1699075073,
   "last_error": null,
   "model": "gpt-4o",
-  "instructions": "You summarize books.",
+  "instructions": null,
+  "incomplete_details": null,
   "tools": [
     {
-      "type": "file_search"
+      "type": "code_interpreter"
     }
   ],
   "tool_resources": {
-    "file_search": {
-      "vector_store_ids": ["vs_123"]
+    "code_interpreter": {
+      "file_ids": [
+        "file-abc123",
+        "file-abc456"
+      ]
     }
   },
-  "metadata": {},
-  "usage": null,
+  "metadata": {
+    "user_id": "user_abc123"
+  },
+  "usage": {
+    "prompt_tokens": 123,
+    "completion_tokens": 456,
+    "total_tokens": 579
+  },
   "temperature": 1.0,
   "top_p": 1.0,
+  "max_prompt_tokens": 1000,
+  "max_completion_tokens": 1000,
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": null
+  },
   "response_format": "auto",
   "tool_choice": "auto",
   "parallel_tool_calls": true
@@ -4172,11 +4172,11 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
     The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was completed.
 
@@ -4184,15 +4184,15 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
     The Unix timestamp (in seconds) for when the run was created.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     The Unix timestamp (in seconds) for when the run will expire.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run failed.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     Details on why the run is incomplete. Will be `null` if the run is not incomplete.
 
@@ -4208,7 +4208,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
     The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run. Will be `null` if there are no errors.
 
@@ -4226,15 +4226,15 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
       A human-readable description of the error.
 
-  - `max_completion_tokens: number`
+  - `max_completion_tokens: number or null`
 
     The maximum number of completion tokens specified to have been used over the course of the run.
 
-  - `max_prompt_tokens: number`
+  - `max_prompt_tokens: number or null`
 
     The maximum number of prompt tokens specified to have been used over the course of the run.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -4257,7 +4257,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
     Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-  - `required_action: object { submit_tool_outputs, type }`
+  - `required_action: object { submit_tool_outputs, type }  or null`
 
     Details on the action required to continue the run. Will be `null` if no action is required.
 
@@ -4297,7 +4297,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
       - `"submit_tool_outputs"`
 
-  - `response_format: AssistantResponseFormatOption`
+  - `response_format: AssistantResponseFormatOption or null`
 
     Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -4360,7 +4360,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
           The schema for the response format, described as a JSON Schema object.
           Learn how to build JSON schemas [here](https://json-schema.org/).
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the output.
           If set to true, the model will always follow the exact schema defined
@@ -4374,7 +4374,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
         - `"json_schema"`
 
-  - `started_at: number`
+  - `started_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was started.
 
@@ -4404,7 +4404,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
     The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
 
-  - `tool_choice: AssistantToolChoiceOption`
+  - `tool_choice: AssistantToolChoiceOption or null`
 
     Controls which (if any) tool is called by the model.
     `none` means the model will not call any tools and instead generates a message.
@@ -4508,7 +4508,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
           Omitting `parameters` defines a function with an empty parameter list.
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -4518,7 +4518,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
         - `"function"`
 
-  - `truncation_strategy: object { type, last_messages }`
+  - `truncation_strategy: object { type, last_messages }  or null`
 
     Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -4530,11 +4530,11 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
       - `"last_messages"`
 
-    - `last_messages: optional number`
+    - `last_messages: optional number or null`
 
       The number of most recent messages from the thread when constructing the context for the run.
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
 
@@ -4550,11 +4550,11 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
 
       Total number of tokens used (prompt + completion).
 
-  - `temperature: optional number`
+  - `temperature: optional number or null`
 
     The sampling temperature used for this run. If not set, defaults to 1.
 
-  - `top_p: optional number`
+  - `top_p: optional number or null`
 
     The nucleus sampling value used for this run. If not set, defaults to 1.
 
@@ -4614,11 +4614,11 @@ Returns a list of run steps belonging to a run.
 
     The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step completed.
 
@@ -4626,15 +4626,15 @@ Returns a list of run steps belonging to a run.
 
     The Unix timestamp (in seconds) for when the run step was created.
 
-  - `expired_at: number`
+  - `expired_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step failed.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run step. Will be `null` if there are no errors.
 
@@ -4650,7 +4650,7 @@ Returns a list of run steps belonging to a run.
 
       A human-readable description of the error.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -4845,7 +4845,7 @@ Returns a list of run steps belonging to a run.
 
               The name of the function.
 
-            - `output: string`
+            - `output: string or null`
 
               The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 
@@ -4873,7 +4873,7 @@ Returns a list of run steps belonging to a run.
 
     - `"tool_calls"`
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
 
@@ -5036,11 +5036,11 @@ Retrieves a run step.
 
     The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step completed.
 
@@ -5048,15 +5048,15 @@ Retrieves a run step.
 
     The Unix timestamp (in seconds) for when the run step was created.
 
-  - `expired_at: number`
+  - `expired_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step failed.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run step. Will be `null` if there are no errors.
 
@@ -5072,7 +5072,7 @@ Retrieves a run step.
 
       A human-readable description of the error.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -5267,7 +5267,7 @@ Retrieves a run step.
 
               The name of the function.
 
-            - `output: string`
+            - `output: string or null`
 
               The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 
@@ -5295,7 +5295,7 @@ Retrieves a run step.
 
     - `"tool_calls"`
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
 
@@ -5668,7 +5668,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
       The name of the function.
 
-    - `output: string`
+    - `output: string or null`
 
       The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 
@@ -5708,7 +5708,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
       The name of the function.
 
-    - `output: optional string`
+    - `output: optional string or null`
 
       The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 
@@ -5744,11 +5744,11 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
     The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step completed.
 
@@ -5756,15 +5756,15 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
     The Unix timestamp (in seconds) for when the run step was created.
 
-  - `expired_at: number`
+  - `expired_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run step failed.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run step. Will be `null` if there are no errors.
 
@@ -5780,7 +5780,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
       A human-readable description of the error.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -5975,7 +5975,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
               The name of the function.
 
-            - `output: string`
+            - `output: string or null`
 
               The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 
@@ -6003,7 +6003,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
     - `"tool_calls"`
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
 
@@ -6181,7 +6181,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
                 The name of the function.
 
-              - `output: optional string`
+              - `output: optional string or null`
 
                 The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 
@@ -6345,7 +6345,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
           The name of the function.
 
-        - `output: optional string`
+        - `output: optional string or null`
 
           The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 
@@ -6493,7 +6493,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_
 
           The name of the function.
 
-        - `output: string`
+        - `output: string or null`
 
           The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 

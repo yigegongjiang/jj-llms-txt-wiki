@@ -6,6 +6,13 @@ The completions API endpoint received its final update in July 2023 and has a di
 
 An example legacy Completions API call looks like the following:
 
+```javascript
+const completion = await openai.completions.create({
+  model: "gpt-3.5-turbo-instruct",
+  prompt: "Write a tagline for an ice cream shop.",
+});
+```
+
 ```python
 from openai import OpenAI
 
@@ -16,11 +23,35 @@ response = client.completions.create(
 )
 ```
 
-```javascript
-const completion = await openai.completions.create({
-model: 'gpt-3.5-turbo-instruct',
-prompt: 'Write a tagline for an ice cream shop.'
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Completions.New(context.Background(), openai.CompletionNewParams{
+		Model:  "gpt-3.5-turbo-instruct",
+		Prompt: openai.CompletionNewParamsPromptUnion{OfString: openai.String("Write a tagline for an ice cream shop.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.Choices[0].Text)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+completion = client.completions.create(model: "gpt-3.5-turbo-instruct", prompt: "Write a tagline for a bakery.", max_tokens: 24)
+puts(completion.choices.fetch(0).text)
 ```
 
 

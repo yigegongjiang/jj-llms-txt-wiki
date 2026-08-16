@@ -103,7 +103,7 @@ Create a thread.
 
     - `"assistant"`
 
-  - `attachments: optional array of object { file_id, tools }`
+  - `attachments: optional array of object { file_id, tools }  or null`
 
     A list of files attached to the message, and the tools they should be added to.
 
@@ -131,7 +131,7 @@ Create a thread.
 
           - `"file_search"`
 
-  - `metadata: optional Metadata`
+  - `metadata: optional Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -140,7 +140,7 @@ Create a thread.
     Keys are strings with a maximum length of 64 characters. Values are strings
     with a maximum length of 512 characters.
 
-- `metadata: optional Metadata`
+- `metadata: optional Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured
@@ -149,7 +149,7 @@ Create a thread.
   Keys are strings with a maximum length of 64 characters. Values are strings
   with a maximum length of 512 characters.
 
-- `tool_resources: optional object { code_interpreter, file_search }`
+- `tool_resources: optional object { code_interpreter, file_search }  or null`
 
   A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -173,7 +173,7 @@ Create a thread.
 
         The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
 
-        - `AutoChunkingStrategy object { type }`
+        - `Auto object { type }`
 
           The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
 
@@ -183,7 +183,7 @@ Create a thread.
 
             - `"auto"`
 
-        - `StaticChunkingStrategy object { static, type }`
+        - `Static object { static, type }`
 
           - `static: object { chunk_overlap_tokens, max_chunk_size_tokens }`
 
@@ -207,7 +207,7 @@ Create a thread.
 
         A list of [file](/docs/api-reference/files) IDs to add to the vector store. For vector stores created before Nov 2025, there can be a maximum of 10,000 files in a vector store. For vector stores created starting in Nov 2025, the limit is 100,000,000 files.
 
-      - `metadata: optional Metadata`
+      - `metadata: optional Metadata or null`
 
         Set of 16 key-value pairs that can be attached to an object. This can be
         useful for storing additional information about the object in a structured
@@ -230,7 +230,7 @@ Create a thread.
 
     The Unix timestamp (in seconds) for when the thread was created.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -245,7 +245,7 @@ Create a thread.
 
     - `"thread"`
 
-  - `tool_resources: object { code_interpreter, file_search }`
+  - `tool_resources: object { code_interpreter, file_search }  or null`
 
     A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -359,19 +359,19 @@ Create a thread and run it in one request.
 
   The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run.
 
-- `instructions: optional string`
+- `instructions: optional string or null`
 
   Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
 
-- `max_completion_tokens: optional number`
+- `max_completion_tokens: optional number or null`
 
   The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
 
-- `max_prompt_tokens: optional number`
+- `max_prompt_tokens: optional number or null`
 
   The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
 
-- `metadata: optional Metadata`
+- `metadata: optional Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured
@@ -380,7 +380,7 @@ Create a thread and run it in one request.
   Keys are strings with a maximum length of 64 characters. Values are strings
   with a maximum length of 512 characters.
 
-- `model: optional string or "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 35 more`
+- `model: optional string or "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 35 more or null`
 
   The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
 
@@ -470,7 +470,7 @@ Create a thread and run it in one request.
 
   Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-- `response_format: optional AssistantResponseFormatOption`
+- `response_format: optional AssistantResponseFormatOption or null`
 
   Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -533,7 +533,7 @@ Create a thread and run it in one request.
         The schema for the response format, described as a JSON Schema object.
         Learn how to build JSON schemas [here](https://json-schema.org/).
 
-      - `strict: optional boolean`
+      - `strict: optional boolean or null`
 
         Whether to enable strict schema adherence when generating the output.
         If set to true, the model will always follow the exact schema defined
@@ -547,11 +547,11 @@ Create a thread and run it in one request.
 
       - `"json_schema"`
 
-- `stream: optional boolean`
+- `stream: optional boolean or null`
 
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
 
-- `temperature: optional number`
+- `temperature: optional number or null`
 
   What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 
@@ -653,7 +653,7 @@ Create a thread and run it in one request.
 
       - `"assistant"`
 
-    - `attachments: optional array of object { file_id, tools }`
+    - `attachments: optional array of object { file_id, tools }  or null`
 
       A list of files attached to the message, and the tools they should be added to.
 
@@ -681,7 +681,7 @@ Create a thread and run it in one request.
 
             - `"file_search"`
 
-    - `metadata: optional Metadata`
+    - `metadata: optional Metadata or null`
 
       Set of 16 key-value pairs that can be attached to an object. This can be
       useful for storing additional information about the object in a structured
@@ -690,7 +690,7 @@ Create a thread and run it in one request.
       Keys are strings with a maximum length of 64 characters. Values are strings
       with a maximum length of 512 characters.
 
-  - `metadata: optional Metadata`
+  - `metadata: optional Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -699,7 +699,7 @@ Create a thread and run it in one request.
     Keys are strings with a maximum length of 64 characters. Values are strings
     with a maximum length of 512 characters.
 
-  - `tool_resources: optional object { code_interpreter, file_search }`
+  - `tool_resources: optional object { code_interpreter, file_search }  or null`
 
     A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -723,7 +723,7 @@ Create a thread and run it in one request.
 
           The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
 
-          - `AutoChunkingStrategy object { type }`
+          - `Auto object { type }`
 
             The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
 
@@ -733,7 +733,7 @@ Create a thread and run it in one request.
 
               - `"auto"`
 
-          - `StaticChunkingStrategy object { static, type }`
+          - `Static object { static, type }`
 
             - `static: object { chunk_overlap_tokens, max_chunk_size_tokens }`
 
@@ -757,7 +757,7 @@ Create a thread and run it in one request.
 
           A list of [file](/docs/api-reference/files) IDs to add to the vector store. For vector stores created before Nov 2025, there can be a maximum of 10,000 files in a vector store. For vector stores created starting in Nov 2025, the limit is 100,000,000 files.
 
-        - `metadata: optional Metadata`
+        - `metadata: optional Metadata or null`
 
           Set of 16 key-value pairs that can be attached to an object. This can be
           useful for storing additional information about the object in a structured
@@ -766,7 +766,7 @@ Create a thread and run it in one request.
           Keys are strings with a maximum length of 64 characters. Values are strings
           with a maximum length of 512 characters.
 
-- `tool_choice: optional AssistantToolChoiceOption`
+- `tool_choice: optional AssistantToolChoiceOption or null`
 
   Controls which (if any) tool is called by the model.
   `none` means the model will not call any tools and instead generates a message.
@@ -804,7 +804,7 @@ Create a thread and run it in one request.
 
         The name of the function to call.
 
-- `tool_resources: optional object { code_interpreter, file_search }`
+- `tool_resources: optional object { code_interpreter, file_search }  or null`
 
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -820,7 +820,7 @@ Create a thread and run it in one request.
 
       The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
 
-- `tools: optional array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+- `tools: optional array of CodeInterpreterTool or FileSearchTool or FunctionTool or null`
 
   Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
 
@@ -880,7 +880,7 @@ Create a thread and run it in one request.
 
         Omitting `parameters` defines a function with an empty parameter list.
 
-      - `strict: optional boolean`
+      - `strict: optional boolean or null`
 
         Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -890,13 +890,13 @@ Create a thread and run it in one request.
 
       - `"function"`
 
-- `top_p: optional number`
+- `top_p: optional number or null`
 
   An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
   We generally recommend altering this or temperature but not both.
 
-- `truncation_strategy: optional object { type, last_messages }`
+- `truncation_strategy: optional object { type, last_messages }  or null`
 
   Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -908,7 +908,7 @@ Create a thread and run it in one request.
 
     - `"last_messages"`
 
-  - `last_messages: optional number`
+  - `last_messages: optional number or null`
 
     The number of most recent messages from the thread when constructing the context for the run.
 
@@ -926,11 +926,11 @@ Create a thread and run it in one request.
 
     The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
 
-  - `cancelled_at: number`
+  - `cancelled_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was cancelled.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was completed.
 
@@ -938,15 +938,15 @@ Create a thread and run it in one request.
 
     The Unix timestamp (in seconds) for when the run was created.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     The Unix timestamp (in seconds) for when the run will expire.
 
-  - `failed_at: number`
+  - `failed_at: number or null`
 
     The Unix timestamp (in seconds) for when the run failed.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     Details on why the run is incomplete. Will be `null` if the run is not incomplete.
 
@@ -962,7 +962,7 @@ Create a thread and run it in one request.
 
     The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
 
-  - `last_error: object { code, message }`
+  - `last_error: object { code, message }  or null`
 
     The last error associated with this run. Will be `null` if there are no errors.
 
@@ -980,15 +980,15 @@ Create a thread and run it in one request.
 
       A human-readable description of the error.
 
-  - `max_completion_tokens: number`
+  - `max_completion_tokens: number or null`
 
     The maximum number of completion tokens specified to have been used over the course of the run.
 
-  - `max_prompt_tokens: number`
+  - `max_prompt_tokens: number or null`
 
     The maximum number of prompt tokens specified to have been used over the course of the run.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -1011,7 +1011,7 @@ Create a thread and run it in one request.
 
     Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
 
-  - `required_action: object { submit_tool_outputs, type }`
+  - `required_action: object { submit_tool_outputs, type }  or null`
 
     Details on the action required to continue the run. Will be `null` if no action is required.
 
@@ -1051,7 +1051,7 @@ Create a thread and run it in one request.
 
       - `"submit_tool_outputs"`
 
-  - `response_format: AssistantResponseFormatOption`
+  - `response_format: AssistantResponseFormatOption or null`
 
     Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
@@ -1114,7 +1114,7 @@ Create a thread and run it in one request.
           The schema for the response format, described as a JSON Schema object.
           Learn how to build JSON schemas [here](https://json-schema.org/).
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the output.
           If set to true, the model will always follow the exact schema defined
@@ -1128,7 +1128,7 @@ Create a thread and run it in one request.
 
         - `"json_schema"`
 
-  - `started_at: number`
+  - `started_at: number or null`
 
     The Unix timestamp (in seconds) for when the run was started.
 
@@ -1158,7 +1158,7 @@ Create a thread and run it in one request.
 
     The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
 
-  - `tool_choice: AssistantToolChoiceOption`
+  - `tool_choice: AssistantToolChoiceOption or null`
 
     Controls which (if any) tool is called by the model.
     `none` means the model will not call any tools and instead generates a message.
@@ -1262,7 +1262,7 @@ Create a thread and run it in one request.
 
           Omitting `parameters` defines a function with an empty parameter list.
 
-        - `strict: optional boolean`
+        - `strict: optional boolean or null`
 
           Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
 
@@ -1272,7 +1272,7 @@ Create a thread and run it in one request.
 
         - `"function"`
 
-  - `truncation_strategy: object { type, last_messages }`
+  - `truncation_strategy: object { type, last_messages }  or null`
 
     Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
 
@@ -1284,11 +1284,11 @@ Create a thread and run it in one request.
 
       - `"last_messages"`
 
-    - `last_messages: optional number`
+    - `last_messages: optional number or null`
 
       The number of most recent messages from the thread when constructing the context for the run.
 
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
 
     Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
 
@@ -1304,11 +1304,11 @@ Create a thread and run it in one request.
 
       Total number of tokens used (prompt + completion).
 
-  - `temperature: optional number`
+  - `temperature: optional number or null`
 
     The sampling temperature used for this run. If not set, defaults to 1.
 
-  - `top_p: optional number`
+  - `top_p: optional number or null`
 
     The nucleus sampling value used for this run. If not set, defaults to 1.
 
@@ -1602,6 +1602,67 @@ event: done
 data: [DONE]
 ```
 
+## Delete thread
+
+**delete** `/threads/{thread_id}`
+
+Delete a thread.
+
+### Path Parameters
+
+- `thread_id: string`
+
+### Returns
+
+- `ThreadDeleted object { id, deleted, object }`
+
+  - `id: string`
+
+  - `deleted: boolean`
+
+  - `object: "thread.deleted"`
+
+    - `"thread.deleted"`
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID \
+    -X DELETE \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "deleted": true,
+  "object": "thread.deleted"
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -X DELETE
+```
+
+#### Response
+
+```json
+{
+  "id": "thread_abc123",
+  "object": "thread.deleted",
+  "deleted": true
+}
+```
+
 ## Retrieve thread
 
 **get** `/threads/{thread_id}`
@@ -1626,7 +1687,7 @@ Retrieves a thread.
 
     The Unix timestamp (in seconds) for when the thread was created.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -1641,7 +1702,7 @@ Retrieves a thread.
 
     - `"thread"`
 
-  - `tool_resources: object { code_interpreter, file_search }`
+  - `tool_resources: object { code_interpreter, file_search }  or null`
 
     A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -1727,7 +1788,7 @@ Modifies a thread.
 
 ### Body Parameters
 
-- `metadata: optional Metadata`
+- `metadata: optional Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured
@@ -1736,7 +1797,7 @@ Modifies a thread.
   Keys are strings with a maximum length of 64 characters. Values are strings
   with a maximum length of 512 characters.
 
-- `tool_resources: optional object { code_interpreter, file_search }`
+- `tool_resources: optional object { code_interpreter, file_search }  or null`
 
   A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -1766,7 +1827,7 @@ Modifies a thread.
 
     The Unix timestamp (in seconds) for when the thread was created.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -1781,7 +1842,7 @@ Modifies a thread.
 
     - `"thread"`
 
-  - `tool_resources: object { code_interpreter, file_search }`
+  - `tool_resources: object { code_interpreter, file_search }  or null`
 
     A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -1862,67 +1923,6 @@ curl https://api.openai.com/v1/threads/thread_abc123 \
 }
 ```
 
-## Delete thread
-
-**delete** `/threads/{thread_id}`
-
-Delete a thread.
-
-### Path Parameters
-
-- `thread_id: string`
-
-### Returns
-
-- `ThreadDeleted object { id, deleted, object }`
-
-  - `id: string`
-
-  - `deleted: boolean`
-
-  - `object: "thread.deleted"`
-
-    - `"thread.deleted"`
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID \
-    -X DELETE \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "deleted": true,
-  "object": "thread.deleted"
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -X DELETE
-```
-
-#### Response
-
-```json
-{
-  "id": "thread_abc123",
-  "object": "thread.deleted",
-  "deleted": true
-}
-```
-
 ## Domain Types
 
 ### Assistant Response Format Option
@@ -1990,7 +1990,7 @@ curl https://api.openai.com/v1/threads/thread_abc123 \
         The schema for the response format, described as a JSON Schema object.
         Learn how to build JSON schemas [here](https://json-schema.org/).
 
-      - `strict: optional boolean`
+      - `strict: optional boolean or null`
 
         Whether to enable strict schema adherence when generating the output.
         If set to true, the model will always follow the exact schema defined
@@ -2088,7 +2088,7 @@ curl https://api.openai.com/v1/threads/thread_abc123 \
 
     The Unix timestamp (in seconds) for when the thread was created.
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -2103,7 +2103,7 @@ curl https://api.openai.com/v1/threads/thread_abc123 \
 
     - `"thread"`
 
-  - `tool_resources: object { code_interpreter, file_search }`
+  - `tool_resources: object { code_interpreter, file_search }  or null`
 
     A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
 
@@ -2131,1449 +2131,120 @@ curl https://api.openai.com/v1/threads/thread_abc123 \
 
     - `"thread.deleted"`
 
-# Runs
+# Messages
 
-## List runs
+## Create message
 
-**get** `/threads/{thread_id}/runs`
+**post** `/threads/{thread_id}/messages`
 
-Returns a list of runs belonging to a thread.
+Create a message.
 
 ### Path Parameters
 
 - `thread_id: string`
-
-### Query Parameters
-
-- `after: optional string`
-
-  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-
-- `before: optional string`
-
-  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-
-- `limit: optional number`
-
-  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-
-- `order: optional "asc" or "desc"`
-
-  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
-
-  - `"asc"`
-
-  - `"desc"`
-
-### Returns
-
-- `data: array of Run`
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
-
-      - `type: "text"`
-
-        The type of response format being defined. Always `text`.
-
-        - `"text"`
-
-    - `ResponseFormatJSONObject object { type }`
-
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
-
-      - `type: "json_object"`
-
-        The type of response format being defined. Always `json_object`.
-
-        - `"json_object"`
-
-    - `ResponseFormatJSONSchema object { json_schema, type }`
-
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-      - `json_schema: object { name, description, schema, strict }`
-
-        Structured Outputs configuration options, including a JSON Schema.
-
-        - `name: string`
-
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type, file_search }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-- `first_id: string`
-
-- `has_more: boolean`
-
-- `last_id: string`
-
-- `object: string`
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "data": [
-    {
-      "id": "id",
-      "assistant_id": "assistant_id",
-      "cancelled_at": 0,
-      "completed_at": 0,
-      "created_at": 0,
-      "expires_at": 0,
-      "failed_at": 0,
-      "incomplete_details": {
-        "reason": "max_completion_tokens"
-      },
-      "instructions": "instructions",
-      "last_error": {
-        "code": "server_error",
-        "message": "message"
-      },
-      "max_completion_tokens": 256,
-      "max_prompt_tokens": 256,
-      "metadata": {
-        "foo": "string"
-      },
-      "model": "model",
-      "object": "thread.run",
-      "parallel_tool_calls": true,
-      "required_action": {
-        "submit_tool_outputs": {
-          "tool_calls": [
-            {
-              "id": "id",
-              "function": {
-                "arguments": "arguments",
-                "name": "name"
-              },
-              "type": "function"
-            }
-          ]
-        },
-        "type": "submit_tool_outputs"
-      },
-      "response_format": "auto",
-      "started_at": 0,
-      "status": "queued",
-      "thread_id": "thread_id",
-      "tool_choice": "none",
-      "tools": [
-        {
-          "type": "code_interpreter"
-        }
-      ],
-      "truncation_strategy": {
-        "type": "auto",
-        "last_messages": 1
-      },
-      "usage": {
-        "completion_tokens": 0,
-        "prompt_tokens": 0,
-        "total_tokens": 0
-      },
-      "temperature": 0,
-      "top_p": 0
-    }
-  ],
-  "first_id": "run_abc123",
-  "has_more": false,
-  "last_id": "run_abc456",
-  "object": "list"
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2"
-```
-
-#### Response
-
-```json
-{
-  "object": "list",
-  "data": [
-    {
-      "id": "run_abc123",
-      "object": "thread.run",
-      "created_at": 1699075072,
-      "assistant_id": "asst_abc123",
-      "thread_id": "thread_abc123",
-      "status": "completed",
-      "started_at": 1699075072,
-      "expires_at": null,
-      "cancelled_at": null,
-      "failed_at": null,
-      "completed_at": 1699075073,
-      "last_error": null,
-      "model": "gpt-4o",
-      "instructions": null,
-      "incomplete_details": null,
-      "tools": [
-        {
-          "type": "code_interpreter"
-        }
-      ],
-      "tool_resources": {
-        "code_interpreter": {
-          "file_ids": [
-            "file-abc123",
-            "file-abc456"
-          ]
-        }
-      },
-      "metadata": {},
-      "usage": {
-        "prompt_tokens": 123,
-        "completion_tokens": 456,
-        "total_tokens": 579
-      },
-      "temperature": 1.0,
-      "top_p": 1.0,
-      "max_prompt_tokens": 1000,
-      "max_completion_tokens": 1000,
-      "truncation_strategy": {
-        "type": "auto",
-        "last_messages": null
-      },
-      "response_format": "auto",
-      "tool_choice": "auto",
-      "parallel_tool_calls": true
-    },
-    {
-      "id": "run_abc456",
-      "object": "thread.run",
-      "created_at": 1699063290,
-      "assistant_id": "asst_abc123",
-      "thread_id": "thread_abc123",
-      "status": "completed",
-      "started_at": 1699063290,
-      "expires_at": null,
-      "cancelled_at": null,
-      "failed_at": null,
-      "completed_at": 1699063291,
-      "last_error": null,
-      "model": "gpt-4o",
-      "instructions": null,
-      "incomplete_details": null,
-      "tools": [
-        {
-          "type": "code_interpreter"
-        }
-      ],
-      "tool_resources": {
-        "code_interpreter": {
-          "file_ids": [
-            "file-abc123",
-            "file-abc456"
-          ]
-        }
-      },
-      "metadata": {},
-      "usage": {
-        "prompt_tokens": 123,
-        "completion_tokens": 456,
-        "total_tokens": 579
-      },
-      "temperature": 1.0,
-      "top_p": 1.0,
-      "max_prompt_tokens": 1000,
-      "max_completion_tokens": 1000,
-      "truncation_strategy": {
-        "type": "auto",
-        "last_messages": null
-      },
-      "response_format": "auto",
-      "tool_choice": "auto",
-      "parallel_tool_calls": true
-    }
-  ],
-  "first_id": "run_abc123",
-  "last_id": "run_abc456",
-  "has_more": false
-}
-```
-
-## Create run
-
-**post** `/threads/{thread_id}/runs`
-
-Create a run.
-
-### Path Parameters
-
-- `thread_id: string`
-
-### Query Parameters
-
-- `include: optional array of RunStepInclude`
-
-  A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
-
-  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-  - `"step_details.tool_calls[*].file_search.results[*].content"`
 
 ### Body Parameters
 
-- `assistant_id: string`
+- `content: string or array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
 
-  The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run.
+  The text contents of the message.
 
-- `additional_instructions: optional string`
-
-  Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.
-
-- `additional_messages: optional array of object { content, role, attachments, metadata }`
-
-  Adds additional messages to the thread before creating the run.
-
-  - `content: string or array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
+  - `TextContent = string`
 
     The text contents of the message.
 
-    - `TextContent = string`
+  - `ArrayOfContentParts = array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
 
-      The text contents of the message.
+    An array of content parts with a defined type, each can be of type `text` or images can be passed with `image_url` or `image_file`. Image types are only supported on [Vision-compatible models](/docs/models).
 
-    - `ArrayOfContentParts = array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
+    - `ImageFileContentBlock object { image_file, type }`
 
-      An array of content parts with a defined type, each can be of type `text` or images can be passed with `image_url` or `image_file`. Image types are only supported on [Vision-compatible models](/docs/models).
+      References an image [File](/docs/api-reference/files) in the content of a message.
 
-      - `ImageFileContentBlock object { image_file, type }`
+      - `image_file: ImageFile`
 
-        References an image [File](/docs/api-reference/files) in the content of a message.
+        - `file_id: string`
 
-        - `image_file: ImageFile`
+          The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
 
-          - `file_id: string`
+        - `detail: optional "auto" or "low" or "high"`
 
-            The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
-
-          - `detail: optional "auto" or "low" or "high"`
-
-            Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
-
-            - `"auto"`
-
-            - `"low"`
-
-            - `"high"`
-
-        - `type: "image_file"`
-
-          Always `image_file`.
-
-          - `"image_file"`
-
-      - `ImageURLContentBlock object { image_url, type }`
-
-        References an image URL in the content of a message.
-
-        - `image_url: ImageURL`
-
-          - `url: string`
-
-            The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
-
-          - `detail: optional "auto" or "low" or "high"`
-
-            Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
-
-            - `"auto"`
-
-            - `"low"`
-
-            - `"high"`
-
-        - `type: "image_url"`
-
-          The type of the content part.
-
-          - `"image_url"`
-
-      - `TextContentBlockParam object { text, type }`
-
-        The text content that is part of a message.
-
-        - `text: string`
-
-          Text content to be sent to the model
-
-        - `type: "text"`
-
-          Always `text`.
-
-          - `"text"`
-
-  - `role: "user" or "assistant"`
-
-    The role of the entity that is creating the message. Allowed values include:
-
-    - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
-    - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
-
-    - `"user"`
-
-    - `"assistant"`
-
-  - `attachments: optional array of object { file_id, tools }`
-
-    A list of files attached to the message, and the tools they should be added to.
-
-    - `file_id: optional string`
-
-      The ID of the file to attach to the message.
-
-    - `tools: optional array of CodeInterpreterTool or object { type }`
-
-      The tools to add this file to.
-
-      - `CodeInterpreterTool object { type }`
-
-        - `type: "code_interpreter"`
-
-          The type of tool being defined: `code_interpreter`
-
-          - `"code_interpreter"`
-
-      - `FileSearchTool object { type }`
-
-        - `type: "file_search"`
-
-          The type of tool being defined: `file_search`
-
-          - `"file_search"`
-
-  - `metadata: optional Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-- `instructions: optional string`
-
-  Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
-
-- `max_completion_tokens: optional number`
-
-  The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-
-- `max_prompt_tokens: optional number`
-
-  The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-
-- `metadata: optional Metadata`
-
-  Set of 16 key-value pairs that can be attached to an object. This can be
-  useful for storing additional information about the object in a structured
-  format, and querying for objects via API or the dashboard.
-
-  Keys are strings with a maximum length of 64 characters. Values are strings
-  with a maximum length of 512 characters.
-
-- `model: optional string or "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 39 more`
-
-  The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
-
-  - `string`
-
-  - `AssistantSupportedModels = "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 39 more`
-
-    The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
-
-    - `"gpt-5"`
-
-    - `"gpt-5-mini"`
-
-    - `"gpt-5-nano"`
-
-    - `"gpt-5-2025-08-07"`
-
-    - `"gpt-5-mini-2025-08-07"`
-
-    - `"gpt-5-nano-2025-08-07"`
-
-    - `"gpt-4.1"`
-
-    - `"gpt-4.1-mini"`
-
-    - `"gpt-4.1-nano"`
-
-    - `"gpt-4.1-2025-04-14"`
-
-    - `"gpt-4.1-mini-2025-04-14"`
-
-    - `"gpt-4.1-nano-2025-04-14"`
-
-    - `"o3-mini"`
-
-    - `"o3-mini-2025-01-31"`
-
-    - `"o1"`
-
-    - `"o1-2024-12-17"`
-
-    - `"gpt-4o"`
-
-    - `"gpt-4o-2024-11-20"`
-
-    - `"gpt-4o-2024-08-06"`
-
-    - `"gpt-4o-2024-05-13"`
-
-    - `"gpt-4o-mini"`
-
-    - `"gpt-4o-mini-2024-07-18"`
-
-    - `"gpt-4.5-preview"`
-
-    - `"gpt-4.5-preview-2025-02-27"`
-
-    - `"gpt-4-turbo"`
-
-    - `"gpt-4-turbo-2024-04-09"`
-
-    - `"gpt-4-0125-preview"`
-
-    - `"gpt-4-turbo-preview"`
-
-    - `"gpt-4-1106-preview"`
-
-    - `"gpt-4-vision-preview"`
-
-    - `"gpt-4"`
-
-    - `"gpt-4-0314"`
-
-    - `"gpt-4-0613"`
-
-    - `"gpt-4-32k"`
-
-    - `"gpt-4-32k-0314"`
-
-    - `"gpt-4-32k-0613"`
-
-    - `"gpt-3.5-turbo"`
-
-    - `"gpt-3.5-turbo-16k"`
-
-    - `"gpt-3.5-turbo-0613"`
-
-    - `"gpt-3.5-turbo-1106"`
-
-    - `"gpt-3.5-turbo-0125"`
-
-    - `"gpt-3.5-turbo-16k-0613"`
-
-- `parallel_tool_calls: optional boolean`
-
-  Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-- `reasoning_effort: optional ReasoningEffort`
-
-  Constrains effort on reasoning for reasoning models. Currently supported
-  values are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.
-  Reducing reasoning effort can result in faster responses and fewer tokens
-  used on reasoning in a response. Not all reasoning models support every
-  value. See the
-  [reasoning guide](https://platform.openai.com/docs/guides/reasoning)
-  for model-specific support.
-
-  - `"none"`
-
-  - `"minimal"`
-
-  - `"low"`
-
-  - `"medium"`
-
-  - `"high"`
-
-  - `"xhigh"`
-
-  - `"max"`
-
-- `response_format: optional AssistantResponseFormatOption`
-
-  Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-  Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-  Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-  **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-  - `"auto"`
-
-    `auto` is the default value
-
-    - `"auto"`
-
-  - `ResponseFormatText object { type }`
-
-    Default response format. Used to generate text responses.
-
-    - `type: "text"`
-
-      The type of response format being defined. Always `text`.
-
-      - `"text"`
-
-  - `ResponseFormatJSONObject object { type }`
-
-    JSON object response format. An older method of generating JSON responses.
-    Using `json_schema` is recommended for models that support it. Note that the
-    model will not generate JSON without a system or user message instructing it
-    to do so.
-
-    - `type: "json_object"`
-
-      The type of response format being defined. Always `json_object`.
-
-      - `"json_object"`
-
-  - `ResponseFormatJSONSchema object { json_schema, type }`
-
-    JSON Schema response format. Used to generate structured JSON responses.
-    Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-    - `json_schema: object { name, description, schema, strict }`
-
-      Structured Outputs configuration options, including a JSON Schema.
-
-      - `name: string`
-
-        The name of the response format. Must be a-z, A-Z, 0-9, or contain
-        underscores and dashes, with a maximum length of 64.
-
-      - `description: optional string`
-
-        A description of what the response format is for, used by the model to
-        determine how to respond in the format.
-
-      - `schema: optional map[unknown]`
-
-        The schema for the response format, described as a JSON Schema object.
-        Learn how to build JSON schemas [here](https://json-schema.org/).
-
-      - `strict: optional boolean`
-
-        Whether to enable strict schema adherence when generating the output.
-        If set to true, the model will always follow the exact schema defined
-        in the `schema` field. Only a subset of JSON Schema is supported when
-        `strict` is `true`. To learn more, read the [Structured Outputs
-        guide](/docs/guides/structured-outputs).
-
-    - `type: "json_schema"`
-
-      The type of response format being defined. Always `json_schema`.
-
-      - `"json_schema"`
-
-- `stream: optional boolean`
-
-  If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-
-- `temperature: optional number`
-
-  What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-
-- `tool_choice: optional AssistantToolChoiceOption`
-
-  Controls which (if any) tool is called by the model.
-  `none` means the model will not call any tools and instead generates a message.
-  `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-  `required` means the model must call one or more tools before responding to the user.
-  Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-  - `"none" or "auto" or "required"`
-
-    `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-    - `"none"`
-
-    - `"auto"`
-
-    - `"required"`
-
-  - `AssistantToolChoice object { type, function }`
-
-    Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-    - `type: "function" or "code_interpreter" or "file_search"`
-
-      The type of the tool. If type is `function`, the function name must be set
-
-      - `"function"`
-
-      - `"code_interpreter"`
-
-      - `"file_search"`
-
-    - `function: optional AssistantToolChoiceFunction`
-
-      - `name: string`
-
-        The name of the function to call.
-
-- `tools: optional array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-  Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
-
-  - `CodeInterpreterTool object { type }`
-
-  - `FileSearchTool object { type, file_search }`
-
-    - `type: "file_search"`
-
-      The type of tool being defined: `file_search`
-
-      - `"file_search"`
-
-    - `file_search: optional object { max_num_results, ranking_options }`
-
-      Overrides for the file search tool.
-
-      - `max_num_results: optional number`
-
-        The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-        Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-      - `ranking_options: optional object { score_threshold, ranker }`
-
-        The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-        See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `score_threshold: number`
-
-          The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-        - `ranker: optional "auto" or "default_2024_08_21"`
-
-          The ranker to use for the file search. If not specified will use the `auto` ranker.
+          Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
 
           - `"auto"`
 
-          - `"default_2024_08_21"`
+          - `"low"`
 
-  - `FunctionTool object { function, type }`
+          - `"high"`
 
-    - `function: FunctionDefinition`
+      - `type: "image_file"`
 
-      - `name: string`
+        Always `image_file`.
 
-        The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+        - `"image_file"`
 
-      - `description: optional string`
+    - `ImageURLContentBlock object { image_url, type }`
 
-        A description of what the function does, used by the model to choose when and how to call the function.
+      References an image URL in the content of a message.
 
-      - `parameters: optional FunctionParameters`
+      - `image_url: ImageURL`
 
-        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+        - `url: string`
 
-        Omitting `parameters` defines a function with an empty parameter list.
+          The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
 
-      - `strict: optional boolean`
+        - `detail: optional "auto" or "low" or "high"`
 
-        Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+          Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
 
-    - `type: "function"`
+          - `"auto"`
 
-      The type of tool being defined: `function`
+          - `"low"`
 
-      - `"function"`
+          - `"high"`
 
-- `top_p: optional number`
+      - `type: "image_url"`
 
-  An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+        The type of the content part.
 
-  We generally recommend altering this or temperature but not both.
+        - `"image_url"`
 
-- `truncation_strategy: optional object { type, last_messages }`
+    - `TextContentBlockParam object { text, type }`
 
-  Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+      The text content that is part of a message.
 
-  - `type: "auto" or "last_messages"`
+      - `text: string`
 
-    The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-    - `"auto"`
-
-    - `"last_messages"`
-
-  - `last_messages: optional number`
-
-    The number of most recent messages from the thread when constructing the context for the run.
-
-### Returns
-
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
-
-  Represents an execution run on a [thread](/docs/api-reference/threads).
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
+        Text content to be sent to the model
 
       - `type: "text"`
 
-        The type of response format being defined. Always `text`.
+        Always `text`.
 
         - `"text"`
 
-    - `ResponseFormatJSONObject object { type }`
+- `role: "user" or "assistant"`
 
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
+  The role of the entity that is creating the message. Allowed values include:
 
-      - `type: "json_object"`
+  - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
+  - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
 
-        The type of response format being defined. Always `json_object`.
+  - `"user"`
 
-        - `"json_object"`
+  - `"assistant"`
 
-    - `ResponseFormatJSONSchema object { json_schema, type }`
+- `attachments: optional array of object { file_id, tools }  or null`
 
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+  A list of files attached to the message, and the tools they should be added to.
 
-      - `json_schema: object { name, description, schema, strict }`
+  - `file_id: optional string`
 
-        Structured Outputs configuration options, including a JSON Schema.
+    The ID of the file to attach to the message.
 
-        - `name: string`
+  - `tools: optional array of CodeInterpreterTool or object { type }`
 
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+    The tools to add this file to.
 
     - `CodeInterpreterTool object { type }`
 
@@ -3583,7 +2254,7 @@ Create a run.
 
         - `"code_interpreter"`
 
-    - `FileSearchTool object { type, file_search }`
+    - `FileSearchTool object { type }`
 
       - `type: "file_search"`
 
@@ -3591,932 +2262,7 @@ Create a run.
 
         - `"file_search"`
 
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs \
-    -H 'Content-Type: application/json' \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-          "assistant_id": "assistant_id",
-          "temperature": 1,
-          "top_p": 1
-        }'
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "cancelled_at": 0,
-  "completed_at": 0,
-  "created_at": 0,
-  "expires_at": 0,
-  "failed_at": 0,
-  "incomplete_details": {
-    "reason": "max_completion_tokens"
-  },
-  "instructions": "instructions",
-  "last_error": {
-    "code": "server_error",
-    "message": "message"
-  },
-  "max_completion_tokens": 256,
-  "max_prompt_tokens": 256,
-  "metadata": {
-    "foo": "string"
-  },
-  "model": "model",
-  "object": "thread.run",
-  "parallel_tool_calls": true,
-  "required_action": {
-    "submit_tool_outputs": {
-      "tool_calls": [
-        {
-          "id": "id",
-          "function": {
-            "arguments": "arguments",
-            "name": "name"
-          },
-          "type": "function"
-        }
-      ]
-    },
-    "type": "submit_tool_outputs"
-  },
-  "response_format": "auto",
-  "started_at": 0,
-  "status": "queued",
-  "thread_id": "thread_id",
-  "tool_choice": "none",
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": 1
-  },
-  "usage": {
-    "completion_tokens": 0,
-    "prompt_tokens": 0,
-    "total_tokens": 0
-  },
-  "temperature": 0,
-  "top_p": 0
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-    "assistant_id": "asst_abc123"
-  }'
-```
-
-#### Response
-
-```json
-{
-  "id": "run_abc123",
-  "object": "thread.run",
-  "created_at": 1699063290,
-  "assistant_id": "asst_abc123",
-  "thread_id": "thread_abc123",
-  "status": "queued",
-  "started_at": 1699063290,
-  "expires_at": null,
-  "cancelled_at": null,
-  "failed_at": null,
-  "completed_at": 1699063291,
-  "last_error": null,
-  "model": "gpt-4o",
-  "instructions": null,
-  "incomplete_details": null,
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "metadata": {},
-  "usage": null,
-  "temperature": 1.0,
-  "top_p": 1.0,
-  "max_prompt_tokens": 1000,
-  "max_completion_tokens": 1000,
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": null
-  },
-  "response_format": "auto",
-  "tool_choice": "auto",
-  "parallel_tool_calls": true
-}
-```
-
-### Streaming
-
-```http
-curl https://api.openai.com/v1/threads/thread_123/runs \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-    "assistant_id": "asst_123",
-    "stream": true
-  }'
-```
-
-#### Response
-
-```json
-event: thread.run.created
-data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710331240,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.queued
-data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710331240,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.in_progress
-data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"in_progress","started_at":1710330641,"expires_at":1710331240,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.step.created
-data: {"id":"step_001","object":"thread.run.step","created_at":1710330641,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710331240,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
-
-event: thread.run.step.in_progress
-data: {"id":"step_001","object":"thread.run.step","created_at":1710330641,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710331240,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
-
-event: thread.message.created
-data: {"id":"msg_001","object":"thread.message","created_at":1710330641,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
-
-event: thread.message.in_progress
-data: {"id":"msg_001","object":"thread.message","created_at":1710330641,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
-
-event: thread.message.delta
-data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"Hello","annotations":[]}}]}}
-
-...
-
-event: thread.message.delta
-data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" today"}}]}}
-
-event: thread.message.delta
-data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"?"}}]}}
-
-event: thread.message.completed
-data: {"id":"msg_001","object":"thread.message","created_at":1710330641,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1710330642,"role":"assistant","content":[{"type":"text","text":{"value":"Hello! How can I assist you today?","annotations":[]}}],"metadata":{}}
-
-event: thread.run.step.completed
-data: {"id":"step_001","object":"thread.run.step","created_at":1710330641,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1710330642,"expires_at":1710331240,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31}}
-
-event: thread.run.completed
-data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"completed","started_at":1710330641,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1710330642,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31},"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: done
-data: [DONE]
-```
-
-### Streaming with Functions
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-    "assistant_id": "asst_abc123",
-    "tools": [
-      {
-        "type": "function",
-        "function": {
-          "name": "get_current_weather",
-          "description": "Get the current weather in a given location",
-          "parameters": {
-            "type": "object",
-            "properties": {
-              "location": {
-                "type": "string",
-                "description": "The city and state, e.g. San Francisco, CA"
-              },
-              "unit": {
-                "type": "string",
-                "enum": ["celsius", "fahrenheit"]
-              }
-            },
-            "required": ["location"]
-          }
-        }
-      }
-    ],
-    "stream": true
-  }'
-```
-
-#### Response
-
-```json
-event: thread.run.created
-data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710348675,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.queued
-data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710348675,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.in_progress
-data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"in_progress","started_at":1710348075,"expires_at":1710348675,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.step.created
-data: {"id":"step_001","object":"thread.run.step","created_at":1710348076,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710348675,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
-
-event: thread.run.step.in_progress
-data: {"id":"step_001","object":"thread.run.step","created_at":1710348076,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710348675,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
-
-event: thread.message.created
-data: {"id":"msg_001","object":"thread.message","created_at":1710348076,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
-
-event: thread.message.in_progress
-data: {"id":"msg_001","object":"thread.message","created_at":1710348076,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
-
-event: thread.message.delta
-data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"Hello","annotations":[]}}]}}
-
-...
-
-event: thread.message.delta
-data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" today"}}]}}
-
-event: thread.message.delta
-data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"?"}}]}}
-
-event: thread.message.completed
-data: {"id":"msg_001","object":"thread.message","created_at":1710348076,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1710348077,"role":"assistant","content":[{"type":"text","text":{"value":"Hello! How can I assist you today?","annotations":[]}}],"metadata":{}}
-
-event: thread.run.step.completed
-data: {"id":"step_001","object":"thread.run.step","created_at":1710348076,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1710348077,"expires_at":1710348675,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31}}
-
-event: thread.run.completed
-data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"completed","started_at":1710348075,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1710348077,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31},"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: done
-data: [DONE]
-```
-
-## Retrieve run
-
-**get** `/threads/{thread_id}/runs/{run_id}`
-
-Retrieves a run.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `run_id: string`
-
-### Returns
-
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
-
-  Represents an execution run on a [thread](/docs/api-reference/threads).
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
-
-      - `type: "text"`
-
-        The type of response format being defined. Always `text`.
-
-        - `"text"`
-
-    - `ResponseFormatJSONObject object { type }`
-
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
-
-      - `type: "json_object"`
-
-        The type of response format being defined. Always `json_object`.
-
-        - `"json_object"`
-
-    - `ResponseFormatJSONSchema object { json_schema, type }`
-
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-      - `json_schema: object { name, description, schema, strict }`
-
-        Structured Outputs configuration options, including a JSON Schema.
-
-        - `name: string`
-
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type, file_search }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "cancelled_at": 0,
-  "completed_at": 0,
-  "created_at": 0,
-  "expires_at": 0,
-  "failed_at": 0,
-  "incomplete_details": {
-    "reason": "max_completion_tokens"
-  },
-  "instructions": "instructions",
-  "last_error": {
-    "code": "server_error",
-    "message": "message"
-  },
-  "max_completion_tokens": 256,
-  "max_prompt_tokens": 256,
-  "metadata": {
-    "foo": "string"
-  },
-  "model": "model",
-  "object": "thread.run",
-  "parallel_tool_calls": true,
-  "required_action": {
-    "submit_tool_outputs": {
-      "tool_calls": [
-        {
-          "id": "id",
-          "function": {
-            "arguments": "arguments",
-            "name": "name"
-          },
-          "type": "function"
-        }
-      ]
-    },
-    "type": "submit_tool_outputs"
-  },
-  "response_format": "auto",
-  "started_at": 0,
-  "status": "queued",
-  "thread_id": "thread_id",
-  "tool_choice": "none",
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": 1
-  },
-  "usage": {
-    "completion_tokens": 0,
-    "prompt_tokens": 0,
-    "total_tokens": 0
-  },
-  "temperature": 0,
-  "top_p": 0
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "OpenAI-Beta: assistants=v2"
-```
-
-#### Response
-
-```json
-{
-  "id": "run_abc123",
-  "object": "thread.run",
-  "created_at": 1699075072,
-  "assistant_id": "asst_abc123",
-  "thread_id": "thread_abc123",
-  "status": "completed",
-  "started_at": 1699075072,
-  "expires_at": null,
-  "cancelled_at": null,
-  "failed_at": null,
-  "completed_at": 1699075073,
-  "last_error": null,
-  "model": "gpt-4o",
-  "instructions": null,
-  "incomplete_details": null,
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "metadata": {},
-  "usage": {
-    "prompt_tokens": 123,
-    "completion_tokens": 456,
-    "total_tokens": 579
-  },
-  "temperature": 1.0,
-  "top_p": 1.0,
-  "max_prompt_tokens": 1000,
-  "max_completion_tokens": 1000,
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": null
-  },
-  "response_format": "auto",
-  "tool_choice": "auto",
-  "parallel_tool_calls": true
-}
-```
-
-## Modify run
-
-**post** `/threads/{thread_id}/runs/{run_id}`
-
-Modifies a run.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `run_id: string`
-
-### Body Parameters
-
-- `metadata: optional Metadata`
+- `metadata: optional Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured
@@ -4527,4170 +2273,19 @@ Modifies a run.
 
 ### Returns
 
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
+- `Message object { id, assistant_id, attachments, 11 more }`
 
-  Represents an execution run on a [thread](/docs/api-reference/threads).
+  Represents a message within a [thread](/docs/api-reference/threads).
 
   - `id: string`
 
     The identifier, which can be referenced in API endpoints.
 
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
-
-      - `type: "text"`
-
-        The type of response format being defined. Always `text`.
-
-        - `"text"`
-
-    - `ResponseFormatJSONObject object { type }`
-
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
-
-      - `type: "json_object"`
-
-        The type of response format being defined. Always `json_object`.
-
-        - `"json_object"`
-
-    - `ResponseFormatJSONSchema object { json_schema, type }`
-
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-      - `json_schema: object { name, description, schema, strict }`
-
-        Structured Outputs configuration options, including a JSON Schema.
-
-        - `name: string`
-
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type, file_search }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID \
-    -H 'Content-Type: application/json' \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{}'
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "cancelled_at": 0,
-  "completed_at": 0,
-  "created_at": 0,
-  "expires_at": 0,
-  "failed_at": 0,
-  "incomplete_details": {
-    "reason": "max_completion_tokens"
-  },
-  "instructions": "instructions",
-  "last_error": {
-    "code": "server_error",
-    "message": "message"
-  },
-  "max_completion_tokens": 256,
-  "max_prompt_tokens": 256,
-  "metadata": {
-    "foo": "string"
-  },
-  "model": "model",
-  "object": "thread.run",
-  "parallel_tool_calls": true,
-  "required_action": {
-    "submit_tool_outputs": {
-      "tool_calls": [
-        {
-          "id": "id",
-          "function": {
-            "arguments": "arguments",
-            "name": "name"
-          },
-          "type": "function"
-        }
-      ]
-    },
-    "type": "submit_tool_outputs"
-  },
-  "response_format": "auto",
-  "started_at": 0,
-  "status": "queued",
-  "thread_id": "thread_id",
-  "tool_choice": "none",
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": 1
-  },
-  "usage": {
-    "completion_tokens": 0,
-    "prompt_tokens": 0,
-    "total_tokens": 0
-  },
-  "temperature": 0,
-  "top_p": 0
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-    "metadata": {
-      "user_id": "user_abc123"
-    }
-  }'
-```
-
-#### Response
-
-```json
-{
-  "id": "run_abc123",
-  "object": "thread.run",
-  "created_at": 1699075072,
-  "assistant_id": "asst_abc123",
-  "thread_id": "thread_abc123",
-  "status": "completed",
-  "started_at": 1699075072,
-  "expires_at": null,
-  "cancelled_at": null,
-  "failed_at": null,
-  "completed_at": 1699075073,
-  "last_error": null,
-  "model": "gpt-4o",
-  "instructions": null,
-  "incomplete_details": null,
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "tool_resources": {
-    "code_interpreter": {
-      "file_ids": [
-        "file-abc123",
-        "file-abc456"
-      ]
-    }
-  },
-  "metadata": {
-    "user_id": "user_abc123"
-  },
-  "usage": {
-    "prompt_tokens": 123,
-    "completion_tokens": 456,
-    "total_tokens": 579
-  },
-  "temperature": 1.0,
-  "top_p": 1.0,
-  "max_prompt_tokens": 1000,
-  "max_completion_tokens": 1000,
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": null
-  },
-  "response_format": "auto",
-  "tool_choice": "auto",
-  "parallel_tool_calls": true
-}
-```
-
-## Submit tool outputs to run
-
-**post** `/threads/{thread_id}/runs/{run_id}/submit_tool_outputs`
-
-When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `run_id: string`
-
-### Body Parameters
-
-- `tool_outputs: array of object { output, tool_call_id }`
-
-  A list of tools for which the outputs are being submitted.
-
-  - `output: optional string`
-
-    The output of the tool call to be submitted to continue the run.
-
-  - `tool_call_id: optional string`
-
-    The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
-
-- `stream: optional boolean`
-
-  If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-
-### Returns
-
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
-
-  Represents an execution run on a [thread](/docs/api-reference/threads).
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
-
-      - `type: "text"`
-
-        The type of response format being defined. Always `text`.
-
-        - `"text"`
-
-    - `ResponseFormatJSONObject object { type }`
-
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
-
-      - `type: "json_object"`
-
-        The type of response format being defined. Always `json_object`.
-
-        - `"json_object"`
-
-    - `ResponseFormatJSONSchema object { json_schema, type }`
-
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-      - `json_schema: object { name, description, schema, strict }`
-
-        Structured Outputs configuration options, including a JSON Schema.
-
-        - `name: string`
-
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type, file_search }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/submit_tool_outputs \
-    -H 'Content-Type: application/json' \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-          "tool_outputs": [
-            {}
-          ]
-        }'
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "cancelled_at": 0,
-  "completed_at": 0,
-  "created_at": 0,
-  "expires_at": 0,
-  "failed_at": 0,
-  "incomplete_details": {
-    "reason": "max_completion_tokens"
-  },
-  "instructions": "instructions",
-  "last_error": {
-    "code": "server_error",
-    "message": "message"
-  },
-  "max_completion_tokens": 256,
-  "max_prompt_tokens": 256,
-  "metadata": {
-    "foo": "string"
-  },
-  "model": "model",
-  "object": "thread.run",
-  "parallel_tool_calls": true,
-  "required_action": {
-    "submit_tool_outputs": {
-      "tool_calls": [
-        {
-          "id": "id",
-          "function": {
-            "arguments": "arguments",
-            "name": "name"
-          },
-          "type": "function"
-        }
-      ]
-    },
-    "type": "submit_tool_outputs"
-  },
-  "response_format": "auto",
-  "started_at": 0,
-  "status": "queued",
-  "thread_id": "thread_id",
-  "tool_choice": "none",
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": 1
-  },
-  "usage": {
-    "completion_tokens": 0,
-    "prompt_tokens": 0,
-    "total_tokens": 0
-  },
-  "temperature": 0,
-  "top_p": 0
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_123/runs/run_123/submit_tool_outputs \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-    "tool_outputs": [
-      {
-        "tool_call_id": "call_001",
-        "output": "70 degrees and sunny."
-      }
-    ]
-  }'
-```
-
-#### Response
-
-```json
-{
-  "id": "run_123",
-  "object": "thread.run",
-  "created_at": 1699075592,
-  "assistant_id": "asst_123",
-  "thread_id": "thread_123",
-  "status": "queued",
-  "started_at": 1699075592,
-  "expires_at": 1699076192,
-  "cancelled_at": null,
-  "failed_at": null,
-  "completed_at": null,
-  "last_error": null,
-  "model": "gpt-4o",
-  "instructions": null,
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "get_current_weather",
-        "description": "Get the current weather in a given location",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "location": {
-              "type": "string",
-              "description": "The city and state, e.g. San Francisco, CA"
-            },
-            "unit": {
-              "type": "string",
-              "enum": ["celsius", "fahrenheit"]
-            }
-          },
-          "required": ["location"]
-        }
-      }
-    }
-  ],
-  "metadata": {},
-  "usage": null,
-  "temperature": 1.0,
-  "top_p": 1.0,
-  "max_prompt_tokens": 1000,
-  "max_completion_tokens": 1000,
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": null
-  },
-  "response_format": "auto",
-  "tool_choice": "auto",
-  "parallel_tool_calls": true
-}
-```
-
-### Streaming
-
-```http
-curl https://api.openai.com/v1/threads/thread_123/runs/run_123/submit_tool_outputs \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-    "tool_outputs": [
-      {
-        "tool_call_id": "call_001",
-        "output": "70 degrees and sunny."
-      }
-    ],
-    "stream": true
-  }'
-```
-
-#### Response
-
-```json
-event: thread.run.step.completed
-data: {"id":"step_001","object":"thread.run.step","created_at":1710352449,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"tool_calls","status":"completed","cancelled_at":null,"completed_at":1710352475,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"tool_calls","tool_calls":[{"id":"call_iWr0kQ2EaYMaxNdl0v3KYkx7","type":"function","function":{"name":"get_current_weather","arguments":"{\"location\":\"San Francisco, CA\",\"unit\":\"fahrenheit\"}","output":"70 degrees and sunny."}}]},"usage":{"prompt_tokens":291,"completion_tokens":24,"total_tokens":315}}
-
-event: thread.run.queued
-data: {"id":"run_123","object":"thread.run","created_at":1710352447,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":1710352448,"expires_at":1710353047,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[{"type":"function","function":{"name":"get_current_weather","description":"Get the current weather in a given location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"string","enum":["celsius","fahrenheit"]}},"required":["location"]}}}],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.in_progress
-data: {"id":"run_123","object":"thread.run","created_at":1710352447,"assistant_id":"asst_123","thread_id":"thread_123","status":"in_progress","started_at":1710352475,"expires_at":1710353047,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[{"type":"function","function":{"name":"get_current_weather","description":"Get the current weather in a given location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"string","enum":["celsius","fahrenheit"]}},"required":["location"]}}}],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: thread.run.step.created
-data: {"id":"step_002","object":"thread.run.step","created_at":1710352476,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_002"}},"usage":null}
-
-event: thread.run.step.in_progress
-data: {"id":"step_002","object":"thread.run.step","created_at":1710352476,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_002"}},"usage":null}
-
-event: thread.message.created
-data: {"id":"msg_002","object":"thread.message","created_at":1710352476,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
-
-event: thread.message.in_progress
-data: {"id":"msg_002","object":"thread.message","created_at":1710352476,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
-
-event: thread.message.delta
-data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"The","annotations":[]}}]}}
-
-event: thread.message.delta
-data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" current"}}]}}
-
-event: thread.message.delta
-data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" weather"}}]}}
-
-...
-
-event: thread.message.delta
-data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" sunny"}}]}}
-
-event: thread.message.delta
-data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
-
-event: thread.message.completed
-data: {"id":"msg_002","object":"thread.message","created_at":1710352476,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1710352477,"role":"assistant","content":[{"type":"text","text":{"value":"The current weather in San Francisco, CA is 70 degrees Fahrenheit and sunny.","annotations":[]}}],"metadata":{}}
-
-event: thread.run.step.completed
-data: {"id":"step_002","object":"thread.run.step","created_at":1710352476,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1710352477,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_002"}},"usage":{"prompt_tokens":329,"completion_tokens":18,"total_tokens":347}}
-
-event: thread.run.completed
-data: {"id":"run_123","object":"thread.run","created_at":1710352447,"assistant_id":"asst_123","thread_id":"thread_123","status":"completed","started_at":1710352475,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1710352477,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[{"type":"function","function":{"name":"get_current_weather","description":"Get the current weather in a given location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"string","enum":["celsius","fahrenheit"]}},"required":["location"]}}}],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31},"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
-
-event: done
-data: [DONE]
-```
-
-## Cancel a run
-
-**post** `/threads/{thread_id}/runs/{run_id}/cancel`
-
-Cancels a run that is `in_progress`.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `run_id: string`
-
-### Returns
-
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
-
-  Represents an execution run on a [thread](/docs/api-reference/threads).
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
-
-      - `type: "text"`
-
-        The type of response format being defined. Always `text`.
-
-        - `"text"`
-
-    - `ResponseFormatJSONObject object { type }`
-
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
-
-      - `type: "json_object"`
-
-        The type of response format being defined. Always `json_object`.
-
-        - `"json_object"`
-
-    - `ResponseFormatJSONSchema object { json_schema, type }`
-
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-      - `json_schema: object { name, description, schema, strict }`
-
-        Structured Outputs configuration options, including a JSON Schema.
-
-        - `name: string`
-
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type, file_search }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/cancel \
-    -X POST \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "cancelled_at": 0,
-  "completed_at": 0,
-  "created_at": 0,
-  "expires_at": 0,
-  "failed_at": 0,
-  "incomplete_details": {
-    "reason": "max_completion_tokens"
-  },
-  "instructions": "instructions",
-  "last_error": {
-    "code": "server_error",
-    "message": "message"
-  },
-  "max_completion_tokens": 256,
-  "max_prompt_tokens": 256,
-  "metadata": {
-    "foo": "string"
-  },
-  "model": "model",
-  "object": "thread.run",
-  "parallel_tool_calls": true,
-  "required_action": {
-    "submit_tool_outputs": {
-      "tool_calls": [
-        {
-          "id": "id",
-          "function": {
-            "arguments": "arguments",
-            "name": "name"
-          },
-          "type": "function"
-        }
-      ]
-    },
-    "type": "submit_tool_outputs"
-  },
-  "response_format": "auto",
-  "started_at": 0,
-  "status": "queued",
-  "thread_id": "thread_id",
-  "tool_choice": "none",
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "truncation_strategy": {
-    "type": "auto",
-    "last_messages": 1
-  },
-  "usage": {
-    "completion_tokens": 0,
-    "prompt_tokens": 0,
-    "total_tokens": 0
-  },
-  "temperature": 0,
-  "top_p": 0
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -X POST
-```
-
-#### Response
-
-```json
-{
-  "id": "run_abc123",
-  "object": "thread.run",
-  "created_at": 1699076126,
-  "assistant_id": "asst_abc123",
-  "thread_id": "thread_abc123",
-  "status": "cancelling",
-  "started_at": 1699076126,
-  "expires_at": 1699076726,
-  "cancelled_at": null,
-  "failed_at": null,
-  "completed_at": null,
-  "last_error": null,
-  "model": "gpt-4o",
-  "instructions": "You summarize books.",
-  "tools": [
-    {
-      "type": "file_search"
-    }
-  ],
-  "tool_resources": {
-    "file_search": {
-      "vector_store_ids": ["vs_123"]
-    }
-  },
-  "metadata": {},
-  "usage": null,
-  "temperature": 1.0,
-  "top_p": 1.0,
-  "response_format": "auto",
-  "tool_choice": "auto",
-  "parallel_tool_calls": true
-}
-```
-
-## Domain Types
-
-### Required Action Function Tool Call
-
-- `RequiredActionFunctionToolCall object { id, function, type }`
-
-  Tool call objects
-
-  - `id: string`
-
-    The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-  - `function: object { arguments, name }`
-
-    The function definition.
-
-    - `arguments: string`
-
-      The arguments that the model expects you to pass to the function.
-
-    - `name: string`
-
-      The name of the function.
-
-  - `type: "function"`
-
-    The type of tool call the output is required for. For now, this is always `function`.
-
-    - `"function"`
-
-### Run
-
-- `Run object { id, assistant_id, cancelled_at, 24 more }`
-
-  Represents an execution run on a [thread](/docs/api-reference/threads).
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run was completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run was created.
-
-  - `expires_at: number`
-
-    The Unix timestamp (in seconds) for when the run will expire.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run failed.
-
-  - `incomplete_details: object { reason }`
-
-    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-
-    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
-
-      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
-
-      - `"max_completion_tokens"`
-
-      - `"max_prompt_tokens"`
-
-  - `instructions: string`
-
-    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
-
-      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-      - `"invalid_prompt"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `max_completion_tokens: number`
-
-    The maximum number of completion tokens specified to have been used over the course of the run.
-
-  - `max_prompt_tokens: number`
-
-    The maximum number of prompt tokens specified to have been used over the course of the run.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `model: string`
-
-    The model that the [assistant](/docs/api-reference/assistants) used for this run.
-
-  - `object: "thread.run"`
-
-    The object type, which is always `thread.run`.
-
-    - `"thread.run"`
-
-  - `parallel_tool_calls: boolean`
-
-    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-
-  - `required_action: object { submit_tool_outputs, type }`
-
-    Details on the action required to continue the run. Will be `null` if no action is required.
-
-    - `submit_tool_outputs: object { tool_calls }`
-
-      Details on the tool outputs needed for this run to continue.
-
-      - `tool_calls: array of RequiredActionFunctionToolCall`
-
-        A list of the relevant tool calls.
-
-        - `id: string`
-
-          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-
-        - `function: object { arguments, name }`
-
-          The function definition.
-
-          - `arguments: string`
-
-            The arguments that the model expects you to pass to the function.
-
-          - `name: string`
-
-            The name of the function.
-
-        - `type: "function"`
-
-          The type of tool call the output is required for. For now, this is always `function`.
-
-          - `"function"`
-
-    - `type: "submit_tool_outputs"`
-
-      For now, this is always `submit_tool_outputs`.
-
-      - `"submit_tool_outputs"`
-
-  - `response_format: AssistantResponseFormatOption`
-
-    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
-
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-    - `"auto"`
-
-      `auto` is the default value
-
-      - `"auto"`
-
-    - `ResponseFormatText object { type }`
-
-      Default response format. Used to generate text responses.
-
-      - `type: "text"`
-
-        The type of response format being defined. Always `text`.
-
-        - `"text"`
-
-    - `ResponseFormatJSONObject object { type }`
-
-      JSON object response format. An older method of generating JSON responses.
-      Using `json_schema` is recommended for models that support it. Note that the
-      model will not generate JSON without a system or user message instructing it
-      to do so.
-
-      - `type: "json_object"`
-
-        The type of response format being defined. Always `json_object`.
-
-        - `"json_object"`
-
-    - `ResponseFormatJSONSchema object { json_schema, type }`
-
-      JSON Schema response format. Used to generate structured JSON responses.
-      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
-
-      - `json_schema: object { name, description, schema, strict }`
-
-        Structured Outputs configuration options, including a JSON Schema.
-
-        - `name: string`
-
-          The name of the response format. Must be a-z, A-Z, 0-9, or contain
-          underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the response format is for, used by the model to
-          determine how to respond in the format.
-
-        - `schema: optional map[unknown]`
-
-          The schema for the response format, described as a JSON Schema object.
-          Learn how to build JSON schemas [here](https://json-schema.org/).
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the output.
-          If set to true, the model will always follow the exact schema defined
-          in the `schema` field. Only a subset of JSON Schema is supported when
-          `strict` is `true`. To learn more, read the [Structured Outputs
-          guide](/docs/guides/structured-outputs).
-
-      - `type: "json_schema"`
-
-        The type of response format being defined. Always `json_schema`.
-
-        - `"json_schema"`
-
-  - `started_at: number`
-
-    The Unix timestamp (in seconds) for when the run was started.
-
-  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
-
-    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"requires_action"`
-
-    - `"cancelling"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"incomplete"`
-
-    - `"expired"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-
-  - `tool_choice: AssistantToolChoiceOption`
-
-    Controls which (if any) tool is called by the model.
-    `none` means the model will not call any tools and instead generates a message.
-    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
-    `required` means the model must call one or more tools before responding to the user.
-    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-    - `"none" or "auto" or "required"`
-
-      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
-
-      - `"none"`
-
-      - `"auto"`
-
-      - `"required"`
-
-    - `AssistantToolChoice object { type, function }`
-
-      Specifies a tool the model should use. Use to force the model to call a specific tool.
-
-      - `type: "function" or "code_interpreter" or "file_search"`
-
-        The type of the tool. If type is `function`, the function name must be set
-
-        - `"function"`
-
-        - `"code_interpreter"`
-
-        - `"file_search"`
-
-      - `function: optional AssistantToolChoiceFunction`
-
-        - `name: string`
-
-          The name of the function to call.
-
-  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
-
-    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type, file_search }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-      - `file_search: optional object { max_num_results, ranking_options }`
-
-        Overrides for the file search tool.
-
-        - `max_num_results: optional number`
-
-          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
-
-          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-        - `ranking_options: optional object { score_threshold, ranker }`
-
-          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
-
-          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-          - `ranker: optional "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-    - `FunctionTool object { function, type }`
-
-      - `function: FunctionDefinition`
-
-        - `name: string`
-
-          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-
-        - `description: optional string`
-
-          A description of what the function does, used by the model to choose when and how to call the function.
-
-        - `parameters: optional FunctionParameters`
-
-          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-
-          Omitting `parameters` defines a function with an empty parameter list.
-
-        - `strict: optional boolean`
-
-          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
-
-      - `type: "function"`
-
-        The type of tool being defined: `function`
-
-        - `"function"`
-
-  - `truncation_strategy: object { type, last_messages }`
-
-    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
-
-    - `type: "auto" or "last_messages"`
-
-      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-
-      - `"auto"`
-
-      - `"last_messages"`
-
-    - `last_messages: optional number`
-
-      The number of most recent messages from the thread when constructing the context for the run.
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-  - `temperature: optional number`
-
-    The sampling temperature used for this run. If not set, defaults to 1.
-
-  - `top_p: optional number`
-
-    The nucleus sampling value used for this run. If not set, defaults to 1.
-
-# Steps
-
-## List run steps
-
-**get** `/threads/{thread_id}/runs/{run_id}/steps`
-
-Returns a list of run steps belonging to a run.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `run_id: string`
-
-### Query Parameters
-
-- `after: optional string`
-
-  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-
-- `before: optional string`
-
-  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-
-- `include: optional array of RunStepInclude`
-
-  A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
-
-  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-  - `"step_details.tool_calls[*].file_search.results[*].content"`
-
-- `limit: optional number`
-
-  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-
-- `order: optional "asc" or "desc"`
-
-  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
-
-  - `"asc"`
-
-  - `"desc"`
-
-### Returns
-
-- `data: array of RunStep`
-
-  - `id: string`
-
-    The identifier of the run step, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run step was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run step completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run step was created.
-
-  - `expired_at: number`
-
-    The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run step failed.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run step. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded"`
-
-      One of `server_error` or `rate_limit_exceeded`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `object: "thread.run.step"`
-
-    The object type, which is always `thread.run.step`.
-
-    - `"thread.run.step"`
-
-  - `run_id: string`
-
-    The ID of the [run](/docs/api-reference/runs) that this run step is a part of.
-
-  - `status: "in_progress" or "cancelled" or "failed" or 2 more`
-
-    The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
-
-    - `"in_progress"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"expired"`
-
-  - `step_details: MessageCreationStepDetails or ToolCallsStepDetails`
-
-    The details of the run step.
-
-    - `MessageCreationStepDetails object { message_creation, type }`
-
-      Details of the message creation by the run step.
-
-      - `message_creation: object { message_id }`
-
-        - `message_id: string`
-
-          The ID of the message that was created by this run step.
-
-      - `type: "message_creation"`
-
-        Always `message_creation`.
-
-        - `"message_creation"`
-
-    - `ToolCallsStepDetails object { tool_calls, type }`
-
-      Details of the tool call.
-
-      - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
-
-        An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-        - `CodeInterpreterToolCall object { id, code_interpreter, type }`
-
-          Details of the Code Interpreter tool call the run step was involved in.
-
-          - `id: string`
-
-            The ID of the tool call.
-
-          - `code_interpreter: object { input, outputs }`
-
-            The Code Interpreter tool call definition.
-
-            - `input: string`
-
-              The input to the Code Interpreter tool call.
-
-            - `outputs: array of object { logs, type }  or object { image, type }`
-
-              The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-              - `CodeInterpreterLogOutput object { logs, type }`
-
-                Text output from the Code Interpreter tool call as part of a run step.
-
-                - `logs: string`
-
-                  The text output from the Code Interpreter tool call.
-
-                - `type: "logs"`
-
-                  Always `logs`.
-
-                  - `"logs"`
-
-              - `CodeInterpreterImageOutput object { image, type }`
-
-                - `image: object { file_id }`
-
-                  - `file_id: string`
-
-                    The [file](/docs/api-reference/files) ID of the image.
-
-                - `type: "image"`
-
-                  Always `image`.
-
-                  - `"image"`
-
-          - `type: "code_interpreter"`
-
-            The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-            - `"code_interpreter"`
-
-        - `FileSearchToolCall object { id, file_search, type }`
-
-          - `id: string`
-
-            The ID of the tool call object.
-
-          - `file_search: object { ranking_options, results }`
-
-            For now, this is always going to be an empty object.
-
-            - `ranking_options: optional object { ranker, score_threshold }`
-
-              The ranking options for the file search.
-
-              - `ranker: "auto" or "default_2024_08_21"`
-
-                The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-                - `"auto"`
-
-                - `"default_2024_08_21"`
-
-              - `score_threshold: number`
-
-                The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-            - `results: optional array of object { file_id, file_name, score, content }`
-
-              The results of the file search.
-
-              - `file_id: string`
-
-                The ID of the file that result was found in.
-
-              - `file_name: string`
-
-                The name of the file that result was found in.
-
-              - `score: number`
-
-                The score of the result. All values must be a floating point number between 0 and 1.
-
-              - `content: optional array of object { text, type }`
-
-                The content of the result that was found. The content is only included if requested via the include query parameter.
-
-                - `text: optional string`
-
-                  The text content of the file.
-
-                - `type: optional "text"`
-
-                  The type of the content.
-
-                  - `"text"`
-
-          - `type: "file_search"`
-
-            The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-            - `"file_search"`
-
-        - `FunctionToolCall object { id, function, type }`
-
-          - `id: string`
-
-            The ID of the tool call object.
-
-          - `function: object { arguments, name, output }`
-
-            The definition of the function that was called.
-
-            - `arguments: string`
-
-              The arguments passed to the function.
-
-            - `name: string`
-
-              The name of the function.
-
-            - `output: string`
-
-              The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-          - `type: "function"`
-
-            The type of tool call. This is always going to be `function` for this type of tool call.
-
-            - `"function"`
-
-      - `type: "tool_calls"`
-
-        Always `tool_calls`.
-
-        - `"tool_calls"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was run.
-
-  - `type: "message_creation" or "tool_calls"`
-
-    The type of run step, which can be either `message_creation` or `tool_calls`.
-
-    - `"message_creation"`
-
-    - `"tool_calls"`
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run step.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run step.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-- `first_id: string`
-
-- `has_more: boolean`
-
-- `last_id: string`
-
-- `object: string`
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/steps \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "data": [
-    {
-      "id": "id",
-      "assistant_id": "assistant_id",
-      "cancelled_at": 0,
-      "completed_at": 0,
-      "created_at": 0,
-      "expired_at": 0,
-      "failed_at": 0,
-      "last_error": {
-        "code": "server_error",
-        "message": "message"
-      },
-      "metadata": {
-        "foo": "string"
-      },
-      "object": "thread.run.step",
-      "run_id": "run_id",
-      "status": "in_progress",
-      "step_details": {
-        "message_creation": {
-          "message_id": "message_id"
-        },
-        "type": "message_creation"
-      },
-      "thread_id": "thread_id",
-      "type": "message_creation",
-      "usage": {
-        "completion_tokens": 0,
-        "prompt_tokens": 0,
-        "total_tokens": 0
-      }
-    }
-  ],
-  "first_id": "step_abc123",
-  "has_more": false,
-  "last_id": "step_abc456",
-  "object": "list"
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2"
-```
-
-#### Response
-
-```json
-{
-  "object": "list",
-  "data": [
-    {
-      "id": "step_abc123",
-      "object": "thread.run.step",
-      "created_at": 1699063291,
-      "run_id": "run_abc123",
-      "assistant_id": "asst_abc123",
-      "thread_id": "thread_abc123",
-      "type": "message_creation",
-      "status": "completed",
-      "cancelled_at": null,
-      "completed_at": 1699063291,
-      "expired_at": null,
-      "failed_at": null,
-      "last_error": null,
-      "step_details": {
-        "type": "message_creation",
-        "message_creation": {
-          "message_id": "msg_abc123"
-        }
-      },
-      "usage": {
-        "prompt_tokens": 123,
-        "completion_tokens": 456,
-        "total_tokens": 579
-      }
-    }
-  ],
-  "first_id": "step_abc123",
-  "last_id": "step_abc456",
-  "has_more": false
-}
-```
-
-## Retrieve run step
-
-**get** `/threads/{thread_id}/runs/{run_id}/steps/{step_id}`
-
-Retrieves a run step.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `run_id: string`
-
-- `step_id: string`
-
-### Query Parameters
-
-- `include: optional array of RunStepInclude`
-
-  A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
-
-  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
-
-  - `"step_details.tool_calls[*].file_search.results[*].content"`
-
-### Returns
-
-- `RunStep object { id, assistant_id, cancelled_at, 13 more }`
-
-  Represents a step in execution of a run.
-
-  - `id: string`
-
-    The identifier of the run step, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run step was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run step completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run step was created.
-
-  - `expired_at: number`
-
-    The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run step failed.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run step. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded"`
-
-      One of `server_error` or `rate_limit_exceeded`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `object: "thread.run.step"`
-
-    The object type, which is always `thread.run.step`.
-
-    - `"thread.run.step"`
-
-  - `run_id: string`
-
-    The ID of the [run](/docs/api-reference/runs) that this run step is a part of.
-
-  - `status: "in_progress" or "cancelled" or "failed" or 2 more`
-
-    The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
-
-    - `"in_progress"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"expired"`
-
-  - `step_details: MessageCreationStepDetails or ToolCallsStepDetails`
-
-    The details of the run step.
-
-    - `MessageCreationStepDetails object { message_creation, type }`
-
-      Details of the message creation by the run step.
-
-      - `message_creation: object { message_id }`
-
-        - `message_id: string`
-
-          The ID of the message that was created by this run step.
-
-      - `type: "message_creation"`
-
-        Always `message_creation`.
-
-        - `"message_creation"`
-
-    - `ToolCallsStepDetails object { tool_calls, type }`
-
-      Details of the tool call.
-
-      - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
-
-        An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-        - `CodeInterpreterToolCall object { id, code_interpreter, type }`
-
-          Details of the Code Interpreter tool call the run step was involved in.
-
-          - `id: string`
-
-            The ID of the tool call.
-
-          - `code_interpreter: object { input, outputs }`
-
-            The Code Interpreter tool call definition.
-
-            - `input: string`
-
-              The input to the Code Interpreter tool call.
-
-            - `outputs: array of object { logs, type }  or object { image, type }`
-
-              The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-              - `CodeInterpreterLogOutput object { logs, type }`
-
-                Text output from the Code Interpreter tool call as part of a run step.
-
-                - `logs: string`
-
-                  The text output from the Code Interpreter tool call.
-
-                - `type: "logs"`
-
-                  Always `logs`.
-
-                  - `"logs"`
-
-              - `CodeInterpreterImageOutput object { image, type }`
-
-                - `image: object { file_id }`
-
-                  - `file_id: string`
-
-                    The [file](/docs/api-reference/files) ID of the image.
-
-                - `type: "image"`
-
-                  Always `image`.
-
-                  - `"image"`
-
-          - `type: "code_interpreter"`
-
-            The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-            - `"code_interpreter"`
-
-        - `FileSearchToolCall object { id, file_search, type }`
-
-          - `id: string`
-
-            The ID of the tool call object.
-
-          - `file_search: object { ranking_options, results }`
-
-            For now, this is always going to be an empty object.
-
-            - `ranking_options: optional object { ranker, score_threshold }`
-
-              The ranking options for the file search.
-
-              - `ranker: "auto" or "default_2024_08_21"`
-
-                The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-                - `"auto"`
-
-                - `"default_2024_08_21"`
-
-              - `score_threshold: number`
-
-                The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-            - `results: optional array of object { file_id, file_name, score, content }`
-
-              The results of the file search.
-
-              - `file_id: string`
-
-                The ID of the file that result was found in.
-
-              - `file_name: string`
-
-                The name of the file that result was found in.
-
-              - `score: number`
-
-                The score of the result. All values must be a floating point number between 0 and 1.
-
-              - `content: optional array of object { text, type }`
-
-                The content of the result that was found. The content is only included if requested via the include query parameter.
-
-                - `text: optional string`
-
-                  The text content of the file.
-
-                - `type: optional "text"`
-
-                  The type of the content.
-
-                  - `"text"`
-
-          - `type: "file_search"`
-
-            The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-            - `"file_search"`
-
-        - `FunctionToolCall object { id, function, type }`
-
-          - `id: string`
-
-            The ID of the tool call object.
-
-          - `function: object { arguments, name, output }`
-
-            The definition of the function that was called.
-
-            - `arguments: string`
-
-              The arguments passed to the function.
-
-            - `name: string`
-
-              The name of the function.
-
-            - `output: string`
-
-              The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-          - `type: "function"`
-
-            The type of tool call. This is always going to be `function` for this type of tool call.
-
-            - `"function"`
-
-      - `type: "tool_calls"`
-
-        Always `tool_calls`.
-
-        - `"tool_calls"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was run.
-
-  - `type: "message_creation" or "tool_calls"`
-
-    The type of run step, which can be either `message_creation` or `tool_calls`.
-
-    - `"message_creation"`
-
-    - `"tool_calls"`
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run step.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run step.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/steps/$STEP_ID \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "cancelled_at": 0,
-  "completed_at": 0,
-  "created_at": 0,
-  "expired_at": 0,
-  "failed_at": 0,
-  "last_error": {
-    "code": "server_error",
-    "message": "message"
-  },
-  "metadata": {
-    "foo": "string"
-  },
-  "object": "thread.run.step",
-  "run_id": "run_id",
-  "status": "in_progress",
-  "step_details": {
-    "message_creation": {
-      "message_id": "message_id"
-    },
-    "type": "message_creation"
-  },
-  "thread_id": "thread_id",
-  "type": "message_creation",
-  "usage": {
-    "completion_tokens": 0,
-    "prompt_tokens": 0,
-    "total_tokens": 0
-  }
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_abc123 \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "OpenAI-Beta: assistants=v2"
-```
-
-#### Response
-
-```json
-{
-  "id": "step_abc123",
-  "object": "thread.run.step",
-  "created_at": 1699063291,
-  "run_id": "run_abc123",
-  "assistant_id": "asst_abc123",
-  "thread_id": "thread_abc123",
-  "type": "message_creation",
-  "status": "completed",
-  "cancelled_at": null,
-  "completed_at": 1699063291,
-  "expired_at": null,
-  "failed_at": null,
-  "last_error": null,
-  "step_details": {
-    "type": "message_creation",
-    "message_creation": {
-      "message_id": "msg_abc123"
-    }
-  },
-  "usage": {
-    "prompt_tokens": 123,
-    "completion_tokens": 456,
-    "total_tokens": 579
-  }
-}
-```
-
-## Domain Types
-
-### Code Interpreter Logs
-
-- `CodeInterpreterLogs object { index, type, logs }`
-
-  Text output from the Code Interpreter tool call as part of a run step.
-
-  - `index: number`
-
-    The index of the output in the outputs array.
-
-  - `type: "logs"`
-
-    Always `logs`.
-
-    - `"logs"`
-
-  - `logs: optional string`
-
-    The text output from the Code Interpreter tool call.
-
-### Code Interpreter Output Image
-
-- `CodeInterpreterOutputImage object { index, type, image }`
-
-  - `index: number`
-
-    The index of the output in the outputs array.
-
-  - `type: "image"`
-
-    Always `image`.
-
-    - `"image"`
-
-  - `image: optional object { file_id }`
-
-    - `file_id: optional string`
-
-      The [file](/docs/api-reference/files) ID of the image.
-
-### Code Interpreter Tool Call
-
-- `CodeInterpreterToolCall object { id, code_interpreter, type }`
-
-  Details of the Code Interpreter tool call the run step was involved in.
-
-  - `id: string`
-
-    The ID of the tool call.
-
-  - `code_interpreter: object { input, outputs }`
-
-    The Code Interpreter tool call definition.
-
-    - `input: string`
-
-      The input to the Code Interpreter tool call.
-
-    - `outputs: array of object { logs, type }  or object { image, type }`
-
-      The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-      - `CodeInterpreterLogOutput object { logs, type }`
-
-        Text output from the Code Interpreter tool call as part of a run step.
-
-        - `logs: string`
-
-          The text output from the Code Interpreter tool call.
-
-        - `type: "logs"`
-
-          Always `logs`.
-
-          - `"logs"`
-
-      - `CodeInterpreterImageOutput object { image, type }`
-
-        - `image: object { file_id }`
-
-          - `file_id: string`
-
-            The [file](/docs/api-reference/files) ID of the image.
-
-        - `type: "image"`
-
-          Always `image`.
-
-          - `"image"`
-
-  - `type: "code_interpreter"`
-
-    The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-    - `"code_interpreter"`
-
-### Code Interpreter Tool Call Delta
-
-- `CodeInterpreterToolCallDelta object { index, type, id, code_interpreter }`
-
-  Details of the Code Interpreter tool call the run step was involved in.
-
-  - `index: number`
-
-    The index of the tool call in the tool calls array.
-
-  - `type: "code_interpreter"`
-
-    The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-    - `"code_interpreter"`
-
-  - `id: optional string`
-
-    The ID of the tool call.
-
-  - `code_interpreter: optional object { input, outputs }`
-
-    The Code Interpreter tool call definition.
-
-    - `input: optional string`
-
-      The input to the Code Interpreter tool call.
-
-    - `outputs: optional array of CodeInterpreterLogs or CodeInterpreterOutputImage`
-
-      The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-      - `CodeInterpreterLogs object { index, type, logs }`
-
-        Text output from the Code Interpreter tool call as part of a run step.
-
-        - `index: number`
-
-          The index of the output in the outputs array.
-
-        - `type: "logs"`
-
-          Always `logs`.
-
-          - `"logs"`
-
-        - `logs: optional string`
-
-          The text output from the Code Interpreter tool call.
-
-      - `CodeInterpreterOutputImage object { index, type, image }`
-
-        - `index: number`
-
-          The index of the output in the outputs array.
-
-        - `type: "image"`
-
-          Always `image`.
-
-          - `"image"`
-
-        - `image: optional object { file_id }`
-
-          - `file_id: optional string`
-
-            The [file](/docs/api-reference/files) ID of the image.
-
-### File Search Tool Call
-
-- `FileSearchToolCall object { id, file_search, type }`
-
-  - `id: string`
-
-    The ID of the tool call object.
-
-  - `file_search: object { ranking_options, results }`
-
-    For now, this is always going to be an empty object.
-
-    - `ranking_options: optional object { ranker, score_threshold }`
-
-      The ranking options for the file search.
-
-      - `ranker: "auto" or "default_2024_08_21"`
-
-        The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-        - `"auto"`
-
-        - `"default_2024_08_21"`
-
-      - `score_threshold: number`
-
-        The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-    - `results: optional array of object { file_id, file_name, score, content }`
-
-      The results of the file search.
-
-      - `file_id: string`
-
-        The ID of the file that result was found in.
-
-      - `file_name: string`
-
-        The name of the file that result was found in.
-
-      - `score: number`
-
-        The score of the result. All values must be a floating point number between 0 and 1.
-
-      - `content: optional array of object { text, type }`
-
-        The content of the result that was found. The content is only included if requested via the include query parameter.
-
-        - `text: optional string`
-
-          The text content of the file.
-
-        - `type: optional "text"`
-
-          The type of the content.
-
-          - `"text"`
-
-  - `type: "file_search"`
-
-    The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-    - `"file_search"`
-
-### File Search Tool Call Delta
-
-- `FileSearchToolCallDelta object { file_search, index, type, id }`
-
-  - `file_search: unknown`
-
-    For now, this is always going to be an empty object.
-
-  - `index: number`
-
-    The index of the tool call in the tool calls array.
-
-  - `type: "file_search"`
-
-    The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-    - `"file_search"`
-
-  - `id: optional string`
-
-    The ID of the tool call object.
-
-### Function Tool Call
-
-- `FunctionToolCall object { id, function, type }`
-
-  - `id: string`
-
-    The ID of the tool call object.
-
-  - `function: object { arguments, name, output }`
-
-    The definition of the function that was called.
-
-    - `arguments: string`
-
-      The arguments passed to the function.
-
-    - `name: string`
-
-      The name of the function.
-
-    - `output: string`
-
-      The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-  - `type: "function"`
-
-    The type of tool call. This is always going to be `function` for this type of tool call.
-
-    - `"function"`
-
-### Function Tool Call Delta
-
-- `FunctionToolCallDelta object { index, type, id, function }`
-
-  - `index: number`
-
-    The index of the tool call in the tool calls array.
-
-  - `type: "function"`
-
-    The type of tool call. This is always going to be `function` for this type of tool call.
-
-    - `"function"`
-
-  - `id: optional string`
-
-    The ID of the tool call object.
-
-  - `function: optional object { arguments, name, output }`
-
-    The definition of the function that was called.
-
-    - `arguments: optional string`
-
-      The arguments passed to the function.
-
-    - `name: optional string`
-
-      The name of the function.
-
-    - `output: optional string`
-
-      The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-### Message Creation Step Details
-
-- `MessageCreationStepDetails object { message_creation, type }`
-
-  Details of the message creation by the run step.
-
-  - `message_creation: object { message_id }`
-
-    - `message_id: string`
-
-      The ID of the message that was created by this run step.
-
-  - `type: "message_creation"`
-
-    Always `message_creation`.
-
-    - `"message_creation"`
-
-### Run Step
-
-- `RunStep object { id, assistant_id, cancelled_at, 13 more }`
-
-  Represents a step in execution of a run.
-
-  - `id: string`
-
-    The identifier of the run step, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
-
-  - `cancelled_at: number`
-
-    The Unix timestamp (in seconds) for when the run step was cancelled.
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the run step completed.
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the run step was created.
-
-  - `expired_at: number`
-
-    The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
-
-  - `failed_at: number`
-
-    The Unix timestamp (in seconds) for when the run step failed.
-
-  - `last_error: object { code, message }`
-
-    The last error associated with this run step. Will be `null` if there are no errors.
-
-    - `code: "server_error" or "rate_limit_exceeded"`
-
-      One of `server_error` or `rate_limit_exceeded`.
-
-      - `"server_error"`
-
-      - `"rate_limit_exceeded"`
-
-    - `message: string`
-
-      A human-readable description of the error.
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `object: "thread.run.step"`
-
-    The object type, which is always `thread.run.step`.
-
-    - `"thread.run.step"`
-
-  - `run_id: string`
-
-    The ID of the [run](/docs/api-reference/runs) that this run step is a part of.
-
-  - `status: "in_progress" or "cancelled" or "failed" or 2 more`
-
-    The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
-
-    - `"in_progress"`
-
-    - `"cancelled"`
-
-    - `"failed"`
-
-    - `"completed"`
-
-    - `"expired"`
-
-  - `step_details: MessageCreationStepDetails or ToolCallsStepDetails`
-
-    The details of the run step.
-
-    - `MessageCreationStepDetails object { message_creation, type }`
-
-      Details of the message creation by the run step.
-
-      - `message_creation: object { message_id }`
-
-        - `message_id: string`
-
-          The ID of the message that was created by this run step.
-
-      - `type: "message_creation"`
-
-        Always `message_creation`.
-
-        - `"message_creation"`
-
-    - `ToolCallsStepDetails object { tool_calls, type }`
-
-      Details of the tool call.
-
-      - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
-
-        An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-        - `CodeInterpreterToolCall object { id, code_interpreter, type }`
-
-          Details of the Code Interpreter tool call the run step was involved in.
-
-          - `id: string`
-
-            The ID of the tool call.
-
-          - `code_interpreter: object { input, outputs }`
-
-            The Code Interpreter tool call definition.
-
-            - `input: string`
-
-              The input to the Code Interpreter tool call.
-
-            - `outputs: array of object { logs, type }  or object { image, type }`
-
-              The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-              - `CodeInterpreterLogOutput object { logs, type }`
-
-                Text output from the Code Interpreter tool call as part of a run step.
-
-                - `logs: string`
-
-                  The text output from the Code Interpreter tool call.
-
-                - `type: "logs"`
-
-                  Always `logs`.
-
-                  - `"logs"`
-
-              - `CodeInterpreterImageOutput object { image, type }`
-
-                - `image: object { file_id }`
-
-                  - `file_id: string`
-
-                    The [file](/docs/api-reference/files) ID of the image.
-
-                - `type: "image"`
-
-                  Always `image`.
-
-                  - `"image"`
-
-          - `type: "code_interpreter"`
-
-            The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-            - `"code_interpreter"`
-
-        - `FileSearchToolCall object { id, file_search, type }`
-
-          - `id: string`
-
-            The ID of the tool call object.
-
-          - `file_search: object { ranking_options, results }`
-
-            For now, this is always going to be an empty object.
-
-            - `ranking_options: optional object { ranker, score_threshold }`
-
-              The ranking options for the file search.
-
-              - `ranker: "auto" or "default_2024_08_21"`
-
-                The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-                - `"auto"`
-
-                - `"default_2024_08_21"`
-
-              - `score_threshold: number`
-
-                The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-            - `results: optional array of object { file_id, file_name, score, content }`
-
-              The results of the file search.
-
-              - `file_id: string`
-
-                The ID of the file that result was found in.
-
-              - `file_name: string`
-
-                The name of the file that result was found in.
-
-              - `score: number`
-
-                The score of the result. All values must be a floating point number between 0 and 1.
-
-              - `content: optional array of object { text, type }`
-
-                The content of the result that was found. The content is only included if requested via the include query parameter.
-
-                - `text: optional string`
-
-                  The text content of the file.
-
-                - `type: optional "text"`
-
-                  The type of the content.
-
-                  - `"text"`
-
-          - `type: "file_search"`
-
-            The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-            - `"file_search"`
-
-        - `FunctionToolCall object { id, function, type }`
-
-          - `id: string`
-
-            The ID of the tool call object.
-
-          - `function: object { arguments, name, output }`
-
-            The definition of the function that was called.
-
-            - `arguments: string`
-
-              The arguments passed to the function.
-
-            - `name: string`
-
-              The name of the function.
-
-            - `output: string`
-
-              The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-          - `type: "function"`
-
-            The type of tool call. This is always going to be `function` for this type of tool call.
-
-            - `"function"`
-
-      - `type: "tool_calls"`
-
-        Always `tool_calls`.
-
-        - `"tool_calls"`
-
-  - `thread_id: string`
-
-    The ID of the [thread](/docs/api-reference/threads) that was run.
-
-  - `type: "message_creation" or "tool_calls"`
-
-    The type of run step, which can be either `message_creation` or `tool_calls`.
-
-    - `"message_creation"`
-
-    - `"tool_calls"`
-
-  - `usage: object { completion_tokens, prompt_tokens, total_tokens }`
-
-    Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
-
-    - `completion_tokens: number`
-
-      Number of completion tokens used over the course of the run step.
-
-    - `prompt_tokens: number`
-
-      Number of prompt tokens used over the course of the run step.
-
-    - `total_tokens: number`
-
-      Total number of tokens used (prompt + completion).
-
-### Run Step Delta Event
-
-- `RunStepDeltaEvent object { id, delta, object }`
-
-  Represents a run step delta i.e. any changed fields on a run step during streaming.
-
-  - `id: string`
-
-    The identifier of the run step, which can be referenced in API endpoints.
-
-  - `delta: object { step_details }`
-
-    The delta containing the fields that have changed on the run step.
-
-    - `step_details: optional RunStepDeltaMessageDelta or ToolCallDeltaObject`
-
-      The details of the run step.
-
-      - `RunStepDeltaMessageDelta object { type, message_creation }`
-
-        Details of the message creation by the run step.
-
-        - `type: "message_creation"`
-
-          Always `message_creation`.
-
-          - `"message_creation"`
-
-        - `message_creation: optional object { message_id }`
-
-          - `message_id: optional string`
-
-            The ID of the message that was created by this run step.
-
-      - `ToolCallDeltaObject object { type, tool_calls }`
-
-        Details of the tool call.
-
-        - `type: "tool_calls"`
-
-          Always `tool_calls`.
-
-          - `"tool_calls"`
-
-        - `tool_calls: optional array of CodeInterpreterToolCallDelta or FileSearchToolCallDelta or FunctionToolCallDelta`
-
-          An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-          - `CodeInterpreterToolCallDelta object { index, type, id, code_interpreter }`
-
-            Details of the Code Interpreter tool call the run step was involved in.
-
-            - `index: number`
-
-              The index of the tool call in the tool calls array.
-
-            - `type: "code_interpreter"`
-
-              The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-              - `"code_interpreter"`
-
-            - `id: optional string`
-
-              The ID of the tool call.
-
-            - `code_interpreter: optional object { input, outputs }`
-
-              The Code Interpreter tool call definition.
-
-              - `input: optional string`
-
-                The input to the Code Interpreter tool call.
-
-              - `outputs: optional array of CodeInterpreterLogs or CodeInterpreterOutputImage`
-
-                The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-                - `CodeInterpreterLogs object { index, type, logs }`
-
-                  Text output from the Code Interpreter tool call as part of a run step.
-
-                  - `index: number`
-
-                    The index of the output in the outputs array.
-
-                  - `type: "logs"`
-
-                    Always `logs`.
-
-                    - `"logs"`
-
-                  - `logs: optional string`
-
-                    The text output from the Code Interpreter tool call.
-
-                - `CodeInterpreterOutputImage object { index, type, image }`
-
-                  - `index: number`
-
-                    The index of the output in the outputs array.
-
-                  - `type: "image"`
-
-                    Always `image`.
-
-                    - `"image"`
-
-                  - `image: optional object { file_id }`
-
-                    - `file_id: optional string`
-
-                      The [file](/docs/api-reference/files) ID of the image.
-
-          - `FileSearchToolCallDelta object { file_search, index, type, id }`
-
-            - `file_search: unknown`
-
-              For now, this is always going to be an empty object.
-
-            - `index: number`
-
-              The index of the tool call in the tool calls array.
-
-            - `type: "file_search"`
-
-              The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-              - `"file_search"`
-
-            - `id: optional string`
-
-              The ID of the tool call object.
-
-          - `FunctionToolCallDelta object { index, type, id, function }`
-
-            - `index: number`
-
-              The index of the tool call in the tool calls array.
-
-            - `type: "function"`
-
-              The type of tool call. This is always going to be `function` for this type of tool call.
-
-              - `"function"`
-
-            - `id: optional string`
-
-              The ID of the tool call object.
-
-            - `function: optional object { arguments, name, output }`
-
-              The definition of the function that was called.
-
-              - `arguments: optional string`
-
-                The arguments passed to the function.
-
-              - `name: optional string`
-
-                The name of the function.
-
-              - `output: optional string`
-
-                The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-  - `object: "thread.run.step.delta"`
-
-    The object type, which is always `thread.run.step.delta`.
-
-    - `"thread.run.step.delta"`
-
-### Run Step Delta Message Delta
-
-- `RunStepDeltaMessageDelta object { type, message_creation }`
-
-  Details of the message creation by the run step.
-
-  - `type: "message_creation"`
-
-    Always `message_creation`.
-
-    - `"message_creation"`
-
-  - `message_creation: optional object { message_id }`
-
-    - `message_id: optional string`
-
-      The ID of the message that was created by this run step.
-
-### Run Step Include
-
-- `RunStepInclude = "step_details.tool_calls[*].file_search.results[*].content"`
-
-  - `"step_details.tool_calls[*].file_search.results[*].content"`
-
-### Tool Call Delta Object
-
-- `ToolCallDeltaObject object { type, tool_calls }`
-
-  Details of the tool call.
-
-  - `type: "tool_calls"`
-
-    Always `tool_calls`.
-
-    - `"tool_calls"`
-
-  - `tool_calls: optional array of CodeInterpreterToolCallDelta or FileSearchToolCallDelta or FunctionToolCallDelta`
-
-    An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-    - `CodeInterpreterToolCallDelta object { index, type, id, code_interpreter }`
-
-      Details of the Code Interpreter tool call the run step was involved in.
-
-      - `index: number`
-
-        The index of the tool call in the tool calls array.
-
-      - `type: "code_interpreter"`
-
-        The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-        - `"code_interpreter"`
-
-      - `id: optional string`
-
-        The ID of the tool call.
-
-      - `code_interpreter: optional object { input, outputs }`
-
-        The Code Interpreter tool call definition.
-
-        - `input: optional string`
-
-          The input to the Code Interpreter tool call.
-
-        - `outputs: optional array of CodeInterpreterLogs or CodeInterpreterOutputImage`
-
-          The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-          - `CodeInterpreterLogs object { index, type, logs }`
-
-            Text output from the Code Interpreter tool call as part of a run step.
-
-            - `index: number`
-
-              The index of the output in the outputs array.
-
-            - `type: "logs"`
-
-              Always `logs`.
-
-              - `"logs"`
-
-            - `logs: optional string`
-
-              The text output from the Code Interpreter tool call.
-
-          - `CodeInterpreterOutputImage object { index, type, image }`
-
-            - `index: number`
-
-              The index of the output in the outputs array.
-
-            - `type: "image"`
-
-              Always `image`.
-
-              - `"image"`
-
-            - `image: optional object { file_id }`
-
-              - `file_id: optional string`
-
-                The [file](/docs/api-reference/files) ID of the image.
-
-    - `FileSearchToolCallDelta object { file_search, index, type, id }`
-
-      - `file_search: unknown`
-
-        For now, this is always going to be an empty object.
-
-      - `index: number`
-
-        The index of the tool call in the tool calls array.
-
-      - `type: "file_search"`
-
-        The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-        - `"file_search"`
-
-      - `id: optional string`
-
-        The ID of the tool call object.
-
-    - `FunctionToolCallDelta object { index, type, id, function }`
-
-      - `index: number`
-
-        The index of the tool call in the tool calls array.
-
-      - `type: "function"`
-
-        The type of tool call. This is always going to be `function` for this type of tool call.
-
-        - `"function"`
-
-      - `id: optional string`
-
-        The ID of the tool call object.
-
-      - `function: optional object { arguments, name, output }`
-
-        The definition of the function that was called.
-
-        - `arguments: optional string`
-
-          The arguments passed to the function.
-
-        - `name: optional string`
-
-          The name of the function.
-
-        - `output: optional string`
-
-          The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-### Tool Calls Step Details
-
-- `ToolCallsStepDetails object { tool_calls, type }`
-
-  Details of the tool call.
-
-  - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
-
-    An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-    - `CodeInterpreterToolCall object { id, code_interpreter, type }`
-
-      Details of the Code Interpreter tool call the run step was involved in.
-
-      - `id: string`
-
-        The ID of the tool call.
-
-      - `code_interpreter: object { input, outputs }`
-
-        The Code Interpreter tool call definition.
-
-        - `input: string`
-
-          The input to the Code Interpreter tool call.
-
-        - `outputs: array of object { logs, type }  or object { image, type }`
-
-          The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-
-          - `CodeInterpreterLogOutput object { logs, type }`
-
-            Text output from the Code Interpreter tool call as part of a run step.
-
-            - `logs: string`
-
-              The text output from the Code Interpreter tool call.
-
-            - `type: "logs"`
-
-              Always `logs`.
-
-              - `"logs"`
-
-          - `CodeInterpreterImageOutput object { image, type }`
-
-            - `image: object { file_id }`
-
-              - `file_id: string`
-
-                The [file](/docs/api-reference/files) ID of the image.
-
-            - `type: "image"`
-
-              Always `image`.
-
-              - `"image"`
-
-      - `type: "code_interpreter"`
-
-        The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-
-        - `"code_interpreter"`
-
-    - `FileSearchToolCall object { id, file_search, type }`
-
-      - `id: string`
-
-        The ID of the tool call object.
-
-      - `file_search: object { ranking_options, results }`
-
-        For now, this is always going to be an empty object.
-
-        - `ranking_options: optional object { ranker, score_threshold }`
-
-          The ranking options for the file search.
-
-          - `ranker: "auto" or "default_2024_08_21"`
-
-            The ranker to use for the file search. If not specified will use the `auto` ranker.
-
-            - `"auto"`
-
-            - `"default_2024_08_21"`
-
-          - `score_threshold: number`
-
-            The score threshold for the file search. All values must be a floating point number between 0 and 1.
-
-        - `results: optional array of object { file_id, file_name, score, content }`
-
-          The results of the file search.
-
-          - `file_id: string`
-
-            The ID of the file that result was found in.
-
-          - `file_name: string`
-
-            The name of the file that result was found in.
-
-          - `score: number`
-
-            The score of the result. All values must be a floating point number between 0 and 1.
-
-          - `content: optional array of object { text, type }`
-
-            The content of the result that was found. The content is only included if requested via the include query parameter.
-
-            - `text: optional string`
-
-              The text content of the file.
-
-            - `type: optional "text"`
-
-              The type of the content.
-
-              - `"text"`
-
-      - `type: "file_search"`
-
-        The type of tool call. This is always going to be `file_search` for this type of tool call.
-
-        - `"file_search"`
-
-    - `FunctionToolCall object { id, function, type }`
-
-      - `id: string`
-
-        The ID of the tool call object.
-
-      - `function: object { arguments, name, output }`
-
-        The definition of the function that was called.
-
-        - `arguments: string`
-
-          The arguments passed to the function.
-
-        - `name: string`
-
-          The name of the function.
-
-        - `output: string`
-
-          The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-
-      - `type: "function"`
-
-        The type of tool call. This is always going to be `function` for this type of tool call.
-
-        - `"function"`
-
-  - `type: "tool_calls"`
-
-    Always `tool_calls`.
-
-    - `"tool_calls"`
-
-# Messages
-
-## List messages
-
-**get** `/threads/{thread_id}/messages`
-
-Returns a list of messages for a given thread.
-
-### Path Parameters
-
-- `thread_id: string`
-
-### Query Parameters
-
-- `after: optional string`
-
-  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
-
-- `before: optional string`
-
-  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-
-- `limit: optional number`
-
-  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
-
-- `order: optional "asc" or "desc"`
-
-  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
-
-  - `"asc"`
-
-  - `"desc"`
-
-- `run_id: optional string`
-
-  Filter messages by the run ID that generated them.
-
-### Returns
-
-- `data: array of Message`
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
+  - `assistant_id: string or null`
 
     If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.
 
-  - `attachments: array of object { file_id, tools }`
+  - `attachments: array of object { file_id, tools }  or null`
 
     A list of files attached to the message, and the tools they were added to.
 
@@ -8718,7 +2313,7 @@ Returns a list of messages for a given thread.
 
           - `"file_search"`
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was completed.
 
@@ -8860,11 +2455,11 @@ Returns a list of messages for a given thread.
 
     The Unix timestamp (in seconds) for when the message was created.
 
-  - `incomplete_at: number`
+  - `incomplete_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was marked as incomplete.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     On an incomplete message, details about why the message is incomplete.
 
@@ -8882,7 +2477,7 @@ Returns a list of messages for a given thread.
 
       - `"run_failed"`
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -8905,7 +2500,443 @@ Returns a list of messages for a given thread.
 
     - `"assistant"`
 
-  - `run_id: string`
+  - `run_id: string or null`
+
+    The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
+
+  - `status: "in_progress" or "incomplete" or "completed"`
+
+    The status of the message, which can be either `in_progress`, `incomplete`, or `completed`.
+
+    - `"in_progress"`
+
+    - `"incomplete"`
+
+    - `"completed"`
+
+  - `thread_id: string`
+
+    The [thread](/docs/api-reference/threads) ID that this message belongs to.
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/messages \
+    -H 'Content-Type: application/json' \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+          "content": "string",
+          "role": "user"
+        }'
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "attachments": [
+    {
+      "file_id": "file_id",
+      "tools": [
+        {
+          "type": "code_interpreter"
+        }
+      ]
+    }
+  ],
+  "completed_at": 0,
+  "content": [
+    {
+      "image_file": {
+        "file_id": "file_id",
+        "detail": "auto"
+      },
+      "type": "image_file"
+    }
+  ],
+  "created_at": 0,
+  "incomplete_at": 0,
+  "incomplete_details": {
+    "reason": "content_filter"
+  },
+  "metadata": {
+    "foo": "string"
+  },
+  "object": "thread.message",
+  "role": "user",
+  "run_id": "run_id",
+  "status": "in_progress",
+  "thread_id": "thread_id"
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/messages \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -d '{
+      "role": "user",
+      "content": "How does AI work? Explain it in simple terms."
+    }'
+```
+
+#### Response
+
+```json
+{
+  "id": "msg_abc123",
+  "object": "thread.message",
+  "created_at": 1713226573,
+  "assistant_id": null,
+  "thread_id": "thread_abc123",
+  "run_id": null,
+  "role": "user",
+  "content": [
+    {
+      "type": "text",
+      "text": {
+        "value": "How does AI work? Explain it in simple terms.",
+        "annotations": []
+      }
+    }
+  ],
+  "attachments": [],
+  "metadata": {}
+}
+```
+
+## Delete message
+
+**delete** `/threads/{thread_id}/messages/{message_id}`
+
+Deletes a message.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `message_id: string`
+
+### Returns
+
+- `MessageDeleted object { id, deleted, object }`
+
+  - `id: string`
+
+  - `deleted: boolean`
+
+  - `object: "thread.message.deleted"`
+
+    - `"thread.message.deleted"`
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/messages/$MESSAGE_ID \
+    -X DELETE \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "deleted": true,
+  "object": "thread.message.deleted"
+}
+```
+
+### Example
+
+```http
+curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc123 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "OpenAI-Beta: assistants=v2"
+```
+
+#### Response
+
+```json
+{
+  "id": "msg_abc123",
+  "object": "thread.message.deleted",
+  "deleted": true
+}
+```
+
+## List messages
+
+**get** `/threads/{thread_id}/messages`
+
+Returns a list of messages for a given thread.
+
+### Path Parameters
+
+- `thread_id: string`
+
+### Query Parameters
+
+- `after: optional string`
+
+  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+
+- `before: optional string`
+
+  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+
+- `limit: optional number`
+
+  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+- `order: optional "asc" or "desc"`
+
+  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+
+  - `"asc"`
+
+  - `"desc"`
+
+- `run_id: optional string`
+
+  Filter messages by the run ID that generated them.
+
+### Returns
+
+- `data: array of Message`
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string or null`
+
+    If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.
+
+  - `attachments: array of object { file_id, tools }  or null`
+
+    A list of files attached to the message, and the tools they were added to.
+
+    - `file_id: optional string`
+
+      The ID of the file to attach to the message.
+
+    - `tools: optional array of CodeInterpreterTool or object { type }`
+
+      The tools to add this file to.
+
+      - `CodeInterpreterTool object { type }`
+
+        - `type: "code_interpreter"`
+
+          The type of tool being defined: `code_interpreter`
+
+          - `"code_interpreter"`
+
+      - `FileSearchTool object { type }`
+
+        - `type: "file_search"`
+
+          The type of tool being defined: `file_search`
+
+          - `"file_search"`
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the message was completed.
+
+  - `content: array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlock or RefusalContentBlock`
+
+    The content of the message in array of text and/or images.
+
+    - `ImageFileContentBlock object { image_file, type }`
+
+      References an image [File](/docs/api-reference/files) in the content of a message.
+
+      - `image_file: ImageFile`
+
+        - `file_id: string`
+
+          The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
+
+        - `detail: optional "auto" or "low" or "high"`
+
+          Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+
+          - `"auto"`
+
+          - `"low"`
+
+          - `"high"`
+
+      - `type: "image_file"`
+
+        Always `image_file`.
+
+        - `"image_file"`
+
+    - `ImageURLContentBlock object { image_url, type }`
+
+      References an image URL in the content of a message.
+
+      - `image_url: ImageURL`
+
+        - `url: string`
+
+          The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
+
+        - `detail: optional "auto" or "low" or "high"`
+
+          Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
+
+          - `"auto"`
+
+          - `"low"`
+
+          - `"high"`
+
+      - `type: "image_url"`
+
+        The type of the content part.
+
+        - `"image_url"`
+
+    - `TextContentBlock object { text, type }`
+
+      The text content that is part of a message.
+
+      - `text: Text`
+
+        - `annotations: array of FileCitationAnnotation or FilePathAnnotation`
+
+          - `FileCitationAnnotation object { end_index, file_citation, start_index, 2 more }`
+
+            A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
+
+            - `end_index: number`
+
+            - `file_citation: object { file_id }`
+
+              - `file_id: string`
+
+                The ID of the specific File the citation is from.
+
+            - `start_index: number`
+
+            - `text: string`
+
+              The text in the message content that needs to be replaced.
+
+            - `type: "file_citation"`
+
+              Always `file_citation`.
+
+              - `"file_citation"`
+
+          - `FilePathAnnotation object { end_index, file_path, start_index, 2 more }`
+
+            A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
+
+            - `end_index: number`
+
+            - `file_path: object { file_id }`
+
+              - `file_id: string`
+
+                The ID of the file that was generated.
+
+            - `start_index: number`
+
+            - `text: string`
+
+              The text in the message content that needs to be replaced.
+
+            - `type: "file_path"`
+
+              Always `file_path`.
+
+              - `"file_path"`
+
+        - `value: string`
+
+          The data that makes up the text.
+
+      - `type: "text"`
+
+        Always `text`.
+
+        - `"text"`
+
+    - `RefusalContentBlock object { refusal, type }`
+
+      The refusal content generated by the assistant.
+
+      - `refusal: string`
+
+      - `type: "refusal"`
+
+        Always `refusal`.
+
+        - `"refusal"`
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the message was created.
+
+  - `incomplete_at: number or null`
+
+    The Unix timestamp (in seconds) for when the message was marked as incomplete.
+
+  - `incomplete_details: object { reason }  or null`
+
+    On an incomplete message, details about why the message is incomplete.
+
+    - `reason: "content_filter" or "max_tokens" or "run_cancelled" or 2 more`
+
+      The reason the message is incomplete.
+
+      - `"content_filter"`
+
+      - `"max_tokens"`
+
+      - `"run_cancelled"`
+
+      - `"run_expired"`
+
+      - `"run_failed"`
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `object: "thread.message"`
+
+    The object type, which is always `thread.message`.
+
+    - `"thread.message"`
+
+  - `role: "user" or "assistant"`
+
+    The entity that produced the message. One of `user` or `assistant`.
+
+    - `"user"`
+
+    - `"assistant"`
+
+  - `run_id: string or null`
 
     The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
 
@@ -9051,143 +3082,17 @@ curl https://api.openai.com/v1/threads/thread_abc123/messages \
 }
 ```
 
-## Create message
+## Retrieve message
 
-**post** `/threads/{thread_id}/messages`
+**get** `/threads/{thread_id}/messages/{message_id}`
 
-Create a message.
+Retrieve a message.
 
 ### Path Parameters
 
 - `thread_id: string`
 
-### Body Parameters
-
-- `content: string or array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
-
-  The text contents of the message.
-
-  - `TextContent = string`
-
-    The text contents of the message.
-
-  - `ArrayOfContentParts = array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
-
-    An array of content parts with a defined type, each can be of type `text` or images can be passed with `image_url` or `image_file`. Image types are only supported on [Vision-compatible models](/docs/models).
-
-    - `ImageFileContentBlock object { image_file, type }`
-
-      References an image [File](/docs/api-reference/files) in the content of a message.
-
-      - `image_file: ImageFile`
-
-        - `file_id: string`
-
-          The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
-
-        - `detail: optional "auto" or "low" or "high"`
-
-          Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
-
-          - `"auto"`
-
-          - `"low"`
-
-          - `"high"`
-
-      - `type: "image_file"`
-
-        Always `image_file`.
-
-        - `"image_file"`
-
-    - `ImageURLContentBlock object { image_url, type }`
-
-      References an image URL in the content of a message.
-
-      - `image_url: ImageURL`
-
-        - `url: string`
-
-          The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
-
-        - `detail: optional "auto" or "low" or "high"`
-
-          Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
-
-          - `"auto"`
-
-          - `"low"`
-
-          - `"high"`
-
-      - `type: "image_url"`
-
-        The type of the content part.
-
-        - `"image_url"`
-
-    - `TextContentBlockParam object { text, type }`
-
-      The text content that is part of a message.
-
-      - `text: string`
-
-        Text content to be sent to the model
-
-      - `type: "text"`
-
-        Always `text`.
-
-        - `"text"`
-
-- `role: "user" or "assistant"`
-
-  The role of the entity that is creating the message. Allowed values include:
-
-  - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
-  - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
-
-  - `"user"`
-
-  - `"assistant"`
-
-- `attachments: optional array of object { file_id, tools }`
-
-  A list of files attached to the message, and the tools they should be added to.
-
-  - `file_id: optional string`
-
-    The ID of the file to attach to the message.
-
-  - `tools: optional array of CodeInterpreterTool or object { type }`
-
-    The tools to add this file to.
-
-    - `CodeInterpreterTool object { type }`
-
-      - `type: "code_interpreter"`
-
-        The type of tool being defined: `code_interpreter`
-
-        - `"code_interpreter"`
-
-    - `FileSearchTool object { type }`
-
-      - `type: "file_search"`
-
-        The type of tool being defined: `file_search`
-
-        - `"file_search"`
-
-- `metadata: optional Metadata`
-
-  Set of 16 key-value pairs that can be attached to an object. This can be
-  useful for storing additional information about the object in a structured
-  format, and querying for objects via API or the dashboard.
-
-  Keys are strings with a maximum length of 64 characters. Values are strings
-  with a maximum length of 512 characters.
+- `message_id: string`
 
 ### Returns
 
@@ -9199,11 +3104,11 @@ Create a message.
 
     The identifier, which can be referenced in API endpoints.
 
-  - `assistant_id: string`
+  - `assistant_id: string or null`
 
     If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.
 
-  - `attachments: array of object { file_id, tools }`
+  - `attachments: array of object { file_id, tools }  or null`
 
     A list of files attached to the message, and the tools they were added to.
 
@@ -9231,7 +3136,7 @@ Create a message.
 
           - `"file_search"`
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was completed.
 
@@ -9373,11 +3278,11 @@ Create a message.
 
     The Unix timestamp (in seconds) for when the message was created.
 
-  - `incomplete_at: number`
+  - `incomplete_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was marked as incomplete.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     On an incomplete message, details about why the message is incomplete.
 
@@ -9395,7 +3300,7 @@ Create a message.
 
       - `"run_failed"`
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -9418,7 +3323,7 @@ Create a message.
 
     - `"assistant"`
 
-  - `run_id: string`
+  - `run_id: string or null`
 
     The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
 
@@ -9439,14 +3344,9 @@ Create a message.
 ### Example
 
 ```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/messages \
-    -H 'Content-Type: application/json' \
+curl https://api.openai.com/v1/threads/$THREAD_ID/messages/$MESSAGE_ID \
     -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-          "content": "string",
-          "role": "user"
-        }'
+    -H "Authorization: Bearer $OPENAI_API_KEY"
 ```
 
 #### Response
@@ -9494,14 +3394,10 @@ curl https://api.openai.com/v1/threads/$THREAD_ID/messages \
 ### Example
 
 ```http
-curl https://api.openai.com/v1/threads/thread_abc123/messages \
+curl https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc123 \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "OpenAI-Beta: assistants=v2" \
-  -d '{
-      "role": "user",
-      "content": "How does AI work? Explain it in simple terms."
-    }'
+  -H "OpenAI-Beta: assistants=v2"
 ```
 
 #### Response
@@ -9510,7 +3406,7 @@ curl https://api.openai.com/v1/threads/thread_abc123/messages \
 {
   "id": "msg_abc123",
   "object": "thread.message",
-  "created_at": 1713226573,
+  "created_at": 1699017614,
   "assistant_id": null,
   "thread_id": "thread_abc123",
   "run_id": null,
@@ -9543,7 +3439,7 @@ Modifies a message.
 
 ### Body Parameters
 
-- `metadata: optional Metadata`
+- `metadata: optional Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured
@@ -9562,11 +3458,11 @@ Modifies a message.
 
     The identifier, which can be referenced in API endpoints.
 
-  - `assistant_id: string`
+  - `assistant_id: string or null`
 
     If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.
 
-  - `attachments: array of object { file_id, tools }`
+  - `attachments: array of object { file_id, tools }  or null`
 
     A list of files attached to the message, and the tools they were added to.
 
@@ -9594,7 +3490,7 @@ Modifies a message.
 
           - `"file_search"`
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was completed.
 
@@ -9736,11 +3632,11 @@ Modifies a message.
 
     The Unix timestamp (in seconds) for when the message was created.
 
-  - `incomplete_at: number`
+  - `incomplete_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was marked as incomplete.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     On an incomplete message, details about why the message is incomplete.
 
@@ -9758,7 +3654,7 @@ Modifies a message.
 
       - `"run_failed"`
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -9781,7 +3677,7 @@ Modifies a message.
 
     - `"assistant"`
 
-  - `run_id: string`
+  - `run_id: string or null`
 
     The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
 
@@ -9891,411 +3787,6 @@ curl https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc123 \
     "modified": "true",
     "user": "abc123"
   }
-}
-```
-
-## Retrieve message
-
-**get** `/threads/{thread_id}/messages/{message_id}`
-
-Retrieve a message.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `message_id: string`
-
-### Returns
-
-- `Message object { id, assistant_id, attachments, 11 more }`
-
-  Represents a message within a [thread](/docs/api-reference/threads).
-
-  - `id: string`
-
-    The identifier, which can be referenced in API endpoints.
-
-  - `assistant_id: string`
-
-    If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.
-
-  - `attachments: array of object { file_id, tools }`
-
-    A list of files attached to the message, and the tools they were added to.
-
-    - `file_id: optional string`
-
-      The ID of the file to attach to the message.
-
-    - `tools: optional array of CodeInterpreterTool or object { type }`
-
-      The tools to add this file to.
-
-      - `CodeInterpreterTool object { type }`
-
-        - `type: "code_interpreter"`
-
-          The type of tool being defined: `code_interpreter`
-
-          - `"code_interpreter"`
-
-      - `FileSearchTool object { type }`
-
-        - `type: "file_search"`
-
-          The type of tool being defined: `file_search`
-
-          - `"file_search"`
-
-  - `completed_at: number`
-
-    The Unix timestamp (in seconds) for when the message was completed.
-
-  - `content: array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlock or RefusalContentBlock`
-
-    The content of the message in array of text and/or images.
-
-    - `ImageFileContentBlock object { image_file, type }`
-
-      References an image [File](/docs/api-reference/files) in the content of a message.
-
-      - `image_file: ImageFile`
-
-        - `file_id: string`
-
-          The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
-
-        - `detail: optional "auto" or "low" or "high"`
-
-          Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
-
-          - `"auto"`
-
-          - `"low"`
-
-          - `"high"`
-
-      - `type: "image_file"`
-
-        Always `image_file`.
-
-        - `"image_file"`
-
-    - `ImageURLContentBlock object { image_url, type }`
-
-      References an image URL in the content of a message.
-
-      - `image_url: ImageURL`
-
-        - `url: string`
-
-          The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
-
-        - `detail: optional "auto" or "low" or "high"`
-
-          Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
-
-          - `"auto"`
-
-          - `"low"`
-
-          - `"high"`
-
-      - `type: "image_url"`
-
-        The type of the content part.
-
-        - `"image_url"`
-
-    - `TextContentBlock object { text, type }`
-
-      The text content that is part of a message.
-
-      - `text: Text`
-
-        - `annotations: array of FileCitationAnnotation or FilePathAnnotation`
-
-          - `FileCitationAnnotation object { end_index, file_citation, start_index, 2 more }`
-
-            A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
-
-            - `end_index: number`
-
-            - `file_citation: object { file_id }`
-
-              - `file_id: string`
-
-                The ID of the specific File the citation is from.
-
-            - `start_index: number`
-
-            - `text: string`
-
-              The text in the message content that needs to be replaced.
-
-            - `type: "file_citation"`
-
-              Always `file_citation`.
-
-              - `"file_citation"`
-
-          - `FilePathAnnotation object { end_index, file_path, start_index, 2 more }`
-
-            A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
-
-            - `end_index: number`
-
-            - `file_path: object { file_id }`
-
-              - `file_id: string`
-
-                The ID of the file that was generated.
-
-            - `start_index: number`
-
-            - `text: string`
-
-              The text in the message content that needs to be replaced.
-
-            - `type: "file_path"`
-
-              Always `file_path`.
-
-              - `"file_path"`
-
-        - `value: string`
-
-          The data that makes up the text.
-
-      - `type: "text"`
-
-        Always `text`.
-
-        - `"text"`
-
-    - `RefusalContentBlock object { refusal, type }`
-
-      The refusal content generated by the assistant.
-
-      - `refusal: string`
-
-      - `type: "refusal"`
-
-        Always `refusal`.
-
-        - `"refusal"`
-
-  - `created_at: number`
-
-    The Unix timestamp (in seconds) for when the message was created.
-
-  - `incomplete_at: number`
-
-    The Unix timestamp (in seconds) for when the message was marked as incomplete.
-
-  - `incomplete_details: object { reason }`
-
-    On an incomplete message, details about why the message is incomplete.
-
-    - `reason: "content_filter" or "max_tokens" or "run_cancelled" or 2 more`
-
-      The reason the message is incomplete.
-
-      - `"content_filter"`
-
-      - `"max_tokens"`
-
-      - `"run_cancelled"`
-
-      - `"run_expired"`
-
-      - `"run_failed"`
-
-  - `metadata: Metadata`
-
-    Set of 16 key-value pairs that can be attached to an object. This can be
-    useful for storing additional information about the object in a structured
-    format, and querying for objects via API or the dashboard.
-
-    Keys are strings with a maximum length of 64 characters. Values are strings
-    with a maximum length of 512 characters.
-
-  - `object: "thread.message"`
-
-    The object type, which is always `thread.message`.
-
-    - `"thread.message"`
-
-  - `role: "user" or "assistant"`
-
-    The entity that produced the message. One of `user` or `assistant`.
-
-    - `"user"`
-
-    - `"assistant"`
-
-  - `run_id: string`
-
-    The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
-
-  - `status: "in_progress" or "incomplete" or "completed"`
-
-    The status of the message, which can be either `in_progress`, `incomplete`, or `completed`.
-
-    - `"in_progress"`
-
-    - `"incomplete"`
-
-    - `"completed"`
-
-  - `thread_id: string`
-
-    The [thread](/docs/api-reference/threads) ID that this message belongs to.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/messages/$MESSAGE_ID \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "assistant_id": "assistant_id",
-  "attachments": [
-    {
-      "file_id": "file_id",
-      "tools": [
-        {
-          "type": "code_interpreter"
-        }
-      ]
-    }
-  ],
-  "completed_at": 0,
-  "content": [
-    {
-      "image_file": {
-        "file_id": "file_id",
-        "detail": "auto"
-      },
-      "type": "image_file"
-    }
-  ],
-  "created_at": 0,
-  "incomplete_at": 0,
-  "incomplete_details": {
-    "reason": "content_filter"
-  },
-  "metadata": {
-    "foo": "string"
-  },
-  "object": "thread.message",
-  "role": "user",
-  "run_id": "run_id",
-  "status": "in_progress",
-  "thread_id": "thread_id"
-}
-```
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc123 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "OpenAI-Beta: assistants=v2"
-```
-
-#### Response
-
-```json
-{
-  "id": "msg_abc123",
-  "object": "thread.message",
-  "created_at": 1699017614,
-  "assistant_id": null,
-  "thread_id": "thread_abc123",
-  "run_id": null,
-  "role": "user",
-  "content": [
-    {
-      "type": "text",
-      "text": {
-        "value": "How does AI work? Explain it in simple terms.",
-        "annotations": []
-      }
-    }
-  ],
-  "attachments": [],
-  "metadata": {}
-}
-```
-
-## Delete message
-
-**delete** `/threads/{thread_id}/messages/{message_id}`
-
-Deletes a message.
-
-### Path Parameters
-
-- `thread_id: string`
-
-- `message_id: string`
-
-### Returns
-
-- `MessageDeleted object { id, deleted, object }`
-
-  - `id: string`
-
-  - `deleted: boolean`
-
-  - `object: "thread.message.deleted"`
-
-    - `"thread.message.deleted"`
-
-### Example
-
-```http
-curl https://api.openai.com/v1/threads/$THREAD_ID/messages/$MESSAGE_ID \
-    -X DELETE \
-    -H 'OpenAI-Beta: assistants=v2' \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "deleted": true,
-  "object": "thread.message.deleted"
-}
-```
-
-### Example
-
-```http
-curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc123 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "OpenAI-Beta: assistants=v2"
-```
-
-#### Response
-
-```json
-{
-  "id": "msg_abc123",
-  "object": "thread.message.deleted",
-  "deleted": true
 }
 ```
 
@@ -10619,11 +4110,11 @@ curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc1
 
     The identifier, which can be referenced in API endpoints.
 
-  - `assistant_id: string`
+  - `assistant_id: string or null`
 
     If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.
 
-  - `attachments: array of object { file_id, tools }`
+  - `attachments: array of object { file_id, tools }  or null`
 
     A list of files attached to the message, and the tools they were added to.
 
@@ -10651,7 +4142,7 @@ curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc1
 
           - `"file_search"`
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was completed.
 
@@ -10793,11 +4284,11 @@ curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc1
 
     The Unix timestamp (in seconds) for when the message was created.
 
-  - `incomplete_at: number`
+  - `incomplete_at: number or null`
 
     The Unix timestamp (in seconds) for when the message was marked as incomplete.
 
-  - `incomplete_details: object { reason }`
+  - `incomplete_details: object { reason }  or null`
 
     On an incomplete message, details about why the message is incomplete.
 
@@ -10815,7 +4306,7 @@ curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc1
 
       - `"run_failed"`
 
-  - `metadata: Metadata`
+  - `metadata: Metadata or null`
 
     Set of 16 key-value pairs that can be attached to an object. This can be
     useful for storing additional information about the object in a structured
@@ -10838,7 +4329,7 @@ curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc1
 
     - `"assistant"`
 
-  - `run_id: string`
+  - `run_id: string or null`
 
     The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
 
@@ -11561,3 +5052,6512 @@ curl -X DELETE https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc1
     - `value: optional string`
 
       The data that makes up the text.
+
+# Runs
+
+## Cancel a run
+
+**post** `/threads/{thread_id}/runs/{run_id}/cancel`
+
+Cancels a run that is `in_progress`.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `run_id: string`
+
+### Returns
+
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/cancel \
+    -X POST \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "cancelled_at": 0,
+  "completed_at": 0,
+  "created_at": 0,
+  "expires_at": 0,
+  "failed_at": 0,
+  "incomplete_details": {
+    "reason": "max_completion_tokens"
+  },
+  "instructions": "instructions",
+  "last_error": {
+    "code": "server_error",
+    "message": "message"
+  },
+  "max_completion_tokens": 256,
+  "max_prompt_tokens": 256,
+  "metadata": {
+    "foo": "string"
+  },
+  "model": "model",
+  "object": "thread.run",
+  "parallel_tool_calls": true,
+  "required_action": {
+    "submit_tool_outputs": {
+      "tool_calls": [
+        {
+          "id": "id",
+          "function": {
+            "arguments": "arguments",
+            "name": "name"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "type": "submit_tool_outputs"
+  },
+  "response_format": "auto",
+  "started_at": 0,
+  "status": "queued",
+  "thread_id": "thread_id",
+  "tool_choice": "none",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": 1
+  },
+  "usage": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  },
+  "temperature": 0,
+  "top_p": 0
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -X POST
+```
+
+#### Response
+
+```json
+{
+  "id": "run_abc123",
+  "object": "thread.run",
+  "created_at": 1699076126,
+  "assistant_id": "asst_abc123",
+  "thread_id": "thread_abc123",
+  "status": "cancelling",
+  "started_at": 1699076126,
+  "expires_at": 1699076726,
+  "cancelled_at": null,
+  "failed_at": null,
+  "completed_at": null,
+  "last_error": null,
+  "model": "gpt-4o",
+  "instructions": "You summarize books.",
+  "tools": [
+    {
+      "type": "file_search"
+    }
+  ],
+  "tool_resources": {
+    "file_search": {
+      "vector_store_ids": ["vs_123"]
+    }
+  },
+  "metadata": {},
+  "usage": null,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "response_format": "auto",
+  "tool_choice": "auto",
+  "parallel_tool_calls": true
+}
+```
+
+## Create run
+
+**post** `/threads/{thread_id}/runs`
+
+Create a run.
+
+### Path Parameters
+
+- `thread_id: string`
+
+### Query Parameters
+
+- `include: optional array of RunStepInclude`
+
+  A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
+
+  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+  - `"step_details.tool_calls[*].file_search.results[*].content"`
+
+### Body Parameters
+
+- `assistant_id: string`
+
+  The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run.
+
+- `additional_instructions: optional string or null`
+
+  Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.
+
+- `additional_messages: optional array of object { content, role, attachments, metadata }  or null`
+
+  Adds additional messages to the thread before creating the run.
+
+  - `content: string or array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
+
+    The text contents of the message.
+
+    - `TextContent = string`
+
+      The text contents of the message.
+
+    - `ArrayOfContentParts = array of ImageFileContentBlock or ImageURLContentBlock or TextContentBlockParam`
+
+      An array of content parts with a defined type, each can be of type `text` or images can be passed with `image_url` or `image_file`. Image types are only supported on [Vision-compatible models](/docs/models).
+
+      - `ImageFileContentBlock object { image_file, type }`
+
+        References an image [File](/docs/api-reference/files) in the content of a message.
+
+        - `image_file: ImageFile`
+
+          - `file_id: string`
+
+            The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
+
+          - `detail: optional "auto" or "low" or "high"`
+
+            Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+
+            - `"auto"`
+
+            - `"low"`
+
+            - `"high"`
+
+        - `type: "image_file"`
+
+          Always `image_file`.
+
+          - `"image_file"`
+
+      - `ImageURLContentBlock object { image_url, type }`
+
+        References an image URL in the content of a message.
+
+        - `image_url: ImageURL`
+
+          - `url: string`
+
+            The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp.
+
+          - `detail: optional "auto" or "low" or "high"`
+
+            Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
+
+            - `"auto"`
+
+            - `"low"`
+
+            - `"high"`
+
+        - `type: "image_url"`
+
+          The type of the content part.
+
+          - `"image_url"`
+
+      - `TextContentBlockParam object { text, type }`
+
+        The text content that is part of a message.
+
+        - `text: string`
+
+          Text content to be sent to the model
+
+        - `type: "text"`
+
+          Always `text`.
+
+          - `"text"`
+
+  - `role: "user" or "assistant"`
+
+    The role of the entity that is creating the message. Allowed values include:
+
+    - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
+    - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
+
+    - `"user"`
+
+    - `"assistant"`
+
+  - `attachments: optional array of object { file_id, tools }  or null`
+
+    A list of files attached to the message, and the tools they should be added to.
+
+    - `file_id: optional string`
+
+      The ID of the file to attach to the message.
+
+    - `tools: optional array of CodeInterpreterTool or object { type }`
+
+      The tools to add this file to.
+
+      - `CodeInterpreterTool object { type }`
+
+        - `type: "code_interpreter"`
+
+          The type of tool being defined: `code_interpreter`
+
+          - `"code_interpreter"`
+
+      - `FileSearchTool object { type }`
+
+        - `type: "file_search"`
+
+          The type of tool being defined: `file_search`
+
+          - `"file_search"`
+
+  - `metadata: optional Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+- `instructions: optional string or null`
+
+  Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
+
+- `max_completion_tokens: optional number or null`
+
+  The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+
+- `max_prompt_tokens: optional number or null`
+
+  The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+
+- `metadata: optional Metadata or null`
+
+  Set of 16 key-value pairs that can be attached to an object. This can be
+  useful for storing additional information about the object in a structured
+  format, and querying for objects via API or the dashboard.
+
+  Keys are strings with a maximum length of 64 characters. Values are strings
+  with a maximum length of 512 characters.
+
+- `model: optional string or "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 39 more or null`
+
+  The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
+
+  - `string`
+
+  - `AssistantSupportedModels = "gpt-5" or "gpt-5-mini" or "gpt-5-nano" or 39 more`
+
+    The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
+
+    - `"gpt-5"`
+
+    - `"gpt-5-mini"`
+
+    - `"gpt-5-nano"`
+
+    - `"gpt-5-2025-08-07"`
+
+    - `"gpt-5-mini-2025-08-07"`
+
+    - `"gpt-5-nano-2025-08-07"`
+
+    - `"gpt-4.1"`
+
+    - `"gpt-4.1-mini"`
+
+    - `"gpt-4.1-nano"`
+
+    - `"gpt-4.1-2025-04-14"`
+
+    - `"gpt-4.1-mini-2025-04-14"`
+
+    - `"gpt-4.1-nano-2025-04-14"`
+
+    - `"o3-mini"`
+
+    - `"o3-mini-2025-01-31"`
+
+    - `"o1"`
+
+    - `"o1-2024-12-17"`
+
+    - `"gpt-4o"`
+
+    - `"gpt-4o-2024-11-20"`
+
+    - `"gpt-4o-2024-08-06"`
+
+    - `"gpt-4o-2024-05-13"`
+
+    - `"gpt-4o-mini"`
+
+    - `"gpt-4o-mini-2024-07-18"`
+
+    - `"gpt-4.5-preview"`
+
+    - `"gpt-4.5-preview-2025-02-27"`
+
+    - `"gpt-4-turbo"`
+
+    - `"gpt-4-turbo-2024-04-09"`
+
+    - `"gpt-4-0125-preview"`
+
+    - `"gpt-4-turbo-preview"`
+
+    - `"gpt-4-1106-preview"`
+
+    - `"gpt-4-vision-preview"`
+
+    - `"gpt-4"`
+
+    - `"gpt-4-0314"`
+
+    - `"gpt-4-0613"`
+
+    - `"gpt-4-32k"`
+
+    - `"gpt-4-32k-0314"`
+
+    - `"gpt-4-32k-0613"`
+
+    - `"gpt-3.5-turbo"`
+
+    - `"gpt-3.5-turbo-16k"`
+
+    - `"gpt-3.5-turbo-0613"`
+
+    - `"gpt-3.5-turbo-1106"`
+
+    - `"gpt-3.5-turbo-0125"`
+
+    - `"gpt-3.5-turbo-16k-0613"`
+
+- `parallel_tool_calls: optional boolean`
+
+  Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+- `reasoning_effort: optional ReasoningEffort or null`
+
+  Constrains effort on reasoning for reasoning models. Currently supported
+  values are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.
+  Reducing reasoning effort can result in faster responses and fewer tokens
+  used on reasoning in a response. Not all reasoning models support every
+  value. See the
+  [reasoning guide](https://platform.openai.com/docs/guides/reasoning)
+  for model-specific support.
+
+  - `"none"`
+
+  - `"minimal"`
+
+  - `"low"`
+
+  - `"medium"`
+
+  - `"high"`
+
+  - `"xhigh"`
+
+  - `"max"`
+
+- `response_format: optional AssistantResponseFormatOption or null`
+
+  Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+  Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+  Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+  **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+  - `"auto"`
+
+    `auto` is the default value
+
+    - `"auto"`
+
+  - `ResponseFormatText object { type }`
+
+    Default response format. Used to generate text responses.
+
+    - `type: "text"`
+
+      The type of response format being defined. Always `text`.
+
+      - `"text"`
+
+  - `ResponseFormatJSONObject object { type }`
+
+    JSON object response format. An older method of generating JSON responses.
+    Using `json_schema` is recommended for models that support it. Note that the
+    model will not generate JSON without a system or user message instructing it
+    to do so.
+
+    - `type: "json_object"`
+
+      The type of response format being defined. Always `json_object`.
+
+      - `"json_object"`
+
+  - `ResponseFormatJSONSchema object { json_schema, type }`
+
+    JSON Schema response format. Used to generate structured JSON responses.
+    Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+    - `json_schema: object { name, description, schema, strict }`
+
+      Structured Outputs configuration options, including a JSON Schema.
+
+      - `name: string`
+
+        The name of the response format. Must be a-z, A-Z, 0-9, or contain
+        underscores and dashes, with a maximum length of 64.
+
+      - `description: optional string`
+
+        A description of what the response format is for, used by the model to
+        determine how to respond in the format.
+
+      - `schema: optional map[unknown]`
+
+        The schema for the response format, described as a JSON Schema object.
+        Learn how to build JSON schemas [here](https://json-schema.org/).
+
+      - `strict: optional boolean or null`
+
+        Whether to enable strict schema adherence when generating the output.
+        If set to true, the model will always follow the exact schema defined
+        in the `schema` field. Only a subset of JSON Schema is supported when
+        `strict` is `true`. To learn more, read the [Structured Outputs
+        guide](/docs/guides/structured-outputs).
+
+    - `type: "json_schema"`
+
+      The type of response format being defined. Always `json_schema`.
+
+      - `"json_schema"`
+
+- `stream: optional boolean or null`
+
+  If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+
+- `temperature: optional number or null`
+
+  What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+
+- `tool_choice: optional AssistantToolChoiceOption or null`
+
+  Controls which (if any) tool is called by the model.
+  `none` means the model will not call any tools and instead generates a message.
+  `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+  `required` means the model must call one or more tools before responding to the user.
+  Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+  - `"none" or "auto" or "required"`
+
+    `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+    - `"none"`
+
+    - `"auto"`
+
+    - `"required"`
+
+  - `AssistantToolChoice object { type, function }`
+
+    Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+    - `type: "function" or "code_interpreter" or "file_search"`
+
+      The type of the tool. If type is `function`, the function name must be set
+
+      - `"function"`
+
+      - `"code_interpreter"`
+
+      - `"file_search"`
+
+    - `function: optional AssistantToolChoiceFunction`
+
+      - `name: string`
+
+        The name of the function to call.
+
+- `tools: optional array of CodeInterpreterTool or FileSearchTool or FunctionTool or null`
+
+  Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+
+  - `CodeInterpreterTool object { type }`
+
+  - `FileSearchTool object { type, file_search }`
+
+    - `type: "file_search"`
+
+      The type of tool being defined: `file_search`
+
+      - `"file_search"`
+
+    - `file_search: optional object { max_num_results, ranking_options }`
+
+      Overrides for the file search tool.
+
+      - `max_num_results: optional number`
+
+        The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+        Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+      - `ranking_options: optional object { score_threshold, ranker }`
+
+        The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+        See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `score_threshold: number`
+
+          The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+        - `ranker: optional "auto" or "default_2024_08_21"`
+
+          The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+          - `"auto"`
+
+          - `"default_2024_08_21"`
+
+  - `FunctionTool object { function, type }`
+
+    - `function: FunctionDefinition`
+
+      - `name: string`
+
+        The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+      - `description: optional string`
+
+        A description of what the function does, used by the model to choose when and how to call the function.
+
+      - `parameters: optional FunctionParameters`
+
+        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+        Omitting `parameters` defines a function with an empty parameter list.
+
+      - `strict: optional boolean or null`
+
+        Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+    - `type: "function"`
+
+      The type of tool being defined: `function`
+
+      - `"function"`
+
+- `top_p: optional number or null`
+
+  An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+
+  We generally recommend altering this or temperature but not both.
+
+- `truncation_strategy: optional object { type, last_messages }  or null`
+
+  Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+  - `type: "auto" or "last_messages"`
+
+    The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+    - `"auto"`
+
+    - `"last_messages"`
+
+  - `last_messages: optional number or null`
+
+    The number of most recent messages from the thread when constructing the context for the run.
+
+### Returns
+
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs \
+    -H 'Content-Type: application/json' \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+          "assistant_id": "assistant_id",
+          "temperature": 1,
+          "top_p": 1
+        }'
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "cancelled_at": 0,
+  "completed_at": 0,
+  "created_at": 0,
+  "expires_at": 0,
+  "failed_at": 0,
+  "incomplete_details": {
+    "reason": "max_completion_tokens"
+  },
+  "instructions": "instructions",
+  "last_error": {
+    "code": "server_error",
+    "message": "message"
+  },
+  "max_completion_tokens": 256,
+  "max_prompt_tokens": 256,
+  "metadata": {
+    "foo": "string"
+  },
+  "model": "model",
+  "object": "thread.run",
+  "parallel_tool_calls": true,
+  "required_action": {
+    "submit_tool_outputs": {
+      "tool_calls": [
+        {
+          "id": "id",
+          "function": {
+            "arguments": "arguments",
+            "name": "name"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "type": "submit_tool_outputs"
+  },
+  "response_format": "auto",
+  "started_at": 0,
+  "status": "queued",
+  "thread_id": "thread_id",
+  "tool_choice": "none",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": 1
+  },
+  "usage": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  },
+  "temperature": 0,
+  "top_p": 0
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -d '{
+    "assistant_id": "asst_abc123"
+  }'
+```
+
+#### Response
+
+```json
+{
+  "id": "run_abc123",
+  "object": "thread.run",
+  "created_at": 1699063290,
+  "assistant_id": "asst_abc123",
+  "thread_id": "thread_abc123",
+  "status": "queued",
+  "started_at": 1699063290,
+  "expires_at": null,
+  "cancelled_at": null,
+  "failed_at": null,
+  "completed_at": 1699063291,
+  "last_error": null,
+  "model": "gpt-4o",
+  "instructions": null,
+  "incomplete_details": null,
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "metadata": {},
+  "usage": null,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_prompt_tokens": 1000,
+  "max_completion_tokens": 1000,
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": null
+  },
+  "response_format": "auto",
+  "tool_choice": "auto",
+  "parallel_tool_calls": true
+}
+```
+
+### Streaming
+
+```http
+curl https://api.openai.com/v1/threads/thread_123/runs \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -d '{
+    "assistant_id": "asst_123",
+    "stream": true
+  }'
+```
+
+#### Response
+
+```json
+event: thread.run.created
+data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710331240,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.queued
+data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710331240,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.in_progress
+data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"in_progress","started_at":1710330641,"expires_at":1710331240,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.step.created
+data: {"id":"step_001","object":"thread.run.step","created_at":1710330641,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710331240,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
+
+event: thread.run.step.in_progress
+data: {"id":"step_001","object":"thread.run.step","created_at":1710330641,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710331240,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
+
+event: thread.message.created
+data: {"id":"msg_001","object":"thread.message","created_at":1710330641,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
+
+event: thread.message.in_progress
+data: {"id":"msg_001","object":"thread.message","created_at":1710330641,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
+
+event: thread.message.delta
+data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"Hello","annotations":[]}}]}}
+
+...
+
+event: thread.message.delta
+data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" today"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"?"}}]}}
+
+event: thread.message.completed
+data: {"id":"msg_001","object":"thread.message","created_at":1710330641,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1710330642,"role":"assistant","content":[{"type":"text","text":{"value":"Hello! How can I assist you today?","annotations":[]}}],"metadata":{}}
+
+event: thread.run.step.completed
+data: {"id":"step_001","object":"thread.run.step","created_at":1710330641,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1710330642,"expires_at":1710331240,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31}}
+
+event: thread.run.completed
+data: {"id":"run_123","object":"thread.run","created_at":1710330640,"assistant_id":"asst_123","thread_id":"thread_123","status":"completed","started_at":1710330641,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1710330642,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31},"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: done
+data: [DONE]
+```
+
+### Streaming with Functions
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -d '{
+    "assistant_id": "asst_abc123",
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "get_current_weather",
+          "description": "Get the current weather in a given location",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "location": {
+                "type": "string",
+                "description": "The city and state, e.g. San Francisco, CA"
+              },
+              "unit": {
+                "type": "string",
+                "enum": ["celsius", "fahrenheit"]
+              }
+            },
+            "required": ["location"]
+          }
+        }
+      }
+    ],
+    "stream": true
+  }'
+```
+
+#### Response
+
+```json
+event: thread.run.created
+data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710348675,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.queued
+data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":null,"expires_at":1710348675,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.in_progress
+data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"in_progress","started_at":1710348075,"expires_at":1710348675,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.step.created
+data: {"id":"step_001","object":"thread.run.step","created_at":1710348076,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710348675,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
+
+event: thread.run.step.in_progress
+data: {"id":"step_001","object":"thread.run.step","created_at":1710348076,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710348675,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":null}
+
+event: thread.message.created
+data: {"id":"msg_001","object":"thread.message","created_at":1710348076,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
+
+event: thread.message.in_progress
+data: {"id":"msg_001","object":"thread.message","created_at":1710348076,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
+
+event: thread.message.delta
+data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"Hello","annotations":[]}}]}}
+
+...
+
+event: thread.message.delta
+data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" today"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_001","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"?"}}]}}
+
+event: thread.message.completed
+data: {"id":"msg_001","object":"thread.message","created_at":1710348076,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1710348077,"role":"assistant","content":[{"type":"text","text":{"value":"Hello! How can I assist you today?","annotations":[]}}],"metadata":{}}
+
+event: thread.run.step.completed
+data: {"id":"step_001","object":"thread.run.step","created_at":1710348076,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1710348077,"expires_at":1710348675,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_001"}},"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31}}
+
+event: thread.run.completed
+data: {"id":"run_123","object":"thread.run","created_at":1710348075,"assistant_id":"asst_123","thread_id":"thread_123","status":"completed","started_at":1710348075,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1710348077,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31},"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: done
+data: [DONE]
+```
+
+## List runs
+
+**get** `/threads/{thread_id}/runs`
+
+Returns a list of runs belonging to a thread.
+
+### Path Parameters
+
+- `thread_id: string`
+
+### Query Parameters
+
+- `after: optional string`
+
+  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+
+- `before: optional string`
+
+  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+
+- `limit: optional number`
+
+  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+- `order: optional "asc" or "desc"`
+
+  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+
+  - `"asc"`
+
+  - `"desc"`
+
+### Returns
+
+- `data: array of Run`
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+- `first_id: string`
+
+- `has_more: boolean`
+
+- `last_id: string`
+
+- `object: string`
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "id",
+      "assistant_id": "assistant_id",
+      "cancelled_at": 0,
+      "completed_at": 0,
+      "created_at": 0,
+      "expires_at": 0,
+      "failed_at": 0,
+      "incomplete_details": {
+        "reason": "max_completion_tokens"
+      },
+      "instructions": "instructions",
+      "last_error": {
+        "code": "server_error",
+        "message": "message"
+      },
+      "max_completion_tokens": 256,
+      "max_prompt_tokens": 256,
+      "metadata": {
+        "foo": "string"
+      },
+      "model": "model",
+      "object": "thread.run",
+      "parallel_tool_calls": true,
+      "required_action": {
+        "submit_tool_outputs": {
+          "tool_calls": [
+            {
+              "id": "id",
+              "function": {
+                "arguments": "arguments",
+                "name": "name"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "type": "submit_tool_outputs"
+      },
+      "response_format": "auto",
+      "started_at": 0,
+      "status": "queued",
+      "thread_id": "thread_id",
+      "tool_choice": "none",
+      "tools": [
+        {
+          "type": "code_interpreter"
+        }
+      ],
+      "truncation_strategy": {
+        "type": "auto",
+        "last_messages": 1
+      },
+      "usage": {
+        "completion_tokens": 0,
+        "prompt_tokens": 0,
+        "total_tokens": 0
+      },
+      "temperature": 0,
+      "top_p": 0
+    }
+  ],
+  "first_id": "run_abc123",
+  "has_more": false,
+  "last_id": "run_abc456",
+  "object": "list"
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2"
+```
+
+#### Response
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "run_abc123",
+      "object": "thread.run",
+      "created_at": 1699075072,
+      "assistant_id": "asst_abc123",
+      "thread_id": "thread_abc123",
+      "status": "completed",
+      "started_at": 1699075072,
+      "expires_at": null,
+      "cancelled_at": null,
+      "failed_at": null,
+      "completed_at": 1699075073,
+      "last_error": null,
+      "model": "gpt-4o",
+      "instructions": null,
+      "incomplete_details": null,
+      "tools": [
+        {
+          "type": "code_interpreter"
+        }
+      ],
+      "tool_resources": {
+        "code_interpreter": {
+          "file_ids": [
+            "file-abc123",
+            "file-abc456"
+          ]
+        }
+      },
+      "metadata": {},
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 456,
+        "total_tokens": 579
+      },
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "max_prompt_tokens": 1000,
+      "max_completion_tokens": 1000,
+      "truncation_strategy": {
+        "type": "auto",
+        "last_messages": null
+      },
+      "response_format": "auto",
+      "tool_choice": "auto",
+      "parallel_tool_calls": true
+    },
+    {
+      "id": "run_abc456",
+      "object": "thread.run",
+      "created_at": 1699063290,
+      "assistant_id": "asst_abc123",
+      "thread_id": "thread_abc123",
+      "status": "completed",
+      "started_at": 1699063290,
+      "expires_at": null,
+      "cancelled_at": null,
+      "failed_at": null,
+      "completed_at": 1699063291,
+      "last_error": null,
+      "model": "gpt-4o",
+      "instructions": null,
+      "incomplete_details": null,
+      "tools": [
+        {
+          "type": "code_interpreter"
+        }
+      ],
+      "tool_resources": {
+        "code_interpreter": {
+          "file_ids": [
+            "file-abc123",
+            "file-abc456"
+          ]
+        }
+      },
+      "metadata": {},
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 456,
+        "total_tokens": 579
+      },
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "max_prompt_tokens": 1000,
+      "max_completion_tokens": 1000,
+      "truncation_strategy": {
+        "type": "auto",
+        "last_messages": null
+      },
+      "response_format": "auto",
+      "tool_choice": "auto",
+      "parallel_tool_calls": true
+    }
+  ],
+  "first_id": "run_abc123",
+  "last_id": "run_abc456",
+  "has_more": false
+}
+```
+
+## Retrieve run
+
+**get** `/threads/{thread_id}/runs/{run_id}`
+
+Retrieves a run.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `run_id: string`
+
+### Returns
+
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "cancelled_at": 0,
+  "completed_at": 0,
+  "created_at": 0,
+  "expires_at": 0,
+  "failed_at": 0,
+  "incomplete_details": {
+    "reason": "max_completion_tokens"
+  },
+  "instructions": "instructions",
+  "last_error": {
+    "code": "server_error",
+    "message": "message"
+  },
+  "max_completion_tokens": 256,
+  "max_prompt_tokens": 256,
+  "metadata": {
+    "foo": "string"
+  },
+  "model": "model",
+  "object": "thread.run",
+  "parallel_tool_calls": true,
+  "required_action": {
+    "submit_tool_outputs": {
+      "tool_calls": [
+        {
+          "id": "id",
+          "function": {
+            "arguments": "arguments",
+            "name": "name"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "type": "submit_tool_outputs"
+  },
+  "response_format": "auto",
+  "started_at": 0,
+  "status": "queued",
+  "thread_id": "thread_id",
+  "tool_choice": "none",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": 1
+  },
+  "usage": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  },
+  "temperature": 0,
+  "top_p": 0
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "OpenAI-Beta: assistants=v2"
+```
+
+#### Response
+
+```json
+{
+  "id": "run_abc123",
+  "object": "thread.run",
+  "created_at": 1699075072,
+  "assistant_id": "asst_abc123",
+  "thread_id": "thread_abc123",
+  "status": "completed",
+  "started_at": 1699075072,
+  "expires_at": null,
+  "cancelled_at": null,
+  "failed_at": null,
+  "completed_at": 1699075073,
+  "last_error": null,
+  "model": "gpt-4o",
+  "instructions": null,
+  "incomplete_details": null,
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "metadata": {},
+  "usage": {
+    "prompt_tokens": 123,
+    "completion_tokens": 456,
+    "total_tokens": 579
+  },
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_prompt_tokens": 1000,
+  "max_completion_tokens": 1000,
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": null
+  },
+  "response_format": "auto",
+  "tool_choice": "auto",
+  "parallel_tool_calls": true
+}
+```
+
+## Submit tool outputs to run
+
+**post** `/threads/{thread_id}/runs/{run_id}/submit_tool_outputs`
+
+When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `run_id: string`
+
+### Body Parameters
+
+- `tool_outputs: array of object { output, tool_call_id }`
+
+  A list of tools for which the outputs are being submitted.
+
+  - `output: optional string`
+
+    The output of the tool call to be submitted to continue the run.
+
+  - `tool_call_id: optional string`
+
+    The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
+
+- `stream: optional boolean or null`
+
+  If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+
+### Returns
+
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/submit_tool_outputs \
+    -H 'Content-Type: application/json' \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+          "tool_outputs": [
+            {}
+          ]
+        }'
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "cancelled_at": 0,
+  "completed_at": 0,
+  "created_at": 0,
+  "expires_at": 0,
+  "failed_at": 0,
+  "incomplete_details": {
+    "reason": "max_completion_tokens"
+  },
+  "instructions": "instructions",
+  "last_error": {
+    "code": "server_error",
+    "message": "message"
+  },
+  "max_completion_tokens": 256,
+  "max_prompt_tokens": 256,
+  "metadata": {
+    "foo": "string"
+  },
+  "model": "model",
+  "object": "thread.run",
+  "parallel_tool_calls": true,
+  "required_action": {
+    "submit_tool_outputs": {
+      "tool_calls": [
+        {
+          "id": "id",
+          "function": {
+            "arguments": "arguments",
+            "name": "name"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "type": "submit_tool_outputs"
+  },
+  "response_format": "auto",
+  "started_at": 0,
+  "status": "queued",
+  "thread_id": "thread_id",
+  "tool_choice": "none",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": 1
+  },
+  "usage": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  },
+  "temperature": 0,
+  "top_p": 0
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_123/runs/run_123/submit_tool_outputs \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -d '{
+    "tool_outputs": [
+      {
+        "tool_call_id": "call_001",
+        "output": "70 degrees and sunny."
+      }
+    ]
+  }'
+```
+
+#### Response
+
+```json
+{
+  "id": "run_123",
+  "object": "thread.run",
+  "created_at": 1699075592,
+  "assistant_id": "asst_123",
+  "thread_id": "thread_123",
+  "status": "queued",
+  "started_at": 1699075592,
+  "expires_at": 1699076192,
+  "cancelled_at": null,
+  "failed_at": null,
+  "completed_at": null,
+  "last_error": null,
+  "model": "gpt-4o",
+  "instructions": null,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_current_weather",
+        "description": "Get the current weather in a given location",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city and state, e.g. San Francisco, CA"
+            },
+            "unit": {
+              "type": "string",
+              "enum": ["celsius", "fahrenheit"]
+            }
+          },
+          "required": ["location"]
+        }
+      }
+    }
+  ],
+  "metadata": {},
+  "usage": null,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_prompt_tokens": 1000,
+  "max_completion_tokens": 1000,
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": null
+  },
+  "response_format": "auto",
+  "tool_choice": "auto",
+  "parallel_tool_calls": true
+}
+```
+
+### Streaming
+
+```http
+curl https://api.openai.com/v1/threads/thread_123/runs/run_123/submit_tool_outputs \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -d '{
+    "tool_outputs": [
+      {
+        "tool_call_id": "call_001",
+        "output": "70 degrees and sunny."
+      }
+    ],
+    "stream": true
+  }'
+```
+
+#### Response
+
+```json
+event: thread.run.step.completed
+data: {"id":"step_001","object":"thread.run.step","created_at":1710352449,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"tool_calls","status":"completed","cancelled_at":null,"completed_at":1710352475,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"tool_calls","tool_calls":[{"id":"call_iWr0kQ2EaYMaxNdl0v3KYkx7","type":"function","function":{"name":"get_current_weather","arguments":"{\"location\":\"San Francisco, CA\",\"unit\":\"fahrenheit\"}","output":"70 degrees and sunny."}}]},"usage":{"prompt_tokens":291,"completion_tokens":24,"total_tokens":315}}
+
+event: thread.run.queued
+data: {"id":"run_123","object":"thread.run","created_at":1710352447,"assistant_id":"asst_123","thread_id":"thread_123","status":"queued","started_at":1710352448,"expires_at":1710353047,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[{"type":"function","function":{"name":"get_current_weather","description":"Get the current weather in a given location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"string","enum":["celsius","fahrenheit"]}},"required":["location"]}}}],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.in_progress
+data: {"id":"run_123","object":"thread.run","created_at":1710352447,"assistant_id":"asst_123","thread_id":"thread_123","status":"in_progress","started_at":1710352475,"expires_at":1710353047,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[{"type":"function","function":{"name":"get_current_weather","description":"Get the current weather in a given location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"string","enum":["celsius","fahrenheit"]}},"required":["location"]}}}],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: thread.run.step.created
+data: {"id":"step_002","object":"thread.run.step","created_at":1710352476,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_002"}},"usage":null}
+
+event: thread.run.step.in_progress
+data: {"id":"step_002","object":"thread.run.step","created_at":1710352476,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_002"}},"usage":null}
+
+event: thread.message.created
+data: {"id":"msg_002","object":"thread.message","created_at":1710352476,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
+
+event: thread.message.in_progress
+data: {"id":"msg_002","object":"thread.message","created_at":1710352476,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"metadata":{}}
+
+event: thread.message.delta
+data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"The","annotations":[]}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" current"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" weather"}}]}}
+
+...
+
+event: thread.message.delta
+data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" sunny"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_002","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.completed
+data: {"id":"msg_002","object":"thread.message","created_at":1710352476,"assistant_id":"asst_123","thread_id":"thread_123","run_id":"run_123","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1710352477,"role":"assistant","content":[{"type":"text","text":{"value":"The current weather in San Francisco, CA is 70 degrees Fahrenheit and sunny.","annotations":[]}}],"metadata":{}}
+
+event: thread.run.step.completed
+data: {"id":"step_002","object":"thread.run.step","created_at":1710352476,"run_id":"run_123","assistant_id":"asst_123","thread_id":"thread_123","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1710352477,"expires_at":1710353047,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_002"}},"usage":{"prompt_tokens":329,"completion_tokens":18,"total_tokens":347}}
+
+event: thread.run.completed
+data: {"id":"run_123","object":"thread.run","created_at":1710352447,"assistant_id":"asst_123","thread_id":"thread_123","status":"completed","started_at":1710352475,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1710352477,"required_action":null,"last_error":null,"model":"gpt-4o","instructions":null,"tools":[{"type":"function","function":{"name":"get_current_weather","description":"Get the current weather in a given location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"string","enum":["celsius","fahrenheit"]}},"required":["location"]}}}],"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":20,"completion_tokens":11,"total_tokens":31},"response_format":"auto","tool_choice":"auto","parallel_tool_calls":true}}
+
+event: done
+data: [DONE]
+```
+
+## Modify run
+
+**post** `/threads/{thread_id}/runs/{run_id}`
+
+Modifies a run.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `run_id: string`
+
+### Body Parameters
+
+- `metadata: optional Metadata or null`
+
+  Set of 16 key-value pairs that can be attached to an object. This can be
+  useful for storing additional information about the object in a structured
+  format, and querying for objects via API or the dashboard.
+
+  Keys are strings with a maximum length of 64 characters. Values are strings
+  with a maximum length of 512 characters.
+
+### Returns
+
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID \
+    -H 'Content-Type: application/json' \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{}'
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "cancelled_at": 0,
+  "completed_at": 0,
+  "created_at": 0,
+  "expires_at": 0,
+  "failed_at": 0,
+  "incomplete_details": {
+    "reason": "max_completion_tokens"
+  },
+  "instructions": "instructions",
+  "last_error": {
+    "code": "server_error",
+    "message": "message"
+  },
+  "max_completion_tokens": 256,
+  "max_prompt_tokens": 256,
+  "metadata": {
+    "foo": "string"
+  },
+  "model": "model",
+  "object": "thread.run",
+  "parallel_tool_calls": true,
+  "required_action": {
+    "submit_tool_outputs": {
+      "tool_calls": [
+        {
+          "id": "id",
+          "function": {
+            "arguments": "arguments",
+            "name": "name"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "type": "submit_tool_outputs"
+  },
+  "response_format": "auto",
+  "started_at": 0,
+  "status": "queued",
+  "thread_id": "thread_id",
+  "tool_choice": "none",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": 1
+  },
+  "usage": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  },
+  "temperature": 0,
+  "top_p": 0
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2" \
+  -d '{
+    "metadata": {
+      "user_id": "user_abc123"
+    }
+  }'
+```
+
+#### Response
+
+```json
+{
+  "id": "run_abc123",
+  "object": "thread.run",
+  "created_at": 1699075072,
+  "assistant_id": "asst_abc123",
+  "thread_id": "thread_abc123",
+  "status": "completed",
+  "started_at": 1699075072,
+  "expires_at": null,
+  "cancelled_at": null,
+  "failed_at": null,
+  "completed_at": 1699075073,
+  "last_error": null,
+  "model": "gpt-4o",
+  "instructions": null,
+  "incomplete_details": null,
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "tool_resources": {
+    "code_interpreter": {
+      "file_ids": [
+        "file-abc123",
+        "file-abc456"
+      ]
+    }
+  },
+  "metadata": {
+    "user_id": "user_abc123"
+  },
+  "usage": {
+    "prompt_tokens": 123,
+    "completion_tokens": 456,
+    "total_tokens": 579
+  },
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_prompt_tokens": 1000,
+  "max_completion_tokens": 1000,
+  "truncation_strategy": {
+    "type": "auto",
+    "last_messages": null
+  },
+  "response_format": "auto",
+  "tool_choice": "auto",
+  "parallel_tool_calls": true
+}
+```
+
+## Domain Types
+
+### Required Action Function Tool Call
+
+- `RequiredActionFunctionToolCall object { id, function, type }`
+
+  Tool call objects
+
+  - `id: string`
+
+    The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+  - `function: object { arguments, name }`
+
+    The function definition.
+
+    - `arguments: string`
+
+      The arguments that the model expects you to pass to the function.
+
+    - `name: string`
+
+      The name of the function.
+
+  - `type: "function"`
+
+    The type of tool call the output is required for. For now, this is always `function`.
+
+    - `"function"`
+
+### Run
+
+- `Run object { id, assistant_id, cancelled_at, 24 more }`
+
+  Represents an execution run on a [thread](/docs/api-reference/threads).
+
+  - `id: string`
+
+    The identifier, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run was created.
+
+  - `expires_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run will expire.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run failed.
+
+  - `incomplete_details: object { reason }  or null`
+
+    Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+
+    - `reason: optional "max_completion_tokens" or "max_prompt_tokens"`
+
+      The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
+
+      - `"max_completion_tokens"`
+
+      - `"max_prompt_tokens"`
+
+  - `instructions: string`
+
+    The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded" or "invalid_prompt"`
+
+      One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+      - `"invalid_prompt"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `max_completion_tokens: number or null`
+
+    The maximum number of completion tokens specified to have been used over the course of the run.
+
+  - `max_prompt_tokens: number or null`
+
+    The maximum number of prompt tokens specified to have been used over the course of the run.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `model: string`
+
+    The model that the [assistant](/docs/api-reference/assistants) used for this run.
+
+  - `object: "thread.run"`
+
+    The object type, which is always `thread.run`.
+
+    - `"thread.run"`
+
+  - `parallel_tool_calls: boolean`
+
+    Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+
+  - `required_action: object { submit_tool_outputs, type }  or null`
+
+    Details on the action required to continue the run. Will be `null` if no action is required.
+
+    - `submit_tool_outputs: object { tool_calls }`
+
+      Details on the tool outputs needed for this run to continue.
+
+      - `tool_calls: array of RequiredActionFunctionToolCall`
+
+        A list of the relevant tool calls.
+
+        - `id: string`
+
+          The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+
+        - `function: object { arguments, name }`
+
+          The function definition.
+
+          - `arguments: string`
+
+            The arguments that the model expects you to pass to the function.
+
+          - `name: string`
+
+            The name of the function.
+
+        - `type: "function"`
+
+          The type of tool call the output is required for. For now, this is always `function`.
+
+          - `"function"`
+
+    - `type: "submit_tool_outputs"`
+
+      For now, this is always `submit_tool_outputs`.
+
+      - `"submit_tool_outputs"`
+
+  - `response_format: AssistantResponseFormatOption or null`
+
+    Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+    - `"auto"`
+
+      `auto` is the default value
+
+      - `"auto"`
+
+    - `ResponseFormatText object { type }`
+
+      Default response format. Used to generate text responses.
+
+      - `type: "text"`
+
+        The type of response format being defined. Always `text`.
+
+        - `"text"`
+
+    - `ResponseFormatJSONObject object { type }`
+
+      JSON object response format. An older method of generating JSON responses.
+      Using `json_schema` is recommended for models that support it. Note that the
+      model will not generate JSON without a system or user message instructing it
+      to do so.
+
+      - `type: "json_object"`
+
+        The type of response format being defined. Always `json_object`.
+
+        - `"json_object"`
+
+    - `ResponseFormatJSONSchema object { json_schema, type }`
+
+      JSON Schema response format. Used to generate structured JSON responses.
+      Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+      - `json_schema: object { name, description, schema, strict }`
+
+        Structured Outputs configuration options, including a JSON Schema.
+
+        - `name: string`
+
+          The name of the response format. Must be a-z, A-Z, 0-9, or contain
+          underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the response format is for, used by the model to
+          determine how to respond in the format.
+
+        - `schema: optional map[unknown]`
+
+          The schema for the response format, described as a JSON Schema object.
+          Learn how to build JSON schemas [here](https://json-schema.org/).
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the output.
+          If set to true, the model will always follow the exact schema defined
+          in the `schema` field. Only a subset of JSON Schema is supported when
+          `strict` is `true`. To learn more, read the [Structured Outputs
+          guide](/docs/guides/structured-outputs).
+
+      - `type: "json_schema"`
+
+        The type of response format being defined. Always `json_schema`.
+
+        - `"json_schema"`
+
+  - `started_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run was started.
+
+  - `status: "queued" or "in_progress" or "requires_action" or 6 more`
+
+    The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"requires_action"`
+
+    - `"cancelling"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"incomplete"`
+
+    - `"expired"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
+
+  - `tool_choice: AssistantToolChoiceOption or null`
+
+    Controls which (if any) tool is called by the model.
+    `none` means the model will not call any tools and instead generates a message.
+    `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+    `required` means the model must call one or more tools before responding to the user.
+    Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+    - `"none" or "auto" or "required"`
+
+      `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user.
+
+      - `"none"`
+
+      - `"auto"`
+
+      - `"required"`
+
+    - `AssistantToolChoice object { type, function }`
+
+      Specifies a tool the model should use. Use to force the model to call a specific tool.
+
+      - `type: "function" or "code_interpreter" or "file_search"`
+
+        The type of the tool. If type is `function`, the function name must be set
+
+        - `"function"`
+
+        - `"code_interpreter"`
+
+        - `"file_search"`
+
+      - `function: optional AssistantToolChoiceFunction`
+
+        - `name: string`
+
+          The name of the function to call.
+
+  - `tools: array of CodeInterpreterTool or FileSearchTool or FunctionTool`
+
+    The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+
+    - `CodeInterpreterTool object { type }`
+
+      - `type: "code_interpreter"`
+
+        The type of tool being defined: `code_interpreter`
+
+        - `"code_interpreter"`
+
+    - `FileSearchTool object { type, file_search }`
+
+      - `type: "file_search"`
+
+        The type of tool being defined: `file_search`
+
+        - `"file_search"`
+
+      - `file_search: optional object { max_num_results, ranking_options }`
+
+        Overrides for the file search tool.
+
+        - `max_num_results: optional number`
+
+          The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
+
+          Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+        - `ranking_options: optional object { score_threshold, ranker }`
+
+          The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+          See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+          - `ranker: optional "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+    - `FunctionTool object { function, type }`
+
+      - `function: FunctionDefinition`
+
+        - `name: string`
+
+          The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+
+        - `description: optional string`
+
+          A description of what the function does, used by the model to choose when and how to call the function.
+
+        - `parameters: optional FunctionParameters`
+
+          The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+
+          Omitting `parameters` defines a function with an empty parameter list.
+
+        - `strict: optional boolean or null`
+
+          Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+
+      - `type: "function"`
+
+        The type of tool being defined: `function`
+
+        - `"function"`
+
+  - `truncation_strategy: object { type, last_messages }  or null`
+
+    Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.
+
+    - `type: "auto" or "last_messages"`
+
+      The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+
+      - `"auto"`
+
+      - `"last_messages"`
+
+    - `last_messages: optional number or null`
+
+      The number of most recent messages from the thread when constructing the context for the run.
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+  - `temperature: optional number or null`
+
+    The sampling temperature used for this run. If not set, defaults to 1.
+
+  - `top_p: optional number or null`
+
+    The nucleus sampling value used for this run. If not set, defaults to 1.
+
+# Steps
+
+## List run steps
+
+**get** `/threads/{thread_id}/runs/{run_id}/steps`
+
+Returns a list of run steps belonging to a run.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `run_id: string`
+
+### Query Parameters
+
+- `after: optional string`
+
+  A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+
+- `before: optional string`
+
+  A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+
+- `include: optional array of RunStepInclude`
+
+  A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
+
+  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+  - `"step_details.tool_calls[*].file_search.results[*].content"`
+
+- `limit: optional number`
+
+  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+- `order: optional "asc" or "desc"`
+
+  Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+
+  - `"asc"`
+
+  - `"desc"`
+
+### Returns
+
+- `data: array of RunStep`
+
+  - `id: string`
+
+    The identifier of the run step, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run step was created.
+
+  - `expired_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step failed.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run step. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded"`
+
+      One of `server_error` or `rate_limit_exceeded`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `object: "thread.run.step"`
+
+    The object type, which is always `thread.run.step`.
+
+    - `"thread.run.step"`
+
+  - `run_id: string`
+
+    The ID of the [run](/docs/api-reference/runs) that this run step is a part of.
+
+  - `status: "in_progress" or "cancelled" or "failed" or 2 more`
+
+    The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
+
+    - `"in_progress"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"expired"`
+
+  - `step_details: MessageCreationStepDetails or ToolCallsStepDetails`
+
+    The details of the run step.
+
+    - `MessageCreationStepDetails object { message_creation, type }`
+
+      Details of the message creation by the run step.
+
+      - `message_creation: object { message_id }`
+
+        - `message_id: string`
+
+          The ID of the message that was created by this run step.
+
+      - `type: "message_creation"`
+
+        Always `message_creation`.
+
+        - `"message_creation"`
+
+    - `ToolCallsStepDetails object { tool_calls, type }`
+
+      Details of the tool call.
+
+      - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
+
+        An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+        - `CodeInterpreterToolCall object { id, code_interpreter, type }`
+
+          Details of the Code Interpreter tool call the run step was involved in.
+
+          - `id: string`
+
+            The ID of the tool call.
+
+          - `code_interpreter: object { input, outputs }`
+
+            The Code Interpreter tool call definition.
+
+            - `input: string`
+
+              The input to the Code Interpreter tool call.
+
+            - `outputs: array of object { logs, type }  or object { image, type }`
+
+              The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+              - `CodeInterpreterLogOutput object { logs, type }`
+
+                Text output from the Code Interpreter tool call as part of a run step.
+
+                - `logs: string`
+
+                  The text output from the Code Interpreter tool call.
+
+                - `type: "logs"`
+
+                  Always `logs`.
+
+                  - `"logs"`
+
+              - `CodeInterpreterImageOutput object { image, type }`
+
+                - `image: object { file_id }`
+
+                  - `file_id: string`
+
+                    The [file](/docs/api-reference/files) ID of the image.
+
+                - `type: "image"`
+
+                  Always `image`.
+
+                  - `"image"`
+
+          - `type: "code_interpreter"`
+
+            The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+            - `"code_interpreter"`
+
+        - `FileSearchToolCall object { id, file_search, type }`
+
+          - `id: string`
+
+            The ID of the tool call object.
+
+          - `file_search: object { ranking_options, results }`
+
+            For now, this is always going to be an empty object.
+
+            - `ranking_options: optional object { ranker, score_threshold }`
+
+              The ranking options for the file search.
+
+              - `ranker: "auto" or "default_2024_08_21"`
+
+                The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+                - `"auto"`
+
+                - `"default_2024_08_21"`
+
+              - `score_threshold: number`
+
+                The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+            - `results: optional array of object { file_id, file_name, score, content }`
+
+              The results of the file search.
+
+              - `file_id: string`
+
+                The ID of the file that result was found in.
+
+              - `file_name: string`
+
+                The name of the file that result was found in.
+
+              - `score: number`
+
+                The score of the result. All values must be a floating point number between 0 and 1.
+
+              - `content: optional array of object { text, type }`
+
+                The content of the result that was found. The content is only included if requested via the include query parameter.
+
+                - `text: optional string`
+
+                  The text content of the file.
+
+                - `type: optional "text"`
+
+                  The type of the content.
+
+                  - `"text"`
+
+          - `type: "file_search"`
+
+            The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+            - `"file_search"`
+
+        - `FunctionToolCall object { id, function, type }`
+
+          - `id: string`
+
+            The ID of the tool call object.
+
+          - `function: object { arguments, name, output }`
+
+            The definition of the function that was called.
+
+            - `arguments: string`
+
+              The arguments passed to the function.
+
+            - `name: string`
+
+              The name of the function.
+
+            - `output: string or null`
+
+              The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+          - `type: "function"`
+
+            The type of tool call. This is always going to be `function` for this type of tool call.
+
+            - `"function"`
+
+      - `type: "tool_calls"`
+
+        Always `tool_calls`.
+
+        - `"tool_calls"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was run.
+
+  - `type: "message_creation" or "tool_calls"`
+
+    The type of run step, which can be either `message_creation` or `tool_calls`.
+
+    - `"message_creation"`
+
+    - `"tool_calls"`
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run step.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run step.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+- `first_id: string`
+
+- `has_more: boolean`
+
+- `last_id: string`
+
+- `object: string`
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/steps \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "id",
+      "assistant_id": "assistant_id",
+      "cancelled_at": 0,
+      "completed_at": 0,
+      "created_at": 0,
+      "expired_at": 0,
+      "failed_at": 0,
+      "last_error": {
+        "code": "server_error",
+        "message": "message"
+      },
+      "metadata": {
+        "foo": "string"
+      },
+      "object": "thread.run.step",
+      "run_id": "run_id",
+      "status": "in_progress",
+      "step_details": {
+        "message_creation": {
+          "message_id": "message_id"
+        },
+        "type": "message_creation"
+      },
+      "thread_id": "thread_id",
+      "type": "message_creation",
+      "usage": {
+        "completion_tokens": 0,
+        "prompt_tokens": 0,
+        "total_tokens": 0
+      }
+    }
+  ],
+  "first_id": "step_abc123",
+  "has_more": false,
+  "last_id": "step_abc456",
+  "object": "list"
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2"
+```
+
+#### Response
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "step_abc123",
+      "object": "thread.run.step",
+      "created_at": 1699063291,
+      "run_id": "run_abc123",
+      "assistant_id": "asst_abc123",
+      "thread_id": "thread_abc123",
+      "type": "message_creation",
+      "status": "completed",
+      "cancelled_at": null,
+      "completed_at": 1699063291,
+      "expired_at": null,
+      "failed_at": null,
+      "last_error": null,
+      "step_details": {
+        "type": "message_creation",
+        "message_creation": {
+          "message_id": "msg_abc123"
+        }
+      },
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 456,
+        "total_tokens": 579
+      }
+    }
+  ],
+  "first_id": "step_abc123",
+  "last_id": "step_abc456",
+  "has_more": false
+}
+```
+
+## Retrieve run step
+
+**get** `/threads/{thread_id}/runs/{run_id}/steps/{step_id}`
+
+Retrieves a run step.
+
+### Path Parameters
+
+- `thread_id: string`
+
+- `run_id: string`
+
+- `step_id: string`
+
+### Query Parameters
+
+- `include: optional array of RunStepInclude`
+
+  A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
+
+  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
+
+  - `"step_details.tool_calls[*].file_search.results[*].content"`
+
+### Returns
+
+- `RunStep object { id, assistant_id, cancelled_at, 13 more }`
+
+  Represents a step in execution of a run.
+
+  - `id: string`
+
+    The identifier of the run step, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run step was created.
+
+  - `expired_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step failed.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run step. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded"`
+
+      One of `server_error` or `rate_limit_exceeded`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `object: "thread.run.step"`
+
+    The object type, which is always `thread.run.step`.
+
+    - `"thread.run.step"`
+
+  - `run_id: string`
+
+    The ID of the [run](/docs/api-reference/runs) that this run step is a part of.
+
+  - `status: "in_progress" or "cancelled" or "failed" or 2 more`
+
+    The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
+
+    - `"in_progress"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"expired"`
+
+  - `step_details: MessageCreationStepDetails or ToolCallsStepDetails`
+
+    The details of the run step.
+
+    - `MessageCreationStepDetails object { message_creation, type }`
+
+      Details of the message creation by the run step.
+
+      - `message_creation: object { message_id }`
+
+        - `message_id: string`
+
+          The ID of the message that was created by this run step.
+
+      - `type: "message_creation"`
+
+        Always `message_creation`.
+
+        - `"message_creation"`
+
+    - `ToolCallsStepDetails object { tool_calls, type }`
+
+      Details of the tool call.
+
+      - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
+
+        An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+        - `CodeInterpreterToolCall object { id, code_interpreter, type }`
+
+          Details of the Code Interpreter tool call the run step was involved in.
+
+          - `id: string`
+
+            The ID of the tool call.
+
+          - `code_interpreter: object { input, outputs }`
+
+            The Code Interpreter tool call definition.
+
+            - `input: string`
+
+              The input to the Code Interpreter tool call.
+
+            - `outputs: array of object { logs, type }  or object { image, type }`
+
+              The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+              - `CodeInterpreterLogOutput object { logs, type }`
+
+                Text output from the Code Interpreter tool call as part of a run step.
+
+                - `logs: string`
+
+                  The text output from the Code Interpreter tool call.
+
+                - `type: "logs"`
+
+                  Always `logs`.
+
+                  - `"logs"`
+
+              - `CodeInterpreterImageOutput object { image, type }`
+
+                - `image: object { file_id }`
+
+                  - `file_id: string`
+
+                    The [file](/docs/api-reference/files) ID of the image.
+
+                - `type: "image"`
+
+                  Always `image`.
+
+                  - `"image"`
+
+          - `type: "code_interpreter"`
+
+            The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+            - `"code_interpreter"`
+
+        - `FileSearchToolCall object { id, file_search, type }`
+
+          - `id: string`
+
+            The ID of the tool call object.
+
+          - `file_search: object { ranking_options, results }`
+
+            For now, this is always going to be an empty object.
+
+            - `ranking_options: optional object { ranker, score_threshold }`
+
+              The ranking options for the file search.
+
+              - `ranker: "auto" or "default_2024_08_21"`
+
+                The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+                - `"auto"`
+
+                - `"default_2024_08_21"`
+
+              - `score_threshold: number`
+
+                The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+            - `results: optional array of object { file_id, file_name, score, content }`
+
+              The results of the file search.
+
+              - `file_id: string`
+
+                The ID of the file that result was found in.
+
+              - `file_name: string`
+
+                The name of the file that result was found in.
+
+              - `score: number`
+
+                The score of the result. All values must be a floating point number between 0 and 1.
+
+              - `content: optional array of object { text, type }`
+
+                The content of the result that was found. The content is only included if requested via the include query parameter.
+
+                - `text: optional string`
+
+                  The text content of the file.
+
+                - `type: optional "text"`
+
+                  The type of the content.
+
+                  - `"text"`
+
+          - `type: "file_search"`
+
+            The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+            - `"file_search"`
+
+        - `FunctionToolCall object { id, function, type }`
+
+          - `id: string`
+
+            The ID of the tool call object.
+
+          - `function: object { arguments, name, output }`
+
+            The definition of the function that was called.
+
+            - `arguments: string`
+
+              The arguments passed to the function.
+
+            - `name: string`
+
+              The name of the function.
+
+            - `output: string or null`
+
+              The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+          - `type: "function"`
+
+            The type of tool call. This is always going to be `function` for this type of tool call.
+
+            - `"function"`
+
+      - `type: "tool_calls"`
+
+        Always `tool_calls`.
+
+        - `"tool_calls"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was run.
+
+  - `type: "message_creation" or "tool_calls"`
+
+    The type of run step, which can be either `message_creation` or `tool_calls`.
+
+    - `"message_creation"`
+
+    - `"tool_calls"`
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run step.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run step.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/$THREAD_ID/runs/$RUN_ID/steps/$STEP_ID \
+    -H 'OpenAI-Beta: assistants=v2' \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "assistant_id": "assistant_id",
+  "cancelled_at": 0,
+  "completed_at": 0,
+  "created_at": 0,
+  "expired_at": 0,
+  "failed_at": 0,
+  "last_error": {
+    "code": "server_error",
+    "message": "message"
+  },
+  "metadata": {
+    "foo": "string"
+  },
+  "object": "thread.run.step",
+  "run_id": "run_id",
+  "status": "in_progress",
+  "step_details": {
+    "message_creation": {
+      "message_id": "message_id"
+    },
+    "type": "message_creation"
+  },
+  "thread_id": "thread_id",
+  "type": "message_creation",
+  "usage": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  }
+}
+```
+
+### Example
+
+```http
+curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_abc123 \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "OpenAI-Beta: assistants=v2"
+```
+
+#### Response
+
+```json
+{
+  "id": "step_abc123",
+  "object": "thread.run.step",
+  "created_at": 1699063291,
+  "run_id": "run_abc123",
+  "assistant_id": "asst_abc123",
+  "thread_id": "thread_abc123",
+  "type": "message_creation",
+  "status": "completed",
+  "cancelled_at": null,
+  "completed_at": 1699063291,
+  "expired_at": null,
+  "failed_at": null,
+  "last_error": null,
+  "step_details": {
+    "type": "message_creation",
+    "message_creation": {
+      "message_id": "msg_abc123"
+    }
+  },
+  "usage": {
+    "prompt_tokens": 123,
+    "completion_tokens": 456,
+    "total_tokens": 579
+  }
+}
+```
+
+## Domain Types
+
+### Code Interpreter Logs
+
+- `CodeInterpreterLogs object { index, type, logs }`
+
+  Text output from the Code Interpreter tool call as part of a run step.
+
+  - `index: number`
+
+    The index of the output in the outputs array.
+
+  - `type: "logs"`
+
+    Always `logs`.
+
+    - `"logs"`
+
+  - `logs: optional string`
+
+    The text output from the Code Interpreter tool call.
+
+### Code Interpreter Output Image
+
+- `CodeInterpreterOutputImage object { index, type, image }`
+
+  - `index: number`
+
+    The index of the output in the outputs array.
+
+  - `type: "image"`
+
+    Always `image`.
+
+    - `"image"`
+
+  - `image: optional object { file_id }`
+
+    - `file_id: optional string`
+
+      The [file](/docs/api-reference/files) ID of the image.
+
+### Code Interpreter Tool Call
+
+- `CodeInterpreterToolCall object { id, code_interpreter, type }`
+
+  Details of the Code Interpreter tool call the run step was involved in.
+
+  - `id: string`
+
+    The ID of the tool call.
+
+  - `code_interpreter: object { input, outputs }`
+
+    The Code Interpreter tool call definition.
+
+    - `input: string`
+
+      The input to the Code Interpreter tool call.
+
+    - `outputs: array of object { logs, type }  or object { image, type }`
+
+      The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+      - `CodeInterpreterLogOutput object { logs, type }`
+
+        Text output from the Code Interpreter tool call as part of a run step.
+
+        - `logs: string`
+
+          The text output from the Code Interpreter tool call.
+
+        - `type: "logs"`
+
+          Always `logs`.
+
+          - `"logs"`
+
+      - `CodeInterpreterImageOutput object { image, type }`
+
+        - `image: object { file_id }`
+
+          - `file_id: string`
+
+            The [file](/docs/api-reference/files) ID of the image.
+
+        - `type: "image"`
+
+          Always `image`.
+
+          - `"image"`
+
+  - `type: "code_interpreter"`
+
+    The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+    - `"code_interpreter"`
+
+### Code Interpreter Tool Call Delta
+
+- `CodeInterpreterToolCallDelta object { index, type, id, code_interpreter }`
+
+  Details of the Code Interpreter tool call the run step was involved in.
+
+  - `index: number`
+
+    The index of the tool call in the tool calls array.
+
+  - `type: "code_interpreter"`
+
+    The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+    - `"code_interpreter"`
+
+  - `id: optional string`
+
+    The ID of the tool call.
+
+  - `code_interpreter: optional object { input, outputs }`
+
+    The Code Interpreter tool call definition.
+
+    - `input: optional string`
+
+      The input to the Code Interpreter tool call.
+
+    - `outputs: optional array of CodeInterpreterLogs or CodeInterpreterOutputImage`
+
+      The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+      - `CodeInterpreterLogs object { index, type, logs }`
+
+        Text output from the Code Interpreter tool call as part of a run step.
+
+        - `index: number`
+
+          The index of the output in the outputs array.
+
+        - `type: "logs"`
+
+          Always `logs`.
+
+          - `"logs"`
+
+        - `logs: optional string`
+
+          The text output from the Code Interpreter tool call.
+
+      - `CodeInterpreterOutputImage object { index, type, image }`
+
+        - `index: number`
+
+          The index of the output in the outputs array.
+
+        - `type: "image"`
+
+          Always `image`.
+
+          - `"image"`
+
+        - `image: optional object { file_id }`
+
+          - `file_id: optional string`
+
+            The [file](/docs/api-reference/files) ID of the image.
+
+### File Search Tool Call
+
+- `FileSearchToolCall object { id, file_search, type }`
+
+  - `id: string`
+
+    The ID of the tool call object.
+
+  - `file_search: object { ranking_options, results }`
+
+    For now, this is always going to be an empty object.
+
+    - `ranking_options: optional object { ranker, score_threshold }`
+
+      The ranking options for the file search.
+
+      - `ranker: "auto" or "default_2024_08_21"`
+
+        The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+        - `"auto"`
+
+        - `"default_2024_08_21"`
+
+      - `score_threshold: number`
+
+        The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+    - `results: optional array of object { file_id, file_name, score, content }`
+
+      The results of the file search.
+
+      - `file_id: string`
+
+        The ID of the file that result was found in.
+
+      - `file_name: string`
+
+        The name of the file that result was found in.
+
+      - `score: number`
+
+        The score of the result. All values must be a floating point number between 0 and 1.
+
+      - `content: optional array of object { text, type }`
+
+        The content of the result that was found. The content is only included if requested via the include query parameter.
+
+        - `text: optional string`
+
+          The text content of the file.
+
+        - `type: optional "text"`
+
+          The type of the content.
+
+          - `"text"`
+
+  - `type: "file_search"`
+
+    The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+    - `"file_search"`
+
+### File Search Tool Call Delta
+
+- `FileSearchToolCallDelta object { file_search, index, type, id }`
+
+  - `file_search: unknown`
+
+    For now, this is always going to be an empty object.
+
+  - `index: number`
+
+    The index of the tool call in the tool calls array.
+
+  - `type: "file_search"`
+
+    The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+    - `"file_search"`
+
+  - `id: optional string`
+
+    The ID of the tool call object.
+
+### Function Tool Call
+
+- `FunctionToolCall object { id, function, type }`
+
+  - `id: string`
+
+    The ID of the tool call object.
+
+  - `function: object { arguments, name, output }`
+
+    The definition of the function that was called.
+
+    - `arguments: string`
+
+      The arguments passed to the function.
+
+    - `name: string`
+
+      The name of the function.
+
+    - `output: string or null`
+
+      The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+  - `type: "function"`
+
+    The type of tool call. This is always going to be `function` for this type of tool call.
+
+    - `"function"`
+
+### Function Tool Call Delta
+
+- `FunctionToolCallDelta object { index, type, id, function }`
+
+  - `index: number`
+
+    The index of the tool call in the tool calls array.
+
+  - `type: "function"`
+
+    The type of tool call. This is always going to be `function` for this type of tool call.
+
+    - `"function"`
+
+  - `id: optional string`
+
+    The ID of the tool call object.
+
+  - `function: optional object { arguments, name, output }`
+
+    The definition of the function that was called.
+
+    - `arguments: optional string`
+
+      The arguments passed to the function.
+
+    - `name: optional string`
+
+      The name of the function.
+
+    - `output: optional string or null`
+
+      The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+### Message Creation Step Details
+
+- `MessageCreationStepDetails object { message_creation, type }`
+
+  Details of the message creation by the run step.
+
+  - `message_creation: object { message_id }`
+
+    - `message_id: string`
+
+      The ID of the message that was created by this run step.
+
+  - `type: "message_creation"`
+
+    Always `message_creation`.
+
+    - `"message_creation"`
+
+### Run Step
+
+- `RunStep object { id, assistant_id, cancelled_at, 13 more }`
+
+  Represents a step in execution of a run.
+
+  - `id: string`
+
+    The identifier of the run step, which can be referenced in API endpoints.
+
+  - `assistant_id: string`
+
+    The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
+
+  - `cancelled_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step was cancelled.
+
+  - `completed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step completed.
+
+  - `created_at: number`
+
+    The Unix timestamp (in seconds) for when the run step was created.
+
+  - `expired_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
+
+  - `failed_at: number or null`
+
+    The Unix timestamp (in seconds) for when the run step failed.
+
+  - `last_error: object { code, message }  or null`
+
+    The last error associated with this run step. Will be `null` if there are no errors.
+
+    - `code: "server_error" or "rate_limit_exceeded"`
+
+      One of `server_error` or `rate_limit_exceeded`.
+
+      - `"server_error"`
+
+      - `"rate_limit_exceeded"`
+
+    - `message: string`
+
+      A human-readable description of the error.
+
+  - `metadata: Metadata or null`
+
+    Set of 16 key-value pairs that can be attached to an object. This can be
+    useful for storing additional information about the object in a structured
+    format, and querying for objects via API or the dashboard.
+
+    Keys are strings with a maximum length of 64 characters. Values are strings
+    with a maximum length of 512 characters.
+
+  - `object: "thread.run.step"`
+
+    The object type, which is always `thread.run.step`.
+
+    - `"thread.run.step"`
+
+  - `run_id: string`
+
+    The ID of the [run](/docs/api-reference/runs) that this run step is a part of.
+
+  - `status: "in_progress" or "cancelled" or "failed" or 2 more`
+
+    The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
+
+    - `"in_progress"`
+
+    - `"cancelled"`
+
+    - `"failed"`
+
+    - `"completed"`
+
+    - `"expired"`
+
+  - `step_details: MessageCreationStepDetails or ToolCallsStepDetails`
+
+    The details of the run step.
+
+    - `MessageCreationStepDetails object { message_creation, type }`
+
+      Details of the message creation by the run step.
+
+      - `message_creation: object { message_id }`
+
+        - `message_id: string`
+
+          The ID of the message that was created by this run step.
+
+      - `type: "message_creation"`
+
+        Always `message_creation`.
+
+        - `"message_creation"`
+
+    - `ToolCallsStepDetails object { tool_calls, type }`
+
+      Details of the tool call.
+
+      - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
+
+        An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+        - `CodeInterpreterToolCall object { id, code_interpreter, type }`
+
+          Details of the Code Interpreter tool call the run step was involved in.
+
+          - `id: string`
+
+            The ID of the tool call.
+
+          - `code_interpreter: object { input, outputs }`
+
+            The Code Interpreter tool call definition.
+
+            - `input: string`
+
+              The input to the Code Interpreter tool call.
+
+            - `outputs: array of object { logs, type }  or object { image, type }`
+
+              The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+              - `CodeInterpreterLogOutput object { logs, type }`
+
+                Text output from the Code Interpreter tool call as part of a run step.
+
+                - `logs: string`
+
+                  The text output from the Code Interpreter tool call.
+
+                - `type: "logs"`
+
+                  Always `logs`.
+
+                  - `"logs"`
+
+              - `CodeInterpreterImageOutput object { image, type }`
+
+                - `image: object { file_id }`
+
+                  - `file_id: string`
+
+                    The [file](/docs/api-reference/files) ID of the image.
+
+                - `type: "image"`
+
+                  Always `image`.
+
+                  - `"image"`
+
+          - `type: "code_interpreter"`
+
+            The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+            - `"code_interpreter"`
+
+        - `FileSearchToolCall object { id, file_search, type }`
+
+          - `id: string`
+
+            The ID of the tool call object.
+
+          - `file_search: object { ranking_options, results }`
+
+            For now, this is always going to be an empty object.
+
+            - `ranking_options: optional object { ranker, score_threshold }`
+
+              The ranking options for the file search.
+
+              - `ranker: "auto" or "default_2024_08_21"`
+
+                The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+                - `"auto"`
+
+                - `"default_2024_08_21"`
+
+              - `score_threshold: number`
+
+                The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+            - `results: optional array of object { file_id, file_name, score, content }`
+
+              The results of the file search.
+
+              - `file_id: string`
+
+                The ID of the file that result was found in.
+
+              - `file_name: string`
+
+                The name of the file that result was found in.
+
+              - `score: number`
+
+                The score of the result. All values must be a floating point number between 0 and 1.
+
+              - `content: optional array of object { text, type }`
+
+                The content of the result that was found. The content is only included if requested via the include query parameter.
+
+                - `text: optional string`
+
+                  The text content of the file.
+
+                - `type: optional "text"`
+
+                  The type of the content.
+
+                  - `"text"`
+
+          - `type: "file_search"`
+
+            The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+            - `"file_search"`
+
+        - `FunctionToolCall object { id, function, type }`
+
+          - `id: string`
+
+            The ID of the tool call object.
+
+          - `function: object { arguments, name, output }`
+
+            The definition of the function that was called.
+
+            - `arguments: string`
+
+              The arguments passed to the function.
+
+            - `name: string`
+
+              The name of the function.
+
+            - `output: string or null`
+
+              The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+          - `type: "function"`
+
+            The type of tool call. This is always going to be `function` for this type of tool call.
+
+            - `"function"`
+
+      - `type: "tool_calls"`
+
+        Always `tool_calls`.
+
+        - `"tool_calls"`
+
+  - `thread_id: string`
+
+    The ID of the [thread](/docs/api-reference/threads) that was run.
+
+  - `type: "message_creation" or "tool_calls"`
+
+    The type of run step, which can be either `message_creation` or `tool_calls`.
+
+    - `"message_creation"`
+
+    - `"tool_calls"`
+
+  - `usage: object { completion_tokens, prompt_tokens, total_tokens }  or null`
+
+    Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
+
+    - `completion_tokens: number`
+
+      Number of completion tokens used over the course of the run step.
+
+    - `prompt_tokens: number`
+
+      Number of prompt tokens used over the course of the run step.
+
+    - `total_tokens: number`
+
+      Total number of tokens used (prompt + completion).
+
+### Run Step Delta Event
+
+- `RunStepDeltaEvent object { id, delta, object }`
+
+  Represents a run step delta i.e. any changed fields on a run step during streaming.
+
+  - `id: string`
+
+    The identifier of the run step, which can be referenced in API endpoints.
+
+  - `delta: object { step_details }`
+
+    The delta containing the fields that have changed on the run step.
+
+    - `step_details: optional RunStepDeltaMessageDelta or ToolCallDeltaObject`
+
+      The details of the run step.
+
+      - `RunStepDeltaMessageDelta object { type, message_creation }`
+
+        Details of the message creation by the run step.
+
+        - `type: "message_creation"`
+
+          Always `message_creation`.
+
+          - `"message_creation"`
+
+        - `message_creation: optional object { message_id }`
+
+          - `message_id: optional string`
+
+            The ID of the message that was created by this run step.
+
+      - `ToolCallDeltaObject object { type, tool_calls }`
+
+        Details of the tool call.
+
+        - `type: "tool_calls"`
+
+          Always `tool_calls`.
+
+          - `"tool_calls"`
+
+        - `tool_calls: optional array of CodeInterpreterToolCallDelta or FileSearchToolCallDelta or FunctionToolCallDelta`
+
+          An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+          - `CodeInterpreterToolCallDelta object { index, type, id, code_interpreter }`
+
+            Details of the Code Interpreter tool call the run step was involved in.
+
+            - `index: number`
+
+              The index of the tool call in the tool calls array.
+
+            - `type: "code_interpreter"`
+
+              The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+              - `"code_interpreter"`
+
+            - `id: optional string`
+
+              The ID of the tool call.
+
+            - `code_interpreter: optional object { input, outputs }`
+
+              The Code Interpreter tool call definition.
+
+              - `input: optional string`
+
+                The input to the Code Interpreter tool call.
+
+              - `outputs: optional array of CodeInterpreterLogs or CodeInterpreterOutputImage`
+
+                The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+                - `CodeInterpreterLogs object { index, type, logs }`
+
+                  Text output from the Code Interpreter tool call as part of a run step.
+
+                  - `index: number`
+
+                    The index of the output in the outputs array.
+
+                  - `type: "logs"`
+
+                    Always `logs`.
+
+                    - `"logs"`
+
+                  - `logs: optional string`
+
+                    The text output from the Code Interpreter tool call.
+
+                - `CodeInterpreterOutputImage object { index, type, image }`
+
+                  - `index: number`
+
+                    The index of the output in the outputs array.
+
+                  - `type: "image"`
+
+                    Always `image`.
+
+                    - `"image"`
+
+                  - `image: optional object { file_id }`
+
+                    - `file_id: optional string`
+
+                      The [file](/docs/api-reference/files) ID of the image.
+
+          - `FileSearchToolCallDelta object { file_search, index, type, id }`
+
+            - `file_search: unknown`
+
+              For now, this is always going to be an empty object.
+
+            - `index: number`
+
+              The index of the tool call in the tool calls array.
+
+            - `type: "file_search"`
+
+              The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+              - `"file_search"`
+
+            - `id: optional string`
+
+              The ID of the tool call object.
+
+          - `FunctionToolCallDelta object { index, type, id, function }`
+
+            - `index: number`
+
+              The index of the tool call in the tool calls array.
+
+            - `type: "function"`
+
+              The type of tool call. This is always going to be `function` for this type of tool call.
+
+              - `"function"`
+
+            - `id: optional string`
+
+              The ID of the tool call object.
+
+            - `function: optional object { arguments, name, output }`
+
+              The definition of the function that was called.
+
+              - `arguments: optional string`
+
+                The arguments passed to the function.
+
+              - `name: optional string`
+
+                The name of the function.
+
+              - `output: optional string or null`
+
+                The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+  - `object: "thread.run.step.delta"`
+
+    The object type, which is always `thread.run.step.delta`.
+
+    - `"thread.run.step.delta"`
+
+### Run Step Delta Message Delta
+
+- `RunStepDeltaMessageDelta object { type, message_creation }`
+
+  Details of the message creation by the run step.
+
+  - `type: "message_creation"`
+
+    Always `message_creation`.
+
+    - `"message_creation"`
+
+  - `message_creation: optional object { message_id }`
+
+    - `message_id: optional string`
+
+      The ID of the message that was created by this run step.
+
+### Run Step Include
+
+- `RunStepInclude = "step_details.tool_calls[*].file_search.results[*].content"`
+
+  - `"step_details.tool_calls[*].file_search.results[*].content"`
+
+### Tool Call Delta Object
+
+- `ToolCallDeltaObject object { type, tool_calls }`
+
+  Details of the tool call.
+
+  - `type: "tool_calls"`
+
+    Always `tool_calls`.
+
+    - `"tool_calls"`
+
+  - `tool_calls: optional array of CodeInterpreterToolCallDelta or FileSearchToolCallDelta or FunctionToolCallDelta`
+
+    An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+    - `CodeInterpreterToolCallDelta object { index, type, id, code_interpreter }`
+
+      Details of the Code Interpreter tool call the run step was involved in.
+
+      - `index: number`
+
+        The index of the tool call in the tool calls array.
+
+      - `type: "code_interpreter"`
+
+        The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+        - `"code_interpreter"`
+
+      - `id: optional string`
+
+        The ID of the tool call.
+
+      - `code_interpreter: optional object { input, outputs }`
+
+        The Code Interpreter tool call definition.
+
+        - `input: optional string`
+
+          The input to the Code Interpreter tool call.
+
+        - `outputs: optional array of CodeInterpreterLogs or CodeInterpreterOutputImage`
+
+          The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+          - `CodeInterpreterLogs object { index, type, logs }`
+
+            Text output from the Code Interpreter tool call as part of a run step.
+
+            - `index: number`
+
+              The index of the output in the outputs array.
+
+            - `type: "logs"`
+
+              Always `logs`.
+
+              - `"logs"`
+
+            - `logs: optional string`
+
+              The text output from the Code Interpreter tool call.
+
+          - `CodeInterpreterOutputImage object { index, type, image }`
+
+            - `index: number`
+
+              The index of the output in the outputs array.
+
+            - `type: "image"`
+
+              Always `image`.
+
+              - `"image"`
+
+            - `image: optional object { file_id }`
+
+              - `file_id: optional string`
+
+                The [file](/docs/api-reference/files) ID of the image.
+
+    - `FileSearchToolCallDelta object { file_search, index, type, id }`
+
+      - `file_search: unknown`
+
+        For now, this is always going to be an empty object.
+
+      - `index: number`
+
+        The index of the tool call in the tool calls array.
+
+      - `type: "file_search"`
+
+        The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+        - `"file_search"`
+
+      - `id: optional string`
+
+        The ID of the tool call object.
+
+    - `FunctionToolCallDelta object { index, type, id, function }`
+
+      - `index: number`
+
+        The index of the tool call in the tool calls array.
+
+      - `type: "function"`
+
+        The type of tool call. This is always going to be `function` for this type of tool call.
+
+        - `"function"`
+
+      - `id: optional string`
+
+        The ID of the tool call object.
+
+      - `function: optional object { arguments, name, output }`
+
+        The definition of the function that was called.
+
+        - `arguments: optional string`
+
+          The arguments passed to the function.
+
+        - `name: optional string`
+
+          The name of the function.
+
+        - `output: optional string or null`
+
+          The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+### Tool Calls Step Details
+
+- `ToolCallsStepDetails object { tool_calls, type }`
+
+  Details of the tool call.
+
+  - `tool_calls: array of CodeInterpreterToolCall or FileSearchToolCall or FunctionToolCall`
+
+    An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+    - `CodeInterpreterToolCall object { id, code_interpreter, type }`
+
+      Details of the Code Interpreter tool call the run step was involved in.
+
+      - `id: string`
+
+        The ID of the tool call.
+
+      - `code_interpreter: object { input, outputs }`
+
+        The Code Interpreter tool call definition.
+
+        - `input: string`
+
+          The input to the Code Interpreter tool call.
+
+        - `outputs: array of object { logs, type }  or object { image, type }`
+
+          The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+
+          - `CodeInterpreterLogOutput object { logs, type }`
+
+            Text output from the Code Interpreter tool call as part of a run step.
+
+            - `logs: string`
+
+              The text output from the Code Interpreter tool call.
+
+            - `type: "logs"`
+
+              Always `logs`.
+
+              - `"logs"`
+
+          - `CodeInterpreterImageOutput object { image, type }`
+
+            - `image: object { file_id }`
+
+              - `file_id: string`
+
+                The [file](/docs/api-reference/files) ID of the image.
+
+            - `type: "image"`
+
+              Always `image`.
+
+              - `"image"`
+
+      - `type: "code_interpreter"`
+
+        The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+
+        - `"code_interpreter"`
+
+    - `FileSearchToolCall object { id, file_search, type }`
+
+      - `id: string`
+
+        The ID of the tool call object.
+
+      - `file_search: object { ranking_options, results }`
+
+        For now, this is always going to be an empty object.
+
+        - `ranking_options: optional object { ranker, score_threshold }`
+
+          The ranking options for the file search.
+
+          - `ranker: "auto" or "default_2024_08_21"`
+
+            The ranker to use for the file search. If not specified will use the `auto` ranker.
+
+            - `"auto"`
+
+            - `"default_2024_08_21"`
+
+          - `score_threshold: number`
+
+            The score threshold for the file search. All values must be a floating point number between 0 and 1.
+
+        - `results: optional array of object { file_id, file_name, score, content }`
+
+          The results of the file search.
+
+          - `file_id: string`
+
+            The ID of the file that result was found in.
+
+          - `file_name: string`
+
+            The name of the file that result was found in.
+
+          - `score: number`
+
+            The score of the result. All values must be a floating point number between 0 and 1.
+
+          - `content: optional array of object { text, type }`
+
+            The content of the result that was found. The content is only included if requested via the include query parameter.
+
+            - `text: optional string`
+
+              The text content of the file.
+
+            - `type: optional "text"`
+
+              The type of the content.
+
+              - `"text"`
+
+      - `type: "file_search"`
+
+        The type of tool call. This is always going to be `file_search` for this type of tool call.
+
+        - `"file_search"`
+
+    - `FunctionToolCall object { id, function, type }`
+
+      - `id: string`
+
+        The ID of the tool call object.
+
+      - `function: object { arguments, name, output }`
+
+        The definition of the function that was called.
+
+        - `arguments: string`
+
+          The arguments passed to the function.
+
+        - `name: string`
+
+          The name of the function.
+
+        - `output: string or null`
+
+          The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+
+      - `type: "function"`
+
+        The type of tool call. This is always going to be `function` for this type of tool call.
+
+        - `"function"`
+
+  - `type: "tool_calls"`
+
+    Always `tool_calls`.
+
+    - `"tool_calls"`

@@ -89,6 +89,50 @@ client.fine_tuning.jobs.create(
 )
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	job, err := client.FineTuning.Jobs.New(context.Background(), openai.FineTuningJobNewParams{
+		TrainingFile: "file-abc123",
+		Model:        "gpt-4o-mini-2024-07-18",
+		Method: openai.FineTuningJobNewParamsMethod{
+			Type: "supervised",
+			Supervised: openai.SupervisedMethodParam{Hyperparameters: openai.SupervisedHyperparameters{
+				NEpochs: openai.SupervisedHyperparametersNEpochsUnion{OfInt: openai.Int(2)},
+			}},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(job.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+job = client.fine_tuning.jobs.create(
+  model: "gpt-4.1-mini-2025-04-14",
+  training_file: "file-abc123",
+  method_: {
+    type: :supervised,
+    supervised: {hyperparameters: {n_epochs: 2}}
+  }
+)
+puts(job.id)
+```
+
 
 ## Adjust your dataset
 

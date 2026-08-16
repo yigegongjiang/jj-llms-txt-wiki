@@ -53,6 +53,55 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfInputItemList: responses.ResponseInputParam{
+				responses.ResponseInputItemParamOfMessage("Knock knock.", responses.EasyInputMessageRoleUser),
+				responses.ResponseInputItemParamOfMessage("Who's there?", responses.EasyInputMessageRoleAssistant),
+				responses.ResponseInputItemParamOfMessage("Orange.", responses.EasyInputMessageRoleUser),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: [
+    {role: :user, content: "Knock knock."},
+    {role: :assistant, content: "Who's there?"},
+    {role: :user, content: "Orange."}
+  ]
+)
+
+puts(response.output_text)
+```
+
 
 
 By using alternating `user` and `assistant` messages, you capture the previous state of a conversation in one request to the model.
@@ -135,6 +184,83 @@ second_response = client.responses.create(
 print(second_response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	history := responses.ResponseInputParam{
+		responses.ResponseInputItemParamOfMessage("tell me a joke", responses.EasyInputMessageRoleUser),
+	}
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: history},
+		Store: openai.Bool(false),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(first.OutputText())
+
+	history = append(history, outputAsInput(first.Output)...)
+	history = append(history, responses.ResponseInputItemParamOfMessage("tell me another", responses.EasyInputMessageRoleUser))
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: history},
+		Store: openai.Bool(false),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.OutputText())
+}
+
+func outputAsInput(output []responses.ResponseOutputItemUnion) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+history = [{role: :user, content: "Tell me a joke."}]
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  input: history,
+  store: false
+)
+puts(first.output_text)
+
+history.concat(first.output.map(&:to_h))
+history << {role: :user, content: "Tell me another."}
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  input: history,
+  store: false
+)
+puts(second.output_text)
+```
+
 
 
 ## OpenAI APIs for conversation state
@@ -157,6 +283,17 @@ Conversations store items, which can be messages, tool calls, tool outputs, and 
 conversation = openai.conversations.create()
 ```
 
+```go
+conversation, err := client.Conversations.New(context.Background(), conversations.ConversationNewParams{})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+conversation = client.conversations.create
+```
+
 
 In a multi-turn interaction, you can pass the `conversation` into subsequent responses to persist state and share context across subsequent responses, rather than having to chain multiple response items together.
 
@@ -168,6 +305,32 @@ response = openai.responses.create(
     input=[{"role": "user", "content": "What are the 5 Ds of dodgeball?"}],
     conversation=conversation.id,
 )
+```
+
+```go
+response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+	Model: "gpt-5.6",
+	Conversation: responses.ResponseNewParamsConversationUnion{
+		OfString: openai.String(conversation.ID),
+	},
+	Input: responses.ResponseNewParamsInputUnion{
+		OfString: openai.String("What are the five Ds of dodgeball?"),
+	},
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(response.OutputText())
+```
+
+```ruby
+response = client.responses.create(
+  model: "gpt-5.6",
+  conversation: conversation.id,
+  input: "What are the five Ds of dodgeball?"
+)
+
+puts(response.output_text)
 ```
 
 
@@ -219,6 +382,64 @@ second_response = client.responses.create(
 print(second_response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Tell me a joke."),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(first.OutputText())
+
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:              "gpt-5.6",
+		PreviousResponseID: openai.String(first.ID),
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Explain why this is funny."),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  input: "Tell me a joke."
+)
+puts(first.output_text)
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  previous_response_id: first.id,
+  input: "Explain why this is funny."
+)
+puts(second.output_text)
+```
+
 
 In the following example, we ask the model to tell a joke. Separately, we ask the model to explain why it's funny, and the model has all necessary context to deliver a good response.
 
@@ -265,6 +486,64 @@ second_response = client.responses.create(
     input=[{"role": "user", "content": "explain why this is funny."}],
 )
 print(second_response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Tell me a joke."),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(first.OutputText())
+
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:              "gpt-5.6",
+		PreviousResponseID: openai.String(first.ID),
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Explain why this is funny."),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  input: "Tell me a joke."
+)
+puts(first.output_text)
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  previous_response_id: first.id,
+  input: "Explain why this is funny."
+)
+puts(second.output_text)
 ```
 
 

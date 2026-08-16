@@ -309,7 +309,7 @@ For more information, see the [Evals guide](/docs/guides/evals).
 
       - `"string_check"`
 
-  - `TextSimilarityGrader = TextSimilarityGrader`
+  - `TextSimilarity = TextSimilarityGrader`
 
     A TextSimilarityGrader object which grades text based on similarity metrics.
 
@@ -317,7 +317,7 @@ For more information, see the [Evals guide](/docs/guides/evals).
 
       The threshold for the score.
 
-  - `PythonGrader = PythonGrader`
+  - `Python = PythonGrader`
 
     A PythonGrader object that runs a python script on the input.
 
@@ -325,7 +325,7 @@ For more information, see the [Evals guide](/docs/guides/evals).
 
       The threshold for the score.
 
-  - `ScoreModelGrader = ScoreModelGrader`
+  - `ScoreModel = ScoreModelGrader`
 
     A ScoreModelGrader object that uses a model to assign a score to the input.
 
@@ -333,7 +333,7 @@ For more information, see the [Evals guide](/docs/guides/evals).
 
       The threshold for the score.
 
-- `metadata: optional Metadata`
+- `metadata: optional Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured
@@ -397,7 +397,7 @@ For more information, see the [Evals guide](/docs/guides/evals).
 
       - `"logs"`
 
-    - `metadata: optional Metadata`
+    - `metadata: optional Metadata or null`
 
       Set of 16 key-value pairs that can be attached to an object. This can be
       useful for storing additional information about the object in a structured
@@ -421,7 +421,7 @@ For more information, see the [Evals guide](/docs/guides/evals).
 
       - `"stored_completions"`
 
-    - `metadata: optional Metadata`
+    - `metadata: optional Metadata or null`
 
       Set of 16 key-value pairs that can be attached to an object. This can be
       useful for storing additional information about the object in a structured
@@ -430,7 +430,7 @@ For more information, see the [Evals guide](/docs/guides/evals).
       Keys are strings with a maximum length of 64 characters. Values are strings
       with a maximum length of 512 characters.
 
-- `metadata: Metadata`
+- `metadata: Metadata or null`
 
   Set of 16 key-value pairs that can be attached to an object. This can be
   useful for storing additional information about the object in a structured

@@ -104,6 +104,28 @@ That single header lets ChatGPT discover the metadata URL even if it has not see
 - If your provider advertises OIDC scopes (for example, `openid`, `email`, `profile`) in `scopes_supported` of its `.well-known/oauth-authorization-server` or `.well-known/openid-configuration` document, ChatGPT requests those scopes by default during the OAuth flow.
 - Some identity providers may not enable advertised OIDC scopes by default. Check your provider's configuration settings and make sure every advertised scope is enabled for the OAuth client, whether it uses CIMD, was created manually, or was created through DCR.
 
+#### Support workspace domain restrictions
+
+ChatGPT Enterprise workspaces can verify ownership of email domains. When an
+OAuth-linked plugin provides the user's verified email address, ChatGPT can use
+the email domain to prevent that corporate identity from linking the plugin in
+a personal workspace or another workspace outside the organization.
+
+To support this protection, configure your authorization server to:
+
+- Publish OpenID Connect discovery metadata.
+- Advertise and enable the `openid` and `email` scopes.
+- Advertise a UserInfo Endpoint that returns the user's `email` claim and
+  `email_verified: true`.
+
+You can also return these claims in an ID token during the OAuth flow, but the
+UserInfo Endpoint is required for workspace domain restrictions.
+
+The Enterprise workspace must also verify its domain. Your authorization server
+provides the user identity that ChatGPT compares with verified domains
+configured for the workspace; it does not verify workspace ownership of a
+domain.
+
 #### Preserve login context during reauthorization
 
 When ChatGPT reauthorizes an existing link, including to request additional OAuth scopes, it may include the prior OIDC ID token in the authorization request as the standard `id_token_hint` parameter. To let users grant additional scopes without starting login from scratch, configure your authorization server to issue an ID token during the original OAuth flow and honor `id_token_hint` during authorization.
@@ -157,15 +179,33 @@ Use [Client ID Metadata Documents (CIMD)](https://modelcontextprotocol.io/specif
 
 If you support CIMD, set `client_id_metadata_document_supported: true` in your authorization server metadata. This lets ChatGPT use one stable client identity for connectors that choose CIMD, which your authorization server can use for redirect URI allowlists, rate limits, and other policies.
 
-ChatGPT's production CIMD document advertises both supported client authentication methods using the [OpenID Connect RP Metadata Choices](https://openid.net/specs/openid-connect-rp-metadata-choices-1_0-final.html) client metadata field:
+ChatGPT is adopting the CIMD transition proposed in
+[MCP SEP-3149](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/3149).
+Its production CIMD document publishes
+`token_endpoint_auth_methods_supported` as an array of methods that ChatGPT
+can use, with no preference order. During the transition, it also publishes
+the legacy singular `token_endpoint_auth_method` as a preference:
 
 ```json
 {
-  "token_endpoint_auth_methods_supported": ["none", "private_key_jwt"]
+  "token_endpoint_auth_methods_supported": ["none", "private_key_jwt"],
+  "token_endpoint_auth_method": "private_key_jwt"
 }
 ```
 
-The same field name has different perspectives in the two documents: in authorization server metadata, it lists the methods your token endpoint accepts; in ChatGPT's CIMD document, it lists the methods ChatGPT can use. The `client_id` URL is stable and does not use query parameters to select a method-specific document. At runtime, ChatGPT compares both lists and prefers the stronger `private_key_jwt` method when your authorization server supports it; otherwise, it uses `none`.
+The plural field has different perspectives in the two documents:
+authorization server metadata lists the methods your token endpoint accepts,
+while ChatGPT's CIMD document lists the methods ChatGPT can use. ChatGPT
+selects a method from the intersection of those sets. When the singular legacy
+preference is in the intersection, ChatGPT uses it for compatibility with
+authorization servers that still treat the singular field as binding.
+Otherwise, ChatGPT can use another method in the intersection.
+
+Authorization servers that read the plural CIMD field should accept any method
+in the intersection unless local security policy disallows that method for the
+client. They must reject methods outside the intersection. The `client_id` URL
+stays stable and does not use query parameters to select a method-specific
+document.
 
 The supported methods are:
 
@@ -173,6 +213,8 @@ The supported methods are:
 - `private_key_jwt`: use this signed client assertion flow when your token endpoint requires client authentication. ChatGPT publishes a public JWKS URL in its CIMD metadata. The JWKS is served from `/oauth/jwks.json` on the metadata origin. ChatGPT signs token requests server-side with a managed private key and `kid`; your authorization server verifies the assertion against the public JWKS.
 
 DCR is still supported. If you include `registration_endpoint`, ChatGPT can register dynamically when the plugin builder chooses DCR or CIMD is not available. ChatGPT runs DCR once per MCP server connection, then keeps and reuses the registered OAuth client for that connection. DCR can still create many registered clients across many separate connections, so CIMD is usually easier to administer at scale.
+
+Keep the registered OAuth client and any client secret valid while the connector is in use. If your authorization server expires, deletes, or replaces either credential, users and reviewers may receive an `invalid_client` error when they connect. Access and refresh tokens can still expire or rotate normally.
 
 ### Client identification
 

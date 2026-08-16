@@ -34,25 +34,6 @@ To implement this use case, you can use either the [Chat Completions API](https:
 
   Categorize IT support tickets
 
-```bash
-curl https://api.openai.com/v1/responses \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{
-        "model": "gpt-5.6",
-        "input": [
-            {
-                "role": "developer",
-                "content": "Categorize the following support ticket into one of Hardware, Software, or Other."
-            },
-            {
-                "role": "user",
-                "content": "My monitor wont turn on - help!"
-            }
-        ]
-    }'
-```
-
 ```javascript
 import OpenAI from "openai";
 const client = new OpenAI();
@@ -100,6 +81,72 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	instructions := "You are an expert in categorizing IT support tickets. Given the support ticket below, categorize the request into one of \"Hardware\", \"Software\", or \"Other\". Respond with only one of those words."
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
+			responses.ResponseInputItemParamOfMessage(instructions, responses.EasyInputMessageRoleDeveloper),
+			responses.ResponseInputItemParamOfMessage("My monitor won't turn on - help!", responses.EasyInputMessageRoleUser),
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+instructions = <<~INSTRUCTIONS
+  You are an expert in categorizing IT support tickets. Given the support
+  ticket below, categorize the request as Hardware, Software, or Other.
+  Respond with only one of those words.
+INSTRUCTIONS
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: [
+    {role: :developer, content: instructions},
+    {role: :user, content: "My monitor won't turn on - help!"}
+  ]
+)
+puts(response.output_text)
+```
+
+```bash
+curl https://api.openai.com/v1/responses \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "gpt-5.6",
+        "input": [
+            {
+                "role": "developer",
+                "content": "Categorize the following support ticket into one of Hardware, Software, or Other."
+            },
+            {
+                "role": "user",
+                "content": "My monitor wont turn on - help!"
+            }
+        ]
+    }'
+```
+
 
 
 
@@ -110,36 +157,6 @@ Let's set up an eval to test this behavior [via API](https://developers.openai.c
 - `testing_criteria`: The [graders](https://developers.openai.com/api/docs/guides/graders) that determine if the model output is correct.
 
 Create an eval
-
-```bash
-curl https://api.openai.com/v1/evals \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{
-        "name": "IT Ticket Categorization",
-        "data_source_config": {
-            "type": "custom",
-            "item_schema": {
-                "type": "object",
-                "properties": {
-                    "ticket_text": { "type": "string" },
-                    "correct_label": { "type": "string" }
-                },
-                "required": ["ticket_text", "correct_label"]
-            },
-            "include_sample_schema": true
-        },
-        "testing_criteria": [
-            {
-                "type": "string_check",
-                "name": "Match output to human label",
-                "input": "{{ sample.output_text }}",
-                "operation": "eq",
-                "reference": "{{ item.correct_label }}"
-            }
-        ]
-    }'
-```
 
 ```javascript
 import OpenAI from "openai";
@@ -204,6 +221,48 @@ eval_obj = client.evals.create(
 )
 
 print(eval_obj)
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+evaluation = client.evals.create(
+  name: "Support answer quality",
+  data_source_config: {type: :custom, item_schema: {type: :object, properties: {input: {type: :string}}, required: ["input"]}},
+  testing_criteria: [{type: :string_check, name: "mentions_refund", input: "{{sample.output_text}}", operation: :contains, reference: "refund"}]
+)
+puts(evaluation.id)
+```
+
+```bash
+curl https://api.openai.com/v1/evals \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "name": "IT Ticket Categorization",
+        "data_source_config": {
+            "type": "custom",
+            "item_schema": {
+                "type": "object",
+                "properties": {
+                    "ticket_text": { "type": "string" },
+                    "correct_label": { "type": "string" }
+                },
+                "required": ["ticket_text", "correct_label"]
+            },
+            "include_sample_schema": true
+        },
+        "testing_criteria": [
+            {
+                "type": "string_check",
+                "name": "Match output to human label",
+                "input": "{{ sample.output_text }}",
+                "operation": "eq",
+                "reference": "{{ item.correct_label }}"
+            }
+        ]
+    }'
 ```
 
 
@@ -298,13 +357,6 @@ Next, let's upload our test data file to the OpenAI platform so we can reference
 
 Upload a test data file
 
-```bash
-curl https://api.openai.com/v1/files \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -F purpose="evals" \
-  -F file="@tickets.jsonl"
-```
-
 ```javascript
 import fs from "fs";
 import OpenAI from "openai";
@@ -327,6 +379,52 @@ client = OpenAI()
 file = client.files.create(file=open("tickets.jsonl", "rb"), purpose="evals")
 
 print(file)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := os.Open("tickets.jsonl")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	uploaded, err := client.Files.New(context.Background(), openai.FileNewParams{
+		File:    file,
+		Purpose: openai.FilePurposeEvals,
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(uploaded.ID)
+}
+```
+
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+file = Pathname("tickets.jsonl")
+uploaded = client.files.create(file: file, purpose: :evals)
+puts(uploaded.id)
+```
+
+```bash
+curl https://api.openai.com/v1/files \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -F purpose="evals" \
+  -F file="@tickets.jsonl"
 ```
 
 
@@ -354,27 +452,6 @@ Make sure to replace `YOUR_EVAL_ID` and `YOUR_FILE_ID` with the unique IDs of th
 
 
   Create an eval run
-
-```bash
-curl https://api.openai.com/v1/evals/YOUR_EVAL_ID/runs \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{
-        "name": "Categorization text run",
-        "data_source": {
-            "type": "responses",
-            "model": "gpt-5.6",
-            "input_messages": {
-                "type": "template",
-                "template": [
-                    {"role": "developer", "content": "You are an expert in categorizing IT support tickets. Given the support ticket below, categorize the request into one of Hardware, Software, or Other. Respond with only one of those words."},
-                    {"role": "user", "content": "{{ item.ticket_text }}"}
-                ]
-            },
-            "source": { "type": "file_id", "id": "YOUR_FILE_ID" }
-        }
-    }'
-```
 
 ```javascript
 import OpenAI from "openai";
@@ -429,6 +506,53 @@ run = client.evals.runs.create(
 )
 
 print(run)
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+run = client.evals.runs.create(
+  "YOUR_EVAL_ID",
+  name: "Categorization text run",
+  data_source: {
+    type: :responses,
+    source: {type: :file_id, id: "YOUR_FILE_ID"},
+    input_messages: {
+      type: :template,
+      template: [
+        {
+          role: :developer,
+          content: "Categorize the ticket as Hardware, Software, or Other."
+        },
+        {role: :user, content: "{{ item.ticket_text }}"}
+      ]
+    },
+    model: "gpt-5.6"
+  }
+)
+puts(run.id)
+```
+
+```bash
+curl https://api.openai.com/v1/evals/YOUR_EVAL_ID/runs \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "name": "Categorization text run",
+        "data_source": {
+            "type": "responses",
+            "model": "gpt-5.6",
+            "input_messages": {
+                "type": "template",
+                "template": [
+                    {"role": "developer", "content": "You are an expert in categorizing IT support tickets. Given the support ticket below, categorize the request into one of Hardware, Software, or Other. Respond with only one of those words."},
+                    {"role": "user", "content": "{{ item.ticket_text }}"}
+                ]
+            },
+            "source": { "type": "file_id", "id": "YOUR_FILE_ID" }
+        }
+    }'
 ```
 
 
@@ -501,12 +625,6 @@ Depending on the size of your dataset, the eval run may take some time to comple
 
 Retrieve eval run status
 
-```bash
-curl https://api.openai.com/v1/evals/YOUR_EVAL_ID/runs/YOUR_RUN_ID \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -H "Content-Type: application/json"
-```
-
 ```javascript
 import OpenAI from "openai";
 const openai = new OpenAI();
@@ -523,6 +641,20 @@ client = OpenAI()
 
 run = client.evals.runs.retrieve("YOUR_RUN_ID", eval_id="YOUR_EVAL_ID")
 print(run)
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+run = client.evals.runs.retrieve("YOUR_RUN_ID", eval_id: "YOUR_EVAL_ID")
+puts(run.id)
+```
+
+```bash
+curl https://api.openai.com/v1/evals/YOUR_EVAL_ID/runs/YOUR_RUN_ID \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -H "Content-Type: application/json"
 ```
 
 

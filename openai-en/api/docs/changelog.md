@@ -6,7 +6,69 @@
 
 Upcoming deprecations are listed on the [deprecations page](/api/docs/deprecations).
 
+## August, 2026
+
+### Aug 13
+
+Announcement
+
+Announced Ultrafast mode, a new API service tier for GPT-5.6 Sol that runs up to 14x faster than Standard processing. Available in limited preview to select customers. Sign up to receive updates on Ultrafast mode [here](https://openai.com/form/ultrafast/).
+
+### Aug 7
+
+Feature · Model: gpt-5.6-cyber · Model: daybreak-red-latest · Model: daybreak-blue-latest · API: v1/responses
+
+Daybreak now offers two access tiers for approved defenders: Daybreak Blue and Daybreak Red. Use them to move from security findings to validated fixes in explicitly authorized engagements.
+
+Start with Daybreak Blue for most defensive security work. It provides access to general-purpose models such as GPT-5.6 Sol for vulnerability discovery, secure code review, detection engineering, incident response, malware analysis, and patch validation. Read more [here](https://developers.openai.com/api/docs/models/daybreak-blue-latest).
+
+Daybreak Red provides separately approved access to purpose-trained models such as [GPT-5.6 Cyber](https://developers.openai.com/api/docs/models/gpt-5.6-cyber) for authorized vulnerability reproduction, exploit validation, penetration testing, red teaming, and complex system analysis.
+
+These models require separate approval and provisioning. You can apply to join the Daybreak program [here](https://openai.com/daybreak/). More details on pricing [here](https://developers.openai.com/api/docs/pricing).
+
+### Aug 6
+
+Update · Model: chat-latest
+
+Updated the **chat-latest** snapshot, which points to the latest model available in ChatGPT for Plus and Pro users. We recommend leveraging [GPT-5.6 Sol](https://developers.openai.com/api/docs/models/gpt-5.6-sol) for production API usage, but feel free to use this model to test the latest improvements for chat use cases. The underlying model snapshot will be regularly updated. Read more [here](https://developers.openai.com/api/docs/models/chat-latest).
+
+### Aug 5
+
+Update · Model: gpt-5.6-sol · Model: gpt-5.6-terra · Model: gpt-5.6-luna
+
+Fast mode now supports long-context requests for GPT-5.6 Sol, GPT-5.6 Terra, and GPT-5.6 Luna. As of today, long-context prompts exceeding 272K tokens can run in [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode), delivering speeds up to 2.5× faster than the Standard tier. See [pricing details](https://developers.openai.com/api/docs/pricing).
+
+### Aug 4
+
+Feature
+
+Customers can now filter and group data by API key in the [Usage and Costs dashboards](https://platform.openai.com/settings/organization/usage). The [Usage API](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage) and [Costs API](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage/methods/costs) also support the API key dimension for programmatic reporting and analysis.
+
 ## July, 2026
+
+### Jul 30
+
+Update · Model: gpt-5.6-sol · Model: gpt-5.6-terra · Model: gpt-5.6-luna · API: v1/responses · API: v1/chat/completions
+
+Starting July 30, GPT-5.6 Luna costs 80% less, while GPT-5.6 Terra costs 20% less. See [pricing details](https://developers.openai.com/api/docs/pricing).
+
+We're also introducing [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) in the API, which replaces our Priority Processing offering. For GPT-5.6 Sol, Fast mode now delivers up to 2.5× faster speeds than standard processing at twice the price. This change is backward compatible: requests tagged priority will automatically use Fast mode.
+
+### Jul 29
+
+Feature
+
+Released the official [OpenAI Terraform provider](https://developers.openai.com/api/docs/guides/terraform) for managing OpenAI API Platform resources as infrastructure as code.
+
+Provision and manage projects, users, groups, roles, access assignments, service accounts, certificates, invitations, and project-level rate limits. Use standard Terraform workflows to review and apply changes, import existing resources, and detect and reconcile configuration drift. Install the provider from the [Terraform Registry](https://registry.terraform.io/providers/openai/openai/latest).
+
+### Jul 28
+
+Feature · Model: gpt-transcribe · Model: gpt-live-transcribe · API: v1/audio/transcriptions · API: v1/realtime
+
+Released [GPT Transcribe](https://developers.openai.com/api/docs/models/gpt-transcribe) for accurate file transcription and final transcripts of committed Realtime turns, along with [GPT Live Transcribe](https://developers.openai.com/api/docs/models/gpt-live-transcribe) for low-latency streaming transcription.
+
+Both models support free-form transcription context, keyword hints, and multiple expected input languages. Compare supported outputs and workflows in the [transcription guide](https://developers.openai.com/api/docs/guides/transcription).
 
 ### Jul 22
 

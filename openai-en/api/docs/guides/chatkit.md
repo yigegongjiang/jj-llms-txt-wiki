@@ -127,12 +127,10 @@ def create_chatkit_session(
 
    See the [chatkit-js repo](https://github.com/openai/chatkit-js) on GitHub.
 
-   chatkit.ts
+   chatkit.js
 
-```typescript
-export default async function getChatKitSessionToken(
-  deviceId: string
-): Promise<string> {
+```javascript
+export default async function getChatKitSessionToken(deviceId) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("OPENAI_API_KEY is required");
@@ -157,9 +155,8 @@ export default async function getChatKitSessionToken(
     );
   }
 
-  const { client_secret } = (await response.json()) as {
-    client_secret?: string;
-  };
+  const { client_secret } = await response.json();
+
   if (!client_secret) {
     throw new Error("ChatKit session response did not include client_secret");
   }
@@ -191,35 +188,6 @@ async
 
    Your frontend code
 
-```react
-import { ChatKit, useChatKit } from '@openai/chatkit-react';
-
-   export function MyChat({ getAppAuthToken }) {
-     const { control } = useChatKit({
-       api: {
-         async getClientSecret(existing) {
-           if (existing) {
-             // implement session refresh
-            }
-
-           const appAuthToken = await getAppAuthToken();
-           const res = await fetch('/api/chatkit/session', {
-             method: 'POST',
-             headers: {
-               'Authorization': 'Bearer ' + appAuthToken,
-               'Content-Type': 'application/json',
-             },
-           });
-           const { client_secret } = await res.json();
-           return client_secret;
-         },
-       },
-     });
-
-     return ;
-   }
-```
-
 ```javascript
 const chatkit = document.getElementById("my-chat");
 if (
@@ -249,6 +217,35 @@ chatkit.setOptions({
     },
   },
 });
+```
+
+```tsx
+import { ChatKit, useChatKit } from '@openai/chatkit-react';
+
+   export function MyChat({ getAppAuthToken }) {
+     const { control } = useChatKit({
+       api: {
+         async getClientSecret(existing) {
+           if (existing) {
+             // implement session refresh
+            }
+
+           const appAuthToken = await getAppAuthToken();
+           const res = await fetch('/api/chatkit/session', {
+             method: 'POST',
+             headers: {
+               'Authorization': 'Bearer ' + appAuthToken,
+               'Content-Type': 'application/json',
+             },
+           });
+           const { client_secret } = await res.json();
+           return client_secret;
+         },
+       },
+     });
+
+     return ;
+   }
 ```
 
 

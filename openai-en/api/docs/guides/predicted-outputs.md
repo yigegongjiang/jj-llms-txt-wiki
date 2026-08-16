@@ -8,32 +8,33 @@ Predicted Outputs are available today using the latest `gpt-4o`, `gpt-4o-mini`, 
 
 ## Code refactoring example
 
-Predicted Outputs are particularly useful for regenerating text documents and code files with small modifications. Let's say you want the [GPT-4o model](https://developers.openai.com/api/docs/models#gpt-4o) to refactor a piece of TypeScript code, and convert the `username` property of the `User` class to be `email` instead:
+Predicted Outputs are particularly useful for regenerating text documents and code files with small modifications. Let's say you want the [GPT-4o model](https://developers.openai.com/api/docs/models#gpt-4o) to refactor a piece of JavaScript code, and convert the `username` property of the `User` class to be `email` instead:
 
-```typescript
+```javascript
 class User {
-  firstName: string = "";
-  lastName: string = "";
-  username: string = "";
+  firstName = "";
+  lastName = "";
+  username = "";
 }
 
 export default User;
 ```
 
+
 Most of the file will be unchanged, except for line 4 above. If you use the current text of the code file as your prediction, you can regenerate the entire file with lower latency. These time savings add up quickly for larger files.
 
 Below is an example of using the `prediction` parameter in our SDKs to predict that the final output of the model will be very similar to our original code file, which we use as the prediction text.
 
-Refactor a TypeScript class with a Predicted Output
+Refactor a JavaScript class with a Predicted Output
 
 ```javascript
 import OpenAI from "openai";
 
 const code = `
 class User {
-  firstName: string = "";
-  lastName: string = "";
-  username: string = "";
+  firstName = "";
+  lastName = "";
+  username = "";
 }
 
 export default User;
@@ -75,13 +76,13 @@ from openai import OpenAI
 
 code = """
 class User {
-  firstName: string = "";
-  lastName: string = "";
-  username: string = "";
+  firstName = "";
+  lastName = "";
+  username = "";
 }
 
 export default User;
-"""
+""".strip()
 
 refactor_prompt = """
 Replace the "username" property with an "email" property. Respond only
@@ -101,6 +102,81 @@ completion = client.chat.completions.create(
 
 print(completion)
 print(completion.choices[0].message.content)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	code := strings.TrimSpace(`
+class User {
+  firstName = "";
+  lastName = "";
+  username = "";
+}
+
+export default User;
+`)
+	refactorPrompt := strings.TrimSpace(`
+Replace the "username" property with an "email" property. Respond only
+with code, and with no markdown formatting.
+`)
+	completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model: shared.ChatModelGPT4_1,
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage(refactorPrompt),
+			openai.UserMessage(code),
+		},
+		Store: openai.Bool(true),
+		Prediction: openai.ChatCompletionPredictionContentParam{
+			Content: openai.ChatCompletionPredictionContentContentUnionParam{OfString: openai.String(code)},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(completion.Choices[0].Message.Content)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+code = <<~CODE
+  class User {
+    firstName: string = "";
+    lastName: string = "";
+    username: string = "";
+  }
+
+  export default User;
+CODE
+refactor_prompt = <<~PROMPT
+  Replace the "username" property with an "email" property. Respond only
+  with code, and with no markdown formatting.
+PROMPT
+completion = client.chat.completions.create(
+  model: "gpt-4.1",
+  messages: [
+    {role: :user, content: refactor_prompt},
+    {role: :user, content: code}
+  ],
+  prediction: {type: :content, content: code},
+  store: true
+)
+
+puts(completion.choices.fetch(0).message.content)
 ```
 
 ```bash
@@ -127,32 +203,31 @@ curl https://api.openai.com/v1/chat/completions \
 ```
 
 
-In addition to the refactored code, the model response will contain data that looks something like this:
+In addition to the refactored code, an abridged model response without the `choices` field contains usage data like this:
 
-```javascript
+```json
 {
-  id: 'chatcmpl-xxx',
-  object: 'chat.completion',
-  created: 1730918466,
-  model: 'gpt-4o-2024-08-06',
-  choices: [ /* ...actual text response here... */],
-  usage: {
-    prompt_tokens: 81,
-    completion_tokens: 39,
-    total_tokens: 120,
-    prompt_tokens_details: { cached_tokens: 0, audio_tokens: 0 },
-    completion_tokens_details: {
-      reasoning_tokens: 0,
-      audio_tokens: 0,
-      accepted_prediction_tokens: 18,
-      rejected_prediction_tokens: 10
+  "id": "chatcmpl-xxx",
+  "object": "chat.completion",
+  "created": 1786652188,
+  "model": "gpt-4.1-2025-04-14",
+  "usage": {
+    "prompt_tokens": 59,
+    "completion_tokens": 24,
+    "total_tokens": 83,
+    "prompt_tokens_details": { "cached_tokens": 0, "audio_tokens": 0 },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 14,
+      "rejected_prediction_tokens": 2
     }
   },
-  system_fingerprint: 'fp_159d8341cc'
+  "system_fingerprint": "fp_6ddb4f7408"
 }
 ```
 
-Note both the `accepted_prediction_tokens` and `rejected_prediction_tokens` in the `usage` object. In this example, 18 tokens from the prediction were used to speed up the response, while 10 were rejected.
+Note both the `accepted_prediction_tokens` and `rejected_prediction_tokens` in the `usage` object. In this example, 14 tokens from the prediction were used to speed up the response, while 2 were rejected.
 
 Note that any rejected tokens are still billed like other completion tokens
   generated by the API, so Predicted Outputs can introduce higher costs for your
@@ -169,9 +244,9 @@ import OpenAI from "openai";
 
 const code = `
 class User {
-  firstName: string = "";
-  lastName: string = "";
-  username: string = "";
+  firstName = "";
+  lastName = "";
+  username = "";
 }
 
 export default User;
@@ -215,13 +290,13 @@ from openai import OpenAI
 
 code = """
 class User {
-  firstName: string = "";
-  lastName: string = "";
-  username: string = "";
+  firstName = "";
+  lastName = "";
+  username = "";
 }
 
 export default User;
-"""
+""".strip()
 
 refactor_prompt = """
 Replace the "username" property with an "email" property. Respond only
@@ -245,15 +320,94 @@ for chunk in stream:
         print(chunk.choices[0].delta.content, end="")
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	code := strings.TrimSpace(`
+class User {
+  firstName = "";
+  lastName = "";
+  username = "";
+}
+
+export default User;
+`)
+	refactorPrompt := strings.TrimSpace(`
+Replace the "username" property with an "email" property. Respond only
+with code, and with no markdown formatting.
+`)
+	stream := client.Chat.Completions.NewStreaming(context.Background(), openai.ChatCompletionNewParams{
+		Model: shared.ChatModelGPT4_1,
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage(refactorPrompt),
+			openai.UserMessage(code),
+		},
+		Store: openai.Bool(true),
+		Prediction: openai.ChatCompletionPredictionContentParam{
+			Content: openai.ChatCompletionPredictionContentContentUnionParam{OfString: openai.String(code)},
+		},
+	})
+	for stream.Next() {
+		if len(stream.Current().Choices) > 0 {
+			fmt.Print(stream.Current().Choices[0].Delta.Content)
+		}
+	}
+	if err := stream.Err(); err != nil {
+		panic(err)
+	}
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+code = <<~CODE
+  class User {
+    firstName: string = "";
+    lastName: string = "";
+    username: string = "";
+  }
+
+  export default User;
+CODE
+refactor_prompt = <<~PROMPT
+  Replace the "username" property with an "email" property. Respond only
+  with code, and with no markdown formatting.
+PROMPT
+stream = client.chat.completions.stream(
+  model: "gpt-4.1",
+  messages: [
+    {role: :user, content: refactor_prompt},
+    {role: :user, content: code}
+  ],
+  prediction: {type: :content, content: code},
+  store: true
+)
+
+stream.text.each { |text| print(text) }
+```
+
 
 ## Position of predicted text in response
 
 When providing prediction text, your prediction can appear anywhere within the generated response, and still provide latency reduction for the response. Let's say your predicted text is the simple [Hono](https://hono.dev/) server shown below:
 
-```typescript
-
-
-
+```javascript
+import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
+import { Hono } from "hono";
 
 const app = new Hono();
 
@@ -261,7 +415,7 @@ app.get("/api", (c) => {
   return c.text("Hello Hono!");
 });
 
-// You will need to build the client code first `pnpm run ui:build`
+// You will need to build the client code first: `pnpm run ui:build`.
 app.use(
   "/*",
   serveStatic({
@@ -277,6 +431,7 @@ serve({
   port,
 });
 ```
+
 
 You could prompt the model to regenerate the file with a prompt like:
 
@@ -289,10 +444,10 @@ markdown formatting.
 
 The response to the prompt might look something like this:
 
-```typescript
-
-
-
+```javascript
+import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
+import { Hono } from "hono";
 
 const app = new Hono();
 
@@ -304,7 +459,7 @@ app.get("/hello", (c) => {
   return c.text("hello world");
 });
 
-// You will need to build the client code first `pnpm run ui:build`
+// You will need to build the client code first: `pnpm run ui:build`.
 app.use(
   "/*",
   serveStatic({
@@ -321,28 +476,28 @@ serve({
 });
 ```
 
-You would still see accepted prediction tokens in the response, even though the prediction text appeared both before and after the new content added to the response:
 
-```javascript
+An abridged model response without the `choices` field would still show accepted prediction tokens, even though the prediction text appeared both before and after the new content added to the response:
+
+```json
 {
-  id: 'chatcmpl-xxx',
-  object: 'chat.completion',
-  created: 1731014771,
-  model: 'gpt-4o-2024-08-06',
-  choices: [ /* completion here... */],
-  usage: {
-    prompt_tokens: 203,
-    completion_tokens: 159,
-    total_tokens: 362,
-    prompt_tokens_details: { cached_tokens: 0, audio_tokens: 0 },
-    completion_tokens_details: {
-      reasoning_tokens: 0,
-      audio_tokens: 0,
-      accepted_prediction_tokens: 60,
-      rejected_prediction_tokens: 0
+  "id": "chatcmpl-xxx",
+  "object": "chat.completion",
+  "created": 1731014771,
+  "model": "gpt-4o-2024-08-06",
+  "usage": {
+    "prompt_tokens": 203,
+    "completion_tokens": 159,
+    "total_tokens": 362,
+    "prompt_tokens_details": { "cached_tokens": 0, "audio_tokens": 0 },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 60,
+      "rejected_prediction_tokens": 0
     }
   },
-  system_fingerprint: 'fp_9ee9e968ea'
+  "system_fingerprint": "fp_9ee9e968ea"
 }
 ```
 

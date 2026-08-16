@@ -60,6 +60,57 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	prompt := `Write a bash script that takes a matrix represented as a string with
+format '[1,2],[3,4],[5,6]' and prints the transpose in the same format.`
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Reasoning: responses.ReasoningParam{
+			Effort: responses.ReasoningEffortLow,
+		},
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String(prompt),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+prompt = <<~PROMPT
+  Write a bash script that takes a matrix represented as a string with format
+  '[1,2],[3,4],[5,6]' and prints the transpose in the same format.
+PROMPT
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  reasoning: {effort: :low},
+  input: prompt
+)
+
+puts(response.output_text)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses \
   -H "Content-Type: application/json" \
@@ -127,7 +178,7 @@ Pro mode aggregates the model work performed to produce the final answer and bil
 
 Reasoning models introduce **reasoning tokens** in addition to input and output tokens. The models use these reasoning tokens to "think," breaking down the prompt and considering multiple approaches to generating a response. Our reasoning models like `gpt-5.5` and `gpt-5.4` support interleaved thinking, where the model is able to generate visible output tokens before and in between thinking, and is able to think in between tool calls.
 
-Here is the default behavior for a multi-step conversation between a user and an assistant. Input and output tokens from each step are carried over, while reasoning from earlier turns is not rendered into the next sample. Models that support persisted reasoning can change this behavior with `reasoning.context`.
+For models released before GPT-5.6, the default behavior in a multi-step conversation is to carry over input and output tokens from each step without rendering reasoning from earlier turns into the next sample. GPT-5.6 models instead default to rendering available reasoning from earlier turns. Use `reasoning.context` to select either behavior on supported models.
 
 ![Reasoning tokens with current-turn context](https://cdn.openai.com/API/docs/images/context-window.png)
 
@@ -236,6 +287,67 @@ if (
         print("Ran out of tokens during reasoning")
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	prompt := `Write a bash script that takes a matrix represented as a string with
+format '[1,2],[3,4],[5,6]' and prints the transpose in the same format.`
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:           "gpt-5.6",
+		MaxOutputTokens: openai.Int(300),
+		Reasoning: responses.ReasoningParam{
+			Effort: responses.ReasoningEffortMedium,
+		},
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String(prompt),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	if response.Status == responses.ResponseStatusIncomplete {
+		fmt.Println("Ran out of tokens")
+		if text := response.OutputText(); text != "" {
+			fmt.Println("Partial output:", text)
+		}
+	}
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+prompt = <<~PROMPT
+  Write a bash script that takes a matrix represented as a string with format
+  '[1,2],[3,4],[5,6]' and prints the transpose in the same format.
+PROMPT
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  max_output_tokens: 300,
+  reasoning: {effort: :medium},
+  input: prompt
+)
+
+if response.status == OpenAI::Responses::ResponseStatus::INCOMPLETE
+  puts("Ran out of tokens")
+  puts("Partial output: #{response.output_text}") unless response.output_text.empty?
+end
+```
+
 
 ### Keeping reasoning items in context
 
@@ -253,15 +365,16 @@ Conversation state and reasoning state serve different purposes. Passing message
 
 Persisted reasoning provides continuity; it does not expose the model's raw reasoning. The reasoning items remain opaque, and the API does not return their reasoning text. Set `reasoning.context` to control which available reasoning items the model can use:
 
-Support for `reasoning.context` modes is model-dependent. Replace
-  `YOUR_MODEL_ID` in the examples with a model that supports the mode
-  you select.
+The [GPT-5.6 model family](https://developers.openai.com/api/docs/guides/latest-model) supports
+  `all_turns` and uses it by default. Earlier models default to
+  `current_turn`. Omit `reasoning.context` or set it to
+  `auto` to use the selected model's default.
 
-| Value          | Behavior                                                                                                                        |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `auto`         | Uses the selected model's default. Omitting `reasoning.context` has the same effect as `auto`.                                  |
-| `current_turn` | Makes reasoning from the active turn available, but does not render reasoning from earlier turns into the next sample.          |
-| `all_turns`    | Renders available, compatible reasoning items from earlier turns into the next sample. Only supported models accept this value. |
+| Value          | Behavior                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `auto`         | Uses the selected model's default. Omitting `reasoning.context` has the same effect as `auto`.                            |
+| `current_turn` | Makes reasoning from the active turn available, but does not render reasoning from earlier turns into the next sample.    |
+| `all_turns`    | Renders available, compatible reasoning items from earlier turns into the next sample. GPT-5.6 models support this value. |
 
 The response's `reasoning.context` field contains the effective mode, either `current_turn` or `all_turns`. Check this field on each response to confirm which mode the model used. The setting does not create reasoning items that are not already available.
 
@@ -279,13 +392,13 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const first = await client.responses.create({
-  model: "YOUR_MODEL_ID",
+  model: "gpt-5.6",
   input: "Inspect this repository and identify the likely bug.",
   reasoning: { context: "current_turn" },
 });
 
 const second = await client.responses.create({
-  model: "YOUR_MODEL_ID",
+  model: "gpt-5.6",
   previous_response_id: first.id,
   input: "Now patch the bug and explain the change.",
   reasoning: { context: "all_turns" },
@@ -314,6 +427,73 @@ second = client.responses.create(
 )
 
 print(second.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	model := "gpt-5.6"
+
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: model,
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Inspect this repository and identify the likely bug."),
+		},
+		Reasoning: responses.ReasoningParam{
+			Context: responses.ReasoningContextCurrentTurn,
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:              model,
+		PreviousResponseID: openai.String(first.ID),
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Now patch the bug and explain the change."),
+		},
+		Reasoning: responses.ReasoningParam{
+			Context: responses.ReasoningContextAllTurns,
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(second.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  input: "Inspect this repository and identify the likely bug.",
+  reasoning: {context: :current_turn}
+)
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  previous_response_id: first.id,
+  input: "Now patch the bug and explain the change.",
+  reasoning: {context: :all_turns}
+)
+
+puts(second.output_text)
 ```
 
 
@@ -359,7 +539,7 @@ const history = [
 ];
 
 const first = await client.responses.create({
-  model: "YOUR_MODEL_ID",
+  model: "gpt-5.6",
   store: false,
   input: history,
   reasoning: { context: "current_turn" },
@@ -373,7 +553,7 @@ history.push({
 });
 
 const second = await client.responses.create({
-  model: "YOUR_MODEL_ID",
+  model: "gpt-5.6",
   store: false,
   input: history,
   reasoning: { context: "all_turns" },
@@ -421,6 +601,90 @@ second = client.responses.create(
 print(second.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	history := []responses.ResponseInputItemUnionParam{
+		responses.ResponseInputItemParamOfMessage("Inspect this repository and identify the likely bug.", responses.EasyInputMessageRoleUser),
+	}
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:     "gpt-5.6",
+		Store:     openai.Bool(false),
+		Input:     responses.ResponseNewParamsInputUnion{OfInputItemList: history},
+		Reasoning: shared.ReasoningParam{Context: shared.ReasoningContextCurrentTurn},
+	})
+	if err != nil {
+		panic(err)
+	}
+	history = append(history, outputAsInput(first.Output)...)
+	history = append(history, responses.ResponseInputItemParamOfMessage(
+		"Now patch the bug and explain the change.",
+		responses.EasyInputMessageRoleUser,
+	))
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:     "gpt-5.6",
+		Store:     openai.Bool(false),
+		Input:     responses.ResponseNewParamsInputUnion{OfInputItemList: history},
+		Reasoning: shared.ReasoningParam{Context: shared.ReasoningContextAllTurns},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.OutputText())
+}
+
+func outputAsInput(output []responses.ResponseOutputItemUnion) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+history = [
+  {role: :user, content: "Inspect this repository and identify the likely bug."}
+]
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  store: false,
+  input: history,
+  reasoning: {context: :current_turn}
+)
+history.concat(first.output.map(&:to_h))
+history << {role: :user, content: "Now patch the bug and explain the change."}
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  store: false,
+  input: history,
+  reasoning: {context: :all_turns}
+)
+
+puts(second.output_text)
+```
+
 
 ## Reasoning summaries
 
@@ -462,6 +726,52 @@ response = client.responses.create(
 )
 
 print(response.output)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("What is the capital of France?"),
+		},
+		Reasoning: responses.ReasoningParam{
+			Effort:  responses.ReasoningEffortLow,
+			Summary: responses.ReasoningSummaryAuto,
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.Output)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "What is the capital of France?",
+  reasoning: {effort: :low, summary: :auto}
+)
+
+puts(response.output)
 ```
 
 ```bash
@@ -583,6 +893,72 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	commentary := responses.ResponseInputItemParamOfMessage(
+		"I’ll inspect the logs and then summarize root cause and remediation.",
+		responses.EasyInputMessageRoleAssistant,
+	)
+	commentary.OfMessage.Phase = responses.EasyInputMessagePhaseCommentary
+	finalAnswer := responses.ResponseInputItemParamOfMessage(
+		"Root cause: cache invalidation race.",
+		responses.EasyInputMessageRoleAssistant,
+	)
+	finalAnswer.OfMessage.Phase = responses.EasyInputMessagePhaseFinalAnswer
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
+			commentary,
+			finalAnswer,
+			responses.ResponseInputItemParamOfMessage("Great—now give me a rollout-safe fix plan.", responses.EasyInputMessageRoleUser),
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: [
+    {
+      role: :assistant,
+      phase: :commentary,
+      content: "I'll inspect the logs and then summarize root cause and remediation."
+    },
+    {
+      role: :assistant,
+      phase: :final_answer,
+      content: "Root cause: cache invalidation race."
+    },
+    {
+      role: :user,
+      content: "Great—now give me a rollout-safe fix plan."
+    }
+  ]
+)
+
+puts(response.output_text)
+```
+
 
 ## Advice on prompting
 
@@ -701,6 +1077,69 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	prompt := `Instructions:
+- Given the React component below, change it so that nonfiction books have red text.
+- Return only the code in your reply.
+- Do not include any additional formatting, such as markdown code blocks.
+
+const books = [
+  { title: 'Dune', category: 'fiction', id: 1 },
+  { title: 'Frankenstein', category: 'fiction', id: 2 },
+  { title: 'Moneyball', category: 'nonfiction', id: 3 },
+];`
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String(prompt),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+prompt = <<~PROMPT
+  Instructions:
+  - Given the React component below, change it so that nonfiction books have red text.
+  - Return only the code in your reply.
+  - Do not include any additional formatting, such as markdown code blocks.
+
+  const books = [
+    { title: 'Dune', category: 'fiction', id: 1 },
+    { title: 'Frankenstein', category: 'fiction', id: 2 },
+    { title: 'Moneyball', category: 'nonfiction', id: 3 },
+  ];
+PROMPT
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: prompt
+)
+
+puts(response.output_text)
+```
+
 
   
 
@@ -774,6 +1213,58 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	prompt := `I want to build a Python app that takes user questions and looks them up
+in a database where they are mapped to answers. If there is a close match, it
+retrieves the matched answer. If there is not, it asks the user to provide an
+answer and stores the question/answer pair in the database. Make a plan for the
+directory structure you will need, then return each file in full.`
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String(prompt),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+prompt = <<~PROMPT
+  I want to build a Python app that looks up user questions in a database where
+  they are mapped to answers. If there is a close match, it retrieves the answer.
+  Otherwise, it asks the user for an answer and stores the question and answer.
+  Plan the directory structure, then return each file in full.
+PROMPT
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: prompt
+)
+
+puts(response.output_text)
+```
+
 
   
 
@@ -831,6 +1322,53 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	prompt := `What are three compounds we should consider investigating to advance
+research into new antibiotics? Why should we consider them?`
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String(prompt),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+prompt = <<~PROMPT
+  What are three compounds we should consider investigating to advance research
+  into new antibiotics? Why should we consider them?
+PROMPT
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: prompt
+)
+
+puts(response.output_text)
 ```
 
 

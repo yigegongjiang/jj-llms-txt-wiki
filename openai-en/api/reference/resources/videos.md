@@ -74,7 +74,7 @@ Create a new video generation job from a prompt and optional reference assets.
 
     Unique identifier for the video job.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     Unix timestamp (seconds) for when the job completed, if finished.
 
@@ -82,7 +82,7 @@ Create a new video generation job from a prompt and optional reference assets.
 
     Unix timestamp (seconds) for when the job was created.
 
-  - `error: VideoCreateError`
+  - `error: VideoCreateError or null`
 
     Error payload that explains why generation failed, if applicable.
 
@@ -94,7 +94,7 @@ Create a new video generation job from a prompt and optional reference assets.
 
       A human-readable description of the error that was returned.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     Unix timestamp (seconds) for when the downloadable assets expire, if set.
 
@@ -126,11 +126,11 @@ Create a new video generation job from a prompt and optional reference assets.
 
     Approximate completion percentage for the generation task.
 
-  - `prompt: string`
+  - `prompt: string or null`
 
     The prompt that was used to generate the video.
 
-  - `remixed_from_video_id: string`
+  - `remixed_from_video_id: string or null`
 
     Identifier of the source video if this video is a remix.
 
@@ -190,7 +190,7 @@ curl https://api.openai.com/v1/videos \
   "progress": 0,
   "prompt": "prompt",
   "remixed_from_video_id": "remixed_from_video_id",
-  "seconds": "seconds",
+  "seconds": "string",
   "size": "720x1280",
   "status": "queued"
 }
@@ -219,6 +219,121 @@ curl https://api.openai.com/v1/videos \
   "seconds": "8",
   "quality": "standard"
 }
+```
+
+## Create a character from an uploaded video.
+
+**post** `/videos/characters`
+
+Create a character from an uploaded video.
+
+### Returns
+
+- `id: string or null`
+
+  Identifier for the character creation cameo.
+
+- `created_at: number`
+
+  Unix timestamp (in seconds) when the character was created.
+
+- `name: string or null`
+
+  Display name for the character.
+
+### Example
+
+```http
+curl https://api.openai.com/v1/videos/characters \
+    -H 'Content-Type: multipart/form-data' \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -F name=x \
+    -F 'video=@/path/to/video'
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "created_at": 0,
+  "name": "name"
+}
+```
+
+## Delete video
+
+**delete** `/videos/{video_id}`
+
+Permanently delete a completed or failed video and its stored assets.
+
+### Path Parameters
+
+- `video_id: string`
+
+### Returns
+
+- `id: string`
+
+  Identifier of the deleted video.
+
+- `deleted: boolean`
+
+  Indicates that the video resource was deleted.
+
+- `object: "video.deleted"`
+
+  The object type that signals the deletion response.
+
+  - `"video.deleted"`
+
+### Example
+
+```http
+curl https://api.openai.com/v1/videos/$VIDEO_ID \
+    -X DELETE \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "deleted": true,
+  "object": "video.deleted"
+}
+```
+
+## Retrieve video content
+
+**get** `/videos/{video_id}/content`
+
+Download the generated video bytes or a derived preview asset.
+
+Streams the rendered video content for the specified video job.
+
+### Path Parameters
+
+- `video_id: string`
+
+### Query Parameters
+
+- `variant: optional "video" or "thumbnail" or "spritesheet"`
+
+  Which downloadable asset to return. Defaults to the MP4 video.
+
+  - `"video"`
+
+  - `"thumbnail"`
+
+  - `"spritesheet"`
+
+### Example
+
+```http
+curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
 ```
 
 ## Create a new video generation job by editing a source video or existing generated video.
@@ -251,7 +366,7 @@ Create a new video generation job by editing a source video or existing generate
 
     Unique identifier for the video job.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     Unix timestamp (seconds) for when the job completed, if finished.
 
@@ -259,7 +374,7 @@ Create a new video generation job by editing a source video or existing generate
 
     Unix timestamp (seconds) for when the job was created.
 
-  - `error: VideoCreateError`
+  - `error: VideoCreateError or null`
 
     Error payload that explains why generation failed, if applicable.
 
@@ -271,7 +386,7 @@ Create a new video generation job by editing a source video or existing generate
 
       A human-readable description of the error that was returned.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     Unix timestamp (seconds) for when the downloadable assets expire, if set.
 
@@ -303,11 +418,11 @@ Create a new video generation job by editing a source video or existing generate
 
     Approximate completion percentage for the generation task.
 
-  - `prompt: string`
+  - `prompt: string or null`
 
     The prompt that was used to generate the video.
 
-  - `remixed_from_video_id: string`
+  - `remixed_from_video_id: string or null`
 
     Identifier of the source video if this video is a remix.
 
@@ -370,7 +485,7 @@ curl https://api.openai.com/v1/videos/edits \
   "progress": 0,
   "prompt": "prompt",
   "remixed_from_video_id": "remixed_from_video_id",
-  "seconds": "seconds",
+  "seconds": "string",
   "size": "720x1280",
   "status": "queued"
 }
@@ -416,7 +531,7 @@ Create an extension of a completed video.
 
     Unique identifier for the video job.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     Unix timestamp (seconds) for when the job completed, if finished.
 
@@ -424,7 +539,7 @@ Create an extension of a completed video.
 
     Unix timestamp (seconds) for when the job was created.
 
-  - `error: VideoCreateError`
+  - `error: VideoCreateError or null`
 
     Error payload that explains why generation failed, if applicable.
 
@@ -436,7 +551,7 @@ Create an extension of a completed video.
 
       A human-readable description of the error that was returned.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     Unix timestamp (seconds) for when the downloadable assets expire, if set.
 
@@ -468,11 +583,11 @@ Create an extension of a completed video.
 
     Approximate completion percentage for the generation task.
 
-  - `prompt: string`
+  - `prompt: string or null`
 
     The prompt that was used to generate the video.
 
-  - `remixed_from_video_id: string`
+  - `remixed_from_video_id: string or null`
 
     Identifier of the source video if this video is a remix.
 
@@ -536,49 +651,9 @@ curl https://api.openai.com/v1/videos/extensions \
   "progress": 0,
   "prompt": "prompt",
   "remixed_from_video_id": "remixed_from_video_id",
-  "seconds": "seconds",
+  "seconds": "string",
   "size": "720x1280",
   "status": "queued"
-}
-```
-
-## Create a character from an uploaded video.
-
-**post** `/videos/characters`
-
-Create a character from an uploaded video.
-
-### Returns
-
-- `id: string`
-
-  Identifier for the character creation cameo.
-
-- `created_at: number`
-
-  Unix timestamp (in seconds) when the character was created.
-
-- `name: string`
-
-  Display name for the character.
-
-### Example
-
-```http
-curl https://api.openai.com/v1/videos/characters \
-    -H 'Content-Type: multipart/form-data' \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -F name=x \
-    -F 'video=@/path/to/video'
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "created_at": 0,
-  "name": "name"
 }
 ```
 
@@ -594,7 +669,7 @@ Fetch a character.
 
 ### Returns
 
-- `id: string`
+- `id: string or null`
 
   Identifier for the character creation cameo.
 
@@ -602,7 +677,7 @@ Fetch a character.
 
   Unix timestamp (in seconds) when the character was created.
 
-- `name: string`
+- `name: string or null`
 
   Display name for the character.
 
@@ -657,7 +732,7 @@ List recently generated videos for the current project.
 
     Unique identifier for the video job.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     Unix timestamp (seconds) for when the job completed, if finished.
 
@@ -665,7 +740,7 @@ List recently generated videos for the current project.
 
     Unix timestamp (seconds) for when the job was created.
 
-  - `error: VideoCreateError`
+  - `error: VideoCreateError or null`
 
     Error payload that explains why generation failed, if applicable.
 
@@ -677,7 +752,7 @@ List recently generated videos for the current project.
 
       A human-readable description of the error that was returned.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     Unix timestamp (seconds) for when the downloadable assets expire, if set.
 
@@ -709,11 +784,11 @@ List recently generated videos for the current project.
 
     Approximate completion percentage for the generation task.
 
-  - `prompt: string`
+  - `prompt: string or null`
 
     The prompt that was used to generate the video.
 
-  - `remixed_from_video_id: string`
+  - `remixed_from_video_id: string or null`
 
     Identifier of the source video if this video is a remix.
 
@@ -745,7 +820,7 @@ List recently generated videos for the current project.
 
     - `"failed"`
 
-- `first_id: string`
+- `first_id: string or null`
 
   The ID of the first item in the list.
 
@@ -753,7 +828,7 @@ List recently generated videos for the current project.
 
   Whether there are more items available.
 
-- `last_id: string`
+- `last_id: string or null`
 
   The ID of the last item in the list.
 
@@ -789,7 +864,7 @@ curl https://api.openai.com/v1/videos \
       "progress": 0,
       "prompt": "prompt",
       "remixed_from_video_id": "remixed_from_video_id",
-      "seconds": "seconds",
+      "seconds": "string",
       "size": "720x1280",
       "status": "queued"
     }
@@ -824,188 +899,6 @@ curl https://api.openai.com/v1/videos \
 }
 ```
 
-## Retrieve video
-
-**get** `/videos/{video_id}`
-
-Fetch the latest metadata for a generated video.
-
-### Path Parameters
-
-- `video_id: string`
-
-### Returns
-
-- `Video object { id, completed_at, created_at, 10 more }`
-
-  Structured information describing a generated video job.
-
-  - `id: string`
-
-    Unique identifier for the video job.
-
-  - `completed_at: number`
-
-    Unix timestamp (seconds) for when the job completed, if finished.
-
-  - `created_at: number`
-
-    Unix timestamp (seconds) for when the job was created.
-
-  - `error: VideoCreateError`
-
-    Error payload that explains why generation failed, if applicable.
-
-    - `code: string`
-
-      A machine-readable error code that was returned.
-
-    - `message: string`
-
-      A human-readable description of the error that was returned.
-
-  - `expires_at: number`
-
-    Unix timestamp (seconds) for when the downloadable assets expire, if set.
-
-  - `model: VideoModel`
-
-    The video generation model that produced the job.
-
-    - `string`
-
-    - `"sora-2" or "sora-2-pro" or "sora-2-2025-10-06" or 2 more`
-
-      - `"sora-2"`
-
-      - `"sora-2-pro"`
-
-      - `"sora-2-2025-10-06"`
-
-      - `"sora-2-pro-2025-10-06"`
-
-      - `"sora-2-2025-12-08"`
-
-  - `object: "video"`
-
-    The object type, which is always `video`.
-
-    - `"video"`
-
-  - `progress: number`
-
-    Approximate completion percentage for the generation task.
-
-  - `prompt: string`
-
-    The prompt that was used to generate the video.
-
-  - `remixed_from_video_id: string`
-
-    Identifier of the source video if this video is a remix.
-
-  - `seconds: string`
-
-    Duration of the generated clip in seconds. For extensions, this is the stitched total duration.
-
-  - `size: VideoSize`
-
-    The resolution of the generated video.
-
-    - `"720x1280"`
-
-    - `"1280x720"`
-
-    - `"1024x1792"`
-
-    - `"1792x1024"`
-
-  - `status: "queued" or "in_progress" or "completed" or "failed"`
-
-    Current lifecycle status of the video job.
-
-    - `"queued"`
-
-    - `"in_progress"`
-
-    - `"completed"`
-
-    - `"failed"`
-
-### Example
-
-```http
-curl https://api.openai.com/v1/videos/$VIDEO_ID \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "completed_at": 0,
-  "created_at": 0,
-  "error": {
-    "code": "code",
-    "message": "message"
-  },
-  "expires_at": 0,
-  "model": "sora-2",
-  "object": "video",
-  "progress": 0,
-  "prompt": "prompt",
-  "remixed_from_video_id": "remixed_from_video_id",
-  "seconds": "seconds",
-  "size": "720x1280",
-  "status": "queued"
-}
-```
-
-## Delete video
-
-**delete** `/videos/{video_id}`
-
-Permanently delete a completed or failed video and its stored assets.
-
-### Path Parameters
-
-- `video_id: string`
-
-### Returns
-
-- `id: string`
-
-  Identifier of the deleted video.
-
-- `deleted: boolean`
-
-  Indicates that the video resource was deleted.
-
-- `object: "video.deleted"`
-
-  The object type that signals the deletion response.
-
-  - `"video.deleted"`
-
-### Example
-
-```http
-curl https://api.openai.com/v1/videos/$VIDEO_ID \
-    -X DELETE \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-#### Response
-
-```json
-{
-  "id": "id",
-  "deleted": true,
-  "object": "video.deleted"
-}
-```
-
 ## Remix video
 
 **post** `/videos/{video_id}/remix`
@@ -1032,7 +925,7 @@ Create a remix of a completed video using a refreshed prompt.
 
     Unique identifier for the video job.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     Unix timestamp (seconds) for when the job completed, if finished.
 
@@ -1040,7 +933,7 @@ Create a remix of a completed video using a refreshed prompt.
 
     Unix timestamp (seconds) for when the job was created.
 
-  - `error: VideoCreateError`
+  - `error: VideoCreateError or null`
 
     Error payload that explains why generation failed, if applicable.
 
@@ -1052,7 +945,7 @@ Create a remix of a completed video using a refreshed prompt.
 
       A human-readable description of the error that was returned.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     Unix timestamp (seconds) for when the downloadable assets expire, if set.
 
@@ -1084,11 +977,11 @@ Create a remix of a completed video using a refreshed prompt.
 
     Approximate completion percentage for the generation task.
 
-  - `prompt: string`
+  - `prompt: string or null`
 
     The prompt that was used to generate the video.
 
-  - `remixed_from_video_id: string`
+  - `remixed_from_video_id: string or null`
 
     Identifier of the source video if this video is a remix.
 
@@ -1148,7 +1041,7 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/remix \
   "progress": 0,
   "prompt": "prompt",
   "remixed_from_video_id": "remixed_from_video_id",
-  "seconds": "seconds",
+  "seconds": "string",
   "size": "720x1280",
   "status": "queued"
 }
@@ -1181,50 +1074,17 @@ curl -X POST https://api.openai.com/v1/videos/video_123/remix \
 }
 ```
 
-## Retrieve video content
+## Retrieve video
 
-**get** `/videos/{video_id}/content`
+**get** `/videos/{video_id}`
 
-Download the generated video bytes or a derived preview asset.
-
-Streams the rendered video content for the specified video job.
+Fetch the latest metadata for a generated video.
 
 ### Path Parameters
 
 - `video_id: string`
 
-### Query Parameters
-
-- `variant: optional "video" or "thumbnail" or "spritesheet"`
-
-  Which downloadable asset to return. Defaults to the MP4 video.
-
-  - `"video"`
-
-  - `"thumbnail"`
-
-  - `"spritesheet"`
-
-### Example
-
-```http
-curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
-    -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-## Domain Types
-
-### Image Input Reference Param
-
-- `ImageInputReferenceParam object { file_id, image_url }`
-
-  - `file_id: optional string`
-
-  - `image_url: optional string`
-
-    A fully qualified URL or base64-encoded data URL.
-
-### Video
+### Returns
 
 - `Video object { id, completed_at, created_at, 10 more }`
 
@@ -1234,7 +1094,7 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
 
     Unique identifier for the video job.
 
-  - `completed_at: number`
+  - `completed_at: number or null`
 
     Unix timestamp (seconds) for when the job completed, if finished.
 
@@ -1242,7 +1102,7 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
 
     Unix timestamp (seconds) for when the job was created.
 
-  - `error: VideoCreateError`
+  - `error: VideoCreateError or null`
 
     Error payload that explains why generation failed, if applicable.
 
@@ -1254,7 +1114,7 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
 
       A human-readable description of the error that was returned.
 
-  - `expires_at: number`
+  - `expires_at: number or null`
 
     Unix timestamp (seconds) for when the downloadable assets expire, if set.
 
@@ -1286,11 +1146,11 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
 
     Approximate completion percentage for the generation task.
 
-  - `prompt: string`
+  - `prompt: string or null`
 
     The prompt that was used to generate the video.
 
-  - `remixed_from_video_id: string`
+  - `remixed_from_video_id: string or null`
 
     Identifier of the source video if this video is a remix.
 
@@ -1322,6 +1182,162 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
 
     - `"failed"`
 
+### Example
+
+```http
+curl https://api.openai.com/v1/videos/$VIDEO_ID \
+    -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "completed_at": 0,
+  "created_at": 0,
+  "error": {
+    "code": "code",
+    "message": "message"
+  },
+  "expires_at": 0,
+  "model": "sora-2",
+  "object": "video",
+  "progress": 0,
+  "prompt": "prompt",
+  "remixed_from_video_id": "remixed_from_video_id",
+  "seconds": "string",
+  "size": "720x1280",
+  "status": "queued"
+}
+```
+
+## Domain Types
+
+### Image Input Reference Param
+
+- `ImageInputReferenceParam object { file_id, image_url }`
+
+  - `file_id: optional string`
+
+  - `image_url: optional string`
+
+    A fully qualified URL or base64-encoded data URL.
+
+### Video
+
+- `Video object { id, completed_at, created_at, 10 more }`
+
+  Structured information describing a generated video job.
+
+  - `id: string`
+
+    Unique identifier for the video job.
+
+  - `completed_at: number or null`
+
+    Unix timestamp (seconds) for when the job completed, if finished.
+
+  - `created_at: number`
+
+    Unix timestamp (seconds) for when the job was created.
+
+  - `error: VideoCreateError or null`
+
+    Error payload that explains why generation failed, if applicable.
+
+    - `code: string`
+
+      A machine-readable error code that was returned.
+
+    - `message: string`
+
+      A human-readable description of the error that was returned.
+
+  - `expires_at: number or null`
+
+    Unix timestamp (seconds) for when the downloadable assets expire, if set.
+
+  - `model: VideoModel`
+
+    The video generation model that produced the job.
+
+    - `string`
+
+    - `"sora-2" or "sora-2-pro" or "sora-2-2025-10-06" or 2 more`
+
+      - `"sora-2"`
+
+      - `"sora-2-pro"`
+
+      - `"sora-2-2025-10-06"`
+
+      - `"sora-2-pro-2025-10-06"`
+
+      - `"sora-2-2025-12-08"`
+
+  - `object: "video"`
+
+    The object type, which is always `video`.
+
+    - `"video"`
+
+  - `progress: number`
+
+    Approximate completion percentage for the generation task.
+
+  - `prompt: string or null`
+
+    The prompt that was used to generate the video.
+
+  - `remixed_from_video_id: string or null`
+
+    Identifier of the source video if this video is a remix.
+
+  - `seconds: string`
+
+    Duration of the generated clip in seconds. For extensions, this is the stitched total duration.
+
+  - `size: VideoSize`
+
+    The resolution of the generated video.
+
+    - `"720x1280"`
+
+    - `"1280x720"`
+
+    - `"1024x1792"`
+
+    - `"1792x1024"`
+
+  - `status: "queued" or "in_progress" or "completed" or "failed"`
+
+    Current lifecycle status of the video job.
+
+    - `"queued"`
+
+    - `"in_progress"`
+
+    - `"completed"`
+
+    - `"failed"`
+
+### Video Create Character Response
+
+- `VideoCreateCharacterResponse object { id, created_at, name }`
+
+  - `id: string or null`
+
+    Identifier for the character creation cameo.
+
+  - `created_at: number`
+
+    Unix timestamp (in seconds) when the character was created.
+
+  - `name: string or null`
+
+    Display name for the character.
+
 ### Video Create Error
 
 - `VideoCreateError object { code, message }`
@@ -1335,6 +1351,42 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
   - `message: string`
 
     A human-readable description of the error that was returned.
+
+### Video Delete Response
+
+- `VideoDeleteResponse object { id, deleted, object }`
+
+  Confirmation payload returned after deleting a video.
+
+  - `id: string`
+
+    Identifier of the deleted video.
+
+  - `deleted: boolean`
+
+    Indicates that the video resource was deleted.
+
+  - `object: "video.deleted"`
+
+    The object type that signals the deletion response.
+
+    - `"video.deleted"`
+
+### Video Get Character Response
+
+- `VideoGetCharacterResponse object { id, created_at, name }`
+
+  - `id: string or null`
+
+    Identifier for the character creation cameo.
+
+  - `created_at: number`
+
+    Unix timestamp (in seconds) when the character was created.
+
+  - `name: string or null`
+
+    Display name for the character.
 
 ### Video Model
 
@@ -1375,55 +1427,3 @@ curl https://api.openai.com/v1/videos/$VIDEO_ID/content \
   - `"1024x1792"`
 
   - `"1792x1024"`
-
-### Video Create Character Response
-
-- `VideoCreateCharacterResponse object { id, created_at, name }`
-
-  - `id: string`
-
-    Identifier for the character creation cameo.
-
-  - `created_at: number`
-
-    Unix timestamp (in seconds) when the character was created.
-
-  - `name: string`
-
-    Display name for the character.
-
-### Video Get Character Response
-
-- `VideoGetCharacterResponse object { id, created_at, name }`
-
-  - `id: string`
-
-    Identifier for the character creation cameo.
-
-  - `created_at: number`
-
-    Unix timestamp (in seconds) when the character was created.
-
-  - `name: string`
-
-    Display name for the character.
-
-### Video Delete Response
-
-- `VideoDeleteResponse object { id, deleted, object }`
-
-  Confirmation payload returned after deleting a video.
-
-  - `id: string`
-
-    Identifier of the deleted video.
-
-  - `deleted: boolean`
-
-    Indicates that the video resource was deleted.
-
-  - `object: "video.deleted"`
-
-    The object type that signals the deletion response.
-
-    - `"video.deleted"`

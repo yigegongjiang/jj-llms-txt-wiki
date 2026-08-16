@@ -57,15 +57,15 @@ Match the look and feel of your product by specifying colors, typography, and mo
 
 For all theming options, see the [API reference](https://openai.github.io/chatkit-js/api/openai/chatkit/type-aliases/themeoption/).
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   theme: {
     colorScheme: "dark",
     color: {
       accent: {
         primary: "#2D8CFF",
-        level: 2
-      }
+        level: 2,
+      },
     },
     radius: "round",
     density: "compact",
@@ -74,12 +74,13 @@ const options: Partial<ChatKitOptions> = {
 };
 ```
 
+
 ## Customize the start screen text
 
 Let users know what to ask or guide their first input by changing the composer’s placeholder text.
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   composer: {
     placeholder: "Ask anything about your data…",
   },
@@ -89,36 +90,38 @@ const options: Partial<ChatKitOptions> = {
 };
 ```
 
+
 ## Show starter prompts for new threads
 
 Guide users on what to ask or do by suggesting prompt ideas when starting a conversation.
 
-```js
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   startScreen: {
     greeting: "What can I help you build today?",
     prompts: [
       {
         name: "Check on the status of a ticket",
         prompt: "Can you help me check on the status of a ticket?",
-        icon: "search"
+        icon: "search",
       },
       {
         name: "Create Ticket",
         prompt: "Can you help me create a new support ticket?",
-        icon: "write"
+        icon: "write",
       },
     ],
   },
 };
 ```
 
+
 ## Add custom buttons to the header
 
 Custom header buttons help you add navigation, context, or actions relevant to your integration.
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   header: {
     customButtonLeft: {
       icon: "settings-cog",
@@ -132,6 +135,7 @@ const options: Partial<ChatKitOptions> = {
 };
 ```
 
+
 ## Enable file attachments
 
 Attachments are disabled by default. To enable them, add attachments configuration.
@@ -140,18 +144,19 @@ See the Python SDK docs for more information on other upload strategies work wit
 
 You can also control the number, size, and types of files that users can attach to messages.
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   composer: {
     attachments: {
-      uploadStrategy: { type: 'hosted' },
-      maxSize: 20 * 1024 * 1024, // 20MB per file
+      uploadStrategy: { type: "hosted" },
+      maxSize: 20 * 1024 * 1024, // 20 MB per file
       maxCount: 3,
       accept: { "application/pdf": [".pdf"], "image/*": [".png", ".jpg"] },
     },
   },
-}
+};
 ```
+
 
 ## Enable @mentions in the composer with entity tags
 
@@ -160,10 +165,11 @@ Let users tag custom “entities” with @-mentions. This enables richer convers
 - Use `onTagSearch` to return a list of entities based on the input query.
 - Use `onClick` to handle the click event of an entity.
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   entities: {
     async onTagSearch(query) {
+      void query;
       return [
         {
           id: "user_123",
@@ -177,7 +183,7 @@ const options: Partial<ChatKitOptions> = {
           group: "Documents",
           interactive: true,
         },
-      ]
+      ];
     },
     onClick: (entity) => {
       navigateToEntity(entity.id);
@@ -185,6 +191,7 @@ const options: Partial<ChatKitOptions> = {
   },
 };
 ```
+
 
 ## Customize how entity tags appear
 
@@ -196,10 +203,12 @@ You can customize the appearance of entity tags on mouseover using widgets. Show
 
       Browse available widgets.](https://widgets.chatkit.studio)
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   entities: {
-    async onTagSearch() { /* ... */ },
+    async onTagSearch() {
+      return [];
+    },
     onRequestPreview: async (entity) => ({
       preview: {
         type: "Card",
@@ -213,19 +222,20 @@ const options: Partial<ChatKitOptions> = {
 };
 ```
 
+
 ## Add custom tools to the composer
 
 Enhance productivity by letting users trigger app-specific actions from the composer bar. The selected tool
 will be sent to the model as a tool preference.
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   composer: {
     tools: [
       {
-        id: 'add-note',
-        label: 'Add Note',
-        icon: 'write',
+        id: "add-note",
+        label: "Add Note",
+        icon: "write",
         pinned: true,
       },
     ],
@@ -233,23 +243,25 @@ const options: Partial<ChatKitOptions> = {
 };
 ```
 
+
 ## Toggle UI regions and features
 
 Disable major UI regions and features if you need more customization over the options available in the header and want to implement your own instead. Disabling history can be useful when the concept of threads and history doesn't make sense for your use case—e.g., in a support chatbot.
 
-```jsx
-const options: Partial<ChatKitOptions> = {
+```javascript
+const options = {
   history: { enabled: false },
   header: { enabled: false },
 };
 ```
 
+
 ## Override the locale
 
 Override the default locale if you have an app-wide language setting. By default, the locale is set to the browser's locale.
 
-```jsx
-const options: Partial<ChatKitOptions> = {
-  locale: 'de-DE',
+```javascript
+const options = {
+  locale: "de-DE",
 };
 ```

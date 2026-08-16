@@ -86,7 +86,77 @@ if image_data:
         f.write(base64.b64decode(image_base64))
 ```
 
-```cli
+```go
+package main
+
+import (
+	"context"
+	"encoding/base64"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Generate an image of a gray tabby cat hugging an otter with an orange scarf."),
+		},
+		Tools: []responses.ToolUnionParam{{
+			OfImageGeneration: &responses.ToolImageGenerationParam{},
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	for _, output := range response.Output {
+		if output.Type != "image_generation_call" {
+			continue
+		}
+		image, err := base64.StdEncoding.DecodeString(output.AsImageGenerationCall().Result)
+		if err != nil {
+			panic(err)
+		}
+		if err := os.WriteFile("cat_and_otter.png", image, 0o600); err != nil {
+			panic(err)
+		}
+		return
+	}
+
+	panic("response did not include an image generation call")
+}
+```
+
+```ruby
+require "base64"
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Generate an image of a gray tabby cat hugging an otter with an orange scarf.",
+  tools: [{type: :image_generation}]
+)
+
+image_call = response.output.find do |item|
+  item.is_a?(OpenAI::Models::Responses::ResponseOutputItem::ImageGenerationCall)
+end
+unless image_call.is_a?(OpenAI::Models::Responses::ResponseOutputItem::ImageGenerationCall)
+  raise "No image generation call returned"
+end
+
+File.binwrite(
+  "cat_and_otter.png",
+  Base64.strict_decode64(image_call.result)
+)
+```
+
+```bash
 openai responses create \
   --model gpt-5.6 \
   --raw-output \
@@ -183,6 +253,45 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfInputItemList: responses.ResponseInputParam{
+				responses.ResponseInputItemParamOfMessage(
+					responses.ResponseInputMessageContentListParam{
+						responses.ResponseInputContentParamOfInputText("What's in this image?"),
+						{OfInputImage: &responses.ResponseInputImageParam{
+							Detail:   responses.ResponseInputImageDetailAuto,
+							ImageURL: openai.String("https://api.nga.gov/iiif/a2e6da57-3cd1-4235-b20e-95dcaefed6c8/full/!800,800/0/default.jpg"),
+						}},
+					},
+					responses.EasyInputMessageRoleUser,
+				),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -209,6 +318,31 @@ ResponseResult response = await client.CreateResponseAsync(
 Console.WriteLine(response.GetOutputText());
 ```
 
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: [
+    {
+      role: :user,
+      content: [
+        {type: :input_text, text: "What's in this image?"},
+        {
+          type: :input_image,
+          detail: :auto,
+          image_url: "https://api.nga.gov/iiif/a2e6da57-3cd1-4235-b20e-95dcaefed6c8/full/!800,800/0/default.jpg"
+        }
+      ]
+    }
+  ]
+)
+
+puts(response.output_text)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses \
   -H "Content-Type: application/json" \
@@ -230,7 +364,7 @@ curl https://api.openai.com/v1/responses \
   }'
 ```
 
-```cli
+```bash
 openai responses create \
   --model gpt-5.6 \
   --raw-output \
@@ -322,6 +456,52 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"encoding/base64"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	image, err := os.ReadFile("image.png")
+	if err != nil {
+		panic(err)
+	}
+	imageURL := "data:image/png;base64," + base64.StdEncoding.EncodeToString(image)
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfInputItemList: responses.ResponseInputParam{
+				responses.ResponseInputItemParamOfMessage(
+					responses.ResponseInputMessageContentListParam{
+						responses.ResponseInputContentParamOfInputText("What's in this image?"),
+						{OfInputImage: &responses.ResponseInputImageParam{
+							Detail:   responses.ResponseInputImageDetailAuto,
+							ImageURL: openai.String(imageURL),
+						}},
+					},
+					responses.EasyInputMessageRoleUser,
+				),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -370,6 +550,33 @@ ResponseResult response2 = await client.CreateResponseAsync(
 );
 
 Console.WriteLine($"From byte array: {response2.GetOutputText()}");
+```
+
+```ruby
+require "base64"
+require "openai"
+
+client = OpenAI::Client.new
+image = Base64.strict_encode64(File.binread("image.png"))
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: [
+    {
+      role: :user,
+      content: [
+        {type: :input_text, text: "What's in this image?"},
+        {
+          type: :input_image,
+          detail: :auto,
+          image_url: "data:image/png;base64,#{image}"
+        }
+      ]
+    }
+  ]
+)
+
+puts(response.output_text)
 ```
 
   
@@ -458,6 +665,59 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := os.Open("image.png")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	uploaded, err := client.Files.New(context.Background(), openai.FileNewParams{
+		File:    file,
+		Purpose: openai.FilePurposeVision,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{
+			OfInputItemList: responses.ResponseInputParam{
+				responses.ResponseInputItemParamOfMessage(
+					responses.ResponseInputMessageContentListParam{
+						responses.ResponseInputContentParamOfInputText("What's in this image?"),
+						{OfInputImage: &responses.ResponseInputImageParam{
+							Detail: responses.ResponseInputImageDetailAuto,
+							FileID: openai.String(uploaded.ID),
+						}},
+					},
+					responses.EasyInputMessageRoleUser,
+				),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Files;
 using OpenAI.Responses;
@@ -497,6 +757,32 @@ ResponseResult response = await client.CreateResponseAsync(
 );
 
 Console.WriteLine(response.GetOutputText());
+```
+
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+uploaded = client.files.create(
+  file: Pathname("image.png"),
+  purpose: :vision
+)
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: [
+    {
+      role: :user,
+      content: [
+        {type: :input_text, text: "What's in this image?"},
+        {type: :input_image, detail: :auto, file_id: uploaded.id}
+      ]
+    }
+  ]
+)
+
+puts(response.output_text)
 ```
 
 

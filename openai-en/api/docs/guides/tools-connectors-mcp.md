@@ -94,6 +94,36 @@ resp = client.responses.create(
 print(resp.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("dmcp")
+	tool.OfMcp.ServerDescription = openai.String("A Dungeons and Dragons MCP server to assist with dice rolling.")
+	tool.OfMcp.ServerURL = openai.String("https://dmcp-server.deno.dev/mcp")
+	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{OfMcpToolApprovalSetting: openai.String("never")}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Roll 2d4+1")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -225,6 +255,36 @@ resp = client.responses.create(
 print(resp.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("Dropbox")
+	tool.OfMcp.ConnectorID = "connector_dropbox"
+	tool.OfMcp.Authorization = openai.String("<oauth access token>")
+	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{OfMcpToolApprovalSetting: openai.String("never")}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Summarize the Q2 earnings report.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -250,6 +310,25 @@ options.InputItems.Add(
 ResponseResult response = await client.CreateResponseAsync(options);
 
 Console.WriteLine(response.GetOutputText());
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Summarize the Q2 earnings report.",
+  tools: [{
+    type: :mcp,
+    server_label: "Dropbox",
+    connector_id: "connector_dropbox",
+    authorization: "<oauth access token>",
+    require_approval: :never
+  }]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -415,6 +494,37 @@ resp = client.responses.create(
 print(resp.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("dmcp")
+	tool.OfMcp.ServerDescription = openai.String("A Dungeons and Dragons MCP server to assist with dice rolling.")
+	tool.OfMcp.ServerURL = openai.String("https://dmcp-server.deno.dev/mcp")
+	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{OfMcpToolApprovalSetting: openai.String("never")}
+	tool.OfMcp.AllowedTools = responses.ToolMcpAllowedToolsUnionParam{OfMcpAllowedTools: []string{"roll"}}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Roll 2d4+1")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -436,6 +546,29 @@ options.InputItems.Add(ResponseItem.CreateUserMessageItem("Roll 2d4+1"));
 ResponseResult response = await client.CreateResponseAsync(options);
 
 Console.WriteLine(response.GetOutputText());
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Roll 2d4+1",
+  tools: [
+    {
+      type: :mcp,
+      server_label: "dmcp",
+      server_description: "A Dungeons and Dragons MCP server to assist with dice rolling.",
+      server_url: "https://dmcp-server.deno.dev/mcp",
+      require_approval: :never,
+      allowed_tools: ["roll"]
+    }
+  ]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -561,6 +694,39 @@ resp = client.responses.create(
 print(resp.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("dmcp")
+	tool.OfMcp.ServerDescription = openai.String("A Dungeons and Dragons MCP server to assist with dice rolling.")
+	tool.OfMcp.ServerURL = openai.String("https://dmcp-server.deno.dev/mcp")
+	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{OfMcpToolApprovalSetting: openai.String("always")}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:              "gpt-5.6",
+		PreviousResponseID: openai.String("resp_682d498bdefc81918b4a6aa477bfafd904ad1e533afccbfa"),
+		Tools:              []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
+			responses.ResponseInputItemParamOfMcpApprovalResponse("mcpr_682d498e3bd4819196a0ce1664f8e77b04ad1e533afccbfa", true),
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -593,6 +759,30 @@ options.InputItems.Add(
 ResponseResult response2 = await client.CreateResponseAsync(options);
 
 Console.WriteLine(response2.GetOutputText());
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  previous_response_id: "resp_682d498bdefc81918b4a6aa477bfafd904ad1e533afccbfa",
+  input: [{
+    type: :mcp_approval_response,
+    approval_request_id: "mcpr_682d498e3bd4819196a0ce1664f8e77b04ad1e533afccbfa",
+    approve: true
+  }],
+  tools: [{
+    type: :mcp,
+    server_label: "dmcp",
+    server_url: "https://dmcp-server.deno.dev/mcp",
+    server_description: "A Dungeons and Dragons MCP server.",
+    require_approval: :always
+  }]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -672,6 +862,41 @@ resp = client.responses.create(
 print(resp.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("deepwiki")
+	tool.OfMcp.ServerURL = openai.String("https://mcp.deepwiki.com/mcp")
+	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{
+		OfMcpToolApprovalFilter: &responses.ToolMcpRequireApprovalMcpToolApprovalFilterParam{
+			Never: responses.ToolMcpRequireApprovalMcpToolApprovalFilterNeverParam{
+				ToolNames: []string{"ask_question", "read_wiki_structure"},
+			},
+		},
+	}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("What transport protocols does the 2025-03-26 version of the MCP spec (modelcontextprotocol/modelcontextprotocol) support?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -702,6 +927,29 @@ options.InputItems.Add(
 ResponseResult response = await client.CreateResponseAsync(options);
 
 Console.WriteLine(response.GetOutputText());
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "What transport protocols does the 2025-03-26 version of the MCP spec support?",
+  tools: [
+    {
+      type: :mcp,
+      server_label: "deepwiki",
+      server_url: "https://mcp.deepwiki.com/mcp",
+      require_approval: {
+        never: {tool_names: ["ask_question", "read_wiki_structure"]}
+      }
+    }
+  ]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -772,6 +1020,40 @@ resp = client.responses.create(
 print(resp.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	authorization := os.Getenv("STRIPE_OAUTH_ACCESS_TOKEN")
+	if authorization == "" {
+		panic("STRIPE_OAUTH_ACCESS_TOKEN is required")
+	}
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("stripe")
+	tool.OfMcp.ServerURL = openai.String("https://mcp.stripe.com")
+	tool.OfMcp.Authorization = openai.String(authorization)
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Create a payment link for $20")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -796,6 +1078,24 @@ options.InputItems.Add(
 ResponseResult response = await client.CreateResponseAsync(options);
 
 Console.WriteLine(response.GetOutputText());
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Create a payment link for $20.",
+  tools: [{
+    type: :mcp,
+    server_label: "stripe",
+    server_url: "https://mcp.stripe.com",
+    authorization: ENV.fetch("STRIPE_OAUTH_ACCESS_TOKEN")
+  }]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -902,6 +1202,36 @@ resp = client.responses.create(
 print(resp.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("google_calendar")
+	tool.OfMcp.ConnectorID = "connector_googlecalendar"
+	tool.OfMcp.Authorization = openai.String("<oauth access token>")
+	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{OfMcpToolApprovalSetting: openai.String("never")}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("What's on my Google Calendar for today?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -927,6 +1257,25 @@ options.InputItems.Add(
 ResponseResult response = await client.CreateResponseAsync(options);
 
 Console.WriteLine(response.GetOutputText());
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "What's on my Google Calendar for today?",
+  tools: [{
+    type: :mcp,
+    server_label: "google_calendar",
+    connector_id: "connector_googlecalendar",
+    authorization: "<oauth access token>",
+    require_approval: :never
+  }]
+)
+
+puts(response.output_text)
 ```
 
 

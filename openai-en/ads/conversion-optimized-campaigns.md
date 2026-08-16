@@ -1,10 +1,14 @@
-# Conversion-optimized campaigns
+# Conversion-Optimized Campaigns
 
 > For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
 Use a conversion-optimized cost-per-click (oCPC) campaign when you want to
 optimize delivery toward one tracked conversion event while continuing to pay
 for valid clicks. In the Ads API, oCPC uses `bidding_type: "conversions"`.
+
+oCPC is in open beta for both standard and product-feed campaigns. Use the
+  same campaign and ad-group endpoints to optimize for conversions while
+  continuing to pay per valid click.
 
 Choose the campaign goal that matches the outcome you want:
 
@@ -31,9 +35,9 @@ Before you create an oCPC campaign, make sure:
 - The conversion event setting belongs to the current ad account and connects
   to one active conversion source.
 
-Product-feed campaigns cannot use oCPC. Each oCPC campaign uses one selected
-conversion event, and you cannot change the goal or event after campaign
-creation.
+Product-feed conversion bidding is available in open beta. Each oCPC campaign
+uses one selected conversion event, and you cannot change the goal or event
+after campaign creation.
 
 ## Create a conversion-optimized campaign
 
@@ -57,8 +61,29 @@ curl -X POST "https://api.ads.openai.com/v1/campaigns" \
 Replace `ces_123` with the active conversion event setting ID that represents
 your goal, such as `order_created`, `lead_created`, or
 `registration_completed`. See [Conversion
-setup](https://developers.openai.com/ads/api-reference/conversion-setup) to create and manage event
+Setup](https://developers.openai.com/ads/api-reference/conversion-setup) to create and manage event
 settings.
+
+For a product-feed campaign, use the same `POST /campaigns` endpoint. Include
+`mode: "product_feed"`, the ID of a product feed linked to the ad account, and
+the same conversion bidding fields:
+
+```bash
+curl -X POST "https://api.ads.openai.com/v1/campaigns" \
+  -H "Authorization: Bearer $OPENAI_ADS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Running shoes catalog purchases",
+    "status": "paused",
+    "mode": "product_feed",
+    "product_feed_id": "product_feed_123",
+    "budget": {
+      "lifetime_spend_limit_micros": 250000000
+    },
+    "bidding_type": "conversions",
+    "conversion_event_setting_ids": ["ces_123"]
+  }'
+```
 
 Create each child ad group with `billing_event_type` set to `click`. For an
 oCPC campaign, `max_bid_micros` is the CPA bid even though billing uses valid
@@ -79,11 +104,17 @@ curl -X POST "https://api.ads.openai.com/v1/ad_groups" \
   }'
 ```
 
+For a product-feed campaign, the ad group automatically inherits the campaign's
+product feed. Include `product_set` only when you want to specify product
+filters; its `product_feed_id` must match the campaign's feed. See
+[Product Feeds](https://developers.openai.com/ads/product-feeds) for the complete product-feed campaign,
+ad-group, and product-ad template workflow.
+
 Create ads as you normally would, then activate the campaign after all child
-resources are ready. For the complete resource-creation sequence, see the [Ads
-API quickstart](https://developers.openai.com/ads/api-quickstart). For all campaign and ad-group fields, see
-the [campaigns](https://developers.openai.com/ads/api-reference/campaigns) and [ad
-groups](https://developers.openai.com/ads/api-reference/ad-groups) references.
+resources are ready. For the complete resource-creation sequence, see the
+[Quickstart](https://developers.openai.com/ads/api-quickstart). For all campaign and ad-group fields, see
+[Campaigns](https://developers.openai.com/ads/api-reference/campaigns) and [Ad
+Groups](https://developers.openai.com/ads/api-reference/ad-groups).
 
 ## Understand delivery and billing
 
@@ -122,7 +153,7 @@ To improve performance:
 
 An oCPC campaign supports exactly one active standard conversion event setting.
 Custom event settings are not supported as optimization goals. See [Supported
-events](https://developers.openai.com/ads/supported-events) for the standard event names.
+Events](https://developers.openai.com/ads/supported-events) for the standard event names.
 
 ### Changing an existing campaign
 
@@ -141,7 +172,11 @@ still uses valid clicks.
 
 ### Product-feed campaigns
 
-No. Product-feed campaigns cannot use `bidding_type: "conversions"`.
+Yes. Product-feed oCPC is available in open beta. Set
+`mode` to `product_feed`, include the linked `product_feed_id`, and set
+`bidding_type` to `conversions` when creating the campaign. Create its ad group
+with `billing_event_type: "click"`. The ad group inherits the campaign's feed;
+include `product_set` only when you want to specify product filters.
 
 ## Next steps
 
@@ -150,4 +185,5 @@ No. Product-feed campaigns cannot use `bidding_type: "conversions"`.
 - [Send server-side events with the Conversions API](https://developers.openai.com/ads/conversions-api)
 - [Create campaigns](https://developers.openai.com/ads/api-reference/campaigns)
 - [Create ad groups](https://developers.openai.com/ads/api-reference/ad-groups)
+- [Create product-feed campaigns](https://developers.openai.com/ads/product-feeds)
 - [Query insights](https://developers.openai.com/ads/api-reference/insights)

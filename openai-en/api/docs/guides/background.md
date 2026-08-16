@@ -50,6 +50,48 @@ resp = client.responses.create(
 print(resp.status)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:      "gpt-5.6",
+		Background: openai.Bool(true),
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Write a very long novel about otters in space."),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.Status)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Write a detailed market analysis.",
+  background: true
+)
+
+puts(response.status)
+```
+
 
 ## Polling background responses
 
@@ -102,6 +144,65 @@ while resp.status in {"queued", "in_progress"}:
 print(f"Final status: {resp.status}\nOutput:\n{resp.output_text}")
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:      "gpt-5.6",
+		Background: openai.Bool(true),
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Write a very long novel about otters in space."),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	for response.Status == "queued" || response.Status == "in_progress" {
+		fmt.Println("Current status:", response.Status)
+		time.Sleep(2 * time.Second)
+		response, err = client.Responses.Get(context.Background(), response.ID, responses.ResponseGetParams{})
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	fmt.Printf("Final status: %s\nOutput:\n%s\n", response.Status, response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Write a very long novel about otters in space.",
+  background: true
+)
+
+while [:queued, :in_progress].include?(response.status)
+  puts("Current status: #{response.status}")
+  sleep(2)
+  response = client.responses.retrieve(response.id)
+end
+
+puts("Final status: #{response.status}")
+puts(response.output_text)
+```
+
 
 ## Cancelling a background response
 
@@ -135,6 +236,36 @@ client = OpenAI()
 resp = client.responses.cancel(response_id)
 
 print(resp.status)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	canceled, err := client.Responses.Cancel(context.Background(), "resp_123")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(canceled.Status)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.cancel("resp_123")
+puts(response.status)
 ```
 
 
@@ -211,6 +342,82 @@ for event in stream:
 # SDK support for resuming the stream is coming soon.
 # for event in client.responses.stream(resp.id, starting_after=cursor):
 #     print(event)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	stream := client.Responses.NewStreaming(context.Background(), responses.ResponseNewParams{
+		Model:      "gpt-5.6",
+		Background: openai.Bool(true),
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Write a very long novel about otters in space."),
+		},
+	})
+	var cursor int64
+	var responseID string
+	for stream.Next() {
+		event := stream.Current()
+		fmt.Println(event.Type)
+		cursor = event.SequenceNumber
+		if event.Response.ID != "" {
+			responseID = event.Response.ID
+		}
+	}
+	if err := stream.Err(); err != nil {
+		panic(err)
+	}
+	fmt.Printf("response %s last cursor %d\n", responseID, cursor)
+
+	// If the connection drops, resume streaming from the last cursor:
+	// resumed := client.Responses.GetStreaming(
+	// 	context.Background(),
+	// 	responseID,
+	// 	responses.ResponseGetParams{StartingAfter: openai.Int(cursor)},
+	// )
+	// for resumed.Next() {
+	// 	fmt.Println(resumed.Current().Type)
+	// }
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+stream = client.responses.stream(
+  model: "gpt-5.6",
+  input: "Write a very long novel about otters in space.",
+  background: true
+)
+
+last_sequence_number = -1
+response_id = ""
+stream.each do |event|
+  puts(event.type)
+  last_sequence_number = event.sequence_number
+  if event.is_a?(OpenAI::Models::Responses::ResponseCreatedEvent)
+    response_id = event.response.id
+  end
+end
+
+puts("Response #{response_id}; last sequence number #{last_sequence_number}")
+
+# If the connection drops, resume from the last sequence number:
+# client.responses.stream(response_id: response_id, starting_after: last_sequence_number).each do |event|
+#   puts(event.type)
+# end
 ```
 
 

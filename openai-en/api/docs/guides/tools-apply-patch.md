@@ -89,6 +89,37 @@ patch_calls = [
 ]
 ```
 
+```go
+response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+	Model: "gpt-5.6",
+	Input: responses.ResponseNewParamsInputUnion{OfString: openai.String(responseInput)},
+	Tools: []responses.ToolUnionParam{{OfApplyPatch: &responses.ApplyPatchToolParam{}}},
+})
+if err != nil {
+	panic(err)
+}
+patchCalls := make([]responses.ResponseOutputItemUnion, 0)
+for _, item := range response.Output {
+	if item.Type == "apply_patch_call" {
+		patchCalls = append(patchCalls, item)
+	}
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Rename fib() to fibonacci() in lib/fib.py and update run.py to use the new name.",
+  tools: [{type: :apply_patch}]
+)
+
+patch_calls = response.output.select { |item| item.type == :apply_patch_call }
+puts(patch_calls)
+```
+
 
 **Example `apply_patch_call` object**
 
@@ -143,6 +174,50 @@ followup = client.responses.create(
     input=results,
     tools=[{"type": "apply_patch"}],
 )
+```
+
+```go
+results := make(responses.ResponseInputParam, 0, len(patchCalls))
+for _, call := range patchCalls {
+	success, logOutput := applyOperation(call.Operation)
+	status := "completed"
+	if !success {
+		status = "failed"
+	}
+	result := responses.ResponseInputItemParamOfApplyPatchCallOutput(call.CallID, status)
+	result.OfApplyPatchCallOutput.Output = openai.String(logOutput)
+	results = append(results, result)
+}
+_, err = client.Responses.New(context.Background(), responses.ResponseNewParams{
+	Model:              "gpt-5.6",
+	PreviousResponseID: openai.String(response.ID),
+	Input:              responses.ResponseNewParamsInputUnion{OfInputItemList: results},
+	Tools:              []responses.ToolUnionParam{{OfApplyPatch: &responses.ApplyPatchToolParam{}}},
+})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response_id = ENV.fetch("OPENAI_RESPONSE_ID")
+patch_call_id = ENV.fetch("OPENAI_APPLY_PATCH_CALL_ID")
+response = client.responses.create(
+  model: "gpt-5.6",
+  previous_response_id: response_id,
+  input: [{
+    type: :apply_patch_call_output,
+    call_id: patch_call_id,
+    status: :completed,
+    output: "Patch applied successfully."
+  }],
+  tools: [{type: :apply_patch}]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -200,29 +275,19 @@ Alternatively, you can use the [Agents SDK](https://developers.openai.com/api/do
 Use the apply patch tool with the Agents SDK
 
 ```javascript
-import {
-  applyDiff,
-  Agent,
-  run,
-  applyPatchTool,
-  type ApplyPatchOperation,
-  type ApplyPatchResult,
-  type Editor,
-} from "@openai/agents";
+import { applyDiff, Agent, run, applyPatchTool } from "@openai/agents";
 
-class WorkspaceEditor implements Editor {
-  async createFile(
-    operation: Extract<ApplyPatchOperation, { type: "create_file" }>
-  ): Promise<ApplyPatchResult> {
+class WorkspaceEditor {
+  /** @returns {Promise<import("@openai/agents").ApplyPatchResult>} */
+  async createFile(operation) {
     // convert the diff to the file content
     const content = applyDiff("", operation.diff, "create");
     // write the file content to the file system
     return { status: "completed", output: `Created ${operation.path}` };
   }
 
-  async updateFile(
-    operation: Extract<ApplyPatchOperation, { type: "update_file" }>
-  ): Promise<ApplyPatchResult> {
+  /** @returns {Promise<import("@openai/agents").ApplyPatchResult>} */
+  async updateFile(operation) {
     // read the file content from the file system
     const current = "";
     // convert the diff to the new file content
@@ -231,9 +296,8 @@ class WorkspaceEditor implements Editor {
     return { status: "completed", output: `Updated ${operation.path}` };
   }
 
-  async deleteFile(
-    operation: Extract<ApplyPatchOperation, { type: "delete_file" }>
-  ): Promise<ApplyPatchResult> {
+  /** @returns {Promise<import("@openai/agents").ApplyPatchResult>} */
+  async deleteFile(operation) {
     // delete the file from the file system
     return { status: "completed", output: `Deleted ${operation.path}` };
   }

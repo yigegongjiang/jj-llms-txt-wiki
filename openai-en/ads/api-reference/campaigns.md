@@ -156,11 +156,13 @@ curl -X POST "https://api.ads.openai.com/v1/campaigns" \
 ```
 
 Conversion bidding must be enabled for the ad account. Product-feed campaigns
-cannot use oCPC. You cannot change the campaign objective or selected
-conversion event after creation. For the complete setup flow, including the
-required ad-group bid configuration, see [Conversion-optimized
-campaigns](https://developers.openai.com/ads/conversion-optimized-campaigns) and [API partner
-setup](https://developers.openai.com/ads/api-partner-setup).
+can use oCPC during the open beta. Use the same endpoint, set `mode` to
+`product_feed`, and include the linked `product_feed_id`. You cannot change the
+campaign objective or selected conversion event after creation. For the complete
+setup flow, including the required ad-group bid configuration, see
+[Conversion-Optimized Campaigns](https://developers.openai.com/ads/conversion-optimized-campaigns),
+[Product Feeds](https://developers.openai.com/ads/product-feeds), and [API Partner
+Setup](https://developers.openai.com/ads/api-partner-setup).
 
 ## Retrieve a campaign
 

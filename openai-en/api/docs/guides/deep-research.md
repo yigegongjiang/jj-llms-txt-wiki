@@ -12,6 +12,43 @@ To use deep research, use the [Responses API](https://developers.openai.com/api/
 
 Kick off a deep research task
 
+```javascript
+import OpenAI from "openai";
+const openai = new OpenAI({ timeout: 3600 * 1000 });
+
+const input = `
+Research the economic impact of semaglutide on global healthcare systems.
+Do:
+- Include specific figures, trends, statistics, and measurable outcomes.
+- Prioritize reliable, up-to-date sources: peer-reviewed research, health
+  organizations (e.g., WHO, CDC), regulatory agencies, or pharmaceutical
+  earnings reports.
+- Include inline citations and return all source metadata.
+
+Be analytical, avoid generalities, and ensure that each section supports
+data-backed reasoning that could inform healthcare policy or financial modeling.
+`;
+
+const response = await openai.responses.create({
+  model: "o3-deep-research",
+  input,
+  background: true,
+  tools: [
+    { type: "web_search_preview" },
+    {
+      type: "file_search",
+      vector_store_ids: [
+        "vs_68870b8868b88191894165101435eef6",
+        "vs_12345abcde6789fghijk101112131415",
+      ],
+    },
+    { type: "code_interpreter", container: { type: "auto" } },
+  ],
+});
+
+console.log(response);
+```
+
 ```python
 from openai import OpenAI
 
@@ -53,41 +90,74 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
-```javascript
-import OpenAI from "openai";
-const openai = new OpenAI({ timeout: 3600 * 1000 });
+```go
+package main
 
-const input = `
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+const researchInput = `
 Research the economic impact of semaglutide on global healthcare systems.
 Do:
 - Include specific figures, trends, statistics, and measurable outcomes.
-- Prioritize reliable, up-to-date sources: peer-reviewed research, health
-  organizations (e.g., WHO, CDC), regulatory agencies, or pharmaceutical
-  earnings reports.
+- Prioritize reliable, up-to-date sources: peer-reviewed research, health organizations (e.g., WHO, CDC), regulatory agencies, or pharmaceutical earnings reports.
 - Include inline citations and return all source metadata.
 
-Be analytical, avoid generalities, and ensure that each section supports
-data-backed reasoning that could inform healthcare policy or financial modeling.
-`;
+Be analytical, avoid generalities, and ensure that each section supports data-backed reasoning that could inform healthcare policy or financial modeling.
+`
 
-const response = await openai.responses.create({
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:      "o3-deep-research",
+		Background: openai.Bool(true),
+		Input:      responses.ResponseNewParamsInputUnion{OfString: openai.String(researchInput)},
+		Tools: []responses.ToolUnionParam{
+			responses.ToolParamOfWebSearchPreview(responses.WebSearchPreviewToolTypeWebSearchPreview),
+			responses.ToolParamOfFileSearch([]string{"vs_68870b8868b88191894165101435eef6", "vs_12345abcde6789fghijk101112131415"}),
+			responses.ToolParamOfCodeInterpreter(responses.ToolCodeInterpreterContainerCodeInterpreterContainerAutoParam{}),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+vector_store_id = ENV.fetch("OPENAI_VECTOR_STORE_ID")
+response = client.responses.create(
   model: "o3-deep-research",
-  input,
-  background: true,
+  input: "Research the economic impact of semaglutide on global healthcare systems. Include measurable outcomes and cite primary sources.",
   tools: [
-    { type: "web_search_preview" },
-    {
-      type: "file_search",
-      vector_store_ids: [
-        "vs_68870b8868b88191894165101435eef6",
-        "vs_12345abcde6789fghijk101112131415",
-      ],
-    },
-    { type: "code_interpreter", container: { type: "auto" } },
+    {type: :web_search_preview},
+    {type: :file_search, vector_store_ids: [vector_store_id]},
+    {type: :code_interpreter, container: {type: :auto}}
   ],
-});
+  background: true
+)
 
-console.log(response);
+while [
+  OpenAI::Responses::ResponseStatus::QUEUED,
+  OpenAI::Responses::ResponseStatus::IN_PROGRESS
+].include?(response.status)
+  sleep(2)
+  response = client.responses.retrieve(response.id)
+end
+unless response.status == OpenAI::Responses::ResponseStatus::COMPLETED
+  raise "Research ended with status: #{response.status}"
+end
+
+puts(response.output_text)
 ```
 
 ```bash
@@ -187,6 +257,33 @@ Deep research via the Responses API does not include a clarification or prompt r
 
 Asking clarifying questions using a faster, smaller model
 
+```javascript
+import OpenAI from "openai";
+const openai = new OpenAI();
+
+const instructions = `
+You are talking to a user who is asking for a research task to be conducted. Your job is to gather more information from the user to successfully complete the task.
+
+GUIDELINES:
+- Be concise while gathering all necessary information**
+- Make sure to gather all the information needed to carry out the research task in a concise, well-structured manner.
+- Use bullet points or numbered lists if appropriate for clarity.
+- Don't ask for unnecessary information, or information that the user has already provided.
+
+IMPORTANT: Do NOT conduct any research yourself, just gather information that will be given to a researcher to conduct the research task.
+`;
+
+const input = "Research surfboards for me. I'm interested in ...";
+
+const response = await openai.responses.create({
+  model: "gpt-5.6",
+  input,
+  instructions,
+});
+
+console.log(response.output_text);
+```
+
 ```python
 from openai import OpenAI
 
@@ -215,31 +312,54 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
-```javascript
-import OpenAI from "openai";
-const openai = new OpenAI();
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
 
 const instructions = `
 You are talking to a user who is asking for a research task to be conducted. Your job is to gather more information from the user to successfully complete the task.
 
 GUIDELINES:
-- Be concise while gathering all necessary information**
+- Be concise while gathering all necessary information.
 - Make sure to gather all the information needed to carry out the research task in a concise, well-structured manner.
 - Use bullet points or numbered lists if appropriate for clarity.
 - Don't ask for unnecessary information, or information that the user has already provided.
 
 IMPORTANT: Do NOT conduct any research yourself, just gather information that will be given to a researcher to conduct the research task.
-`;
+`
 
-const input = "Research surfboards for me. I'm interested in ...";
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:        "gpt-5.6",
+		Instructions: openai.String(instructions),
+		Input:        responses.ResponseNewParamsInputUnion{OfString: openai.String("Research surfboards for me. I'm interested in ...")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
 
-const response = await openai.responses.create({
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
   model: "gpt-5.6",
-  input,
-  instructions,
-});
+  instructions: "Ask concise questions to gather all missing requirements. Do not conduct the research yet.",
+  input: "Research surfboards for me. I'm interested in ..."
+)
 
-console.log(response.output_text);
+puts(response.output_text)
 ```
 
 ```bash
@@ -256,6 +376,87 @@ curl https://api.openai.com/v1/responses \
 
 Enrich a user prompt using a faster, smaller model
 
+```javascript
+import OpenAI from "openai";
+const openai = new OpenAI();
+
+const instructions = `
+You will be given a research task by a user. Your job is to produce a set of
+instructions for a researcher that will complete the task. Do NOT complete the
+task yourself, just provide instructions on how to complete it.
+
+GUIDELINES:
+1. **Maximize Specificity and Detail**
+- Include all known user preferences and explicitly list key attributes or
+  dimensions to consider.
+- It is of utmost importance that all details from the user are included in
+  the instructions.
+
+2. **Fill in Unstated But Necessary Dimensions as Open-Ended**
+- If certain attributes are essential for a meaningful output but the user
+  has not provided them, explicitly state that they are open-ended or default
+  to no specific constraint.
+
+3. **Avoid Unwarranted Assumptions**
+- If the user has not provided a particular detail, do not invent one.
+- Instead, state the lack of specification and guide the researcher to treat
+  it as flexible or accept all possible options.
+
+4. **Use the First Person**
+- Phrase the request from the perspective of the user.
+
+5. **Tables**
+- If you determine that including a table will help illustrate, organize, or
+  enhance the information in the research output, you must explicitly request
+  that the researcher provide them.
+
+Examples:
+- Product Comparison (Consumer): When comparing different smartphone models,
+  request a table listing each model's features, price, and consumer ratings
+  side-by-side.
+- Project Tracking (Work): When outlining project deliverables, create a table
+  showing tasks, deadlines, responsible team members, and status updates.
+- Budget Planning (Consumer): When creating a personal or household budget,
+  request a table detailing income sources, monthly expenses, and savings goals.
+- Competitor Analysis (Work): When evaluating competitor products, request a
+  table with key metrics, such as market share, pricing, and main differentiators.
+
+6. **Headers and Formatting**
+- You should include the expected output format in the prompt.
+- If the user is asking for content that would be best returned in a
+  structured format (e.g. a report, plan, etc.), ask the researcher to format
+  as a report with the appropriate headers and formatting that ensures clarity
+  and structure.
+
+7. **Language**
+- If the user input is in a language other than English, tell the researcher
+  to respond in this language, unless the user query explicitly asks for the
+  response in a different language.
+
+8. **Sources**
+- If specific sources should be prioritized, specify them in the prompt.
+- For product and travel research, prefer linking directly to official or
+  primary websites (e.g., official brand sites, manufacturer pages, or
+  reputable e-commerce platforms like Amazon for user reviews) rather than
+  aggregator sites or SEO-heavy blogs.
+- For academic or scientific queries, prefer linking directly to the original
+  paper or official journal publication rather than survey papers or secondary
+  summaries.
+- If the query is in a specific language, prioritize sources published in that
+  language.
+`;
+
+const input = "Research surfboards for me. I'm interested in ...";
+
+const response = await openai.responses.create({
+  model: "gpt-5.6",
+  input,
+  instructions,
+});
+
+console.log(response.output_text);
+```
+
 ```python
 from openai import OpenAI
 
@@ -338,9 +539,16 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
-```javascript
-import OpenAI from "openai";
-const openai = new OpenAI();
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
 
 const instructions = `
 You will be given a research task by a user. Your job is to produce a set of
@@ -406,17 +614,33 @@ Examples:
   summaries.
 - If the query is in a specific language, prioritize sources published in that
   language.
-`;
+`
 
-const input = "Research surfboards for me. I'm interested in ...";
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:        "gpt-5.6",
+		Instructions: openai.String(instructions),
+		Input:        responses.ResponseNewParamsInputUnion{OfString: openai.String("Research surfboards for me. I'm interested in ...")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
 
-const response = await openai.responses.create({
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
   model: "gpt-5.6",
-  input,
-  instructions,
-});
+  instructions: "Rewrite the user's request as detailed research instructions. Preserve all stated preferences, identify open-ended dimensions, request primary sources, and specify a clear report format. Do not perform the research.",
+  input: "Research surfboards for me. I'm interested in ..."
+)
 
-console.log(response.output_text);
+puts(response.output_text)
 ```
 
 ```bash
@@ -539,6 +763,71 @@ resp = client.responses.create(
 )
 
 print(resp.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfMcp("mycompany_mcp_server")
+	tool.OfMcp.ServerURL = openai.String("https://mycompany.com/mcp")
+	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{OfMcpToolApprovalSetting: openai.String("never")}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:        "o3-deep-research",
+		Background:   openai.Bool(true),
+		Reasoning:    shared.ReasoningParam{Summary: shared.ReasoningSummaryAuto},
+		Tools:        []responses.ToolUnionParam{tool},
+		Instructions: openai.String("<deep research instructions...>"),
+		Input:        responses.ResponseNewParamsInputUnion{OfString: openai.String("What similarities are in the notes for our closed/lost Salesforce opportunities?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+mcp_server_url = ENV.fetch("OPENAI_MCP_SERVER_URL")
+response = client.responses.create(
+  model: "o3-deep-research",
+  input: "What patterns appear in our closed-lost Salesforce opportunities?",
+  instructions: "Produce a source-backed deep research report.",
+  reasoning: {summary: :auto},
+  tools: [{
+    type: :mcp,
+    server_label: "mycompany_mcp_server",
+    server_url: mcp_server_url,
+    require_approval: :never
+  }],
+  background: true
+)
+
+while [
+  OpenAI::Responses::ResponseStatus::QUEUED,
+  OpenAI::Responses::ResponseStatus::IN_PROGRESS
+].include?(response.status)
+  sleep(2)
+  response = client.responses.retrieve(response.id)
+end
+unless response.status == OpenAI::Responses::ResponseStatus::COMPLETED
+  raise "Research ended with status: #{response.status}"
+end
+
+puts(response.output_text)
 ```
 
 

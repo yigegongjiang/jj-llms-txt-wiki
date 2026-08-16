@@ -23,6 +23,10 @@ The OpenAI API accepts bearer credentials from API keys or from short-lived acce
 
 **Remember that your API key is a secret.** Don't share it with others or expose it in any client-side code such as browsers or apps. Load API keys from an environment variable or key management service on the server.
 
+Revocations of an API key take effect within a few seconds. Most updates that
+  affect authentication results of an API key propagate within 15 minutes, but
+  can potentially take longer.
+
 Provide API credentials with [HTTP Bearer authentication](https://swagger.io/docs/specification/v3_0/authentication/bearer-authentication/).
 
 ```bash
@@ -39,6 +43,18 @@ curl https://api.openai.com/v1/models \
 ```
 
 Usage from these API requests counts as usage for the specified organization and project. Find organization and project IDs in your [dashboard settings](https://platform.openai.com/settings/organization/general).
+
+## Request headers
+
+For reliable behavior across API paths and HTTP versions, keep the total size
+of an API request's headers under 64 KiB. This budget includes the names and
+values of all headers, including common headers such as `Authorization`,
+`Content-Type`, and `User-Agent`, as well as any custom headers.
+
+To leave room for required headers and headers added by intermediaries, keep
+any individual custom header value and the total size of all custom header
+values at 60 KiB or less. Requests with larger headers may fail before they
+reach the API, so you may not receive a response or an `x-request-id`.
 
 ## Debugging requests
 

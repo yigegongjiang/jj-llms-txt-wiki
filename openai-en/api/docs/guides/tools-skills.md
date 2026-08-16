@@ -136,6 +136,61 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfContainerAuto: &responses.ContainerAutoParam{
+			Skills: []responses.ContainerAutoSkillUnionParam{
+				{OfSkillReference: &responses.SkillReferenceParam{SkillID: "<skill_id>"}},
+				{OfSkillReference: &responses.SkillReferenceParam{SkillID: "<skill_id>", Version: openai.String("2")}},
+			},
+		}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Use the skills to add 144 and 377, then compute triangle area with base 9 height 13.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Use the skills to add 144 and 377, then compute a triangle area with base 9 and height 13.",
+  tools: [{
+    type: :shell,
+    environment: {
+      type: :container_auto,
+      skills: [
+        {type: :skill_reference, skill_id: "<skill_id>"},
+        {type: :skill_reference, skill_id: "<skill_id>", version: "2"}
+      ]
+    }
+  }]
+)
+
+puts(response.output_text)
+```
+
 
 ### Prompting behavior
 
@@ -228,6 +283,63 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfLocal: &responses.LocalEnvironmentParam{
+			Skills: []responses.LocalSkillParam{{
+				Name:        "csv-insights",
+				Description: "Summarize CSV files and produce a markdown report.",
+				Path:        "<path-to-skill-folder>",
+			}},
+		}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Use the csv-insights skill and run locally to summarize today's CSV reports in this repo.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Use the csv-insights skill to summarize today's CSV reports.",
+  tools: [{
+    type: :shell,
+    environment: {
+      type: :local,
+      skills: [{
+        name: "csv-insights",
+        description: "Summarize CSV files and produce a Markdown report.",
+        path: "<path-to-skill-folder>"
+      }]
+    }
+  }]
+)
+
+puts(response.output_text)
 ```
 
 

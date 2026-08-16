@@ -68,6 +68,57 @@ print(display_name(None))
 print(result.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String(`Find the null pointer exception in this code:
+
+def display_name(user):
+    return user.profile.name
+
+print(display_name(None))`)},
+		Reasoning: shared.ReasoningParam{Effort: shared.ReasoningEffortHigh},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+code = <<~PYTHON
+  def display_name(user):
+      return user.profile.name
+
+  print(display_name(None))
+PYTHON
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Find the null pointer exception in this code:\n\n#{code}",
+  reasoning: {effort: :high}
+)
+
+puts(response.output_text)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses \
   -H "Content-Type: application/json" \

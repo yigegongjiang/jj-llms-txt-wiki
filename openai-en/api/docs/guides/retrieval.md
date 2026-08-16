@@ -16,6 +16,22 @@ The Retrieval API is powered by [**vector stores**](#vector-stores), which serve
 
 Create vector store with files
 
+```javascript
+import OpenAI from "openai";
+const client = new OpenAI();
+
+const vector_store = await client.vectorStores.create({
+  // Create vector store
+  name: "Support FAQ",
+});
+
+await client.vectorStores.files.uploadAndPoll(
+  vector_store.id,
+  // Upload file
+  fs.createReadStream("customer_policies.txt")
+);
+```
+
 ```python
 from openai import OpenAI
 
@@ -31,18 +47,54 @@ client.vector_stores.files.upload_and_poll(        # Upload file
 )
 ```
 
-```javascript
-import OpenAI from "openai";
-const client = new OpenAI();
+```go
+package main
 
-const vector_store = await client.vectorStores.create({   // Create vector store
-    name: "Support FAQ",
-});
+import (
+	"context"
+	"fmt"
+	"os"
 
-await client.vector_stores.files.upload_and_poll({         // Upload file
-    vector_store_id: vector_store.id,
-    file: fs.createReadStream("customer_policies.txt"),
-});
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	vectorStore, err := client.VectorStores.New(context.Background(), openai.VectorStoreNewParams{Name: openai.String("Support FAQ")})
+	if err != nil {
+		panic(err)
+	}
+	file, err := os.Open("customer_policies.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	_, err = client.VectorStores.Files.UploadAndPoll(context.Background(), vectorStore.ID, openai.FileNewParams{
+		File:    openai.File(file, "customer_policies.txt", "text/plain"),
+		Purpose: openai.FilePurposeAssistants,
+	}, 1000)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(vectorStore.ID)
+}
+```
+
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+store = client.vector_stores.create(name: "Support FAQ")
+source = Pathname("customer_policies.txt")
+uploaded = client.files.create(file: source, purpose: :assistants)
+file = client.vector_stores.files.create(store.id, file_id: uploaded.id)
+until [:completed, :failed, :cancelled].include?(file.status)
+  sleep(1)
+  file = client.vector_stores.files.retrieve(file.id, vector_store_id: store.id)
+end
+
+puts(store.id)
 ```
 
 
@@ -51,6 +103,14 @@ await client.vector_stores.files.upload_and_poll({         // Upload file
 </li>
 
 Search query
+
+```javascript
+const userQuery = "What is the return policy?";
+
+const results = await client.vectorStores.search(vector_store.id, {
+  query: userQuery,
+});
+```
 
 ```python
 user_query = "What is the return policy?"
@@ -61,13 +121,34 @@ results = client.vector_stores.search(
 )
 ```
 
-```javascript
-const userQuery = "What is the return policy?";
+```go
+package main
 
-const results = await client.vectorStores.search({
-    vector_store_id: vector_store.id,
-    query: userQuery,
-});
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	results, err := client.VectorStores.Search(context.Background(), "vs_123", openai.VectorStoreSearchParams{
+		Query: openai.VectorStoreSearchParamsQueryUnion{OfString: openai.String("What is the return policy?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(results.Data)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+results = client.vector_stores.search("vs_123", query: "What is the return policy?")
+puts(results.data&.first&.content)
 ```
 
 
@@ -98,6 +179,12 @@ You can query a vector store using the `search` function and specifying a `query
 
 Search query
 
+```javascript
+const results = await client.vectorStores.search(vector_store.id, {
+  query: "How many woodchucks are allowed per passenger?",
+});
+```
+
 ```python
 results = client.vector_stores.search(
     vector_store_id=vector_store.id,
@@ -105,11 +192,37 @@ results = client.vector_stores.search(
 )
 ```
 
-```javascript
-const results = await client.vectorStores.search({
-    vector_store_id: vector_store.id,
-    query: "How many woodchucks are allowed per passenger?",
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	results, err := client.VectorStores.Search(context.Background(), "vs_123", openai.VectorStoreSearchParams{
+		Query: openai.VectorStoreSearchParamsQueryUnion{OfString: openai.String("How many woodchucks are allowed per passenger?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(results.Data)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+results = client.vector_stores.search(
+  "vs_123",
+  query: "How many woodchucks are allowed per passenger?"
+)
+puts(results.data&.first&.content)
 ```
 
 
@@ -197,7 +310,7 @@ Compound filter
 ```json
 {
   "type": "and" | "or",                                // logical operators
-  "filters": [...]                                   
+  "filters": [...]
 }
 ```
 
@@ -363,6 +476,13 @@ Create
 
     Create vector store
 
+```javascript
+await client.vectorStores.create({
+  name: "Support FAQ",
+  file_ids: ["file_123"],
+});
+```
+
 ```python
 client.vector_stores.create(
     name="Support FAQ",
@@ -370,11 +490,38 @@ client.vector_stores.create(
 )
 ```
 
-```javascript
-await client.vector_stores.create({
-    name: "Support FAQ",
-    file_ids: ["file_123"]
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	vectorStore, err := client.VectorStores.New(context.Background(), openai.VectorStoreNewParams{
+		Name:    openai.String("Support FAQ"),
+		FileIDs: []string{"file_123"},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(vectorStore.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+store = client.vector_stores.create(
+  name: "Support FAQ",
+  file_ids: ["file_123"]
+)
+puts(store.id)
 ```
 
   
@@ -386,16 +533,42 @@ Retrieve
 
     Retrieve vector store
 
+```javascript
+await client.vectorStores.retrieve("vs_123");
+```
+
 ```python
 client.vector_stores.retrieve(
     vector_store_id="vs_123"
 )
 ```
 
-```javascript
-await client.vector_stores.retrieve({
-    vector_store_id: "vs_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	vectorStore, err := client.VectorStores.Get(context.Background(), "vs_123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(vectorStore.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+store = client.vector_stores.retrieve("vs_123")
+puts(store.id)
 ```
 
   
@@ -407,6 +580,12 @@ Update
 
     Update vector store
 
+```javascript
+await client.vectorStores.update("vs_123", {
+  name: "Support FAQ Updated",
+});
+```
+
 ```python
 client.vector_stores.update(
     vector_store_id="vs_123",
@@ -414,11 +593,34 @@ client.vector_stores.update(
 )
 ```
 
-```javascript
-await client.vector_stores.update({
-    vector_store_id: "vs_123",
-    name: "Support FAQ Updated"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	vectorStore, err := client.VectorStores.Update(context.Background(), "vs_123", openai.VectorStoreUpdateParams{
+		Name: openai.String("Support FAQ Updated"),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(vectorStore.Name)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+store = client.vector_stores.update("vs_123", name: "Updated knowledge base")
+puts(store.name)
 ```
 
   
@@ -430,16 +632,42 @@ Delete
 
     Delete vector store
 
+```javascript
+await client.vectorStores.delete("vs_123");
+```
+
 ```python
 client.vector_stores.delete(
     vector_store_id="vs_123"
 )
 ```
 
-```javascript
-await client.vector_stores.delete({
-    vector_store_id: "vs_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	deleted, err := client.VectorStores.Delete(context.Background(), "vs_123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(deleted.Deleted)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+deleted = client.vector_stores.delete("vs_123")
+puts(deleted.deleted)
 ```
 
   
@@ -451,12 +679,40 @@ List
 
     List vector stores
 
+```javascript
+await client.vectorStores.list();
+```
+
 ```python
 client.vector_stores.list()
 ```
 
-```javascript
-await client.vector_stores.list();
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	vectorStores, err := client.VectorStores.List(context.Background(), openai.VectorStoreListParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(vectorStores.Data)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+stores = client.vector_stores.list(limit: 10)
+puts((stores.data || []).length)
 ```
 
 
@@ -473,6 +729,12 @@ Create
 
     Create vector store file
 
+```javascript
+await client.vectorStores.files.createAndPoll("vs_123", {
+  file_id: "file_123",
+});
+```
+
 ```python
 client.vector_stores.files.create_and_poll(
     vector_store_id="vs_123",
@@ -480,11 +742,34 @@ client.vector_stores.files.create_and_poll(
 )
 ```
 
-```javascript
-await client.vector_stores.files.create_and_poll({
-    vector_store_id: "vs_123",
-    file_id: "file_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := client.VectorStores.Files.NewAndPoll(context.Background(), "vs_123", openai.VectorStoreFileNewParams{
+		FileID: "file_123",
+	}, 1000)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(file.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+file = client.vector_stores.files.create("vs_123", file_id: "file_123")
+puts(file.id)
 ```
 
   
@@ -496,6 +781,13 @@ Upload
 
     Upload vector store file
 
+```javascript
+await client.vectorStores.files.uploadAndPoll(
+  "vs_123",
+  fs.createReadStream("customer_policies.txt")
+);
+```
+
 ```python
 client.vector_stores.files.upload_and_poll(
     vector_store_id="vs_123",
@@ -503,11 +795,54 @@ client.vector_stores.files.upload_and_poll(
 )
 ```
 
-```javascript
-await client.vector_stores.files.upload_and_poll({
-    vector_store_id: "vs_123",
-    file: fs.createReadStream("customer_policies.txt"),
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := os.Open("customer_policies.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	result, err := client.VectorStores.Files.UploadAndPoll(context.Background(), "vs_123", openai.FileNewParams{
+		File:    openai.File(file, "customer_policies.txt", "text/plain"),
+		Purpose: openai.FilePurposeAssistants,
+	}, 1000)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(result.ID)
+}
+```
+
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+file = Pathname("customer_policies.txt")
+uploaded = client.files.create(file: file, purpose: :assistants)
+vector_store_file = client.vector_stores.files.create(
+  "vs_123",
+  file_id: uploaded.id
+)
+until [:completed, :failed, :cancelled].include?(vector_store_file.status)
+  sleep(1)
+  vector_store_file = client.vector_stores.files.retrieve(
+    vector_store_file.id,
+    vector_store_id: "vs_123"
+  )
+end
+puts(vector_store_file.id)
 ```
 
   
@@ -519,6 +854,12 @@ Retrieve
 
     Retrieve vector store file
 
+```javascript
+await client.vectorStores.files.retrieve("file_123", {
+  vector_store_id: "vs_123",
+});
+```
+
 ```python
 client.vector_stores.files.retrieve(
     vector_store_id="vs_123",
@@ -526,11 +867,32 @@ client.vector_stores.files.retrieve(
 )
 ```
 
-```javascript
-await client.vector_stores.files.retrieve({
-    vector_store_id: "vs_123",
-    file_id: "file_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := client.VectorStores.Files.Get(context.Background(), "vs_123", "file_123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(file.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+file = client.vector_stores.files.retrieve("file_123", vector_store_id: "vs_123")
+puts(file.id)
 ```
 
   
@@ -542,6 +904,13 @@ Update
 
     Update vector store file
 
+```javascript
+await client.vectorStores.files.update("file_123", {
+  vector_store_id: "vs_123",
+  attributes: { key: "value" },
+});
+```
+
 ```python
 client.vector_stores.files.update(
     vector_store_id="vs_123",
@@ -550,12 +919,36 @@ client.vector_stores.files.update(
 )
 ```
 
-```javascript
-await client.vector_stores.files.update({
-    vector_store_id: "vs_123",
-    file_id: "file_123",
-    attributes: { key: "value" }
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := client.VectorStores.Files.Update(context.Background(), "vs_123", "file_123", openai.VectorStoreFileUpdateParams{
+		Attributes: map[string]openai.VectorStoreFileUpdateParamsAttributeUnion{
+			"key": {OfString: openai.String("value")},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(file.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+file = client.vector_stores.files.update("file_123", vector_store_id: "vs_123", attributes: {category: "policy"})
+puts(file.id)
 ```
 
   
@@ -567,6 +960,12 @@ Delete
 
     Delete vector store file
 
+```javascript
+await client.vectorStores.files.delete("file_123", {
+  vector_store_id: "vs_123",
+});
+```
+
 ```python
 client.vector_stores.files.delete(
     vector_store_id="vs_123",
@@ -574,11 +973,32 @@ client.vector_stores.files.delete(
 )
 ```
 
-```javascript
-await client.vector_stores.files.delete({
-    vector_store_id: "vs_123",
-    file_id: "file_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	deleted, err := client.VectorStores.Files.Delete(context.Background(), "vs_123", "file_123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(deleted.Deleted)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+deleted = client.vector_stores.files.delete("file_123", vector_store_id: "vs_123")
+puts(deleted.deleted)
 ```
 
   
@@ -590,16 +1010,42 @@ List
 
     List vector store files
 
+```javascript
+await client.vectorStores.files.list("vs_123");
+```
+
 ```python
 client.vector_stores.files.list(
     vector_store_id="vs_123"
 )
 ```
 
-```javascript
-await client.vector_stores.files.list({
-    vector_store_id: "vs_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	files, err := client.VectorStores.Files.List(context.Background(), "vs_123", openai.VectorStoreFileListParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(files.Data)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+files = client.vector_stores.files.list("vs_123")
+puts((files.data || []).length)
 ```
 
 
@@ -611,6 +1057,27 @@ await client.vector_stores.files.list({
 Create
 
     Batch create operation
+
+```javascript
+await client.vectorStores.fileBatches.createAndPoll("vs_123", {
+  files: [
+    {
+      file_id: "file_123",
+      attributes: { department: "finance" },
+    },
+    {
+      file_id: "file_456",
+      chunking_strategy: {
+        type: "static",
+        static: {
+          max_chunk_size_tokens: 1200,
+          chunk_overlap_tokens: 200,
+        },
+      },
+    },
+  ],
+});
+```
 
 ```python
 client.vector_stores.file_batches.create_and_poll(
@@ -632,24 +1099,67 @@ client.vector_stores.file_batches.create_and_poll(
 )
 ```
 
-```javascript
-await client.vector_stores.file_batches.create_and_poll({
-    vector_store_id: "vs_123",
-    files: [
-        {
-            file_id: "file_123",
-            attributes: { department: "finance" }
-        },
-        {
-            file_id: "file_456",
-            chunking_strategy: {
-                type: "static",
-                max_chunk_size_tokens: 1200,
-                chunk_overlap_tokens: 200
-            }
-        }
-    ]
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	batch, err := client.VectorStores.FileBatches.NewAndPoll(context.Background(), "vs_123", openai.VectorStoreFileBatchNewParams{
+		Files: []openai.VectorStoreFileBatchNewParamsFile{
+			{
+				FileID: "file_123",
+				Attributes: map[string]openai.VectorStoreFileBatchNewParamsFileAttributeUnion{
+					"department": {OfString: openai.String("finance")},
+				},
+			},
+			{
+				FileID: "file_456",
+				ChunkingStrategy: openai.FileChunkingStrategyParamUnion{OfStatic: &openai.StaticFileChunkingStrategyObjectParam{
+					Static: openai.StaticFileChunkingStrategyParam{MaxChunkSizeTokens: 1200, ChunkOverlapTokens: 200},
+				}},
+			},
+		},
+	}, 1000)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(batch.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+batch = client.vector_stores.file_batches.create(
+  "vs_123",
+  files: [
+    {file_id: "file_123", attributes: {department: "finance"}},
+    {
+      file_id: "file_456",
+      chunking_strategy: {
+        type: :static,
+        max_chunk_size_tokens: 1_200,
+        chunk_overlap_tokens: 200
+      }
+    }
+  ]
+)
+until [:completed, :failed, :cancelled].include?(batch.status)
+  sleep(1)
+  batch = client.vector_stores.file_batches.retrieve(
+    batch.id,
+    vector_store_id: "vs_123"
+  )
+end
+puts(batch.status)
 ```
 
   
@@ -661,6 +1171,12 @@ Retrieve
 
     Batch retrieve operation
 
+```javascript
+await client.vectorStores.fileBatches.retrieve("vsfb_123", {
+  vector_store_id: "vs_123",
+});
+```
+
 ```python
 client.vector_stores.file_batches.retrieve(
     vector_store_id="vs_123",
@@ -668,11 +1184,35 @@ client.vector_stores.file_batches.retrieve(
 )
 ```
 
-```javascript
-await client.vector_stores.file_batches.retrieve({
-    vector_store_id: "vs_123",
-    batch_id: "vsfb_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	batch, err := client.VectorStores.FileBatches.Get(context.Background(), "vs_123", "vsfb_123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(batch.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+batch = client.vector_stores.file_batches.retrieve(
+  "vsfb_123",
+  vector_store_id: "vs_123"
+)
+puts(batch.status)
 ```
 
   
@@ -684,6 +1224,12 @@ Cancel
 
     Batch cancel operation
 
+```javascript
+await client.vectorStores.fileBatches.cancel("vsfb_123", {
+  vector_store_id: "vs_123",
+});
+```
+
 ```python
 client.vector_stores.file_batches.cancel(
     vector_store_id="vs_123",
@@ -691,11 +1237,35 @@ client.vector_stores.file_batches.cancel(
 )
 ```
 
-```javascript
-await client.vector_stores.file_batches.cancel({
-    vector_store_id: "vs_123",
-    batch_id: "vsfb_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	batch, err := client.VectorStores.FileBatches.Cancel(context.Background(), "vs_123", "vsfb_123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(batch.Status)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+batch = client.vector_stores.file_batches.cancel(
+  "vsfb_123",
+  vector_store_id: "vs_123"
+)
+puts(batch.status)
 ```
 
   
@@ -707,6 +1277,12 @@ List
 
     List files in a batch
 
+```javascript
+await client.vectorStores.fileBatches.listFiles("vsfb_123", {
+  vector_store_id: "vs_123",
+});
+```
+
 ```python
 client.vector_stores.file_batches.list_files(
     "vsfb_123",
@@ -714,10 +1290,35 @@ client.vector_stores.file_batches.list_files(
 )
 ```
 
-```javascript
-await client.vectorStores.fileBatches.listFiles("vsfb_123", {
-    vector_store_id: "vs_123"
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	files, err := client.VectorStores.FileBatches.ListFiles(context.Background(), "vs_123", "vsfb_123", openai.VectorStoreFileBatchListFilesParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(files.Data)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+files = client.vector_stores.file_batches.list_files(
+  "vsfb_123",
+  vector_store_id: "vs_123"
+)
+puts((files.data || []).length)
 ```
 
 
@@ -732,6 +1333,17 @@ Each `vector_store.file` can have associated `attributes`, a dictionary of value
 
 Create vector store file with attributes
 
+```javascript
+await client.vectorStores.files.create("<vector_store_id>", {
+  file_id: "file_123",
+  attributes: {
+    region: "US",
+    category: "Marketing",
+    date: 1672531200, // Jan 1, 2023
+  },
+});
+```
+
 ```python
 client.vector_stores.files.create(
     vector_store_id="<vector_store_id>",
@@ -744,15 +1356,39 @@ client.vector_stores.files.create(
 )
 ```
 
-```javascript
-await client.vector_stores.files.create(<vector_store_id>, {
-    file_id: "file_123",
-    attributes: {
-        region: "US",
-        category: "Marketing",
-        date: 1672531200, // Jan 1, 2023
-    },
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := client.VectorStores.Files.New(context.Background(), "<vector_store_id>", openai.VectorStoreFileNewParams{
+		FileID: "file_123",
+		Attributes: map[string]openai.VectorStoreFileNewParamsAttributeUnion{
+			"region":   {OfString: openai.String("US")},
+			"category": {OfString: openai.String("Marketing")},
+			"date":     {OfFloat: openai.Float(1672531200)},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(file.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+file = client.vector_stores.files.create("<vector_store_id>", file_id: "file_123", attributes: {category: "policy"})
+puts(file.id)
 ```
 
 
@@ -761,6 +1397,15 @@ await client.vector_stores.files.create(<vector_store_id>, {
 You can set an expiration policy on `vector_store` objects with `expires_after`. Once a vector store expires, all associated `vector_store.file` objects will be deleted and you'll no longer be charged for them.
 
 Set expiration policy for vector store
+
+```javascript
+await client.vectorStores.update("vs_123", {
+  expires_after: {
+    anchor: "last_active_at",
+    days: 7,
+  },
+});
+```
 
 ```python
 client.vector_stores.update(
@@ -772,14 +1417,37 @@ client.vector_stores.update(
 )
 ```
 
-```javascript
-await client.vector_stores.update({
-    vector_store_id: "vs_123",
-    expires_after: {
-        anchor: "last_active_at",
-        days: 7,
-    },
-});
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	vectorStore, err := client.VectorStores.Update(context.Background(), "vs_123", openai.VectorStoreUpdateParams{
+		ExpiresAfter: openai.VectorStoreUpdateParamsExpiresAfter{Days: 7},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(vectorStore.ExpiresAfter)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+store = client.vector_stores.update(
+  "vs_123",
+  expires_after: {anchor: :last_active_at, days: 7}
+)
+puts(store.expires_after)
 ```
 
 
@@ -833,6 +1501,18 @@ After performing a query you may want to synthesize a response based on the resu
 
 Perform search query to get results
 
+```javascript
+import OpenAI from "openai";
+
+const client = new OpenAI();
+
+const userQuery = "What is the return policy?";
+
+const results = await client.vectorStores.search(vector_store.id, {
+  query: userQuery,
+});
+```
+
 ```python
 from openai import OpenAI
 
@@ -846,21 +1526,66 @@ results = client.vector_stores.search(
 )
 ```
 
-```javascript
-import OpenAI from "openai";
+```go
+package main
 
-const client = new OpenAI();
+import (
+	"context"
+	"fmt"
 
-const userQuery = "What is the return policy?";
+	"github.com/openai/openai-go/v3"
+)
 
-const results = await client.vectorStores.search({
-    vector_store_id: vector_store.id,
-    query: userQuery,
-});
+func main() {
+	client := openai.NewClient()
+	results, err := client.VectorStores.Search(context.Background(), "vs_123", openai.VectorStoreSearchParams{
+		Query: openai.VectorStoreSearchParamsQueryUnion{OfString: openai.String("What is the return policy?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(results.Data)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+results = client.vector_stores.search(
+  "vs_123",
+  query: "What is the return policy?"
+)
+puts(results.data)
 ```
 
 
 Synthesize a response based on results
+
+```javascript
+const formattedResults = formatResults(results.data);
+// Join the text content of all results
+const textSources = results.data
+  .map((result) => result.content.map((c) => c.text).join("\n"))
+  .join("\n");
+
+const completion = await client.chat.completions.create({
+  model: "gpt-5.6",
+  messages: [
+    {
+      role: "developer",
+      content:
+        "Produce a concise answer to the query based on the provided sources.",
+    },
+    {
+      role: "user",
+      content: `Sources: ${formattedResults}\n\nQuery: '${userQuery}'`,
+    },
+  ],
+});
+
+console.log(completion.choices[0].message.content);
+```
 
 ```python
 formatted_results = format_results(results.data)
@@ -884,26 +1609,77 @@ completion = client.chat.completions.create(
 print(completion.choices[0].message.content)
 ```
 
-```javascript
-const formattedResults = formatResults(results.data);
-// Join the text content of all results
-const textSources = results.data.map(result => result.content.map(c => c.text).join('\n')).join('\n');
+```go
+package main
 
-const completion = await client.chat.completions.create({
-    model: "gpt-5.6",
-    messages: [
-        {
-            role: "developer",
-            content: "Produce a concise answer to the query based on the provided sources."
-        },
-        {
-            role: "user",
-            content: `Sources: ${formattedResults}\n\nQuery: 'What is the return policy?'`
-        }
-    ],
-});
+import (
+	"context"
+	"fmt"
+	"strings"
 
-console.log(completion.choices[0].message.content);
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	userQuery := "What is the return policy?"
+	results, err := client.VectorStores.Search(context.Background(), "vs_123", openai.VectorStoreSearchParams{
+		Query: openai.VectorStoreSearchParamsQueryUnion{OfString: openai.String(userQuery)},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model: "gpt-5.6",
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.DeveloperMessage("Produce a concise answer to the query based on the provided sources."),
+			openai.UserMessage(fmt.Sprintf("Sources: %s\n\nQuery: %q", formatResults(results.Data), userQuery)),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(completion.Choices[0].Message.Content)
+}
+
+func formatResults(results []openai.VectorStoreSearchResponse) string {
+	var sources strings.Builder
+	sources.WriteString("<sources>")
+	for _, result := range results {
+		fmt.Fprintf(&sources, "<result file_id=%q file_name=%q>", result.FileID, result.Filename)
+		for _, content := range result.Content {
+			fmt.Fprintf(&sources, "<content>%s</content>", content.Text)
+		}
+		sources.WriteString("</result>")
+	}
+	sources.WriteString("</sources>")
+	return sources.String()
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+query = "What is the return policy?"
+results = client.vector_stores.search("vs_123", query: query)
+sources = (results.data || []).map do |result|
+  content = result.content.map { |part| "<content>#{part.text}</content>" }.join
+  "<result file_id='#{result.file_id}' file_name='#{result.filename}'>#{content}</result>"
+end.join
+
+completion = client.chat.completions.create(
+  model: "gpt-5.6",
+  messages: [
+    {
+      role: :developer,
+      content: "Answer the query concisely using only the provided sources."
+    },
+    {role: :user, content: "Sources: <sources>#{sources}</sources>\n\nQuery: #{query}"}
+  ]
+)
+puts(completion.choices.fetch(0).message.content)
 ```
 
 
@@ -915,6 +1691,20 @@ This uses a sample `format_results` function, which could be implemented like
 so:
 
 Sample result formatting function
+
+```javascript
+function formatResults(results) {
+  let formattedResults = "";
+  for (const result of results.data) {
+    let formattedResult = `<result file_id='${result.file_id}' file_name='${result.filename}'>`;
+    for (const part of result.content) {
+      formattedResult += `<content>${part.text}</content>`;
+    }
+    formattedResults += formattedResult + "</result>";
+  }
+  return `<sources>${formattedResults}</sources>`;
+}
+```
 
 ```python
 def format_results(results):
@@ -929,16 +1719,53 @@ def format_results(results):
     return f"<sources>{formatted_results}</sources>"
 ```
 
-```javascript
-function formatResults(results) {
-    let formattedResults = '';
-    for (const result of results.data) {
-        let formattedResult = `<result file_id='${result.file_id}' file_name='${result.file_name}'>`;
-        for (const part of result.content) {
-            formattedResult += `<content>${part.text}</content>`;
-        }
-        formattedResults += formattedResult + "</result>";
-    }
-    return `<sources>${formattedResults}</sources>`;
+```go
+package main
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	results := []openai.VectorStoreSearchResponse{{
+		FileID:   "file-12345",
+		Filename: "woodchuck_policy.txt",
+		Content:  []openai.VectorStoreSearchResponseContent{{Text: "Each passenger may carry up to two woodchucks."}},
+	}}
+	fmt.Println(formatResults(results))
 }
+
+func formatResults(results []openai.VectorStoreSearchResponse) string {
+	var sources strings.Builder
+	sources.WriteString("<sources>")
+	for _, result := range results {
+		fmt.Fprintf(&sources, "<result file_id=%q file_name=%q>", result.FileID, result.Filename)
+		for _, content := range result.Content {
+			fmt.Fprintf(&sources, "<content>%s</content>", content.Text)
+		}
+		sources.WriteString("</result>")
+	}
+	sources.WriteString("</sources>")
+	return sources.String()
+}
+```
+
+```ruby
+results = [
+  {
+    file_id: "file-12345",
+    filename: "woodchuck_policy.txt",
+    content: [{text: "Each passenger may carry up to two woodchucks."}]
+  }
+]
+
+sources = results.map do |result|
+  content = result.fetch(:content).map { |part| "<content>#{part.fetch(:text)}</content>" }.join
+  "<result file_id=\"#{result.fetch(:file_id)}\" file_name=\"#{result.fetch(:filename)}\">#{content}</result>"
+end
+
+puts("<sources>#{sources.join}</sources>")
 ```

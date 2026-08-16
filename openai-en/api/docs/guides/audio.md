@@ -17,7 +17,7 @@ An audio application combines one or more of these modalities:
 
 ## Common speech tasks
 
-**Speech to text** converts speech into text. Use it for captions, notes, transcripts, analytics, search, and accessibility. Transcription can be request-based for files or streaming for live audio.
+**Speech to text** converts speech into text. Use it for captions, notes, transcripts, analytics, search, and accessibility. Transcription can be request-based for files or streaming for live audio. Start with the [Transcription overview](https://developers.openai.com/api/docs/guides/transcription) to choose a workflow and model.
 
 **Text to speech** converts text into spoken audio. Use it for narration, assistants, accessibility, and generated voice responses. Speech generation can stream audio back as the model produces it.
 
@@ -37,9 +37,9 @@ OpenAI supports two broad audio architectures:
 
 | Architecture                | Use when                                             | Examples                                                                                                                                                       |
 | --------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Request-based audio APIs    | You have a file, a text input, or a bounded request. | [Speech to text](https://developers.openai.com/api/docs/guides/speech-to-text), [text to speech](https://developers.openai.com/api/docs/guides/text-to-speech).                                                          |
+| Request-based audio APIs    | You have a file, a text input, or a bounded request. | [File transcription](https://developers.openai.com/api/docs/guides/speech-to-text), [text to speech](https://developers.openai.com/api/docs/guides/text-to-speech).                                                      |
 | Realtime sessions           | Audio is live and the app needs low-latency events.  | [Voice agents](https://developers.openai.com/api/docs/guides/voice-agents), [translation](https://developers.openai.com/api/docs/guides/realtime-translation), [transcription](https://developers.openai.com/api/docs/guides/realtime-transcription). |
-| Multimodal chat completions | You are extending an existing chat flow with audio.  | [Audio input or output](#add-audio-to-your-existing-application).                                                                                              |
+| Multimodal Chat Completions | You are extending an existing chat flow with audio.  | [Audio input or output](#add-audio-to-your-existing-application).                                                                                              |
 
 For build-path guidance, see the [Realtime and audio overview](https://developers.openai.com/api/docs/guides/realtime).
 
@@ -47,7 +47,7 @@ For build-path guidance, see the [Realtime and audio overview](https://developer
 
 Models such as [`gpt-realtime-2.1`](https://developers.openai.com/api/docs/models/gpt-realtime-2.1) and [`gpt-audio-1.5`](https://developers.openai.com/api/docs/models/gpt-audio-1.5) are natively multimodal, meaning they can understand and generate audio and text as input and output.
 
-For live browser speech-to-speech interactions, start with a realtime session in the JavaScript SDK:
+For live browser speech-to-speech interactions, start with a realtime session in the Agents SDK for JavaScript:
 
 Start a realtime voice session
 
@@ -69,7 +69,7 @@ await session.connect({
 ```
 
 
-This example uses JavaScript because browser voice agents connect with WebRTC from the client. For Python voice workflows, use the [Voice agents guide](https://developers.openai.com/api/docs/guides/voice-agents), which covers chained voice pipelines.
+This JavaScript example uses the Agents SDK to connect browser voice agents with WebRTC from the client. For Python voice workflows, use the [Voice agents guide](https://developers.openai.com/api/docs/guides/voice-agents), which covers chained voice pipelines.
 
 If you already have a text-based LLM application with the [Chat Completions endpoint](https://developers.openai.com/api/reference/resources/chat), you may want to add audio capabilities. For example, if your chat application supports text input, you can add audio input and output: include `audio` in the `modalities` array and use an audio model, like [`gpt-audio-1.5`](https://developers.openai.com/api/docs/models/gpt-audio-1.5).
 
@@ -132,6 +132,60 @@ print(completion.choices[0])
 wav_bytes = base64.b64decode(completion.choices[0].message.audio.data)
 with open("dog.wav", "wb") as f:
     f.write(wav_bytes)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"encoding/base64"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model:      "gpt-audio-1.5",
+		Modalities: []string{"text", "audio"},
+		Audio: openai.ChatCompletionAudioParam{
+			Voice:  openai.ChatCompletionAudioParamVoiceUnion{OfString: openai.String("alloy")},
+			Format: openai.ChatCompletionAudioParamFormatWAV,
+		},
+		Messages: []openai.ChatCompletionMessageParamUnion{openai.UserMessage("Is a golden retriever a good family dog?")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.Choices[0])
+	audio, err := base64.StdEncoding.DecodeString(response.Choices[0].Message.Audio.Data)
+	if err != nil {
+		panic(err)
+	}
+	if err := os.WriteFile("dog.wav", audio, 0o600); err != nil {
+		panic(err)
+	}
+}
+```
+
+```ruby
+require "base64"
+require "openai"
+
+client = OpenAI::Client.new
+completion = client.chat.completions.create(
+  model: "gpt-audio-1.5",
+  messages: [{role: :user, content: "Is a golden retriever a good family dog?"}],
+  modalities: [:text, :audio],
+  audio: {voice: :alloy, format: :wav},
+  store: true
+)
+
+audio = completion.choices.fetch(0).message.audio or raise "No audio returned"
+File.binwrite("dog.wav", Base64.strict_decode64(audio.data))
 ```
 
 ```bash
@@ -225,6 +279,69 @@ completion = client.chat.completions.create(
 )
 
 print(completion.choices[0].message)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"encoding/base64"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	audio, err := os.ReadFile("fixtures/audio.wav")
+	if err != nil {
+		panic(err)
+	}
+	client := openai.NewClient()
+	response, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model:      "gpt-audio-1.5",
+		Modalities: []string{"text", "audio"},
+		Audio: openai.ChatCompletionAudioParam{
+			Voice:  openai.ChatCompletionAudioParamVoiceUnion{OfString: openai.String("alloy")},
+			Format: openai.ChatCompletionAudioParamFormatWAV,
+		},
+		Messages: []openai.ChatCompletionMessageParamUnion{openai.UserMessage([]openai.ChatCompletionContentPartUnionParam{
+			openai.TextContentPart("What is in this recording?"),
+			openai.InputAudioContentPart(openai.ChatCompletionContentPartInputAudioInputAudioParam{
+				Data:   base64.StdEncoding.EncodeToString(audio),
+				Format: "wav",
+			}),
+		})},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.Choices[0])
+}
+```
+
+```ruby
+require "base64"
+require "openai"
+
+client = OpenAI::Client.new
+audio = Base64.strict_encode64(File.binread("audio.wav"))
+completion = client.chat.completions.create(
+  model: "gpt-audio-1.5",
+  messages: [{
+    role: :user,
+    content: [
+      {type: :text, text: "What is in this recording?"},
+      {type: :input_audio, input_audio: {data: audio, format: :wav}}
+    ]
+  }],
+  modalities: [:text, :audio],
+  audio: {voice: :alloy, format: :wav},
+  store: true
+)
+
+puts(completion.choices.fetch(0).message.content)
 ```
 
 ```bash

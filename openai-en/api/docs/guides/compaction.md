@@ -80,6 +80,96 @@ while keep_going:
     )
 ```
 
+```go
+package main
+
+import (
+	"bufio"
+	"context"
+	"encoding/json"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	conversation := []responses.ResponseInputItemUnionParam{
+		responses.ResponseInputItemParamOfMessage("Let's begin a long coding task.", responses.EasyInputMessageRoleUser),
+	}
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+			Model: "gpt-5.3-codex",
+			Store: openai.Bool(false),
+			Input: responses.ResponseNewParamsInputUnion{OfInputItemList: conversation},
+			ContextManagement: []responses.ResponseNewParamsContextManagement{{
+				Type: "compaction", CompactThreshold: openai.Int(200000),
+			}},
+		})
+		if err != nil {
+			panic(err)
+		}
+		conversation = append(conversation, outputAsInput(response.Output)...)
+		fmt.Println(response.OutputText())
+		if !scanner.Scan() {
+			break
+		}
+		conversation = append(conversation,
+			responses.ResponseInputItemParamOfMessage(scanner.Text(), responses.EasyInputMessageRoleUser),
+		)
+	}
+	if err := scanner.Err(); err != nil {
+		panic(err)
+	}
+}
+
+func outputAsInput(output []responses.ResponseOutputItemUnion) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+conversation = [{
+  type: :message,
+  role: :user,
+  content: "Let's begin a long coding task."
+}]
+
+response = client.responses.create(
+  model: "gpt-5.3-codex",
+  input: conversation,
+  store: false,
+  context_management: [{type: :compaction, compact_threshold: 200_000}]
+)
+conversation.concat(response.output)
+conversation << {
+  type: :message,
+  role: :user,
+  content: "Now implement the next step."
+}
+next_response = client.responses.create(
+  model: "gpt-5.3-codex",
+  input: conversation,
+  store: false,
+  context_management: [{type: :compaction, compact_threshold: 200_000}]
+)
+puts(next_response.output_text)
+```
+
 
 ## Standalone compact endpoint
 
@@ -143,4 +233,82 @@ next_response = client.responses.create(
     input=next_input,
     store=False,  # Keep the flow ZDR-friendly
 )
+```
+
+```go
+package main
+
+import (
+	"bufio"
+	"context"
+	"encoding/json"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	longInputItems := []responses.ResponseInputItemUnionParam{
+		responses.ResponseInputItemParamOfMessage("Plan a trip to Kyoto.", responses.EasyInputMessageRoleUser),
+	}
+	compacted, err := client.Responses.Compact(context.Background(), responses.ResponseCompactParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseCompactParamsInputUnion{OfResponseInputItemArray: longInputItems},
+	})
+	if err != nil {
+		panic(err)
+	}
+	scanner := bufio.NewScanner(os.Stdin)
+	if !scanner.Scan() {
+		return
+	}
+	nextInput := append(outputAsInput(compacted.Output),
+		responses.ResponseInputItemParamOfMessage(scanner.Text(), responses.EasyInputMessageRoleUser),
+	)
+	nextResponse, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Store: openai.Bool(false),
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: nextInput},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(nextResponse.OutputText())
+}
+
+func outputAsInput(output []responses.ResponseOutputItemUnion) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+long_input = [{role: :user, content: "Plan a trip to Kyoto."}]
+compaction = client.responses.compact(
+  model: "gpt-5.6",
+  input: long_input
+)
+next_input = [
+  *compaction.output,
+  {type: :message, role: :user, content: "Add restaurant recommendations."}
+]
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: next_input,
+  store: false
+)
+puts(response.output_text)
 ```

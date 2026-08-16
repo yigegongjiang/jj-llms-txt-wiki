@@ -113,6 +113,65 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	prompt := strings.Join([]string{
+		"Our CI job started failing after a dependency bump.",
+		"",
+		"Error:",
+		"TypeError: Timeout.__init__() got an unexpected keyword argument 'connect'",
+		"",
+		"Identify the likeliest root cause and the smallest safe fix.",
+	}, "\n")
+	reasoning := shared.ReasoningParam{Effort: shared.ReasoningEffortXhigh}
+	reasoning.SetExtraFields(map[string]any{"mode": "pro"})
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:     "gpt-5.6",
+		Reasoning: reasoning,
+		Input:     responses.ResponseNewParamsInputUnion{OfString: openai.String(prompt)},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+prompt = <<~PROMPT
+  Our CI job started failing after a dependency bump.
+
+  Error:
+  TypeError: Timeout.__init__() got an unexpected keyword argument 'connect'
+
+  Identify the likeliest root cause and the smallest safe fix.
+PROMPT
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  reasoning: {effort: :xhigh, mode: :pro},
+  input: prompt
+)
+
+puts(response.output_text)
+```
+
 
 ## Set up `text.verbosity`
 
@@ -173,6 +232,60 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	incident := strings.Join([]string{
+		"Summarize this incident for the next on-call engineer.",
+		"- checkout latency spiked from 220 ms to 4.8 s",
+		"- only us-east-1 was affected",
+		"- rollback is complete",
+		"- likely trigger: cache stampede after deploy",
+	}, "\n")
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Text:  responses.ResponseTextConfigParam{Verbosity: "low"},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String(incident)},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+incident = <<~INCIDENT
+  Summarize this incident for the next on-call engineer.
+  - checkout latency spiked from 220 ms to 4.8 s
+  - only us-east-1 was affected
+  - rollback is complete
+  - likely trigger: cache stampede after deploy
+INCIDENT
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  text: {verbosity: :low},
+  input: incident
+)
+
+puts(response.output_text)
 ```
 
 
@@ -379,6 +492,118 @@ response = client.responses.create(
 print(response.output)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	billing := namespaceTool(
+		"billing",
+		"Billing tools for invoices, payments, taxes, and credits.",
+		"lookup_invoice",
+		"Look up invoice state, taxes, credits, and payment attempts.",
+		"invoice_id",
+	)
+	crm := namespaceTool(
+		"crm",
+		"CRM tools for account ownership, plans, health, and payment history.",
+		"get_account",
+		"Fetch account owner, plan, health, and payment history.",
+		"account_id",
+	)
+	toolSearch := responses.ToolUnionParam{OfToolSearch: &responses.ToolSearchToolParam{}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String(
+			"Find the right billing tool and explain why invoice INV-1043 still shows overdue after a payment yesterday.",
+		)},
+		Tools: []responses.ToolUnionParam{billing, crm, toolSearch},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.Output)
+}
+
+func namespaceTool(namespace, namespaceDescription, name, description, argument string) responses.ToolUnionParam {
+	parameters := map[string]any{
+		"type": "object",
+		"properties": map[string]any{
+			argument: map[string]any{"type": "string"},
+		},
+		"required":             []string{argument},
+		"additionalProperties": false,
+	}
+	function := responses.NamespaceToolToolFunctionParam{
+		Name: name, Description: openai.String(description), Parameters: parameters, Strict: openai.Bool(true), DeferLoading: openai.Bool(true),
+	}
+	return responses.ToolParamOfNamespace(
+		namespaceDescription,
+		namespace,
+		[]responses.NamespaceToolToolUnionParam{{OfFunction: &function}},
+	)
+}
+```
+
+```ruby
+require "openai"
+
+def namespace_tool(name, description, function_name, function_description, argument)
+  {
+    type: :namespace,
+    name: name,
+    description: description,
+    tools: [
+      {
+        type: :function,
+        name: function_name,
+        description: function_description,
+        defer_loading: true,
+        strict: true,
+        parameters: {
+          type: "object",
+          properties: {argument => {type: "string"}},
+          required: [argument],
+          additionalProperties: false
+        }
+      }
+    ]
+  }
+end
+
+client = OpenAI::Client.new
+billing = namespace_tool(
+  "billing",
+  "Billing tools for invoices, payments, taxes, and credits.",
+  "lookup_invoice",
+  "Look up invoice state, taxes, credits, and payment attempts.",
+  "invoice_id"
+)
+crm = namespace_tool(
+  "crm",
+  "CRM tools for account ownership, plans, health, and payment history.",
+  "get_account",
+  "Fetch account owner, plan, health, and payment history.",
+  "account_id"
+)
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Find the right billing tool and explain why invoice INV-1043 still shows overdue after a payment yesterday.",
+  tools: [billing, crm, {type: :tool_search}]
+)
+
+puts(response.output)
+```
+
 
 ## Use Programmatic Tool Calling
 
@@ -555,6 +780,90 @@ next_response = client.responses.create(
 print(next_response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	longWindow := []responses.ResponseInputItemUnionParam{
+		responses.ResponseInputItemParamOfMessage("Find the cache invalidation bug in this debugging session.", responses.EasyInputMessageRoleUser),
+	}
+	compacted, err := client.Responses.Compact(context.Background(), responses.ResponseCompactParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseCompactParamsInputUnion{OfResponseInputItemArray: longWindow},
+	})
+	if err != nil {
+		panic(err)
+	}
+	input := append(outputAsInput(compacted.Output),
+		responses.ResponseInputItemParamOfMessage(
+			"We found the bad cache invalidation path. Write the fix plan and the verification checklist.",
+			responses.EasyInputMessageRoleUser,
+		),
+	)
+	nextResponse, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Store: openai.Bool(false),
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: input},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(nextResponse.OutputText())
+}
+
+func outputAsInput(output []responses.ResponseOutputItemUnion) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+long_window = [
+  {
+    role: :user,
+    content: "Find the cache invalidation bug in this debugging session."
+  }
+]
+
+compacted = client.responses.compact(
+  model: "gpt-5.6",
+  input: long_window
+)
+input = compacted.output.map(&:to_h)
+input << {
+  role: :user,
+  content: "We found the bad cache invalidation path. Write the fix plan and the verification checklist."
+}
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  store: false,
+  input: input
+)
+
+puts(response.output_text)
+```
+
 
 ## Use `prompt_cache_key`
 
@@ -627,6 +936,58 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	instructions := strings.Join([]string{
+		"You are the support agent for Acme.",
+		"Follow the Acme support policy and escalation rubric.",
+		"Use the same tone, safety rules, and tool plan for each ticket.",
+	}, "\n")
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:          "gpt-5.6",
+		PromptCacheKey: openai.String("tenant-acme-support-agent"),
+		Instructions:   openai.String(instructions),
+		Input:          responses.ResponseNewParamsInputUnion{OfString: openai.String("Summarize the current escalation for the on-call lead.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+instructions = <<~INSTRUCTIONS
+  You are the support agent for Acme.
+  Follow the Acme support policy and escalation rubric.
+  Use the same tone, safety rules, and tool plan for each ticket.
+INSTRUCTIONS
+
+response = client.responses.create(
+  model: "gpt-5.6",
+  prompt_cache_key: "tenant-acme-support-agent",
+  instructions: instructions,
+  input: "Summarize the current escalation for the on-call lead."
+)
+
+puts(response.output_text)
 ```
 
 
@@ -728,6 +1089,98 @@ second = client.responses.create(
 print(second.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	history := []responses.ResponseInputItemUnionParam{
+		responses.ResponseInputItemParamOfMessage("Investigate why invoice INV-1043 has mismatched tax totals.", responses.EasyInputMessageRoleUser),
+	}
+	first, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:     "gpt-5.6",
+		Store:     openai.Bool(false),
+		Reasoning: shared.ReasoningParam{Effort: shared.ReasoningEffortMedium, Context: shared.ReasoningContextCurrentTurn},
+		Include:   []responses.ResponseIncludable{responses.ResponseIncludableReasoningEncryptedContent},
+		Input:     responses.ResponseNewParamsInputUnion{OfInputItemList: history},
+	})
+	if err != nil {
+		panic(err)
+	}
+	history = append(history, outputAsInput(first.Output)...)
+	history = append(history, responses.ResponseInputItemParamOfMessage(
+		"Now write the customer-facing explanation in plain English.",
+		responses.EasyInputMessageRoleUser,
+	))
+	second, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:     "gpt-5.6",
+		Store:     openai.Bool(false),
+		Reasoning: shared.ReasoningParam{Effort: shared.ReasoningEffortMedium, Context: shared.ReasoningContextAllTurns},
+		Input:     responses.ResponseNewParamsInputUnion{OfInputItemList: history},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(second.OutputText())
+}
+
+func outputAsInput(output []responses.ResponseOutputItemUnion) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+history = [
+  {
+    role: :user,
+    content: "Investigate why invoice INV-1043 has mismatched tax totals."
+  }
+]
+
+first = client.responses.create(
+  model: "gpt-5.6",
+  store: false,
+  reasoning: {effort: :medium, context: :current_turn},
+  include: ["reasoning.encrypted_content"],
+  input: history
+)
+history.concat(first.output.map(&:to_h))
+history << {
+  role: :user,
+  content: "Now write the customer-facing explanation in plain English."
+}
+
+second = client.responses.create(
+  model: "gpt-5.6",
+  store: false,
+  reasoning: {effort: :medium, context: :all_turns},
+  input: history
+)
+
+puts(second.output_text)
+```
+
 
 ## Set image detail intentionally
 
@@ -821,6 +1274,70 @@ while job.status in {"queued", "in_progress"}:
     job = client.responses.retrieve(job.id)
 
 print(job.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolParamOfCodeInterpreter(responses.ToolCodeInterpreterContainerCodeInterpreterContainerAutoParam{
+		FileIDs: []string{"file_abc123"},
+	})
+	job, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:      "gpt-5.6",
+		Background: openai.Bool(true),
+		Store:      openai.Bool(false),
+		Input:      responses.ResponseNewParamsInputUnion{OfString: openai.String("Analyze this large log bundle and cluster the primary failure modes.")},
+		Tools:      []responses.ToolUnionParam{tool},
+	})
+	if err != nil {
+		panic(err)
+	}
+	for job.Status == responses.ResponseStatusQueued || job.Status == responses.ResponseStatusInProgress {
+		time.Sleep(2 * time.Second)
+		job, err = client.Responses.Get(context.Background(), job.ID, responses.ResponseGetParams{})
+		if err != nil {
+			panic(err)
+		}
+	}
+	fmt.Println(job.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+job = client.responses.create(
+  model: "gpt-5.6",
+  background: true,
+  store: false,
+  input: "Analyze this large log bundle and cluster the primary failure modes.",
+  tools: [
+    {
+      type: :code_interpreter,
+      container: {type: :auto, file_ids: ["file_abc123"]}
+    }
+  ]
+)
+
+while [:queued, :in_progress].include?(job.status)
+  sleep(2)
+  job = client.responses.retrieve(job.id)
+end
+
+puts(job.output_text)
 ```
 
 

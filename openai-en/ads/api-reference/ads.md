@@ -58,7 +58,7 @@ Create an ad for an ad group.
 | --------------------- | ------ | --------------- | ------------------------------------------------------------------------------------------------------------- |
 | `ad_group_id`         | string | Yes             | Parent ad group ID.                                                                                           |
 | `name`                | string | Yes             | `3` to `1000` chars and must include a non-space character. Used for organization, is not shown to end users. |
-| `creative.type`       | string | Yes             | `chat_card` or `product_ad_template`. See [Product feeds](https://developers.openai.com/ads/product-feeds).                                |
+| `creative.type`       | string | Yes             | `chat_card` or `product_ad_template`. See [Product Feeds](https://developers.openai.com/ads/product-feeds).                                |
 | `creative.title`      | string | Yes             | `3` to `50` chars.                                                                                            |
 | `creative.body`       | string | Yes             | Maximum `100` chars.                                                                                          |
 | `creative.price`      | string | No              | Price text or `{{product.price}}` for a product-ad template.                                                  |
@@ -133,13 +133,24 @@ curl -X POST "https://api.ads.openai.com/v1/ads/ad_501" \
 
 ## Review status
 
-Every ad response includes `review_status`, which can be:
+Every returned ad object includes `review_status`, which can be:
 
 - `in_review`
 - `rejected`
 - `approved`
 
 If your ad has been rejected, it violates one of our [ads policies](https://openai.com/policies/ad-policies/). Please edit your ad for it to be re-reviewed.
+
+## Preview an ad
+
+Preview an existing ad by ID. The preview expires 24 hours after creation.
+
+`POST /ads/{ad_id}/preview`
+
+```bash
+curl -X POST "https://api.ads.openai.com/v1/ads/ad_501/preview" \
+  -H "Authorization: Bearer $OPENAI_ADS_API_KEY"
+```
 
 ## Change state with dedicated actions
 

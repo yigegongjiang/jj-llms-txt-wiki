@@ -35,27 +35,30 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
-```cli
-openai responses create \
-  --model "gpt-5.6" \
-  --input "Write a one-sentence bedtime story about a unicorn." \
-  --raw-output \
-  --transform 'output.#(type=="message").content.0.text'
-```
+```go
+package main
 
-```csharp
-using OpenAI.Responses;
-#pragma warning disable OPENAI001
+import (
+	"context"
+	"fmt"
 
-string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
-ResponsesClient client = new(key);
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
 
-ResponseResult response = await client.CreateResponseAsync(
-    "gpt-5.6",
-    "Say 'this is a test.'"
-);
+func main() {
+	client := openai.NewClient()
 
-Console.WriteLine($"[ASSISTANT]: {response.GetOutputText()}");
+	resp, err := client.Responses.New(context.TODO(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Say this is a test")},
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Println(resp.OutputText())
+}
 ```
 
 ```java
@@ -81,33 +84,19 @@ public class Main {
 }
 ```
 
-```go
-package main
+```csharp
+using OpenAI.Responses;
+#pragma warning disable OPENAI001
 
-import (
-	"context"
-	"fmt"
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+ResponsesClient client = new(key);
 
-	"github.com/openai/openai-go/v3"
-	"github.com/openai/openai-go/v3/option"
-	"github.com/openai/openai-go/v3/responses"
-)
+ResponseResult response = await client.CreateResponseAsync(
+    "gpt-5.6",
+    "Say 'this is a test.'"
+);
 
-func main() {
-	client := openai.NewClient(
-		option.WithAPIKey("My API Key"), // or set OPENAI_API_KEY in your env
-	)
-
-	resp, err := client.Responses.New(context.TODO(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
-		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Say this is a test")},
-	})
-	if err != nil {
-		panic(err.Error())
-	}
-
-	fmt.Println(resp.OutputText())
-}
+Console.WriteLine($"[ASSISTANT]: {response.GetOutputText()}");
 ```
 
 ```ruby
@@ -121,6 +110,14 @@ response = openai.responses.create(
 )
 
 puts(response.output_text)
+```
+
+```bash
+openai responses create \
+  --model "gpt-5.6" \
+  --input "Write a one-sentence bedtime story about a unicorn." \
+  --raw-output \
+  --transform 'output.#(type=="message").content.0.text'
 ```
 
 ```bash
@@ -225,6 +222,52 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:        "gpt-5.6",
+		Instructions: openai.String("Talk like a pirate."),
+		Reasoning: responses.ReasoningParam{
+			Effort: responses.ReasoningEffortLow,
+		},
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("Are semicolons optional in JavaScript?"),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  instructions: "Talk like a pirate.",
+  reasoning: {effort: :low},
+  input: "Are semicolons optional in JavaScript?"
+)
+
+puts(response.output_text)
+```
+
 ```bash
 curl "https://api.openai.com/v1/responses" \
     -H "Content-Type: application/json" \
@@ -279,6 +322,62 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Reasoning: responses.ReasoningParam{
+			Effort: responses.ReasoningEffortLow,
+		},
+		Input: responses.ResponseNewParamsInputUnion{
+			OfInputItemList: responses.ResponseInputParam{
+				responses.ResponseInputItemParamOfMessage(
+					"Talk like a pirate.",
+					responses.EasyInputMessageRoleDeveloper,
+				),
+				responses.ResponseInputItemParamOfMessage(
+					"Are semicolons optional in JavaScript?",
+					responses.EasyInputMessageRoleUser,
+				),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  reasoning: {effort: :low},
+  input: [
+    {role: :developer, content: "Talk like a pirate."},
+    {role: :user, content: "Are semicolons optional in JavaScript?"}
+  ]
+)
+
+puts(response.output_text)
 ```
 
 ```bash
@@ -429,6 +528,55 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	instructions, err := os.ReadFile("prompt.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:        "gpt-5.6",
+		Instructions: openai.String(string(instructions)),
+		Input: responses.ResponseNewParamsInputUnion{
+			OfString: openai.String("How would I declare a variable for a last name?"),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+instructions = File.read(File.join(__dir__, "prompt.txt"))
+response = client.responses.create(
+  model: "gpt-5.6",
+  instructions: instructions,
+  input: "How would I declare a variable for a last name?"
+)
+
+puts(response.output_text)
 ```
 
 ```bash

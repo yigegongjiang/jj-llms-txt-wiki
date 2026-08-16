@@ -413,10 +413,6 @@
       "etag": "\"7ed0494a4a858ee1ce3dbe4ba48b12d9\"",
       "last_modified": "Sun, 26 Jul 2026 11:51:09 GMT"
     },
-    "https://developers.openai.com/api/docs/guides/priority-processing.md": {
-      "etag": "\"da09cd21180a4d95174c300c52e5ee16\"",
-      "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
-    },
     "https://developers.openai.com/api/docs/guides/private-link.md": {
       "etag": "\"c0954a92779c4a213a58c95b8db28bac\"",
       "last_modified": "Sat, 25 Jul 2026 10:25:59 GMT"
@@ -1684,10 +1680,6 @@
     "https://developers.openai.com/api/reference/workload-identity-federation.md": {
       "etag": "\"f393eba4c709d2db985c1a32567bb2e3\"",
       "last_modified": "Sat, 11 Jul 2026 17:54:21 GMT"
-    },
-    "https://developers.openai.com/codex/community/codex-for-oss.md": {
-      "etag": "\"c3daebda37d43d2e2ab93ea1161d9a13\"",
-      "last_modified": "Sat, 25 Jul 2026 05:42:58 GMT"
     },
     "https://developers.openai.com/commerce/guides/best-practices.md": {
       "etag": "\"f76ffcdef22311877d5f914ffd2e1dec\"",

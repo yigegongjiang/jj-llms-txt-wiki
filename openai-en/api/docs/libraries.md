@@ -173,9 +173,10 @@ OpenAI provides an API helper for the Java programming language, currently in be
 <dependency>
   <groupId>com.openai</groupId>
   <artifactId>openai-java</artifactId>
-  <version>4.0.0</version>
+  <version>4.51.0</version>
 </dependency>
 ```
+
 
 A simple API request to [Responses API](https://developers.openai.com/api/reference/resources/responses) would look like this:
 
@@ -244,14 +245,11 @@ import (
 	"fmt"
 
 	"github.com/openai/openai-go/v3"
-	"github.com/openai/openai-go/v3/option"
 	"github.com/openai/openai-go/v3/responses"
 )
 
 func main() {
-	client := openai.NewClient(
-		option.WithAPIKey("My API Key"), // or set OPENAI_API_KEY in your env
-	)
+	client := openai.NewClient()
 
 	resp, err := client.Responses.New(context.TODO(), responses.ResponseNewParams{
 		Model: "gpt-5.6",

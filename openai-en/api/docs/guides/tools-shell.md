@@ -97,6 +97,47 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfContainerAuto: &responses.ContainerAutoParam{}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Execute: ls -lah /mnt/data && python --version && node --version")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Run ls -lah /mnt/data, then show the Python and Node.js versions.",
+  tools: [{type: :shell, environment: {type: :container_auto}}]
+)
+
+puts(response.output_text)
+```
+
 
 ## Hosted runtime details
 
@@ -163,6 +204,41 @@ container = client.containers.create(
 print(container.id)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	container, err := client.Containers.New(context.Background(), openai.ContainerNewParams{
+		Name:        "analysis-container",
+		MemoryLimit: openai.ContainerNewParamsMemoryLimit1g,
+		ExpiresAfter: openai.ContainerNewParamsExpiresAfter{
+			Anchor:  "last_active_at",
+			Minutes: 20,
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(container.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+container = client.containers.create(name: "analysis", expires_after: {anchor: :last_active_at, minutes: 20})
+puts(container.id)
+```
+
 
 ### 2. Reference the container in Responses
 
@@ -225,6 +301,50 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfContainerReference: &responses.ContainerReferenceParam{ContainerID: "cntr_08f3d96c87a585390069118b594f7481a088b16cda7d9415fe"}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.6",
+		Tools: []responses.ToolUnionParam{tool},
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("List files in the container and show disk usage.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "List files in the container and show disk usage.",
+  tools: [{
+    type: :shell,
+    environment: {type: :container_reference, container_id: "cntr_08f3d96c87a585390069118b594f7481a088b16cda7d9415fe"}
+  }]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -295,6 +415,52 @@ container = client.containers.create(
 )
 
 print(container.id)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	container, err := client.Containers.New(context.Background(), openai.ContainerNewParams{
+		Name: "skill-container",
+		Skills: []openai.ContainerNewParamsSkillUnion{
+			{OfSkillReference: &responses.SkillReferenceParam{SkillID: "skill_4db6f1a2c9e73508b41f9da06e2c7b5f"}},
+			{OfSkillReference: &responses.SkillReferenceParam{SkillID: "openai-spreadsheets", Version: openai.String("latest")}},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(container.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+container = client.containers.create(
+  name: "skill-container",
+  skills: [
+    {type: :skill_reference, skill_id: "skill_4db6f1a2c9e73508b41f9da06e2c7b5f"},
+    {
+      type: :skill_reference,
+      skill_id: "openai-spreadsheets",
+      version: "latest"
+    }
+  ]
+)
+
+puts(container.id)
 ```
 
 
@@ -402,6 +568,62 @@ response = client.responses.create(
 )
 
 print(response.output_text)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfContainerAuto: &responses.ContainerAutoParam{
+			NetworkPolicy: responses.ContainerAutoNetworkPolicyUnionParam{OfAllowlist: &responses.ContainerNetworkPolicyAllowlistParam{
+				AllowedDomains: []string{"pypi.org", "files.pythonhosted.org", "github.com"},
+			}},
+		}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:      "gpt-5.6",
+		ToolChoice: responses.ResponseNewParamsToolChoiceUnion{OfToolChoiceMode: openai.Opt(responses.ToolChoiceOptionsRequired)},
+		Tools:      []responses.ToolUnionParam{tool},
+		Input:      responses.ResponseNewParamsInputUnion{OfString: openai.String("In the container, pip install httpx beautifulsoup4, fetch release pages, and write /mnt/data/release_digest.md.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Fetch release pages and write /mnt/data/release_digest.md.",
+  tool_choice: :required,
+  tools: [{
+    type: :shell,
+    environment: {
+      type: :container_auto,
+      network_policy: {
+        type: :allowlist,
+        allowed_domains: ["pypi.org", "files.pythonhosted.org", "github.com"]
+      }
+    }
+  }]
+)
+
+puts(response.output_text)
 ```
 
 
@@ -647,6 +869,33 @@ deleted = client.containers.delete(container_id)
 print(deleted)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	if err := client.Containers.Delete(context.Background(), "container_id"); err != nil {
+		panic(err)
+	}
+	fmt.Println("Container deleted")
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+client.containers.delete("container_id")
+puts("Deleted container_id")
+```
+
 
 ## Domain secrets
 
@@ -780,6 +1029,73 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfContainerAuto: &responses.ContainerAutoParam{
+			NetworkPolicy: responses.ContainerAutoNetworkPolicyUnionParam{OfAllowlist: &responses.ContainerNetworkPolicyAllowlistParam{
+				AllowedDomains: []string{"httpbin.org"},
+				DomainSecrets: []responses.ContainerNetworkPolicyDomainSecretParam{{
+					Domain: "httpbin.org",
+					Name:   "API_KEY",
+					Value:  "debug-secret-123",
+				}},
+			}},
+		}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:      "gpt-5.6",
+		ToolChoice: responses.ResponseNewParamsToolChoiceUnion{OfToolChoiceMode: openai.Opt(responses.ToolChoiceOptionsRequired)},
+		Tools:      []responses.ToolUnionParam{tool},
+		Input:      responses.ResponseNewParamsInputUnion{OfString: openai.String("Use curl to call https://httpbin.org/headers with header Authorization: Bearer $API_KEY. Tell me what you see in the final text response.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Use curl to call https://httpbin.org/headers with an " \
+    '"Authorization: Bearer $API_KEY" header.',
+  tool_choice: :required,
+  tools: [{
+    type: :shell,
+    environment: {
+      type: :container_auto,
+      network_policy: {
+        type: :allowlist,
+        allowed_domains: ["httpbin.org"],
+        domain_secrets: [{
+          domain: "httpbin.org",
+          name: "API_KEY",
+          value: "debug-secret-123"
+        }]
+      }
+    }
+  }]
+)
+
+puts(response.output_text)
+```
+
 
 ## Multi-turn workflows
 
@@ -854,6 +1170,52 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfContainerReference: &responses.ContainerReferenceParam{ContainerID: "cntr_f19c2b51e4a06793d82d54a7be0fc9154d3361ab28ce7f6041"}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:              "gpt-5.6",
+		PreviousResponseID: openai.String("resp_2a8e5c9174d63b0f18a4c572de9f64a1b3c76d508e12f9ab47"),
+		Tools:              []responses.ToolUnionParam{tool},
+		Input:              responses.ResponseNewParamsInputUnion{OfString: openai.String("Read /mnt/data/top5.csv and report the top candidate.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  input: "Read /mnt/data/top5.csv and report the top candidate.",
+  previous_response_id: "resp_2a8e5c9174d63b0f18a4c572de9f64a1b3c76d508e12f9ab47",
+  tools: [{
+    type: :shell,
+    environment: {type: :container_reference, container_id: "cntr_f19c2b51e4a06793d82d54a7be0fc9154d3361ab28ce7f6041"}
+  }]
+)
+
+puts(response.output_text)
+```
+
 
 ## Shell output in Responses
 
@@ -898,21 +1260,6 @@ curl -L 'https://api.openai.com/v1/responses' \
   }'
 ```
 
-```python
-from openai import OpenAI
-
-client = OpenAI()
-
-response = client.responses.create(
-    model="gpt-5.6",
-    instructions="The local bash shell environment is on Mac.",
-    input="find me the largest pdf file in ~/Documents",
-    tools=[{"type": "shell", "environment": {"type": "local"}}],
-)
-
-print(response)
-```
-
 ```javascript
 import OpenAI from "openai";
 
@@ -928,6 +1275,64 @@ const response = await client.responses.create({
 console.log(response);
 ```
 
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+response = client.responses.create(
+    model="gpt-5.6",
+    instructions="The local bash shell environment is on Mac.",
+    input="find me the largest pdf file in ~/Documents",
+    tools=[{"type": "shell", "environment": {"type": "local"}}],
+)
+
+print(response)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	tool := responses.ToolUnionParam{OfShell: &responses.FunctionShellToolParam{
+		Environment: responses.FunctionShellToolEnvironmentUnionParam{OfLocal: &responses.LocalEnvironmentParam{}},
+	}}
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:        "gpt-5.6",
+		Instructions: openai.String("The local bash shell environment is on Mac."),
+		Input:        responses.ResponseNewParamsInputUnion{OfString: openai.String("find me the largest pdf file in ~/Documents")},
+		Tools:        []responses.ToolUnionParam{tool},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.Output)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.6",
+  instructions: "The local shell environment is macOS.",
+  input: "Find the largest PDF in ~/Documents.",
+  tools: [{type: :shell, environment: {type: :local}}]
+)
+
+puts(response.output)
+```
+
 
 When you receive `shell_call` output items:
 
@@ -936,6 +1341,37 @@ When you receive `shell_call` output items:
 - Return results as `shell_call_output` in the next request.
 
 Local shell executor example
+
+```javascript
+import { exec as execCallback } from "node:child_process";
+import { promisify } from "node:util";
+
+const exec = promisify(execCallback);
+
+class ShellExecutor {
+  constructor(defaultTimeoutMs = 60_000) {
+    this.defaultTimeoutMs = defaultTimeoutMs;
+  }
+
+  async run(cmd, timeoutMs) {
+    const timeout = timeoutMs ?? this.defaultTimeoutMs;
+
+    try {
+      const { stdout, stderr } = await exec(cmd, { timeout });
+      return { stdout, stderr, exitCode: 0, timedOut: false };
+    } catch (error) {
+      const timedOut = Boolean(error?.killed) && error?.signal === "SIGTERM";
+      const exitCode = timedOut ? null : (error?.code ?? null);
+      return {
+        stdout: error?.stdout ?? "",
+        stderr: error?.stderr ?? String(error),
+        exitCode,
+        timedOut,
+      };
+    }
+  }
+}
+```
 
 ```python
 @dataclass
@@ -968,35 +1404,105 @@ class ShellExecutor:
             return CmdResult(out, err, p.returncode, True)
 ```
 
-```javascript
-import { exec as execCallback } from "node:child_process";
-import { promisify } from "node:util";
+```go
+package main
 
-const exec = promisify(execCallback);
+import (
+	"bytes"
+	"context"
+	"fmt"
+	"os/exec"
+	"time"
+)
 
-class ShellExecutor {
-  constructor(defaultTimeoutMs = 60_000) {
-    this.defaultTimeoutMs = defaultTimeoutMs;
-  }
-
-  async run(cmd, timeoutMs) {
-    const timeout = timeoutMs ?? this.defaultTimeoutMs;
-
-    try {
-      const { stdout, stderr } = await exec(cmd, { timeout });
-      return { stdout, stderr, exitCode: 0, timedOut: false };
-    } catch (error) {
-      const timedOut = Boolean(error?.killed) && error?.signal === "SIGTERM";
-      const exitCode = timedOut ? null : (error?.code ?? null);
-      return {
-        stdout: error?.stdout ?? "",
-        stderr: error?.stderr ?? String(error),
-        exitCode,
-        timedOut,
-      };
-    }
-  }
+type shellResult struct {
+	Stdout   string
+	Stderr   string
+	ExitCode int
+	TimedOut bool
 }
+
+type shellExecutor struct {
+	DefaultTimeout time.Duration
+}
+
+func (e shellExecutor) run(command string, timeout time.Duration) shellResult {
+	if timeout == 0 {
+		timeout = e.DefaultTimeout
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "sh", "-c", command)
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	result := shellResult{Stdout: stdout.String(), Stderr: stderr.String()}
+	if ctx.Err() == context.DeadlineExceeded {
+		result.TimedOut = true
+		result.ExitCode = -1
+		return result
+	}
+	if err != nil {
+		if exitError, ok := err.(*exec.ExitError); ok {
+			result.ExitCode = exitError.ExitCode()
+			return result
+		}
+		if result.Stderr == "" {
+			result.Stderr = err.Error()
+		}
+		result.ExitCode = -1
+	}
+	return result
+}
+
+func main() {
+	executor := shellExecutor{DefaultTimeout: time.Minute}
+	fmt.Println(executor.run("printf shell-executor-ready", 0))
+}
+```
+
+```ruby
+require "open3"
+
+class ShellExecutor
+  Result = Data.define(:stdout, :stderr, :exit_code, :timed_out)
+
+  def initialize(default_timeout: 60)
+    @default_timeout = default_timeout
+  end
+
+  def run(command, timeout: @default_timeout)
+    Open3.popen3("sh", "-c", command, pgroup: true) do |stdin, stdout, stderr, wait_thread|
+      stdin.close
+      stdout_reader = Thread.new { stdout.read }
+      stderr_reader = Thread.new { stderr.read }
+      finished = wait_thread.join(timeout)
+      terminate_process_group(wait_thread) unless finished
+
+      Result.new(
+        stdout: stdout_reader.value,
+        stderr: stderr_reader.value,
+        exit_code: wait_thread.value.exitstatus || -1,
+        timed_out: finished.nil?
+      )
+    end
+  end
+
+  private
+
+  def terminate_process_group(wait_thread)
+    Process.kill("TERM", -wait_thread.pid)
+    wait_thread.join(1)
+    Process.kill("KILL", -wait_thread.pid)
+  rescue Errno::ESRCH
+    nil
+  ensure
+    wait_thread.join
+  end
+end
+
+puts(ShellExecutor.new.run("printf shell-executor-ready"))
 ```
 
 
@@ -1037,18 +1543,11 @@ If you are using the [Agents SDK](https://developers.openai.com/api/docs/guides/
 Use local shell with Agents SDK
 
 ```javascript
-import {
-  Agent,
-  run,
-  withTrace,
-  Shell,
-  ShellAction,
-  ShellResult,
-  shellTool,
-} from "@openai/agents";
+import { Agent, run, withTrace, shellTool } from "@openai/agents";
 
-class LocalShell implements Shell {
-  async run(action: ShellAction): Promise<ShellResult> {
+class LocalShell {
+  /** @returns {Promise<import("@openai/agents").ShellResult>} */
+  async run(action) {
     return {
       output: [
         {

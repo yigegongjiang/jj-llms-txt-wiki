@@ -27,17 +27,6 @@ The token counting API handles all of these. Use the same payload you would send
 
 Simple text input
 
-```python
-from openai import OpenAI
-
-client = OpenAI()
-
-response = client.responses.input_tokens.count(
-    model="gpt-5.6", input="Tell me a joke."
-)
-print(response.input_tokens)
-```
-
 ```javascript
 import OpenAI from "openai";
 
@@ -51,6 +40,54 @@ const response = await client.responses.inputTokens.count({
 console.log(response.input_tokens);
 ```
 
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+response = client.responses.input_tokens.count(
+    model="gpt-5.6", input="Tell me a joke."
+)
+print(response.input_tokens)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
+		Model: openai.String("gpt-5.6"),
+		Input: responses.InputTokenCountParamsInputUnion{OfString: openai.String("Tell me a joke.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(count.InputTokens)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+count = client.responses.input_tokens.count(
+  model: "gpt-5.6",
+  input: "Tell me a joke."
+)
+
+puts(count.input_tokens)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -61,7 +98,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   }'
 ```
 
-```cli
+```bash
 openai responses:input-tokens count \
   --model gpt-5.6 \
   --input "Tell me a joke." \
@@ -73,22 +110,6 @@ openai responses:input-tokens count \
 ## Count tokens in conversations
 
 Multi-turn conversation
-
-```python
-from openai import OpenAI
-
-client = OpenAI()
-
-response = client.responses.input_tokens.count(
-    model="gpt-5.6",
-    input=[
-        {"role": "user", "content": "What is 2 + 2?"},
-        {"role": "assistant", "content": "2 + 2 equals 4."},
-        {"role": "user", "content": "What about 3 + 3?"},
-    ],
-)
-print(response.input_tokens)
-```
 
 ```javascript
 import OpenAI from "openai";
@@ -107,6 +128,69 @@ const response = await client.responses.inputTokens.count({
 console.log(response.input_tokens);
 ```
 
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+response = client.responses.input_tokens.count(
+    model="gpt-5.6",
+    input=[
+        {"role": "user", "content": "What is 2 + 2?"},
+        {"role": "assistant", "content": "2 + 2 equals 4."},
+        {"role": "user", "content": "What about 3 + 3?"},
+    ],
+)
+print(response.input_tokens)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	input := []responses.ResponseInputItemUnionParam{
+		responses.ResponseInputItemParamOfMessage("What is 2 + 2?", responses.EasyInputMessageRoleUser),
+		responses.ResponseInputItemParamOfMessage("2 + 2 equals 4.", responses.EasyInputMessageRoleAssistant),
+		responses.ResponseInputItemParamOfMessage("What about 3 + 3?", responses.EasyInputMessageRoleUser),
+	}
+	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
+		Model: openai.String("gpt-5.6"),
+		Input: responses.InputTokenCountParamsInputUnion{OfResponseInputItemArray: input},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(count.InputTokens)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+conversation = [
+  {role: :user, content: "What is 2 + 2?"},
+  {role: :assistant, content: "2 + 2 equals 4."},
+  {role: :user, content: "What about 3 + 3?"}
+]
+
+count = client.responses.input_tokens.count(
+  model: "gpt-5.6",
+  input: conversation
+)
+
+puts(count.input_tokens)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -121,7 +205,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   }'
 ```
 
-```cli
+```bash
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'
@@ -141,19 +225,6 @@ YAML
 
 Input with system instructions
 
-```python
-from openai import OpenAI
-
-client = OpenAI()
-
-response = client.responses.input_tokens.count(
-    model="gpt-5.6",
-    instructions="You are a helpful assistant that explains concepts simply.",
-    input="Explain quantum computing in one sentence.",
-)
-print(response.input_tokens)
-```
-
 ```javascript
 import OpenAI from "openai";
 
@@ -168,6 +239,58 @@ const response = await client.responses.inputTokens.count({
 console.log(response.input_tokens);
 ```
 
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+response = client.responses.input_tokens.count(
+    model="gpt-5.6",
+    instructions="You are a helpful assistant that explains concepts simply.",
+    input="Explain quantum computing in one sentence.",
+)
+print(response.input_tokens)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
+		Model:        openai.String("gpt-5.6"),
+		Instructions: openai.String("You are a helpful assistant that explains concepts simply."),
+		Input:        responses.InputTokenCountParamsInputUnion{OfString: openai.String("Explain quantum computing in one sentence.")},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(count.InputTokens)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+count = client.responses.input_tokens.count(
+  model: "gpt-5.6",
+  instructions: "You are a helpful assistant that explains concepts simply.",
+  input: "Explain quantum computing in one sentence."
+)
+
+puts(count.input_tokens)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -179,7 +302,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   }'
 ```
 
-```cli
+```bash
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'
@@ -195,30 +318,6 @@ YAML
 Images consume tokens based on size and detail level. The token counting API returns the exact count—no guesswork.
 
 Input with an image
-
-```python
-from openai import OpenAI
-
-client = OpenAI()
-
-# Use file_id from uploaded file, or image_url for a URL
-response = client.responses.input_tokens.count(
-    model="gpt-5.6",
-    input=[
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "input_image",
-                    "image_url": "https://example.com/chart.png",
-                },
-                {"type": "input_text", "text": "Summarize this chart."},
-            ],
-        }
-    ],
-)
-print(response.input_tokens)
-```
 
 ```javascript
 import OpenAI from "openai";
@@ -245,6 +344,88 @@ const response = await client.responses.inputTokens.count({
 console.log(response.input_tokens);
 ```
 
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+# Use file_id from uploaded file, or image_url for a URL
+response = client.responses.input_tokens.count(
+    model="gpt-5.6",
+    input=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "input_image",
+                    "image_url": "https://example.com/chart.png",
+                },
+                {"type": "input_text", "text": "Summarize this chart."},
+            ],
+        }
+    ],
+)
+print(response.input_tokens)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	input := []responses.ResponseInputItemUnionParam{
+		responses.ResponseInputItemParamOfMessage(
+			responses.ResponseInputMessageContentListParam{
+				{OfInputImage: &responses.ResponseInputImageParam{ImageURL: openai.String("https://example.com/chart.png"), Detail: responses.ResponseInputImageDetailAuto}},
+				{OfInputText: &responses.ResponseInputTextParam{Text: "Summarize this chart."}},
+			},
+			responses.EasyInputMessageRoleUser,
+		),
+	}
+	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
+		Model: openai.String("gpt-5.6"),
+		Input: responses.InputTokenCountParamsInputUnion{OfResponseInputItemArray: input},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(count.InputTokens)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+count = client.responses.input_tokens.count(
+  model: "gpt-5.6",
+  input: [
+    {
+      role: :user,
+      content: [
+        {
+          type: :input_image,
+          image_url: "https://api.nga.gov/iiif/a2e6da57-3cd1-4235-b20e-95dcaefed6c8/full/!800,800/0/default.jpg",
+          detail: :auto
+        },
+        {type: :input_text, text: "Summarize this chart."}
+      ]
+    }
+  ]
+)
+
+puts(count.input_tokens)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -261,7 +442,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   }'
 ```
 
-```cli
+```bash
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'
@@ -284,30 +465,6 @@ You can use `file_id` (from the [Files API](https://developers.openai.com/api/re
 Tool definitions (function schemas, MCP servers, etc.) add tokens to the context. Count them together with your input:
 
 Input with function tools
-
-```python
-from openai import OpenAI
-
-client = OpenAI()
-
-response = client.responses.input_tokens.count(
-    model="gpt-5.6",
-    tools=[
-        {
-            "type": "function",
-            "name": "get_weather",
-            "description": "Get the current weather in a location",
-            "parameters": {
-                "type": "object",
-                "properties": {"location": {"type": "string"}},
-                "required": ["location"],
-            },
-        }
-    ],
-    input="What is the weather in San Francisco?",
-)
-print(response.input_tokens)
-```
 
 ```javascript
 import OpenAI from "openai";
@@ -336,6 +493,92 @@ const response = await client.responses.inputTokens.count({
 console.log(response.input_tokens);
 ```
 
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+response = client.responses.input_tokens.count(
+    model="gpt-5.6",
+    tools=[
+        {
+            "type": "function",
+            "name": "get_weather",
+            "description": "Get the current weather in a location",
+            "parameters": {
+                "type": "object",
+                "properties": {"location": {"type": "string"}},
+                "required": ["location"],
+            },
+        }
+    ],
+    input="What is the weather in San Francisco?",
+)
+print(response.input_tokens)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	parameters := map[string]any{
+		"type": "object",
+		"properties": map[string]any{
+			"location": map[string]any{"type": "string"},
+		},
+		"required":             []string{"location"},
+		"additionalProperties": false,
+	}
+	tool := responses.ToolParamOfFunction("get_weather", parameters, true)
+	tool.OfFunction.Description = openai.String("Get the current weather in a location")
+	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
+		Model: openai.String("gpt-5.6"),
+		Input: responses.InputTokenCountParamsInputUnion{OfString: openai.String("What is the weather in San Francisco?")},
+		Tools: []responses.ToolUnionParam{tool},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(count.InputTokens)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+count = client.responses.input_tokens.count(
+  model: "gpt-5.6",
+  input: "What is the weather in San Francisco?",
+  tools: [
+    {
+      type: :function,
+      name: "get_weather",
+      description: "Get the current weather in a location",
+      strict: true,
+      parameters: {
+        type: "object",
+        properties: {location: {type: "string"}},
+        required: ["location"],
+        additionalProperties: false
+      }
+    }
+  ]
+)
+
+puts(count.input_tokens)
+```
+
 ```bash
 curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -356,7 +599,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   }'
 ```
 
-```cli
+```bash
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'

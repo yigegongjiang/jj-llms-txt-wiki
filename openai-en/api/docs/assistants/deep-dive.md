@@ -23,17 +23,42 @@ To get started, creating an Assistant only requires specifying the `model` to us
 
 For example, to create an Assistant that can create data visualization based on a `.csv` file, first upload a file.
 
+```javascript
+const file = await openai.files.create({
+  file: fs.createReadStream("revenue-forecast.csv"),
+  purpose: "assistants",
+});
+```
+
 ```python
 file = client.files.create(
     file=open("revenue-forecast.csv", "rb"), purpose="assistants"
 )
 ```
 
-```javascript
-const file = await openai.files.create({
-  file: fs.createReadStream("revenue-forecast.csv"),
-  purpose: "assistants",
-});
+```go
+input, err := os.Open("revenue-forecast.csv")
+if err != nil {
+	panic(err)
+}
+defer input.Close()
+file, err := client.Files.New(context.Background(), openai.FileNewParams{
+	File:    input,
+	Purpose: openai.FilePurposeAssistants,
+})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+file = Pathname("revenue-forecast.csv")
+uploaded = client.files.create(file: file, purpose: :assistants)
+puts(uploaded.id)
 ```
 
 ```bash
@@ -46,6 +71,21 @@ curl https://api.openai.com/v1/files \
 
 Then, create the Assistant with the `code_interpreter` tool enabled and provide the file as a resource to the tool.
 
+```javascript
+const assistant = await openai.beta.assistants.create({
+  name: "Data visualizer",
+  description:
+    "You are great at creating beautiful data visualizations. You analyze data present in .csv files, understand trends, and come up with data visualizations relevant to those trends. You also share a brief text summary of the trends observed.",
+  model: "gpt-4o",
+  tools: [{ type: "code_interpreter" }],
+  tool_resources: {
+    code_interpreter: {
+      file_ids: [file.id],
+    },
+  },
+});
+```
+
 ```python
 assistant = client.beta.assistants.create(
     name="Data visualizer",
@@ -56,18 +96,35 @@ assistant = client.beta.assistants.create(
 )
 ```
 
-```javascript
-const assistant = await openai.beta.assistants.create({
+```go
+assistant, err := client.Beta.Assistants.New(context.Background(), openai.BetaAssistantNewParams{
+	Name:        openai.String("Data visualizer"),
+	Description: openai.String("You are great at creating beautiful data visualizations. You analyze data present in .csv files, understand trends, and come up with data visualizations relevant to those trends. You also share a brief text summary of the trends observed."),
+	Model:       shared.ChatModelGPT4o,
+	Tools:       []openai.AssistantToolUnionParam{{OfCodeInterpreter: &openai.CodeInterpreterToolParam{}}},
+	ToolResources: openai.BetaAssistantNewParamsToolResources{
+		CodeInterpreter: openai.BetaAssistantNewParamsToolResourcesCodeInterpreter{FileIDs: []string{"file-BK7bzQj3FfZFXr7DbL6xJwfo"}},
+	},
+})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+assistant = client.beta.assistants.create(
   name: "Data visualizer",
-  description: "You are great at creating beautiful data visualizations. You analyze data present in .csv files, understand trends, and come up with data visualizations relevant to those trends. You also share a brief text summary of the trends observed.",
   model: "gpt-4o",
-  tools: [{"type": "code_interpreter"}],
+  instructions: "Analyze CSV data, create relevant visualizations, and summarize the trends.",
+  tools: [{type: :code_interpreter}],
   tool_resources: {
-    "code_interpreter": {
-      "file_ids": [file.id]
-    }
+    code_interpreter: {file_ids: ["file-BK7bzQj3FfZFXr7DbL6xJwfo"]}
   }
-});
+)
+puts(assistant.id)
 ```
 
 ```bash
@@ -99,6 +156,23 @@ Threads and Messages represent a conversation session between an Assistant and a
 
 You can create a Thread with an initial list of Messages like this:
 
+```javascript
+const thread = await openai.beta.threads.create({
+  messages: [
+    {
+      role: "user",
+      content: "Create 3 data visualizations based on the trends in this file.",
+      attachments: [
+        {
+          file_id: file.id,
+          tools: [{ type: "code_interpreter" }],
+        },
+      ],
+    },
+  ],
+});
+```
+
 ```python
 thread = client.beta.threads.create(
     messages=[
@@ -113,21 +187,39 @@ thread = client.beta.threads.create(
 )
 ```
 
-```javascript
-const thread = await openai.beta.threads.create({
-  messages: [
-    {
-      "role": "user",
-      "content": "Create 3 data visualizations based on the trends in this file.",
-      "attachments": [
-        {
-          file_id: file.id,
-          tools: [{type: "code_interpreter"}]
-        }
-      ]
-    }
-  ]
-});
+```go
+thread, err := client.Beta.Threads.New(context.Background(), openai.BetaThreadNewParams{
+	Messages: []openai.BetaThreadNewParamsMessage{{
+		Role: "user",
+		Content: openai.BetaThreadNewParamsMessageContentUnion{
+			OfString: openai.String("Create 3 data visualizations based on the trends in this file."),
+		},
+		Attachments: []openai.BetaThreadNewParamsMessageAttachment{{
+			FileID: openai.String("file-ACq8OjcLQm2eIG0BvRM4z5qX"),
+			Tools:  []openai.BetaThreadNewParamsMessageAttachmentToolUnion{{OfCodeInterpreter: &openai.CodeInterpreterToolParam{}}},
+		}},
+	}},
+})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+thread = client.beta.threads.create(
+  messages: [{
+    role: :user,
+    content: "Create 3 data visualizations based on the trends in this file.",
+    attachments: [{
+      file_id: "file-ACq8OjcLQm2eIG0BvRM4z5qX",
+      tools: [{type: :code_interpreter}]
+    }]
+  }]
+)
+puts(thread.id)
 ```
 
 ```bash
@@ -160,6 +252,38 @@ Message content can contain either external image URLs or File IDs uploaded via 
 
 Tools cannot access image content unless specified. To pass image files to Code Interpreter, add the file ID in the message `attachments` list to allow the tool to read and analyze the input. Image URLs cannot be downloaded in Code Interpreter today.
 
+```javascript
+import fs from "fs";
+
+const file = await openai.files.create({
+  file: fs.createReadStream("myimage.png"),
+  purpose: "vision",
+});
+const thread = await openai.beta.threads.create({
+  messages: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "text",
+          text: "What is the difference between these images?",
+        },
+        {
+          type: "image_url",
+          image_url: {
+            url: "https://openai-documentation.vercel.app/images/cat_and_otter.png",
+          },
+        },
+        {
+          type: "image_file",
+          image_file: { file_id: file.id },
+        },
+      ],
+    },
+  ],
+});
+```
+
 ```python
 file = client.files.create(file=open("myimage.png", "rb"), purpose="vision")
 thread = client.beta.threads.create(
@@ -184,34 +308,57 @@ thread = client.beta.threads.create(
 )
 ```
 
-```javascript
-import fs from "fs";
+```go
+image, err := os.Open("myimage.png")
+if err != nil {
+	panic(err)
+}
+defer image.Close()
+file, err := client.Files.New(context.Background(), openai.FileNewParams{
+	File:    image,
+	Purpose: openai.FilePurposeVision,
+})
+if err != nil {
+	panic(err)
+}
+thread, err := client.Beta.Threads.New(context.Background(), openai.BetaThreadNewParams{
+	Messages: []openai.BetaThreadNewParamsMessage{{
+		Role: "user",
+		Content: openai.BetaThreadNewParamsMessageContentUnion{OfArrayOfContentParts: []openai.MessageContentPartParamUnion{
+			openai.MessageContentPartParamOfText("What is the difference between these images?"),
+			openai.MessageContentPartParamOfImageURL(openai.ImageURLParam{URL: "https://openai-documentation.vercel.app/images/cat_and_otter.png"}),
+			openai.MessageContentPartParamOfImageFile(openai.ImageFileParam{FileID: file.ID}),
+		}},
+	}},
+})
+if err != nil {
+	panic(err)
+}
+```
 
-const file = await openai.files.create({
-  file: fs.createReadStream("myimage.png"),
-  purpose: "vision",
-});
-const thread = await openai.beta.threads.create({
-  messages: [
-    {
-      "role": "user",
-      "content": [
-        {
-          "type": "text",
-          "text": "What is the difference between these images?"
-        },
-        {
-          "type": "image_url",
-          "image_url": {"url": "https://openai-documentation.vercel.app/images/cat_and_otter.png"}
-        },
-        {
-          "type": "image_file",
-          "image_file": {"file_id": file.id}
-        },
-      ]
-    }
-  ]
-});
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+file = client.files.create(
+  file: Pathname("myimage.png"),
+  purpose: :vision
+)
+thread = client.beta.threads.create(
+  messages: [{
+    role: :user,
+    content: [
+      {type: :text, text: "What is the difference between these images?"},
+      {
+        type: :image_url,
+        image_url: {url: "https://openai-documentation.vercel.app/images/cat_and_otter.png"}
+      },
+      {type: :image_file, image_file: {file_id: file.id}}
+    ]
+  }]
+)
+puts(thread.id)
 ```
 
 ```bash
@@ -258,6 +405,29 @@ By controlling the `detail` parameter, which has three options, `low`, `high`, o
 - `low` will enable the "low res" mode. The model will receive a low-res 512px x 512px version of the image, and represent the image with a budget of 85 tokens. This allows the API to return faster responses and consume fewer input tokens for use cases that do not require high detail.
 - `high` will enable "high res" mode, which first allows the model to see the low res image and then creates detailed crops of input images based on the input image size. Use the [pricing calculator](https://openai.com/api/pricing/) to see token counts for various image sizes.
 
+```javascript
+const thread = await openai.beta.threads.create({
+  messages: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "text",
+          text: "What is this an image of?",
+        },
+        {
+          type: "image_url",
+          image_url: {
+            url: "https://openai-documentation.vercel.app/images/cat_and_otter.png",
+            detail: "high",
+          },
+        },
+      ],
+    },
+  ],
+});
+```
+
 ```python
 thread = client.beta.threads.create(
     messages=[
@@ -278,27 +448,44 @@ thread = client.beta.threads.create(
 )
 ```
 
-```javascript
-const thread = await openai.beta.threads.create({
-  messages: [
-    {
-      "role": "user",
-      "content": [
-          {
-            "type": "text",
-            "text": "What is this an image of?"
-          },
-          {
-            "type": "image_url",
-            "image_url": {
-              "url": "https://openai-documentation.vercel.app/images/cat_and_otter.png",
-              "detail": "high"
-            }
-          },
-      ]
-    }
-  ]
-});
+```go
+thread, err := client.Beta.Threads.New(context.Background(), openai.BetaThreadNewParams{
+	Messages: []openai.BetaThreadNewParamsMessage{{
+		Role: "user",
+		Content: openai.BetaThreadNewParamsMessageContentUnion{OfArrayOfContentParts: []openai.MessageContentPartParamUnion{
+			openai.MessageContentPartParamOfText("What is this an image of?"),
+			openai.MessageContentPartParamOfImageURL(openai.ImageURLParam{
+				URL:    "https://openai-documentation.vercel.app/images/cat_and_otter.png",
+				Detail: openai.ImageURLDetailHigh,
+			}),
+		}},
+	}},
+})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+thread = client.beta.threads.create(
+  messages: [{
+    role: :user,
+    content: [
+      {type: :text, text: "What is this an image of?"},
+      {
+        type: :image_url,
+        image_url: {
+          url: "https://openai-documentation.vercel.app/images/cat_and_otter.png",
+          detail: :high
+        }
+      }
+    ]
+  }]
+)
+puts(thread.id)
 ```
 
 ```bash
@@ -407,10 +594,106 @@ for index, annotation in enumerate(annotations):
 message_content.value += "\n" + "\n".join(citations)
 ```
 
+```go
+message, err := client.Beta.Threads.Messages.Get(context.Background(), "thread_abc123", "msg_abc123")
+if err != nil {
+	panic(err)
+}
+if len(message.Content) == 0 || message.Content[0].Type != "text" {
+	panic("message does not contain text")
+}
+messageContent := message.Content[0].AsText().Text
+citations := make([]string, 0, len(messageContent.Annotations))
+for index, annotation := range messageContent.Annotations {
+	messageContent.Value = strings.ReplaceAll(messageContent.Value, annotation.Text, fmt.Sprintf(" [%d]", index))
+	switch annotation.Type {
+	case "file_citation":
+		citation := annotation.AsFileCitation()
+		file, err := client.Files.Get(context.Background(), citation.FileCitation.FileID)
+		if err != nil {
+			panic(err)
+		}
+		citations = append(citations, fmt.Sprintf("[%d] %s", index, file.Filename))
+	case "file_path":
+		filePath := annotation.AsFilePath()
+		file, err := client.Files.Get(context.Background(), filePath.FilePath.FileID)
+		if err != nil {
+			panic(err)
+		}
+		response, err := client.Files.Content(context.Background(), filePath.FilePath.FileID)
+		if err != nil {
+			panic(err)
+		}
+		defer response.Body.Close()
+		if err := os.MkdirAll("downloads", 0o755); err != nil {
+			panic(err)
+		}
+		outputPath := filepath.Join("downloads", filepath.Base(file.Filename))
+		output, err := os.Create(outputPath)
+		if err != nil {
+			panic(err)
+		}
+		if _, err := io.Copy(output, response.Body); err != nil {
+			output.Close()
+			panic(err)
+		}
+		if err := output.Close(); err != nil {
+			panic(err)
+		}
+		citations = append(citations, fmt.Sprintf("[%d] Downloaded %s", index, outputPath))
+	}
+}
+messageContent.Value += "\n" + strings.Join(citations, "\n")
+fmt.Println(messageContent.Value)
+```
+
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+message = client.beta.threads.messages.retrieve(
+  "msg_abc123",
+  thread_id: "thread_abc123"
+)
+text_block = message.content.find do |content|
+  content.is_a?(OpenAI::Models::Beta::Threads::TextContentBlock)
+end
+unless text_block.is_a?(OpenAI::Models::Beta::Threads::TextContentBlock)
+  raise "No text content returned"
+end
+text = text_block.text
+downloads = Pathname("downloads")
+references = text.annotations.each_with_index.filter_map do |annotation, index|
+  text.value = text.value.sub(annotation.text, " [#{index}]")
+
+  case annotation
+  when OpenAI::Models::Beta::Threads::FileCitationAnnotation
+    file = client.files.retrieve(annotation.file_citation.file_id)
+    "[#{index}] #{file.filename}"
+  when OpenAI::Models::Beta::Threads::FilePathAnnotation
+    file_id = annotation.file_path.file_id
+    file = client.files.retrieve(file_id)
+    downloads.mkpath
+    output_path = downloads.join(Pathname(file.filename).basename)
+    output_path.binwrite(client.files.content(file_id).read)
+    "[#{index}] Downloaded #{output_path}"
+  end
+end
+
+puts(([text.value] + references).join("\n"))
+```
+
 
 ## Runs and Run Steps
 
 When you have all the context you need from your user in the Thread, you can run the Thread with an Assistant of your choice.
+
+```javascript
+const run = await openai.beta.threads.runs.create(thread.id, {
+  assistant_id: assistant.id,
+});
+```
 
 ```python
 run = client.beta.threads.runs.create(
@@ -419,11 +702,21 @@ run = client.beta.threads.runs.create(
 )
 ```
 
-```javascript
-const run = await openai.beta.threads.runs.create(
-  thread.id,
-  { assistant_id: assistant.id }
-);
+```go
+_, err := client.Beta.Threads.Runs.New(context.Background(), "thread_abc123", openai.BetaThreadRunNewParams{
+	AssistantID: "asst_ToSF7Gb04YMj8AMMm50ZLLtY",
+})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+run = client.beta.threads.runs.create("thread_abc123", assistant_id: "asst_ToSF7Gb04YMj8AMMm50ZLLtY")
+puts(run.id)
 ```
 
 ```bash
@@ -439,6 +732,15 @@ curl https://api.openai.com/v1/threads/THREAD_ID/runs \
 
 By default, a Run will use the `model` and `tools` configuration specified in Assistant object, but you can override most of these when creating the Run for added flexibility:
 
+```javascript
+const run = await openai.beta.threads.runs.create(thread.id, {
+  assistant_id: assistant.id,
+  model: "gpt-4o",
+  instructions: "New instructions that override the Assistant instructions",
+  tools: [{ type: "code_interpreter" }, { type: "file_search" }],
+});
+```
+
 ```python
 run = client.beta.threads.runs.create(
     thread_id=thread.id,
@@ -449,16 +751,33 @@ run = client.beta.threads.runs.create(
 )
 ```
 
-```javascript
-const run = await openai.beta.threads.runs.create(
-  thread.id,
-  {
-    assistant_id: assistant.id,
-    model: "gpt-4o",
-    instructions: "New instructions that override the Assistant instructions",
-    tools: [{"type": "code_interpreter"}, {"type": "file_search"}]
-  }
-);
+```go
+_, err := client.Beta.Threads.Runs.New(context.Background(), "thread_abc123", openai.BetaThreadRunNewParams{
+	AssistantID:  "asst_ToSF7Gb04YMj8AMMm50ZLLtY",
+	Model:        shared.ChatModelGPT4o,
+	Instructions: openai.String("New instructions that override the Assistant instructions"),
+	Tools: []openai.AssistantToolUnionParam{
+		{OfCodeInterpreter: &openai.CodeInterpreterToolParam{}},
+		{OfFileSearch: &openai.FileSearchToolParam{}},
+	},
+})
+if err != nil {
+	panic(err)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+run = client.beta.threads.runs.create(
+  "thread_abc123",
+  assistant_id: "asst_ToSF7Gb04YMj8AMMm50ZLLtY",
+  model: "gpt-4o",
+  instructions: "New instructions that override the Assistant instructions",
+  tools: [{type: :code_interpreter}, {type: :file_search}]
+)
+puts(run.id)
 ```
 
 ```bash

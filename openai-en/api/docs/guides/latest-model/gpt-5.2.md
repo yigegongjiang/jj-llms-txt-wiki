@@ -56,20 +56,6 @@ With reasoning effort set to `none`, prompting is important. To improve the mode
 
 Reasoning effort set to none
 
-```bash
-curl --request POST \
-  --url https://api.openai.com/v1/responses \
-  --header "Authorization: Bearer $OPENAI_API_KEY" \
-  --header 'Content-type: application/json' \
-  --data '{
-        "model": "gpt-5.2",
-        "input": "Think carefully and outline your steps before answering. How much gold would it take to coat the Statue of Liberty in a 1mm layer?",
-        "reasoning": {
-                "effort": "none"
-        }
-}'
-```
-
 ```javascript
 import OpenAI from "openai";
 const openai = new OpenAI();
@@ -100,6 +86,58 @@ response = client.responses.create(
 print(response)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:     "gpt-5.2",
+		Input:     responses.ResponseNewParamsInputUnion{OfString: openai.String("Think carefully and outline your steps before answering. How much gold would it take to coat the Statue of Liberty in a 1mm layer?")},
+		Reasoning: shared.ReasoningParam{Effort: shared.ReasoningEffortNone},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.2",
+  reasoning: {effort: :minimal},
+  input: "Explain the bug and propose a fix."
+)
+puts(response.output_text)
+```
+
+```bash
+curl --request POST \
+  --url https://api.openai.com/v1/responses \
+  --header "Authorization: Bearer $OPENAI_API_KEY" \
+  --header 'Content-type: application/json' \
+  --data '{
+        "model": "gpt-5.2",
+        "input": "Think carefully and outline your steps before answering. How much gold would it take to coat the Statue of Liberty in a 1mm layer?",
+        "reasoning": {
+                "effort": "none"
+        }
+}'
+```
+
 
 ### Verbosity
 
@@ -113,20 +151,6 @@ GPT-5 made this option configurable as one of `high`, `medium`, or `low`. With G
 When generating code with GPT-5.2, `medium` and `high` verbosity levels yield longer, more structured code with inline explanations, while `low` verbosity produces shorter, more concise code with minimal commentary.
 
 Control verbosity
-
-```bash
-curl --request POST \
-  --url https://api.openai.com/v1/responses \
-  --header "Authorization: Bearer $OPENAI_API_KEY" \
-  --header 'Content-type: application/json' \
-  --data '{
-  "model": "gpt-5.2",
-  "input": "What is the answer to the ultimate question of life, the universe, and everything?",
-  "text": {
-    "verbosity": "low"
-  }
-}'
-```
 
 ```javascript
 import OpenAI from "openai";
@@ -156,6 +180,57 @@ response = client.responses.create(
 )
 
 print(response)
+```
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.2",
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("What is the answer to the ultimate question of life, the universe, and everything?")},
+		Text:  responses.ResponseTextConfigParam{Verbosity: responses.ResponseTextConfigVerbosityLow},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.2",
+  text: {verbosity: :low},
+  input: "Explain the bug and propose a fix."
+)
+puts(response.output_text)
+```
+
+```bash
+curl --request POST \
+  --url https://api.openai.com/v1/responses \
+  --header "Authorization: Bearer $OPENAI_API_KEY" \
+  --header 'Content-type: application/json' \
+  --data '{
+  "model": "gpt-5.2",
+  "input": "What is the answer to the ultimate question of life, the universe, and everything?",
+  "text": {
+    "verbosity": "low"
+  }
+}'
 ```
 
 
@@ -627,6 +702,25 @@ compacted_response = client.responses.compact(
 
 
 print(json.dumps(compacted_response.model_dump(), indent=2))
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.2",
+  input: [{role: :user, content: "Write a very long poem about a dog."}]
+)
+compaction = client.responses.compact(
+  model: "gpt-5.2",
+  input: [
+    {role: :user, content: "Write a very long poem about a dog."},
+    *response.output.map(&:to_h)
+  ]
+)
+
+puts(compaction.output)
 ```
 
 

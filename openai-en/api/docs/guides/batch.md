@@ -130,6 +130,46 @@ batch_input_file = client.files.create(
 print(batch_input_file)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	file, err := os.Open("batchinput.jsonl")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	uploaded, err := client.Files.New(context.Background(), openai.FileNewParams{
+		File:    file,
+		Purpose: openai.FilePurposeBatch,
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(uploaded.ID)
+}
+```
+
+```ruby
+require "openai"
+require "pathname"
+
+client = OpenAI::Client.new
+file = Pathname("batchinput.jsonl")
+uploaded = client.files.create(file: file, purpose: :batch)
+puts(uploaded.id)
+```
+
 ```bash
 curl https://api.openai.com/v1/files \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -137,7 +177,7 @@ curl https://api.openai.com/v1/files \
   -F file="@batchinput.jsonl"
 ```
 
-```cli
+```bash
 openai files create \
   --file batchinput.jsonl \
   --purpose batch
@@ -173,6 +213,38 @@ batch = client.batches.create(
 print(batch)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	batch, err := client.Batches.New(context.Background(), openai.BatchNewParams{
+		InputFileID:      "file-abc123",
+		Endpoint:         openai.BatchNewParamsEndpointV1ChatCompletions,
+		CompletionWindow: openai.BatchNewParamsCompletionWindow24h,
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(batch.ID)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+batch = client.batches.create(input_file_id: "file-abc123", endpoint: "/v1/responses", completion_window: "24h")
+puts(batch.id)
+```
+
 ```bash
 curl https://api.openai.com/v1/batches \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -184,7 +256,7 @@ curl https://api.openai.com/v1/batches \
   }'
 ```
 
-```cli
+```bash
 openai batches create \
   --input-file-id file-abc123 \
   --endpoint /v1/chat/completions \
@@ -239,13 +311,41 @@ batch = client.batches.retrieve(batch.id)
 print(batch)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	batch, err := client.Batches.Get(context.Background(), "batch_abc123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(batch.Status)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+batch = client.batches.retrieve("batch_abc123")
+puts(batch.status)
+```
+
 ```bash
 curl https://api.openai.com/v1/batches/batch_abc123 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json"
 ```
 
-```cli
+```bash
 openai batches retrieve \
   --batch-id batch_abc123
 ```
@@ -292,12 +392,46 @@ file_response = client.files.content(output_file_id)
 print(file_response.text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"io"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Files.Content(context.Background(), "file-xyz123")
+	if err != nil {
+		panic(err)
+	}
+	defer response.Body.Close()
+	contents, err := io.ReadAll(response.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(contents))
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+content = client.files.content("file-xyz123")
+puts(content.read)
+```
+
 ```bash
 curl https://api.openai.com/v1/files/file-xyz123/content \
   -H "Authorization: Bearer $OPENAI_API_KEY" > batch_output.jsonl
 ```
 
-```cli
+```bash
 openai files content \
   --file-id file-xyz123 \
   --output batch_output.jsonl
@@ -345,6 +479,34 @@ client = OpenAI()
 client.batches.cancel(batch_id)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	batch, err := client.Batches.Cancel(context.Background(), "batch_abc123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(batch.Status)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+batch = client.batches.cancel("batch_abc123")
+puts(batch.status)
+```
+
 ```bash
 curl https://api.openai.com/v1/batches/batch_abc123/cancel \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -352,7 +514,7 @@ curl https://api.openai.com/v1/batches/batch_abc123/cancel \
   -X POST
 ```
 
-```cli
+```bash
 openai batches cancel \
   --batch-id batch_abc123
 ```
@@ -383,13 +545,44 @@ client = OpenAI()
 client.batches.list(limit=10)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+	list := client.Batches.ListAutoPaging(context.Background(), openai.BatchListParams{Limit: openai.Int(10)})
+	for list.Next() {
+		fmt.Println(list.Current().ID)
+	}
+	if err := list.Err(); err != nil {
+		panic(err)
+	}
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+client.batches.list(limit: 10).auto_paging_each do |batch|
+  puts(batch.id)
+end
+```
+
 ```bash
 curl https://api.openai.com/v1/batches?limit=10 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json"
 ```
 
-```cli
+```bash
 openai batches list \
   --limit 10
 ```

@@ -197,6 +197,106 @@ Post-processor examples
 
 Citation parsing helpers
 
+```javascript
+const CITATION_START = "\uE200";
+const CITATION_DELIMITER = "\uE202";
+const CITATION_STOP = "\uE201";
+
+const SOURCE_ID_RE = /^[A-Za-z0-9_-]+$/;
+const LINE_LOCATOR_RE = /^L\d+(?:-L\d+)?$/;
+
+/**
+ * @typedef {Object} Citation
+ * @property {string} raw
+ * @property {string} family
+ * @property {string[]} source_ids
+ * @property {string | null} locator
+ * @property {number} start
+ * @property {number} end
+ */
+
+/**
+ * Extract citations such as:
+ *
+ *   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_STOP}
+ *   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_DELIMITER}L8-L13{CITATION_STOP}
+ *   {CITATION_START}cite{CITATION_DELIMITER}turn0search0{CITATION_DELIMITER}turn1news2{CITATION_STOP}
+ *
+ * @param {string} text
+ * @param {{ families?: string[] }} [options]
+ * @returns {Citation[]}
+ */
+function extractCitations(text, { families = ["cite"] } = {}) {
+  if (families.length === 0) {
+    return [];
+  }
+
+  const familyPattern = families
+    .map((family) => family.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|");
+
+  const tokenRe = new RegExp(
+    `${CITATION_START}(?<family>${familyPattern})${CITATION_DELIMITER}(?<body>[\\s\\S]*?)${CITATION_STOP}`,
+    "g"
+  );
+
+  /** @type {Citation[]} */
+  const citations = [];
+
+  for (const match of text.matchAll(tokenRe)) {
+    const body = match.groups?.body ?? "";
+    const parts = body
+      .split(CITATION_DELIMITER)
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    if (parts.length === 0) {
+      continue;
+    }
+
+    let locator = null;
+    const lastPart = parts[parts.length - 1];
+    if (LINE_LOCATOR_RE.test(lastPart)) {
+      locator = parts.pop() ?? null;
+    }
+
+    if (parts.length === 0 || parts.some((part) => !SOURCE_ID_RE.test(part))) {
+      continue;
+    }
+
+    citations.push({
+      raw: match[0],
+      family: match.groups?.family ?? "",
+      source_ids: parts,
+      locator,
+      start: match.index ?? 0,
+      end: (match.index ?? 0) + match[0].length,
+    });
+  }
+
+  return citations;
+}
+
+/**
+ * @param {string} text
+ * @param {Iterable<Citation>} citations
+ * @returns {string}
+ */
+function stripCitations(text, citations) {
+  let cleanText = text;
+  const sortedCitations = Array.from(citations).sort(
+    (left, right) => right.start - left.start
+  );
+
+  for (const citation of sortedCitations) {
+    cleanText =
+      cleanText.slice(0, citation.start) + cleanText.slice(citation.end);
+  }
+
+  return cleanText;
+}
+```
+
 ```python
 import re
 from typing import Iterable, TypedDict
@@ -284,105 +384,6 @@ def strip_citations(text: str, citations: Iterable[Citation]) -> str:
         clean_text = clean_text[: citation["start"]] + clean_text[citation["end"] :]
 
     return clean_text
-```
-
-```javascript
-const CITATION_START = "\uE200";
-const CITATION_DELIMITER = "\uE202";
-const CITATION_STOP = "\uE201";
-
-const SOURCE_ID_RE = /^[A-Za-z0-9_-]+$/;
-const LINE_LOCATOR_RE = /^L\d+(?:-L\d+)?$/;
-
-/**
- * @typedef {Object} Citation
- * @property {string} raw
- * @property {string} family
- * @property {string[]} source_ids
- * @property {string | null} locator
- * @property {number} start
- * @property {number} end
- */
-
-/**
- * Extract citations such as:
- *
- *   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_STOP}
- *   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_DELIMITER}L8-L13{CITATION_STOP}
- *   {CITATION_START}cite{CITATION_DELIMITER}turn0search0{CITATION_DELIMITER}turn1news2{CITATION_STOP}
- *
- * @param {string} text
- * @param {{ families?: string[] }} [options]
- * @returns {Citation[]}
- */
-function extractCitations(text, { families = ["cite"] } = {}) {
-  if (families.length === 0) {
-    return [];
-  }
-
-  const familyPattern = families
-    .map((family) => family.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .join("|");
-
-  const tokenRe = new RegExp(
-    `\uE200(?<family>${familyPattern})\uE202(?<body>[\\s\\S]*?)\uE201`,
-    "g"
-  );
-
-  /** @type {Citation[]} */
-  const citations = [];
-
-  for (const match of text.matchAll(tokenRe)) {
-    const body = match.groups?.body ?? "";
-    const parts = body
-      .split(CITATION_DELIMITER)
-      .map((part) => part.trim())
-      .filter(Boolean);
-
-    if (parts.length === 0) {
-      continue;
-    }
-
-    let locator = null;
-    const lastPart = parts[parts.length - 1];
-    if (LINE_LOCATOR_RE.test(lastPart)) {
-      locator = parts.pop() ?? null;
-    }
-
-    if (parts.length === 0 || parts.some((part) => !SOURCE_ID_RE.test(part))) {
-      continue;
-    }
-
-    citations.push({
-      raw: match[0],
-      family: match.groups?.family ?? "",
-      source_ids: parts,
-      locator,
-      start: match.index ?? 0,
-      end: (match.index ?? 0) + match[0].length,
-    });
-  }
-
-  return citations;
-}
-
-/**
- * @param {string} text
- * @param {Iterable<Citation>} citations
- * @returns {string}
- */
-function stripCitations(text, citations) {
-  let cleanText = text;
-  const sortedCitations = Array.from(citations).sort(
-    (left, right) => right.start - left.start
-  );
-
-  for (const citation of sortedCitations) {
-    cleanText = cleanText.slice(0, citation.start) + cleanText.slice(citation.end);
-  }
-
-  return cleanText;
-}
 ```
 
 

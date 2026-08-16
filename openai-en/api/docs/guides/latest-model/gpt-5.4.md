@@ -59,20 +59,6 @@ With reasoning effort set to `none`, prompting is important. To improve the mode
 
 Reasoning effort set to none
 
-```bash
-curl --request POST \
-  --url https://api.openai.com/v1/responses \
-  --header "Authorization: Bearer $OPENAI_API_KEY" \
-  --header 'Content-type: application/json' \
-  --data '{
-        "model": "gpt-5.4",
-        "input": "Think carefully and outline your steps before answering. How much gold would it take to coat the Statue of Liberty in a 1mm layer?",
-        "reasoning": {
-                "effort": "none"
-        }
-}'
-```
-
 ```javascript
 import OpenAI from "openai";
 const openai = new OpenAI();
@@ -103,6 +89,58 @@ response = client.responses.create(
 print(response)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+	"github.com/openai/openai-go/v3/shared"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model:     "gpt-5.4",
+		Input:     responses.ResponseNewParamsInputUnion{OfString: openai.String("Think carefully and outline your steps before answering. How much gold would it take to coat the Statue of Liberty in a 1mm layer?")},
+		Reasoning: shared.ReasoningParam{Effort: shared.ReasoningEffortNone},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.4",
+  reasoning: {effort: :minimal},
+  input: "Explain the bug and propose a fix."
+)
+puts(response.output_text)
+```
+
+```bash
+curl --request POST \
+  --url https://api.openai.com/v1/responses \
+  --header "Authorization: Bearer $OPENAI_API_KEY" \
+  --header 'Content-type: application/json' \
+  --data '{
+        "model": "gpt-5.4",
+        "input": "Think carefully and outline your steps before answering. How much gold would it take to coat the Statue of Liberty in a 1mm layer?",
+        "reasoning": {
+                "effort": "none"
+        }
+}'
+```
+
 
 ### Verbosity
 
@@ -116,20 +154,6 @@ GPT-5 made this option configurable as one of `high`, `medium`, or `low`. With G
 When generating code with GPT-5.4, `medium` and `high` verbosity levels yield longer, more structured code with inline explanations, while `low` verbosity produces shorter, more concise code with minimal commentary.
 
 Control verbosity
-
-```bash
-curl --request POST \
-  --url https://api.openai.com/v1/responses \
-  --header "Authorization: Bearer $OPENAI_API_KEY" \
-  --header 'Content-type: application/json' \
-  --data '{
-  "model": "gpt-5.4",
-  "input": "What is the answer to the ultimate question of life, the universe, and everything?",
-  "text": {
-    "verbosity": "low"
-  }
-}'
-```
 
 ```javascript
 import OpenAI from "openai";
@@ -161,6 +185,57 @@ response = client.responses.create(
 print(response)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.4",
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("What is the answer to the ultimate question of life, the universe, and everything?")},
+		Text:  responses.ResponseTextConfigParam{Verbosity: responses.ResponseTextConfigVerbosityLow},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response)
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.4",
+  text: {verbosity: :low},
+  input: "Explain the bug and propose a fix."
+)
+puts(response.output_text)
+```
+
+```bash
+curl --request POST \
+  --url https://api.openai.com/v1/responses \
+  --header "Authorization: Bearer $OPENAI_API_KEY" \
+  --header 'Content-type: application/json' \
+  --data '{
+  "model": "gpt-5.4",
+  "input": "What is the answer to the ultimate question of life, the universe, and everything?",
+  "text": {
+    "verbosity": "low"
+  }
+}'
+```
+
 
 You can still steer verbosity through prompting after setting it to `low` in the API. The verbosity parameter defines a general token range at the system prompt level, but the actual output is flexible to both developer and user prompts within that range.
 
@@ -168,7 +243,7 @@ You can still steer verbosity through prompting after setting it to `low` in the
 
 1M token context window was introduced with GPT-5.4, making it easier to analyze entire codebases, long document collections, or extended agent trajectories in a single request.
 
-We have separate standard pricing for requests under 272K and over 272K tokens, available in the [pricing docs](https://developers.openai.com/api/docs/pricing). If you use [priority processing](https://developers.openai.com/api/docs/guides/priority-processing), any prompt above 272K tokens is automatically processed at standard rates.
+We have separate standard pricing for requests under 272K and over 272K tokens, available in the [pricing docs](https://developers.openai.com/api/docs/pricing). If you use [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode), any prompt above 272K tokens is automatically processed at standard rates.
 
 Long context pricing stacks with other pricing modifiers such as data residency and batch.
 
@@ -292,7 +367,7 @@ While the model should be close to a drop-in replacement for GPT-5.2, there are 
 
 Using GPT-5 models with the Responses API provides improved intelligence because of the API design. The Responses API can pass the previous turn's CoT to the model. This leads to fewer generated reasoning tokens, higher cache hit rates, and less latency. To learn more, see an [in-depth guide](https://developers.openai.com/cookbook/examples/responses_api/reasoning_items) on the benefits of the Responses API.
 
-When migrating to GPT-5.4 from an older OpenAI model, start by experimenting with reasoning levels and prompting strategies. Based on our testing, we recommend using our [prompt optimizer](https://platform.openai.com/chat/edit?models=gpt-5.4&optimize=true)—which automatically updates your prompts for GPT-5.4 based on our best practices—and following this model-specific guidance:
+When migrating to GPT-5.4 from an older OpenAI model, start by experimenting with reasoning levels and prompting strategies. Use the [prompt optimizer](https://platform.openai.com/chat/edit?models=gpt-5.4&optimize=true) to update your prompts for GPT-5.4 based on current best practices, then follow this model-specific guidance:
 
 - **`gpt-5.2`**: `gpt-5.4` with default settings is meant to be a drop-in replacement.
 - **o3**: `gpt-5.4` with `medium` or `high` reasoning. Start with `medium` reasoning with prompt tuning, then increase to `high` if you aren't getting the results you want.
@@ -372,6 +447,57 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+func main() {
+	client := openai.NewClient()
+	commentary := responses.ResponseInputItemParamOfMessage(
+		"I’ll inspect the logs and then summarize root cause and remediation.",
+		responses.EasyInputMessageRoleAssistant,
+	)
+	commentary.OfMessage.Phase = responses.EasyInputMessagePhaseCommentary
+	finalAnswer := responses.ResponseInputItemParamOfMessage(
+		"Root cause: cache invalidation race.",
+		responses.EasyInputMessageRoleAssistant,
+	)
+	finalAnswer.OfMessage.Phase = responses.EasyInputMessagePhaseFinalAnswer
+
+	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+		Model: "gpt-5.4",
+		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
+			commentary,
+			finalAnswer,
+			responses.ResponseInputItemParamOfMessage("Great—now give me a rollout-safe fix plan.", responses.EasyInputMessageRoleUser),
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.OutputText())
+}
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+response = client.responses.create(
+  model: "gpt-5.4",
+  reasoning: {effort: :medium},
+  input: "Explain the bug and propose a fix."
+)
+puts(response.output_text)
+```
+
 
 ### GPT-5.4 parameter compatibility
 
@@ -381,7 +507,7 @@ The following parameters are **only supported** when using GPT-5.4 with reasonin
 - `top_p`
 - `logprobs`
 
-Requests to GPT-5.4 or GPT-5.2 with any other reasoning effort setting, or to older GPT-5 models—for example, `gpt-5`, `gpt-5-mini`, or `gpt-5-nano`—that include these fields will raise an error.
+Requests that include these fields will raise an error for GPT-5.4 or GPT-5.2 with any other reasoning effort setting, or for older GPT-5 models such as `gpt-5`, `gpt-5-mini`, or `gpt-5-nano`.
 
 To achieve similar results with reasoning effort set higher, or with another GPT-5 family model, try these alternative parameters:
 

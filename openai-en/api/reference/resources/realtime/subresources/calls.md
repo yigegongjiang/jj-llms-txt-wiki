@@ -31,7 +31,7 @@ handle it.
 
       The format of the input audio.
 
-      - `PCMAudioFormat object { rate, type }`
+      - `PCMAudio object { rate, type }`
 
         The PCM audio format. Only a 24kHz sample rate is supported.
 
@@ -47,7 +47,7 @@ handle it.
 
           - `"audio/pcm"`
 
-      - `PCMUAudioFormat object { type }`
+      - `PCMUAudio object { type }`
 
         The G.711 μ-law format.
 
@@ -57,7 +57,7 @@ handle it.
 
           - `"audio/pcmu"`
 
-      - `PCMAAudioFormat object { type }`
+      - `PCMAAudio object { type }`
 
         The G.711 A-law format.
 
@@ -101,23 +101,35 @@ handle it.
 
         - `"xhigh"`
 
+      - `keywords: optional array of string`
+
+        Words or phrases to guide transcription of the input audio. Supported by `gpt-transcribe` and `gpt-live-transcribe`.
+
       - `language: optional string`
 
         The language of the input audio. Supplying the input language in
         [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format
         will improve accuracy and latency.
 
-      - `model: optional string or "whisper-1" or "gpt-4o-mini-transcribe" or "gpt-4o-mini-transcribe-2025-12-15" or 3 more`
+      - `languages: optional array of string`
 
-        The model to use for transcription. Current options are `whisper-1`, `gpt-4o-mini-transcribe`, `gpt-4o-mini-transcribe-2025-12-15`, `gpt-4o-transcribe`, `gpt-4o-transcribe-diarize`, and `gpt-realtime-whisper`. Use `gpt-4o-transcribe-diarize` when you need diarization with speaker labels.
+        Possible languages of the input audio, in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format. Supported by `gpt-transcribe` and `gpt-live-transcribe`.
+
+      - `model: optional string or "whisper-1" or "gpt-transcribe" or "gpt-live-transcribe" or 5 more`
+
+        The model to use for transcription. Current options are `whisper-1`, `gpt-transcribe`, `gpt-live-transcribe`, `gpt-4o-mini-transcribe`, `gpt-4o-mini-transcribe-2025-12-15`, `gpt-4o-transcribe`, `gpt-4o-transcribe-diarize`, and `gpt-realtime-whisper`. Use `gpt-4o-transcribe-diarize` when you need diarization with speaker labels.
 
         - `string`
 
-        - `"whisper-1" or "gpt-4o-mini-transcribe" or "gpt-4o-mini-transcribe-2025-12-15" or 3 more`
+        - `"whisper-1" or "gpt-transcribe" or "gpt-live-transcribe" or 5 more`
 
-          The model to use for transcription. Current options are `whisper-1`, `gpt-4o-mini-transcribe`, `gpt-4o-mini-transcribe-2025-12-15`, `gpt-4o-transcribe`, `gpt-4o-transcribe-diarize`, and `gpt-realtime-whisper`. Use `gpt-4o-transcribe-diarize` when you need diarization with speaker labels.
+          The model to use for transcription. Current options are `whisper-1`, `gpt-transcribe`, `gpt-live-transcribe`, `gpt-4o-mini-transcribe`, `gpt-4o-mini-transcribe-2025-12-15`, `gpt-4o-transcribe`, `gpt-4o-transcribe-diarize`, and `gpt-realtime-whisper`. Use `gpt-4o-transcribe-diarize` when you need diarization with speaker labels.
 
           - `"whisper-1"`
+
+          - `"gpt-transcribe"`
+
+          - `"gpt-live-transcribe"`
 
           - `"gpt-4o-mini-transcribe"`
 
@@ -137,7 +149,7 @@ handle it.
         For `gpt-4o-transcribe` models (excluding `gpt-4o-transcribe-diarize`), the prompt is a free text string, for example "expect words related to technology".
         Prompt is not supported with `gpt-realtime-whisper` in GA Realtime sessions.
 
-    - `turn_detection: optional RealtimeAudioInputTurnDetection`
+    - `turn_detection: optional RealtimeAudioInputTurnDetection or null`
 
       Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.
 
@@ -164,7 +176,7 @@ handle it.
 
           If both `create_response` and `interrupt_response` are set to `false`, the model will never respond automatically but VAD events will still be emitted.
 
-        - `idle_timeout_ms: optional number`
+        - `idle_timeout_ms: optional number or null`
 
           Optional timeout after which a model response will be triggered automatically. This is
           useful for situations in which a long pause from the user is unexpected, such as a phone
@@ -378,7 +390,7 @@ handle it.
   Whether the model may call multiple tools in parallel. Only supported by
   reasoning Realtime models such as `gpt-realtime-2`.
 
-- `prompt: optional ResponsePrompt`
+- `prompt: optional ResponsePrompt or null`
 
   Reference to a prompt template and its variables.
   [Learn more](/docs/guides/text?api-mode=responses#reusable-prompts).
@@ -387,7 +399,7 @@ handle it.
 
     The unique identifier of the prompt template to use.
 
-  - `variables: optional map[string or ResponseInputText or ResponseInputImage or ResponseInputFile]`
+  - `variables: optional map[string or ResponseInputText or ResponseInputImage or ResponseInputFile] or null`
 
     Optional map of values to substitute in for variables in your
     prompt. The substitution values can either be strings, or other
@@ -441,11 +453,11 @@ handle it.
 
         - `"input_image"`
 
-      - `file_id: optional string`
+      - `file_id: optional string or null`
 
         The ID of the file to be sent to the model.
 
-      - `image_url: optional string`
+      - `image_url: optional string or null`
 
         The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.
 
@@ -483,7 +495,7 @@ handle it.
 
         The content of the file to be sent to the model.
 
-      - `file_id: optional string`
+      - `file_id: optional string or null`
 
         The ID of the file to be sent to the model.
 
@@ -505,7 +517,7 @@ handle it.
 
           - `"explicit"`
 
-  - `version: optional string`
+  - `version: optional string or null`
 
     Optional version of the prompt template.
 
@@ -578,7 +590,7 @@ handle it.
 
       - `"mcp"`
 
-    - `name: optional string`
+    - `name: optional string or null`
 
       The name of the tool to call on the server.
 
@@ -623,7 +635,7 @@ handle it.
 
       - `"mcp"`
 
-    - `allowed_callers: optional array of "direct" or "programmatic"`
+    - `allowed_callers: optional array of "direct" or "programmatic" or null`
 
       The tool invocation context(s).
 
@@ -631,7 +643,7 @@ handle it.
 
       - `"programmatic"`
 
-    - `allowed_tools: optional array of string or object { read_only, tool_names }`
+    - `allowed_tools: optional array of string or object { read_only, tool_names }  or null`
 
       List of allowed tool names or a filter object.
 
@@ -696,12 +708,12 @@ handle it.
 
       Whether this MCP tool is deferred and discovered via tool search.
 
-    - `headers: optional map[string]`
+    - `headers: optional map[string] or null`
 
       Optional HTTP headers to send to the MCP server. Use for authentication
       or other purposes.
 
-    - `require_approval: optional object { always, never }  or "always" or "never"`
+    - `require_approval: optional object { always, never }  or "always" or "never" or null`
 
       Specify which of the MCP server's tools require approval.
 
@@ -763,7 +775,7 @@ handle it.
       The Secure MCP Tunnel ID to use instead of a direct server URL. One of
       `server_url`, `connector_id`, or `tunnel_id` must be provided.
 
-- `tracing: optional RealtimeTracingConfig`
+- `tracing: optional RealtimeTracingConfig or null`
 
   Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once
   tracing is enabled for a session, the configuration cannot be modified.
