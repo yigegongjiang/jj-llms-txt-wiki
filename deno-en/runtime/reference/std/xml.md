@@ -24,17 +24,17 @@ Parsing APIs</h2>
 </thead>
 <tbody>
 <tr>
-<td><a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.1.3/doc/~/parse" rel="nofollow"><code>parse</code></a></td>
+<td><a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.2.0/doc/~/parse" rel="nofollow"><code>parse</code></a></td>
 <td>Parse a complete XML string</td>
 <td>Document tree</td>
 </tr>
 <tr>
-<td><a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.1.3/doc/~/parseXmlStream" rel="nofollow"><code>parseXmlStream</code></a></td>
+<td><a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.2.0/doc/~/parseXmlStream" rel="nofollow"><code>parseXmlStream</code></a></td>
 <td>Streaming with maximum throughput</td>
 <td>Direct callbacks</td>
 </tr>
 <tr>
-<td><a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.1.3/doc/~/parseXmlRecords" rel="nofollow"><code>parseXmlRecords</code></a></td>
+<td><a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.2.0/doc/~/parseXmlRecords" rel="nofollow"><code>parseXmlRecords</code></a></td>
 <td>Streaming records assembled in callbacks</td>
 <td><code>AsyncGenerator&lt;T&gt;</code></td>
 </tr>
@@ -117,12 +117,12 @@ Position Tracking</h2>
 debugging and error reporting:</p>
 <ul>
 <li>
-<p><strong>DOM parser (<a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.1.3/doc/~/parse" rel="nofollow"><code>parse</code></a>)</strong>: Position tracking is <strong>enabled by default</strong>
+<p><strong>DOM parser (<a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.2.0/doc/~/parse" rel="nofollow"><code>parse</code></a>)</strong>: Position tracking is <strong>enabled by default</strong>
 to provide detailed error messages. Disable with <code>{ trackPosition: false }</code>
 for a performance boost when parsing trusted XML.</p>
 </li>
 <li>
-<p><strong>Streaming parser (<a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.1.3/doc/~/parseXmlStream" rel="nofollow"><code>parseXmlStream</code></a>)</strong>: Position tracking is
+<p><strong>Streaming parser (<a href="https://github.com/denoland/std/blob/HEAD/@std/xml@0.2.0/doc/~/parseXmlStream" rel="nofollow"><code>parseXmlStream</code></a>)</strong>: Position tracking is
 <strong>disabled by default</strong> for optimal streaming performance. Enable with
 <code>{ trackPosition: true }</code> when you need position info.</p>
 </li>

@@ -6,11 +6,11 @@
 
 ## Overview
 
-<p><a href="https://github.com/denoland/std/blob/HEAD/@std/yaml@1.1.2/doc/~/parse" rel="nofollow"><code>parse</code></a> and <a href="https://github.com/denoland/std/blob/HEAD/@std/yaml@1.1.2/doc/~/stringify" rel="nofollow"><code>stringify</code></a> for handling
+<p><a href="https://github.com/denoland/std/blob/HEAD/@std/yaml@1.2.0/doc/~/parse" rel="nofollow"><code>parse</code></a> and <a href="https://github.com/denoland/std/blob/HEAD/@std/yaml@1.2.0/doc/~/stringify" rel="nofollow"><code>stringify</code></a> for handling
 <a href="https://yaml.org/" rel="nofollow">YAML</a> encoded data.</p>
 <p>Ported from
 <a href="https://github.com/nodeca/js-yaml/commit/665aadda42349dcae869f12040d9b10ef18d12da" rel="nofollow">js-yaml v3.13.1</a>.</p>
-<p>Use <a href="https://github.com/denoland/std/blob/HEAD/@std/yaml@1.1.2/doc/~/parseAll" rel="nofollow"><code>parseAll</code></a> for parsing multiple documents in a single YAML
+<p>Use <a href="https://github.com/denoland/std/blob/HEAD/@std/yaml@1.2.0/doc/~/parseAll" rel="nofollow"><code>parseAll</code></a> for parsing multiple documents in a single YAML
 string.</p>
 <p>This package generally supports
 <a href="https://yaml.org/spec/1.2.2/" rel="nofollow">YAML 1.2.x</a> (latest) and some

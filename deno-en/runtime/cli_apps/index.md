@@ -167,6 +167,11 @@ with the usual `--allow-*` flags so it runs without prompting:
 deno compile --output greet greet.ts
 ```
 
+If binary size matters more than raw execution speed, you can build against the
+experimental QuickJS engine instead of V8 with `--engine quickjs`. See
+[choosing a JavaScript engine](/runtime/reference/cli/compile/#choosing-a-javascript-engine)
+for the trade-offs.
+
 ## Embed assets in the binary
 
 A single-file executable should stay single-file even when your tool needs data

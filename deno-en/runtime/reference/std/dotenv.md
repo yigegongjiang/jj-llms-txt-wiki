@@ -11,14 +11,8 @@ This @std package is experimental and its API may change without a major version
 :::
 ## Overview
 
-<p>Parses and loads environment variables from a <code>.env</code> file into the current
-process, or stringify data into a <code>.env</code> file format.</p>
+<p>Parses and stringifies data in the <code>.env</code> file format.</p>
 <p>Note: The key needs to match the pattern /^[a-zA-Z_][a-zA-Z0-9_]*$/.</p>
-
-```js
-// Automatically load environment variables from a `.env` file
-import "@std/dotenv/load";
-```
 
 ```js
 import { parse, stringify } from "@std/dotenv";
@@ -27,6 +21,73 @@ import { assertEquals } from "@std/assert";
 assertEquals(parse("GREETING=hello world"), { GREETING: "hello world" });
 assertEquals(stringify({ GREETING: "hello world" }), "GREETING='hello world'");
 ```
+
+<h2 id="migrating-from-load()">
+Migrating from <code>load()</code></h2>
+<p><a href="https://github.com/denoland/std/blob/HEAD/@std/dotenv@0.225.8/doc/~/load" rel="nofollow"><code>load</code></a>, <a href="https://github.com/denoland/std/blob/HEAD/@std/dotenv@0.225.8/doc/~/loadSync" rel="nofollow"><code>loadSync</code></a> and the <code>@std/dotenv/load</code> side-effect
+module are deprecated in favor of the runtime's
+<a href="https://docs.deno.com/runtime/reference/env_variables/" rel="nofollow">--env-file</a>
+flag, which Node.js and Bun also support:</p>
+
+```js
+deno run --env-file app.ts
+deno run --env-file=.env --env-file=.env.local app.ts
+```
+
+<table>
+<thead>
+<tr>
+<th>Deprecated API</th>
+<th>Replacement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>import "@std/dotenv/load"</code></td>
+<td><code>deno run --env-file app.ts</code></td>
+</tr>
+<tr>
+<td><code>load({ export: true })</code> / <code>loadSync({ export: true })</code></td>
+<td><code>--env-file</code></td>
+</tr>
+<tr>
+<td><code>load({ envPath: "./.env_prod" })</code></td>
+<td><code>--env-file=.env_prod</code></td>
+</tr>
+<tr>
+<td><code>load()</code> (read into an object, no export)</td>
+<td><code>parse(await Deno.readTextFile(".env"))</code></td>
+</tr>
+</tbody>
+</table>
+<p>Differences to be aware of:</p>
+<ul>
+<li><code>load()</code> silently ignores a missing file. <code>--env-file</code> warns but continues,
+while the <code>parse()</code> replacement above throws. To treat the file as
+optional:</li>
+</ul>
+
+```js
+import { parse } from "@std/dotenv";
+
+let env: Record<string, string> = {};
+try {
+  env = parse(await Deno.readTextFile(".env"));
+} catch (e) {
+  if (!(e instanceof Deno.errors.NotFound)) throw e;
+}
+```
+
+<ul>
+<li><code>$VAR</code> inside a double-quoted value stays literal with <code>load()</code> but
+expands with <code>--env-file</code>. Use single quotes for values containing a
+literal <code>$</code>.</li>
+<li><code>${KEY:-default}</code> and nested defaults are not supported by <code>--env-file</code>.
+Use <a href="https://github.com/denoland/std/blob/HEAD/@std/dotenv@0.225.8/doc/~/parse" rel="nofollow"><code>parse</code></a>, which keeps the full expansion behavior.</li>
+<li>Node's <code>--env-file</code> performs no variable expansion at all.</li>
+<li>On platforms without a CLI, e.g. Deno Deploy, set environment variables
+through the platform's configuration instead.</li>
+</ul>
 
 ### Add to your project
 

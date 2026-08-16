@@ -43,7 +43,7 @@ therefore is not provided.</p>
 </blockquote>
 <h2 id="user-agent-handling">
 User agent handling</h2>
-<p>The <a href="https://github.com/denoland/std/blob/HEAD/@std/http@1.1.2/doc/~/UserAgent" rel="nofollow"><code>UserAgent</code></a> class provides user agent string parsing, allowing
+<p>The <a href="https://github.com/denoland/std/blob/HEAD/@std/http@1.1.3/doc/~/UserAgent" rel="nofollow"><code>UserAgent</code></a> class provides user agent string parsing, allowing
 a user agent flag to be semantically understood.</p>
 <p>For example to integrate the user agent provided in the header <code>User-Agent</code>
 in an http request would look like this:</p>
