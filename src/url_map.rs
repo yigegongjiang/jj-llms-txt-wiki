@@ -307,6 +307,12 @@ impl PathRegistry {
         }
         Ok(path)
     }
+
+    /// Whether some URL in this crawl maps to `relative` (a snapshot-root-relative
+    /// path). Files that answer `false` are not part of the snapshot being built.
+    pub fn claims(&self, relative: &Path) -> bool {
+        self.urls.contains_key(&LocalPath(relative.to_path_buf()))
+    }
 }
 
 #[cfg(test)]

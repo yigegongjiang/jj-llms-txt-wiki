@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.21.1] - 2026-08-16
+
+### Fixed
+
+- 上一次同步被中断后重跑，不再把远端已删除的页面、或旧命名规则留下的文件混进新快照。
+  - `crawler::prune_unclaimed` 在成功收尾（写 manifest 前）扫掉 staging 中 `PathRegistry` 未认领的文件与空目录，manifest 文件豁免、符号链接不跟随；404 / degraded 页面在发现阶段已登记路径，续传副本不受影响。best-effort，删不掉的文件不使站点失败。
+
 ## [0.21.0] - 2026-08-16
 
 ### Fixed

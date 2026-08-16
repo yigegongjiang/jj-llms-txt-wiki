@@ -8,7 +8,7 @@ use url::Url;
 
 use crate::discovery::{declared_links, discover};
 use crate::http::{FetchOutcome, HttpClient};
-use crate::manifest::{Manifest, Validator};
+use crate::manifest::{MANIFEST_FILE, Manifest, Validator};
 use crate::url_map::{AllowedOrigins, CanonicalUrl, LocalPath, PathRegistry};
 
 pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
@@ -478,16 +478,51 @@ pub async fn crawl(
         report.failures.append(&mut report.degraded);
     }
 
-    if report.is_success()
-        && let Err(error) = manifest.save(snapshot_root)
-    {
-        report.failures.push(CrawlFailure {
-            url: "manifest".to_owned(),
-            message: error,
-        });
+    if report.is_success() {
+        prune_unclaimed(snapshot_root, &paths);
+        if let Err(error) = manifest.save(snapshot_root) {
+            report.failures.push(CrawlFailure {
+                url: "manifest".to_owned(),
+                message: error,
+            });
+        }
     }
 
     Ok(report)
+}
+
+/// Drop staged files no URL of this crawl maps to. An adopted partial carries
+/// whatever the interrupted run wrote, including pages the site has since
+/// removed and files named by an older mapping rule; publishing those would mix
+/// unverified content into the snapshot. Degraded and 404 pages keep their files:
+/// their URLs are registered at discovery time, before the fetch verdict.
+/// Best-effort — a file that resists deletion stays rather than failing the site.
+fn prune_unclaimed(root: &Path, paths: &PathRegistry) {
+    prune_directory(root, root, paths);
+}
+
+/// Prune `dir` recursively; returns whether it ended up empty, so the parent can
+/// remove directories an older naming rule left behind.
+fn prune_directory(root: &Path, dir: &Path, paths: &PathRegistry) -> bool {
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return false;
+    };
+    let mut empty = true;
+    for entry in entries.flatten() {
+        let path = entry.path();
+        // `file_type` does not follow symlinks, so a linked directory is treated
+        // as a plain unclaimed file and unlinked, never descended into.
+        let is_dir = entry.file_type().is_ok_and(|kind| kind.is_dir());
+        let removed = if is_dir {
+            prune_directory(root, &path, paths) && std::fs::remove_dir(&path).is_ok()
+        } else {
+            path.strip_prefix(root).is_ok_and(|relative| {
+                relative != Path::new(MANIFEST_FILE) && !paths.claims(relative)
+            }) && std::fs::remove_file(&path).is_ok()
+        };
+        empty &= removed;
+    }
+    empty
 }
 
 /// Where newly discovered content pages go: held back in `deferred` while entry
@@ -633,7 +668,7 @@ pub(crate) async fn write_document(
 #[cfg(test)]
 mod tests {
     use super::{CrawlObserver, CrawlOptions, CrawlReport, NoopObserver, crawl};
-    use crate::manifest::{Manifest, Validator};
+    use crate::manifest::{MANIFEST_FILE, Manifest, Validator};
     use std::collections::HashMap;
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
@@ -1336,6 +1371,89 @@ mod tests {
         assert!(!report.is_success());
         assert!(report.failed() >= 6, "{:?}", report.failures);
         assert!(report.degraded.is_empty());
+    }
+
+    #[tokio::test]
+    async fn query_variants_land_side_by_side_and_stale_files_are_pruned() {
+        // Same path, different content per query — the shape learn.chatgpt.com
+        // serves with `?surface=cli` / `?surface=ide`.
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[cli](/docs/x.md?surface=cli) [ide](/docs/x.md?surface=ide)"),
+            ),
+            ("/docs/x.md?surface=cli".to_owned(), Response::ok("cli")),
+            ("/docs/x.md?surface=ide".to_owned(), Response::ok("ide")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let root = directory.path();
+        // What an interrupted older run left staged: the same page under the old
+        // query-less name, a page the site no longer links, and a manifest.
+        std::fs::create_dir_all(root.join("docs/gone")).unwrap();
+        std::fs::write(root.join("docs/x.md"), "stale").unwrap();
+        std::fs::write(root.join("docs/gone/old.md"), "stale").unwrap();
+        std::fs::write(root.join(MANIFEST_FILE), "{}").unwrap();
+
+        let report = fresh_crawl(
+            server.url.clone(),
+            root,
+            options(2, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        assert_eq!(report.downloaded, 2);
+        assert_eq!(
+            std::fs::read_to_string(root.join("docs/x__surface=cli.md")).unwrap(),
+            "cli"
+        );
+        assert_eq!(
+            std::fs::read_to_string(root.join("docs/x__surface=ide.md")).unwrap(),
+            "ide"
+        );
+        assert!(!root.join("docs/x.md").exists(), "old name is pruned");
+        assert!(!root.join("docs/gone").exists(), "emptied dir is pruned");
+        assert!(
+            root.join(MANIFEST_FILE).exists(),
+            "manifest is never pruned"
+        );
+    }
+
+    #[tokio::test]
+    async fn pruning_keeps_files_the_resumed_partial_supplies() {
+        // Resume reuses a staged file instead of re-fetching it; its URL is still
+        // registered, so the sweep must leave it alone.
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[a](/a.md) [b](/b.md)"),
+            ),
+            ("/a.md".to_owned(), Response::ok("a")),
+            ("/b.md".to_owned(), Response::ok("b")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let root = directory.path();
+        std::fs::write(root.join("b.md"), "already downloaded").unwrap();
+
+        let report = fresh_crawl(
+            server.url.clone(),
+            root,
+            options(2, Duration::ZERO),
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+
+        assert!(report.is_success());
+        assert_eq!((report.downloaded, report.resumed), (1, 1));
+        assert_eq!(
+            std::fs::read_to_string(root.join("b.md")).unwrap(),
+            "already downloaded"
+        );
     }
 
     #[test]

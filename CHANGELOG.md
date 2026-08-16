@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.21.1] - 2026-08-16
+
+### Fixed
+
+- 上一次同步被中断后重跑，不再把远端已删除的页面、或旧命名规则留下的文件混进新快照。
+
 ## [0.21.0] - 2026-08-16
 
 ### Fixed
