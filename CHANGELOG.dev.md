@@ -7,6 +7,18 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.21.0] - 2026-08-16
+
+### Fixed
+
+- 同一路径靠 query 区分内容的页面（如 `…/developer-commands.md?surface=cli` 与 `?surface=ide`）不再判定为路径冲突导致整站失败，两份内容各自落盘。
+  - `url_map::apply_query_suffix` 在 `local_path` / `full_markdown_path` 末端把 query 折进文件名 stem，`PathRegistry` 冲突检测语义不变（仍拦跨 host 同 path、`/x` 与 `/x.md` 等真冲突）。
+
+### Changed
+
+- 带 query 的页面文件名改为在原名后追加 `__<query>`（如 `developer-commands__surface=ide.md`）；不带 query 的文件名不变，首次同步会重命名受影响的少量文件。
+  - `query_slug`：非 `[A-Za-z0-9._=-]` 替换为 `-`，经替换或超 48 字符时补 `-<fnv1a64 hex>` 保证唯一且长度有界；确定性、无新依赖。
+
 ## [0.20.0] - 2026-07-29
 
 ### Added

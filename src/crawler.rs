@@ -1290,11 +1290,11 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn reports_http_utf8_timeout_and_path_collision_failures() {
+    async fn reports_http_utf8_and_timeout_failures() {
         let server = server(HashMap::from([
             (
                 "/llms.txt".to_owned(),
-                Response::ok("[bad](/bad.md) [busy](/busy.md) [denied](/denied.md) [utf8](/utf8.md) [slow](/slow.md) [q1](/same.md?q=1) [q2](/same.md?q=2)"),
+                Response::ok("[bad](/bad.md) [busy](/busy.md) [denied](/denied.md) [utf8](/utf8.md) [slow](/slow.md) [q1](/same.md?q=1) [q2](/same.md?q=2) [gone](/gone.md)"),
             ),
             ("/bad.md".to_owned(), Response::status(500)),
             ("/busy.md".to_owned(), Response::status(429)),
@@ -1314,6 +1314,7 @@ mod tests {
                 Response::ok("slow").delayed(Duration::from_millis(100)),
             ),
             ("/same.md?q=1".to_owned(), Response::ok("one")),
+            ("/gone.md".to_owned(), Response::status(500)),
         ]))
         .await;
         let directory = tempdir().unwrap();

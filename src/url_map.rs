@@ -174,7 +174,58 @@ pub fn local_path(url: &Url) -> Result<LocalPath, String> {
     {
         return Err(format!("URL path is unsafe: {url}"));
     }
+    apply_query_suffix(&mut local, url)?;
     Ok(LocalPath(local))
+}
+
+/// Sites may serve different documents at one path via a query string
+/// (`/docs/x.md?surface=cli` vs `?surface=ide`). Fold the query into the file
+/// stem so those variants land in distinct files instead of colliding.
+/// Query-less URLs keep their historical name, so existing snapshots are stable.
+fn apply_query_suffix(local: &mut PathBuf, url: &Url) -> Result<(), String> {
+    let Some(query) = url.query().filter(|query| !query.is_empty()) else {
+        return Ok(());
+    };
+    let file = local
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| format!("URL path is not UTF-8: {url}"))?;
+    let (stem, extension) = match file.rsplit_once('.') {
+        Some((stem, extension)) if !stem.is_empty() => (stem, format!(".{extension}")),
+        _ => (file, String::new()),
+    };
+    let slug = query_slug(query);
+    local.set_file_name(format!("{stem}__{slug}{extension}"));
+    Ok(())
+}
+
+/// Filesystem-safe, deterministic rendering of a query string. Long queries are
+/// truncated and disambiguated with an FNV-1a digest so the name stays bounded
+/// without losing uniqueness.
+fn query_slug(query: &str) -> String {
+    const MAX: usize = 48;
+    let mut slug: String = query
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-' | '=') {
+                c
+            } else {
+                '-'
+            }
+        })
+        .collect();
+    if slug.len() > MAX || slug != query {
+        let mut hash: u64 = 0xcbf2_9ce4_8422_2325;
+        for byte in query.as_bytes() {
+            hash ^= u64::from(*byte);
+            hash = hash.wrapping_mul(0x0000_0100_0000_01b3);
+        }
+        while slug.len() > MAX {
+            slug.pop();
+        }
+        slug.push_str(&format!("-{hash:016x}"));
+    }
+    slug
 }
 
 pub fn full_markdown_path(url: &Url) -> Result<LocalPath, String> {
@@ -206,6 +257,7 @@ pub fn full_markdown_path(url: &Url) -> Result<LocalPath, String> {
         }
     }
 
+    apply_query_suffix(&mut local, url)?;
     Ok(LocalPath(local))
 }
 
@@ -390,14 +442,48 @@ mod tests {
     }
 
     #[test]
-    fn detects_query_path_collisions() {
+    fn query_variants_map_to_distinct_files() {
+        let mut registry = PathRegistry::default();
+        let first = registry
+            .register(&CanonicalUrl::new(url(
+                "https://example.com/a.md?surface=cli",
+            )))
+            .unwrap();
+        let second = registry
+            .register(&CanonicalUrl::new(url(
+                "https://example.com/a.md?surface=ide",
+            )))
+            .unwrap();
+        assert_eq!(first.as_path(), Path::new("a__surface=cli.md"));
+        assert_eq!(second.as_path(), Path::new("a__surface=ide.md"));
+        assert_eq!(
+            full_markdown_path(&url("https://example.com/docs/a?surface=ide"))
+                .unwrap()
+                .as_path(),
+            Path::new("docs/a__surface=ide.md")
+        );
+        assert_eq!(
+            full_markdown_path(&url("https://example.com/docs/?surface=ide"))
+                .unwrap()
+                .as_path(),
+            Path::new("docs/index__surface=ide.md")
+        );
+        // Unsafe/long queries are sanitized and digest-suffixed, never raw.
+        let sanitized = local_path(&url("https://example.com/a.md?p=x/y")).unwrap();
+        let sanitized = sanitized.as_path().to_str().unwrap();
+        assert!(!sanitized.contains('/'), "{sanitized}");
+        assert!(sanitized.starts_with("a__p=x-y-") && sanitized.ends_with(".md"));
+    }
+
+    #[test]
+    fn detects_real_path_collisions() {
         let mut registry = PathRegistry::default();
         registry
-            .register(&CanonicalUrl::new(url("https://example.com/a.md?q=1")))
+            .register(&CanonicalUrl::new(url("https://one.test/a.md")))
             .unwrap();
         assert!(
             registry
-                .register(&CanonicalUrl::new(url("https://example.com/a.md?q=2")))
+                .register(&CanonicalUrl::new(url("https://two.test/a.md")))
                 .is_err()
         );
     }

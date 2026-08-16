@@ -505,7 +505,7 @@ async fn real_cli_syncs_full_bundle_with_fresh_atomic_snapshots() {
     let stable = tree(&wiki.join("full"));
     let commits = git(&wiki, &["rev-list", "--count", "HEAD"]);
     let collision = format!(
-        "# One\n\nURL: {}/same?q=1\n\nOne\n\n---\n\n# Two\n\nURL: {}/same?q=2\n\nTwo\n",
+        "# One\n\nURL: {}/same\n\nOne\n\n---\n\n# Two\n\nURL: {}/same.md\n\nTwo\n",
         srv.origin, srv.origin
     );
     for response in [
