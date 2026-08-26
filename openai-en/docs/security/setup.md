@@ -27,11 +27,13 @@ Go to [Codex environments](https://chatgpt.com/codex/settings/environments) and 
 
 
 
-  <img
-    src={createEnvironment.src}
-    alt="Codex environments"
-    class="block h-auto w-full"
-  />
+  
+    
+
+> Illustration: Codex environments
+
+
+  
 
 
 
@@ -59,11 +61,13 @@ To configure a repository:
 
 
 
-  <img
-    src={createScan.src}
-    alt="Create a security scan"
-    class="block h-auto w-full"
-  />
+  
+    
+
+> Illustration: Create a security scan
+
+
+  
 
 
 
@@ -87,11 +91,13 @@ Initial scan setup is automatic and thorough. This can take a few hours. Don’t
 
 
 
-  <img
-    src={reviewThreatModel.src}
-    alt="Threat model editor in Codex Security"
-    class="block h-auto w-full"
-  />
+  
+    
+
+> Illustration: Threat model editor in Codex Security
+
+
+  
 
 
 
@@ -123,7 +129,13 @@ You can use two views:
 - **Recommended Findings**: an evolving top 10 list of the most critical issues in the repo
 - **All Findings**: a sortable, filterable table of findings across the repository
 
-![Recommended findings view](https://learn.chatgpt.com/docs/security/images/aardvark_recommended_findings.png)
+
+  
+
+> Illustration: Recommended findings view
+
+
+
 
 Click a finding to open its detail page, which includes:
 

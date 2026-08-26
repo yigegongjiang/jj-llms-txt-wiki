@@ -242,6 +242,57 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.Reasoning;
+import com.openai.models.ReasoningEffort;
+import com.openai.models.responses.ResponseCreateParams;
+
+String semicolonsDevMsg = "Talk like a pirate.";
+
+String semicolonsPrompt = "Are semicolons optional in JavaScript?";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input(semicolonsPrompt)
+        .instructions(semicolonsDevMsg)
+        .reasoning(Reasoning.builder().effort(ReasoningEffort.LOW).build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
+```csharp
+using OpenAI.Responses;
+#pragma warning disable OPENAI001
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+ResponsesClient client = new(key);
+
+CreateResponseOptions options = new()
+{
+    Model = "gpt-5.6",
+    Instructions = "Talk like a pirate.",
+    ReasoningOptions = new ResponseReasoningOptions
+    {
+        ReasoningEffortLevel = ResponseReasoningEffortLevel.Low,
+    },
+};
+options.InputItems.Add(
+    ResponseItem.CreateUserMessageItem("Are semicolons optional in JavaScript?")
+);
+
+ResponseResult response = await client.CreateResponseAsync(options);
+
+Console.WriteLine(response.GetOutputText());
+```
+
 ```ruby
 require "openai"
 
@@ -350,6 +401,73 @@ func main() {
 
 	fmt.Println(response.OutputText())
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.Reasoning;
+import com.openai.models.ReasoningEffort;
+import com.openai.models.responses.EasyInputMessage;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputItem;
+import java.util.List;
+
+String semicolonsDevMsg = "Talk like a pirate.";
+
+String semicolonsPrompt = "Are semicolons optional in JavaScript?";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input(
+            ResponseCreateParams.Input.ofResponse(
+                List.of(
+                    ResponseInputItem.ofEasyInputMessage(
+                        EasyInputMessage.builder()
+                            .role(EasyInputMessage.Role.DEVELOPER)
+                            .content(semicolonsDevMsg)
+                            .build()),
+                    ResponseInputItem.ofEasyInputMessage(
+                        EasyInputMessage.builder()
+                            .role(EasyInputMessage.Role.USER)
+                            .content(semicolonsPrompt)
+                            .build()))))
+        .reasoning(Reasoning.builder().effort(ReasoningEffort.LOW).build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
+```csharp
+using OpenAI.Responses;
+#pragma warning disable OPENAI001
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+ResponsesClient client = new(key);
+
+CreateResponseOptions options = new()
+{
+    Model = "gpt-5.6",
+    ReasoningOptions = new ResponseReasoningOptions
+    {
+        ReasoningEffortLevel = ResponseReasoningEffortLevel.Low,
+    },
+};
+options.InputItems.Add(
+    ResponseItem.CreateDeveloperMessageItem("Talk like a pirate.")
+);
+options.InputItems.Add(
+    ResponseItem.CreateUserMessageItem("Are semicolons optional in JavaScript?")
+);
+
+ResponseResult response = await client.CreateResponseAsync(options);
+
+Console.WriteLine(response.GetOutputText());
 ```
 
 ```ruby

@@ -124,6 +124,33 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.Tool;
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("Roll 2d4+1")
+        .addTool(
+            Tool.Mcp.builder()
+                .serverLabel("dmcp")
+                .serverDescription(
+                    "A Dungeons and Dragons MCP server to assist with dice rolling.")
+                .serverUrl("https://dmcp-server.deno.dev/mcp")
+                .requireApproval(Tool.Mcp.RequireApproval.McpToolApprovalSetting.NEVER)
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -283,6 +310,34 @@ func main() {
 	}
 	fmt.Println(response.OutputText())
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.Tool;
+
+String oauthAccessToken = "<oauth access token>";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("Summarize the Q2 earnings report.")
+        .addTool(
+            Tool.Mcp.builder()
+                .serverLabel("Dropbox")
+                .connectorId(Tool.Mcp.ConnectorId.of("connector_dropbox"))
+                .authorization(oauthAccessToken)
+                .requireApproval(Tool.Mcp.RequireApproval.McpToolApprovalSetting.NEVER)
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
 ```
 
 ```csharp
@@ -525,6 +580,35 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.Tool;
+import java.util.List;
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("Roll 2d4+1")
+        .addTool(
+            Tool.Mcp.builder()
+                .serverLabel("dmcp")
+                .serverDescription(
+                    "A Dungeons and Dragons MCP server to assist with dice rolling.")
+                .serverUrl("https://dmcp-server.deno.dev/mcp")
+                .requireApproval(Tool.Mcp.RequireApproval.McpToolApprovalSetting.NEVER)
+                .allowedToolsOfMcp(List.of("roll"))
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -727,6 +811,46 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputItem;
+import com.openai.models.responses.Tool;
+import java.util.List;
+
+String responseId = "resp_682d498bdefc81918b4a6aa477bfafd904ad1e533afccbfa";
+
+String approvalRequestId = "mcpr_682d498e3bd4819196a0ce1664f8e77b04ad1e533afccbfa";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input(
+            ResponseCreateParams.Input.ofResponse(
+                List.of(
+                    ResponseInputItem.ofMcpApprovalResponse(
+                        ResponseInputItem.McpApprovalResponse.builder()
+                            .approvalRequestId(approvalRequestId)
+                            .approve(true)
+                            .build()))))
+        .previousResponseId(responseId)
+        .addTool(
+            Tool.Mcp.builder()
+                .serverLabel("dmcp")
+                .serverDescription("A Dungeons and Dragons MCP server.")
+                .serverUrl("https://dmcp-server.deno.dev/mcp")
+                .requireApproval(Tool.Mcp.RequireApproval.McpToolApprovalSetting.ALWAYS)
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -743,14 +867,14 @@ options.Tools.Add(
     )
 );
 
-// STEP 1: Create a response that requests tool-call approval.
+// Step 1: Create a response that requests tool-call approval.
 options.InputItems.Add(ResponseItem.CreateUserMessageItem("Roll 2d4+1"));
 ResponseResult response1 = await client.CreateResponseAsync(options);
 
 McpToolCallApprovalRequestItem approvalRequest =
     response1.OutputItems.OfType<McpToolCallApprovalRequestItem>().Single();
 
-// STEP 2: Approve the tool call and get the final response.
+// Step 2: Approve the tool call and get the final response.
 options.PreviousResponseId = response1.Id;
 options.InputItems.Clear();
 options.InputItems.Add(
@@ -895,6 +1019,38 @@ func main() {
 	}
 	fmt.Println(response.OutputText())
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.Tool;
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What transport protocols does the 2025-03-26 version of the MCP spec support?")
+        .addTool(
+            Tool.Mcp.builder()
+                .serverLabel("deepwiki")
+                .serverUrl("https://mcp.deepwiki.com/mcp")
+                .requireApproval(
+                    Tool.Mcp.RequireApproval.McpToolApprovalFilter.builder()
+                        .never(
+                            Tool.Mcp.RequireApproval.McpToolApprovalFilter.Never.builder()
+                                .addToolName("ask_question")
+                                .addToolName("read_wiki_structure")
+                                .build())
+                        .build())
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
 ```
 
 ```csharp
@@ -1052,6 +1208,33 @@ func main() {
 	}
 	fmt.Println(response.OutputText())
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.Tool;
+
+String stripeAccessToken = System.getenv("STRIPE_OAUTH_ACCESS_TOKEN");
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("Create a payment link for $20.")
+        .addTool(
+            Tool.Mcp.builder()
+                .serverLabel("stripe")
+                .serverUrl("https://mcp.stripe.com")
+                .authorization(stripeAccessToken)
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
 ```
 
 ```csharp
@@ -1232,6 +1415,34 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.Tool;
+
+String oauthAccessToken = "<oauth access token>";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What's on my Google Calendar for today?")
+        .addTool(
+            Tool.Mcp.builder()
+                .serverLabel("google_calendar")
+                .connectorId(Tool.Mcp.ConnectorId.of("connector_googlecalendar"))
+                .authorization(oauthAccessToken)
+                .requireApproval(Tool.Mcp.RequireApproval.McpToolApprovalSetting.NEVER)
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
@@ -1298,9 +1509,12 @@ An MCP tool call from a Connector will look the same as an MCP tool call from a 
 
 The available tools depend on which scopes your OAuth token has available to it. Expand the tables below to see what tools you can use when connecting to each application.
 
-Dropbox
 
-<table>
+
+#### Dropbox
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1338,9 +1552,15 @@ Dropbox
     </tr>
   </table>
 
-Gmail
 
-<table>
+
+
+
+
+#### Gmail
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1378,9 +1598,15 @@ Gmail
     </tr>
   </table>
 
-Google Calendar
 
-<table>
+
+
+
+
+#### Google Calendar
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1413,9 +1639,15 @@ Google Calendar
     </tr>
   </table>
 
-Google Drive
 
-<table>
+
+
+
+
+#### Google Drive
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1448,9 +1680,15 @@ Google Drive
     </tr>
   </table>
 
-Microsoft Teams
 
-<table>
+
+
+
+
+#### Microsoft Teams
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1478,9 +1716,15 @@ Microsoft Teams
     </tr>
   </table>
 
-Outlook Calendar
 
-<table>
+
+
+
+
+#### Outlook Calendar
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1513,9 +1757,15 @@ Outlook Calendar
     </tr>
   </table>
 
-Outlook Email
 
-<table>
+
+
+
+
+#### Outlook Email
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1553,9 +1803,15 @@ Outlook Email
     </tr>
   </table>
 
-Sharepoint
 
-<table>
+
+
+
+
+#### Sharepoint
+
+
+  <table>
     <tr>
       <th>Tool</th>
       <th>Description</th>
@@ -1587,6 +1843,9 @@ Sharepoint
       <td>User.Read</td>
     </tr>
   </table>
+
+
+
 
 ## Defer loading tools in an MCP server
 

@@ -140,8 +140,9 @@
           icon: "workspace",
         },
         {
-          title: "Chrome extension",
-          description: "Share browser context with ChatGPT from Chrome.",
+          title: "Browser extension",
+          description:
+            "Use Chrome, Edge, Brave, Opera, or Vivaldi with ChatGPT.",
           href: "/codex/chrome-extension",
           icon: "connect",
         },

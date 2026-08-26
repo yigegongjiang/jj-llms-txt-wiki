@@ -75,6 +75,37 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+
+var embedding =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .input("The food was delicious and the waiter...")
+                .build());
+
+System.out.println(embedding.data().get(0).embedding());
+```
+
+```csharp
+using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+OpenAIEmbedding embedding = await client.GenerateEmbeddingAsync(
+    "The food was delicious and the waiter was friendly."
+);
+
+Console.WriteLine($"Dimensions: {embedding.ToFloats().Length}");
+```
+
 ```ruby
 require "openai"
 
@@ -177,6 +208,42 @@ df["ada_embedding"] = df.combined.apply(
 df.to_csv("output/embedded_1k_reviews.csv", index=False)
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+static String csvField(String value) {
+  return "\"" + value.replace("\"", "\"\"") + "\"";
+}
+
+List<String> reviews = List.of("A rich cup of coffee.", "A bright herbal tea.");
+Path output = Path.of("output", "embedded_1k_reviews.csv");
+Files.createDirectories(output.getParent());
+try (var writer = Files.newBufferedWriter(output)) {
+  writer.write("combined,ada_embedding\n");
+  for (String review : reviews) {
+    var embedding =
+        client
+            .embeddings()
+            .create(
+                EmbeddingCreateParams.builder()
+                    .model("text-embedding-3-small")
+                    .inputOfArrayOfStrings(List.of(review.replace("\n", " ")))
+                    .build())
+            .data()
+            .get(0)
+            .embedding();
+    writer.write(csvField(review) + "," + csvField(embedding.toString()) + "\n");
+  }
+}
+System.out.println(output);
+```
+
 
 To load the data from a saved file, you can run the following:
 
@@ -188,7 +255,11 @@ df["ada_embedding"] = df.ada_embedding.apply(eval).apply(np.array)
 ```
 
 
-Reducing embedding dimensions
+
+
+#### Reducing embedding dimensions
+
+
 
 Using larger embeddings, for example storing them in a vector store for retrieval, generally costs more and consumes more compute, memory and storage than using smaller embeddings.
 
@@ -225,10 +296,66 @@ norm_dim = normalize_l2(cut_dim)
 print(norm_dim)
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.List;
+
+private static List<Double> normalizeL2(List<Float> embedding) {
+  double norm = Math.sqrt(embedding.stream().mapToDouble(value -> value * value).sum());
+  return embedding.stream().map(value -> norm == 0 ? 0.0 : value / norm).toList();
+}
+
+var embedding =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .input("Testing 123")
+                .encodingFormat(EmbeddingCreateParams.EncodingFormat.FLOAT)
+                .build());
+
+List<Float> shortened = embedding.data().get(0).embedding().subList(0, 256);
+System.out.println(normalizeL2(shortened));
+```
+
+```csharp
+using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+OpenAIEmbedding embedding = await client.GenerateEmbeddingAsync("Testing 123");
+
+float[] shortened = embedding.ToFloats().Span[..256].ToArray();
+double magnitude = Math.Sqrt(shortened.Sum(value => value * value));
+float[] normalized =
+    magnitude == 0
+        ? shortened
+        : shortened.Select(value => (float)(value / magnitude)).ToArray();
+
+Console.WriteLine($"Dimensions: {normalized.Length}");
+Console.WriteLine($"First value: {normalized[0]:F6}");
+Console.WriteLine(
+    $"L2 norm: {Math.Sqrt(normalized.Sum(value => value * value)):F3}"
+);
+```
+
 
 Dynamically changing the dimensions enables very flexible usage. For example, when using a vector data store that only supports embeddings up to 1024 dimensions long, developers can now still use our best embedding model `text-embedding-3-large` and specify a value of 1024 for the `dimensions` API parameter, which will shorten the embedding down from 3072 dimensions, trading off some accuracy in exchange for the smaller vector size.
 
-Question answering using embeddings-based search
+
+
+
+
+
+
+#### Question answering using embeddings-based search
+
+
 
 
 
@@ -262,8 +389,43 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
 
-Text search using embeddings
+String article =
+    "At the 2022 Winter Olympics, Great Britain won women's curling and Sweden won men's curling.";
+String question =
+    "Use the below article on the 2022 Winter Olympics to answer the subsequent question. "
+        + "If the answer cannot be found, write \"I don't know.\"\n\n"
+        + "Article:\n"
+        + article
+        + "\n\nQuestion: Which athletes won the gold medal in curling at the 2022 Winter Olympics?";
+
+ChatCompletionCreateParams params =
+    ChatCompletionCreateParams.builder()
+        .model("gpt-4.1-mini")
+        .addSystemMessage("You answer questions about the 2022 Winter Olympics.")
+        .addUserMessage(question)
+        .temperature(0)
+        .build();
+
+client.chat().completions().create(params).choices().stream()
+    .flatMap(choice -> choice.message().content().stream())
+    .forEach(System.out::println);
+```
+
+
+
+
+
+
+
+
+#### Text search using embeddings
+
+
 
 
 
@@ -285,8 +447,62 @@ def search_reviews(df, product_description, n=3, pprint=True):
 res = search_reviews(df, "delicious beans", n=3)
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
 
-Code search using embeddings
+List<String> reviews =
+    List.of(
+        "A rich cup of coffee.",
+        "Smooth beans in tomato sauce.",
+        "Dark chocolate with orange.");
+var reviewEmbeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(reviews)
+                .build())
+        .data();
+List<Float> query =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(List.of("delicious beans"))
+                .build())
+        .data()
+        .get(0)
+        .embedding();
+
+IntStream.range(0, reviews.size())
+    .boxed()
+    .sorted(
+        Comparator.comparingDouble(
+                (Integer index) ->
+                    cosineSimilarity(query, reviewEmbeddings.get(index).embedding()))
+            .reversed())
+    .limit(3)
+    .map(reviews::get)
+    .forEach(System.out::println);
+```
+
+
+
+
+
+
+
+
+#### Code search using embeddings
+
+
 
 
 
@@ -316,8 +532,57 @@ def search_functions(df, code_query, n=3, pprint=True, n_lines=7):
 res = search_functions(df, "Completions API tests", n=3)
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
 
-Recommendations using embeddings
+List<String> functions =
+    List.of("def add(a, b): return a + b", "def complete(prompt): return prompt");
+var functionEmbeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(functions)
+                .build())
+        .data();
+List<Float> query =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .input("Completions API tests")
+                .build())
+        .data()
+        .get(0)
+        .embedding();
+IntStream.range(0, functions.size())
+    .boxed()
+    .sorted(
+        Comparator.comparingDouble(
+                (Integer index) ->
+                    cosineSimilarity(query, functionEmbeddings.get(index).embedding()))
+            .reversed())
+    .map(functions::get)
+    .forEach(System.out::println);
+```
+
+
+
+
+
+
+
+
+#### Recommendations using embeddings
+
+
 
 
 
@@ -354,8 +619,63 @@ def recommendations_from_strings(
     return indices_of_nearest_neighbors
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
 
-Data visualization in 2D
+List<String> strings =
+    List.of(
+        "A cheetah is a fast land animal.",
+        "A peregrine falcon is a fast bird.",
+        "A tortoise moves slowly.");
+
+var embeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(strings)
+                .build())
+        .data();
+
+List<Float> query = embeddings.get(0).embedding();
+var nearestNeighbors =
+    IntStream.range(0, embeddings.size())
+        .boxed()
+        .sorted(
+            Comparator.comparingDouble(
+                (Integer index) -> {
+                  List<Float> candidate = embeddings.get(index).embedding();
+                  double dotProduct = 0;
+                  double queryMagnitude = 0;
+                  double candidateMagnitude = 0;
+                  for (int dimension = 0; dimension < query.size(); dimension++) {
+                    dotProduct += query.get(dimension) * candidate.get(dimension);
+                    queryMagnitude += query.get(dimension) * query.get(dimension);
+                    candidateMagnitude += candidate.get(dimension) * candidate.get(dimension);
+                  }
+                  return 1 - dotProduct / Math.sqrt(queryMagnitude * candidateMagnitude);
+                }))
+        .toList();
+
+System.out.println(nearestNeighbors);
+```
+
+
+
+
+
+
+
+
+#### Data visualization in 2D
+
+
 
 
 
@@ -401,7 +721,15 @@ plt.title("Amazon ratings visualized in language using t-SNE")
 ```
 
 
-Embedding as a text feature encoder for ML algorithms
+
+
+
+
+
+
+#### Embedding as a text feature encoder for ML algorithms
+
+
 
 
 
@@ -438,7 +766,15 @@ preds = rfr.predict(X_test)
 ```
 
 
-Classification using the embedding features
+
+
+
+
+
+
+#### Classification using the embedding features
+
+
 
 
 
@@ -459,7 +795,15 @@ preds = clf.predict(X_test)
 ```
 
 
-Zero-shot classification
+
+
+
+
+
+
+#### Zero-shot classification
+
+
 
 
 
@@ -489,8 +833,38 @@ prediction = (
 )
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.List;
 
-Obtaining user and product embeddings for cold-start recommendation
+var embeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(List.of("negative", "positive", "Sample Review"))
+                .build())
+        .data();
+
+List<Float> review = embeddings.get(2).embedding();
+double negative = cosineSimilarity(review, embeddings.get(0).embedding());
+double positive = cosineSimilarity(review, embeddings.get(1).embedding());
+System.out.println(positive > negative ? "positive" : "negative");
+```
+
+
+
+
+
+
+
+
+#### Obtaining user and product embeddings for cold-start recommendation
+
+
 
 
 
@@ -507,7 +881,15 @@ prod_embeddings = df.groupby("ProductId").ada_embedding.apply(np.mean)
 ```
 
 
-Clustering
+
+
+
+
+
+
+#### Clustering
+
+
 
 
 
@@ -529,6 +911,10 @@ kmeans = KMeans(n_clusters=n_clusters, init="k-means++", random_state=42)
 kmeans.fit(matrix)
 df["Cluster"] = kmeans.labels_
 ```
+
+
+
+
 
 
 ## FAQ

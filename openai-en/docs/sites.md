@@ -2,12 +2,12 @@
 
 > For the complete documentation index, see [llms.txt](https://learn.chatgpt.com/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-Sites is in public beta. Availability can depend on your plan, region, and
-  workspace settings. Plan-specific usage limits apply across all Sites during
-  the beta. ChatGPT shows the current limits and notifies you as you approach
-  one. Reaching a limit can prevent you from creating a Site, adding storage, or
-  keeping a high-usage Site public, but you can still edit and manage existing
-  Sites.
+Sites is in public beta and is available with ChatGPT Plus, Pro, Business,
+  Enterprise and Edu plans. Plan-specific usage limits apply across all Sites
+  during the beta. ChatGPT shows the current limits and notifies you as you
+  approach one. Reaching a limit can prevent you from creating a Site, adding
+  storage, or keeping a high-usage Site public, but you can still edit and
+  manage existing Sites.
 
 Sites lets ChatGPT create, host, refine, and share websites, web apps, and games.
 Use Sites when you want to turn a prompt or compatible existing project into a
@@ -146,9 +146,11 @@ the Site in ChatGPT on the web or in the desktop app to review its analytics.
 
 </ContentModeSwitch>
 
-<Illustration description="Interactive Sites analytics dashboard showing unique visitors and page views over seven days.">
-  <SitesAnalyticsIllustration />
-</Illustration>
+
+
+> Illustration: Interactive Sites analytics dashboard showing unique visitors and page views over seven days.
+
+
 
 Analytics is currently available for Sites that aren't owned by an Enterprise
   workspace.
@@ -272,8 +274,9 @@ Depending on your account and workspace settings, sharing options can include:
 - **Anyone in the workspace**, where supported
 - **Anyone on the internet**, only when public publishing is enabled
 
-Sharing lets people visit the Site; it doesn't let them edit it. In Enterprise
-workspaces, public publishing is off by default and must be enabled by an admin.
+Visitor access lets people open the Site; it doesn't give them editing access.
+In Enterprise workspaces, public publishing is off by default and must be
+enabled by an admin.
 
 For limited sharing, invited visitors must sign in with the account that
 received access. A public Site is available without ChatGPT workspace access. A
@@ -286,6 +289,40 @@ For example:
 Change this Site's access to everyone in my workspace after showing me the
 current Site and confirming its URL.
 ```
+
+### Collaborate on a Site
+
+Site collaboration requires a workspace. When the feature is available, a Site
+owner can invite active members of the same workspace as editors.
+
+Editors can read the Site's live database data. Invite only people you trust
+with the Site's code and data.
+
+<WorkflowSteps>
+
+1. Open the Site and select **Share**.
+2. Under **Add people or groups**, find and select a workspace member. They
+   are added as a visitor.
+3. Open **Can view** next to that person and choose **Can edit**. Access saves
+   automatically. The Site appears under **Shared with you** in the member's
+   Sites view.
+4. The editor can open the Site, make changes, save versions, and publish
+   updates after the owner has published the Site for the first time.
+
+</WorkflowSteps>
+
+The Site owner manages editor access and can promote an existing visitor to
+editor, change an editor to **Can view**, or remove their access. Co-editing
+doesn't add a separate workspace permission toggle.
+
+Editors can't change the Site's audience, invite or remove other people, manage
+settings or analytics, restore an earlier version, or transfer ownership. An
+editor also can't perform the Site's first publish; the owner must publish the
+Site before editors can publish later updates.
+
+Editor access is separate from visitor access. The steps above first add the
+person as a visitor, then grant editing access. Promoting a visitor to editor
+doesn't change the Site's audience setting.
 
 ### Configure runtime environment values
 
@@ -311,6 +348,25 @@ redeploy the approved saved version so the next deployment uses the updated
 configuration.
 
 </ContentModeSwitch>
+
+## Change a Site URL
+
+Where URL editing is available, Site owners can change the ChatGPT-hosted URL
+for an existing Site without creating another deployment.
+
+1. Open **Sites**, find the Site, and open its settings.
+2. Find the Site URL and select **Change URL**.
+3. Enter an available name. It must contain at least five characters, start
+   with a lowercase letter, and use only lowercase letters, numbers, and single
+   hyphens. It can't end with a hyphen or contain consecutive hyphens.
+4. Confirm the change and wait while Sites updates the address.
+
+The URL change doesn't create another deployment. The previous address
+redirects to the new one, including routes and query parameters.
+
+Changing the ChatGPT-hosted URL doesn't add, remove, or change a custom domain.
+Custom domains are a separate, existing feature; use the custom-domain
+settings when that feature is available.
 
 ## Connect a custom domain
 
@@ -377,6 +433,16 @@ Deleting a Site permanently removes it. You can't restore a deleted Site.
 Sites hosts web experiences that run in the supported Sites runtime. Some
 frameworks, private networks, databases, background services, and hosting
 patterns aren't supported.
+
+HTTP, HTTPS, and WebSockets are supported. Raw inbound and outbound TCP
+connections aren't.
+
+Each Site has these storage limits:
+
+| Resource            | Limit                  |
+| ------------------- | ---------------------- |
+| D1 database storage | 10 GB                  |
+| R2 object storage   | No fixed storage limit |
 
 Sites doesn't support data residency or inference residency at launch. This
 includes deployed Sites, Site code, D1 and R2 data and file storage, generated

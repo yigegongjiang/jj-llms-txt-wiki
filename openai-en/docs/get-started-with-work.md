@@ -53,13 +53,13 @@ Here are three common use cases you can get started with:
 Use ChatGPT Work to turn notes, docs, research, or meeting materials into a structured
 deck.
 
-<CodexScreenshot
-  alt="A presentation created in ChatGPT Work"
-  lightSrc="/codex/get-started-with-work/create-presentation.webp"
-  darkSrc="/codex/get-started-with-work/create-presentation.webp"
-  maxHeight={520}
-  class="my-6 p-4 md:p-8"
-/>
+
+  
+
+> Illustration: A presentation created in ChatGPT Work
+
+
+
 
 
 
@@ -74,13 +74,13 @@ Review the attached source materials and create an eight-slide presentation for 
 Use ChatGPT Work to turn notes, files, or research into a spreadsheet that compares
 options and helps you make a decision.
 
-<CodexScreenshot
-  alt="A comparison spreadsheet created in ChatGPT Work"
-  lightSrc="/codex/get-started-with-work/comparison-spreadsheet.webp"
-  darkSrc="/codex/get-started-with-work/comparison-spreadsheet.webp"
-  maxHeight={520}
-  class="my-6 p-4 md:p-8"
-/>
+
+  
+
+> Illustration: A comparison spreadsheet created in ChatGPT Work
+
+
+
 
 
 
@@ -95,13 +95,13 @@ Create a spreadsheet comparing the options for [decision]. Use the attached note
 Use scheduled tasks when you want ChatGPT Work to repeat, monitor, or refresh something
 over time.
 
-<CodexScreenshot
-  alt="A recurring update scheduled in ChatGPT Work"
-  lightSrc="/codex/get-started-with-work/recurring-update.webp"
-  darkSrc="/codex/get-started-with-work/recurring-update.webp"
-  maxHeight={520}
-  class="my-6 p-4 md:p-8"
-/>
+
+  
+
+> Illustration: A recurring update scheduled in ChatGPT Work
+
+
+
 
 
 
@@ -144,13 +144,13 @@ Learn more about [prompting for ChatGPT Work](https://learn.chatgpt.com/docs/pro
 
 ## Add plugins for more context and better outputs
 
-<CodexScreenshot
-  alt="The plugins library in ChatGPT Work"
-  lightSrc="/codex/get-started-with-work/plugins.webp"
-  darkSrc="/codex/get-started-with-work/plugins.webp"
-  maxHeight={520}
-  class="my-6 p-4 md:p-8"
-/>
+
+  
+
+> Illustration: The plugins library in ChatGPT Work
+
+
+
 
 Plugins connect ChatGPT Work to tools your team uses, like Slack, Google Drive,
 SharePoint, email, calendars, customer relationship management systems, and

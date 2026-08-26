@@ -58,6 +58,13 @@
           icon: "connect",
         },
         {
+          title: "Site tools (WebMCP)",
+          description:
+            "Use WebMCP to give AI agents a direct way to work with your website.",
+          href: "/codex/webmcp",
+          icon: "tools",
+        },
+        {
           title: "Hooks",
           description: "Run custom commands when Codex emits lifecycle events.",
           href: "/codex/hooks",
@@ -143,6 +150,13 @@
             "Assign work, review changes, and move toward a pull request.",
           href: "/codex/third-party/github",
           icon: "github",
+        },
+        {
+          title: "GitLab (Beta)",
+          description:
+            "Connect projects, delegate work, and review merge requests.",
+          href: "/codex/third-party/gitlab",
+          icon: "connect",
         },
         {
           title: "Slack",

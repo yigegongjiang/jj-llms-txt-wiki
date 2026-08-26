@@ -10,7 +10,11 @@ If your application has many functions or large schemas, you can pair function c
 
 Let's begin by understanding a few key terms about tool calling. After we have a shared vocabulary for tool calling, we'll show you how it's done with some practical examples.
 
-Tools - functionality we give the model
+
+
+### Tools - functionality we give the model
+
+
 
 A **function** or **tool** refers in the abstract to a piece of functionality that we tell the model it has access to. As a model generates a response to a prompt, it may decide that it needs data or functionality provided by a tool to follow the prompt's instructions.
 
@@ -24,13 +28,29 @@ Or anything else you'd like the model to be able to know or do as it responds to
 
 When we make an API request to the model with a prompt, we can include a list of tools the model could consider using. For example, if we wanted the model to be able to answer questions about the current weather somewhere in the world, we might give it access to a `get_weather` tool that takes `location` as an argument.
 
-Tool calls - requests from the model to use tools
+
+
+
+
+
+
+### Tool calls - requests from the model to use tools
+
+
 
 A **function call** or **tool call** refers to a special kind of response we can get from the model if it examines a prompt, and then determines that in order to follow the instructions in the prompt, it needs to call one of the tools we made available to it.
 
 If the model receives a prompt like "what is the weather in Paris?" in an API request, it could respond to that prompt with a tool call for the `get_weather` tool, with `Paris` as the `location` argument.
 
-Tool call outputs - output we generate for the model
+
+
+
+
+
+
+### Tool call outputs - output we generate for the model
+
+
 
 A **function call output** or **tool call output** refers to the response a tool generates using the input from a model's tool call. The tool call output can either be structured JSON or plain text, and it should contain a reference to a specific model tool call (referenced by `call_id` in the examples to come).
 To complete our weather example:
@@ -45,11 +65,23 @@ We then send all of the tool definition, the original prompt, the model's tool c
 The weather in Paris today is 25C.
 ```
 
-Functions versus tools
+
+
+
+
+
+
+### Functions versus tools
+
+
 
 - A function is a specific kind of tool, defined by a JSON schema. A function definition allows the model to pass data to your application, where your code can access data or take actions suggested by the model.
 - In addition to function tools, there are custom tools (described in this guide) that work with free text inputs and outputs.
 - There are also [built-in tools](https://developers.openai.com/api/docs/guides/tools) that are part of the OpenAI platform. These tools enable the model to [search the web](https://developers.openai.com/api/docs/guides/tools-web-search), [execute code](https://developers.openai.com/api/docs/guides/tools-code-interpreter), access the functionality of an [MCP server](https://developers.openai.com/api/docs/guides/tools-connectors-mcp), and more.
+
+
+
+
 
 ### The tool calling flow
 
@@ -302,6 +334,80 @@ func horoscopeResponseTool() responses.ToolUnionParam {
 func getHoroscope(sign string) string {
 	return fmt.Sprintf("%s: Next Tuesday you will befriend a baby otter.", sign)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.core.JsonValue;
+import com.openai.models.responses.FunctionTool;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputItem;
+import java.util.List;
+import java.util.Map;
+
+FunctionTool horoscope =
+    FunctionTool.builder()
+        .name("get_horoscope")
+        .description("Get today's horoscope for an astrological sign.")
+        .parameters(
+            FunctionTool.Parameters.builder()
+                .putAdditionalProperty("type", JsonValue.from("object"))
+                .putAdditionalProperty(
+                    "properties",
+                    JsonValue.from(
+                        Map.of(
+                            "sign",
+                            Map.of(
+                                "type", "string",
+                                "description",
+                                    "An astrological sign like Taurus or Aquarius"))))
+                .putAdditionalProperty("required", JsonValue.from(List.of("sign")))
+                .putAdditionalProperty("additionalProperties", JsonValue.from(false))
+                .build())
+        .strict(true)
+        .build();
+
+var firstResponse =
+    client
+        .responses()
+        .create(
+            ResponseCreateParams.builder()
+                .model("gpt-5.6")
+                .input("What is my horoscope? I am an Aquarius.")
+                .addTool(horoscope)
+                .build());
+
+var functionCall =
+    firstResponse.output().stream()
+        .flatMap(item -> item.functionCall().stream())
+        .filter(call -> call.name().equals("get_horoscope"))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("The model did not call get_horoscope"));
+
+record HoroscopeArguments(String sign) {}
+
+String sign = functionCall.arguments(HoroscopeArguments.class).sign();
+ResponseCreateParams followUp =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .instructions("Respond only with a horoscope generated by a tool.")
+        .previousResponseId(firstResponse.id())
+        .inputOfResponse(
+            List.of(
+                ResponseInputItem.ofFunctionCallOutput(
+                    ResponseInputItem.FunctionCallOutput.builder()
+                        .callId(functionCall.callId())
+                        .output(sign + ": Embrace an unexpected opportunity today.")
+                        .build())))
+        .addTool(horoscope)
+        .build();
+
+client.responses().create(followUp).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
 ```
 
 ```ruby
@@ -578,6 +684,56 @@ for _, output := range response.Output {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.core.JsonValue;
+import com.openai.models.responses.EasyInputMessage;
+import com.openai.models.responses.FunctionTool;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputItem;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+response.output().stream()
+    .map(item -> JsonValue.from(item).convert(ResponseInputItem.class))
+    .forEach(input::add);
+response.output().stream()
+    .flatMap(item -> item.functionCall().stream())
+    .forEach(
+        call -> {
+          String result;
+          if (call.name().equals("get_weather")) {
+            record Coordinates(double latitude, double longitude) {}
+
+            Coordinates coordinates = call.arguments(Coordinates.class);
+            result =
+                JsonValue.from(
+                        Map.of(
+                            "latitude", coordinates.latitude(),
+                            "longitude", coordinates.longitude(),
+                            "temperature_c", 18))
+                    .toString();
+          } else if (call.name().equals("send_email")) {
+            record Email(String to, String body) {}
+
+            Email message = call.arguments(Email.class);
+            result = JsonValue.from(Map.of("to", message.to(), "status", "sent")).toString();
+          } else {
+            throw new IllegalArgumentException("Unknown function: " + call.name());
+          }
+          var output =
+              ResponseInputItem.ofFunctionCallOutput(
+                  ResponseInputItem.FunctionCallOutput.builder()
+                      .callId(call.callId())
+                      .output(result)
+                      .build());
+          input.add(output);
+          System.out.println(call.callId() + " " + result);
+        });
+```
+
 ```ruby
 input.concat(response.output)
 
@@ -698,6 +854,64 @@ response, err = client.Responses.New(context.Background(), responses.ResponseNew
 if err != nil {
 	panic(err)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.core.JsonValue;
+import com.openai.models.responses.EasyInputMessage;
+import com.openai.models.responses.FunctionTool;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseFunctionToolCall;
+import com.openai.models.responses.ResponseInputItem;
+import java.util.List;
+import java.util.Map;
+
+FunctionTool weather =
+    FunctionTool.builder()
+        .name("get_weather")
+        .description("Get the weather for a city.")
+        .parameters(
+            FunctionTool.Parameters.builder()
+                .putAdditionalProperty("type", JsonValue.from("object"))
+                .putAdditionalProperty(
+                    "properties", JsonValue.from(Map.of("city", Map.of("type", "string"))))
+                .putAdditionalProperty("required", JsonValue.from(List.of("city")))
+                .putAdditionalProperty("additionalProperties", JsonValue.from(false))
+                .build())
+        .strict(true)
+        .build();
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .inputOfResponse(
+            List.of(
+                ResponseInputItem.ofEasyInputMessage(
+                    EasyInputMessage.builder()
+                        .role(EasyInputMessage.Role.USER)
+                        .content("What is the weather like in Paris?")
+                        .build()),
+                ResponseInputItem.ofFunctionCall(
+                    ResponseFunctionToolCall.builder()
+                        .callId("call_weather")
+                        .name("get_weather")
+                        .arguments("{\"city\":\"Paris\"}")
+                        .build()),
+                ResponseInputItem.ofFunctionCallOutput(
+                    ResponseInputItem.FunctionCallOutput.builder()
+                        .callId("call_weather")
+                        .output("{\"city\":\"Paris\",\"temperature_c\":18}")
+                        .build())))
+        .addTool(weather)
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
 ```
 
 ```ruby
@@ -1021,6 +1235,55 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.core.JsonValue;
+import com.openai.core.http.StreamResponse;
+import com.openai.models.responses.FunctionTool;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseStreamEvent;
+import java.util.List;
+import java.util.Map;
+
+FunctionTool weather =
+    FunctionTool.builder()
+        .name("get_weather")
+        .description("Get the weather for a city.")
+        .parameters(
+            FunctionTool.Parameters.builder()
+                .putAdditionalProperty("type", JsonValue.from("object"))
+                .putAdditionalProperty(
+                    "properties", JsonValue.from(Map.of("city", Map.of("type", "string"))))
+                .putAdditionalProperty("required", JsonValue.from(List.of("city")))
+                .putAdditionalProperty("additionalProperties", JsonValue.from(false))
+                .build())
+        .strict(true)
+        .build();
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What is the weather in Paris?")
+        .addTool(weather)
+        .build();
+
+try (StreamResponse<ResponseStreamEvent> stream = client.responses().createStreaming(params)) {
+  stream.stream()
+      .forEach(
+          event -> {
+            System.out.println(event);
+            event
+                .outputItemAdded()
+                .ifPresent(added -> System.out.println("response.output_item.added: " + added));
+            event
+                .functionCallArgumentsDelta()
+                .ifPresent(
+                    delta ->
+                        System.out.println("response.function_call_arguments.delta: " + delta));
+          });
+}
+```
+
 ```ruby
 require "openai"
 
@@ -1156,6 +1419,68 @@ func main() {
 	}
 	fmt.Println(finalToolCalls)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.core.JsonValue;
+import com.openai.core.http.StreamResponse;
+import com.openai.models.responses.FunctionTool;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseFunctionToolCall;
+import com.openai.models.responses.ResponseStreamEvent;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+FunctionTool weather =
+    FunctionTool.builder()
+        .name("get_weather")
+        .description("Get the weather for a city.")
+        .parameters(
+            FunctionTool.Parameters.builder()
+                .putAdditionalProperty("type", JsonValue.from("object"))
+                .putAdditionalProperty(
+                    "properties", JsonValue.from(Map.of("location", Map.of("type", "string"))))
+                .putAdditionalProperty("required", JsonValue.from(List.of("location")))
+                .putAdditionalProperty("additionalProperties", JsonValue.from(false))
+                .build())
+        .strict(true)
+        .build();
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What is the weather in Paris?")
+        .addTool(weather)
+        .build();
+
+Map<Long, ResponseFunctionToolCall> toolCalls = new LinkedHashMap<>();
+try (StreamResponse<ResponseStreamEvent> stream = client.responses().createStreaming(params)) {
+  stream.stream()
+      .forEach(
+          event -> {
+            event
+                .outputItemAdded()
+                .ifPresent(
+                    added ->
+                        added
+                            .item()
+                            .functionCall()
+                            .ifPresent(call -> toolCalls.put(added.outputIndex(), call)));
+            event
+                .functionCallArgumentsDelta()
+                .ifPresent(
+                    delta ->
+                        toolCalls.computeIfPresent(
+                            delta.outputIndex(),
+                            (ignored, call) ->
+                                call.toBuilder()
+                                    .arguments(call.arguments() + delta.delta())
+                                    .build()));
+          });
+}
+toolCalls.values().forEach(System.out::println);
 ```
 
 ```ruby
@@ -1297,6 +1622,26 @@ func main() {
 	}
 	fmt.Println(response.Output)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.CustomTool;
+import com.openai.models.responses.ResponseCreateParams;
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("Use code_exec to print hello world.")
+        .addTool(
+            CustomTool.builder()
+                .name("code_exec")
+                .description("Executes arbitrary Python code.")
+                .build())
+        .build();
+
+client.responses().create(params).output().forEach(System.out::println);
 ```
 
 ```ruby
@@ -1460,6 +1805,42 @@ MUL: "*"
 	}
 	fmt.Println(response.Output)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.CustomToolInputFormat;
+import com.openai.models.responses.CustomTool;
+import com.openai.models.responses.ResponseCreateParams;
+
+String grammar =
+    """
+    start: expr
+    expr: term (SP ADD SP term)*
+    term: INT
+    SP: " "
+    ADD: "+"
+    %import common.INT
+    """;
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("Use math_exp to add four plus four.")
+        .addTool(
+            CustomTool.builder()
+                .name("math_exp")
+                .description("Creates valid mathematical expressions.")
+                .format(
+                    CustomToolInputFormat.Grammar.builder()
+                        .syntax(CustomToolInputFormat.Grammar.Syntax.LARK)
+                        .definition(grammar)
+                        .build())
+                .build())
+        .build();
+
+client.responses().create(params).output().forEach(System.out::println);
 ```
 
 ```ruby
@@ -1682,6 +2063,36 @@ func main() {
 	}
 	fmt.Println(response.Output)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.CustomToolInputFormat;
+import com.openai.models.responses.CustomTool;
+import com.openai.models.responses.ResponseCreateParams;
+
+String grammar =
+    "^(January|February|March|April|May|June|July|August|September|October|November|December) "
+        + "\\d{1,2}(st|nd|rd|th)? \\d{4} at (0?[1-9]|1[0-2])(AM|PM)$";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("Use timestamp to save August 7th 2025 at 10AM.")
+        .addTool(
+            CustomTool.builder()
+                .name("timestamp")
+                .description("Saves a timestamp in date and time format.")
+                .format(
+                    CustomToolInputFormat.Grammar.builder()
+                        .syntax(CustomToolInputFormat.Grammar.Syntax.REGEX)
+                        .definition(grammar)
+                        .build())
+                .build())
+        .build();
+
+client.responses().create(params).output().forEach(System.out::println);
 ```
 
 ```ruby

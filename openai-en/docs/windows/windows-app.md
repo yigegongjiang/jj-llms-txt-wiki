@@ -10,13 +10,13 @@ It runs natively on Windows using PowerShell and the
 [Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox#windows-sandbox), or you can configure it to
 run in [Windows Subsystem for Linux 2 (WSL2)](#windows-subsystem-for-linux-wsl).
 
-<CodexScreenshot
-  alt="ChatGPT desktop app for Windows showing a project sidebar, active chat, and review pane"
-  lightSrc="/images/codex/windows/codex-windows-light.webp"
-  darkSrc="/images/codex/windows/codex-windows-dark.webp"
-  variant="no-wallpaper"
-  maxHeight="320px"
-/>
+
+  
+
+> Illustration: ChatGPT desktop app for Windows showing a project sidebar, active chat, and review pane
+
+
+
 
 ## Download the ChatGPT desktop app
 
@@ -63,13 +63,13 @@ choice takes precedence.
 
 
 
-<CodexScreenshot
-  alt="ChatGPT desktop app settings showing the default Open In app on Windows"
-  lightSrc="/images/codex/windows/open-in-windows-light.webp"
-  darkSrc="/images/codex/windows/open-in-windows-dark.webp"
-  maxHeight={520}
-  maxWidth={784}
-/>
+
+  
+
+> Illustration: ChatGPT desktop app settings showing the default Open In app on Windows
+
+
+
 
 </section>
 
@@ -95,13 +95,13 @@ expecting the new default terminal to appear.
 
 
 
-<CodexScreenshot
-  alt="ChatGPT desktop app settings showing the integrated terminal selection on Windows"
-  lightSrc="/images/codex/windows/integrated-shell-light.webp"
-  darkSrc="/images/codex/windows/integrated-shell-dark.webp"
-  maxHeight={520}
-  maxWidth={788}
-/>
+
+  
+
+> Illustration: ChatGPT desktop app settings showing the integrated terminal selection on Windows
+
+
+
 
 </section>
 
@@ -129,14 +129,13 @@ place after restart.
 WSL1 was supported through Codex `0.114`. Starting in Codex `0.115`, the Linux
 sandbox moved to `bubblewrap`, so WSL1 is no longer supported.
 
-<CodexScreenshot
-  alt="ChatGPT desktop app settings showing the agent selector with Windows native and WSL options"
-  lightSrc="/images/codex/windows/wsl-select-light.webp"
-  darkSrc="/images/codex/windows/wsl-select-dark.webp"
-  maxHeight={520}
-  maxWidth={786}
-  class="mb-8"
-/>
+
+  
+
+> Illustration: ChatGPT desktop app settings showing the agent selector with Windows native and WSL options
+
+
+
 
 You configure the integrated terminal independently from the agent. See
 [Customize for your dev setup](#customize-for-your-dev-setup) for the

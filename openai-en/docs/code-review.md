@@ -125,12 +125,13 @@ Reviews run in the current chat by default. Under **Settings** > **General** >
 **Code review**, choose **Detached** to start a separate review chat. See
 [developer settings](https://learn.chatgpt.com/docs/developer-settings?surface=app#app-code-review).
 
-<CodexScreenshot
-  alt="Inline code review comments displayed in the review pane"
-  lightSrc="/images/codex/app/inline-code-review-light.webp"
-  darkSrc="/images/codex/app/inline-code-review-dark.webp"
-  maxHeight="400px"
-/>
+
+  
+
+> Illustration: Inline code review comments displayed in the review pane
+
+
+
 
 </ContentModeSwitch>
 

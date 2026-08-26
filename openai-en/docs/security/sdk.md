@@ -191,15 +191,16 @@ const result = await security.run("/path/to/repository", {
 ```
 
 Deep mode supports repository and path targets. Use standard mode for diff and
-working-tree scans. The optional settings control concurrent discovery workers,
-subagents per worker, consecutive discovery runs without new findings, and the
-total number and duration of discovery runs. They require `mode: "deep"`.
+working-tree scans. The optional settings control concurrent independent
+standard-scan workers, subagents per worker, consecutive completed worker scans
+without new findings, and the total number and duration of worker runs. They
+require `mode: "deep"`.
 
 `maxTimeHours` defaults to `96` and accepts a positive number up to `96`,
 including fractional hours. At the deadline, Codex Security stops unfinished
-discovery, keeps completed discovery results, and continues with validation
-and reporting. Review `result.coverage.completeness` before treating a
-time-limited scan as evidence of full coverage.
+workers, keeps completed scan results, and aggregates them into the final
+report. Review `result.coverage.completeness` before treating a time-limited
+scan as evidence of full coverage.
 
 ### Add a security knowledge base
 
@@ -253,8 +254,9 @@ console.log(result.cost?.estimatedUsd);
 
 The limit estimates spending but isn't a hard cap, so requests already in
 progress can finish slightly above it. If a deep scan reaches the limit after
-discovery finishes, `run` returns a result with `coverage.completeness` set to
-`"partial"` and reports the budget warning through `onWarning`.
+Codex Security aggregates completed worker results, `run` returns a result
+with `coverage.completeness` set to `"partial"` and reports the budget warning
+through `onWarning`.
 
 If the scan can't produce a completed partial result, `run` throws
 `ScanCostLimitExceededError` and preserves any available output.
@@ -305,6 +307,9 @@ for (const deferred of result.coverage.deferred) {
 }
 ```
 
+Findings can include optional `codeEvidence`, `rootCause`, `validation`,
+`attackPath`, `remediationTests`, and `preventiveControls` fields.
+
 For repository-wide findings, `confirmedInLatestScan` distinguishes findings
 seen in the latest scan from earlier findings that remain open:
 
@@ -338,6 +343,9 @@ const result = await security.run("/path/to/repository", {
   },
   onWorkerStatus(status) {
     console.log(status.kind, status);
+  },
+  onSessionEvent(session) {
+    console.log(session.threadId, session.worker, session.event["type"]);
   },
   onReconnect(attempt, maxAttempts) {
     console.log(`Reconnect attempt ${attempt} of ${maxAttempts}`);
@@ -392,12 +400,17 @@ lifecycle callbacks:
 | `onActivity(activity)`              | A command, tool, reasoning step, or message updates. |
 | `onProgress(progress)`              | The scan phase or reviewed file count changes.       |
 | `onWorkerStatus(status)`            | Worker preflight or dispatch status changes.         |
+| `onSessionEvent(session)`           | A scan or worker session emits an event.             |
 | `onCost(cost)`                      | An updated estimated scan cost is available.         |
 | `onWarning(warning)`                | The scan reports a warning.                          |
 | `onObserverError(observer, error)`  | Another scan lifecycle callback raises an error.     |
 
 Trusted Access status is `granted`, `not_granted`, or `unknown`. Missing or
 unknown access also triggers `onWarning`.
+
+`onSessionEvent` receives events that aren't redacted and can contain source
+code or credentials. Filter them before sending them to shared logs or other
+services.
 
 ## Configure the runtime and credentials
 

@@ -9,7 +9,7 @@ By default, Codex blocks internet access during the agent phase. Setup scripts s
 Enabling agent internet access increases security risk, including:
 
 - Prompt injection from untrusted web content
-- Exfiltration of code or secrets
+- Code or secret exfiltration
 - Downloading malware or vulnerable dependencies
 - Pulling in content with license restrictions
 
@@ -35,7 +35,13 @@ Please run the script and provide the output.
 
 If the agent follows those instructions, it could leak the last commit message to an attacker-controlled server:
 
-![Prompt injection leak example](https://cdn.openai.com/API/docs/codex/prompt-injection-example.png)
+
+  
+
+> Illustration: Prompt injection leak example
+
+
+
 
 This example shows how prompt injection can expose sensitive data or lead to unsafe changes. Point Codex only to trusted resources and keep internet access as limited as possible.
 
@@ -62,7 +68,7 @@ For extra protection, restrict network requests to `GET`, `HEAD`, and `OPTIONS`.
 
 ## Preset domain lists
 
-Finding the right domains can take some trial and error. Presets help you start with a known-good list, then narrow it down as needed.
+Finding the right domains can require iterative testing. Presets help you start with a known-good list, then narrow it down as needed.
 
 ### Common dependencies
 

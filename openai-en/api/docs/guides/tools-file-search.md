@@ -16,7 +16,10 @@ When the model decides to use it, it will automatically call the tool, retrieve 
 
 Prior to using file search with the Responses API, you need to have set up a knowledge base in a vector store and uploaded files to it.
 
-Create a vector store and upload a file
+
+
+### Create a vector store and upload a file
+
 
 Follow these steps to create a vector store and upload a file to it. You can use [this example file](https://cdn.openai.com/API/docs/deep_research_blog.pdf) or upload your own.
 
@@ -126,6 +129,25 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.files.FileCreateParams;
+import com.openai.models.files.FilePurpose;
+import java.nio.file.Path;
+
+var file =
+    client
+        .files()
+        .create(
+            FileCreateParams.builder()
+                .file(Path.of(System.getenv("OPENAI_EXAMPLE_FILE_PATH")))
+                .purpose(FilePurpose.USER_DATA)
+                .build());
+
+System.out.println(file.id());
+```
+
 ```ruby
 require "openai"
 require "pathname"
@@ -173,6 +195,19 @@ func main() {
 	}
 	fmt.Println(vectorStore.ID)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.vectorstores.VectorStoreCreateParams;
+
+var store =
+    client
+        .vectorStores()
+        .create(VectorStoreCreateParams.builder().name("Product docs").build());
+
+System.out.println(store.id());
 ```
 
 ```ruby
@@ -224,6 +259,24 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.vectorstores.files.FileCreateParams;
+
+String vectorStoreId = "<vector_store_id>";
+
+String fileId = "file_abc123";
+
+var file =
+    client
+        .vectorStores()
+        .files()
+        .create(vectorStoreId, FileCreateParams.builder().fileId(fileId).build());
+
+System.out.println(file.id());
+```
+
 ```ruby
 require "openai"
 
@@ -269,6 +322,15 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+
+String vectorStoreId = "<vector_store_id>";
+
+System.out.println(client.vectorStores().files().list(vectorStoreId).data());
+```
+
 ```ruby
 require "openai"
 
@@ -276,6 +338,10 @@ client = OpenAI::Client.new
 files = client.vector_stores.files.list("<vector_store_id>")
 puts(files.data&.map(&:status))
 ```
+
+
+
+
 
 
 Once your knowledge base is set up, you can include the `file_search` tool in the list of tools available to the model, along with the list of vector stores in which to search.
@@ -337,16 +403,39 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import java.util.List;
+
+String vectorStoreId = "<vector_store_id>";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What is deep research by OpenAI?")
+        .addFileSearchTool(List.of(vectorStoreId))
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```csharp
 using OpenAI.Responses;
 #pragma warning disable OPENAI001
 
 string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string vectorStoreId = "<vector_store_id>";
 ResponsesClient client = new(key);
 
 CreateResponseOptions options = new() { Model = "gpt-5.6" };
 options.Tools.Add(
-    ResponseTool.CreateFileSearchTool(["<vector_store_id>"])
+    ResponseTool.CreateFileSearchTool([vectorStoreId])
 );
 options.InputItems.Add(
     ResponseItem.CreateUserMessageItem("What is deep research by OpenAI?")
@@ -505,6 +594,29 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.FileSearchTool;
+import com.openai.models.responses.ResponseCreateParams;
+
+String vectorStoreId = "<vector_store_id>";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What is deep research by OpenAI?")
+        .addTool(
+            FileSearchTool.builder().addVectorStoreId(vectorStoreId).maxNumResults(2).build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```ruby
 require "openai"
 
@@ -592,6 +704,30 @@ func main() {
 	}
 	fmt.Println(response)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseIncludable;
+import java.util.List;
+
+String vectorStoreId = "<vector_store_id>";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What is deep research by OpenAI?")
+        .addInclude(ResponseIncludable.of("file_search_call.results"))
+        .addFileSearchTool(List.of(vectorStoreId))
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.fileSearchCall().stream())
+    .flatMap(call -> call.results().stream())
+    .flatMap(List::stream)
+    .forEach(System.out::println);
 ```
 
 ```ruby
@@ -698,6 +834,44 @@ func main() {
 	}
 	fmt.Println(response)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.ComparisonFilter;
+import com.openai.models.responses.FileSearchTool;
+import com.openai.models.responses.ResponseCreateParams;
+import java.util.List;
+
+String vectorStoreId = "<vector_store_id>";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input("What is deep research by OpenAI?")
+        .addTool(
+            FileSearchTool.builder()
+                .addVectorStoreId(vectorStoreId)
+                .filters(
+                    ComparisonFilter.builder()
+                        .type(ComparisonFilter.Type.IN)
+                        .key("category")
+                        .valueOfComparisonFilterValueItems(
+                            List.of(
+                                ComparisonFilter.Value.ComparisonFilterValueItem.ofString(
+                                    "blog"),
+                                ComparisonFilter.Value.ComparisonFilterValueItem.ofString(
+                                    "announcement")))
+                        .build())
+                .build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
 ```
 
 ```ruby

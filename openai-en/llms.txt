@@ -42,7 +42,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 - [Authentication](https://learn.chatgpt.com/docs/auth.md): Sign-in methods for ChatGPT web and Codex clients
 
 ## Automations
-- [Scheduled tasks](https://learn.chatgpt.com/docs/automations.md): Schedule recurring tasks in ChatGPT
+- [Scheduled tasks](https://learn.chatgpt.com/docs/automations.md): Run tasks on a schedule or from supported app events in ChatGPT
 
 ## Browser
 - [Browser](https://learn.chatgpt.com/docs/browser.md): Let ChatGPT research and interact with websites
@@ -54,7 +54,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 - [Build skills](https://learn.chatgpt.com/docs/build-skills.md): Give ChatGPT and Codex new capabilities and expertise
 
 ## Chrome Extension
-- [Chrome extension](https://learn.chatgpt.com/docs/chrome-extension.md): Use Chrome with ChatGPT while managing browser permissions, website approvals, and browsing data
+- [Browser extension](https://learn.chatgpt.com/docs/chrome-extension.md): Use Chrome, Edge, Brave, Opera, or Vivaldi with ChatGPT
 
 ## Cli
 - [Codex CLI](https://learn.chatgpt.com/docs/codex/cli.md): Use Codex from your terminal and scripts.
@@ -111,6 +111,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 - [Analytics API](https://learn.chatgpt.com/docs/enterprise/analytics-api.md): Understand the purpose and administration boundary of the Codex Analytics API
 - [ChatGPT usage limits and spend controls](https://learn.chatgpt.com/docs/enterprise/usage-limits.md): Understand when ChatGPT workspace credit controls can affect plan-dependent Codex usage
 - [ChatGPT Work admin FAQ](https://learn.chatgpt.com/docs/enterprise/work-admin-faq.md): Manage access, data, governance, observability, usage, and incident controls for ChatGPT Work
+- [ChatGPT Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security.md): Review cloud execution boundaries, connected accounts, browser and network controls, data retention, and audit visibility for ChatGPT Work
 - [ChatGPT Work Overview](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-overview.md): Understand local and cloud execution, network access, connected apps, privacy, and data retention for ChatGPT Work in Enterprise and Edu workspaces
 - [Compliance API and audit events](https://learn.chatgpt.com/docs/enterprise/compliance-api.md): Understand the purpose and administration boundary of the Compliance API
 - [Deploy the Windows app](https://learn.chatgpt.com/docs/enterprise/windows-deployment.md): Choose an enterprise installation and update path for the ChatGPT desktop app on Windows
@@ -124,6 +125,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 - [Roles and workspace permissions](https://learn.chatgpt.com/docs/enterprise/roles-and-workspace-permissions.md): Separate ChatGPT workspace access from local runtime, API, plugin, and source-system controls
 - [Service accounts](https://learn.chatgpt.com/docs/enterprise/service-accounts.md): Set up and manage service accounts for Codex automation in your ChatGPT workspace
 - [Skill controls](https://learn.chatgpt.com/docs/enterprise/skills.md): Compare ChatGPT workspace, local filesystem, and plugin skill controls
+- [Workload identity federation](https://learn.chatgpt.com/docs/enterprise/workload-identity.md): Configure workload identity federation for Codex with an OIDC token or SPIFFE JWT-SVID stored in a runtime-managed file.
 - [Workspace analytics](https://learn.chatgpt.com/docs/enterprise/workspace-analytics.md): Compare ChatGPT workspace analytics, Codex analytics, reporting APIs, and audit records
 - [Workspace model availability](https://learn.chatgpt.com/docs/enterprise/workspace-model-availability.md): Separate model access across ChatGPT, Codex in the ChatGPT desktop app, Codex CLI, the IDE extension, Codex cloud, and the OpenAI API Platform
 
@@ -131,7 +133,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 - [Cloud environments](https://learn.chatgpt.com/docs/environments/cloud-environment.md): Customize dependencies and tools for Codex
 - [Codex environments](https://learn.chatgpt.com/docs/environments/modes.md): Choose where a Codex chat runs and how its files stay isolated
 - [Local environments](https://learn.chatgpt.com/docs/environments/local-environment.md): Configure common actions and setup scripts for worktrees
-- [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees.md): Use Git worktrees in Codex in the ChatGPT desktop app to run chats in parallel
+- [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees.md): Use Git worktrees in Codex to run chats in parallel
 
 ## Extend
 - [Model Context Protocol](https://learn.chatgpt.com/docs/extend/mcp.md): Give Codex access to third-party tools and context
@@ -158,7 +160,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 - [Building an AI-Native Engineering Team](https://learn.chatgpt.com/guides/build-ai-native-engineering-team.md): How coding agents speed up the software development lifecycle
 
 ## Hooks
-- [Hooks](https://learn.chatgpt.com/docs/hooks.md): Run deterministic scripts during the Codex lifecycle
+- [Hooks](https://learn.chatgpt.com/docs/hooks.md): Run scripts or MCP tools during the Codex lifecycle
 
 ## Ide
 - [Codex IDE extension](https://learn.chatgpt.com/docs/codex/ide.md): Use Codex beside your code and editor context.
@@ -188,7 +190,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 - [Long-running work](https://learn.chatgpt.com/docs/long-running-work.md): Keep multi-step work focused with clear outcomes and completion criteria
 
 ## Mcp Server
-- [Use Codex with the Agents SDK](https://learn.chatgpt.com/docs/mcp-server.md): Invoke Codex as an MCP server to build multi-agent development workflows
+- [Use Codex with the Agents SDK](https://learn.chatgpt.com/docs/mcp-server.md): Deprecated. Use the Codex app server or the Codex plugin for Claude Code
 
 ## Models
 - [Models](https://learn.chatgpt.com/docs/models.md): Meet the AI models that power ChatGPT Work and Codex
@@ -283,6 +285,7 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 
 ## Third Party
 - [Review GitHub pull requests with Codex](https://learn.chatgpt.com/docs/third-party/github.md): Set up Code Review and Security Review for GitHub pull requests, request reviews with @codex review and @codex security review, enable automatic reviews, and write custom review rules in AGENTS.md.
+- [Review GitLab merge requests with Codex](https://learn.chatgpt.com/docs/third-party/gitlab.md): Set up Code Review for GitLab merge requests, request reviews with @codex review, enable automatic reviews, and write custom review rules in AGENTS.md.
 - [Use Codex in Linear](https://learn.chatgpt.com/docs/third-party/linear.md): Run Codex chats from Linear issues
 - [Use Codex in Slack](https://learn.chatgpt.com/docs/third-party/slack.md): Ask Codex to work from Slack channels and threads
 
@@ -300,6 +303,9 @@ Use this as a compact map of ChatGPT docs for Codex. Each page has a Markdown tw
 
 ## Web Search
 - [Web search](https://learn.chatgpt.com/docs/web-search.md): Search the web while you work in ChatGPT
+
+## Webmcp
+- [Site tools](https://learn.chatgpt.com/docs/webmcp.md): Use WebMCP to give AI agents a direct way to work with your website
 
 ## Whats New
 - [What's new](https://learn.chatgpt.com/docs/whats-new.md): A weekly digest of ChatGPT and Codex features that can change how you work

@@ -33,12 +33,32 @@ curl -X POST "https://api.ads.openai.com/v1/upload" \
   -F "file=@workspace-planner-card.png"
 ```
 
-## Upload an account favicon
+## Upload a custom audience file
+
+Upload a UTF-8 CSV or TXT customer list with the dedicated `POST /uploads`
+endpoint. Set `purpose` to `custom_audience` and save the returned `file_id`:
+
+```bash
+curl -X POST "https://api.ads.openai.com/v1/uploads" \
+  -H "Authorization: Bearer $OPENAI_ADS_API_KEY" \
+  -F "file=@audience.csv;type=text/csv" \
+  -F "purpose=custom_audience"
+```
+
+Use the file ID, original filename, MIME type, and exact file size to
+[create a custom audience](https://developers.openai.com/ads/custom-audiences#create-the-custom-audience).
+You can also use an uploaded file to
+[add, remove, or replace audience members](https://developers.openai.com/ads/custom-audiences#add-or-remove-using-a-file).
+CSV files can combine email, phone, GAID, and hashed identifier columns when the
+audience request sets `identifier_resolution` to `auto`. See
+[audience file requirements](https://developers.openai.com/ads/custom-audiences#prepare-an-audience-file).
+
+## Upload an account `favicon`
 
 Set `purpose` to `account_favicon` when you upload an image for account brand
 review. The image must be at least 128 × 128 pixels.
 
-The API can resolve a favicon from the client's website:
+The API can resolve an icon from the client's website:
 
 ```bash
 curl -X POST "https://api.ads.openai.com/v1/upload" \

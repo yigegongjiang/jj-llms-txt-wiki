@@ -26,14 +26,13 @@ desktop host. To connect Codex to a project on an SSH host, see
 
 
 
-  <CodexScreenshot
-    alt="Remote setup screen in the ChatGPT mobile app"
-    lightSrc="/images/codex/app/mobile-setup-light.webp"
-    darkSrc="/images/codex/app/mobile-setup-dark.webp"
-    variant="no-wallpaper"
-    maxHeight="none"
-    maxWidth="420px"
-  />
+  
+    
+
+> Illustration: Remote setup screen in the ChatGPT mobile app
+
+
+  
 
 
 
@@ -102,12 +101,11 @@ Existing connections used since June 8, 2026, remain paired. If you haven't
 
 </WorkflowSteps>
 
-<Illustration description="Connections controls for allowing devices to control this Mac and keeping it awake.">
-  <RemoteConnectionsIllustration
-    view="control-this-mac"
-    ariaLabel="Connections controls for allowing devices to control this Mac and keeping it awake."
-  />
-</Illustration>
+
+
+> Illustration: Connections controls for allowing devices to control this Mac and keeping it awake.
+
+
 
 ## Choose what to connect
 
@@ -203,12 +201,11 @@ On a Mac or Windows device where the feature is available, use **Settings >
 Connections > Control other devices** to add the other host. A device can allow
 remote access and control another device at the same time.
 
-<Illustration description="Connections setup card for controlling another device from this Mac.">
-  <RemoteConnectionsIllustration
-    view="control-other-devices"
-    ariaLabel="Connections setup card for controlling another device from this Mac."
-  />
-</Illustration>
+
+
+> Illustration: Connections setup card for controlling another device from this Mac.
+
+
 
 ## Connect to an SSH host
 
@@ -251,12 +248,11 @@ unauthenticated public listeners.
 
 </WorkflowSteps>
 
-<Illustration description="Connections SSH list with three remote hosts.">
-  <RemoteConnectionsIllustration
-    view="ssh"
-    ariaLabel="Connections SSH list with three remote hosts."
-  />
-</Illustration>
+
+
+> Illustration: Connections SSH list with three remote hosts.
+
+
 
 <a id="hand-off-a-thread-between-hosts"></a>
 <a id="hand-off-a-chat-between-hosts"></a>

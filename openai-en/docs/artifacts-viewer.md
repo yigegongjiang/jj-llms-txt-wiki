@@ -6,10 +6,9 @@ When a task produces a file, give ChatGPT the source data, expected file type,
 structure, and review criteria that matter for the task. The preview and review
 tools depend on the surface you use.
 
-<YouTubeEmbed
-  title="Work with documents, spreadsheets, and presentations in ChatGPT"
-  videoId="E3dDr_QtBuo"
-/>
+
+
+[Watch: Work with documents, spreadsheets, and presentations in ChatGPT](https://www.youtube.com/watch?v=E3dDr_QtBuo)
 
 <ContentModeSwitch group="codex-surface" id="app">
 
@@ -52,14 +51,13 @@ PDF files in a compatible viewer.
 
 <ContentModeSwitch group="codex-surface" id="app">
 
-<CodexScreenshot
-  alt="ChatGPT desktop app showing a generated presentation preview"
-  lightSrc="/images/codex/app/artifact-viewer-light.webp"
-  darkSrc="/images/codex/app/artifact-viewer-dark.webp"
-  maxHeight="420px"
-  variant="no-wallpaper"
-  class="my-8"
-/>
+
+  
+
+> Illustration: ChatGPT desktop app showing a generated presentation preview
+
+
+
 
 </ContentModeSwitch>
 

@@ -109,6 +109,39 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.EasyInputMessage;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputItem;
+import java.util.List;
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .inputOfResponse(
+            List.of(
+                ResponseInputItem.ofEasyInputMessage(
+                    EasyInputMessage.builder()
+                        .role(EasyInputMessage.Role.DEVELOPER)
+                        .content(
+                            "You are an expert in categorizing IT support tickets. Categorize each request as Hardware, Software, or Other. Respond with only one of those words.")
+                        .build()),
+                ResponseInputItem.ofEasyInputMessage(
+                    EasyInputMessage.builder()
+                        .role(EasyInputMessage.Role.USER)
+                        .content("My monitor won't turn on - help!")
+                        .build())))
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```ruby
 require "openai"
 
@@ -266,7 +299,11 @@ curl https://api.openai.com/v1/evals \
 ```
 
 
-Explanation: data_source_config parameter
+
+
+### Explanation: data_source_config parameter
+
+
 
 Running this eval will require a test data set that represents the type of data you expect your prompt to work with (more on creating the test data set later in this guide). In our `data_source_config` parameter, we specify that each **item** in the data set will conform to a [JSON schema](https://json-schema.org/) with two properties:
 
@@ -290,7 +327,15 @@ Since we will be referencing a **sample** in our test criteria (the output gener
 }
 ```
 
-Explanation: testing_criteria parameter
+
+
+
+
+
+
+### Explanation: testing_criteria parameter
+
+
 
 In our `testing_criteria`, we define how we will conclude if the model output satisfies our requirements for each item in the data set. In this case, we just want the model to output one of three category strings based on the input ticket. The string it outputs should exactly match the human-labeled `correct_label` field in our test data. So in this case, we will want to use a `string_check` grader to evaluate the output.
 
@@ -308,6 +353,10 @@ In the test configuration, we will introduce template syntax, represented by the
   "reference": "{{ item.category }}"
 }
 ```
+
+
+
+
 
 After creating the eval, it will be assigned a UUID that you will need to address it later when kicking off a run.
 
@@ -408,6 +457,25 @@ func main() {
 	}
 	fmt.Println(uploaded.ID)
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.files.FileCreateParams;
+import com.openai.models.files.FilePurpose;
+import java.nio.file.Path;
+
+var file =
+    client
+        .files()
+        .create(
+            FileCreateParams.builder()
+                .file(Path.of(System.getenv("OPENAI_EXAMPLE_FILE_PATH")))
+                .purpose(FilePurpose.EVALS)
+                .build());
+
+System.out.println(file.id());
 ```
 
 ```ruby

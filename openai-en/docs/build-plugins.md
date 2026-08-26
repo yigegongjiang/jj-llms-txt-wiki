@@ -31,11 +31,13 @@ connect to an external service, or distribute a stable capability to a team.
 For the fastest setup, use the built-in `@plugin-creator` skill in ChatGPT Work
 mode or `$plugin-creator` in Codex.
 
-<CodexScreenshot
-  alt="Plugin creator skill in ChatGPT"
-  lightSrc="/images/codex/plugins/plugin-creator.png"
-  darkSrc="/images/codex/plugins/plugin-creator-dark.png"
-/>
+
+  
+
+> Illustration: Plugin creator skill in ChatGPT
+
+
+
 
 Describe the outcome, the skills or MCP server to include, and whether you want
 a local marketplace entry for testing. For example:
@@ -49,11 +51,13 @@ Add it to a personal marketplace so I can test it locally.
 The skill creates the required `.codex-plugin/plugin.json` manifest, organizes
 the plugin folder, and can add the plugin to a local marketplace.
 
-<CodexScreenshot
-  alt="Invoking the plugin creator skill"
-  lightSrc="/images/codex/plugins/plugin-creator-invoke.png"
-  darkSrc="/images/codex/plugins/plugin-creator-invoke-dark.png"
-/>
+
+  
+
+> Illustration: Invoking the plugin creator skill
+
+
+
 
 After it finishes:
 

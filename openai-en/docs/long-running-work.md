@@ -43,12 +43,13 @@ workspace. Continue the same chat to steer the task while it runs.
 
 <ContentModeSwitch group="codex-surface" id="app">
 
-<CodexScreenshot
-  alt="ChatGPT desktop app goal progress controls above the composer"
-  lightSrc="/images/codex/app/goal-dialog-light.webp"
-  darkSrc="/images/codex/app/goal-dialog-dark.webp"
-  class="my-8"
-/>
+
+  
+
+> Illustration: ChatGPT desktop app goal progress controls above the composer
+
+
+
 
 </ContentModeSwitch>
 

@@ -29,6 +29,7 @@ The CLI provides these commands:
 | `codex-security scans`        | List, inspect, compare, and retrieve saved scan logs. |
 | `codex-security findings`     | Review and update saved security findings.            |
 | `codex-security export`       | Export completed findings as CSV, JSON, or SARIF.     |
+| `codex-security publish`      | Publish completed scan findings to Linear.            |
 | `codex-security validate`     | Check one or more candidate security findings.        |
 | `codex-security patch`        | Patch one or more security issues.                    |
 | `codex-security login`        | Sign in, store credentials, or check sign-in status.  |
@@ -117,11 +118,13 @@ usage: codex-security scan [-h] [--auth {auto,chatgpt,api-key}]
                            [--subagents N] [--stop-after-no-new N]
                            [--max-discovery-runs N] [--max-time-hours HOURS]
                            [--model MODEL]
-                           [--effort {minimal,low,medium,high,xhigh}]
+                           [--effort {minimal,low,medium,high,xhigh,max}]
                            [--output-dir DIR]
                            [--archive-existing]
                            [--plugin-path PATH] [--python PATH]
                            [--codex KEY=VALUE] [--fail-on-severity LEVEL]
+                           [--patch] [--patch-severity {critical,high,medium,low}]
+                           [--create-pr]
                            [--max-cost USD] [--dry-run] [--headless] [--verbose]
                            [--json] [--format {toon,json,yaml,jsonl}]
                            [--full-output] [repository]
@@ -243,23 +246,22 @@ npx @openai/codex-security scan . --mode deep
 
 ### Configure deep scans
 
-Use these options with `--mode deep` to control discovery concurrency and
-runtime:
+Use these options with `--mode deep` to control worker concurrency and runtime:
 
-| Argument                 | Description                                                             |
-| ------------------------ | ----------------------------------------------------------------------- |
-| `--workers N`            | Limit on concurrent discovery workers. Defaults to automatic selection. |
-| `--subagents N`          | Subagents available to each discovery worker. Defaults to `3`.          |
-| `--stop-after-no-new N`  | Stop after `N` consecutive runs find no new issues. Defaults to `6`.    |
-| `--max-discovery-runs N` | Limit on total discovery runs. Defaults to `60`.                        |
-| `--max-time-hours HOURS` | Discovery time limit in hours. Defaults to `96`; accepts fractions.     |
+| Argument                 | Description                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| `--workers N`            | Limit on concurrent independent standard-scan workers. Defaults to `4`.                |
+| `--subagents N`          | Subagents available to each worker. Defaults to `3`.                                   |
+| `--stop-after-no-new N`  | Stop after `N` consecutive completed worker scans find no new issues. Defaults to `4`. |
+| `--max-discovery-runs N` | Limit on total independent standard-scan runs. Defaults to `40`.                       |
+| `--max-time-hours HOURS` | Worker execution time limit in hours. Defaults to `96`; accepts fractions.             |
 
 `--subagents` accepts zero or a positive integer. `--max-time-hours` accepts a
 positive number no greater than `96`. The remaining options require a positive
 integer. These options aren't available for standard scans.
 
-For example, use two discovery workers, allow up to ten runs, and stop
-discovery after 1.5 hours:
+For example, use two workers, allow up to ten runs, and stop worker execution
+after 1.5 hours:
 
 ```bash
 npx @openai/codex-security scan . \
@@ -271,10 +273,9 @@ npx @openai/codex-security scan . \
   --max-time-hours 1.5
 ```
 
-The time limit applies only to discovery. When it expires, the scan stops
-unfinished discovery, keeps completed discovery results, and continues with
-validation and reporting. If no source review finishes, the scan records
-partial coverage and returns exit code `2`.
+When the time limit expires, the scan stops unfinished workers, keeps completed
+scan results, and aggregates them into the final report. If no worker finishes
+source review, the scan records partial coverage and returns exit code `2`.
 
 Set persistent defaults in `~/.codex/codex-security/config.toml`, or in
 `$CODEX_HOME/codex-security/config.toml` when you set `CODEX_HOME`:
@@ -289,9 +290,9 @@ max_time_hours = 1.5
 ```
 
 Command-line options override these defaults. `scan --workers` controls
-discovery workers within one scan; `bulk-scan --workers` controls concurrent
-repository scans. Set `stop_after_consecutive_errors` only in the TOML file;
-its default is `3`.
+independent standard-scan workers within one deep scan; `bulk-scan --workers`
+controls concurrent repository scans. Set `stop_after_consecutive_errors` only
+in the TOML file; its default is `3`.
 
 ### Add security context
 
@@ -338,6 +339,9 @@ machine-readable result.
 | `--output-dir DIR`         | Write scan artifacts to a private directory outside the enclosing Git worktree. Defaults to persistent Codex Security state. |
 | `--archive-existing`       | Move existing results to `DIR.previous-<timestamp>-<id>` and start with an empty output directory. Requires `--output-dir`.  |
 | `--fail-on-severity LEVEL` | Return exit `1` when a completed scan reports a finding at or above `critical`, `high`, `medium`, or `low`.                  |
+| `--patch`                  | Fix and verify selected findings after a complete scan.                                                                      |
+| `--patch-severity LEVEL`   | Patch findings at or above `critical`, `high`, `medium`, or `low`. Defaults to `low`.                                        |
+| `--create-pr`              | Commit verified patch files and open a GitHub pull request. Requires `--patch`.                                              |
 | `--max-cost USD`           | Stop a scan when its estimated model cost exceeds the specified USD amount.                                                  |
 | `--dry-run`                | Check the repository, target, knowledge base, output directory, and Codex configuration without starting a scan.             |
 | `--headless`               | Show plain-text progress instead of the interactive scan dashboard.                                                          |
@@ -348,9 +352,9 @@ machine-readable result.
 
 The cost limit is an estimate, not a hard spending cap. Requests already in
 progress can finish slightly above the limit. If a deep scan reaches the limit
-after discovery finishes, the CLI seals the available results, marks coverage
-as `partial`, and returns exit code `2`. Otherwise, it returns `2` and leaves
-any available partial output on disk.
+after Codex Security aggregates completed worker results, the CLI seals the
+available results, marks coverage as `partial`, and returns exit code `2`.
+Otherwise, it returns `2` and leaves any available partial output on disk.
 
 When you omit `--output-dir`, results persist under
 `$CODEX_HOME/state/plugins/codex-security/scans/<repository>`. `CODEX_HOME`
@@ -407,7 +411,7 @@ Codex configuration value.
 | `--auth {auto,chatgpt,api-key}`                           | Select the scan credentials. The default is `auto`.                                                      |
 | `--provider {openai,openrouter,fireworks,amazon-bedrock}` | Select the inference provider. The default is `openai`.                                                  |
 | `--model MODEL`                                           | Select the model. The default is `gpt-5.6-sol`. Required for OpenRouter, Fireworks, and Amazon Bedrock.  |
-| `--effort {minimal,low,medium,high,xhigh}`                | Select the model's reasoning effort. The default is `xhigh`.                                             |
+| `--effort {minimal,low,medium,high,xhigh,max}`            | Select the model's reasoning effort. The default is `xhigh`.                                             |
 | `--plugin-path PATH`                                      | Use a Codex Security plugin directory or ZIP to override the bundled plugin.                             |
 | `--python PATH`                                           | Select the Python interpreter for the plugin runtime.                                                    |
 | `--codex KEY=VALUE`                                       | Override an isolated Codex configuration value. Values use TOML syntax. Repeat the flag for more values. |
@@ -456,7 +460,7 @@ usage: codex-security bulk-scan [input] [--output-dir DIR]
                                 [--workers N] [--mode {standard,deep}]
                                 [--provider {openai,openrouter,fireworks,amazon-bedrock}]
                                 [--model MODEL]
-                                [--effort {minimal,low,medium,high,xhigh}]
+                                [--effort {minimal,low,medium,high,xhigh,max}]
                                 [--knowledge-base PATH]
                                 [--scan-prompt-file FILE]
                                 [--post-scan-prompt-file FILE]
@@ -705,6 +709,87 @@ npx @openai/codex-security export /path/to/scan \
   --output /path/outside/repository/exports/findings.csv
 ```
 
+## `codex-security publish scan`
+
+Publish every finding from a completed scan to Linear:
+
+```text
+usage: codex-security publish scan [SCAN_DIR] --to linear
+                                   [--linear-team TEAM_ID]
+                                   [--project PROJECT_ID]
+                                   [--linear-api-key KEY]
+                                   [--linear-assignee EMAIL_OR_USER_ID]
+                                   [--dry-run] [--json]
+```
+
+`SCAN_DIR` must contain a completed, sealed scan. Omit it in an interactive
+terminal to select a completed scan from local scan history. Creating issues
+also requires the scan and its findings to exist in local scan history. A dry
+run validates the sealed artifacts without this persistence check.
+
+| Argument                             | Description                                                                                                                                                      |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--to linear`                        | Publish to Linear. This argument is required.                                                                                                                    |
+| `--linear-team TEAM_ID`              | Select the Linear team. Uses `CODEX_SECURITY_LINEAR_TEAM` when omitted; one of them is required.                                                                 |
+| `--project PROJECT_ID`               | Select a Linear project. Uses `CODEX_SECURITY_LINEAR_PROJECT` when omitted. If neither is set, issues are created directly in the team.                          |
+| `--linear-api-key KEY`               | Use a Linear personal API key for direct publication. Uses `CODEX_SECURITY_LINEAR_API_KEY` when omitted.                                                         |
+| `--linear-assignee EMAIL_OR_USER_ID` | Assign created issues by email address or Linear user ID. Requires `--linear-api-key` or `CODEX_SECURITY_LINEAR_API_KEY`. Issues remain unassigned when omitted. |
+| `--dry-run`                          | Prepare issue payloads without starting Codex, contacting Linear, creating issues, or writing publication state.                                                 |
+| `--json`                             | Write structured publication results to stdout. Progress remains on stderr.                                                                                      |
+
+Linear issue descriptions and dry-run output can include source code snippets
+  and vulnerability details. Publish only to an authorized Linear team or
+  project, and treat saved output as sensitive.
+
+Each non-dry-run invocation attempts to create a new issue for every finding.
+Publishing the same scan again doesn't match, update, or reuse existing issues.
+If some findings fail, the command preserves successfully created issues and
+returns exit code `2`.
+With `--json`, review the `created` and `failed` results before retrying to
+avoid duplicates.
+
+Preview the issue payloads before publishing:
+
+```bash
+npx @openai/codex-security publish scan /path/to/completed-scan \
+  --to linear \
+  --linear-team TEAM_ID \
+  --dry-run \
+  --json
+```
+
+### Publish with the connected Linear app
+
+Without a Linear API key, the command starts Codex using your existing
+configuration and connected Linear app. Sign in and connect Linear to your
+Codex account before publishing:
+
+```bash
+npx @openai/codex-security login
+npx @openai/codex-security publish scan /path/to/completed-scan \
+  --to linear \
+  --linear-team TEAM_ID \
+  --project PROJECT_ID
+```
+
+### Publish with a Linear API key
+
+Supplying `--linear-api-key` or `CODEX_SECURITY_LINEAR_API_KEY` publishes
+directly through the Linear API and doesn't start Codex. Direct publication
+leaves issues unassigned unless you select an assignee:
+
+```bash
+export CODEX_SECURITY_LINEAR_API_KEY=YOUR_LINEAR_PERSONAL_API_KEY
+npx @openai/codex-security publish scan /path/to/completed-scan \
+  --to linear \
+  --linear-team TEAM_ID \
+  --linear-assignee teammate@example.com
+```
+
+Command-line values override their matching environment variables. For API
+keys, prefer `CODEX_SECURITY_LINEAR_API_KEY` over `--linear-api-key` because
+command-line arguments can appear in shell history and process listings.
+
 ## `codex-security validate` and `codex-security patch`
 
 Check whether a candidate finding is valid:
@@ -721,17 +806,76 @@ npx @openai/codex-security patch findings.json \
   "Missing authorization check in src/routes.ts:18"
 ```
 
-Each argument can contain literal text or point to a file. Both commands work
-against the current directory. Use `validate` to directly recheck an original
-finding after a fix or when a later scan no longer reports it. A scan
-comparison alone doesn't prove that a fix worked. External tools can use these
-commands without rebuilding the scanner.
+Each positional argument accepts literal text or a file path. These inputs use
+the current directory. Use `validate` to recheck a finding after a fix or when a
+later scan no longer reports it. Comparing scans alone doesn't prove that a fix
+worked.
 
 Use `--effort` to select reasoning effort for either command:
 
 ```bash
 npx @openai/codex-security validate "Possible SQL injection" --effort high
 ```
+
+### Patch findings after a scan
+
+Use `scan --patch` to fix findings after a complete scan. This requires
+`@openai/codex-security` 0.1.15 or later. The default severity threshold is
+`low`. This command selects high and critical findings:
+
+```bash
+npx @openai/codex-security scan . --patch --patch-severity high --json
+```
+
+Verified and already-fixed findings don't trigger `--fail-on-severity`.
+
+### Patch saved findings
+
+Pass a finding or occurrence ID to patch its original repository, or select
+findings from a saved scan:
+
+```bash
+npx @openai/codex-security patch OCCURRENCE_ID
+npx @openai/codex-security patch --scan SCAN_ID --severity high --json
+npx @openai/codex-security patch --scan latest --severity medium
+```
+
+`--scan latest` selects the latest completed scan for the current repository.
+Saved-finding commands support `--json`; literal-text and file inputs don't.
+
+Add `--create-pr` to commit only verified patch files and open a pull request
+with the GitHub CLI:
+
+```bash
+npx @openai/codex-security patch --scan SCAN_ID --severity high --create-pr
+```
+
+If the push or pull request fails, run the printed `patch --resume-pr BRANCH`
+command from the same repository to retry.
+
+### Patch Linear issues
+
+Set `CODEX_SECURITY_LINEAR_API_KEY` or `LINEAR_API_KEY` for a personal API key,
+or `LINEAR_ACCESS_TOKEN` for an OAuth token. Prefer an environment variable to
+`--linear-api-key KEY` to keep the key out of shell history.
+
+Import an issue by ID or URL. Repeat `--linear-issue` to select more than one
+issue:
+
+```bash
+npx @openai/codex-security patch --linear-issue SEC-123 --linear-issue SEC-124
+```
+
+Use `--linear-project` to select a project's open issues. Add `--linear-filter`
+to narrow the selection:
+
+```bash
+npx @openai/codex-security patch --linear-project "Security backlog" \
+  --linear-filter '{"labels":{"name":{"eq":"security"}}}'
+```
+
+The CLI excludes completed and canceled issues unless the filter sets `state`.
+It doesn't change the Linear issues.
 
 ## `codex-security login`, `logout`, and `info`
 
@@ -778,7 +922,7 @@ npx @openai/codex-security info --json
 ```
 
 When you expose the CLI as an MCP server, `info` is the only available command.
-Scans, exports, sign-in, validation, and patching remain CLI-only.
+Scans, exports, publication, sign-in, validation, and patching remain CLI-only.
 
 ## Read scan output
 
@@ -794,6 +938,9 @@ an interactive terminal:
 ```bash
 npx @openai/codex-security scan . --headless
 ```
+
+The dashboard also shows live session details. They aren't redacted and can
+contain source code or credentials. Review them before sharing.
 
 ### Verbose diagnostics
 
@@ -852,6 +999,9 @@ turn
   usage
 ```
 
+When [patching](#patch-findings-after-a-scan), JSON output also includes patch
+results and any created pull request.
+
 Progress, completion summaries, archive notices, and errors remain on stderr.
 A completed scan still prints the full JSON result when a severity policy
 returns exit `1` or incomplete coverage returns exit `2`.
@@ -899,18 +1049,19 @@ coverage as evidence for a security decision.
 
 The CLI uses these exit codes:
 
-| Exit  | Condition                                                                                                                                     |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`   | A scan completed with complete coverage and passed its severity policy, a bulk scan completed without failures, or another command succeeded. |
-| `1`   | A completed scan reports a finding at or above the configured severity.                                                                       |
-| `2`   | The CLI found an input, runtime, or export error, a scan has incomplete coverage, or a bulk scan has repositories with errors.                |
-| `130` | Ctrl-C interrupted a scan.                                                                                                                    |
-| `143` | SIGTERM terminated a scan.                                                                                                                    |
+| Exit  | Condition                                                                                                                                                                     |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`   | A scan completed with complete coverage and passed its severity policy, a bulk scan or publication completed without failures, or another command succeeded.                  |
+| `1`   | A completed scan reports a finding at or above the configured severity.                                                                                                       |
+| `2`   | The CLI found an input, runtime, or export error, a scan has incomplete coverage, a bulk scan has repositories with errors, or a publication has one or more failed findings. |
+| `130` | Ctrl-C interrupted a scan or publication.                                                                                                                                     |
+| `143` | SIGTERM terminated a scan or publication.                                                                                                                                     |
 
 Any scan with `partial` or `unknown` coverage returns `2`, even without a
-severity policy. When you request structured output, completed scans still
-write the available results to stdout. The CLI prints the location of any
-partial output after an interruption or runtime error.
+severity policy. When you request structured output, completed scans and
+partial publications still write the available results to stdout. The CLI
+prints the location of any partial output after an interruption or runtime
+error.
 
 ## Local scan permissions
 

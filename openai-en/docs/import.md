@@ -13,17 +13,11 @@ imported work in sync with automatic updates.
 
 Importing doesn't change or delete your existing agent setup.
 
-<Illustration description="ChatGPT import screen for choosing other AI apps to import from.">
-  <ExternalAgentImportIllustration
-    step="providers"
-    providers={[
-      { label: "Claude Code", icon: "code", selected: true },
-      { label: "Claude Cowork", icon: "tasks", selected: true },
-      { label: "Cursor", icon: "code", selected: true },
-    ]}
-    note="Your existing agent setup won't be affected."
-  />
-</Illustration>
+
+
+> Illustration: ChatGPT import screen for choosing other AI apps to import from.
+
+
 
 ## Start an import
 
@@ -60,9 +54,11 @@ isn't available during a running task, in a remote session, or while connected
 to a local app-server daemon. See [CLI slash
 commands](https://learn.chatgpt.com/docs/developer-commands?surface=cli#cli-import-claude-code-or-cursor-setup-with-import).
 
-<Illustration description="ChatGPT import screen for selecting setup, projects, and recent chats to import.">
-  <ExternalAgentImportIllustration step="items" />
-</Illustration>
+
+
+> Illustration: ChatGPT import screen for selecting setup, projects, and recent chats to import.
+
+
 
 ## How importing works
 
@@ -80,19 +76,19 @@ When you import, ChatGPT:
 
 ## What ChatGPT can import
 
-| Imported item                     | Destination                                          |
-| --------------------------------- | ---------------------------------------------------- |
-| Instruction files                 | [`AGENTS.md`](https://learn.chatgpt.com/docs/agent-configuration/agents-md)  |
-| `settings.json`                   | [`config.toml`](https://learn.chatgpt.com/docs/config-file/config-basic)     |
-| Skills                            | [Skills](https://learn.chatgpt.com/docs/build-skills)                        |
-| Plugins                           | Plugins                                              |
-| Existing project folders          | Projects using the same folders                      |
-| Project memories from Claude Code | [Memories](https://learn.chatgpt.com/docs/customization/memories)            |
-| Chats from the last 30 days       | ChatGPT chats                                        |
-| MCP server configuration          | [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp)         |
-| Hooks                             | [Codex hooks](https://learn.chatgpt.com/docs/hooks)                          |
-| Slash commands                    | [Skills](https://learn.chatgpt.com/docs/build-skills)                        |
-| Subagents                         | [Codex agents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
+| Imported item                     | Destination                                             |
+| --------------------------------- | ------------------------------------------------------- |
+| Instruction files                 | [`AGENTS.md`](https://learn.chatgpt.com/docs/agent-configuration/agents-md)     |
+| `settings.json`                   | [`config.toml`](https://learn.chatgpt.com/docs/config-file/config-basic)        |
+| Skills                            | [Skills](https://learn.chatgpt.com/docs/build-skills)                           |
+| Plugins                           | Plugins                                                 |
+| Existing project folders          | Projects using the same folders                         |
+| Project memories from Claude Code | [Memories](https://learn.chatgpt.com/docs/customization/memories)               |
+| Chats from the last 30 days       | ChatGPT chats                                           |
+| MCP server configuration          | [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp)            |
+| Hooks                             | [Codex hooks](https://learn.chatgpt.com/docs/hooks)                             |
+| Slash commands                    | [Skills](https://learn.chatgpt.com/docs/build-skills)                           |
+| Subagents                         | [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
 
 ## Finish setup after importing
 

@@ -200,7 +200,7 @@ Retrieves a model response with the given ID.
 
               An image input to the model. Learn about [image inputs](/docs/guides/vision).
 
-              - `detail: "low" or "high" or "auto" or "original"`
+              - `detail: ImageDetail`
 
                 The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.
 
@@ -1159,17 +1159,9 @@ Retrieves a model response with the given ID.
 
                 - `"input_image"`
 
-              - `detail: optional "low" or "high" or "auto" or "original" or null`
+              - `detail: optional ImageDetail or null`
 
                 The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.
-
-                - `"low"`
-
-                - `"high"`
-
-                - `"auto"`
-
-                - `"original"`
 
               - `file_id: optional string or null`
 
@@ -1887,8 +1879,11 @@ Retrieves a model response with the given ID.
 
             - `background: optional "transparent" or "opaque" or "auto"`
 
-              Background type for the generated image. One of `transparent`,
-              `opaque`, or `auto`. Default: `auto`.
+              Set the background of the generated image. One of `transparent`,
+              `opaque`, or `auto`. Transparent backgrounds are available for
+              supported GPT Image models. For `gpt-image-2` and
+              `gpt-image-2-2026-04-21`, this support is in preview. When using
+              `transparent`, set the output format to `png` or `webp`. Default: `auto`.
 
               - `"transparent"`
 
@@ -1917,21 +1912,31 @@ Retrieves a model response with the given ID.
 
                 Base64-encoded mask image.
 
-            - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+            - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-              The image generation model to use. Default: `gpt-image-1`.
+              The image generation model to use. One of `gpt-image-1`,
+              `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+              `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+              `gpt-image-1`.
 
               - `string`
 
-              - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+              - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-                The image generation model to use. Default: `gpt-image-1`.
+                The image generation model to use. One of `gpt-image-1`,
+                `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+                `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+                `gpt-image-1`.
 
                 - `"gpt-image-1"`
 
                 - `"gpt-image-1-mini"`
 
                 - `"gpt-image-1.5"`
+
+                - `"gpt-image-2"`
+
+                - `"gpt-image-2-2026-04-21"`
 
             - `moderation: optional "auto" or "low"`
 
@@ -2894,8 +2899,11 @@ Retrieves a model response with the given ID.
 
             - `background: optional "transparent" or "opaque" or "auto"`
 
-              Background type for the generated image. One of `transparent`,
-              `opaque`, or `auto`. Default: `auto`.
+              Set the background of the generated image. One of `transparent`,
+              `opaque`, or `auto`. Transparent backgrounds are available for
+              supported GPT Image models. For `gpt-image-2` and
+              `gpt-image-2-2026-04-21`, this support is in preview. When using
+              `transparent`, set the output format to `png` or `webp`. Default: `auto`.
 
               - `"transparent"`
 
@@ -2924,21 +2932,31 @@ Retrieves a model response with the given ID.
 
                 Base64-encoded mask image.
 
-            - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+            - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-              The image generation model to use. Default: `gpt-image-1`.
+              The image generation model to use. One of `gpt-image-1`,
+              `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+              `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+              `gpt-image-1`.
 
               - `string`
 
-              - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+              - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-                The image generation model to use. Default: `gpt-image-1`.
+                The image generation model to use. One of `gpt-image-1`,
+                `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+                `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+                `gpt-image-1`.
 
                 - `"gpt-image-1"`
 
                 - `"gpt-image-1-mini"`
 
                 - `"gpt-image-1.5"`
+
+                - `"gpt-image-2"`
+
+                - `"gpt-image-2-2026-04-21"`
 
             - `moderation: optional "auto" or "low"`
 
@@ -4157,7 +4175,7 @@ Retrieves a model response with the given ID.
 
           The namespace of the custom tool being called.
 
-      - `CompactionTrigger object { type }`
+      - `CompactionTrigger object { type, id }`
 
         Compacts the current context. Must be the final input item.
 
@@ -4166,6 +4184,10 @@ Retrieves a model response with the given ID.
           The type of the item. Always `compaction_trigger`.
 
           - `"compaction_trigger"`
+
+        - `id: optional string or null`
+
+          The unique ID of this compaction trigger.
 
       - `ItemReference object { id, type }`
 
@@ -5548,8 +5570,11 @@ Retrieves a model response with the given ID.
 
           - `background: optional "transparent" or "opaque" or "auto"`
 
-            Background type for the generated image. One of `transparent`,
-            `opaque`, or `auto`. Default: `auto`.
+            Set the background of the generated image. One of `transparent`,
+            `opaque`, or `auto`. Transparent backgrounds are available for
+            supported GPT Image models. For `gpt-image-2` and
+            `gpt-image-2-2026-04-21`, this support is in preview. When using
+            `transparent`, set the output format to `png` or `webp`. Default: `auto`.
 
             - `"transparent"`
 
@@ -5578,21 +5603,31 @@ Retrieves a model response with the given ID.
 
               Base64-encoded mask image.
 
-          - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+          - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-            The image generation model to use. Default: `gpt-image-1`.
+            The image generation model to use. One of `gpt-image-1`,
+            `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+            `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+            `gpt-image-1`.
 
             - `string`
 
-            - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+            - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-              The image generation model to use. Default: `gpt-image-1`.
+              The image generation model to use. One of `gpt-image-1`,
+              `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+              `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+              `gpt-image-1`.
 
               - `"gpt-image-1"`
 
               - `"gpt-image-1-mini"`
 
               - `"gpt-image-1.5"`
+
+              - `"gpt-image-2"`
+
+              - `"gpt-image-2-2026-04-21"`
 
           - `moderation: optional "auto" or "low"`
 
@@ -6401,8 +6436,11 @@ Retrieves a model response with the given ID.
 
           - `background: optional "transparent" or "opaque" or "auto"`
 
-            Background type for the generated image. One of `transparent`,
-            `opaque`, or `auto`. Default: `auto`.
+            Set the background of the generated image. One of `transparent`,
+            `opaque`, or `auto`. Transparent backgrounds are available for
+            supported GPT Image models. For `gpt-image-2` and
+            `gpt-image-2-2026-04-21`, this support is in preview. When using
+            `transparent`, set the output format to `png` or `webp`. Default: `auto`.
 
             - `"transparent"`
 
@@ -6431,21 +6469,31 @@ Retrieves a model response with the given ID.
 
               Base64-encoded mask image.
 
-          - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+          - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-            The image generation model to use. Default: `gpt-image-1`.
+            The image generation model to use. One of `gpt-image-1`,
+            `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+            `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+            `gpt-image-1`.
 
             - `string`
 
-            - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+            - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-              The image generation model to use. Default: `gpt-image-1`.
+              The image generation model to use. One of `gpt-image-1`,
+              `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+              `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+              `gpt-image-1`.
 
               - `"gpt-image-1"`
 
               - `"gpt-image-1-mini"`
 
               - `"gpt-image-1.5"`
+
+              - `"gpt-image-2"`
+
+              - `"gpt-image-2-2026-04-21"`
 
           - `moderation: optional "auto" or "low"`
 
@@ -8253,8 +8301,11 @@ Retrieves a model response with the given ID.
 
       - `background: optional "transparent" or "opaque" or "auto"`
 
-        Background type for the generated image. One of `transparent`,
-        `opaque`, or `auto`. Default: `auto`.
+        Set the background of the generated image. One of `transparent`,
+        `opaque`, or `auto`. Transparent backgrounds are available for
+        supported GPT Image models. For `gpt-image-2` and
+        `gpt-image-2-2026-04-21`, this support is in preview. When using
+        `transparent`, set the output format to `png` or `webp`. Default: `auto`.
 
         - `"transparent"`
 
@@ -8283,21 +8334,31 @@ Retrieves a model response with the given ID.
 
           Base64-encoded mask image.
 
-      - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+      - `model: optional string or "gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-        The image generation model to use. Default: `gpt-image-1`.
+        The image generation model to use. One of `gpt-image-1`,
+        `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+        `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+        `gpt-image-1`.
 
         - `string`
 
-        - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5"`
+        - `"gpt-image-1" or "gpt-image-1-mini" or "gpt-image-1.5" or 2 more`
 
-          The image generation model to use. Default: `gpt-image-1`.
+          The image generation model to use. One of `gpt-image-1`,
+          `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,
+          `gpt-image-2-2026-04-21`, or `chatgpt-image-latest`. Default:
+          `gpt-image-1`.
 
           - `"gpt-image-1"`
 
           - `"gpt-image-1-mini"`
 
           - `"gpt-image-1.5"`
+
+          - `"gpt-image-2"`
+
+          - `"gpt-image-2-2026-04-21"`
 
       - `moderation: optional "auto" or "low"`
 
@@ -8948,7 +9009,7 @@ Retrieves a model response with the given ID.
     A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.
     The IDs should be a string that uniquely identifies each user, with a maximum length of 64 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](/docs/guides/safety-best-practices#safety-identifiers).
 
-  - `service_tier: optional "auto" or "default" or "flex" or 4 more or null`
+  - `service_tier: optional ServiceTier or null`
 
     Specifies the processing type used for serving the request.
 

@@ -46,13 +46,13 @@ In **Settings**, you can change the app appearance by choosing a base theme,
 adjusting accent, background, and foreground colors, and changing the UI and
 code fonts. You can also share your custom theme with friends.
 
-<CodexScreenshot
-  alt="ChatGPT desktop app Appearance settings showing theme selection, color controls, and font options"
-  lightSrc="/images/codex/app/theme-selection-light.webp"
-  darkSrc="/images/codex/app/theme-selection-dark.webp"
-  maxHeight="720px"
-  class="mb-8"
-/>
+
+  
+
+> Illustration: ChatGPT desktop app Appearance settings showing theme selection, color controls, and font options
+
+
+
 
 ## Pets
 
@@ -79,7 +79,7 @@ code fonts. You can also share your custom theme with friends.
 ## Browser
 
 Use these settings to install or enable the bundled Browser plugin, set up the
-[Chrome extension](https://learn.chatgpt.com/docs/chrome-extension), and manage allowed and blocked
+[browser extension](https://learn.chatgpt.com/docs/chrome-extension), and manage allowed and blocked
 websites. ChatGPT asks before using a website unless you've allowed it. Removing
 a blocked site lets ChatGPT ask again before using it in the browser.
 
@@ -128,10 +128,7 @@ In the ChatGPT desktop app, pop out an active chat into a separate window and pl
 next to your browser, editor, or design preview. Turn on **Always on top** when
 you want the chat to remain visible while you work in another app.
 
-<CodexScreenshot
-  alt="ChatGPT desktop app chat displayed in a floating pop-out window"
-  lightSrc="/images/codex/app/popover-light.webp"
-  darkSrc="/images/codex/app/popover-dark.webp"
-  maxHeight="400px"
-  class="my-8"
-/>
+
+  
+
+> Illustration: ChatGPT desktop app chat displayed in a floating pop-out window

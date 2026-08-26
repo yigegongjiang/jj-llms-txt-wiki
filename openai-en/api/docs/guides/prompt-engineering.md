@@ -254,6 +254,57 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.Reasoning;
+import com.openai.models.ReasoningEffort;
+import com.openai.models.responses.ResponseCreateParams;
+
+String semicolonsDevMsg = "Talk like a pirate.";
+
+String semicolonsPrompt = "Are semicolons optional in JavaScript?";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input(semicolonsPrompt)
+        .instructions(semicolonsDevMsg)
+        .reasoning(Reasoning.builder().effort(ReasoningEffort.LOW).build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
+```csharp
+using OpenAI.Responses;
+#pragma warning disable OPENAI001
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+ResponsesClient client = new(key);
+
+CreateResponseOptions options = new()
+{
+    Model = "gpt-5.6",
+    Instructions = "Talk like a pirate.",
+    ReasoningOptions = new ResponseReasoningOptions
+    {
+        ReasoningEffortLevel = ResponseReasoningEffortLevel.Low,
+    },
+};
+options.InputItems.Add(
+    ResponseItem.CreateUserMessageItem("Are semicolons optional in JavaScript?")
+);
+
+ResponseResult response = await client.CreateResponseAsync(options);
+
+Console.WriteLine(response.GetOutputText());
+```
+
 ```ruby
 require "openai"
 
@@ -362,6 +413,73 @@ func main() {
 
 	fmt.Println(response.OutputText())
 }
+```
+
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.Reasoning;
+import com.openai.models.ReasoningEffort;
+import com.openai.models.responses.EasyInputMessage;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputItem;
+import java.util.List;
+
+String semicolonsDevMsg = "Talk like a pirate.";
+
+String semicolonsPrompt = "Are semicolons optional in JavaScript?";
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .input(
+            ResponseCreateParams.Input.ofResponse(
+                List.of(
+                    ResponseInputItem.ofEasyInputMessage(
+                        EasyInputMessage.builder()
+                            .role(EasyInputMessage.Role.DEVELOPER)
+                            .content(semicolonsDevMsg)
+                            .build()),
+                    ResponseInputItem.ofEasyInputMessage(
+                        EasyInputMessage.builder()
+                            .role(EasyInputMessage.Role.USER)
+                            .content(semicolonsPrompt)
+                            .build()))))
+        .reasoning(Reasoning.builder().effort(ReasoningEffort.LOW).build())
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
+```csharp
+using OpenAI.Responses;
+#pragma warning disable OPENAI001
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+ResponsesClient client = new(key);
+
+CreateResponseOptions options = new()
+{
+    Model = "gpt-5.6",
+    ReasoningOptions = new ResponseReasoningOptions
+    {
+        ReasoningEffortLevel = ResponseReasoningEffortLevel.Low,
+    },
+};
+options.InputItems.Add(
+    ResponseItem.CreateDeveloperMessageItem("Talk like a pirate.")
+);
+options.InputItems.Add(
+    ResponseItem.CreateUserMessageItem("Are semicolons optional in JavaScript?")
+);
+
+ResponseResult response = await client.CreateResponseAsync(options);
+
+Console.WriteLine(response.GetOutputText());
 ```
 
 ```ruby
@@ -565,6 +683,26 @@ func main() {
 }
 ```
 
+```java
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+
+ResponseCreateParams params =
+    ResponseCreateParams.builder()
+        .model("gpt-5.6")
+        .instructions(
+            "You are a coding assistant. Answer with concise JavaScript examples and use semicolons.")
+        .input("How would I declare a variable for a last name?")
+        .build();
+
+client.responses().create(params).output().stream()
+    .flatMap(item -> item.message().stream())
+    .flatMap(message -> message.content().stream())
+    .flatMap(content -> content.outputText().stream())
+    .forEach(text -> System.out.println(text.text()));
+```
+
 ```ruby
 require "openai"
 
@@ -670,7 +808,11 @@ GPT models like [`gpt-5.6`](https://developers.openai.com/api/docs/models/gpt-5.
 
 For the full current treatment, use the [latest GPT-5 prompting best practices](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices). The practical reminders below still apply.
 
-Coding
+
+
+#### Coding
+
+
 
 #### Coding
 
@@ -690,7 +832,15 @@ Guide the model to generate clean, semantically correct markdown using inline co
 
 For detailed guidance and prompt samples specific to coding, see the [latest GPT-5 prompting best practices](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices).
 
-Front-end engineering
+
+
+
+
+
+
+#### Front-end engineering
+
+
 
 [GPT-5.6](https://developers.openai.com/api/docs/models/gpt-5.6-sol)
 performs well at building front ends from scratch as well as contributing to
@@ -727,7 +877,15 @@ For front-end engineering work in larger codebases, we've found that adding thes
 
 For detailed guidance and prompt samples specific to frontend development, see the [latest GPT-5 prompting best practices](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices).
 
-Agentic tasks
+
+
+
+
+
+
+#### Agentic tasks
+
+
 
 For agentic and long-running rollouts with `gpt-5.6`, focus your prompts on three core practices: plan tasks thoroughly to ensure complete resolution, provide clear preambles for major tool usage decisions, and use a TODO tool to track workflow and progress in an organized manner.
 
@@ -764,6 +922,10 @@ Before you call a tool explain why you are calling it
 Use a TODO list tool or rubric to enforce structured planning and avoid missed steps.
 
 For detailed guidance and prompt samples specific to building agents, see the [latest GPT-5 prompting best practices](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices).
+
+
+
+
 
 ## Prompting reasoning models
 

@@ -17,22 +17,30 @@ data handling, and how tasks are executed securely using ChatGPT Work on the
 web. Availability and administrative controls depend on your plan and workspace
 configuration.
 
+For a focused review of hosted execution, connected-account permissions,
+browser and network settings, retention, and audit visibility, see
+[ChatGPT Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security).
+
 ## Execution isolation, files, and device access
 
 The files and tools available to ChatGPT Work depend on where Work is running,
 user permissions and admin configuration.
 
-**Local Work** runs tasks through the ChatGPT desktop app on the user's device.
+### Local Work
+
+Local Work runs tasks through the ChatGPT desktop app on the user's device.
 It can access local files, applications, and other resources made available to
 it, subject to the user's permissions, applicable workspace controls, and device
 security policies. Unlike Work on the Web, local Work can operate on resources
 that remain on your computer without requiring you to upload files to a cloud
 conversation.
 
-**Cloud Work**, accessed via the web or mobile, runs the Codex harness in an
-isolated environment on OpenAI-managed infrastructure. Cloud conversations can
-be available across supported web, mobile, and desktop surfaces, and supported
-tasks can continue while the user is away from the conversation.
+### Cloud Work
+
+Cloud Work is available on supported web, mobile, and desktop surfaces. It runs
+the Codex harness in an isolated environment on OpenAI-managed infrastructure.
+Cloud conversations can sync across these surfaces, and supported tasks can
+continue while the user is away from the conversation.
 
 Work on the web can't directly access files, applications, or open browser tabs
 on the user's computer. A user can provide files by uploading them, adding them
@@ -59,8 +67,9 @@ tasks. Each of these tools has configurable permissions.
 
 - **Code and shell commands**: Public internet access depends on the applicable
   workspace policy and individual Work network setting. When public internet
-  access isn't allowed, commands can still reach required destinations on a
-  managed allowlist.
+  access isn't allowed, commands can still reach OpenAI-approved destinations
+  required for Work to function. This controls network destinations, not which
+  commands can run.
 - **Web search**: Search has controls separate from the Work code and shell
   network setting.
 
@@ -90,12 +99,11 @@ It operates remotely and uses a browser session separate from the user's local
 browser. It can't access local tabs, extensions, browsing history, saved
 passwords, or authenticated local sessions.
 
-The cloud browser supports public, signed-out websites. It can navigate pages,
-enter information into supported public forms, and combine relevant information
-from an approved app with a website task. It can't accept credentials, use a
-password manager or saved form entries, sign in to a website, or complete
-payments. If a task requires one of those unsupported steps, it stops. Browser
-availability depends on your plan, region, rollout, and workspace permissions.
+The cloud browser can navigate public websites, enter information into supported
+public forms, and combine relevant information from an approved app with a
+website task. Website sign-in through the cloud browser isn't available in
+Enterprise or Edu workspaces. Browser availability depends on your plan,
+region, rollout, and workspace permissions.
 For Enterprise workspaces, an administrator must enable cloud browser access in
 addition to Work access.
 
@@ -130,8 +138,10 @@ dashboard.
 For Enterprise and Edu workspaces, plugins and their underlying apps are off by
 default. For Business workspaces, plugins and apps are on by default. Making a
 plugin available doesn't automatically enable its required app or grant access
-to a user's account. The user must enable the plugin and authenticate before
-ChatGPT Work can access it.
+to an account. The required connection must be authorized for an individual,
+shared, or agent-owned account before ChatGPT Work can access it. A shared or
+agent-owned connection uses the connected account's source-system permissions,
+which can differ from the requesting user's permissions.
 
 Where supported, administrators can restrict an app to read-only actions or an
 approved set of actions. App permission settings can also determine whether
@@ -164,21 +174,21 @@ and the [ChatGPT Work Admin FAQ](https://learn.chatgpt.com/docs/enterprise/work-
 
 ### Retention depends on the data type
 
-- **Work conversations**—Follow the applicable ChatGPT workspace conversation
+- **Work conversations:** Follow the applicable ChatGPT workspace conversation
   retention and deletion settings.
-- **Files saved to Library**—Follow the applicable file and workspace
+- **Files saved to Library:** Follow the applicable file and workspace
   retention rules. Deleting a conversation doesn't delete files stored in
   Library.
-- **Project files**—Remain with the project until its deletion, subject to the
+- **Project files:** Remain with the project until its deletion, subject to the
   applicable deletion rules and exceptions.
-- **Transient uploads outside Library**—For Enterprise, transient uploads can
+- **Transient uploads outside Library:** For Enterprise, transient uploads can
   expire after 48 hours unless a different retention setting applies.
-- **Saved memories, when enabled**—Follow separate memory controls.
-- **Cloud browser cookies**—Remain separate from local browser data. Users can
+- **Saved memories, when enabled:** Follow separate memory controls.
+- **Cloud browser cookies:** Remain separate from local browser data. Users can
   clear them from the Cloud browser settings.
-- **Compliance Logs Platform records**—Remain available in the platform for 30
+- **Compliance Logs Platform records:** Remain available in the platform for 30
   days. Exported copies follow the receiving system's retention policy.
-- **Connected application data**—Source records follow the connected
+- **Connected application data:** Source records follow the connected
   application's policies. Copies saved in a chat, file, or synced index also
   follow the applicable OpenAI storage and retention rules.
 

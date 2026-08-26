@@ -11,11 +11,11 @@ leaving the keyboard.
 
   
 
-    <Illustration description="Interactive Codex Micro keyboard with illuminated Agent Keys, customizable Command Keys, a dial, and an analog stick">
-      <CodexMicroKeyboardIllustration
-        ariaLabel="Interactive Codex Micro keyboard with illuminated Agent Keys, customizable Command Keys, a dial, and an analog stick"
-      />
-    </Illustration>
+    
+
+> Illustration: Interactive Codex Micro keyboard with illuminated Agent Keys, customizable Command Keys, a dial, and an analog stick
+
+
   
 
 

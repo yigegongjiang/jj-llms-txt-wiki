@@ -41,13 +41,13 @@ Actions are helpful to keep you from typing common actions like triggering a bui
 
 
 
-<CodexScreenshot
-  alt="Project actions list shown in ChatGPT desktop app settings"
-  lightSrc="/images/codex/app/actions-light.webp"
-  darkSrc="/images/codex/app/actions-dark.webp"
-  maxHeight="400px"
-  class="mb-4 lg:mb-0"
-/>
+
+  
+
+> Illustration: Project actions list shown in ChatGPT desktop app settings
+
+
+
 
 </section>
 
@@ -82,6 +82,6 @@ your local checkout, start the task in a [worktree](https://learn.chatgpt.com/do
 
 
 
-<Illustration description="Codex environment summary panel">
-  <EnvironmentPanelIllustration ariaLabel="Codex environment summary panel" />
-</Illustration>
+
+
+> Illustration: Codex environment summary panel

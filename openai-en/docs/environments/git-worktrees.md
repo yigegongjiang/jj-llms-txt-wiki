@@ -2,10 +2,14 @@
 
 > For the complete documentation index, see [llms.txt](https://learn.chatgpt.com/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-In the ChatGPT desktop app, worktrees let Codex run multiple independent chats in the same project without interfering with each other. For Git repositories, [scheduled tasks](https://learn.chatgpt.com/docs/automations) can run on dedicated background worktrees so they don't conflict with your ongoing work. In non-version-controlled projects, scheduled tasks run directly in the project directory. You can also start chats in a worktree manually and use Handoff to move a chat between Local and Worktree.
+Worktrees let Codex run multiple independent chats in the same project without interfering with each other. The repository, worktree, and commands remain on the computer or remote development environment that contains the project. You can work directly in the ChatGPT desktop app, or use [Remote](https://learn.chatgpt.com/docs/remote) in the ChatGPT mobile app to start, guide, approve, and review worktree chats on a connected computer.
 
-Worktrees are available only in Codex in the ChatGPT desktop app. Select
-  **Codex** before you start a chat in a worktree.
+For Git repositories, [scheduled tasks](https://learn.chatgpt.com/docs/automations) can run on dedicated background worktrees so they don't conflict with your ongoing work. In non-version-controlled projects, scheduled tasks run directly in the project directory. You can also start chats in a worktree manually and use Handoff to move a chat between Local and Worktree.
+
+Worktrees don't run locally on your phone. With Remote, the mobile app
+  controls Codex on your connected computer, where the repository and worktree
+  remain, or in the remote development environment that computer uses. The
+  desktop-specific instructions below apply on the connected computer.
 
 ## What's a worktree
 
@@ -76,13 +80,13 @@ You can open your IDE to the worktree using the "Open" button in the header, use
 
 
 
-<CodexScreenshot
-  alt="Worktree chat view with branch controls and worktree details"
-  lightSrc="/images/codex/app/worktree-light.webp"
-  darkSrc="/images/codex/app/worktree-dark.webp"
-  maxHeight="400px"
-  class="mb-4 lg:mb-0"
-/>
+
+  
+
+> Illustration: Worktree chat view with branch controls and worktree details
+
+
+
 
 
 
@@ -112,13 +116,13 @@ Each chat keeps the same associated worktree over time. If you hand the chat bac
 
 
 
-<CodexScreenshot
-  alt="Handoff dialog moving a chat from a worktree to Local"
-  lightSrc="/images/codex/app/handoff-light.webp"
-  darkSrc="/images/codex/app/handoff-dark.webp"
-  maxHeight="400px"
-  class="mb-4 lg:mb-0"
-/>
+
+  
+
+> Illustration: Handoff dialog moving a chat from a worktree to Local
+
+
+
 
 
 

@@ -4,6 +4,12 @@
 
 # Running Codex as an MCP server
 
+`codex mcp-server` is deprecated. Use the [Codex app
+  server](https://learn.chatgpt.com/docs/app-server) instead. To call Codex from Claude Code, use the
+  [Codex plugin for Claude Code](https://github.com/openai/codex-plugin-cc),
+  which uses the app server. This page documents the deprecated command for
+  existing integrations.
+
 You can run Codex as an MCP server and connect it from other MCP clients (for example, an agent built with the [OpenAI Agents SDK MCP integration](https://developers.openai.com/api/docs/guides/agents/integrations-observability#mcp)).
 
 To start Codex as an MCP server, you can use the following command:

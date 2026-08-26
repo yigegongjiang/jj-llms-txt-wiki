@@ -102,11 +102,15 @@ Each event includes the event metadata and a `data` object.
   "action_source": "web",
   "user": {
     "obref": "123e4567-e89b-42d3-a456-426614174000",
-    "email_sha256": "b4c9a289323b21a01c3e940f150eb9b8c542587f1abfd8f0e1cc1ffc5e475514",
-    "external_id_sha256": "73d83a078369bb4f0971b317aa7797a91cf5c0df1b62161c2e47d75c33ab5b6e",
-    "country": "US",
-    "city": "San Francisco",
-    "zip_code": "94107",
+    "emails_sha256": [
+      "b4c9a289323b21a01c3e940f150eb9b8c542587f1abfd8f0e1cc1ffc5e475514"
+    ],
+    "external_ids_sha256": [
+      "18f69bcd2f9cc9c38195e722b2a5590429840ea5090971d2256e026926e55fa1"
+    ],
+    "countries": ["US"],
+    "cities": ["San Francisco"],
+    "postal_codes": ["94107"],
     "ip_address": "203.0.113.1",
     "user_agent": "Mozilla/5.0"
   },
@@ -116,6 +120,8 @@ Each event includes the event metadata and a `data` object.
 }
 ```
 
+{/* Intentionally omit `oppcref` from public documentation. Do not add it to this field table without Ads product approval. */}
+
 | Field               | Required | Description                                                                                                                                                                                                                                                                         |
 | ------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`                | Yes      | A non-empty string that identifies the event. Reuse the same ID when retrying or sending the same conversion through another integration.                                                                                                                                           |
@@ -123,10 +129,9 @@ Each event includes the event metadata and a `data` object.
 | `timestamp_ms`      | Yes      | Event time as an integer Unix timestamp in milliseconds. The timestamp must be within the last 7 days and no more than 10 minutes in the future.                                                                                                                                    |
 | `custom_event_name` | Depends  | Required when `type` is `custom`. Use 1–64 letters, digits, underscores, or hyphens; start and end with a letter or digit. The name cannot match a standard event name. The API converts it to lowercase.                                                                           |
 | `oppref`            | No       | An opaque, OpenAI-provided attribution identifier. Pass the original string without modification.                                                                                                                                                                                   |
-| `oppcref`           | No       | An organic commerce reference formatted as a lowercase UUID version 4. Supported only for `checkout_started`, `items_added`, `order_created`, and `page_viewed` events.                                                                                                             |
 | `source_url`        | Depends  | Required for web events when `action_source` is `web`; optional for native app events. Use a URL with a scheme and host, such as `https://shop.example.com/checkout`.                                                                                                               |
 | `action_source`     | Depends  | Use `web`, `mobile_app`, `offline`, `physical_store`, `phone_call`, `email`, or `other`. The value must be `mobile_app` for `app_installed` and `app_opened` events.                                                                                                                |
-| `user`              | No       | An object containing optional matching fields: `email_sha256`, `external_id_sha256`, `country`, `city`, `zip_code`, `ip_address`, `user_agent`, or `obref`. See [Send user data](#send-user-data).                                                                                  |
+| `user`              | No       | An object containing optional conversion-matching fields. See [Send user data](#send-user-data).                                                                                                                                                                                    |
 | `opt_out`           | No       | Use `true` to opt the event out of future user-level personalization, or `false` for the default behavior.                                                                                                                                                                          |
 | `data`              | Yes      | An object describing the conversion. Its `type` field must match the data shape required for the event name (see [Supported Events](https://developers.openai.com/ads/supported-events)) and use one of the event data shapes below.                                                                             |
 
@@ -168,6 +173,28 @@ request root.
 Every field in the `user` object is optional. Include only the fields you have
 for the user.
 
+### Normalize identifiers before hashing
+
+Normalize each identifier as follows:
+
+- Email address: trim leading and trailing whitespace and convert the value to
+  lowercase.
+- Phone number: convert the value to international digits-only form. Keep the
+  country calling code, but remove the leading `+` or `00`
+  international-access prefix and all whitespace, parentheses, periods, and
+  hyphens. Hash the resulting 8–15 digits. For example,
+  `+1 (415) 555-2671` becomes `14155552671`.
+- External ID: trim leading and trailing whitespace. Preserve case and all
+  other characters.
+- First and last name: convert the value to lowercase and remove all whitespace
+  and ASCII punctuation. Apart from converting to lowercase, preserve non-ASCII characters;
+  don't strip accents or transliterate. For example, `José` becomes `josé`.
+
+Encode each normalized value as UTF-8, compute its SHA-256 digest, and send the
+digest as a lowercase, 64-character hexadecimal string. Don't send raw email
+addresses, phone numbers, external IDs, first names, or last names. Send
+geographic values as raw strings.
+
 ### User object example
 
 Place this object inside an event at `events[].user`:
@@ -175,26 +202,54 @@ Place this object inside an event at `events[].user`:
 ```json
 {
   "obref": "123e4567-e89b-42d3-a456-426614174000",
-  "email_sha256": "b4c9a289323b21a01c3e940f150eb9b8c542587f1abfd8f0e1cc1ffc5e475514",
-  "external_id_sha256": "73d83a078369bb4f0971b317aa7797a91cf5c0df1b62161c2e47d75c33ab5b6e",
-  "country": "US",
-  "city": "San Francisco",
-  "zip_code": "94107",
+  "phone_numbers_sha256": [
+    "758fbf68945f21c416814c539ab578876c8d98fb69e6da692def92cd52417fe0"
+  ],
+  "emails_sha256": [
+    "b4c9a289323b21a01c3e940f150eb9b8c542587f1abfd8f0e1cc1ffc5e475514"
+  ],
+  "external_ids_sha256": [
+    "18f69bcd2f9cc9c38195e722b2a5590429840ea5090971d2256e026926e55fa1"
+  ],
+  "first_names_sha256": [
+    "fdee430d40bd57deeac186cd9790033d0f06f909a8806e7ce6e717ab7c7d5029"
+  ],
+  "last_names_sha256": [
+    "fb1e7ec987523d2cb9e022cec1d6ae7c99dc46edfae4fe51254025fe4bea571f"
+  ],
+  "regions": ["California"],
+  "postal_codes": ["94107"],
+  "cities": ["San Francisco"],
+  "countries": ["US"],
+  "android_advertising_id": "38400000-8cf0-11bd-b23e-10b96e40000d",
   "ip_address": "203.0.113.1",
   "user_agent": "Mozilla/5.0"
 }
 ```
 
-| Field                | Description                                                                                    |
-| -------------------- | ---------------------------------------------------------------------------------------------- |
-| `obref`              | Opaque browser reference from the Pixel's `__obref` cookie. Pass it without hashing.           |
-| `email_sha256`       | SHA-256 hash of the email address after trimming whitespace and converting it to lowercase.    |
-| `external_id_sha256` | SHA-256 hash of a stable, pseudonymous customer identifier from your system.                   |
-| `country`            | Two-letter ISO 3166-1 country code, such as `US`.                                              |
-| `city`               | City name, with a max of 128 characters. OpenAI trims whitespace and converts it to lowercase. |
-| `zip_code`           | Postal or ZIP code. Use letters, numbers, spaces, or hyphens, with a max of 32 characters.     |
-| `ip_address`         | Valid IPv4 or IPv6 address.                                                                    |
-| `user_agent`         | Non-empty user agent string from the client that generated the event.                          |
+Use the plural list fields below. For each list, the API uses the first three
+valid, unique values in the order provided. It ignores additional values without
+rejecting the event or request.
+
+| Field                    | Type           | Description                                                                                                                    |
+| ------------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `phone_numbers_sha256`   | `list[string]` | SHA-256 hashes of normalized phone numbers.                                                                                    |
+| `emails_sha256`          | `list[string]` | SHA-256 hashes of normalized email addresses.                                                                                  |
+| `external_ids_sha256`    | `list[string]` | SHA-256 hashes of stable, pseudonymous customer identifiers from your system.                                                  |
+| `first_names_sha256`     | `list[string]` | SHA-256 hashes of normalized first names.                                                                                      |
+| `last_names_sha256`      | `list[string]` | SHA-256 hashes of normalized last names.                                                                                       |
+| `regions`                | `list[string]` | Raw region values. The API trims whitespace, converts values to lowercase, and limits each normalized value to 128 characters. |
+| `postal_codes`           | `list[string]` | Raw postal or ZIP codes. Use letters, numbers, spaces, or hyphens; each normalized value can contain up to 32 characters.      |
+| `cities`                 | `list[string]` | Raw city names. The API trims whitespace, converts values to lowercase, and limits each normalized value to 128 characters.    |
+| `countries`              | `list[string]` | Raw two-letter country codes, such as `US`.                                                                                    |
+| `android_advertising_id` | `string`       | Raw Android Google Advertising ID (GAID) in UUID format. Available only through the Conversions API.                           |
+| `obref`                  | `string`       | Opaque browser reference from the Pixel's `__obref` cookie. Pass it without hashing.                                           |
+| `ip_address`             | `string`       | Valid IPv4 or IPv6 address.                                                                                                    |
+| `user_agent`             | `string`       | Non-empty user agent string from the client that generated the event.                                                          |
+
+`android_advertising_id` supports Android GAID only; IDFA is not supported. You
+can send a GAID with any `action_source`. The API ignores all-zero advertising
+IDs without rejecting the event.
 
 For hybrid Pixel and Conversions API integrations, read the `__obref`
 first-party cookie in the browser, send it to your server, and include it
@@ -202,10 +257,6 @@ unchanged as `events[].user.obref` when available. Send a non-blank string.
 Before collecting or forwarding the cookie, follow your site's measurement
 consent requirements. If the user revokes consent, stop sending it. Unlike
 `oppref`, which is an event-level field, `obref` belongs inside `user`.
-
-Send hashes as lowercase, 64-character hexadecimal strings. Send the geographic,
-IP address, and user agent fields as raw values. Don't send raw email addresses,
-raw external IDs, phone numbers, or phone number hashes.
 
 ## Example event
 
@@ -225,11 +276,15 @@ curl -X POST "https://bzr.openai.com/v1/events?pid=<PIXEL-ID>" \
         "action_source": "web",
         "user": {
           "obref": "123e4567-e89b-42d3-a456-426614174000",
-          "email_sha256": "b4c9a289323b21a01c3e940f150eb9b8c542587f1abfd8f0e1cc1ffc5e475514",
-          "external_id_sha256": "73d83a078369bb4f0971b317aa7797a91cf5c0df1b62161c2e47d75c33ab5b6e",
-          "country": "US",
-          "city": "San Francisco",
-          "zip_code": "94107",
+          "emails_sha256": [
+            "b4c9a289323b21a01c3e940f150eb9b8c542587f1abfd8f0e1cc1ffc5e475514"
+          ],
+          "external_ids_sha256": [
+            "18f69bcd2f9cc9c38195e722b2a5590429840ea5090971d2256e026926e55fa1"
+          ],
+          "countries": ["US"],
+          "cities": ["San Francisco"],
+          "postal_codes": ["94107"],
           "ip_address": "203.0.113.1",
           "user_agent": "Mozilla/5.0"
         },
@@ -293,4 +348,5 @@ App lifecycle events use the `customer_action` data shape and require
 If you send the same conversion from the pixel and the Conversions API, reuse
 the same value as the API `id` and pixel `event_id`. Send both events with the
 same Pixel ID. For custom events, use the same `custom_event_name` on both sides
-as well.
+as well. Deduplication uses your Pixel ID, `event_name`, and `id`. OpenAI uses
+the first event it receives for a matching key and ignores later duplicates.

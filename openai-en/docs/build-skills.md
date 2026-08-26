@@ -22,13 +22,13 @@ ChatGPT on the web, desktop, and mobile.
 In the ChatGPT desktop app, open **Skills** in the sidebar to view and explore skills
 created across your projects.
 
-<CodexScreenshot
-  alt="Skills picker showing available skills in the ChatGPT desktop app"
-  lightSrc="/images/codex/app/skill-selector-light.webp"
-  darkSrc="/images/codex/app/skill-selector-dark.webp"
-  maxHeight="400px"
-  class="my-8"
-/>
+
+  
+
+> Illustration: Skills picker showing available skills in the ChatGPT desktop app
+
+
+
 
 Skills use **progressive disclosure** to manage context efficiently. ChatGPT and
 Codex start with each skill's name and description, then load the full

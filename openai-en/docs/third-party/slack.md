@@ -6,10 +6,13 @@ Use Codex in Slack to kick off coding work from channels and threads. Mention `@
 
 
 
-  <img src="https://developers.openai.com/images/codex/integrations/slack-example.png"
-    alt="Codex Slack integration in action"
-    class="block h-auto w-full mx-0!"
-  />
+  
+    
+
+> Illustration: Codex Slack integration in action
+
+
+  
 
 
 
