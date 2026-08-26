@@ -43,7 +43,7 @@ Build durable, multi-step applications using the Workers platform
 - [Rules of Workflows](https://developers.cloudflare.com/workflows/build/rules-of-workflows/index.md): Best practices for building resilient Workflows, including idempotency, state management, and error handling.
 - [Sleeping and retrying](https://developers.cloudflare.com/workflows/build/sleeping-and-retrying/index.md): Configure sleep durations and retry logic for Workflows steps, including relative and absolute sleep timers.
 - [Step context](https://developers.cloudflare.com/workflows/build/step-context/index.md): Access runtime information in Workflows steps using the WorkflowStepContext object, including step name and retry attempt.
-- [Test Workflows](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/#workflowsindex.md): Write and run automated tests for Cloudflare Workflows using the Vitest integration.
+- [Test Workflows](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/index.md#workflows): Write and run automated tests for Cloudflare Workflows using the Vitest integration.
 - [Trigger Workflows](https://developers.cloudflare.com/workflows/build/trigger-workflows/index.md): Trigger Workflows from Workers bindings, the REST API, or the Wrangler CLI.
 - [Visualize Workflows](https://developers.cloudflare.com/workflows/build/visualizer/index.md): View a visual diagram of your Workflow steps, conditionals, and parallel logic in the Cloudflare dashboard.
 - [Workers API](https://developers.cloudflare.com/workflows/build/workers-api/index.md): Reference for the Workflows Workers API, including WorkflowEntrypoint, step methods, and instance management.

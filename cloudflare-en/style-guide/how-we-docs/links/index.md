@@ -1,6 +1,6 @@
 ---
-description: Write and format links in documentation.
-title: Links
+description: How we keep links healthy with build checks, external link auditing, and background anchor link audits.
+title: Link maintenance
 image: https://developers.cloudflare.com/og-docs.png
 ---
 
@@ -10,23 +10,17 @@ image: https://developers.cloudflare.com/og-docs.png
 > Fetch the complete documentation index at: https://developers.cloudflare.com/style-guide/llms.txt  
 > Use this file to discover all available pages before exploring further.
 
-# Links
+# Link maintenance
 
-Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/links/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/links/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Though [links](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/links/) are an important part of documentation, they also have their own maintenance cost.
+Though [links](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/structure/links/) are an important part of documentation, they also have their own maintenance cost.
 
 We have a few strategies we use to make link maintenance easier.
 
 ## Link types
 
-There are 3 types of links:
-
-* **External**: To other resources, such as [www.cloudflare.com ↗](http://www.cloudflare.com).
-* **Internal**: To other pages in the docs, such as [Workers](https://developers.cloudflare.com/workers/).
-* **Anchor**: To specific parts of other pages in our docs, such as [Proxied records](https://developers.cloudflare.com/dns/proxy-status/#proxied-records).
-
-For each type of link, we think through a few different aspects of the experience.
+Documentation uses three [types of links](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/structure/links/#types-of-links): external, internal, and anchor. For each type, we think through a few different aspects of the experience.
 
 * **External**:  
   * _Source of truth_: Another site.
@@ -66,7 +60,7 @@ We use an external SEO tool to help flag these broken external links for us, add
 
 ### Anchor links
 
-Anchor links do not have as dramatic as consequences of being wrong as internal links. If you have a broken anchor link, a customer will either need to manually scroll to the header or - in some cases - go to another page.
+Anchor links do not have as dramatic as consequences of being wrong as internal links. If you have a broken anchor link, a customer will either need to manually scroll to the header or, in some cases, go to another page.
 
 Because of these characteristics, we run [periodic, background checks ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/anchor-link-audit.yml) to flag broken anchor links, using the `htmltest` library.
 
@@ -79,5 +73,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/links/#page","headline":"Links · Cloudflare Style Guide","description":"Write and format links in documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/links/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/links/#page","headline":"Link maintenance · Cloudflare Style Guide","description":"How we keep links healthy with build checks, external link auditing, and background anchor link audits.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/links/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

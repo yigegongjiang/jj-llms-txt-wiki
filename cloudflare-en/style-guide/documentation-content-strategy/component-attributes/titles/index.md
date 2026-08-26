@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Titles
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Definition
 
@@ -39,17 +39,17 @@ Do not use emojis in page titles or sidebar labels. Emojis can cause issues with
 
 ## Subtitles
 
-## Definition
+### Definition
 
 The first line of text on a page. H2, H3, etc.
 
-## Used in
+### Used in
 
 All content types
 
-[Overview](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/overview/), [How to](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/), [Configuration](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/configuration/),c[FAQ](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/), [Changelog](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/), [Concept](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/concept/), [Reference](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference/), [Tutorial](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/), [Navigation](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/navigation/)
+[Overview](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/overview/), [How to](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/), [Configuration](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/configuration/), [FAQ](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/), [Changelog](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/), [Concept](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/concept/), [Reference](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference/), [Tutorial](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/), [Navigation](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/navigation/)
 
-## Structure
+### Structure
 
 Subtitles are verb or noun phrase that describes the sub-pages in the section. If using verb, do not use the gerund. Write "Install Wrangler", not "Installing Wrangler".
 
@@ -64,5 +64,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/#page","headline":"Titles · Cloudflare Style Guide","description":"Write clear and consistent page titles.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/#page","headline":"Titles · Cloudflare Style Guide","description":"Write clear and consistent page titles.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -21,7 +21,7 @@ During local development, bindings connect to locally simulated resources by def
 The following bindings are available today:
 
 * [AI](https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/#2-connect-your-worker-to-workers-ai)
-* [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine)
+* [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/)
 * [Assets](https://developers.cloudflare.com/workers/static-assets/binding/)
 * [Browser Run](https://developers.cloudflare.com/browser-run/)
 * [D1](https://developers.cloudflare.com/d1/worker-api/)
@@ -29,7 +29,7 @@ The following bindings are available today:
 * [Durable Objects](https://developers.cloudflare.com/durable-objects/api/)
 * [Dynamic Worker Loaders](https://developers.cloudflare.com/workers/runtime-apis/bindings/worker-loader/)
 * [Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
-* [Hyperdrive](https://developers.cloudflare.com/hyperdrive)
+* [Hyperdrive](https://developers.cloudflare.com/hyperdrive/)
 * [Images](https://developers.cloudflare.com/images/optimization/binding/)
 * [KV](https://developers.cloudflare.com/kv/api/)
 * [Media Transformations](https://developers.cloudflare.com/stream/transform-videos/bindings/)
@@ -328,5 +328,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/bindings/#page","headline":"Bindings (env) · Cloudflare Workers docs","description":"Worker Bindings that allow for interaction with other Cloudflare Resources.","url":"https://developers.cloudflare.com/workers/runtime-apis/bindings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Bindings"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/bindings/#page","headline":"Bindings (env) · Cloudflare Workers docs","description":"Worker Bindings that allow for interaction with other Cloudflare Resources.","url":"https://developers.cloudflare.com/workers/runtime-apis/bindings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Bindings"]}
 ```

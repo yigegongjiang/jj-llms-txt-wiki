@@ -61,7 +61,7 @@ Protect your enterprise network with advanced firewall-as-a-service protection
 ## reference
 
 - [Cloudflare Network Firewall fields](https://developers.cloudflare.com/cloudflare-network-firewall/reference/network-firewall-fields/index.md): Fields available in Network Firewall rule expressions.
-- [Cloudflare Network Firewall functions](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#cloudflare-network-firewall-functionsindex.md): Functions available in Network Firewall rule expressions.
+- [Cloudflare Network Firewall functions](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/index.md#cloudflare-network-firewall-functions): Functions available in Network Firewall rule expressions.
 
 ## troubleshooting
 

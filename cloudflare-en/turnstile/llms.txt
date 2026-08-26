@@ -65,7 +65,7 @@ Turnstile is Cloudflare's smart CAPTCHA alternative
 - [Any Hostname (Enterprise only)](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/any-hostname/index.md): Allow Turnstile widgets on any hostname with Enterprise plans.
 - [Pre-clearance configuration](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/pre-clearance/index.md): Configure Pre-clearance to reduce repeated challenges for visitors.
 - [Remove Cloudflare branding with Offlabel](https://developers.cloudflare.com/turnstile/additional-configuration/offlabel/index.md): Remove Cloudflare branding from Turnstile widgets with Offlabel mode.
-- [Pre-clearance support](https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/#pre-clearance-support-in-turnstileindex.md): Issue clearance cookies to reduce repeated challenges for valid visitors.
+- [Pre-clearance support](https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/index.md#pre-clearance-support-in-turnstile): Issue clearance cookies to reduce repeated challenges for valid visitors.
 
 ## concepts
 
@@ -76,7 +76,7 @@ Turnstile is Cloudflare's smart CAPTCHA alternative
 
 - [Implement Turnstile with Google Firebase](https://developers.cloudflare.com/turnstile/extensions/google-firebase/index.md): Integrate Turnstile with Google Firebase for server-side validation.
 - [Pages Plugin](https://developers.cloudflare.com/pages/functions/plugins/turnstile/index.md): Add Turnstile to Cloudflare Pages with the Pages Plugin.
-- [Waiting Room Analytics](https://developers.cloudflare.com/waiting-room/waiting-room-analytics/#turnstile-widget-trafficindex.md): View Turnstile analytics for Waiting Room challenge events.
+- [Waiting Room Analytics](https://developers.cloudflare.com/waiting-room/waiting-room-analytics/index.md#turnstile-widget-traffic): View Turnstile analytics for Waiting Room challenge events.
 
 ## reference
 

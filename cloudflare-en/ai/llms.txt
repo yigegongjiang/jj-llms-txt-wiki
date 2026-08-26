@@ -24,6 +24,6 @@ Run AI models on Cloudflare's global network
 - [Browser Rendering](https://developers.cloudflare.com/browser-run/index.md): Control and interact with headless browser instances for AI data extraction using Browser Rendering.
 - [Cloudflare Agent](https://developers.cloudflare.com/agent-lee/index.md): Use Cloudflare Agent as an AI-powered assistant to navigate, configure, and manage Cloudflare.
 - [Dynamic Workers](https://developers.cloudflare.com/dynamic-workers/index.md): Spin up isolated Dynamic Workers on demand to execute AI-generated or untrusted code.
-- [Sandbox SDK](https://developers.cloudflare.com/sandbox-sdk/index.md): Build secure, isolated code execution environments with the Sandbox SDK.
+- [Sandbox SDK](https://developers.cloudflare.com/sandbox/index.md): Build secure, isolated code execution environments with the Sandbox SDK.
 - [Vectorize](https://developers.cloudflare.com/vectorize/index.md): Store, query, and manage high-dimensional vector databases for AI embeddings with Vectorize.
 - [Workers AI](https://developers.cloudflare.com/workers-ai/index.md): Run machine learning models on Cloudflare's GPU-powered serverless infrastructure.

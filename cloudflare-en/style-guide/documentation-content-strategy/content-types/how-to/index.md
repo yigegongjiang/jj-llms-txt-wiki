@@ -1,5 +1,5 @@
 ---
-description: Write task-oriented how-to documentation.
+description: Write task-oriented how-to documentation that guides a reader through completing a single task in a Cloudflare product.
 title: How to
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -12,27 +12,53 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How to
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-## Purpose
+A how-to explains how to complete a single task within a product. The tone is instructional and straightforward.
 
-The purpose of a how to is to explain how to complete a task within the product.
+## When to use it
 
-Note
+Use a how-to when the reader has already chosen a product and needs to complete one specific task within it. It is not:
 
-If you are unsure about when to categorize something as a how-to, tutorial, or solution guide, remember:
+* **A tutorial.** A tutorial teaches by building something and cannot fail the reader, whereas a how-to serves someone mid-task who already knows the goal.
+* **A concept.** If you find yourself explaining why the product works this way for more than a sentence, move it to a concept page and link to it.
 
-* A how-to helps a user who has already chosen a Cloudflare product complete a singular task within that product.
-* A tutorial guides a user who has already chosen a Cloudflare product through a goal or use case, and may involve multiple products.
-* A solution guide is for users who arrive with a goal or problem rather than a product name. It identifies which Cloudflare products apply and walks the user through configuring them together to achieve their goal.
+For the full comparison, refer to [Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/).
 
-If you are unsure which content type to use, refer to [How to select a content type](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/select-content-type/).
+## Title & description
 
-## Tone
+* **Title**: a short verb phrase in the second-person imperative. Do not use gerunds, bare nouns, or a "How to" prefix.
+* **Description**: start with a verb, name the Cloudflare product or feature, and state the task it accomplishes, then add a key detail or prerequisite.
 
-instructional, straightforward
+## Scaffold this page
 
-## content\_type
+Use the Nimbus how-to recipe to generate this page. Your coding agent pulls the full page skeleton and self-review checklist, then adapts them to your product:
+
+npmyarnpnpm
+
+```
+npx @cloudflare/nimbus-docs add content-how-to
+```
+
+```
+yarn @cloudflare/nimbus-docs add content-how-to
+```
+
+```
+pnpm @cloudflare/nimbus-docs add content-how-to
+```
+
+Adapt the frontmatter the recipe emits to Cloudflare's schema: set [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype) and `products` instead of the generic fields the recipe emits, such as `type`.
+
+## Component guidance
+
+* [**Steps**](https://developers.cloudflare.com/style-guide/build-the-page/components/steps/) are the signature structure: the Steps component or a plain ordered list, whichever you use, must read identically in the Markdown twin. If a page has no steps, question whether it is a how-to.
+* [**Tabs and code groups**](https://developers.cloudflare.com/style-guide/build-the-page/components/tabs/) carry variant axes such as language, platform, or CLI versus dashboard inside one canonical page. For alternative methods, pick the recommended one and link the rest, and never duplicate the page.
+* **Callouts** warn before a destructive step. A page drowning in exception callouts has the wrong happy path.
+* **End in a fixed order:** verification, then the irreversible closing step if there is one, then optional blocks, then Next steps. Never end on the last numbered step.
+* **Multi-procedure pages** number their section headings (`## 1.`, `## 2.`) so the sequence is unambiguous, and cap each phase at roughly ten steps.
+
+## Frontmatter
 
 ```yaml
 pcx_content_type: how-to
@@ -42,148 +68,13 @@ products:
   - product-c
 ```
 
-For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
+For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
 
-## Structure
+## Writing for AI and agents
 
-### Required components
-
-[**Title**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/): Short verb phrase in second-person imperative. Do not use gerund phrases.
-
-[**Steps**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/): Numbered steps that complete a task.
-
-[**Next steps**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/next-steps/): What users should see as the end result of the steps and/or actionable next steps.
-
-### Optional components
-
-[**Context**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/context/): An introductory paragraph on the following steps and what they will accomplish.
-
-Provide context to the reader that is not in the section heading.
-
-End with a colon or a period. Use a colon if it immediately precedes the steps. Use a period if there is more material (such as a note) between the context and the procedure.
-
-Do not provide context for steps with a partial sentence that is completed by the numbered steps.
-
-[**Prerequisites**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/prerequisites/): Tasks or conditions that must be completed before a user can complete a series of steps.
-
-[**Notes/warnings**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/notes-tips-warnings/)
-
-[**Examples**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/examples/)
-
-**Screenshots**
-
-[**Related links**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/links/): Bulleted list of links to associated resources.
-
-## Template
-
-Single procedure how-to
-
-```plaintext
-
----
-weight: xx
-pcx_content_type: how-to
-description: <Verb> <Cloudflare product or feature> to <what the task accomplishes>. <Key detail or prerequisite>.
-products:
-  - product-a
-  - product-b
-  - product-c
----
-
-# Second-person imperative verb phrase
-
-Context for procedure (optional)
-
-1. Step one
-1. Step two
-1. Step three
-1. ...
-
-Next steps sentence - what users should see as the end result and/or actionable next steps.
-```
-
-How-to with multiple procedures
-
-```plaintext
-
----
-weight: xx
-pcx_content_type: how-to
-description: <Verb> <Cloudflare product or feature> to <what the task accomplishes>. <Key detail or prerequisite>.
-products:
-  - product-a
-  - product-b
-  - product-c
----
-
-# Second-person imperative verb phrase
-
-Context for procedures on page (optional)
-
-## Second-person imperative verb phrase
-
-1. Step one
-1. Step two
-1. Step three
-1. ...
-
-Next steps sentence - what users should see as the end result and/or actionable next steps.
-
-## Second-person imperative verb phrase
-
-1. Step one
-1. Step two
-1. Step three
-1. ...
-
-Next steps sentence - what users should see as the end result and/or actionable next steps.
-```
-
-How-to with multiple procedures that must be completed in order
-
-```plaintext
-
----
-weight: xx
-pcx_content_type: how-to
-description: <Verb> <Cloudflare product or feature> to <what the task accomplishes>. <Key detail or prerequisite>.
-products:
-  - product-a
-  - product-b
-  - product-c
----
-
-# Second-person imperative verb phrase
-
-Context for procedures on page (optional)
-
-## 1. Second-person imperative verb phrase
-
-1. Step one
-1. Step two
-1. Step three
-1. ...
-
-Next steps sentence - what users should see as the end result and/or actionable next steps.
-
-## 2. Second-person imperative verb phrase
-
-1. Step one
-1. Step two
-1. Step three
-1. ...
-
-Next steps sentence - what users should see as the end result and/or actionable next steps.
-
-## 3. Second-person imperative verb phrase
-
-1. Step one
-1. Step two
-1. Step three
-1. ...
-
-Next steps sentence - what users should see as the end result and/or actionable next steps.
-```
+* **Self-contained steps.** Name the product area, the full command, and the exact label the reader selects, and never use a positional reference such as "as configured above."
+* **Literal output.** Keep expected output in fenced code blocks with complete, realistic values rather than truncated placeholders, because agents match on the literal text you show.
+* **Twin-safe steps.** When a step's only copy lives inside a tab or other component, make sure it survives as labeled text in the Markdown twin so conversion cannot drop it.
 
 Was this helpful?
 
@@ -194,5 +85,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/#page","headline":"How to · Cloudflare Style Guide","description":"Write task-oriented how-to documentation.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/#page","headline":"How to · Cloudflare Style Guide","description":"Write task-oriented how-to documentation that guides a reader through completing a single task in a Cloudflare product.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

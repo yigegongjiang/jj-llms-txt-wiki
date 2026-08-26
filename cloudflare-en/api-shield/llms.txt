@@ -26,15 +26,15 @@ Identify and address your API vulnerabilities
 - [Broken Object Level Authorization vulnerability detection](https://developers.cloudflare.com/api-shield/security/bola-vulnerability-detection/index.md): Detect endpoints at risk of Broken Object Level Authorization attacks.
 - [GraphQL malicious query protection](https://developers.cloudflare.com/api-shield/security/graphql-protection/index.md): Scan GraphQL traffic and block queries that could overload your origin.
 - [Configure GraphQL malicious query protection via the API](https://developers.cloudflare.com/api-shield/security/graphql-protection/api/index.md): Use the GraphQL API to configure query size and depth limits for your API.
-- [JSON Web Tokens validation](https://developers.cloudflare.com/api-shield/security/jwt-validation/index.md): Verify incoming JWTs to prevent replay attacks and token tampering at the edge.
-- [Configure JWT validation via the API](https://developers.cloudflare.com/api-shield/security/jwt-validation/api/index.md): Create token configurations and validation rules for JWT validation using the API.
+- [JSON Web Tokens validation](https://developers.cloudflare.com/api-shield/security/jwt-validation/index.md): Verify incoming JWTs to detect token tampering and invalid tokens at the edge.
+- [Configure JWT validation via the API](https://developers.cloudflare.com/api-shield/security/jwt-validation/api/index.md): Configure JWT validation and act on its results using the Cloudflare API.
 - [Configure the Worker](https://developers.cloudflare.com/api-shield/security/jwt-validation/jwt-worker/index.md): Use a Worker to keep your identity provider public keys updated for JWT validation.
 - [Enhance Transform Rules](https://developers.cloudflare.com/api-shield/security/jwt-validation/transform-rules/index.md): Forward verified JWT claims to your origin using Transform Rules.
 - [Mutual TLS (mTLS)](https://developers.cloudflare.com/api-shield/security/mtls/index.md): Require client certificates to authenticate API requests with mutual TLS.
 - [Bring your own CA](https://developers.cloudflare.com/ssl/client-certificates/byo-ca/index.md): Use your own certificate authority for mTLS client certificates.
 - [Configure mTLS](https://developers.cloudflare.com/api-shield/security/mtls/configure/index.md): Set up mTLS authentication rules to require client certificates for API hosts.
-- [Schema validation](https://developers.cloudflare.com/api-shield/security/schema-validation/index.md): Validate API requests against OpenAPI schemas to block malformed or unexpected traffic.
-- [Configure Schema validation via the API](https://developers.cloudflare.com/api-shield/security/schema-validation/api/index.md): Configure per-endpoint schema validation and mitigation actions using the API.
+- [Schema validation](https://developers.cloudflare.com/api-shield/security/schema-validation/index.md): Supply Schema Profiles through uploaded OpenAPI schemas.
+- [API configuration](https://developers.cloudflare.com/api-shield/security/schema-validation/api/index.md): Manage uploaded OpenAPI schemas with the Cloudflare API.
 - [Sequence Analytics](https://developers.cloudflare.com/api-shield/security/sequence-analytics/index.md): Track the order of API requests over time to discover user journeys and sequences.
 - [Sequence mitigation](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/index.md): Enforce expected API request patterns to detect and block malicious sequences.
 - [Configure sequence mitigation via the API](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/api/index.md): Build and configure sequence mitigation rules using the Cloudflare API.
@@ -60,11 +60,11 @@ Identify and address your API vulnerabilities
 - [API Routing](https://developers.cloudflare.com/api-shield/management-and-monitoring/api-routing/index.md): Route API requests to different back-end services using API Shield Routing.
 - [Build developer portals](https://developers.cloudflare.com/api-shield/management-and-monitoring/developer-portal/index.md): Create interactive API documentation portals from saved endpoints or schemas.
 - [Endpoint labeling service](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-labels/index.md): Organize API endpoints and address vulnerabilities with managed and custom labels.
-- [Endpoint Management](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/index.md): Promote, learn, and monitor API endpoints with API Shield and Web Assets.
-- [Schema learning](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/schema-learning/index.md): Automatically learn API schema parameters from traffic and export in OpenAPI format.
+- [Endpoint Management](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/index.md): Manage API operations through the Web Assets dashboard.
+- [Schema learning](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/schema-learning/index.md): Learn Schema Profiles from qualifying operation traffic.
 - [Session identifiers](https://developers.cloudflare.com/api-shield/management-and-monitoring/session-identifiers/index.md): Configure session identifiers to track authenticated API traffic per user.
 
 ## reference
 
 - [Classic Schema validation (deprecated)](https://developers.cloudflare.com/api-shield/reference/classic-schema-validation/index.md): Reference for the deprecated classic Schema validation feature in API Shield.
-- [Terraform](https://developers.cloudflare.com/api-shield/reference/terraform/index.md): Configure API Shield resources with Terraform, including endpoints and schemas.
+- [Terraform](https://developers.cloudflare.com/api-shield/reference/terraform/index.md): Configure API Shield operations and uploaded schemas.

@@ -1,5 +1,5 @@
 ---
-description: Write step-by-step tutorial documentation.
+description: Write tutorial documentation that teaches by guiding the reader through building one real project from start to finish.
 title: Tutorial
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -12,117 +12,75 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Tutorial
 
-Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-A tutorial is a practical lesson that takes you from a clear starting to ending point.
+A tutorial takes a newcomer from nothing to a working project, one visible result at a time, with the author carrying all of the responsibility. The tone is guiding, straightforward, educational, and authoritative.
 
-The goal is to connect products to real-world scenarios to meet a user’s goal.
+## When to use it
 
-Note
+Write a tutorial when competence requires assembling several of the product's pieces into one real project, the kind of value that shows only when features work together. It is the most expensive type to build and keep true, so reach for one deliberately. It is not:
 
-If you are unsure about when to categorize something as a how-to, tutorial, or solution guide, remember:
+* **A quickstart.** A quickstart proves the product works in minutes, whereas a tutorial builds competence through a meaningful project in about an hour.
+* **A how-to.** A how-to serves a competent reader who carries themselves, whereas a tutorial's reader knows nothing, so when something breaks it is the tutorial's fault.
+* **A concept course.** A tutorial teaches by doing rather than by explaining. Link the concept instead of unfolding it.
 
-* A how-to helps a user who has already chosen a Cloudflare product complete a singular task within that product.
-* A tutorial guides a user who has already chosen a Cloudflare product through a goal or use case, and may involve multiple products.
-* A solution guide is for users who arrive with a goal or problem rather than a product name. It identifies which Cloudflare products apply and walks the user through configuring them together to achieve their goal.
+For the full comparison, refer to [Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/). For a live example, refer to [Workers tutorials](https://developers.cloudflare.com/workers/tutorials/).
 
-If you are unsure which content type to use, refer to [How to select a content type](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/select-content-type/).
+## Title & description
 
-## Guidelines
+* **Title**: a short verb phrase in the second-person imperative, named by the outcome, such as "Build an order-notification service". Do not use "Learn ..." or "Tutorial 1".
+* **Description**: state what the reader will build and what they will be able to do afterward, then give an honest time estimate.
 
-**A tutorial is:**
+## Scaffold this page
 
-* For users who have already chosen a Cloudflare product to work with
-* User-focused
-* Aligned to a user's goal or job-to-be-done
-* Descriptive and guiding
+Use the Nimbus tutorial recipe to generate this page. Your coding agent pulls the full page skeleton and self-review checklist, then adapts them to your product:
 
-**A tutorial can:**
+npmyarnpnpm
 
-* Describe how to integrate with a third party
-* Be delivered in the Cloudflare dashboard
-* Describe how to set up multiple products to complete a single job-to-be-done
+```
+npx @cloudflare/nimbus-docs add content-tutorial
+```
 
-**A tutorial is not:**
+```
+yarn @cloudflare/nimbus-docs add content-tutorial
+```
 
-* Product configuration information, how-to (or any of the other content types)
-* How to complete a task in the UI or API
-* A dumping ground for screenshots
-* Content with no end goal or job-to-be-done
+```
+pnpm @cloudflare/nimbus-docs add content-tutorial
+```
 
-### Tone
+Adapt the frontmatter the recipe emits to Cloudflare's schema: set [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype) and `products` instead of the generic fields the recipe emits, such as `type`.
 
-Guiding, straightforward, educational, authoritative
+## Component guidance
 
-### content\_type
+* [**Steps**](https://developers.cloudflare.com/style-guide/build-the-page/components/steps/) or numbered `##` parts are the spine, and every part ends with the verbatim "You should see" output that proves it worked. Never skip one.
+* **Error-recovery prose** at the points readers actually stumble is happy-path content, not an exception callout, because in a tutorial an anticipated error is not an exception.
+* [**GitHubCode**](https://developers.cloudflare.com/style-guide/build-the-page/components/github-code/) and [**PackageManagers**](https://developers.cloudflare.com/style-guide/build-the-page/components/package-managers/) keep sample code and install commands pinned and in sync, and [**ListTutorials**](https://developers.cloudflare.com/style-guide/build-the-page/components/list-tutorials/) surfaces the tutorial in listings.
+* **What does not fit:** Tabs and options of any kind (the author already chose the one path, and per-stack means per-page), long conceptual asides (link out instead), and anything that hides steps.
+
+## Frontmatter
 
 ```yaml
 pcx_content_type: tutorial
+difficulty: Beginner
 products:
   - product-a
   - product-b
-  - product-c
 ```
 
-For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
+Set `difficulty` to Beginner, Intermediate, or Advanced, and stamp `reviewed` with the date you last ran the tutorial end to end. For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
 
-### Components
+## Keeping tutorials current
 
-#### Most used
+A tutorial is the most expensive type to keep true, because it must work for every reader, every time, on a cold machine, and a broken tutorial convinces a newcomer that the product itself is broken. Fewest and freshest wins, so one tested tutorial beats five stale ones. Pin every version the tutorial depends on, re-run it end to end on a clean environment each release, and stamp `reviewed` with that date.
 
-* [ListTutorials](https://developers.cloudflare.com/style-guide/components/list-tutorials/)
+* [ListTutorials](https://developers.cloudflare.com/style-guide/build-the-page/components/list-tutorials/)
 
-#### Required
+## Writing for AI and agents
 
-[**Title**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/): Short verb phrase in second-person imperative.
-
-**Context**: An introductory paragraph on the user's goal or job-to-be-done and how they will accomplish that in the tutorial. Consider including the intended audience for the tutorial. Refer to [Context](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/context/) for more information.
-
-**Consider the user story framing**: "As a `___`, I want to `___` so I can `___`."
-
-[**Steps**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/): Numbered steps that complete a task.
-
-#### Optional
-
-[**Notes/warnings**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/notes-tips-warnings/)
-
-[**Examples**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/examples/)
-
-**Screenshots**
-
-[**Links**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/links/)
-
-**Boundaries**
-
-## Template
-
-```plaintext
-
----
-pcx_content_type: tutorial
-title: Second-person imperative verb phrase
-products:
-  - <product>
-description: Build <what the tutorial produces> with <Cloudflare product>. Covers <key technologies or steps involved>.
-difficulty: Beginner
----
-
-# Second-person imperative verb phrase
-
-Context paragraph describing the user's goal and how the tutorial accomplishes it.
-
-## Prerequisites
-
-## 1. First step
-
-## 2. Second step
-
-## Next steps
-```
-
-## Examples
-
-[Workers Tutorials](https://developers.cloudflare.com/workers/tutorials)
+* **Self-contained parts.** Give every part a full-context heading, the full command, and the verbatim result, so a reader or agent landing mid-tutorial knows where they are, and never use a positional reference such as "as configured above."
+* **Literal output.** Keep every expected output in a fenced code block with complete, realistic values, because that "You should see" text is what agents and readers match against.
+* **Pinned versions.** Name and pin every version in the prerequisites, so the tutorial does not silently drift off the latest release.
 
 Was this helpful?
 
@@ -133,5 +91,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/#page","headline":"Tutorial · Cloudflare Style Guide","description":"Write step-by-step tutorial documentation.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/#page","headline":"Tutorial · Cloudflare Style Guide","description":"Write tutorial documentation that teaches by guiding the reader through building one real project from start to finish.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

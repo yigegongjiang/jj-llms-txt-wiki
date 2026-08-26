@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Check tunnel health in the dashboard
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/check-tunnel-health-dashboard/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/check-tunnel-health-dashboard/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Cloudflare dashboard monitors the health of all anycast tunnels on your account that route traffic from Cloudflare to your origin network.
 
@@ -27,10 +27,10 @@ Not all data centers are relevant to you at all times. You can refer to the **Tr
 ## Check tunnel health
 
 1. Go to the **Network health** page.
-[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health)
+[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health) 
 1. Select the **Connector health** tab.
 2. In this view you can access a list of your tunnels and their current health status. You can also check the amount of health checks passed in the last hour as well as traffic volume for each tunnel.
-3. Find the tunnel you want to inspect, select the three dots next to it, and select:
+3. Find the tunnel you want to inspect, select the three dots next to it, and select:  
   * **Create alert**: Opens the [notifications wizard](https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/configure-tunnel-health-alerts/) so you can create specific alerts for that tunnel when specific conditions are met.
   * **Network Analytics**: Opens the Analytics section of the dash, prefiltered with the tunnel you want to inspect.
 4. Alternatively, from the list of tunnels, select the tunnel you want to inspect to access details about it.
@@ -40,9 +40,9 @@ Not all data centers are relevant to you at all times. You can refer to the **Tr
 You can drill down into a specific tunnel to check its health status and other information.
 
 1. Go to the **Network health** page.
-[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health)
+[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health) 
 1. Select the **Connector health** tab.
-1. Find and select the tunnel you want to inspect.
+2. Find and select the tunnel you want to inspect.
 
 The next view displays detailed information about the tunnel, including:
 
@@ -83,5 +83,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/check-tunnel-health-dashboard/#page","headline":"Check tunnel health in the dashboard · Cloudflare WAN docs","description":"Check WAN tunnel health in the dashboard.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/check-tunnel-health-dashboard/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/check-tunnel-health-dashboard/#page","headline":"Check tunnel health in the dashboard · Cloudflare WAN docs","description":"Check WAN tunnel health in the dashboard.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/check-tunnel-health-dashboard/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

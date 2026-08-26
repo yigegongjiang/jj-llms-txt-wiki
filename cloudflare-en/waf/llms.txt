@@ -30,6 +30,12 @@ Filter incoming traffic and protect against web app vulnerabilities
 - [Prompt injection detection](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/prompt-injection/index.md): Detect prompt injection attacks targeting your AI endpoints.
 - [Token counting](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/token-counting/index.md): Count tokens in AI requests and responses for rate limiting.
 - [Unsafe and custom topic detection](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/unsafe-topics/index.md): Detect unsafe and custom topics in AI application traffic.
+- [Application Profiles](https://developers.cloudflare.com/waf/detections/application-profiles/index.md): Compare requests with application-specific expected structures.
+- [Analyze profile detections](https://developers.cloudflare.com/waf/detections/application-profiles/analyze-profile-detections/index.md): Investigate profile conformance and sampled violation details.
+- [Enforce profiles with Custom Rules](https://developers.cloudflare.com/waf/detections/application-profiles/enforce-profiles-with-custom-rules/index.md): Mitigate profile violations with scoped Custom Rules.
+- [Fields](https://developers.cloudflare.com/waf/detections/application-profiles/fields/index.md): Reference Schema Profile detection fields and usage.
+- [Get started](https://developers.cloudflare.com/waf/detections/application-profiles/get-started/index.md): Learn a Schema Profile and safely configure mitigation.
+- [Schema Profiles](https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/index.md): Understand learned and uploaded Schema Profile sources.
 - [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/index.md): Machine learning scores that classify each request for attack likelihood.
 - [Leaked credentials detection](https://developers.cloudflare.com/waf/detections/leaked-credentials/index.md): Scan incoming requests for usernames and passwords exposed in known data breaches.
 - [Common API calls](https://developers.cloudflare.com/waf/detections/leaked-credentials/api-calls/index.md): Manage leaked credentials detection rules and custom detections using the API.
@@ -117,7 +123,7 @@ Filter incoming traffic and protect against web app vulnerabilities
 - [Configure via API](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/configure-api/index.md): Configure the OWASP Core Ruleset using the API.
 - [Configure in the dashboard](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/configure-dashboard/index.md): Configure the OWASP Core Ruleset in the dashboard.
 - [OWASP evaluation example](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/example/index.md): Example of how OWASP paranoia level and score threshold interact.
-- [Configure in Terraform](https://developers.cloudflare.com/terraform/additional-configurations/waf-managed-rulesets/#configure-the-owasp-paranoia-level-score-threshold-and-actionindex.md): Configure the OWASP Core Ruleset using Terraform.
+- [Configure in Terraform](https://developers.cloudflare.com/terraform/additional-configurations/waf-managed-rulesets/index.md#configure-the-owasp-paranoia-level-score-threshold-and-action): Configure the OWASP Core Ruleset using Terraform.
 - [Cloudflare Sensitive Data Detection](https://developers.cloudflare.com/waf/managed-rules/reference/sensitive-data-detection/index.md): Detect sensitive data like credit card numbers in HTTP responses.
 - [Troubleshoot managed rules](https://developers.cloudflare.com/waf/managed-rules/troubleshooting/index.md): Troubleshoot WAF managed rules false positives and configuration issues.
 - [Create exceptions](https://developers.cloudflare.com/waf/managed-rules/waf-exceptions/index.md): Skip WAF managed rules for specific requests with exceptions.
@@ -130,16 +136,16 @@ Filter incoming traffic and protect against web app vulnerabilities
 - [Custom rulesets (account level)](https://developers.cloudflare.com/waf/account/custom-rulesets/index.md): Create custom rulesets at the account level and deploy them to multiple zones.
 - [Create a custom ruleset using the API](https://developers.cloudflare.com/waf/account/custom-rulesets/create-api/index.md): Create account-level custom rulesets using the Rulesets API.
 - [Work with custom rulesets in the dashboard](https://developers.cloudflare.com/waf/account/custom-rulesets/create-dashboard/index.md): Create and manage account-level custom rulesets in the dashboard.
-- [Use Terraform](https://developers.cloudflare.com/terraform/additional-configurations/waf-custom-rules/#create-and-deploy-a-custom-rulesetindex.md): Create account-level custom rulesets using Terraform.
+- [Use Terraform](https://developers.cloudflare.com/terraform/additional-configurations/waf-custom-rules/index.md#create-and-deploy-a-custom-ruleset): Create account-level custom rulesets using Terraform.
 - [Managed rulesets](https://developers.cloudflare.com/waf/account/managed-rulesets/index.md): Deploy and manage WAF managed rulesets at the account level.
 - [Deploy a WAF managed ruleset via API (account)](https://developers.cloudflare.com/waf/account/managed-rulesets/deploy-api/index.md): Deploy WAF managed rulesets at the account level using the API.
 - [Deploy a WAF managed ruleset in the dashboard (account)](https://developers.cloudflare.com/waf/account/managed-rulesets/deploy-dashboard/index.md): Deploy WAF managed rulesets at the account level in the dashboard.
 - [Create exceptions](https://developers.cloudflare.com/waf/managed-rules/waf-exceptions/index.md): Create exceptions for account-level WAF managed rulesets.
-- [Deploy using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/waf-managed-rulesets/#deploy-managed-rulesets-at-the-account-levelindex.md): Deploy account-level WAF managed rulesets using Terraform.
+- [Deploy using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/waf-managed-rulesets/index.md#deploy-managed-rulesets-at-the-account-level): Deploy account-level WAF managed rulesets using Terraform.
 - [Rate limiting rulesets](https://developers.cloudflare.com/waf/account/rate-limiting-rulesets/index.md): Create rate limiting rulesets at the account level for multiple Enterprise zones.
 - [Create a rate limiting ruleset via API](https://developers.cloudflare.com/waf/account/rate-limiting-rulesets/create-api/index.md): Create account-level rate limiting rulesets using the API.
 - [Create a rate limiting ruleset in the dashboard](https://developers.cloudflare.com/waf/account/rate-limiting-rulesets/create-dashboard/index.md): Create account-level rate limiting rulesets in the dashboard.
-- [Create using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/rate-limiting-rules/#create-a-rate-limiting-rule-at-the-account-levelindex.md): Create account-level rate limiting rulesets using Terraform.
+- [Create using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/rate-limiting-rules/index.md#create-a-rate-limiting-rule-at-the-account-level): Create account-level rate limiting rulesets using Terraform.
 
 ## Security features interoperability
 
@@ -187,7 +193,7 @@ Filter incoming traffic and protect against web app vulnerabilities
 - [Lists](https://developers.cloudflare.com/waf/tools/lists/index.md): Use lists to reference groups of items in rule expressions.
 - [Create a list in the dashboard](https://developers.cloudflare.com/waf/tools/lists/create-dashboard/index.md): Create and manage lists in the Cloudflare dashboard.
 - [Custom lists](https://developers.cloudflare.com/waf/tools/lists/custom-lists/index.md): Create custom lists of IPs, hostnames, or ASNs for use in rules.
-- [Bulk Redirect Lists](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/#bulk-redirect-listsindex.md): Manage Bulk Redirect Lists for URL forwarding.
+- [Bulk Redirect Lists](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/index.md#bulk-redirect-lists): Manage Bulk Redirect Lists for URL forwarding.
 - [Lists API](https://developers.cloudflare.com/waf/tools/lists/lists-api/index.md): Manage lists programmatically with the Lists API.
 - [Lists API endpoints](https://developers.cloudflare.com/waf/tools/lists/lists-api/endpoints/index.md): API endpoints for managing lists and list items.
 - [List JSON object](https://developers.cloudflare.com/waf/tools/lists/lists-api/json-object/index.md): Reference information on the JSON object used in Lists API calls.

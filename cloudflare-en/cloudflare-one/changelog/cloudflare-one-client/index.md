@@ -18,6 +18,92 @@ Review recent changes to the Cloudflare One Client (formerly WARP).
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/cloudflare-one-client.xml)
 
+## 2026-08-19
+
+  
+**Cloudflare One Client for Windows (version 2026.7.1343.0)**  
+
+A new GA release for the Windows Cloudflare One Client is now available on the [stable releases downloads page](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/).
+
+This release introduces multiple features from our previous beta release into stable release, including:
+
+* When reauthentication is needed for any reason, the notifications are clearer and reduce the actions needed to get you back to work by redirecting to the browser for authentication instead of the app window when necessary.
+* When a network is blocking or otherwise not supportive of HTTP/3, the client will learn and adapt by switching the order of fallback for that network by starting with HTTP/2 first and then trying HTTP/3 if needed. This reduces delays in time to connectivity when joining older or heavily filtered networks.
+
+**Additional changes and improvements**
+
+* Fixed a process leak in the Windows GUI that could exhaust system resources during IPC client-creation failures.
+* Fixed being unable to switch organizations when the client was stuck in the "Device not in organization" state.
+* Fixed an issue where Microsoft Defender would falsely flag the Cloudflare One Client installation as malicious when installing with Intune.
+* Made the Windows domain-joined posture check more reliable.
+* A DNS search domain parsing failure no longer prevents connection.
+* Cloud icon now correctly reflects actual connection status instead of showing disconnected while fully connected.
+* Fixed missing certificate error display due to a race condition.
+* Fixed empty black window after transitioning from docked dual displays to undocked/internal display.
+
+**Known issues**
+
+* If a user upgrades to version 2026.7.1343.0, downgrades to an earlier version, re-registers, and then upgrades back to 2026.7.1343.0, the client might fail to connect or switch organizations. To resolve this issue, run `warp-cli registration delete` or `warp-cli registration delete-all`.
+
+For Zero Trust documentation please see: <https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/>  
+For Consumer documentation please see: <https://developers.cloudflare.com/warp-client/>
+
+## 2026-08-19
+
+  
+**Cloudflare One Client for macOS (version 2026.7.1343.0)**  
+
+A new GA release for the macOS Cloudflare One Client is now available on the [stable releases downloads page](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/).
+
+This release introduces multiple features from our previous beta release into stable release, including:
+
+* When reauthentication is needed for any reason, the notifications are clearer and reduce the actions needed to get you back to work by redirecting to the browser for authentication instead of the app window when necessary.
+* When a network is blocking or otherwise not supportive of HTTP/3, the client will learn and adapt by switching the order of fallback for that network by starting with HTTP/2 first and then trying HTTP/3 if needed. This reduces delays in time to connectivity when joining older or heavily filtered networks.
+
+**Additional changes and improvements**
+
+* Fixed the client not allowing login to another organization when currently showing "Device not in organization."
+* A DNS search domain parsing failure no longer prevents connection.
+* Cloud icon now correctly reflects actual connection status instead of showing disconnected while fully connected.
+* Fixed missing certificate error display due to a race condition.
+* Fixed crash when trying to connect to captive portal on Wi-Fi.
+* Fixed empty black window after transitioning from docked dual displays to undocked/internal display.
+
+**Known issues**
+
+* None
+
+For Zero Trust documentation please see: <https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/>  
+For Consumer documentation please see: <https://developers.cloudflare.com/warp-client/>
+
+## 2026-08-19
+
+  
+**Cloudflare One Client for Linux (version 2026.7.1343.0)**  
+
+A new GA release for the Linux Cloudflare One Client is now available on the [stable releases downloads page](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/).
+
+This release introduces multiple features from our previous beta release into stable release, including:
+
+* When reauthentication is needed for any reason, the notifications are clearer and reduce the actions needed to get you back to work by redirecting to the browser for authentication instead of the app window when necessary.
+* When a network is blocking or otherwise not supportive of HTTP/3, the client will learn and adapt by switching the order of fallback for that network by starting with HTTP/2 first and then trying HTTP/3 if needed. This reduces delays in time to connectivity when joining older or heavily filtered networks.
+
+**Additional changes and improvements**
+
+* Fixed the client not allowing login to another organization when currently showing "Device not in organization."
+* A DNS search domain parsing failure no longer prevents connection.
+* Cloud icon now correctly reflects actual connection status instead of showing disconnected while fully connected.
+* Fixed missing certificate error display due to a race condition.
+* Fixed empty black window after transitioning from docked dual displays to undocked/internal display.
+* Fixed hostname routes not working for Cloudflare Mesh when the IP addresses of the hostnames are local addresses.
+
+**Known issues**
+
+* When in DNS Only mode, the client may send DNS queries for names that are configured for Local Domain Fallback to the encrypted DNS server instead of falling back to the system configuration. Local Domain Fallback works as expected in other client modes.
+
+For Zero Trust documentation please see: <https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/>  
+For Consumer documentation please see: <https://developers.cloudflare.com/warp-client/>
+
 ## 2026-08-10
 
   
@@ -1169,101 +1255,6 @@ This release contains minor fixes and improvements including enhancements to [Pr
 
 We're excited to share a new AI feature, the [WARP diagnostic analyzer ↗](https://blog.cloudflare.com/ai-troubleshoot-warp-and-network-connectivity-issues/), to help you troubleshoot and resolve WARP connectivity issues faster. This beta feature is now available in the [Cloudflare One dashboard ↗](https://dash.cloudflare.com/one/) to all users. The AI analyzer makes it easier for you to identify the root cause of client connectivity issues by parsing [remote captures](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/client-packet-capture/#start-a-remote-capture) of [WARP diagnostic logs](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/troubleshooting/diagnostic-logs/#warp-diag-logs). The WARP diagnostic analyzer provides a summary of impact that may be experienced on the device, lists notable events that may contribute to performance issues, and recommended troubleshooting steps and articles to help you resolve these issues. Refer to [WARP diagnostics analyzer (beta)](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/client-packet-capture/#diagnostics-analyzer-beta) to learn more about how to maximize using the WARP diagnostic analyzer to troubleshoot the WARP client.
 
-## 2025-08-21
-
-  
-**WARP client for Windows (version 2025.6.1400.0)**  
-
-A new GA release for the Windows WARP client is now available on the [stable releases downloads page](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/).
-
-This release contains a hotfix for pre-login for multi-user for the 2025.6.1135.0 release.
-
-**Changes and improvements**
-
-* Fixes an issue where new pre-login registrations were not being properly created.
-
-**Known issues**
-
-* For Windows 11 24H2 users, Microsoft has confirmed a regression that may lead to performance issues like mouse lag, audio cracking, or other slowdowns. Cloudflare recommends users experiencing these issues upgrade to a minimum [Windows 11 24H2 KB5062553](https://support.microsoft.com/topic/july-8-2025-kb5062553-os-build-26100-4652-523e69cb-051b-43c6-8376-6a76d6caeefd) or higher for resolution.
-* Devices using WARP client 2025.4.929.0 and up may experience Local Domain Fallback failures if a fallback server has not been configured. To configure a fallback server, refer to [Route traffic to fallback server](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/local-domains/#route-traffic-to-fallback-server).
-* Devices with KB5055523 installed may receive a warning about Win32/ClickFix.ABA being present in the installer. To resolve this false positive, update Microsoft Security Intelligence to [version 1.429.19.0](https://www.microsoft.com/wdsi/definitions/antimalware-definition-release-notes?requestVersion=1.429.19.0) or later.
-* DNS resolution may be broken when the following conditions are all true:
-
-  * WARP is in Secure Web Gateway without DNS filtering (tunnel-only) mode.
-  * A custom DNS server address is configured on the primary network adapter.
-  * The custom DNS server address on the primary network adapter is changed while WARP is connected.  
-To work around this issue, please reconnect the WARP client by toggling off and back on.
-
-## 2025-08-19
-
-  
-**WARP client for Windows (version 2025.6.1335.0)**  
-
-A new GA release for the Windows WARP client is now available on the [stable releases downloads page](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/).
-
-This release contains minor fixes and improvements.
-
-**Changes and improvements**
-
-* Improvements to better manage multi-user pre-login registrations.
-* Fixed an issue preventing devices from reaching split-tunneled traffic even when WARP was disconnected.
-* Fix to prevent WARP from re-enabling its firewall rules after a user-initiated disconnect.
-* Improvement for faster client connectivity on high-latency captive portal networks.
-* Fixed an issue where recursive CNAME records could cause intermittent WARP connectivity issues.
-
-**Known issues**
-
-* For Windows 11 24H2 users, Microsoft has confirmed a regression that may lead to performance issues like mouse lag, audio cracking, or other slowdowns. Cloudflare recommends users experiencing these issues upgrade to a minimum [Windows 11 24H2 version KB5062553](https://support.microsoft.com/en-us/topic/july-8-2025-kb5062553-os-build-26100-4652-523e69cb-051b-43c6-8376-6a76d6caeefd) or higher for resolution.
-* Devices using WARP client 2025.4.929.0 and up may experience Local Domain Fallback failures if a fallback server has not been configured. To configure a fallback server, refer to [Route traffic to fallback server](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/local-domains/#route-traffic-to-fallback-server).
-* Devices with KB5055523 installed may receive a warning about `Win32/ClickFix.ABA` being present in the installer. To resolve this false positive, update Microsoft Security Intelligence to [version 1.429.19.0](https://www.microsoft.com/en-us/wdsi/definitions/antimalware-definition-release-notes?requestVersion=1.429.19.0) or later.
-* DNS resolution may be broken when the following conditions are all true:
-
-  * WARP is in Secure Web Gateway without DNS filtering (tunnel-only) mode.
-  * A custom DNS server address is configured on the primary network adapter.
-  * The custom DNS server address on the primary network adapter is changed while WARP is connected.  
-To work around this issue, reconnect the WARP client by toggling off and back on.
-
-## 2025-08-19
-
-  
-**WARP client for macOS (version 2025.6.1335.0)**  
-
-A new GA release for the macOS WARP client is now available on the [stable releases downloads page](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/).
-
-This release contains minor fixes and improvements.
-
-**Changes and improvements**
-
-* Fixed an issue preventing devices from reaching split-tunneled traffic even when WARP was disconnected.
-* Fix to prevent WARP from re-enabling its firewall rules after a user-initiated disconnect.
-* Improvement for faster client connectivity on high-latency captive portal networks.
-* Fixed an issue where recursive CNAME records could cause intermittent WARP connectivity issues.
-
-**Known issues**
-
-* macOS Sequoia: Due to changes Apple introduced in macOS 15.0.x, the WARP client may not behave as expected. Cloudflare recommends the use of macOS 15.4 or later.
-* Devices using WARP client 2025.4.929.0 and up may experience Local Domain Fallback failures if a fallback server has not been configured. To configure a fallback server, refer to [Route traffic to fallback server](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/local-domains/#route-traffic-to-fallback-server).
-
-## 2025-08-19
-
-  
-**WARP client for Linux (version 2025.6.1335.0)**  
-
-A new GA release for the Linux WARP client is now available on the [stable releases downloads page](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/).
-
-This release contains minor fixes and improvements.
-
-**Changes and improvements**
-
-* Fixed an issue preventing devices from reaching split-tunneled traffic even when WARP was disconnected.
-* Fix to prevent WARP from re-enabling its firewall rules after a user-initiated disconnect.
-* Improvement for faster client connectivity on high-latency captive portal networks.
-* Fixed an issue where recursive CNAME records could cause intermittent WARP connectivity issues.
-
-**Known issues**
-
-* Devices using WARP client 2025.4.929.0 and up may experience Local Domain Fallback failures if a fallback server has not been configured. To configure a fallback server, refer to [Route traffic to fallback server](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/local-domains/#route-traffic-to-fallback-server).
-
 ## 2025-06-30
 
   
@@ -1356,5 +1347,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/cloudflare-one/changelog/cloudflare-one-client/#page","headline":"Cloudflare One Client Changelog · Cloudflare One docs","description":"Review recent changes to the Cloudflare One Client.","url":"https://developers.cloudflare.com/cloudflare-one/changelog/cloudflare-one-client/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/cloudflare-one/changelog/cloudflare-one-client/#page","headline":"Cloudflare One Client Changelog · Cloudflare One docs","description":"Review recent changes to the Cloudflare One Client.","url":"https://developers.cloudflare.com/cloudflare-one/changelog/cloudflare-one-client/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

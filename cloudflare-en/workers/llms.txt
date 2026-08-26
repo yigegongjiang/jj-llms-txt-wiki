@@ -179,15 +179,15 @@ Build, deploy, and scale serverless applications globally with low latency and m
 
 - [Runtime APIs](https://developers.cloudflare.com/workers/runtime-apis/index.md): Explore the JavaScript and web platform APIs available in the Cloudflare Workers runtime.
 - [Bindings (env)](https://developers.cloudflare.com/workers/runtime-apis/bindings/index.md): Worker Bindings that allow for interaction with other Cloudflare Resources.
-- [AI](https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/#2-connect-your-worker-to-workers-aiindex.md): Run generative AI inference and machine learning models on GPUs, without managing servers or infrastructure.
-- [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engineindex.md): Write high-cardinality data and metrics at scale, directly from Workers.
+- [AI](https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/index.md#2-connect-your-worker-to-workers-ai): Run generative AI inference and machine learning models on GPUs, without managing servers or infrastructure.
+- [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/index.md): Write high-cardinality data and metrics at scale, directly from Workers.
 - [Assets](https://developers.cloudflare.com/workers/static-assets/binding/index.md): APIs available in Cloudflare Workers to interact with a collection of static assets. Static assets can be uploaded as part of your Worker.
 - [Browser Run](https://developers.cloudflare.com/browser-run/index.md): Programmatically control and interact with a headless browser instance.
 - [D1](https://developers.cloudflare.com/d1/worker-api/index.md): APIs available in Cloudflare Workers to interact with D1.  D1 is Cloudflare's native serverless database.
 - [Dispatcher (Workers for Platforms)](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/dynamic-dispatch/index.md): Let your customers deploy their own code to your platform, and dynamically dispatch requests from your Worker to their Worker.
 - [Durable Objects](https://developers.cloudflare.com/durable-objects/api/index.md): A globally distributed coordination API with strongly consistent storage.
 - [Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/index.md): Add string and JSON values to your Worker.
-- [Hyperdrive](https://developers.cloudflare.com/hyperdriveindex.md): Connect to your existing database from Workers, turning your existing regional database into a globally distributed database.
+- [Hyperdrive](https://developers.cloudflare.com/hyperdrive/index.md): Connect to your existing database from Workers, turning your existing regional database into a globally distributed database.
 - [Images](https://developers.cloudflare.com/images/optimization/binding/index.md): Store, transform, optimize, and deliver images at scale.
 - [KV](https://developers.cloudflare.com/kv/api/index.md): Global, low-latency, key-value data storage.
 - [Media Transformations](https://developers.cloudflare.com/stream/transform-videos/bindings/index.md): Optimize, transform, and extract from short-form video.
@@ -215,7 +215,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Alarm Handler](https://developers.cloudflare.com/durable-objects/api/alarms/index.md): Handle scheduled alarms in Cloudflare Workers using the Durable Objects alarm API.
 - [Email Handler](https://developers.cloudflare.com/email-service/api/route-emails/email-handler/index.md): Process incoming emails in Cloudflare Workers using the Email Routing runtime API.
 - [Fetch Handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/index.md): Handle incoming HTTP requests in Cloudflare Workers using the fetch() handler and return responses.
-- [Queue Handler](https://developers.cloudflare.com/queues/configuration/javascript-apis/#consumerindex.md): Consume messages from Cloudflare Queues using the queue handler in Workers.
+- [Queue Handler](https://developers.cloudflare.com/queues/configuration/javascript-apis/index.md#consumer): Consume messages from Cloudflare Queues using the queue handler in Workers.
 - [Scheduled Handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/index.md): Run Workers on a recurring schedule using the scheduled() handler and Cron Triggers.
 - [Tail Handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/tail/index.md): Process real-time logs from producer Workers using the tail() handler in Tail Workers.
 - [Headers](https://developers.cloudflare.com/workers/runtime-apis/headers/index.md): Access HTTP request and response headers.
@@ -279,7 +279,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Migrate from Netlify to Workers](https://developers.cloudflare.com/workers/static-assets/migration-guides/netlify-to-workers/index.md): Migrate your Netlify application to Cloudflare Workers. You should already have an existing project deployed on Netlified that you would like to host on Workers.
 - [Migrate from Vercel to Workers](https://developers.cloudflare.com/workers/static-assets/migration-guides/vercel-to-workers/index.md): Migrate your Vercel application to Cloudflare Workers. You should already have an existing project deployed on Vercel that you would like to host on Workers.
 - [Redirects](https://developers.cloudflare.com/workers/static-assets/redirects/index.md): Configure redirect rules for Workers static assets using a _redirects file.
-- [Gradual rollouts](https://developers.cloudflare.com/workers/versions-and-deployments/gradual-deployments/version-affinity/#static-assetsindex.md): Prevent asset mismatches during gradual Worker deployments with static assets.
+- [Gradual rollouts](https://developers.cloudflare.com/workers/versions-and-deployments/gradual-deployments/version-affinity/index.md#static-assets): Prevent asset mismatches during gradual Worker deployments with static assets.
 - [HTML handling](https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/index.md): How to configure a HTML handling and trailing slashes for the static assets of your Worker.
 - [Serving a subdirectory](https://developers.cloudflare.com/workers/static-assets/routing/advanced/serving-a-subdirectory/index.md): How to configure a Worker with static assets on a subpath.
 - [Full-stack application](https://developers.cloudflare.com/workers/static-assets/routing/full-stack-application/index.md): How to configure and use a full-stack application with Workers.
@@ -352,6 +352,8 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Migrate from Miniflare 2's test environments](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/index.md): Migrate from [Miniflare 2](https://github.com/cloudflare/miniflare?tab=readme-ov-file) to the Workers Vitest integration.
 - [Migrate from unstable_dev](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-unstable-dev/index.md): Migrate from the unstable_dev API to writing tests with the Workers Vitest integration.
 - [Migrate from Vitest 3 to Vitest 4](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-vitest-3-to-vitest-4/index.md): Migrate the Workers Vitest integration from v0.12.x (Vitest 3) to v0.13.x (Vitest 4), covering configuration and test file changes.
+- [Migrate to Vitest plugin](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-to-vitest-plugin/index.md): Migrate from @cloudflare/vitest-pool-workers to @cloudflare/vitest-plugin.
+- [Mock outbound requests](https://developers.cloudflare.com/workers/testing/vitest-integration/mock-outbound-requests/index.md): Mock outbound HTTP and WebSocket requests when testing Workers with the Vitest plugin.
 - [Recipes and examples](https://developers.cloudflare.com/workers/testing/vitest-integration/recipes/index.md): Examples that demonstrate how to write unit and integration tests with the Workers Vitest integration.
 - [Test APIs](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/index.md): Runtime helpers for writing tests, exported from `cloudflare:workers` and `cloudflare:test`.
 - [Write your first test](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/index.md): Write tests against Workers using Vitest
@@ -375,7 +377,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 
 - [Languages](https://developers.cloudflare.com/workers/languages/index.md): Languages supported on Workers, a polyglot platform.
 - [JavaScript](https://developers.cloudflare.com/workers/languages/javascript/index.md): Write Cloudflare Workers using JavaScript standards and web platform APIs.
-- [Examples](https://developers.cloudflare.com/workers/examples/?languages=JavaScriptindex.md): Browse JavaScript code examples for Cloudflare Workers.
+- [Examples](https://developers.cloudflare.com/workers/examples/?languages=JavaScript/index.md): Browse JavaScript code examples for Cloudflare Workers.
 - [Python Workers](https://developers.cloudflare.com/workers/languages/python/index.md): Write Workers in 100% Python
 - [The Basics](https://developers.cloudflare.com/workers/languages/python/basics/index.md): Learn the basics of Python Workers
 - [Examples](https://developers.cloudflare.com/workers/languages/python/examples/index.md): Python code examples demonstrating modules, bindings, and SDK usage in Workers.
@@ -388,7 +390,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Rust](https://developers.cloudflare.com/workers/languages/rust/index.md): Write Workers in 100% Rust using the [`workers-rs` crate](https://github.com/cloudflare/workers-rs)
 - [Supported crates](https://developers.cloudflare.com/workers/languages/rust/crates/index.md): Popular Rust crates confirmed to compile to WebAssembly and run on Cloudflare Workers.
 - [TypeScript](https://developers.cloudflare.com/workers/languages/typescript/index.md): Use TypeScript with fully typed APIs to build Cloudflare Workers.
-- [Examples](https://developers.cloudflare.com/workers/examples/?languages=TypeScriptindex.md): Browse TypeScript code examples for Cloudflare Workers.
+- [Examples](https://developers.cloudflare.com/workers/examples/?languages=TypeScript/index.md): Browse TypeScript code examples for Cloudflare Workers.
 
 ## Glossary
 
@@ -432,7 +434,8 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Qwik](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/qwik/index.md): Create a Qwik application and deploy it to Cloudflare Workers with Workers Assets.
 - [Solid](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/solid/index.md): Create a Solid application and deploy it to Cloudflare Workers with Workers Assets.
 - [Waku](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/waku/index.md): Create a Waku application and deploy it to Cloudflare Workers with Workers Assets.
-- [Next.js](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/index.md): Create an Next.js application and deploy it to Cloudflare Workers with Workers Assets.
+- [Next.js](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/index.md): Create a Next.js application with vinext and deploy it to Cloudflare Workers.
+- [OpenNext adapter](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/index.md): Deploy a Next.js application to Cloudflare Workers with the OpenNext adapter.
 - [React + Vite](https://developers.cloudflare.com/workers/framework-guides/web-apps/react/index.md): Create a React application and deploy it to Cloudflare Workers with Workers Assets.
 - [React Router (formerly Remix)](https://developers.cloudflare.com/workers/framework-guides/web-apps/react-router/index.md): Create a React Router application and deploy it to Cloudflare Workers
 - [RedwoodSDK](https://developers.cloudflare.com/workers/framework-guides/web-apps/redwoodsdk/index.md): Create a RedwoodSDK application and deploy it to Cloudflare Workers.

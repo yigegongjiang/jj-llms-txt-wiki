@@ -1,5 +1,5 @@
 ---
-description: Write reference architecture documentation.
+description: Write reference architecture documentation that shows how Cloudflare products fit a customer's infrastructure and maps use cases to solutions.
 title: Reference architecture
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -12,119 +12,89 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Reference architecture
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-## Purpose
+A reference architecture is a high-level design document that shows how Cloudflare products fit into a customer's existing infrastructure and maps their use cases to Cloudflare solutions. The tone is guiding and straightforward.
 
-The purpose of a [reference architecture](https://developers.cloudflare.com/reference-architecture/) is to provide a high-level view of how all or part of the Cloudflare platform is built and how Cloudflare products would fit into a customer's existing infrastructure. Reference architectures are designed to show where our platform fits in with a customer's current environment and describe key aspects of a Cloudflare feature/service. Reference architectures should also map customer use cases to Cloudflare solutions.
+This page covers how to write one. For the published architectures themselves, refer to [Reference architectures](https://developers.cloudflare.com/reference-architecture/).
 
-Reference architectures are typically very detailed. To describe a single architecture without much written content, use a [Reference architecture diagram](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture-diagram/).
+## When to use it
 
-Disambiguation
+Write a reference architecture when you need to show, at the design level, how several Cloudflare products combine to fit a customer's environment and use cases. These documents are typically detailed. It is not:
 
-This page describes the content strategy for a reference architecture. For help with Cloudflare products, refer to [Reference architectures](https://developers.cloudflare.com/reference-architecture/).
+* **A concept.** A concept explains one idea in depth, whereas a reference architecture shows how multiple products fit together in a real environment.
+* **A how-to.** A reference architecture describes and designs rather than giving procedural steps.
 
-## Tone
+For a single architecture that needs little written explanation, use a [reference architecture diagram](#reference-architecture-diagrams) instead. For the full comparison, refer to [Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/). For live examples, refer to [Cloudflare Load Balancing Reference Architecture](https://developers.cloudflare.com/reference-architecture/architectures/load-balancing/), [Magic Transit Reference Architecture](https://developers.cloudflare.com/reference-architecture/architectures/magic-transit/), and [Evolving to a SASE architecture with Cloudflare](https://developers.cloudflare.com/reference-architecture/architectures/sase/).
 
-guiding, straightforward
+## Title & description
 
-## content\_type
+* **Title**: a noun phrase naming the architecture or solution, such as "Cloudflare Load Balancing Reference Architecture".
+* **Description**: name the solution and the products, say how they fit into existing infrastructure and for which use case, and name the intended audience, such as IT and security professionals.
+
+## Scaffold this page
+
+Copy this skeleton and adapt it to your architecture:
+
+```plaintext
+---
+title: <Noun phrase naming the architecture or solution>
+description: How <products> fit <infrastructure> for <use case>, written for <the intended audience>.
+pcx_content_type: reference-architecture
+sidebar:
+  order: 10
+products:
+  - product-a
+---
+
+Open with two or three paragraphs on the subject matter, then state who the document is for and what they will learn.
+
+## <Architecture area>
+
+Present the reference diagram with numbered callouts, and explain each element in prose so the meaning survives without the image.
+
+## <Use case to solution>
+
+Map the customer use case to the Cloudflare solution, and flag any caveats that affect how the architecture applies.
+
+## Related links
+
+Link the supporting how-tos, concepts, and product documentation with current routes.
+```
+
+## Component guidance
+
+* **Diagrams** are the signature component: a single reference diagram reflects the overall architecture, with captions and numbered callouts explaining each element, and supporting diagrams develop specific parts.
+* **Introduction and intended audience** open the document in prose, with two or three paragraphs on the subject matter followed by who it is for and what they will learn.
+* **Notes and warnings** flag caveats that affect how the architecture applies.
+* [**PublicStats**](https://developers.cloudflare.com/style-guide/build-the-page/components/public-stats/) surfaces Cloudflare network statistics where they strengthen the case for the architecture.
+* **What does not fit:** procedural steps, because a reference architecture designs rather than instructs. Link a how-to for implementation.
+
+## Frontmatter
 
 ```yaml
 pcx_content_type: reference-architecture
 products:
   - product-a
   - product-b
-  - product-c
 ```
 
-For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
+For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
 
-## Examples
+## Reference architecture diagrams
 
-[Cloudflare Load Balancing Reference Architecture](https://developers.cloudflare.com/reference-architecture/architectures/load-balancing/)
+A reference architecture diagram is the lighter variant: a single diagram with numbered callouts and just enough text to explain it, for a solution that does not need a full written architecture. The tone is instructional and straightforward.
 
-[Magic Transit Reference Architecture](https://developers.cloudflare.com/reference-architecture/architectures/magic-transit/)
+* **When to use it**: reach for it when one diagram carries the solution and needs little written explanation. Choose a full reference architecture when the design needs detailed discussion.
+* **Title**: a noun phrase, as for a full reference architecture.
+* **Structure**: a single reference diagram, numbered callouts that explain each element, a short description of what the diagram relates to, and related links to supporting content.
+* **Frontmatter**: set `pcx_content_type` to `reference-architecture-diagram`.
 
-[Evolving to a SASE architecture with Cloudflare](https://developers.cloudflare.com/reference-architecture/architectures/sase/)
+## Writing for AI and agents
 
-## Components
-
-### Most used
-
-* [PublicStats](https://developers.cloudflare.com/style-guide/components/public-stats/):  
-The `PublicStats` component allows you to reference specific values about Cloudflare's network without maintaining those values in multiple files.
-* [Diagrams](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/diagrams/): Particularly helpful for image captions.
-
-### Required
-
-[**Title**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/): Short verb phrase in second-person imperative. Do not use gerund phrases.
-
-[**Introduction**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introduction/): Two to three paragraphs describing the document subject matter.
-
-[**Intended audience**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/intended-audience/): Description of who the document is written for and what they will learn.
-
-[**Reference diagram**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/reference-diagram/): A single diagram that reflects the overall reference architecture.
-
-### Optional
-
-[**Notes/warnings**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/notes-tips-warnings/)
-
-[**Examples**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/examples/)
-
-[**Diagrams**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/diagrams/)
-
-**Screenshots**
-
-[**Related links**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/links/): Bulleted list of links to associated resources.
-
-## Template
-
-```plaintext
-
----
-title: Cloudflare Reference Architecture
-pcx_content_type: reference-architecture
-description: Reference architecture for <Cloudflare solution>, showing how <products> fit into existing infrastructure for <use case>. Designed for IT and security professionals.
-products:
-  - cloudflare-one
-  - cloudflare-wan
-  - cloudflare-network-firewall
-weight: 1
-meta:
-    title: "Reference Architecture: An example Cloudflare solution"
----
-
-# Cloudflare Reference Architecture
-
-## Introduction
-Cloudflare provides software as a service solutions (SaaS) solutions for performance, security, reliability, and developer services. This reference architecture focuses on the security of the platform and the network these services are built on, as well as the broad security capabilities the services offer for both public facing and internal facing assets.
-
-### Who is this document for?
-This reference architecture is designed for IT or security professionals with some responsibility over or familiarity with their organization’s existing infrastructure. It is useful to have some experience with technologies important to securing hybrid work, including identity providers (IdPs), user directories, single sign on (SSO), endpoint security or management (EPP, XDR, UEM, MDM), firewalls, routers, and point solutions like packet or content inspection hardware, threat prevention, and data loss prevention technologies.
-
-## Heading 1
-### Subheading 1
-Start by describing the technology which this architecture refers to. Ideally you open with a diagram that either describes the final architecture, or is a base diagram from which the document will build.
-
-![Example reference architecture diagram](/images/reference-architecture/cloudflare-one-reference-architecture-images/cf1-ref-arch-14.svg "The above is an example reference architecture diagram")
-
-## Heading 2
-### Subheading 2
-Then introduce how Cloudflare fits in
-
-## Heading 3
-### Subheading 4
-Start to dig into the details of the technology
-
-## Heading 5
-### Subheading 5
-End with mapping the architecture to real world use cases. Important to connect the reader to how this architecture is used in their own organization.
-
-## Summary
-End the document by summarizing everything so far and provide a list of further reading
-
-```
+* **Text equivalents for every diagram.** Explain each numbered callout in prose and give the diagram a text equivalent, because an agent cannot read the image and the meaning must survive without it.
+* **Literal product and use-case names.** Name the exact Cloudflare products and the use case in text, not only inside the diagram, so the architecture is retrievable on its own.
+* **Load-bearing links.** Link the supporting how-tos, concepts, and product docs with real, current routes, because the architecture points outward to implementation.
 
 Was this helpful?
 
@@ -135,5 +105,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture/#page","headline":"Reference architecture · Cloudflare Style Guide","description":"Write reference architecture documentation.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture/#page","headline":"Reference architecture · Cloudflare Style Guide","description":"Write reference architecture documentation that shows how Cloudflare products fit a customer's infrastructure and maps use cases to solutions.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

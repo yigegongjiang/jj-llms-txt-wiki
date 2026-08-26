@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Aruba EdgeConnect Enterprise
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/aruba-edgeconnect/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/aruba-edgeconnect/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare partners with Aruba's EdgeConnect SD-WAN solution to provide users with an integrated solution. The EdgeConnect appliances manage subnets associated with branch offices or retail locations. Anycast tunnels are set up between the EdgeConnect appliances and Cloudflare to securely route traffic.
 
@@ -135,7 +135,7 @@ _Note: Labels in this image may reflect a previous product name._
 2. Create a Virtual Tunnel Interface (VTI) using the private IP pair shared with CF GRE tunnel endpoint and the passthrough tunnel to match the newly created tunnel alias (**CF\_GRE\_east** in our example).
 ![Modify Passthrough Tunnel screen](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=352,height=352,format=webp/_astro/modify-passthrough._Sp9J4KQ.png)![Edit Virtual Tunnel Interface screen](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=362,height=226,format=webp/_astro/edit-vti.BFWttrT1.png)
 1. Define a GRE tunnel on the Cloudflare dashboard using the EdgeConnect appliance's public IP and the private IP pair /31 shared with the appliance.
-![GRE tunnels information for each branch](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=843,height=384,format=webp/_astro/gre-tunnels-edgeconnect.CPxCqhiR.png)
+![GRE tunnels information for each branch](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=843,height=384,format=webp/_astro/gre-tunnels-edgeconnect.CPxCqhiR.png) 
 
 IPsec tunnel configuration
 
@@ -261,7 +261,7 @@ In this example, the traffic to subnet `10.3.0.0/16` attached to the **east\_bra
 ![Static route information for each branch](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=835,height=205,format=webp/_astro/static-routes-cf.7x1mHyLW.png)
 1. Define static routes on the Orchestrator so Cloudflare can route traffic between sites.  
 This example creates a route for the subnet `10.30.0.0/24` on the **west\_branch** to route via the established GRE tunnel between the EdgeConnect appliance and Cloudflare.
-![Static route information for each branch](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=865,height=227,format=webp/_astro/static-routes-edgeconnect.UNNAmHeW.png)
+![Static route information for each branch](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=865,height=227,format=webp/_astro/static-routes-edgeconnect.UNNAmHeW.png) 
 
 IPsec tunnel configuration
 
@@ -350,5 +350,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/aruba-edgeconnect/#page","headline":"Aruba EdgeConnect Enterprise · Cloudflare WAN docs","description":"Connect Aruba EdgeConnect to Cloudflare WAN.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/aruba-edgeconnect/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/aruba-edgeconnect/#page","headline":"Aruba EdgeConnect Enterprise · Cloudflare WAN docs","description":"Connect Aruba EdgeConnect to Cloudflare WAN.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/aruba-edgeconnect/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

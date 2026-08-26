@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Guidelines for cURL commands
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 We follow several formatting conventions for cURL commands.
 
@@ -20,8 +20,8 @@ We follow several formatting conventions for cURL commands.
 
 To automatically incorporate our conventions into your examples, use:
 
-* [APIRequest](https://developers.cloudflare.com/style-guide/components/api-request/): For examples hitting endpoints in the Cloudflare API schema.
-* [CURL](https://developers.cloudflare.com/style-guide/components/curl/): For other cURL commands.
+* [APIRequest](https://developers.cloudflare.com/style-guide/build-the-page/components/api-request/): For examples hitting endpoints in the Cloudflare API schema.
+* [CURL](https://developers.cloudflare.com/style-guide/build-the-page/components/curl/): For other cURL commands.
 
 ## Parameter names
 
@@ -53,7 +53,7 @@ If you must suggest the use of this tool, you can add a link to the [Make API ca
 
 * Make sure not to use typographical or smart quotes in a cURL command, or the command will fail.
 * Placeholders in the URL should follow the same format as in the API documentation: `$ZONE_ID`
-* Placeholders in the request body (that is, the data included in a `POST`/`PUT`/`PATCH` request) should use [angle brackets](https://developers.cloudflare.com/style-guide/formatting/code-conventions-and-format/#angle-brackets---and--): `<RULE_ID>`
+* Placeholders in the request body (that is, the data included in a `POST`/`PUT`/`PATCH` request) should use [angle brackets](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-conventions-and-format/#angle-brackets---and--): `<RULE_ID>`
 
 The same placeholder name should correspond to the same value – use different placeholder names for different ID values. You can use the same request placeholders in the response, if they should match the values in the request.
 
@@ -243,5 +243,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/#page","headline":"Guidelines for cURL commands · Cloudflare Style Guide","description":"Format cURL commands consistently.","url":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/#page","headline":"Guidelines for cURL commands · Cloudflare Style Guide","description":"Format cURL commands consistently.","url":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Precursor
 
-Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/precursor/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/precursor/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Precursor is a client-side, session-based verification system that continuously evaluates a visitor's behavior over time. Instead of relying on a single challenge event, Precursor runs ongoing verification in the browser to detect automation that appears legitimate in individual requests but exhibits non-human patterns across a session.
 
@@ -86,13 +86,21 @@ Use **Minimize Friction** on endpoints that should not require challenge-style s
 
 ## Relationship to JavaScript Detections
 
-Precursor supersedes JavaScript Detections (JSD):
+Precursor supersedes JavaScript Detections (JSD). JSD and Precursor both collect client-side signals, but Precursor evaluates them continuously across a session instead of as a one-time check.
 
-* moves from one-time execution to continuous verification
-* introduces session-based state
-* enables dynamic runtime control
+* Precursor moves from one-time execution to continuous verification
+* Precursor introduces session-based state
+* Precursor enables dynamic runtime control
 
-If you enable Precursor, you should disable JavaScript Detections (JSD).
+When either JSD or Precursor contributes to bot score, Cloudflare exposes the source as **JavaScript Fingerprinting**.
+
+#### If you already use JSD
+
+Cloudflare will disable JSD when you enable Precursor to avoid running both features on the same traffic. Precursor includes all detections previously covered by JSD, and any JSD-driven Security Rules will still apply.
+
+#### If you do not use JSD
+
+If you enable Precursor without previously using JSD, you may see more traffic with bot score below 30.
 
 ## Relationship to Challenge Pages
 
@@ -117,7 +125,7 @@ Precursor is tightly integrated with [cf\_clearance](https://developers.cloudfla
 
 ## Visibility in Security Analytics
 
-Once Precursor runs on a zone, its detections appear in the zone's Analytics view. To open it, select your zone in the Cloudflare dashboard, then go to **Security** \> **Analytics** \> **Traffic** \> **Bot analysis**. The bot score distribution and WAF rule-match counts now include Precursor's behavioral and biometric detections.
+Once Precursor runs on a zone, its detections appear in the zone's Analytics view. To open it, select your zone in the Cloudflare dashboard, then go to **Security** \> **Analytics** \> **Traffic** \> **Bot analysis**. The bot score distribution and WAF rule-match counts now include Precursor's detections.
 
 For more information, refer to [Security Analytics](https://developers.cloudflare.com/waf/analytics/security-analytics/).
 
@@ -130,5 +138,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/precursor/#page","headline":"Precursor · Cloudflare challenges docs","description":"Client-side, session-based verification that continuously evaluates visitor behavior to identify automation.","url":"https://developers.cloudflare.com/cloudflare-challenges/precursor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/precursor/#page","headline":"Precursor · Cloudflare challenges docs","description":"Client-side, session-based verification that continuously evaluates visitor behavior to identify automation.","url":"https://developers.cloudflare.com/cloudflare-challenges/precursor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

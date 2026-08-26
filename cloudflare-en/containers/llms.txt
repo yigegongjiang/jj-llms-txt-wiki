@@ -57,7 +57,7 @@ Enhance your Workers with serverless containers
 
 ## Wrangler Configuration
 
-- [Wrangler Configuration](https://developers.cloudflare.com/workers/wrangler/configuration/#containersindex.md): Wrangler configuration options for defining Containers, including image source, instance types, and rollout settings.
+- [Wrangler Configuration](https://developers.cloudflare.com/workers/wrangler/configuration/index.md#containers): Wrangler configuration options for defining Containers, including image source, instance types, and rollout settings.
 
 ## Wrangler Commands
 

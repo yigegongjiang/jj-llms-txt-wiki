@@ -89,14 +89,14 @@ Modify incoming requests, change Cloudflare settings, or trigger actions
 - [Request Header Transform Rules](https://developers.cloudflare.com/rules/transform/request-header-modification/index.md): Learn how to modify HTTP request headers with Cloudflare's rules.
 - [Create a request header transform rule via API](https://developers.cloudflare.com/rules/transform/request-header-modification/create-api/index.md): Create request header modification rules using the API.
 - [Create a request header transform rule in the dashboard](https://developers.cloudflare.com/rules/transform/request-header-modification/create-dashboard/index.md): Create request header modification rules in the dashboard.
-- [Create a rule using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/transform-rules/#create-a-request-header-transform-ruleindex.md): Create request header modification rules using Terraform.
+- [Create a rule using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/transform-rules/index.md#create-a-request-header-transform-rule): Create request header modification rules using Terraform.
 - [Available fields and functions](https://developers.cloudflare.com/rules/transform/request-header-modification/reference/fields-functions/index.md): Available fields and functions for request header modification rules.
 - [Format of HTTP request header names and values](https://developers.cloudflare.com/rules/transform/request-header-modification/reference/header-format/index.md): Supported header name and value formats for request header modifications.
 - [API parameter reference](https://developers.cloudflare.com/rules/transform/request-header-modification/reference/parameters/index.md): Configurable parameters for request header modification rules.
 - [Response Header Transform Rules](https://developers.cloudflare.com/rules/transform/response-header-modification/index.md): Add, set, or remove HTTP response headers with Transform Rules.
 - [Create a response header transform rule via API](https://developers.cloudflare.com/rules/transform/response-header-modification/create-api/index.md): Create response header modification rules using the API.
 - [Create a response header transform rule in the dashboard](https://developers.cloudflare.com/rules/transform/response-header-modification/create-dashboard/index.md): Create response header modification rules in the dashboard.
-- [Create a rule using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/transform-rules/#create-a-response-header-transform-ruleindex.md): Create response header modification rules using Terraform.
+- [Create a rule using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/transform-rules/index.md#create-a-response-header-transform-rule): Create response header modification rules using Terraform.
 - [Available fields and functions](https://developers.cloudflare.com/rules/transform/response-header-modification/reference/fields-functions/index.md): Available fields and functions for response header modification rules.
 - [Format of HTTP response header names and values](https://developers.cloudflare.com/rules/transform/response-header-modification/reference/header-format/index.md): Supported header name and value formats for response header modifications.
 - [API parameter reference](https://developers.cloudflare.com/rules/transform/response-header-modification/reference/parameters/index.md): Configurable parameters for response header modification rules.
@@ -104,7 +104,7 @@ Modify incoming requests, change Cloudflare settings, or trigger actions
 - [URL Rewrite Rules](https://developers.cloudflare.com/rules/transform/url-rewrite/index.md): Rewrite request URL paths and query strings with Transform Rules.
 - [Create a URL rewrite rule via API](https://developers.cloudflare.com/rules/transform/url-rewrite/create-api/index.md): Create URL rewrite rules using the Rulesets API.
 - [Create a URL rewrite rule in the dashboard](https://developers.cloudflare.com/rules/transform/url-rewrite/create-dashboard/index.md): Create URL rewrite rules in the Cloudflare dashboard.
-- [Create a rule using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/transform-rules/#create-a-url-rewrite-ruleindex.md): Create URL rewrite rules using the Terraform Cloudflare provider.
+- [Create a rule using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/transform-rules/index.md#create-a-url-rewrite-rule): Create URL rewrite rules using the Terraform Cloudflare provider.
 - [Available fields and functions](https://developers.cloudflare.com/rules/transform/url-rewrite/reference/fields-functions/index.md): Available fields and functions for URL rewrite rules.
 - [URL rewrite parameters](https://developers.cloudflare.com/rules/transform/url-rewrite/reference/parameters/index.md): Configurable parameters for URL rewrite rules.
 

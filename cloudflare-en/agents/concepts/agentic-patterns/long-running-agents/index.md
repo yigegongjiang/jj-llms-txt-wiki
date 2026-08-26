@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Long-running agents
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Build agents that persist for days, weeks, or months — surviving restarts, waking on demand, and managing work that spans far longer than any single request.
 
@@ -108,7 +108,7 @@ type Task = {
 	externalJobId?: string;
 };
 
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	initialState: ProjectState = {
 		name: "",
 		status: "planning",
@@ -137,7 +137,7 @@ The pattern extends naturally to any event source that can reach a Worker — an
 The agent does not need to be "started" or "deployed" separately for each wake source — they all route to the same Durable Object instance. The agent's identity (its name) is the routing key.
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async onStart() {
 		// Daily deadline check at 9am UTC — idempotent, safe across restarts
 		await this.schedule(
@@ -184,7 +184,7 @@ Sometimes an agent needs to do work that takes longer than the idle eviction win
 `keepAlive()` prevents this by creating a heartbeat that resets the inactivity timer:
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async generateProjectPlan(goal: string) {
 		const result = await this.keepAliveWhile(async () => {
 			const plan = await this.callLLM(`Create a project plan for: ${goal}`);
@@ -236,7 +236,7 @@ An agent can be evicted at any time — a deploy, a platform restart, or hitting
 Use [startFiber()](https://developers.cloudflare.com/agents/runtime/execution/durable-execution/#startfiber) when the important boundary is durable acceptance. It adds an idempotency key, retained status records, inspection, cancellation, and cleanup on top of the same fiber machinery. By default it returns after acceptance; pass `waitForCompletion: true` when the request should stay open until the accepted job reaches a terminal status. This is a good fit for webhooks where the provider may retry delivery and the agent must avoid starting duplicate visible side effects.
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async executeTask(task: Task) {
 		await this.runFiber(`task:${task.id}`, async (ctx) => {
 			const resources = await this.gatherResources(task);
@@ -283,7 +283,7 @@ The project manager frequently kicks off work that takes far longer than any sin
 The project manager starts a CI pipeline for a task. The pipeline takes 20 minutes. Rather than holding a connection open, the agent registers its own URL as the callback and goes to sleep:
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async startCIPipeline(task: Task) {
 		const response = await fetch("https://ci.example.com/api/pipelines", {
 			method: "POST",
@@ -321,7 +321,7 @@ export class ProjectManager extends Agent<ProjectState> {
 Not every external service supports callbacks. When the project manager submits a video asset for generation, it needs to check back periodically until the job completes:
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async startVideoGeneration(task: Task) {
 		const response = await fetch("https://video-api.example.com/generate", {
 			method: "POST",
@@ -367,7 +367,7 @@ export class ProjectManager extends Agent<ProjectState> {
 A production deployment involves multiple steps that must each retry independently — build, test, stage, promote. The project manager should not manage these steps internally; it delegates to a [Workflow](https://developers.cloudflare.com/agents/runtime/execution/run-workflows/) that handles retries and step sequencing:
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async startDeployment(task: Task) {
 		const instanceId = await this.runWorkflow("DEPLOY_WORKFLOW", {
 			taskId: task.id,
@@ -435,7 +435,7 @@ type PlanStep = {
 	result?: unknown;
 };
 
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async createPlan(goal: string) {
 		const steps = await this.keepAliveWhile(async () => {
 			return this.callLLM(`
@@ -518,7 +518,7 @@ This pattern has several advantages for long-running agents:
 A project manager does not do everything itself. It delegates specialized work to sub-agents — each with their own identity, state, and lifecycle.
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async delegateTask(task: Task) {
 		const researcher = await this.subAgent(
 			ResearchAgent,
@@ -543,7 +543,7 @@ For the full `subAgent()` API — typed RPC stubs, client routing, access contro
 
 The patterns above handle the project manager's coordination work — scheduling, delegating, polling. But the project manager also uses an LLM directly: generating plans, summarizing progress, drafting status emails. Those LLM calls stream tokens over a connection that cannot be resumed if the agent is evicted mid-response.
 
-For chat-oriented agents built on `AIChatAgent`, this is an even sharper problem — the user is watching the response stream in real time and sees it stop mid-sentence. `chatRecovery` wraps each chat turn in a `runFiber`, providing automatic `keepAlive` during streaming and a recovery hook when the agent restarts:
+For chat-oriented agents built on `AIChatAgent` or `Think`, this is an even sharper problem — the user watches the response stream in real time and sees it stop mid-sentence. Durable recovery wraps every chat turn in a `runFiber`. This provides automatic `keepAlive` during streaming and a recovery hook when the agent restarts:
 
 ```ts
 import { AIChatAgent } from "@cloudflare/ai-chat";
@@ -553,8 +553,6 @@ import type {
 } from "@cloudflare/ai-chat";
 
 class ProjectChat extends AIChatAgent<Env> {
-	override chatRecovery = true;
-
 	override async onChatRecovery(
 		ctx: ChatRecoveryContext,
 	): Promise<ChatRecoveryOptions> {
@@ -578,7 +576,7 @@ The right recovery strategy depends on the LLM provider:
 
 Use `ctx.createdAt` to suppress stale recoveries. For example, if a recovered chat turn is older than a few minutes, you may persist the partial answer but skip automatic continuation to avoid surprising the user with an old response.
 
-[Think](https://developers.cloudflare.com/agents/harnesses/think/) enables `chatRecovery` by default. The default path persists partial output and auto-continues or retries the turn when safe, so many apps do not need a custom hook. Override `onChatRecovery` when a provider has a better recovery strategy, or configure `chatRecovery = { maxAttempts, terminalMessage, onExhausted }` to tune the terminal user experience.
+`AIChatAgent` and [Think](https://developers.cloudflare.com/agents/harnesses/think/) always use durable recovery. The default path persists partial output and continues or retries the turn when safe. Override `onChatRecovery` when a provider has a better recovery strategy. Configure `chatRecovery = { maxAttempts, terminalMessage, onExhausted }` to tune the terminal experience.
 
 If the agent is interrupted before any assistant stream chunks are written, there is no partial assistant message to continue. When the latest persisted message is still the unanswered user message from that turn, chat recovery retries the turn automatically unless `onChatRecovery` returns `{ continue: false }`.
 
@@ -591,7 +589,7 @@ An agent that runs for months accumulates data: conversation history, timeline e
 Schedule periodic cleanup to prune old data and archive completed work:
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async onStart() {
 		await this.schedule("0 0 * * *", "housekeeping", {}, { idempotent: true });
 	}
@@ -635,7 +633,7 @@ Strategies for managing conversation size:
 A long-running agent eventually completes its purpose. The project ships, the investigation concludes, the monitoring window closes. Clean up explicitly:
 
 ```ts
-export class ProjectManager extends Agent<ProjectState> {
+export class ProjectManager extends Agent<Env, ProjectState> {
 	async completeProject() {
 		const schedules = await this.listSchedules();
 		for (const schedule of schedules) {
@@ -720,5 +718,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/#page","headline":"Long-running agents · Cloudflare Agents docs","description":"Build agents that persist for days, weeks, or months — surviving restarts, waking on demand, and managing work that spans far longer than any single request.","url":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/#page","headline":"Long-running agents · Cloudflare Agents docs","description":"Build agents that persist for days, weeks, or months — surviving restarts, waking on demand, and managing work that spans far longer than any single request.","url":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

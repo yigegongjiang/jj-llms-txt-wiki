@@ -16,6 +16,27 @@ Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/ai-gateway.xml)
 
+## 2026-08-19
+
+  
+**Get 50% off GPT-5.6 Sol through AI Gateway**  
+
+GPT-5.6 Sol is available through AI Gateway, and for a limited time you can use it at 50% off. If you are already using AI Gateway, point to the `openai/gpt-5.6-sol` model and the discounted pricing applies automatically — no promo code needed.
+
+The promotion is available for [Unified Billing](https://developers.cloudflare.com/ai-gateway/features/unified-billing/) users only (not [Bring Your Own Keys](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/)). Load credits onto AI Gateway and start sending requests to `openai/gpt-5.6-sol`.
+
+Discounted pricing during the promotion:
+
+| Usage      | Promotional price   | Standard price      |
+| ---------- | ------------------- | ------------------- |
+| Input      | $2.50 per 1M tokens | $5 per 1M tokens    |
+| Output     | $15 per 1M tokens   | $30 per 1M tokens   |
+| Cache read | $0.25 per 1M tokens | $0.50 per 1M tokens |
+
+The promotion runs through September 18, 2026\. After that date, GPT-5.6 Sol requests return to standard pricing.
+
+For more details, refer to the [Unified Billing documentation](https://developers.cloudflare.com/ai-gateway/features/unified-billing/) and the [GPT-5.6 Sol model page](https://developers.cloudflare.com/ai/models/openai/gpt-5.6-sol/).
+
 ## 2026-08-07
 
   
@@ -503,5 +524,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/ai-gateway/changelog/#page","headline":"Changelog · Cloudflare AI Gateway docs","description":"Track the latest updates, new features, and fixes for AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/ai-gateway/changelog/#page","headline":"Changelog · Cloudflare AI Gateway docs","description":"Track the latest updates, new features, and fixes for AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

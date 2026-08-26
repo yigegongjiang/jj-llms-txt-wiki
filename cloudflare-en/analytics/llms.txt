@@ -36,6 +36,7 @@ Visualize the performance, security, and reliability data collected by Cloudflar
 ## GraphQL Analytics API
 
 - [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/index.md): Query Cloudflare analytics data using GraphQL.
+- [Account-based rate limiting](https://developers.cloudflare.com/analytics/graphql-api/account-based-rate-limiting/index.md): Apply GraphQL Analytics API rate limits per account and per zone, so usage scales with the number of resources you query.
 - [Error responses](https://developers.cloudflare.com/analytics/graphql-api/errors/index.md): Understand GraphQL Analytics API error formats.
 - [Confidence Intervals](https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/index.md): Request confidence intervals for sampled data.
 - [Datasets (tables)](https://developers.cloudflare.com/analytics/graphql-api/features/data-sets/index.md): Explore available GraphQL Analytics API datasets.

@@ -28,7 +28,7 @@ Provide client-side protection for your website visitors
 ## Content security rules
 
 - [Content security rules](https://developers.cloudflare.com/client-side-security/rules/index.md): Use content security rules to define the resources (scripts) allowed on your applications.
-- [Create via API](https://developers.cloudflare.com/client-side-security/reference/api/#create-a-content-security-ruleindex.md): Create a content security rule using the client-side security API.
+- [Create via API](https://developers.cloudflare.com/client-side-security/reference/api/index.md#create-a-content-security-rule): Create a content security rule using the client-side security API.
 - [Create a content security rule in the dashboard](https://developers.cloudflare.com/client-side-security/rules/create-dashboard/index.md): Learn how to create a content security rule in the Cloudflare dashboard.
 - [Supported CSP directives](https://developers.cloudflare.com/client-side-security/rules/csp-directives/index.md): CSP directives supported by content security rules
 - [Content security rule violations](https://developers.cloudflare.com/client-side-security/rules/violations/index.md): Cloudflare reports any violations to your content security rules.

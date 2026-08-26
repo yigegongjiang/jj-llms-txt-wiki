@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Set up a site
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/sites/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/sites/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Sites represent the local network of a data center, office, or other physical location, and combine all on-ramps available there. Sites also allow you to quickly check the state of your on-ramps and set up health alert settings so that you get notified when there are issues with the site's on-ramps.
 
@@ -27,7 +27,7 @@ Before creating a site, ensure you have set up at least one on-ramp. Then, follo
 ## Add a site
 
 1. Go to the **Network health** page.
-[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health)
+[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health) 
 1. In **Network overview**, select **Add a site**.
 2. Add a name and description for your new site. Optionally, you can also add the geographical coordinates for your site in **Latitude** and **Longitude**. If you add geographical coordinates, your site's location will appear in the map once created.
 3. Select **Create and continue**.
@@ -45,7 +45,7 @@ Your site is now set up. If you have other sites you need to set up, repeat the 
 
 ## Network overview
 
-After adding your sites, the Network overview section of the dashboard provides a summary of the connectivity status and traffic analytics for all your sites. This is a great place to start if you receive a Cloudflare WAN alert, need to begin the troubleshooting process, or are performing routine monitoring. 
+After adding your sites, the Network overview section of the dashboard provides a summary of the connectivity status and traffic analytics for all your sites. This is a great place to start if you receive a Cloudflare WAN alert, need to begin the troubleshooting process, or are performing routine monitoring.
 
 Network overview has the following data types available:
 
@@ -117,7 +117,7 @@ Select one of your sites to have access to a more detailed view of its traffic, 
 ### Add or remove on-ramps
 
 1. Go to the **Network health** page.
-[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health)
+[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health) 
 1. Go to **Network overview** \> **Traffic overview**.
 2. Find your site > select the three dots in front of it > **Edit**.
 3. Select **On-ramps**.
@@ -129,11 +129,11 @@ Select one of your sites to have access to a more detailed view of its traffic, 
 If you add geographic coordinates to your site, it will appear in the Network map. To set up or edit geographic coordinates to an existing site:
 
 1. Go to the **Network health** page.
-[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health)
+[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health) 
 1. Go to **Network overview** \> **Traffic overview**.
 2. Find your site > select the three dots in front of it > **Edit**.
-1. In **Basic information**, edit your site's **Latitude** and **Longitude** coordinates.
-2. Select **Save**.
+3. In **Basic information**, edit your site's **Latitude** and **Longitude** coordinates.
+4. Select **Save**.
 
 ### Set thresholds for site health
 
@@ -153,5 +153,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/sites/#page","headline":"Set up a site · Cloudflare WAN docs","description":"Set up WAN sites for your network locations.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/sites/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/sites/#page","headline":"Set up a site · Cloudflare WAN docs","description":"Set up WAN sites for your network locations.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/sites/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

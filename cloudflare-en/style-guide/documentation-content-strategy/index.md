@@ -1,6 +1,6 @@
 ---
-description: Guidelines for planning and structuring product documentation.
-title: Product docs content strategy
+description: Plan a documentation page: choose its content type, structure it, and assemble the parts it is built from.
+title: Product content
 image: https://developers.cloudflare.com/og-docs.png
 ---
 
@@ -10,53 +10,30 @@ image: https://developers.cloudflare.com/og-docs.png
 > Fetch the complete documentation index at: https://developers.cloudflare.com/style-guide/llms.txt  
 > Use this file to discover all available pages before exploring further.
 
-# Product docs content strategy
+# Product content
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The purpose of Cloudflare's developer documentation content strategy is to:
+This section is the planning layer of the style guide. It tells you what kind of page to write, where it lives, and what parts it is built from. The three areas follow the order you meet them when you plan a page. Once the page is planned, [Style and grammar](https://developers.cloudflare.com/style-guide/style-and-grammar/) covers how to write it in the house voice.
 
-* Create and document standard templates to streamline content creation
-* Document specific content types to help identify customers' specific needs
-* Enable life cycle management to maintain and optimize a smaller set of pages
-* Suggest easier navigation paths
+## What to write
 
-Strategically speaking, the mission and guiding principles translate into the following initiatives:
+[Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/) catalog the defined page shapes and help you choose the right one. Every type documents how it is structured, scaffolded, and maintained.
 
-* Improve the entire ecosystem of customer-facing product content, placing major emphasis on consistency, quality, accuracy, and timeliness
-* Create a cohesive and compelling story around our products and their functionality
-* Develop content that increases product adoption, deflects support, and makes customers successful
-* Partner with various internal departments and stakeholders in creating and sustaining a rich, consistent content experience across all Cloudflare products
-* Devise new and better ways to give users the information they need, when and where they need it
+## How to structure it
 
-Adoption of this content strategy will be impacted by product releases, resourcing, and company goals.
+[Information architecture](https://developers.cloudflare.com/style-guide/documentation-content-strategy/information-architecture/) governs on-page section order and the folder shape a reader navigates. [File conventions](https://developers.cloudflare.com/style-guide/documentation-content-strategy/file-conventions/) governs the repo file, folder, and image naming a builder works with.
 
-## Purpose statements
+## The parts a page is built from
 
-For each purpose statement, the documentation team will define the approach to solve the content problem for a product.
+[Component attributes](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/) covers the content-strategy parts of a page, such as introductions, prerequisites, and next steps. Formatting and component mechanics live in their own sibling sections, linked from each part.
 
-This approach includes:
-
-### Information architecture
-
-* Where content should live on the site
-* Linking strategy
-
-### Content
-
-* What content is included and what is optional
-* How the content is written
-
-## Content requirements
-
-Content requirements help the contributor ensure they have answered the user question and have not lost the purpose of the content after moving into execution.
+## All pages in this section
 
 * [Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/)
-* [Component attributes](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/)
 * [Information architecture](https://developers.cloudflare.com/style-guide/documentation-content-strategy/information-architecture/)
-* [Writing guidelines](https://developers.cloudflare.com/style-guide/documentation-content-strategy/writing-guidelines/)
-* [Accessibility guidelines](https://developers.cloudflare.com/style-guide/documentation-content-strategy/accessibility/)
 * [File conventions](https://developers.cloudflare.com/style-guide/documentation-content-strategy/file-conventions/)
+* [Component attributes](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/)
 
 Was this helpful?
 
@@ -67,5 +44,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/#page","headline":"Product docs content strategy · Cloudflare Style Guide","description":"Guidelines for planning and structuring product documentation.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/#page","headline":"Product content · Cloudflare Style Guide","description":"Plan a documentation page: choose its content type, structure it, and assemble the parts it is built from.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -60,7 +60,7 @@ Create managed, serverless databases with SQL semantics
 - [Global read replication](https://developers.cloudflare.com/d1/best-practices/read-replication/index.md): Reduce read latency and scale throughput by replicating D1 databases across regions globally.
 - [Remote development](https://developers.cloudflare.com/d1/best-practices/remote-development/index.md): Develop against a D1 database remotely using the Cloudflare dashboard playground.
 - [Retry queries](https://developers.cloudflare.com/d1/best-practices/retry-queries/index.md): Handle transient D1 errors by retrying write queries with exponential backoff.
-- [Use D1 from Pages](https://developers.cloudflare.com/pages/functions/bindings/#d1-databasesindex.md): Bind a D1 database to a Cloudflare Pages project using Pages Functions.
+- [Use D1 from Pages](https://developers.cloudflare.com/pages/functions/bindings/index.md#d1-databases): Bind a D1 database to a Cloudflare Pages project using Pages Functions.
 - [Use indexes](https://developers.cloudflare.com/d1/best-practices/use-indexes/index.md): Improve D1 query performance by creating indexes on frequently queried columns.
 
 ## configuration

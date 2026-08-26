@@ -1,5 +1,5 @@
 ---
-description: Improve your contributions to Cloudflare's documentation. Ensure consistency, professionalism, and clarity in your content across all products.
+description: Write and review Cloudflare content so the whole site reads as if one careful author wrote it, from contributing through planning, style, and build.
 title: Style Guide
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -12,188 +12,75 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Style Guide
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Use this guide when writing any content for product, including the dashboard and documentation.
+Use this guide whenever you write or review Cloudflare content, whether it lives in the documentation or in the product dashboard. Following it is what keeps the whole site reading as though one careful author wrote every page, which also makes the content clearer for readers and simpler to translate.
 
-Understanding Cloudflare style is the first step in being able to write, review, and edit documentation. Adhering to Cloudflare style ensures consistency across the company's documentation and promotes the following benefits:
+The guide is organized around the way you actually work, in five stages: contribute a change, plan the content, write it in the Cloudflare style, build the page, and, for the Cloudflare team, run the site.
 
-* A professional and reliable product image
-* A seamless customer experience across Cloudflare products
-* Minimized customer confusion
-* Simplified translation process
+## Contribute
 
-To contribute to the documentation, visit the [contributor guide](https://developers.cloudflare.com/style-guide/contributions/).
+Start here. Make a change and get it merged.
 
-## Available resources
+### [Contributions](https://developers.cloudflare.com/style-guide/contributions/)
 
-* [Contributions](https://developers.cloudflare.com/style-guide/contributions/)
-* [Grammar](https://developers.cloudflare.com/style-guide/grammar/)
-  * [Parts of speech](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/)
-    * [Abbreviations](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/abbreviations/)
-    * [Acronyms](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/acronyms/)
-    * [Anthropomorphisms](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/anthropomorphisms/)
-    * [Capitalization](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/capitalization/)
-    * [Compound words](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/compound-words/)
-    * [Contractions](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/contractions/)
-    * [Nouns and pronouns](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/nouns-and-pronouns/)
-    * [Possessives](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/possessives/)
-    * [Prepositions](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/prepositions/)
-    * [Slang](https://developers.cloudflare.com/style-guide/grammar/parts-of-speech/slang/)
-  * [Punctuation marks and symbols](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/)
-    * [Ampersands](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/ampersands/)
-    * [Colons](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/colons/)
-    * [Commas](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/commas/)
-    * [Dashes](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/dashes/)
-    * [Exclamation points](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/exclamation-points/)
-    * [Percentages](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/percentages/)
-    * [Periods](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/periods/)
-    * [Quotation marks](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/quotation-marks/)
-    * [Semicolons](https://developers.cloudflare.com/style-guide/grammar/punctuation-marks-and-symbols/semicolons/)
-* [Components](https://developers.cloudflare.com/style-guide/components/)
-  * [Usage](https://developers.cloudflare.com/style-guide/components/usage/)
-  * [Anchor heading](https://developers.cloudflare.com/style-guide/components/anchor-heading/)
-  * [API request](https://developers.cloudflare.com/style-guide/components/api-request/)
-  * [Available notifications](https://developers.cloudflare.com/style-guide/components/available-notifications/)
-  * [Badges](https://developers.cloudflare.com/style-guide/components/badges/)
-  * [Buttons](https://developers.cloudflare.com/style-guide/components/buttons/)
-  * [Cards](https://developers.cloudflare.com/style-guide/components/cards/)
-  * [CURL](https://developers.cloudflare.com/style-guide/components/curl/)
-  * [DashButton](https://developers.cloudflare.com/style-guide/components/dash-button/)
-  * [Descriptions](https://developers.cloudflare.com/style-guide/components/description/)
-  * [Details](https://developers.cloudflare.com/style-guide/components/details/)
-  * [Directory listing](https://developers.cloudflare.com/style-guide/components/directory-listing/)
-  * [Example](https://developers.cloudflare.com/style-guide/components/example/)
-  * [Feature](https://developers.cloudflare.com/style-guide/components/feature/)
-  * [File tree](https://developers.cloudflare.com/style-guide/components/file-tree/)
-  * [Glossary](https://developers.cloudflare.com/style-guide/components/glossary/)
-  * [Glossary definition](https://developers.cloudflare.com/style-guide/components/glossary-definition/)
-  * [Glossary tooltip](https://developers.cloudflare.com/style-guide/components/glossary-tooltip/)
-  * [Icons](https://developers.cloudflare.com/style-guide/components/icons/)
-  * [Inline badge](https://developers.cloudflare.com/style-guide/components/inline-badge/)
-  * [Link cards](https://developers.cloudflare.com/style-guide/components/link-cards/)
-  * [List tutorials](https://developers.cloudflare.com/style-guide/components/list-tutorials/)
-  * [Markdown](https://developers.cloudflare.com/style-guide/components/markdown/)
-  * [Package Managers](https://developers.cloudflare.com/style-guide/components/package-managers/)
-  * [Pages build preset](https://developers.cloudflare.com/style-guide/components/pages-build-preset/)
-  * [Plan](https://developers.cloudflare.com/style-guide/components/plan/)
-  * [Product availability text](https://developers.cloudflare.com/style-guide/components/product-availability-text/)
-  * [Product changelog](https://developers.cloudflare.com/style-guide/components/product-changelog/)
-  * [Public stats](https://developers.cloudflare.com/style-guide/components/public-stats/)
-  * [Related product](https://developers.cloudflare.com/style-guide/components/related-product/)
-  * [Render](https://developers.cloudflare.com/style-guide/components/render/)
-  * [Resources by selector](https://developers.cloudflare.com/style-guide/components/resources-by-selector/)
-  * [RSSButton](https://developers.cloudflare.com/style-guide/components/rss-button/)
-  * [Rule ID](https://developers.cloudflare.com/style-guide/components/rule-id/)
-  * [Steps](https://developers.cloudflare.com/style-guide/components/steps/)
-  * [Stream](https://developers.cloudflare.com/style-guide/components/stream/)
-  * [Subtract IP calculator](https://developers.cloudflare.com/style-guide/components/subtract-ip-calculator/)
-  * [Tabs](https://developers.cloudflare.com/style-guide/components/tabs/)
-  * [Type highlighting](https://developers.cloudflare.com/style-guide/components/type-highlighting/)
-  * [TypeScript example](https://developers.cloudflare.com/style-guide/components/typescript-example/)
-  * [Width](https://developers.cloudflare.com/style-guide/components/width/)
-  * [WranglerCommand](https://developers.cloudflare.com/style-guide/components/wrangler-command/)
-  * [WranglerConfig](https://developers.cloudflare.com/style-guide/components/wrangler-config/)
-  * [WranglerNamespace](https://developers.cloudflare.com/style-guide/components/wrangler-namespace/)
-  * [YouTube](https://developers.cloudflare.com/style-guide/components/youtube/)
-* [Formatting](https://developers.cloudflare.com/style-guide/formatting/)
-  * [Structure](https://developers.cloudflare.com/style-guide/formatting/structure/)
-    * [Links](https://developers.cloudflare.com/style-guide/formatting/structure/links/)
-    * [Lists](https://developers.cloudflare.com/style-guide/formatting/structure/lists/)
-    * [Paragraphs and line breaks](https://developers.cloudflare.com/style-guide/formatting/structure/paragraphs-and-line-breaks/)
-    * [Sentence structure](https://developers.cloudflare.com/style-guide/formatting/structure/sentence-structure/)
-    * [Tables](https://developers.cloudflare.com/style-guide/formatting/structure/tables/)
-  * [Code block guidelines](https://developers.cloudflare.com/style-guide/formatting/code-block-guidelines/)
-  * [Code conventions and format](https://developers.cloudflare.com/style-guide/formatting/code-conventions-and-format/)
-  * [Dates and times](https://developers.cloudflare.com/style-guide/formatting/dates-and-times/)
-  * [Example values](https://developers.cloudflare.com/style-guide/formatting/example-values/)
-  * [External references](https://developers.cloudflare.com/style-guide/formatting/external-references/)
-  * [File types and extensions](https://developers.cloudflare.com/style-guide/formatting/file-types-and-extensions/)
-  * [Footnotes](https://developers.cloudflare.com/style-guide/formatting/footnotes/)
-  * [Keyboard keys](https://developers.cloudflare.com/style-guide/formatting/keyboard-keys/)
-  * [Notes and other notation types](https://developers.cloudflare.com/style-guide/formatting/notes-and-other-notation-types/)
-  * [Numbers and units of measurement](https://developers.cloudflare.com/style-guide/formatting/numbers-and-units-of-measurement/)
-  * [Product name and pluralization](https://developers.cloudflare.com/style-guide/formatting/product-name-and-pluralization/)
-  * [UI elements](https://developers.cloudflare.com/style-guide/formatting/ui-elements/)
-  * [URLs and domain names](https://developers.cloudflare.com/style-guide/formatting/urls-and-domain-names/)
-* [Frontmatter](https://developers.cloudflare.com/style-guide/frontmatter/)
-  * [Custom properties](https://developers.cloudflare.com/style-guide/frontmatter/custom-properties/)
-  * [Banner](https://developers.cloudflare.com/style-guide/frontmatter/banner/)
-  * [Sidebar](https://developers.cloudflare.com/style-guide/frontmatter/sidebar/)
-* [Product docs content strategy](https://developers.cloudflare.com/style-guide/documentation-content-strategy/)
-  * [Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/)
-    * [How to select a content type](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/select-content-type/)
-    * [3rd-party integration guide](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/3rd-party-integration-guide/)
-    * [Changelog](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/)
-    * [Concept](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/concept/)
-    * [Configuration](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/configuration/)
-    * [Design guide](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/design-guide/)
-    * [FAQ](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/)
-    * [Get started](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/get-started/)
-    * [How to](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/)
-    * [Implementation guide](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/implementation-guide/)
-    * [Navigation](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/navigation/)
-    * [Overview](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/overview/)
-    * [Reference](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference/)
-    * [Reference architecture](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture/)
-    * [Reference architecture diagram](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/reference-architecture-diagram/)
-    * [Solution guide](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/solution-guide/)
-    * [Troubleshooting](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/troubleshooting/)
-    * [Tutorial](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/tutorial/)
-  * [Component attributes](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/)
-    * [Context](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/context/)
-    * [Diagrams](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/diagrams/)
-    * [Dynamic lists](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/dynamic-lists/)
-    * [Examples](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/examples/)
-    * [Glossary entry](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/glossary-entry/)
-    * [Intended audience](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/intended-audience/)
-    * [Introduction](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introduction/)
-    * [Last updated](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/last-updated/)
-    * [Links](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/links/)
-    * [Mathematical operations](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/mathematical-operations/)
-    * [Next steps](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/next-steps/)
-    * [Notes/tips/warnings](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/notes-tips-warnings/)
-    * [Prerequisites](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/prerequisites/)
-    * [Product descriptions](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/product-descriptions/)
-    * [Reference diagram](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/reference-diagram/)
-    * [Screenshots](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/screenshots/)
-    * [Steps/tasks/procedures](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/)
-    * [Tables](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/tables/)
-    * [Titles](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/titles/)
-  * [Information architecture](https://developers.cloudflare.com/style-guide/documentation-content-strategy/information-architecture/)
-  * [Writing guidelines](https://developers.cloudflare.com/style-guide/documentation-content-strategy/writing-guidelines/)
-  * [Accessibility guidelines](https://developers.cloudflare.com/style-guide/documentation-content-strategy/accessibility/)
-  * [File conventions](https://developers.cloudflare.com/style-guide/documentation-content-strategy/file-conventions/)
-* [API docs content strategy](https://developers.cloudflare.com/style-guide/api-content-strategy/)
-  * [API content types](https://developers.cloudflare.com/style-guide/api-content-strategy/api-content-types/)
-    * [Get started - API](https://developers.cloudflare.com/style-guide/api-content-strategy/api-content-types/get-started-api/)
-    * [Resources](https://developers.cloudflare.com/style-guide/api-content-strategy/api-content-types/resources/)
-    * [Endpoints](https://developers.cloudflare.com/style-guide/api-content-strategy/api-content-types/endpoints/)
-    * [Parameters](https://developers.cloudflare.com/style-guide/api-content-strategy/api-content-types/parameters/)
-    * [Deprecated APIs](https://developers.cloudflare.com/style-guide/api-content-strategy/api-content-types/deprecated-apis/)
-  * [Guidelines for cURL commands](https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/)
-  * [Method types & common verbs](https://developers.cloudflare.com/style-guide/api-content-strategy/method-types-and-command-verbs/)
-* [How we docs](https://developers.cloudflare.com/style-guide/how-we-docs/)
-  * [How we AI](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/)
-    * [When we use AI](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/when-we-use-ai/)
-    * [Prompt templates](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-templates/)
-    * [Prompt libraries](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-libraries/)
-    * [Control how AI crawls your docs](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/control-ai-crawls/)
-    * [Examples](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/)
-      * [CLUE](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/clue/)
-      * [Cloudspeaker](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/cloudspeaker/)
-  * [How we video](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/)
-    * [Why and when we use videos](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/why-and-when-we-use-videos/)
-    * [Video production workflow](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/video-production-workflow/)
-    * [Integration in docs](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/integration-in-docs/)
-    * [Maintenance](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/maintenance/)
-  * [AI consumability](https://developers.cloudflare.com/style-guide/how-we-docs/ai-consumability/)
-  * [Content reviews](https://developers.cloudflare.com/style-guide/how-we-docs/reviews/)
-  * [Image maintenance](https://developers.cloudflare.com/style-guide/how-we-docs/image-maintenance/)
-  * [Links](https://developers.cloudflare.com/style-guide/how-we-docs/links/)
-  * [Metadata](https://developers.cloudflare.com/style-guide/how-we-docs/metadata/)
-  * [Our site](https://developers.cloudflare.com/style-guide/how-we-docs/our-site/)
-  * [Redirects](https://developers.cloudflare.com/style-guide/how-we-docs/redirects/)
+Open an issue or raise a pull request, then follow it through the review that merges it.
+
+## Plan your content
+
+Decide what kind of page you are writing and where it lives.
+
+### [Content strategy](https://developers.cloudflare.com/style-guide/documentation-content-strategy/)
+
+Choose a content type, structure the page, and place it in the information architecture.
+
+### [API content](https://developers.cloudflare.com/style-guide/api-content-strategy/)
+
+Follow the conventions for documenting endpoints, parameters, and resources.
+
+## Style and grammar
+
+Write the page in the house voice, grammar, and formatting.
+
+### [Voice and tone](https://developers.cloudflare.com/style-guide/style-and-grammar/voice-and-tone/)
+
+Write in the Cloudflare house voice and tone.
+
+### [Accessibility](https://developers.cloudflare.com/style-guide/style-and-grammar/accessibility/)
+
+Write content that everyone can read and use.
+
+### [Grammar](https://developers.cloudflare.com/style-guide/style-and-grammar/grammar/)
+
+Apply the rules for parts of speech, punctuation, and capitalization.
+
+### [Formatting](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/)
+
+Format dates, numbers, code, lists, tables, and UI elements consistently.
+
+## Build the page
+
+Author the page in MDX, set its metadata, and add components.
+
+### [Markdown and MDX](https://developers.cloudflare.com/style-guide/build-the-page/markdown-and-mdx/)
+
+Learn the MDX syntax, how to import components, and how to escape special characters.
+
+### [Frontmatter](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/)
+
+Declare the required and optional metadata that every page carries.
+
+### [Components](https://developers.cloudflare.com/style-guide/build-the-page/components/)
+
+Assemble pages from the MDX components that add buttons, tabs, and more.
+
+## How we docs
+
+How the Cloudflare team runs the site. This section is Cloudflare-specific internal process.
+
+### [How we docs](https://developers.cloudflare.com/style-guide/how-we-docs/)
+
+See how the team handles the site framework, redirects, links, metadata, AI, and video.
 
 Was this helpful?
 
@@ -204,5 +91,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/style-guide/#page","headline":"Style Guide · Cloudflare Style Guide","description":"Improve your contributions to Cloudflare's documentation. Ensure consistency, professionalism, and clarity in your content across all products.","url":"https://developers.cloudflare.com/style-guide/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/style-guide/#page","headline":"Style Guide · Cloudflare Style Guide","description":"Write and review Cloudflare content so the whole site reads as if one careful author wrote it, from contributing through planning, style, and build.","url":"https://developers.cloudflare.com/style-guide/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

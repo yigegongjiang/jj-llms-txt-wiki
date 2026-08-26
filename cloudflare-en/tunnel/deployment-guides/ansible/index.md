@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Ansible
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/tunnel/deployment-guides/ansible/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/tunnel/deployment-guides/ansible/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Ansible is a software tool that enables at scale management of infrastructure. Ansible is agentless — all it needs to function is the ability to SSH to the target and Python installed on the target.
 
@@ -211,7 +211,8 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "gcp_tunnel_config" {
 
 ### Configure GCP resources
 
-The following configuration defines the specifications for the GCP virtual machine and installs Python3 on the machine. Python3 allows Ansible to configure the GCP instance instead of having to run a [startup script](https://developers.cloudflare.com/tunnel/deployment-guides/terraform/#create-a-startup-script) on boot. 
+The following configuration defines the specifications for the GCP virtual machine and installs Python3 on the machine. Python3 allows Ansible to configure the GCP instance instead of having to run a [startup script](https://developers.cloudflare.com/tunnel/deployment-guides/terraform/#create-a-startup-script) on boot.
+
 1. In your configuration directory, create a `.tf` file:  
 ```sh  
 touch GCP-config.tf  
@@ -273,7 +274,8 @@ depends_on = [
 
 ### Export variables to Ansible
 
-The following Terraform resource exports the [tunnel token](https://developers.cloudflare.com/tunnel/configuration/#tunnel-tokens) and other variables to `tf_ansible_vars_file.yml`. Ansible will use the tunnel token to configure and run `cloudflared` on the server. 
+The following Terraform resource exports the [tunnel token](https://developers.cloudflare.com/tunnel/configuration/#tunnel-tokens) and other variables to `tf_ansible_vars_file.yml`. Ansible will use the tunnel token to configure and run `cloudflared` on the server.
+
 1. In your configuration directory, create a new `tf` file:  
 ```sh  
 touch export.tf  
@@ -357,7 +359,8 @@ terraform plan
 ```sh  
 terraform apply  
 ```
-It may take several minutes for the GCP instance and tunnel to come online. You can view your new tunnel in the [Cloudflare dashboard](https://dash.cloudflare.com/) under **Networking** \> **Tunnels**. 
+
+It may take several minutes for the GCP instance and tunnel to come online. You can view your new tunnel in the [Cloudflare dashboard](https://dash.cloudflare.com/) under **Networking** \> **Tunnels**.
 
 ## 7\. Test the connection
 
@@ -372,5 +375,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/tunnel/deployment-guides/ansible/#page","headline":"Ansible · Cloudflare Docs","description":"Deploy Cloudflare Tunnel with Ansible automation.","url":"https://developers.cloudflare.com/tunnel/deployment-guides/ansible/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Integration"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/tunnel/deployment-guides/ansible/#page","headline":"Ansible · Cloudflare Docs","description":"Deploy Cloudflare Tunnel with Ansible automation.","url":"https://developers.cloudflare.com/tunnel/deployment-guides/ansible/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Integration"]}
 ```

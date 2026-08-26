@@ -86,6 +86,7 @@ Access detailed logs with metadata from Cloudflare products
 - [Subrequests](https://developers.cloudflare.com/logs/logpush/logpush-job/subrequests/index.md): Control how Worker subrequests appear in Logpush.
 - [Parse Cloudflare Logs JSON data](https://developers.cloudflare.com/logs/logpush/parsing-json-log-data/index.md): Parse and analyze downloaded Cloudflare Logs data.
 - [Permissions](https://developers.cloudflare.com/logs/logpush/permissions/index.md): Review API permissions required for Cloudflare Logs.
+- [Transformers](https://developers.cloudflare.com/logs/logpush/transformers/index.md): Advanced filtering, reshaping, redacting, and computing on Logpush records with SQL before they leave Cloudflare.
 
 ## Instant Logs
 

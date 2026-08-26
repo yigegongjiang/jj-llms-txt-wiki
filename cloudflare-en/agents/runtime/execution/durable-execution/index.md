@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Durable execution with fibers
 
-Last updated Jun 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/durable-execution/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/durable-execution/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Run work that survives Durable Object eviction. `runFiber()` registers a task in SQLite, keeps the agent alive during execution, lets you checkpoint intermediate state with `stash()`, and calls `onFiberRecovered()` on the next activation if the agent was evicted mid-task.
 
@@ -403,7 +403,7 @@ Key points:
 
 ### Chat recovery
 
-`AIChatAgent` builds on fibers for LLM streaming recovery. When `chatRecovery` is enabled, each chat turn is wrapped in a fiber automatically. The framework handles the internal recovery path and exposes `onChatRecovery` for provider-specific strategies. Refer to [Long-running agents: Recovering interrupted LLM streams](https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/#recovering-interrupted-llm-streams) for details.
+`AIChatAgent` and `Think` build on fibers for LLM streaming recovery. Every chat turn is wrapped in a fiber automatically. The framework handles the internal recovery path and exposes `onChatRecovery` for provider-specific strategies. Refer to [Long-running agents: Recovering interrupted LLM streams](https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/#recovering-interrupted-llm-streams) for details.
 
 ## Concurrent fibers
 
@@ -511,5 +511,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/durable-execution/#page","headline":"Durable execution with fibers · Cloudflare Agents docs","description":"Run work that survives Durable Object eviction with runFiber(), startFiber(), keepAlive(), and crash recovery.","url":"https://developers.cloudflare.com/agents/runtime/execution/durable-execution/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/durable-execution/#page","headline":"Durable execution with fibers · Cloudflare Agents docs","description":"Run work that survives Durable Object eviction with runFiber(), startFiber(), keepAlive(), and crash recovery.","url":"https://developers.cloudflare.com/agents/runtime/execution/durable-execution/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build using UI Kit
 
-Last updated Jul 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The default RealtimeKit Meeting UI component gives you a complete meeting experience out of the box, with all the essential features built in. Drop it into your app and you are ready to go.
 
@@ -104,72 +104,6 @@ Note
 The use of background modes should be justified and comply with Apple's App Store Review Guidelines. Apps that misuse background modes or unnecessarily run in the background may be rejected during the app review process.
 
 Source: [Apple Developer Documentation: Declaring Your App's Supported Background Tasks ↗](https://developer.apple.com/documentation/xcode/configuring-background-execution-modes)
-
-Install the RealtimeKit UI Kit by adding the dependency to your `pubspec.yaml` file:
-
-```bash
-flutter pub add realtimekit_ui
-```
-
-Then import the package into your project:
-
-```dart
-import 'package:realtimekit_ui/realtimekit_ui.dart';
-```
-
-Set `compileSdkVersion 36` and `minSdkVersion 24` in your `build.gradle` file at `<project root>/android/app/build.gradle`:
-
-```java
-defaultConfig {
-  ...
-  compileSdkVersion 36
-  minSdkVersion 24
-  ...
-}
-```
-
-Change the Kotlin version to `1.9.0`:
-
-```java
-ext.kotlin_version = '1.9.0'
-```
-
-Set your platform to iOS 13.0 or above in your `Podfile`:
-
-```txt
-platform :ios, '13.0'
-```
-
-Add the following entries to the `Info.plist` file. This gives your app permissions to access the camera and microphone, access photos, and install the required fonts and icons.
-
-```xml
-<key>NSBluetoothPeripheralUsageDescription</key>
-<string>Access Bluetooth to connect to headphones and audio devices during calls.</string>
-<key>NSBluetoothAlwaysUsageDescription</key>
-<string>Access Bluetooth to connect to headphones and audio devices during calls.</string>
-<key>NSCameraUsageDescription</key>
-<string>Access camera to enable video during meetings.</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>Access microphone to enable audio during meetings.</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>Access photos to share images during meetings.</string>
-<key>UIBackgroundModes</key>
-<array>
-  <string>audio</string>
-  <string>voip</string>
-  <string>fetch</string>
-  <string>remote-notification</string>
-</array>
-```
-
-**Optional:** If you are allowing users to download attachments in chat, add the following permissions to your `Info.plist`:
-
-```xml
-<key>LSSupportsOpeningDocumentsInPlace</key>
-<true/>
-<key>UIFileSharingEnabled</key>
-<true/>
-```
 
 **Minimum requirements:** React Native 0.84 or above, React 19 or above.
 
@@ -508,29 +442,6 @@ val rtkUIKit = RealtimeKitUIBuilder.build(uiKitInfo)
 rtkUIKit.startMeeting()
 ```
 
-## Initialize and display the meeting
-
-Create an `RtkMeetingInfo` with your auth token, wrap it in `RealtimeKitUIInfo`, and build the UI Kit. The returned `RealtimeKitUI` object is a Flutter widget — place it directly in your widget tree.
-
-Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/) to fetch the `authToken`.
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:realtimekit_ui/realtimekit_ui.dart';
-
-final meetingInfo = RtkMeetingInfo(authToken: '<auth-token>');
-final uiKitInfo = RealtimeKitUIInfo(meetingInfo);
-final rtkUI = RealtimeKitUIBuilder.build(uiKitInfo: uiKitInfo);
-
-// Place rtkUI in your widget tree
-Navigator.push(
-  context,
-  MaterialPageRoute(builder: (_) => rtkUI),
-);
-```
-
-Call `RealtimeKitUIBuilder.dispose()` when you no longer need the meeting UI.
-
 ## Initialize the SDK
 
 Use the `useRealtimeKitClient` hook from the core React Native package to create a meeting instance: Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/) to fetch the `authToken`.
@@ -606,5 +517,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/#page","headline":"Build using UI Kit · Cloudflare Realtime docs","description":"Get started with the RealtimeKit UI Kit to add a prebuilt meeting experience to your application.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-09","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/#page","headline":"Build using UI Kit · Cloudflare Realtime docs","description":"Get started with the RealtimeKit UI Kit to add a prebuilt meeting experience to your application.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

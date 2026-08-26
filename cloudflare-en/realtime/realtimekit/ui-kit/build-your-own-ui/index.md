@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build Your Own UI
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide explains how to use RealtimeKit UI Kit components to build a custom meeting interface instead of the default full-screen meeting view.
 
@@ -84,20 +84,6 @@ Participant-level components (tile, avatar, name tag) take an `RtkMeetingPartici
 tileView.activate(meeting.localUser)
 tileView.activate(remoteParticipant)
 ```
-
-The Flutter SDK provides `RtkProvider`, a wrapper widget that sets up dependency injection and theming for individual UI Kit widgets.
-
-Wrap your custom widget tree in `RtkProvider` and use individual exported widgets such as `RtkSelfAudioToggleButton`, `RtkSelfVideoToggleButton`, `RtkParticipantTile`, `RtkJoinButton`, and `RtkLeaveButton`.
-
-```dart
-RtkProvider(
-  meeting: meeting,
-  uiKitInfo: RealtimeKitUIInfo(meetingInfo),
-  child: YourCustomMeetingWidget(),
-)
-```
-
-Each widget that needs the meeting client accepts it as a required `meeting` parameter. Participant-level widgets such as `RtkParticipantTile` accept an `RtkMeetingParticipant` directly.
 
 Similar to `RtkMeeting`, `RtkUIProvider` is a wrapper component that provides the design system and UI state context to all child components.
 
@@ -880,167 +866,6 @@ Note
 
 You must manage layout and sizing for these components yourself. Use standard Android layout techniques (XML, ConstraintLayout, LinearLayout) to position components.
 
-The following example wraps a custom widget tree in `RtkProvider` and uses individual UI Kit widgets:
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:realtimekit_ui/realtimekit_ui.dart';
-
-class CustomMeetingPage extends StatefulWidget {
-  final String authToken;
-  const CustomMeetingPage({required this.authToken, super.key});
-
-  @override
-  State<CustomMeetingPage> createState() => _CustomMeetingPageState();
-}
-
-class _CustomMeetingPageState extends State<CustomMeetingPage>
-    implements RtkMeetingRoomEventListener {
-  late final RealtimekitClient meeting;
-  late final RealtimeKitUIInfo uiKitInfo;
-  String meetingState = 'idle';
-
-  @override
-  void initState() {
-    super.initState();
-    meeting = RealtimekitClient();
-    uiKitInfo = RealtimeKitUIInfo(
-      RtkMeetingInfo(authToken: widget.authToken),
-    );
-    meeting.addMeetingRoomEventListener(this);
-    meeting.init(
-      RtkMeetingInfo(authToken: widget.authToken),
-      onSuccess: () => setState(() => meetingState = 'setup'),
-      onError: (error) => setState(() => meetingState = 'error'),
-    );
-  }
-
-  @override
-  void onMeetingRoomJoinCompleted() {
-    setState(() => meetingState = 'joined');
-  }
-
-  @override
-  void onMeetingEnded() {
-    setState(() => meetingState = 'ended');
-  }
-
-  @override
-  void onMeetingRoomLeaveCompleted() {
-    Navigator.of(context).pop();
-  }
-
-  // Required interface methods — no-op for this example
-  @override
-  void onMeetingInitCompleted() {}
-  @override
-  void onMeetingInitFailed(Exception exception) {}
-  @override
-  void onMeetingInitStarted() {}
-  @override
-  void onMeetingRoomJoinStarted() {}
-  @override
-  void onMeetingRoomJoinFailed(Exception exception) {}
-  @override
-  void onMeetingRoomLeaveStarted() {}
-  @override
-  void onActiveTabUpdate(ActiveTab? activeTab) {}
-  @override
-  void onSocketConnectionUpdate(SocketConnectionState state) {}
-
-  @override
-  Widget build(BuildContext context) {
-    return RtkProvider(
-      meeting: meeting,
-      uiKitInfo: uiKitInfo,
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: _buildForState(),
-      ),
-    );
-  }
-
-  Widget _buildForState() {
-    switch (meetingState) {
-      case 'setup':
-        return Column(
-          children: [
-            Expanded(
-              child: RtkParticipantTile(meeting.localUser, height: 300, width: 200),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RtkSelfAudioToggleButton(meeting: meeting),
-                const SizedBox(width: 16),
-                RtkSelfVideoToggleButton(meeting: meeting),
-                const SizedBox(width: 16),
-                RtkJoinButton(meeting: meeting, onMeetingJoined: () {}),
-              ],
-            ),
-          ],
-        );
-      case 'joined':
-        return Column(
-          children: [
-            RtkMeetingTitle(meeting: meeting),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3 / 4,
-                ),
-                itemCount: meeting.participants.active.length + 1,
-                itemBuilder: (context, index) {
-                  final participant = index == 0
-                      ? meeting.localUser
-                      : meeting.participants.active[index - 1];
-                  return RtkParticipantTile(participant);
-                },
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RtkSelfAudioToggleButton(meeting: meeting),
-                RtkSelfVideoToggleButton(meeting: meeting),
-                RtkLeaveButton(meeting: meeting),
-              ],
-            ),
-          ],
-        );
-      case 'ended':
-        return const Center(child: Text('Meeting ended', style: TextStyle(color: Colors.white)));
-      default:
-        return const Center(child: CircularProgressIndicator());
-    }
-  }
-
-  @override
-  void dispose() {
-    meeting.removeMeetingRoomEventListener(this);
-    super.dispose();
-  }
-}
-```
-
-Individual widgets available for custom UIs:
-
-| Widget                      | Required parameter    | Description                                                    |
-| --------------------------- | --------------------- | -------------------------------------------------------------- |
-| RtkSelfAudioToggleButton    | RealtimekitClient     | Microphone toggle with permission handling                     |
-| RtkSelfVideoToggleButton    | RealtimekitClient     | Camera toggle with permission handling                         |
-| RtkJoinButton               | RealtimekitClient     | Join meeting button with loading state                         |
-| RtkLeaveButton              | RealtimekitClient     | Leave meeting button with confirmation dialog                  |
-| RtkParticipantTile          | RtkMeetingParticipant | Video tile with avatar fallback, name tag, and audio indicator |
-| RtkMeetingTitle             | RealtimekitClient     | Meeting title text                                             |
-| RtkNameTag                  | RtkMeetingParticipant | Participant name label                                         |
-| RtkAudioIndicatorIconWidget | RtkMeetingParticipant | Microphone status icon                                         |
-
-Note
-
-The Flutter SDK exports a focused set of composable widgets. For a complete meeting experience, combine these widgets with the Core SDK event listeners (`RtkMeetingRoomEventListener`, `RtkParticipantsEventListener`, `RtkSelfEventListener`) to manage meeting lifecycle and participant state.
-
 The following example uses `RtkUIProvider` and individual components with state-based screen rendering, similar to the web React pattern:
 
 Caution
@@ -1184,5 +1009,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/#page","headline":"Build Your Own UI · Cloudflare Realtime docs","description":"Build a custom meeting interface video UI using RealtimeKit SDK components and Core SDK.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/#page","headline":"Build Your Own UI · Cloudflare Realtime docs","description":"Build a custom meeting interface video UI using RealtimeKit SDK components and Core SDK.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

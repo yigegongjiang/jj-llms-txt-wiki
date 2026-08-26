@@ -13,7 +13,7 @@ Manage Cloudflare network settings for your website
 - [gRPC connections](https://developers.cloudflare.com/network/grpc-connections/index.md): Protect gRPC APIs on proxied endpoints with Cloudflare.
 - [IP geolocation](https://developers.cloudflare.com/network/ip-geolocation/index.md): Add visitor country information via the CF-IPCountry header.
 - [IPv6 compatibility](https://developers.cloudflare.com/network/ipv6-compatibility/index.md): Configure IPv6 compatibility for your Cloudflare domain.
-- [Maximum upload size](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limitsindex.md): View maximum upload size limits by Cloudflare plan.
+- [Maximum upload size](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/index.md#upload-limits): View maximum upload size limits by Cloudflare plan.
 - [Onion Routing and Tor support](https://developers.cloudflare.com/network/onion-routing/index.md): Serve content directly through the Tor network with Onion Routing.
 - [Pseudo IPv4](https://developers.cloudflare.com/network/pseudo-ipv4/index.md): Map IPv6 addresses to IPv4 for legacy origin servers.
 - [Understanding the True-Client-IP Header](https://developers.cloudflare.com/network/true-client-ip-header/index.md): Send the visitor's IP to your origin via True-Client-IP header.

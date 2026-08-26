@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Observatory (beta)
 
-Last updated Jun 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/observatory/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/observatory/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Observatory uses synthetic tests and real user data from browsers to assess the performance of your website. These data sources produce metrics that provide different types of insights into your website’s performance. Cloudflare then uses the analysis run by Observatory to recommend optimizations with the tools that best suit your performance issues.
 
@@ -36,9 +36,9 @@ You can also compare network tests in Observatory by selecting any two completed
 
 ## Real user monitoring (RUM)
 
-Real user monitoring (also known as RUM), on the other hand, captures real metrics from real users accessing a website. This provides information that synthetic tests cannot capture, as users might access your website from different parts of the world, with different network conditions, ISPs, browsers and computer hardware. However, RUM data is only applied to your own website. Real user data also includes two user interaction metrics that synthetic tests do not offer - [First Input Delay (FID) ↗](https://web.dev/fid/) and [Interaction to Next Paint (INP) ↗](https://web.dev/inp/).
+Real user monitoring (also known as RUM), on the other hand, captures real metrics from real users accessing your own websites. This provides information that synthetic tests cannot capture, as users might access your website from different parts of the world, with different network conditions, ISPs, devices, browsers, browser extensions and other software competing for resources. Real user data also includes a user interaction metric that synthetic tests do not offer: [Interaction to Next Paint (INP) ↗](https://web.dev/inp/).
 
-Free customers have RUM enabled automatically, with EU traffic excluded, and can switch it off if they prefer. Customers on other plans may enable RUM as needed.
+Free customers have RUM enabled automatically, with traffic from EEA/UK/CH excluded, and can switch it off if they prefer. Customers on other plans may enable RUM as needed.
 
 [Run test](https://developers.cloudflare.com/speed/observatory/run-speed-test/)
 
@@ -51,5 +51,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/speed/observatory/#page","headline":"Observatory (beta) · Cloudflare Speed docs","description":"Test and monitor your website performance with Cloudflare Observatory.","url":"https://developers.cloudflare.com/speed/observatory/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/speed/observatory/#page","headline":"Observatory (beta) · Cloudflare Speed docs","description":"Test and monitor your website performance with Cloudflare Observatory.","url":"https://developers.cloudflare.com/speed/observatory/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

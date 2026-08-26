@@ -1,5 +1,5 @@
 ---
-description: Write changelog entries for product updates.
+description: Write changelog pages that record notable, dated product changes, the single type for release notes and other product updates.
 title: Changelog
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -12,51 +12,78 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Changelog
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-## Purpose
+A changelog logs notable, dated changes to a product. The tone is instructional and straightforward.
 
-The purpose of a changelog is to log or record notable changes, which then appear as part of the [Cloudflare changelog](https://developers.cloudflare.com/changelog/) and on product-specific changelog pages.
+This page covers how to write one. For the published updates themselves, refer to [Changelog](https://developers.cloudflare.com/changelog/).
 
-Disambiguation
+## When to use it
 
-This page describes the content strategy for changelogs. For updates on Cloudflare products, refer to [Changelog](https://developers.cloudflare.com/changelog/).
+Write a changelog when you need to record notable, dated changes to a product as an ongoing feed. It is not:
 
-## Tone
+* **A blog post.** A changelog entry is a short, factual record of one change, whereas a blog post explains and promotes at length.
+* **The documentation of a change.** An entry records that something changed and links out, whereas the how-to, reference, or concept is where the change is actually documented.
 
-instructional, straightforward
+For the full comparison, refer to [Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/).
 
-## content\_type
+## Title & description
+
+* **Title**: the page title is Changelog.
+* **Description**: name the product and what the changelog tracks, such as recent changes, new features, and bug fixes.
+
+## Scaffold this page
+
+Use the Nimbus changelog recipe to generate this page. Your coding agent pulls the full page skeleton and self-review checklist, then adapts them to your product:
+
+npmyarnpnpm
+
+```
+npx @cloudflare/nimbus-docs add content-changelog
+```
+
+```
+yarn @cloudflare/nimbus-docs add content-changelog
+```
+
+```
+pnpm @cloudflare/nimbus-docs add content-changelog
+```
+
+Adapt the frontmatter the recipe emits to Cloudflare's schema: set [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype) and `products` instead of the generic fields the recipe emits, such as `type`.
+
+## Component guidance
+
+* [**ProductChangelog**](https://developers.cloudflare.com/style-guide/build-the-page/components/product-changelog/) renders a product's entries on the changelog page, pulling from the entries folder so the page stays current as entries are added.
+* **Entries** are the body: each dated MDX file in the changelog collection is one notable change, with its own title, description, and date.
+* **What does not fit:** long-form explanation or promotion. Keep an entry short and factual, and link to the how-to or concept that covers the change in depth.
+
+## Frontmatter
 
 ```yaml
 pcx_content_type: changelog
 products:
   - product-a
   - product-b
-  - product-c
 ```
 
-For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
+For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
 
 ## Ownership
 
-Product managers and engineers maintain changelogs manually or via an automated process that their team owns. PCX provides a review but does not own creating or writing changelogs.
+Product managers and engineers maintain changelogs manually or through an automated process that their team owns. PCX provides a review but does not own creating or writing changelogs.
 
-## Structure
+## Building a changelog
 
-When creating a changelog, you need an MDX page file and a corresponding folder of changelog entries.
-
-The combination of these files allows us to:
+A changelog needs an MDX page file and a corresponding folder of changelog entries. The combination of these files allows us to:
 
 * Render traditional changelog content on an [HTML page](https://developers.cloudflare.com/dns/changelog/).
 * Programmatically create an [RSS feed](https://developers.cloudflare.com/changelog/rss/dns.xml) with the changelog content.
 * Pull all our changelog content into a [Cloudflare-wide changelog](https://developers.cloudflare.com/changelog/).
 
-### Markdown file
+### Changelog page
 
-Your Markdown file needs to have several special values to pull in the changelog information. These values are highlighted in the sample page.
-
-For more information about the `ProductChangelog` component, refer to the [style guide](https://developers.cloudflare.com/style-guide/components/product-changelog/).
+The MDX page needs several special values to pull in the changelog information, highlighted in the sample page. For more information about the ProductChangelog component, refer to [ProductChangelog](https://developers.cloudflare.com/style-guide/build-the-page/components/product-changelog/).
 
 ```mdx
 ---
@@ -76,9 +103,7 @@ import { ProductChangelog } from "~/components";
 
 ### Changelog entries
 
-Changelog entries live in a different location of our docs, [/src/content/changelog/ ↗](https://github.com/cloudflare/cloudflare-docs/tree/production/src/content/changelog).
-
-Each entry will be its own MDX file, similar to the following.
+Changelog entries live in a different location of our docs, [/src/content/changelog/ ↗](https://github.com/cloudflare/cloudflare-docs/tree/production/src/content/changelog). Each entry is its own MDX file, similar to the following.
 
 ```mdx
 ---
@@ -122,20 +147,20 @@ query Viewer {
 To learn more and get started, refer to the [DNS Analytics documentation](/dns/additional-options/analytics/#analytics).
 ```
 
-### Properties
+### Entry properties
 
-Each changelog entries has the following properties:
+Each changelog entry has the following properties:
 
-* `title` `string`required
+* `title` `string` required
 
   * Shown in the title heading and on social media embeds.
-* `description` `string`required
+* `description` `string` required
 
   * Shown in social media embeds.
-* `date` `date`required
+* `date` `date` required
 
   * This should be a date in `YYYY-MM-DD` format. For example, `2025-02-04`.
-* `products` `Array<String>`(default: current location) required
+* `products` `Array<String>` (default: current location) required
 
   * The products list is case-sensitive. Only use lowercase.
   * This should be an array of strings, each referring to the name of a file in the products collection without the file extension.
@@ -149,10 +174,16 @@ Each changelog entries has the following properties:
   	group: Developer platform  
   	show: false  
   ```
-* `hidden` `Boolean`(default: false) optional
+* `hidden` `Boolean` (default: false) optional
 
   * If `true`, this page will be accessible from the direct link, but hidden from the main [changelog](https://developers.cloudflare.com/changelog/) page and all RSS feeds.
   * If `true`, will also add a `noindex` property so the page is not indexed by search crawlers.
+
+## Writing for AI and agents
+
+* **Dated, atomic entries.** Give each change its own dated entry with a title and description, because an agent extracts and orders changes by entry rather than by scanning prose.
+* **Literal dates and products.** Use `YYYY-MM-DD` dates and exact product names in frontmatter, so a reader or agent can filter and sort the feed reliably.
+* **Link out for depth.** Keep the entry to the change itself and link to the how-to or concept that explains it, because the changelog records what changed, not how to use it.
 
 Was this helpful?
 
@@ -163,5 +194,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/#page","headline":"Changelog · Cloudflare Style Guide","description":"Write changelog entries for product updates.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/#page","headline":"Changelog · Cloudflare Style Guide","description":"Write changelog pages that record notable, dated product changes, the single type for release notes and other product updates.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

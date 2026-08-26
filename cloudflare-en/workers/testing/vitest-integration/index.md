@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Vitest integration
 
-Last updated Jul 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/vitest-integration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/vitest-integration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-For most users, Cloudflare recommends using the Workers Vitest integration for unit testing Workers and [Pages Functions](https://developers.cloudflare.com/pages/functions/) projects. [Vitest ↗](https://vitest.dev/) is a popular JavaScript testing framework featuring a very fast watch mode, Jest compatibility, and out-of-the-box support for TypeScript. In this integration, Cloudflare provides a custom pool that allows your Vitest tests to run _inside_ the Workers runtime.
+For most users, Cloudflare recommends using the Workers Vitest integration for unit testing Workers and [Pages Functions](https://developers.cloudflare.com/pages/functions/) projects. [Vitest ↗](https://vitest.dev/) is a popular JavaScript testing framework featuring a fast watch mode, Jest compatibility, and default TypeScript support. Cloudflare provides the `@cloudflare/vitest-plugin` Vite plugin, which runs your Vitest tests inside the Workers runtime.
 
 The Workers Vitest integration:
 
@@ -24,7 +24,9 @@ The Workers Vitest integration:
 * Runs tests fully-locally using [Miniflare ↗](https://miniflare.dev/).
 * Leverages Vitest's hot-module reloading for near instant reruns.
 * Supports projects with multiple Workers.
-[Write your first test](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/)
+[Write your first test](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/) 
+
+If you use `@cloudflare/vitest-pool-workers`, refer to [Migrate to Vitest plugin](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-to-vitest-plugin/).
 
 Was this helpful?
 
@@ -35,5 +37,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/testing/vitest-integration/#page","headline":"Vitest integration · Cloudflare Workers docs","description":"Run unit and integration tests for Cloudflare Workers inside the Workers runtime using the Vitest integration.","url":"https://developers.cloudflare.com/workers/testing/vitest-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/testing/vitest-integration/#page","headline":"Vitest integration · Cloudflare Workers docs","description":"Run unit and integration tests for Cloudflare Workers inside the Workers runtime using the Vitest integration.","url":"https://developers.cloudflare.com/workers/testing/vitest-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

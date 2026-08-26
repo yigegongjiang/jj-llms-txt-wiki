@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # UI Kit Addons
 
-Last updated May 11, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A collection of UI Kit addons that extend RealtimeKit's prebuilt UI Kit capabilities with additional interactive components and controls for enhanced meeting experiences.
 
-This page is not available for the **iOS, Android, Flutter, React Native**platform.
+This page is not available for the **iOS, Android, React Native**platform.
 
 WebMobile
 
@@ -24,7 +24,7 @@ ReactWeb ComponentsAngular
 
 Note
 
-UI Kit Addons are currently only available for web platforms (React, Web Components, and Angular). Mobile platform support (iOS, Android, Flutter, and React Native) is not available at this time.
+UI Kit Addons are only available for web platforms (React, Web Components, and Angular). Mobile platform support is not available.
 
 The UI Kit addons library provides the following categories of components:
 
@@ -778,5 +778,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/#page","headline":"UI Kit Addons · Cloudflare Realtime docs","description":"Extend RealtimeKit UI Kit with addon components for host controls, reactions, and more.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-11","publisher":{"@type":"Organization","name":"Cloudflare","url":"https://www.cloudflare.com/"},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/#page","headline":"UI Kit Addons · Cloudflare Realtime docs","description":"Extend RealtimeKit UI Kit with addon components for host controls, reactions, and more.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```
