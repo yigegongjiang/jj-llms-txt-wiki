@@ -228,6 +228,8 @@ bun add zod@https://registry.npmjs.org/zod/-/zod-3.21.4.tgz
 }
 ```
 
+A tarball URL can carry credentials, such as `https://user:password@example.com/zod-3.21.4.tgz`. Bun sends them as an `Authorization: Basic` header and requests the URL without them, like npm. The URL, credentials included, is written to `package.json` and to the lockfile.
+
 ---
 
 ## CLI Usage
@@ -312,7 +314,8 @@ bun add <package> <@version>
 ### Installation Control
 
 <ParamField path="--dry-run" type="boolean">
-  Perform a dry run without making changes
+  Resolve the packages but don't install them, update <code>package.json</code>, or save a lockfile (the project's own
+  lifecycle scripts still run)
 </ParamField>
 
 <ParamField path="--force" type="boolean">

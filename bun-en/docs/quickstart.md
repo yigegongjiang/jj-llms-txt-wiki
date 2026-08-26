@@ -230,7 +230,7 @@ Bun can also execute `"scripts"` from your `package.json`. Add the following scr
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^6"
+    "typescript": "^7"
   }
 }
 ```

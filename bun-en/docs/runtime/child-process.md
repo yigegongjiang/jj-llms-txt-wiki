@@ -94,7 +94,7 @@ console.log(output); // "Hello from ReadableStream!"
 
 ## Output streams
 
-Read the subprocess's output from the `stdout` and `stderr` properties. By default `stdout` is an instance of `ReadableStream`; `stderr` is inherited from the parent process, so `proc.stderr` is `undefined` unless you pass `stderr: "pipe"`.
+Read the subprocess's output from the `stdout` and `stderr` properties. By default `stdout` is an instance of `ReadableStream`; `stderr` is inherited from the parent process, so `proc.stderr` is `undefined`. Pass `stderr: "pipe"` to get a `ReadableStream` for it as well.
 
 ```ts
 const proc = Bun.spawn(["bun", "--version"]);
@@ -542,7 +542,7 @@ namespace SpawnOptions {
     killSignal?: string | number;
     maxBuffer?: number;
     cgroup?: string | number; // Linux only; cgroup directory path or open directory fd
-    terminal?: TerminalOptions | Terminal; // PTY (POSIX) / ConPTY (Windows) support
+    terminal?: TerminalOptions | Terminal; // Bun.spawn only (spawnSync throws); PTY (POSIX) / ConPTY (Windows) support
   }
 
   type Readable =

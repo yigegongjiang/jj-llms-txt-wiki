@@ -2,28 +2,28 @@
   "version": 1,
   "entries": {
     "https://bun.com/docs/bundler/bytecode.md": {
-      "etag": "W/\"6fb5a06527df0ec07f100cd6d11b39e0\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:14 GMT"
+      "etag": "W/\"4caf57b2788809f4f6eb1609dfea6639\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/css.md": {
       "etag": "W/\"a943e94d41148cfc7b0636f7154a4044\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:14 GMT"
     },
     "https://bun.com/docs/bundler/esbuild.md": {
-      "etag": "W/\"edfc1253c46d25e446fa6a43362e61b1\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:14 GMT"
+      "etag": "W/\"131aeddf1e175bc472f8cff1777c92f3\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/executables.md": {
-      "etag": "W/\"0f562db21a5a2afb0d8c7abbfe652cf4\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:14 GMT"
+      "etag": "W/\"dab49cf237f1acb7c0a75232990e8a4d\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/fullstack.md": {
-      "etag": "W/\"c5f57a8f2e926d6f6889da95796a678e\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:14 GMT"
+      "etag": "W/\"f6180dd4ff54949caa68d94ab89cfc30\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/hot-reloading.md": {
-      "etag": "W/\"c38acbdb968188ce4d175b3639235804\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:14 GMT"
+      "etag": "W/\"2fdf6a76acb8ad8f56747faff36de82e\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/html-static.md": {
       "etag": "W/\"4eddc6ac687bf83461f6abf55a8c8fa3\"",
@@ -34,16 +34,16 @@
       "last_modified": "Sun, 16 Aug 2026 03:14:25 GMT"
     },
     "https://bun.com/docs/bundler/macros.md": {
-      "etag": "W/\"b5e03dc85829c6f1ba2d27e654819fea\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:15 GMT"
+      "etag": "W/\"923b1ecad960c2f72a13da8084753122\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/minifier.md": {
-      "etag": "W/\"41a19e51f16503b8480e52e7be719d20\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:15 GMT"
+      "etag": "W/\"0a9f6fc92fc7e50c01f2e62303b4f1e1\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/plugins.md": {
-      "etag": "W/\"44bc3688258bd31c159ae5a8dd3dcde5\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:15 GMT"
+      "etag": "W/\"24c0e82672b290bea8887b5edf7faa68\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/bundler/standalone-html.md": {
       "etag": "W/\"7c75a237856569284be3c43536be51a7\"",
@@ -162,8 +162,8 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:16 GMT"
     },
     "https://bun.com/docs/guides/deployment/vercel.md": {
-      "etag": "W/\"2a348188717672f70f319a66d5c7132c\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:16 GMT"
+      "etag": "W/\"45631fec7d45e7594419b300ba522978\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/guides/ecosystem/astro.md": {
       "etag": "W/\"6b1eb625ef3c3c456414b147cd28352e\"",
@@ -206,8 +206,8 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:17 GMT"
     },
     "https://bun.com/docs/guides/ecosystem/neon-serverless-postgres.md": {
-      "etag": "W/\"bbacdae2205e10c066bdf5c92c0ea0f5\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:17 GMT"
+      "etag": "W/\"db4a02d0942b4afa35923bf0a68cf4b2\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:08 GMT"
     },
     "https://bun.com/docs/guides/ecosystem/nextjs.md": {
       "etag": "W/\"3515a8dbdb631573302f1a775ebf3c0f\"",
@@ -370,8 +370,8 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:19 GMT"
     },
     "https://bun.com/docs/guides/install/from-npm-install-to-bun-install.md": {
-      "etag": "W/\"d32495f3ac8811063701921d9626287e\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:19 GMT"
+      "etag": "W/\"287d1bb438feb6fbf15c0030ef6a8bcd\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/guides/install/git-diff-bun-lockfile.md": {
       "etag": "W/\"60889279b672ecf6ad6034dd8e230a5d\"",
@@ -670,8 +670,8 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:22 GMT"
     },
     "https://bun.com/docs/guides/test/todo-tests.md": {
-      "etag": "W/\"f245108d00cf9c6fa2b77c78611e96e0\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:22 GMT"
+      "etag": "W/\"ac4ca3816207be032e467432ee056b5e\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/guides/test/update-snapshots.md": {
       "etag": "\"2bbb042bbdede512f6d345fa0616b68e\"",
@@ -814,8 +814,8 @@
       "last_modified": "Sun, 16 Aug 2026 03:28:51 GMT"
     },
     "https://bun.com/docs/installation.md": {
-      "etag": "W/\"d13ed5f413fcd46319503691aac650d7\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"7cc80508a7f0974af0d40abc462b5862\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/bunx.md": {
       "etag": "W/\"7704a4abdd40ae97d9f3c2afdd7717da\"",
@@ -826,56 +826,56 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
     },
     "https://bun.com/docs/pm/cli/add.md": {
-      "etag": "W/\"89fe93ccbe135bc006deef2a49d1f093\"",
-      "last_modified": "Sun, 16 Aug 2026 03:30:24 GMT"
+      "etag": "W/\"367ea4ba23db19d73a5d1dd86f37c19e\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/audit.md": {
       "etag": "W/\"df3895ae3fa13e380159d65365e959eb\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
     },
     "https://bun.com/docs/pm/cli/dedupe.md": {
-      "etag": "W/\"ebdd757345fb5c1168498d7bb3114713\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"eb6e2850da71b84a4a29d7a7029eab65\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/info.md": {
       "etag": "W/\"b1caa41d1025ff8dd68e3eacaaa047d9\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
     },
     "https://bun.com/docs/pm/cli/install.md": {
-      "etag": "W/\"fb09c8e3d390841770f32c9858aae853\"",
-      "last_modified": "Sun, 16 Aug 2026 03:35:19 GMT"
+      "etag": "W/\"cc56a0619853a9f33cef08eef1be221c\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/link.md": {
-      "etag": "W/\"da37a4b668659387103cb342ca323098\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"3d62fa1e3ffe85aaf19edfcb9afe9a26\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/outdated.md": {
-      "etag": "W/\"b7e5193bd72df72693baa0fb766a967a\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"32f97ce74b1cb41c6d42fbc0f379acb6\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/patch.md": {
-      "etag": "W/\"2607a07c9a253f3d9c7c621e58d8611b\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"1fb1a4a372ace6e8164b1f51765c8bed\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/pm.md": {
-      "etag": "W/\"4226aa2fa4829c57821d25f2d1ae0954\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"f0013f65240bfcc30805397b1d4fddaa\"",
+      "last_modified": "Wed, 26 Aug 2026 00:13:49 GMT"
     },
     "https://bun.com/docs/pm/cli/prune.md": {
-      "etag": "W/\"9ddef3d5297e96c0bd7ee3ff19aff0bb\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"9c920eb30d851eeabe1cbc0ecf1ddad7\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/publish.md": {
-      "etag": "W/\"d38915cd5f8e6b8648276018e2424be5\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"dc2abdf35a7bcd25fb05dd6102cbccc8\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/remove.md": {
-      "etag": "W/\"418472f52588939bdbdf7d9329246cb5\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"76b3a96bb89f09a6f985b676d90af3f9\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/update.md": {
-      "etag": "W/\"6a9dea727bbbe41237486fb17fc95644\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"5f97ef9c8c498a31997f41bc5780ff56\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/cli/why.md": {
       "etag": "W/\"61ca3cb4335455bb90aa337558fa2b89\"",
@@ -886,16 +886,16 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
     },
     "https://bun.com/docs/pm/global-cache.md": {
-      "etag": "W/\"89c9333c6987e5e6aee28130c5793229\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"cd3077808f733dae293dca2fe7131639\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/global-store.md": {
       "etag": "W/\"b698208679e49ef0f3680826e431f1a5\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
     },
     "https://bun.com/docs/pm/isolated-installs.md": {
-      "etag": "W/\"5eb9c991223153c2bccafd3957ea90c2\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:24 GMT"
+      "etag": "W/\"d156b5c1784fe432657bf48cb37cc071\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/pm/lifecycle.md": {
       "etag": "W/\"459d0468a0bd2cdc7725702b237b3575\"",
@@ -922,16 +922,16 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
     },
     "https://bun.com/docs/pm/workspaces.md": {
-      "etag": "W/\"e244fe9f97cf684f3ad502c794e8367d\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
+      "etag": "W/\"1c64e3d1867f99cbaed3e7d666b18853\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/project/benchmarking.md": {
       "etag": "W/\"26b240d3284324e6c56222fd0fa7b32b\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
     },
     "https://bun.com/docs/project/bindgen.md": {
-      "etag": "W/\"002ad1719195130efe8fe14671b9926f\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
+      "etag": "W/\"8c9971164e9cad94c07351d24e76ccfa\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:09 GMT"
     },
     "https://bun.com/docs/project/building-windows.md": {
       "etag": "W/\"6ceb803bcd67671f274b25b193e2bddd\"",
@@ -942,16 +942,16 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
     },
     "https://bun.com/docs/project/license.md": {
-      "etag": "W/\"f21c61b6af43a78d25ad02543c48b0f1\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
+      "etag": "W/\"352affbf4bb6ba526f634c3f5895e177\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/project/roadmap.md": {
       "etag": "\"b90bb1c575d73b091e59b4ccc8fca150\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
     },
     "https://bun.com/docs/quickstart.md": {
-      "etag": "W/\"37e210b6875478b068c031490c305a6b\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
+      "etag": "W/\"f89c19025130b3dcfd7fbc15cda6838e\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/archive.md": {
       "etag": "W/\"9b7b8385349917d33cb1b67bc708a7d9\"",
@@ -962,24 +962,24 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
     },
     "https://bun.com/docs/runtime/binary-data.md": {
-      "etag": "W/\"0b3e09b7542b5ffc50ad8b76374667f7\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
+      "etag": "W/\"1a693468346326b4474d1d30d518d3a2\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/bun-apis.md": {
       "etag": "W/\"32dfaa8b489f481d691cb6fdaca07d58\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
     },
     "https://bun.com/docs/runtime/bunfig.md": {
-      "etag": "W/\"449d8d84c5a806e53cc59d1d1ee3a25c\"",
-      "last_modified": "Sun, 16 Aug 2026 01:05:23 GMT"
+      "etag": "W/\"7c43e178c81ae073c6f8d7a161cefead\"",
+      "last_modified": "Wed, 26 Aug 2026 00:13:49 GMT"
     },
     "https://bun.com/docs/runtime/c-compiler.md": {
-      "etag": "W/\"9a6c0007831d0ff35f8a78bf82154fdd\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
+      "etag": "W/\"59c54e72a7e38c1b8dc010edb13c7a2a\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/child-process.md": {
-      "etag": "W/\"d1131e872a8f1858a399009bfbf294ae\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
+      "etag": "W/\"afda47454cde69dcc3165932f57d8e03\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/color.md": {
       "etag": "W/\"c336fb11ba8463b463ca0f054409d5db\"",
@@ -1002,16 +1002,16 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:25 GMT"
     },
     "https://bun.com/docs/runtime/debugger.md": {
-      "etag": "W/\"ad09a4d5c8b922a7f93bf9cbb2efc44f\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"0f7c347da1d64fd46b8f59778d9112df\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/environment-variables.md": {
-      "etag": "W/\"d433511651efe2bde747108a939cae99\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"0670f5962978350ec7f6c008ea095187\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/ffi.md": {
-      "etag": "W/\"719669327751fd37a9169303c9ff20c6\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"ecff72859ba19a936ef1168174e17ad7\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/file-io.md": {
       "etag": "W/\"a0169b01b6275281f733bac646407b11\"",
@@ -1022,20 +1022,20 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
     },
     "https://bun.com/docs/runtime/file-types.md": {
-      "etag": "W/\"6775fa34da522bb2029fa075e280ee3f\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"81c49c0cdb5f682d713d6e294d62cc17\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/glob.md": {
-      "etag": "W/\"3c3c64fddc808a06f47443e6bcfb1264\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"927459684e70b3b50ba9dfe355d8e224\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/globals.md": {
       "etag": "W/\"7bd6cc8a38b34929125251507e96fc86\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
     },
     "https://bun.com/docs/runtime/hashing.md": {
-      "etag": "W/\"4942def1b13be6bd7093f3e75305780e\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"b18b6a716576c4a45a637a531ab43514\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/html-rewriter.md": {
       "etag": "W/\"d5f8f0568404a9137574d2990f10d401\"",
@@ -1062,8 +1062,8 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
     },
     "https://bun.com/docs/runtime/http/tls.md": {
-      "etag": "W/\"eb08844c4c3d69ccf40b27c14d5731b9\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"6762b877866340b9462c538b1de43338\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/http/websockets.md": {
       "etag": "W/\"ecffc5b88c4ee86e24cc9c80d765baf2\"",
@@ -1090,8 +1090,8 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
     },
     "https://bun.com/docs/runtime/module-resolution.md": {
-      "etag": "W/\"9ae8aacf574ac10adffc75215bd4c6a9\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:26 GMT"
+      "etag": "W/\"51f273e3727ba4195a530039310ab55d\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/networking/dns.md": {
       "etag": "W/\"a8e259c23ea2e87e67d173372163e43e\"",
@@ -1118,20 +1118,20 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
     },
     "https://bun.com/docs/runtime/plugins.md": {
-      "etag": "W/\"38c569e001e3e03ac4e2a67e78093efb\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
+      "etag": "W/\"fd998f3c7a0cb8afdcde0051d8614957\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/redis.md": {
-      "etag": "W/\"e092d5f0ac35bce897d41a62f603809c\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
+      "etag": "W/\"cb09879009383e17b3e0e2b9305a6077\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/repl.md": {
       "etag": "W/\"36eab4dd204eb29d6a9287c07494609e\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
     },
     "https://bun.com/docs/runtime/s3.md": {
-      "etag": "W/\"218026b0a8d6d485fd9c55fe6c0febfa\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
+      "etag": "W/\"119ae3e4b86374574c179fb7b36cd9cd\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/secrets.md": {
       "etag": "W/\"a9fbebfd429b74eb3c0af2c5e2ad51ad\"",
@@ -1146,20 +1146,20 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
     },
     "https://bun.com/docs/runtime/sql.md": {
-      "etag": "W/\"3e8556ab2156cdb591b7fc0dc87bc576\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
+      "etag": "W/\"c5703b8d70cb18260971d9dd92bda09b\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/sqlite.md": {
       "etag": "W/\"1d8609cd7013741a99798df2ea2be407\"",
       "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
     },
     "https://bun.com/docs/runtime/streams.md": {
-      "etag": "W/\"c6ef6d06345730a7fb45fde86a760db1\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
+      "etag": "W/\"b9921d20e981a58058dc0035d5f8fd60\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/templating/create.md": {
-      "etag": "W/\"1ca52b37d95d8fe408f13a475c62336b\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
+      "etag": "W/\"b55778e396dd573bda0cbf6a855b1de5\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/templating/init.md": {
       "etag": "W/\"e2f7328c04d1ee2fbbd52835ec937c0b\"",
@@ -1186,8 +1186,8 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:27 GMT"
     },
     "https://bun.com/docs/runtime/webview.md": {
-      "etag": "W/\"25e02c1242b881db57a09dad97e47a3b\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"3dff71c120e44b2ce856449959f4e457\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/runtime/workers.md": {
       "etag": "W/\"c8741731e8bb4411f30bfaa26ac2b119\"",
@@ -1202,12 +1202,12 @@
       "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
     },
     "https://bun.com/docs/test/code-coverage.md": {
-      "etag": "W/\"fc9f8243ed0187841e6cb568eba0e985\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"d4ed6d4c2551ac4fbb4c6b5a91af630e\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/test/configuration.md": {
-      "etag": "W/\"98072c3622a99e1e50c123d765c8c1fa\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"1e96458fb9cbeefcd129d18abc4840f0\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/test/dates-times.md": {
       "etag": "W/\"12ef117797d46554fa603a57e9c754b2\"",
@@ -1230,24 +1230,24 @@
       "last_modified": "Sun, 16 Aug 2026 03:38:26 GMT"
     },
     "https://bun.com/docs/test/parallel.md": {
-      "etag": "W/\"9762aa642843e1f6df9541b73fc0fd2d\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"2ae589eaf7479ae004a0297b37fd51b3\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/test/reporters.md": {
-      "etag": "W/\"bf0081fbf33faf2ff53994b20d081a24\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"5861dbe9b82e1f83dd99c70db7a27701\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/test/runtime-behavior.md": {
-      "etag": "W/\"eb8224754aafcf7dc0d8861bc2311341\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"96b5f7451987477e7c58b2caa84e1ea3\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/test/snapshots.md": {
-      "etag": "W/\"a2a5f56d03eb73038a59bb98c799f8dc\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"7367f5dd3c24c78e7a201e0b10554e31\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/test/writing-tests.md": {
-      "etag": "W/\"a548f5735ecb25c7feb90d7110ce2cc0\"",
-      "last_modified": "Sun, 16 Aug 2026 04:05:28 GMT"
+      "etag": "W/\"4335985c160d86b44d60bce3065d3bee\"",
+      "last_modified": "Wed, 26 Aug 2026 01:13:10 GMT"
     },
     "https://bun.com/docs/typescript-6.md": {
       "etag": "W/\"c98d63f023a06cf1612ada04164afc20\"",

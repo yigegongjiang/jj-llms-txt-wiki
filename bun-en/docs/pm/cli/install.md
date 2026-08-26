@@ -175,6 +175,20 @@ Bun does not enable `--frozen-lockfile` automatically in CI; pass the flag or us
 
 To validate the lockfile without installing, use `bun install --frozen-lockfile --dry-run`.
 
+### Offline installs
+
+With a warm cache, `bun install` can run without the network:
+
+```bash terminal icon="terminal"
+# Use cached package metadata regardless of age; only fetch what is missing from the cache
+bun install --prefer-offline
+
+# Never touch the network (registry, tarball URLs, git); a required dependency that is not cached is an error
+bun install --offline
+```
+
+`--prefer-offline` is also what `install.prefer = "offline"` in `bunfig.toml` selects; `install.offline = true` is the config form of `--offline`. With a complete restored cache, `--offline --frozen-lockfile` makes a CI install fully deterministic and network-free; `--prefer-offline` still fetches whatever the cache is missing.
+
 See [lockfile](/pm/lockfile) for more on `bun.lock`.
 
 ---
@@ -485,7 +499,7 @@ rm -rf node_modules
 bun install --backend copyfile
 ```
 
-**`symlink`** is typically only used for `file:` dependencies internally. To prevent infinite loops, it skips symlinking the `node_modules` folder.
+**`symlink`** is typically only used for `file:` dependencies internally (for example `file:../foo` and transitive `file:` dependencies). `link:` dependencies do not use this backend; Bun installs them as a single symlink to the linked directory.
 
 If you install with `--backend=symlink`, Node.js won't resolve node_modules of dependencies unless each dependency has its own node_modules folder or you pass `--preserve-symlinks` to `node` or `bun`. See [Node.js documentation on `--preserve-symlinks`](https://nodejs.org/api/cli.html#--preserve-symlinks).
 
@@ -690,7 +704,8 @@ bun install <name>@<version>
 ### Installation Process Control
 
 <ParamField path="--dry-run" type="boolean">
-  Perform a dry run without making changes
+  Resolve dependencies but don't install packages, update package.json, or save a lockfile (the project's own lifecycle
+  scripts still run)
 </ParamField>
 
 <ParamField path="--force" type="boolean">

@@ -69,10 +69,10 @@ import { test, expect } from "bun:test";
 
 test("inline snapshot", () => {
   expect({ hello: "world" }).toMatchInlineSnapshot(`
-{
-  "hello": "world",
-}
-`);
+    {
+      "hello": "world",
+    }
+  `);
 });
 ```
 
