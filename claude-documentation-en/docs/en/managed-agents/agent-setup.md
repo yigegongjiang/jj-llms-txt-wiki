@@ -14,17 +14,17 @@ Create the agent once as a reusable resource and reference it by ID each time yo
 
 ## Agent configuration fields
 
-| Field         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`        | Required. A human-readable name for the agent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `model`       | Required. The Claude [model](https://platform.claude.com/docs/en/about-claude/models/overview) that powers the agent. Accepts a model ID string or an object, for example `{"id": "claude-opus-5"}`. Claude 4.5 and later models are supported. The object form also accepts `speed`, `effort`, and `inference_geo` fields; see the tips under [Create an agent](https://platform.claude.com/docs/en/managed-agents/agent-setup#create-an-agent), [Effort levels](https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels), and [Pin the inference geo](https://platform.claude.com/docs/en/managed-agents/agent-setup#pin-the-inference-geo). |
-| `system`      | A [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role) that defines the agent's behavior and persona. The system prompt is distinct from [user messages](https://platform.claude.com/docs/en/managed-agents/reference#event-types), which should describe the work to be done.                                                                                                                                                                                                                                                                                            |
-| `tools`       | The tools available to the agent. Combines [pre-built agent tools](https://platform.claude.com/docs/en/managed-agents/tools), [MCP tools](https://platform.claude.com/docs/en/managed-agents/mcp-connector), and [custom tools](https://platform.claude.com/docs/en/managed-agents/tools#custom-tools).                                                                                                                                                                                                                                                                                                                                                           |
-| `mcp_servers` | [MCP servers](https://platform.claude.com/docs/en/managed-agents/mcp-connector) that provide standardized third-party capabilities.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `skills`      | [Skills](https://platform.claude.com/docs/en/managed-agents/skills) that supply domain-specific context with progressive disclosure.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `multiagent`  | A coordinator declaration listing the agents this agent can delegate to. See [Multiagent orchestration](https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration).                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `description` | A description of what the agent does.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `metadata`    | Arbitrary key-value pairs for your own tracking.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Field         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`        | Required. A human-readable name for the agent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `model`       | Required. The Claude [model](https://platform.claude.com/docs/en/models/overview) that powers the agent. Accepts a model ID string or an object, for example `{"id": "claude-opus-5"}`. Claude 4.5 and later models are supported. The object form also accepts `speed`, `effort`, and `inference_geo` fields; see the tips under [Create an agent](https://platform.claude.com/docs/en/managed-agents/agent-setup#create-an-agent), [Effort levels](https://platform.claude.com/docs/en/build-with-claude/effort#effort-levels), and [Pin the inference geo](https://platform.claude.com/docs/en/managed-agents/agent-setup#pin-the-inference-geo). |
+| `system`      | A [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role) that defines the agent's behavior and persona. The system prompt is distinct from [user messages](https://platform.claude.com/docs/en/managed-agents/reference#event-types), which should describe the work to be done.                                                                                                                                                                                                                                                                               |
+| `tools`       | The tools available to the agent. Combines [pre-built agent tools](https://platform.claude.com/docs/en/managed-agents/tools), [MCP tools](https://platform.claude.com/docs/en/managed-agents/mcp-connector), and [custom tools](https://platform.claude.com/docs/en/managed-agents/tools#custom-tools).                                                                                                                                                                                                                                                                                                                                              |
+| `mcp_servers` | [MCP servers](https://platform.claude.com/docs/en/managed-agents/mcp-connector) that provide standardized third-party capabilities.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `skills`      | [Skills](https://platform.claude.com/docs/en/managed-agents/skills) that supply domain-specific context with progressive disclosure.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `multiagent`  | A coordinator declaration listing the agents this agent can delegate to. See [Multiagent orchestration](https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration).                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `description` | A description of what the agent does.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `metadata`    | Arbitrary key-value pairs for your own tracking.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 You can also override `model`, `system`, `tools`, `mcp_servers`, and `skills` for a single session without changing the agent. An `effort` level set inside a per-session `model` override isn't applied, and because the override replaces the agent's `model` object in full, a session created with a `model` override runs at the model's default effort level; to run at a specific effort level, set `effort` on the agent and don't override `model` for that session. See [Override agent configuration for a session](https://platform.claude.com/docs/en/managed-agents/sessions#override-agent-configuration-for-a-session).
 
@@ -52,17 +52,24 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   AGENT_VERSION=$(jq -r '.version' <<< "$agent")
   ```
 
-  ```bash CLI
-  agent=$(ant beta:agents create \
-    --name "Coding Assistant" \
-    --model '{id: claude-opus-5}' \
-    --system "You are a helpful coding agent." \
-    --tool '{type: agent_toolset_20260401}' \
-    --format json)
+  <MultiFileExample language="cli" label="CLI">
+    ```bash CLI
+    agent=$(ant beta:agents create --format json < coding-assistant.agent.yaml)
 
-  AGENT_ID=$(jq -r '.id' <<< "$agent")
-  AGENT_VERSION=$(jq -r '.version' <<< "$agent")
-  ```
+    AGENT_ID=$(jq -r '.id' <<< "$agent")
+    ```
+
+    <File filename="coding-assistant.agent.yaml">
+      ```yaml
+      name: Coding Assistant
+      model:
+        id: claude-opus-5
+      system: You are a helpful coding agent.
+      tools:
+        - type: agent_toolset_20260401
+      ```
+    </File>
+  </MultiFileExample>
 
   ```python Python
   agent = client.beta.agents.create(
@@ -221,15 +228,23 @@ The following example pins an agent to US inference and prints the `inference_ge
   echo "Inference geo: $(jq -r '.model.inference_geo' <<< "$agent")"
   ```
 
-  ```bash CLI
-  agent=$(ant beta:agents create \
-    --name "Geo-pinned assistant" \
-    --model '{id: claude-opus-5, inference_geo: us}' \
-    --system "You are a helpful assistant." \
-    --format json)
+  <MultiFileExample language="cli" label="CLI">
+    ```bash CLI
+    agent=$(ant beta:agents create --format json < geo-pinned.agent.yaml)
 
-  echo "Inference geo: $(jq -r '.model.inference_geo' <<< "$agent")"
-  ```
+    echo "Inference geo: $(jq -r '.model.inference_geo' <<< "$agent")"
+    ```
+
+    <File filename="geo-pinned.agent.yaml">
+      ```yaml
+      name: Geo-pinned assistant
+      model:
+        id: claude-opus-5
+        inference_geo: us
+      system: You are a helpful assistant.
+      ```
+    </File>
+  </MultiFileExample>
 
   ```python Python
   agent = client.beta.agents.create(
@@ -352,12 +367,22 @@ Updating an agent generates a new version when the configuration changes. The `v
   echo "New version: $(jq -r '.version' <<< "$updated_agent")"
   ```
 
-  ```bash CLI
-  ant beta:agents update \
-    --agent-id "$AGENT_ID" \
-    --version "$AGENT_VERSION" \
-    --system "You are a helpful coding agent. Always write tests."
-  ```
+  <MultiFileExample language="cli" label="CLI">
+    ```bash CLI
+    ant beta:agents update --agent-id "$AGENT_ID" < coding-assistant.agent.yaml
+    ```
+
+    <File filename="coding-assistant.agent.yaml">
+      ```yaml
+      name: Coding Assistant
+      model:
+        id: claude-opus-5
+      system: You are a helpful coding agent. Always write tests.
+      tools:
+        - type: agent_toolset_20260401
+      ```
+    </File>
+  </MultiFileExample>
 
   ```python Python
   updated_agent = client.beta.agents.update(

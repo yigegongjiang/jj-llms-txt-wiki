@@ -1,17 +1,12 @@
----
-title: Versions
-url: https://platform.claude.com/docs/en/api/beta/skills/versions
----
-
 # Versions
 
 ## Create Skill Version
 
-**post** `/v1/skills/{skill_id}/versions`
+**POST** `/v1/skills/{skill_id}/versions`
 
 Create Skill Version
 
-### Path Parameters
+### Path parameters
 
 - `skill_id: string`
 
@@ -19,7 +14,7 @@ Create Skill Version
 
   The format and length of IDs may change over time.
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -27,7 +22,7 @@ Create Skill Version
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -73,6 +68,8 @@ Create Skill Version
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -94,6 +91,14 @@ Create Skill Version
     - `"agent-memory-2026-07-22"`
 
     - `"mid-conversation-tool-changes-2026-07-01"`
+
+### Body parameters (form-data)
+
+- `files: array of string`
+
+  Files to upload for the skill.
+
+  All files must be in the same top-level directory and must include a SKILL.md file at the root of that directory.
 
 ### Returns
 
@@ -135,6 +140,8 @@ Create Skill Version
 
   For Skill Versions, this is always `"skill_version"`.
 
+  default: skill_version
+
 - `version: string`
 
   Version identifier for the skill.
@@ -143,7 +150,7 @@ Create Skill Version
 
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions \
     -H 'Content-Type: multipart/form-data' \
     -H 'anthropic-version: 2023-06-01' \
@@ -152,7 +159,7 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions \
     -F files='["Example data"]'
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -169,11 +176,11 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions \
 
 ## List Skill Versions
 
-**get** `/v1/skills/{skill_id}/versions`
+**GET** `/v1/skills/{skill_id}/versions`
 
 List Skill Versions
 
-### Path Parameters
+### Path parameters
 
 - `skill_id: string`
 
@@ -181,7 +188,7 @@ List Skill Versions
 
   The format and length of IDs may change over time.
 
-### Query Parameters
+### Query parameters
 
 - `limit: optional number`
 
@@ -193,7 +200,7 @@ List Skill Versions
 
   Optionally set to the `next_page` token from the previous response.
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -201,7 +208,7 @@ List Skill Versions
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -247,6 +254,8 @@ List Skill Versions
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -271,7 +280,7 @@ List Skill Versions
 
 ### Returns
 
-- `data: array of object { id, created_at, description, 5 more }`
+- `data: array of object`
 
   List of skill versions.
 
@@ -313,6 +322,8 @@ List Skill Versions
 
     For Skill Versions, this is always `"skill_version"`.
 
+    default: skill_version
+
   - `version: string`
 
     Version identifier for the skill.
@@ -329,14 +340,14 @@ List Skill Versions
 
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: skills-2025-10-02' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -359,11 +370,11 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions \
 
 ## Download Skill Version Content
 
-**get** `/v1/skills/{skill_id}/versions/{version}/content`
+**GET** `/v1/skills/{skill_id}/versions/{version}/content`
 
 Download a skill version's content as a zip archive.
 
-### Path Parameters
+### Path parameters
 
 - `skill_id: string`
 
@@ -377,7 +388,7 @@ Download a skill version's content as a zip archive.
 
   Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -385,7 +396,7 @@ Download a skill version's content as a zip archive.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -430,6 +441,8 @@ Download a skill version's content as a zip archive.
     - `"output-300k-2026-03-24"`
 
     - `"user-profiles-2026-03-24"`
+
+    - `"user-profiles-2026-08-18"`
 
     - `"advisor-tool-2026-03-01"`
 
@@ -455,7 +468,7 @@ Download a skill version's content as a zip archive.
 
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION/content \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: skills-2025-10-02' \
@@ -464,11 +477,11 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION/content \
 
 ## Get Skill Version
 
-**get** `/v1/skills/{skill_id}/versions/{version}`
+**GET** `/v1/skills/{skill_id}/versions/{version}`
 
 Get Skill Version
 
-### Path Parameters
+### Path parameters
 
 - `skill_id: string`
 
@@ -482,7 +495,7 @@ Get Skill Version
 
   Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -490,7 +503,7 @@ Get Skill Version
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -535,6 +548,8 @@ Get Skill Version
     - `"output-300k-2026-03-24"`
 
     - `"user-profiles-2026-03-24"`
+
+    - `"user-profiles-2026-08-18"`
 
     - `"advisor-tool-2026-03-01"`
 
@@ -598,6 +613,8 @@ Get Skill Version
 
   For Skill Versions, this is always `"skill_version"`.
 
+  default: skill_version
+
 - `version: string`
 
   Version identifier for the skill.
@@ -606,14 +623,14 @@ Get Skill Version
 
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: skills-2025-10-02' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -630,11 +647,11 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
 
 ## Delete Skill Version
 
-**delete** `/v1/skills/{skill_id}/versions/{version}`
+**DELETE** `/v1/skills/{skill_id}/versions/{version}`
 
 Delete Skill Version
 
-### Path Parameters
+### Path parameters
 
 - `skill_id: string`
 
@@ -648,7 +665,7 @@ Delete Skill Version
 
   Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -656,7 +673,7 @@ Delete Skill Version
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -702,6 +719,8 @@ Delete Skill Version
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -738,9 +757,11 @@ Delete Skill Version
 
   For Skill Versions, this is always `"skill_version_deleted"`.
 
+  default: skill_version_deleted
+
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
     -X DELETE \
     -H 'anthropic-version: 2023-06-01' \
@@ -748,7 +769,7 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -757,11 +778,11 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
 }
 ```
 
-## Domain Types
+## Domain types
 
 ### Version Create Response
 
-- `VersionCreateResponse object { id, created_at, description, 5 more }`
+- `VersionCreateResponse object`
 
   - `id: string`
 
@@ -800,6 +821,8 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
     Object type.
 
     For Skill Versions, this is always `"skill_version"`.
+
+    default: skill_version
 
   - `version: string`
 
@@ -809,7 +832,7 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
 
 ### Version List Response
 
-- `VersionListResponse object { id, created_at, description, 5 more }`
+- `VersionListResponse object`
 
   - `id: string`
 
@@ -848,6 +871,8 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
     Object type.
 
     For Skill Versions, this is always `"skill_version"`.
+
+    default: skill_version
 
   - `version: string`
 
@@ -857,7 +882,7 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
 
 ### Version Retrieve Response
 
-- `VersionRetrieveResponse object { id, created_at, description, 5 more }`
+- `VersionRetrieveResponse object`
 
   - `id: string`
 
@@ -897,6 +922,8 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
 
     For Skill Versions, this is always `"skill_version"`.
 
+    default: skill_version
+
   - `version: string`
 
     Version identifier for the skill.
@@ -905,7 +932,7 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
 
 ### Version Delete Response
 
-- `VersionDeleteResponse object { id, type }`
+- `VersionDeleteResponse object`
 
   - `id: string`
 
@@ -918,3 +945,5 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions/$VERSION \
     Deleted object type.
 
     For Skill Versions, this is always `"skill_version_deleted"`.
+
+    default: skill_version_deleted

@@ -26,7 +26,7 @@ The Activity Feed supports two consumption patterns: periodic window polling bou
 
 Both patterns share these constraints:
 
-* Activities are queryable within 1 minute of occurring and retained for 6 years.
+* Activities are queryable within 1 minute of occurring and retained for 6 years. Recording is not retroactive: it begins when the Compliance API is first enabled for your organization, and activity from before enablement is not backfilled.
 * The maximum `limit` for each page is 5,000.
 * Cursor values are opaque strings that you must not parse.
 * Requests are limited to 600 per minute per [parent organization](https://platform.claude.com/docs/en/manage-claude/compliance-api#how-the-compliance-api-works), shared across every key, every linked organization, and every `/v1/compliance/*` endpoint; unlike the local session endpoints, the remote session endpoints carry a second request budget on top. See [429 Too Many Requests](https://platform.claude.com/docs/en/manage-claude/compliance-errors#429-too-many-requests) for the response headers and retry contract.
@@ -94,14 +94,15 @@ Cursors survive key rotation; see [Manage and rotate keys](https://platform.clau
 
 Each `Activity` carries fields you can join against events already in your SIEM (Splunk, Datadog, Microsoft Sentinel, Cribl, or similar):
 
-| Compliance API field  | Join target                                     |
-| --------------------- | ----------------------------------------------- |
-| `actor.user_id`       | Your identity provider's stable user identifier |
-| `actor.email_address` | Directory email when a stable ID is unavailable |
-| `actor.ip_address`    | Network, VPN, and endpoint logs                 |
-| `created_at`          | Time-window correlation across any source       |
+| Compliance API field  | Join target                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
+| `actor.user_id`       | Your identity provider's stable user identifier                         |
+| `actor.email_address` | Directory email when a stable ID is unavailable                         |
+| `actor.ip_address`    | Network, VPN, and endpoint logs                                         |
+| `actor.user_agent`    | Endpoint and device inventory, and the client app that made the request |
+| `created_at`          | Time-window correlation across any source                               |
 
-`actor.user_id` and `actor.email_address` are present when `actor.type` is `user_actor`; check the discriminator before reading them. `user_id` is a stable, opaque identifier for the user account: it is consistent across every Compliance API endpoint and activity payload, and it does not change when the user's email or display name changes. Use `user_id`, not `email_address`, as the primary join key.
+`actor.user_id` and `actor.email_address` are present when `actor.type` is `user_actor`. `actor.ip_address` and `actor.user_agent` are absent on some actor types, such as `anthropic_actor` and `scim_directory_sync_actor`. Check the discriminator before reading any of these fields. `user_id` is a stable, opaque identifier for the user account: it is consistent across every Compliance API endpoint and activity payload, and it does not change when the user's email or display name changes. Use `user_id`, not `email_address`, as the primary join key.
 
 Calls to the Compliance API itself emit `compliance_api_accessed` activities. Ingest these alongside other activity types so your SIEM records who queried compliance data, and when. Pass `activity_types[]=compliance_api_accessed` to scope the query, then in your client, read `actor.api_key_id` from each activity whose `actor.type` is `api_actor` to attribute the access to a specific Compliance Access Key or Admin API key.
 
@@ -136,6 +137,8 @@ The list endpoints do not return a `total_count` field or a checksum. To attest 
 * The starting cursor and the terminal `last_id`.
 * The number of records exported.
 * The run timestamp and the `request-id` of the final page.
+
+Activity volume is not a completeness check. The `claude_*_viewed` activity types, such as `claude_chat_viewed`, follow each app's loading pattern (see [Understand the Activity object](https://platform.claude.com/docs/en/manage-claude/compliance-activity-feed#understand-the-activity-object)). A period with chat messages but no `claude_chat_viewed` activities does not on its own indicate missing data. Rely on the traversal and the overlap or reconciliation pass described in [Window polling](https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns#window-polling) instead.
 
 The content endpoints (chats, files, projects, project attachments, and local and remote session transcripts) serve Claude Enterprise data only. The Activity Feed surfaces administrative and resource events organization-wide. The Compliance API does not include:
 

@@ -1,15 +1,10 @@
----
-title: List Skill Versions
-url: https://platform.claude.com/docs/en/api/beta/skills/versions/list
----
+# List Skill Versions
 
-## List Skill Versions
-
-**get** `/v1/skills/{skill_id}/versions`
+**GET** `/v1/skills/{skill_id}/versions`
 
 List Skill Versions
 
-### Path Parameters
+## Path parameters
 
 - `skill_id: string`
 
@@ -17,7 +12,7 @@ List Skill Versions
 
   The format and length of IDs may change over time.
 
-### Query Parameters
+## Query parameters
 
 - `limit: optional number`
 
@@ -29,7 +24,7 @@ List Skill Versions
 
   Optionally set to the `next_page` token from the previous response.
 
-### Header Parameters
+## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -37,7 +32,7 @@ List Skill Versions
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -83,6 +78,8 @@ List Skill Versions
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -105,9 +102,9 @@ List Skill Versions
 
     - `"mid-conversation-tool-changes-2026-07-01"`
 
-### Returns
+## Returns
 
-- `data: array of object { id, created_at, description, 5 more }`
+- `data: array of object`
 
   List of skill versions.
 
@@ -149,6 +146,8 @@ List Skill Versions
 
     For Skill Versions, this is always `"skill_version"`.
 
+    default: skill_version
+
   - `version: string`
 
     Version identifier for the skill.
@@ -163,16 +162,16 @@ List Skill Versions
 
   Token to provide in as `page` in the subsequent request to retrieve the next page of data.
 
-### Example
+## Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: skills-2025-10-02' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+### Response (200)
 
 ```json
 {

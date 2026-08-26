@@ -1,17 +1,12 @@
----
-title: Files
-url: https://platform.claude.com/docs/en/api/beta/files
----
-
 # Files
 
 ## Upload File
 
-**post** `/v1/files`
+**POST** `/v1/files`
 
 Upload File
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -19,7 +14,7 @@ Upload File
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -65,6 +60,8 @@ Upload File
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -87,9 +84,17 @@ Upload File
 
     - `"mid-conversation-tool-changes-2026-07-01"`
 
+### Body parameters (form-data)
+
+- `file: string`
+
+  The file to upload
+
+  format: binary
+
 ### Returns
 
-- `FileMetadata object { id, created_at, filename, 5 more }`
+- `BetaFileMetadata object`
 
   - `id: string`
 
@@ -101,17 +106,25 @@ Upload File
 
     RFC 3339 datetime string representing when the file was created.
 
+    format: date-time
+
   - `filename: string`
 
     Original filename of the uploaded file.
+
+    maxLength: 500, minLength: 1
 
   - `mime_type: string`
 
     MIME type of the file.
 
+    maxLength: 255, minLength: 1
+
   - `size_bytes: number`
 
     Size of the file in bytes.
+
+    minimum: 0
 
   - `type: "file"`
 
@@ -119,11 +132,11 @@ Upload File
 
     For files, this is always `"file"`.
 
-    - `"file"`
-
   - `downloadable: optional boolean`
 
     Whether the file can be downloaded.
+
+    default: false
 
   - `scope: optional BetaFileScope or null`
 
@@ -137,11 +150,9 @@ Upload File
 
       The type of scope (e.g., `"session"`).
 
-      - `"session"`
-
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/files \
     -H 'Content-Type: multipart/form-data' \
     -H 'anthropic-version: 2023-06-01' \
@@ -150,7 +161,7 @@ curl https://api.anthropic.com/v1/files \
     -F 'file=@/path/to/file'
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -170,11 +181,11 @@ curl https://api.anthropic.com/v1/files \
 
 ## List Files
 
-**get** `/v1/files`
+**GET** `/v1/files`
 
 List Files
 
-### Query Parameters
+### Query parameters
 
 - `after_id: optional string`
 
@@ -190,11 +201,13 @@ List Files
 
   Defaults to `20`. Ranges from `1` to `1000`.
 
+  default: 20, maximum: 1000, minimum: 1
+
 - `scope_id: optional string`
 
   Filter by scope ID. Only returns files associated with the specified scope (e.g., a session ID).
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -202,7 +215,7 @@ List Files
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -248,6 +261,8 @@ List Files
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -272,7 +287,7 @@ List Files
 
 ### Returns
 
-- `data: array of FileMetadata`
+- `data: array of BetaFileMetadata`
 
   List of file metadata objects.
 
@@ -286,17 +301,25 @@ List Files
 
     RFC 3339 datetime string representing when the file was created.
 
+    format: date-time
+
   - `filename: string`
 
     Original filename of the uploaded file.
+
+    maxLength: 500, minLength: 1
 
   - `mime_type: string`
 
     MIME type of the file.
 
+    maxLength: 255, minLength: 1
+
   - `size_bytes: number`
 
     Size of the file in bytes.
+
+    minimum: 0
 
   - `type: "file"`
 
@@ -304,11 +327,11 @@ List Files
 
     For files, this is always `"file"`.
 
-    - `"file"`
-
   - `downloadable: optional boolean`
 
     Whether the file can be downloaded.
+
+    default: false
 
   - `scope: optional BetaFileScope or null`
 
@@ -322,8 +345,6 @@ List Files
 
       The type of scope (e.g., `"session"`).
 
-      - `"session"`
-
 - `first_id: optional string or null`
 
   ID of the first file in this page of results.
@@ -332,20 +353,22 @@ List Files
 
   Whether there are more results available.
 
+  default: false
+
 - `last_id: optional string or null`
 
   ID of the last file in this page of results.
 
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/files \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: files-api-2025-04-14' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -372,17 +395,17 @@ curl https://api.anthropic.com/v1/files \
 
 ## Download File
 
-**get** `/v1/files/{file_id}/content`
+**GET** `/v1/files/{file_id}/content`
 
 Download File
 
-### Path Parameters
+### Path parameters
 
 - `file_id: string`
 
   ID of the File.
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -390,7 +413,7 @@ Download File
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -435,6 +458,8 @@ Download File
     - `"output-300k-2026-03-24"`
 
     - `"user-profiles-2026-03-24"`
+
+    - `"user-profiles-2026-08-18"`
 
     - `"advisor-tool-2026-03-01"`
 
@@ -460,7 +485,7 @@ Download File
 
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/files/$FILE_ID/content \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: files-api-2025-04-14' \
@@ -469,17 +494,17 @@ curl https://api.anthropic.com/v1/files/$FILE_ID/content \
 
 ## Get File Metadata
 
-**get** `/v1/files/{file_id}`
+**GET** `/v1/files/{file_id}`
 
 Get File Metadata
 
-### Path Parameters
+### Path parameters
 
 - `file_id: string`
 
   ID of the File.
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -487,7 +512,7 @@ Get File Metadata
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -532,6 +557,8 @@ Get File Metadata
     - `"output-300k-2026-03-24"`
 
     - `"user-profiles-2026-03-24"`
+
+    - `"user-profiles-2026-08-18"`
 
     - `"advisor-tool-2026-03-01"`
 
@@ -557,7 +584,7 @@ Get File Metadata
 
 ### Returns
 
-- `FileMetadata object { id, created_at, filename, 5 more }`
+- `BetaFileMetadata object`
 
   - `id: string`
 
@@ -569,17 +596,25 @@ Get File Metadata
 
     RFC 3339 datetime string representing when the file was created.
 
+    format: date-time
+
   - `filename: string`
 
     Original filename of the uploaded file.
+
+    maxLength: 500, minLength: 1
 
   - `mime_type: string`
 
     MIME type of the file.
 
+    maxLength: 255, minLength: 1
+
   - `size_bytes: number`
 
     Size of the file in bytes.
+
+    minimum: 0
 
   - `type: "file"`
 
@@ -587,11 +622,11 @@ Get File Metadata
 
     For files, this is always `"file"`.
 
-    - `"file"`
-
   - `downloadable: optional boolean`
 
     Whether the file can be downloaded.
+
+    default: false
 
   - `scope: optional BetaFileScope or null`
 
@@ -605,18 +640,16 @@ Get File Metadata
 
       The type of scope (e.g., `"session"`).
 
-      - `"session"`
-
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/files/$FILE_ID \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: files-api-2025-04-14' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -636,17 +669,17 @@ curl https://api.anthropic.com/v1/files/$FILE_ID \
 
 ## Delete File
 
-**delete** `/v1/files/{file_id}`
+**DELETE** `/v1/files/{file_id}`
 
 Delete File
 
-### Path Parameters
+### Path parameters
 
 - `file_id: string`
 
   ID of the File.
 
-### Header Parameters
+### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -654,7 +687,7 @@ Delete File
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -700,6 +733,8 @@ Delete File
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -724,7 +759,7 @@ Delete File
 
 ### Returns
 
-- `DeletedFile object { id, type }`
+- `BetaDeletedFile object`
 
   - `id: string`
 
@@ -736,11 +771,11 @@ Delete File
 
     For file deletion, this is always `"file_deleted"`.
 
-    - `"file_deleted"`
+    default: file_deleted
 
 ### Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/files/$FILE_ID \
     -X DELETE \
     -H 'anthropic-version: 2023-06-01' \
@@ -748,7 +783,7 @@ curl https://api.anthropic.com/v1/files/$FILE_ID \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+#### Response (200)
 
 ```json
 {
@@ -757,25 +792,11 @@ curl https://api.anthropic.com/v1/files/$FILE_ID \
 }
 ```
 
-## Domain Types
+## Domain types
 
-### Beta File Scope
+### Beta Deleted File
 
-- `BetaFileScope object { id, type }`
-
-  - `id: string`
-
-    The ID of the scoping resource (e.g., the session ID).
-
-  - `type: "session"`
-
-    The type of scope (e.g., `"session"`).
-
-    - `"session"`
-
-### Deleted File
-
-- `DeletedFile object { id, type }`
+- `BetaDeletedFile object`
 
   - `id: string`
 
@@ -787,11 +808,11 @@ curl https://api.anthropic.com/v1/files/$FILE_ID \
 
     For file deletion, this is always `"file_deleted"`.
 
-    - `"file_deleted"`
+    default: file_deleted
 
-### File Metadata
+### Beta File Metadata
 
-- `FileMetadata object { id, created_at, filename, 5 more }`
+- `BetaFileMetadata object`
 
   - `id: string`
 
@@ -803,17 +824,25 @@ curl https://api.anthropic.com/v1/files/$FILE_ID \
 
     RFC 3339 datetime string representing when the file was created.
 
+    format: date-time
+
   - `filename: string`
 
     Original filename of the uploaded file.
+
+    maxLength: 500, minLength: 1
 
   - `mime_type: string`
 
     MIME type of the file.
 
+    maxLength: 255, minLength: 1
+
   - `size_bytes: number`
 
     Size of the file in bytes.
+
+    minimum: 0
 
   - `type: "file"`
 
@@ -821,11 +850,11 @@ curl https://api.anthropic.com/v1/files/$FILE_ID \
 
     For files, this is always `"file"`.
 
-    - `"file"`
-
   - `downloadable: optional boolean`
 
     Whether the file can be downloaded.
+
+    default: false
 
   - `scope: optional BetaFileScope or null`
 
@@ -839,4 +868,14 @@ curl https://api.anthropic.com/v1/files/$FILE_ID \
 
       The type of scope (e.g., `"session"`).
 
-      - `"session"`
+### Beta File Scope
+
+- `BetaFileScope object`
+
+  - `id: string`
+
+    The ID of the scoping resource (e.g., the session ID).
+
+  - `type: "session"`
+
+    The type of scope (e.g., `"session"`).

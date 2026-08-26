@@ -1,6 +1,6 @@
 ---
 title: Introducing Claude Fable 5 and Claude Mythos 5
-url: https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5
+url: https://platform.claude.com/docs/en/models/fable-5/introducing-claude-fable-5-and-claude-mythos-5
 description: Claude Fable 5 and Claude Mythos 5 capabilities, API changes, and availability.
 ---
 
@@ -10,7 +10,7 @@ description: Claude Fable 5 and Claude Mythos 5 capabilities, API changes, and a
 
 Claude Fable 5 is Anthropic's most capable widely released model, built for the most demanding reasoning and long-horizon agentic work. Claude Mythos 5 shares the same capabilities and is available only in limited release through [Project Glasswing](https://anthropic.com/glasswing).
 
-The headline change for integrations: Claude Fable 5 includes safety classifiers that can decline requests. Claude Mythos 5 does not include these classifiers. If your integration calls Claude Fable 5, plan for three changes: new response handling for refusals, fallback options for retrying on another Claude model, and new billing rules. [Refusals, fallback, and billing on Claude Fable 5](https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5#refusals-fallback-and-billing-on-claude-fable-5) summarizes all three.
+The headline change for integrations: Claude Fable 5 includes safety classifiers that can decline requests. Claude Mythos 5 does not include these classifiers. If your integration calls Claude Fable 5, plan for three changes: new response handling for refusals, fallback options for retrying on another Claude model, and new billing rules. [Refusals, fallback, and billing on Claude Fable 5](https://platform.claude.com/docs/en/models/fable-5/introducing-claude-fable-5-and-claude-mythos-5#refusals-fallback-and-billing-on-claude-fable-5) summarizes all three.
 
 ## Models
 
@@ -24,7 +24,7 @@ Claude Fable 5 and Claude Mythos 5 share the same specs and pricing:
 * **Context window and output:** a [1M token context window](https://platform.claude.com/docs/en/build-with-claude/context-windows) by default, and up to 128k output tokens per request.
 * **Pricing:** $10 USD per million input tokens and $50 USD per million output tokens.
 
-For specs across all current models, see the [models overview](https://platform.claude.com/docs/en/about-claude/models/overview).
+For specs across all current models, see the [models overview](https://platform.claude.com/docs/en/models/overview).
 
 ## Refusals, fallback, and billing on Claude Fable 5
 
@@ -50,8 +50,8 @@ You are not billed for a request that is refused before any output is generated.
 
 Claude Fable 5 and Claude Mythos 5 both become available on June 9, 2026:
 
-* **Claude Fable 5** is generally available on the Claude API, [Amazon Bedrock](https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock), [Claude Platform on AWS](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws), [Google Cloud](https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai), and [Microsoft Foundry](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry).
-* **Claude Mythos 5** is not generally available: it is offered in limited availability to approved customers in [Project Glasswing](https://anthropic.com/glasswing). For access, contact your Anthropic, AWS, or Google Cloud account team. Customers without access to Claude Mythos 5 can use Claude Fable 5, which is generally available and offers the same capabilities.
+* **Claude Fable 5** is available on the Claude API, [Amazon Bedrock](https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock), [Claude Platform on AWS](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws), [Google Cloud](https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai), and [Microsoft Foundry](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry).
+* **Claude Mythos 5** is offered only to approved customers in [Project Glasswing](https://anthropic.com/glasswing). For access, contact your Anthropic, AWS, or Google Cloud account team. Customers without access to Claude Mythos 5 can use Claude Fable 5, which does not require access approval and offers the same capabilities.
 
 Claude Fable 5 and Claude Mythos 5 carry 30-day data retention and are not available under zero data retention: both are designated [Covered Models](https://support.claude.com/en/articles/15425695). See [Model-specific data retention requirements](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements).
 
@@ -93,17 +93,17 @@ At launch, Claude Fable 5 and Claude Mythos 5 support:
 
 Step-by-step instructions live in the migration guide:
 
-* From Claude Mythos Preview: see [Migrating from Claude Mythos Preview to Claude Mythos 5](https://platform.claude.com/docs/en/about-claude/models/migration-guide#migrating-from-claude-mythos-preview).
-* From Claude Opus 4.8: see [Migrating from Claude Opus 4.8 to Claude Fable 5](https://platform.claude.com/docs/en/about-claude/models/migration-guide#migrating-from-claude-opus-48).
+* From Claude Mythos Preview: see [Migrating from Claude Mythos Preview to Claude Mythos 5](https://platform.claude.com/docs/en/models/fable-5/migration-guide#migrating-from-claude-mythos-preview).
+* From Claude Opus 4.8: see [Migrating from Claude Opus 4.8 to Claude Fable 5](https://platform.claude.com/docs/en/models/fable-5/migration-guide#migrating-from-claude-opus-48).
 
 ## Next steps
 
 <CardGroup>
-  <Card title="Migration guide" icon="arrow-right" href="https://platform.claude.com/docs/en/about-claude/models/migration-guide">
+  <Card title="Migration guide" icon="arrow-right" href="https://platform.claude.com/docs/en/models/fable-5/migration-guide">
     Step-by-step upgrade instructions from Claude Opus 4.8 and Claude Mythos Preview.
   </Card>
 
-  <Card title="Models overview" icon="settings" href="https://platform.claude.com/docs/en/about-claude/models/overview">
+  <Card title="Models overview" icon="settings" href="https://platform.claude.com/docs/en/models/overview">
     Specs and comparison for all current Claude models.
   </Card>
 

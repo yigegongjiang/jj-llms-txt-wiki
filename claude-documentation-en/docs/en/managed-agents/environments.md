@@ -36,11 +36,21 @@ This page covers `type: cloud` environments. To run sandboxes on your own infras
   echo "Environment ID: $environment_id"
   ```
 
-  ```bash CLI
-  ant beta:environments create \
-    --name "python-dev" \
-    --config '{type: cloud, networking: {type: unrestricted}}'
-  ```
+  <MultiFileExample language="cli" label="CLI">
+    ```bash CLI
+    ant beta:environments create < python-dev.environment.yaml
+    ```
+
+    <File filename="python-dev.environment.yaml">
+      ```yaml
+      name: python-dev
+      config:
+        type: cloud
+        networking:
+          type: unrestricted
+      ```
+    </File>
+  </MultiFileExample>
 
   ```python Python
   environment = client.beta.environments.create(
@@ -151,9 +161,7 @@ Pass the environment ID as a string when [creating a session](https://platform.c
   ```
 
   ```bash CLI
-  ant beta:sessions create \
-    --agent "$AGENT_ID" \
-    --environment-id "$ENVIRONMENT_ID"
+  ant beta:sessions create --agent "$AGENT_ID" --environment-id "$ENVIRONMENT_ID"
   ```
 
   ```python Python
@@ -216,7 +224,7 @@ Pass the environment ID as a string when [creating a session](https://platform.c
 
 ### Packages
 
-The `packages` field pre-installs packages into the sandbox before the agent starts. Packages are installed by their respective package managers and cached across sessions that share the same environment. When multiple package managers are specified, they run in alphabetical order (apt, cargo, gem, go, npm, pip). You can optionally pin specific versions. Unpinned packages install the latest version.
+The `packages` field pre-installs packages into the sandbox before the agent starts. Packages are installed by their respective package managers and cached across sessions that share the same environment. When multiple package managers are specified, they run in alphabetical order (apt, cargo, gem, go, npm, pip). You can optionally pin specific versions. Unpinned packages install the latest version. If the environment uses `limited` [networking](https://platform.claude.com/docs/en/managed-agents/environments#networking), also set `networking.allow_package_managers` to `true`; otherwise the request is rejected with a 400 error.
 
 <CodeGroup defaultLanguage="CLI">
   ```bash cURL
@@ -241,22 +249,28 @@ The `packages` field pre-installs packages into the sandbox before the agent sta
   )
   ```
 
-  ```bash CLI
-  ant beta:environments create <<'YAML'
-  name: data-analysis
-  config:
-    type: cloud
-    packages:
-      pip:
-        - pandas
-        - numpy
-        - scikit-learn
-      npm:
-        - express
-    networking:
-      type: unrestricted
-  YAML
-  ```
+  <MultiFileExample language="cli" label="CLI">
+    ```bash CLI
+    ant beta:environments create < environment.yaml
+    ```
+
+    <File filename="environment.yaml">
+      ```yaml
+      name: data-analysis
+      config:
+        type: cloud
+        packages:
+          pip:
+            - pandas
+            - numpy
+            - scikit-learn
+          npm:
+            - express
+        networking:
+          type: unrestricted
+      ```
+    </File>
+  </MultiFileExample>
 
   ```python Python
   environment = client.beta.environments.create(
@@ -374,16 +388,16 @@ Supported package managers:
 
 | Field   | Package manager           | Example                                     |
 | ------- | ------------------------- | ------------------------------------------- |
-| `apt`   | System packages (apt-get) | `"ffmpeg"`                                  |
-| `cargo` | Rust (cargo)              | `"ripgrep@14.0.0"`                          |
+| `apt`   | System packages (apt-get) | `"graphviz"`                                |
+| `cargo` | Rust (cargo)              | `"hyperfine@1.18.0"`                        |
 | `gem`   | Ruby (gem)                | `"rails:7.1.0"`                             |
 | `go`    | Go modules                | `"golang.org/x/tools/cmd/goimports@latest"` |
 | `npm`   | Node.js (npm)             | `"express@4.18.0"`                          |
-| `pip`   | Python (pip)              | `"pandas==2.2.0"`                           |
+| `pip`   | Python (pip)              | `"sqlalchemy==2.0.30"`                      |
 
 ### Networking
 
-The `networking` field controls the sandbox's outbound network access. It does not affect the allowed domains for the `web_search` or `web_fetch` tools.
+The `networking` field controls the sandbox's outbound network access. It does not affect the `web_search` or `web_fetch` tools, which run on Anthropic's servers; to restrict the sites those tools can reach, set `allowed_domains` or `blocked_domains` on the tool's entry in the agent toolset. See [Restrict web search and web fetch domains](https://platform.claude.com/docs/en/managed-agents/tools#restrict-web-search-and-web-fetch-domains).
 
 | Mode           | Description                                                                                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -413,19 +427,25 @@ The following example creates an environment with `limited` networking:
     }'
   ```
 
-  ```bash CLI
-  ant beta:environments create <<'YAML'
-  name: api-access
-  config:
-    type: cloud
-    networking:
-      type: limited
-      allowed_hosts:
-        - api.example.com
-      allow_mcp_servers: true
-      allow_package_managers: true
-  YAML
-  ```
+  <MultiFileExample language="cli" label="CLI">
+    ```bash CLI
+    ant beta:environments create < environment.yaml
+    ```
+
+    <File filename="environment.yaml">
+      ```yaml
+      name: api-access
+      config:
+        type: cloud
+        networking:
+          type: limited
+          allowed_hosts:
+            - api.example.com
+          allow_mcp_servers: true
+          allow_package_managers: true
+      ```
+    </File>
+  </MultiFileExample>
 
   ```python Python
   environment = client.beta.environments.create(
@@ -551,7 +571,7 @@ When using `limited` networking:
 
 * `allowed_hosts` specifies domains the sandbox can reach. Specify bare hostnames or wildcard patterns (such as `*.example.com`). Do not include a URL scheme, port, or path.
 * `allow_mcp_servers` allows outbound access to MCP server endpoints configured on the agent, beyond those listed in the `allowed_hosts` array. Defaults to `false`.
-* `allow_package_managers` allows outbound access to public package registries (such as PyPI and npm) beyond those listed in the `allowed_hosts` array. Defaults to `false`.
+* `allow_package_managers` allows outbound access to public package registries (such as PyPI and npm) beyond those listed in the `allowed_hosts` array. Defaults to `false`. Set it to `true` whenever the environment specifies `packages`; otherwise the request is rejected with a 400 error, even if the registry hosts are listed in `allowed_hosts`.
 
 ## Environment lifecycle
 
@@ -700,7 +720,7 @@ When using `limited` networking:
 
 ## Pre-installed runtimes
 
-Cloud sandboxes include common runtimes out of the box. See [Cloud sandbox reference](https://platform.claude.com/docs/en/managed-agents/cloud-sandboxes-reference) for the full list of pre-installed languages, databases, and utilities.
+Cloud sandboxes include common language runtimes, databases, and command-line tools out of the box. See [Cloud sandbox reference](https://platform.claude.com/docs/en/managed-agents/cloud-sandboxes-reference) for the full list.
 
 ## Next steps
 

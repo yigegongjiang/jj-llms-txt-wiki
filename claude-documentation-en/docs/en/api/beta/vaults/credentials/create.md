@@ -1,19 +1,14 @@
----
-title: Create Credential
-url: https://platform.claude.com/docs/en/api/beta/vaults/credentials/create
----
+# Create Credential
 
-## Create Credential
-
-**post** `/v1/vaults/{vault_id}/credentials`
+**POST** `/v1/vaults/{vault_id}/credentials`
 
 Create Credential
 
-### Path Parameters
+## Path parameters
 
 - `vault_id: string`
 
-### Header Parameters
+## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -21,7 +16,7 @@ Create Credential
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -67,6 +62,8 @@ Create Credential
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -89,13 +86,13 @@ Create Credential
 
     - `"mid-conversation-tool-changes-2026-07-01"`
 
-### Body Parameters
+## Body parameters
 
 - `auth: BetaManagedAgentsMCPOAuthCreateParams or BetaManagedAgentsStaticBearerCreateParams or BetaManagedAgentsEnvironmentVariableCreateParams`
 
   Authentication details for creating a credential.
 
-  - `BetaManagedAgentsMCPOAuthCreateParams object { access_token, mcp_server_url, type, 2 more }`
+  - `BetaManagedAgentsMCPOAuthCreateParams object`
 
     Parameters for creating an MCP OAuth credential.
 
@@ -103,17 +100,21 @@ Create Credential
 
       OAuth access token.
 
+      minLength: 1, maxLength: 8192
+
     - `mcp_server_url: string`
 
       URL of the MCP server this credential authenticates against.
 
-    - `type: "mcp_oauth"`
+      minLength: 1, maxLength: 2047
 
-      - `"mcp_oauth"`
+    - `type: "mcp_oauth"`
 
     - `expires_at: optional string or null`
 
       A timestamp in RFC 3339 format
+
+      format: date-time
 
     - `refresh: optional BetaManagedAgentsMCPOAuthRefreshParams or null`
 
@@ -123,27 +124,31 @@ Create Credential
 
         OAuth client ID.
 
+        minLength: 1, maxLength: 1024
+
       - `refresh_token: string`
 
         OAuth refresh token.
+
+        minLength: 1, maxLength: 4096
 
       - `token_endpoint: string`
 
         Token endpoint URL used to refresh the access token.
 
+        minLength: 1, maxLength: 2047
+
       - `token_endpoint_auth: BetaManagedAgentsTokenEndpointAuthNoneParam or BetaManagedAgentsTokenEndpointAuthBasicParam or BetaManagedAgentsTokenEndpointAuthPostParam`
 
         Token endpoint requires no client authentication.
 
-        - `BetaManagedAgentsTokenEndpointAuthNoneParam object { type }`
+        - `BetaManagedAgentsTokenEndpointAuthNoneParam object`
 
           Token endpoint requires no client authentication.
 
           - `type: "none"`
 
-            - `"none"`
-
-        - `BetaManagedAgentsTokenEndpointAuthBasicParam object { client_secret, type }`
+        - `BetaManagedAgentsTokenEndpointAuthBasicParam object`
 
           Token endpoint uses HTTP Basic authentication with client credentials.
 
@@ -151,11 +156,11 @@ Create Credential
 
             OAuth client secret.
 
+            minLength: 1, maxLength: 512
+
           - `type: "client_secret_basic"`
 
-            - `"client_secret_basic"`
-
-        - `BetaManagedAgentsTokenEndpointAuthPostParam object { client_secret, type }`
+        - `BetaManagedAgentsTokenEndpointAuthPostParam object`
 
           Token endpoint uses POST body authentication with client credentials.
 
@@ -163,19 +168,23 @@ Create Credential
 
             OAuth client secret.
 
-          - `type: "client_secret_post"`
+            minLength: 1, maxLength: 512
 
-            - `"client_secret_post"`
+          - `type: "client_secret_post"`
 
       - `resource: optional string or null`
 
         OAuth resource indicator.
 
+        minLength: 1, maxLength: 2047
+
       - `scope: optional string or null`
 
         OAuth scope for the refresh request.
 
-  - `BetaManagedAgentsStaticBearerCreateParams object { token, mcp_server_url, type }`
+        minLength: 1, maxLength: 8192
+
+  - `BetaManagedAgentsStaticBearerCreateParams object`
 
     Parameters for creating a static bearer token credential.
 
@@ -183,15 +192,17 @@ Create Credential
 
       Static bearer token value.
 
+      minLength: 1, maxLength: 8192
+
     - `mcp_server_url: string`
 
       URL of the MCP server this credential authenticates against.
 
+      minLength: 1, maxLength: 2047
+
     - `type: "static_bearer"`
 
-      - `"static_bearer"`
-
-  - `BetaManagedAgentsEnvironmentVariableCreateParams object { networking, secret_name, secret_value, 2 more }`
+  - `BetaManagedAgentsEnvironmentVariableCreateParams object`
 
     Parameters for creating an environment variable credential.
 
@@ -199,15 +210,13 @@ Create Credential
 
       Outbound hosts the secret value is substituted on.
 
-      - `BetaManagedAgentsUnrestrictedCredentialNetworkingParams object { type }`
+      - `BetaManagedAgentsUnrestrictedCredentialNetworkingParams object`
 
         Substitute the secret on any host the session's Environment network policy permits egress to. The Environment's network policy is the only boundary on where the secret can reach.
 
         - `type: "unrestricted"`
 
-          - `"unrestricted"`
-
-      - `BetaManagedAgentsLimitedCredentialNetworkingParams object { allowed_hosts, type }`
+      - `BetaManagedAgentsLimitedCredentialNetworkingParams object`
 
         Substitute the secret only on requests to the listed hosts.
 
@@ -217,19 +226,19 @@ Create Credential
 
         - `type: "limited"`
 
-          - `"limited"`
-
     - `secret_name: string`
 
       Name of the environment variable. Immutable after create.
+
+      minLength: 1, maxLength: 255
 
     - `secret_value: string`
 
       Secret value. Write-only; never returned in responses.
 
-    - `type: "environment_variable"`
+      minLength: 1, maxLength: 4096
 
-      - `"environment_variable"`
+    - `type: "environment_variable"`
 
     - `injection_location: optional BetaManagedAgentsInjectionLocationParams`
 
@@ -247,13 +256,15 @@ Create Credential
 
   Human-readable name for the credential. Up to 255 characters.
 
+  maxLength: 255
+
 - `metadata: optional map[string]`
 
   Arbitrary key-value metadata to attach to the credential. Maximum 16 pairs, keys up to 64 chars, values up to 512 chars.
 
-### Returns
+## Returns
 
-- `BetaManagedAgentsCredential object { id, archived_at, auth, 6 more }`
+- `BetaManagedAgentsCredential object`
 
   A credential stored in a vault. Sensitive fields are never returned in responses.
 
@@ -265,11 +276,13 @@ Create Credential
 
     A timestamp in RFC 3339 format
 
+    format: date-time
+
   - `auth: BetaManagedAgentsMCPOAuthAuthResponse or BetaManagedAgentsStaticBearerAuthResponse or BetaManagedAgentsEnvironmentVariableAuthResponse`
 
     Authentication details for a credential.
 
-    - `BetaManagedAgentsMCPOAuthAuthResponse object { mcp_server_url, type, expires_at, refresh }`
+    - `BetaManagedAgentsMCPOAuthAuthResponse object`
 
       OAuth credential details for an MCP server.
 
@@ -279,11 +292,11 @@ Create Credential
 
       - `type: "mcp_oauth"`
 
-        - `"mcp_oauth"`
-
       - `expires_at: optional string or null`
 
         A timestamp in RFC 3339 format
+
+        format: date-time
 
       - `refresh: optional BetaManagedAgentsMCPOAuthRefreshResponse or null`
 
@@ -301,29 +314,23 @@ Create Credential
 
           Token endpoint requires no client authentication.
 
-          - `BetaManagedAgentsTokenEndpointAuthNoneResponse object { type }`
+          - `BetaManagedAgentsTokenEndpointAuthNoneResponse object`
 
             Token endpoint requires no client authentication.
 
             - `type: "none"`
 
-              - `"none"`
-
-          - `BetaManagedAgentsTokenEndpointAuthBasicResponse object { type }`
+          - `BetaManagedAgentsTokenEndpointAuthBasicResponse object`
 
             Token endpoint uses HTTP Basic authentication with client credentials.
 
             - `type: "client_secret_basic"`
 
-              - `"client_secret_basic"`
-
-          - `BetaManagedAgentsTokenEndpointAuthPostResponse object { type }`
+          - `BetaManagedAgentsTokenEndpointAuthPostResponse object`
 
             Token endpoint uses POST body authentication with client credentials.
 
             - `type: "client_secret_post"`
-
-              - `"client_secret_post"`
 
         - `resource: optional string or null`
 
@@ -333,7 +340,7 @@ Create Credential
 
           OAuth scope for the refresh request.
 
-    - `BetaManagedAgentsStaticBearerAuthResponse object { mcp_server_url, type }`
+    - `BetaManagedAgentsStaticBearerAuthResponse object`
 
       Static bearer token credential details for an MCP server.
 
@@ -343,9 +350,7 @@ Create Credential
 
       - `type: "static_bearer"`
 
-        - `"static_bearer"`
-
-    - `BetaManagedAgentsEnvironmentVariableAuthResponse object { injection_location, networking, secret_name, type }`
+    - `BetaManagedAgentsEnvironmentVariableAuthResponse object`
 
       Environment variable credential details. The secret value is never returned.
 
@@ -365,15 +370,13 @@ Create Credential
 
         Outbound hosts the secret value is substituted on.
 
-        - `BetaManagedAgentsUnrestrictedCredentialNetworkingResponse object { type }`
+        - `BetaManagedAgentsUnrestrictedCredentialNetworkingResponse object`
 
           The secret is substituted on any host the session's Environment network policy permits egress to.
 
           - `type: "unrestricted"`
 
-            - `"unrestricted"`
-
-        - `BetaManagedAgentsLimitedCredentialNetworkingResponse object { allowed_hosts, type }`
+        - `BetaManagedAgentsLimitedCredentialNetworkingResponse object`
 
           The secret is substituted only on requests to the listed hosts.
 
@@ -383,19 +386,17 @@ Create Credential
 
           - `type: "limited"`
 
-            - `"limited"`
-
       - `secret_name: string`
 
         Name of the environment variable.
 
       - `type: "environment_variable"`
 
-        - `"environment_variable"`
-
   - `created_at: string`
 
     A timestamp in RFC 3339 format
+
+    format: date-time
 
   - `metadata: map[string]`
 
@@ -403,11 +404,11 @@ Create Credential
 
   - `type: "vault_credential"`
 
-    - `"vault_credential"`
-
   - `updated_at: string`
 
     A timestamp in RFC 3339 format
+
+    format: date-time
 
   - `vault_id: string`
 
@@ -417,9 +418,9 @@ Create Credential
 
     Human-readable name for the credential.
 
-### Example
+## Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/vaults/$VAULT_ID/credentials \
     -H 'Content-Type: application/json' \
     -H 'anthropic-version: 2023-06-01' \
@@ -438,7 +439,7 @@ curl https://api.anthropic.com/v1/vaults/$VAULT_ID/credentials \
         }'
 ```
 
-#### Response
+### Response (200)
 
 ```json
 {

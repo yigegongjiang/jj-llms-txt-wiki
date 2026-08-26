@@ -1,15 +1,10 @@
----
-title: List Files
-url: https://platform.claude.com/docs/en/api/beta/files/list
----
+# List Files
 
-## List Files
-
-**get** `/v1/files`
+**GET** `/v1/files`
 
 List Files
 
-### Query Parameters
+## Query parameters
 
 - `after_id: optional string`
 
@@ -25,11 +20,13 @@ List Files
 
   Defaults to `20`. Ranges from `1` to `1000`.
 
+  default: 20, maximum: 1000, minimum: 1
+
 - `scope_id: optional string`
 
   Filter by scope ID. Only returns files associated with the specified scope (e.g., a session ID).
 
-### Header Parameters
+## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -37,7 +34,7 @@ List Files
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -83,6 +80,8 @@ List Files
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -105,9 +104,9 @@ List Files
 
     - `"mid-conversation-tool-changes-2026-07-01"`
 
-### Returns
+## Returns
 
-- `data: array of FileMetadata`
+- `data: array of BetaFileMetadata`
 
   List of file metadata objects.
 
@@ -121,17 +120,25 @@ List Files
 
     RFC 3339 datetime string representing when the file was created.
 
+    format: date-time
+
   - `filename: string`
 
     Original filename of the uploaded file.
+
+    maxLength: 500, minLength: 1
 
   - `mime_type: string`
 
     MIME type of the file.
 
+    maxLength: 255, minLength: 1
+
   - `size_bytes: number`
 
     Size of the file in bytes.
+
+    minimum: 0
 
   - `type: "file"`
 
@@ -139,11 +146,11 @@ List Files
 
     For files, this is always `"file"`.
 
-    - `"file"`
-
   - `downloadable: optional boolean`
 
     Whether the file can be downloaded.
+
+    default: false
 
   - `scope: optional BetaFileScope or null`
 
@@ -157,8 +164,6 @@ List Files
 
       The type of scope (e.g., `"session"`).
 
-      - `"session"`
-
 - `first_id: optional string or null`
 
   ID of the first file in this page of results.
@@ -167,20 +172,22 @@ List Files
 
   Whether there are more results available.
 
+  default: false
+
 - `last_id: optional string or null`
 
   ID of the last file in this page of results.
 
-### Example
+## Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/files \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: files-api-2025-04-14' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+### Response (200)
 
 ```json
 {

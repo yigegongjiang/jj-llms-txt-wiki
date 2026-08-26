@@ -1,6 +1,6 @@
 ---
 title: What's new in Claude Opus 5
-url: https://platform.claude.com/docs/en/about-claude/models/whats-new-opus-5
+url: https://platform.claude.com/docs/en/models/opus-5/whats-new-opus-5
 description: Overview of new features and behavior changes in Claude Opus 5.
 ---
 
@@ -14,7 +14,7 @@ Claude Opus 5 is a step-change improvement over Claude Opus 4.8, with the larges
 
 Claude Opus 5 has a [1M token context window](https://platform.claude.com/docs/en/build-with-claude/context-windows) (1M tokens is both the default and the maximum; there is no smaller context variant), 128k max output tokens, and [thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) on by default.
 
-For complete pricing and specs, see the [models overview](https://platform.claude.com/docs/en/about-claude/models/overview).
+For complete pricing and specs, see the [models overview](https://platform.claude.com/docs/en/models/overview).
 
 ## New features
 
@@ -32,7 +32,7 @@ The minimum cacheable prompt length on Claude Opus 5 is 512 tokens, down from 1,
 
 ### Fast mode
 
-[Fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode) (research preview) is available for Claude Opus 5 on the Claude API only; it is not currently available on Amazon Bedrock, Google Cloud, or Microsoft Foundry. Fast mode for Claude Opus 5 is priced at $10 USD per million input tokens and $50 USD per million output tokens. See [Fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode) for access, supported models, and pricing.
+[Fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode) (research preview) is available for Claude Opus 5 on the Claude API only; it is not currently available on Amazon Bedrock, Claude Platform on AWS, Google Cloud, or Microsoft Foundry. Fast mode for Claude Opus 5 is priced at $10 USD per million input tokens and $50 USD per million output tokens. See [Fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode) for access, supported models, and pricing.
 
 ## Behavior changes
 
@@ -230,11 +230,11 @@ This request turns effort all the way up to `max`:
   ```
 </CodeGroup>
 
-Thinking is [on by default](https://platform.claude.com/docs/en/about-claude/models/whats-new-opus-5#thinking-on-by-default) on Claude Opus 5, so no `thinking` field is needed.
+Thinking is [on by default](https://platform.claude.com/docs/en/models/opus-5/whats-new-opus-5#thinking-on-by-default) on Claude Opus 5, so no `thinking` field is needed.
 
 ### Disabling thinking requires effort `high` or below
 
-On Claude Opus 5, `thinking: {"type": "disabled"}` is accepted only when the effort level is `high` or below. Setting `thinking: {"type": "disabled"}` with effort `xhigh` or `max` returns a 400 error. This is generally available behavior on Claude Opus 5 onward, enforced on each request, and it is a breaking change from Claude Opus 4.8, where disabling thinking was independent of the effort level. If you disable thinking at high effort levels today, either keep thinking disabled and set effort to `high` or below, or keep the effort level and remove the `thinking` field.
+On Claude Opus 5, `thinking: {"type": "disabled"}` is accepted only when the effort level is `high` or below. Setting `thinking: {"type": "disabled"}` with effort `xhigh` or `max` returns a 400 error. This rule is enforced on every request to Claude Opus 5 and later models. It is a breaking change from Claude Opus 4.8, where disabling thinking was independent of the effort level. If you disable thinking at high effort levels today, either keep thinking disabled and set effort to `high` or below, or keep the effort level and remove the `thinking` field.
 
 With thinking disabled, Claude Opus 5 can occasionally write a tool call into its text output instead of emitting a `tool_use` block, or include internal XML tags in its visible response. Where possible, keep thinking enabled and control token cost with lower effort levels; for integrations that must keep thinking disabled, see [Running with thinking disabled](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5#running-with-thinking-disabled) for prompting mitigations.
 
@@ -269,7 +269,7 @@ See [Pricing](https://platform.claude.com/docs/en/about-claude/pricing) for comp
 Claude Opus 5 is available on:
 
 * **Claude API:** available to all customers, as `claude-opus-5`.
-* **AWS:** available through [Claude in Amazon Bedrock](https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock), as `anthropic.claude-opus-5`. Claude Opus 5 is also reachable through the `InvokeModel` API on `bedrock-runtime`, served by the same infrastructure; the [Claude on Amazon Bedrock (legacy)](https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy) integration does not include it in its ARN-versioned model ID table.
+* **AWS:** available through [Claude in Amazon Bedrock](https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock), as `anthropic.claude-opus-5`, and through [Claude Platform on AWS](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws). On Amazon Bedrock, Claude Opus 5 is also reachable through the `InvokeModel` API on `bedrock-runtime`, served by the same infrastructure; the [Claude on Amazon Bedrock (legacy)](https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy) integration does not include it in its ARN-versioned model ID table.
 * **Google Cloud:** available through [Claude on Google Cloud](https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai), as `claude-opus-5`.
 * **Microsoft Foundry:** available through [Claude in Microsoft Foundry](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry).
 
@@ -316,12 +316,12 @@ To migrate from Claude Opus 4.8, update your model ID:
   ```
 </CodeGroup>
 
-Then review the two [behavior changes](https://platform.claude.com/docs/en/about-claude/models/whats-new-opus-5#behavior-changes): thinking is on by default, and disabling thinking with effort `xhigh` or `max` returns a 400 error. See the [migration guide](https://platform.claude.com/docs/en/about-claude/models/migration-guide#migrating-from-claude-opus-4-8-to-claude-opus-5) for step-by-step instructions.
+Then review the two [behavior changes](https://platform.claude.com/docs/en/models/opus-5/whats-new-opus-5#behavior-changes): thinking is on by default, and disabling thinking with effort `xhigh` or `max` returns a 400 error. See the [migration guide](https://platform.claude.com/docs/en/models/opus-5/migration-guide#migrating-from-claude-opus-4-8-to-claude-opus-5) for step-by-step instructions.
 
 ## Next steps
 
 <CardGroup cols={3}>
-  <Card title="Models overview" icon="arrow-right" href="https://platform.claude.com/docs/en/about-claude/models/overview">
+  <Card title="Models overview" icon="arrow-right" href="https://platform.claude.com/docs/en/models/overview">
     Complete specs and pricing for all current Claude models.
   </Card>
 

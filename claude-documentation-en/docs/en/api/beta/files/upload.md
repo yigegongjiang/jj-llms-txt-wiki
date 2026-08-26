@@ -1,15 +1,10 @@
----
-title: Upload File
-url: https://platform.claude.com/docs/en/api/beta/files/upload
----
+# Upload File
 
-## Upload File
-
-**post** `/v1/files`
+**POST** `/v1/files`
 
 Upload File
 
-### Header Parameters
+## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -17,7 +12,7 @@ Upload File
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -63,6 +58,8 @@ Upload File
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -85,9 +82,17 @@ Upload File
 
     - `"mid-conversation-tool-changes-2026-07-01"`
 
-### Returns
+## Body parameters (form-data)
 
-- `FileMetadata object { id, created_at, filename, 5 more }`
+- `file: string`
+
+  The file to upload
+
+  format: binary
+
+## Returns
+
+- `BetaFileMetadata object`
 
   - `id: string`
 
@@ -99,17 +104,25 @@ Upload File
 
     RFC 3339 datetime string representing when the file was created.
 
+    format: date-time
+
   - `filename: string`
 
     Original filename of the uploaded file.
+
+    maxLength: 500, minLength: 1
 
   - `mime_type: string`
 
     MIME type of the file.
 
+    maxLength: 255, minLength: 1
+
   - `size_bytes: number`
 
     Size of the file in bytes.
+
+    minimum: 0
 
   - `type: "file"`
 
@@ -117,11 +130,11 @@ Upload File
 
     For files, this is always `"file"`.
 
-    - `"file"`
-
   - `downloadable: optional boolean`
 
     Whether the file can be downloaded.
+
+    default: false
 
   - `scope: optional BetaFileScope or null`
 
@@ -135,11 +148,9 @@ Upload File
 
       The type of scope (e.g., `"session"`).
 
-      - `"session"`
+## Example
 
-### Example
-
-```http
+```bash
 curl https://api.anthropic.com/v1/files \
     -H 'Content-Type: multipart/form-data' \
     -H 'anthropic-version: 2023-06-01' \
@@ -148,7 +159,7 @@ curl https://api.anthropic.com/v1/files \
     -F 'file=@/path/to/file'
 ```
 
-#### Response
+### Response (200)
 
 ```json
 {

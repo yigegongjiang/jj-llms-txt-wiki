@@ -1,15 +1,10 @@
----
-title: Create Skill
-url: https://platform.claude.com/docs/en/api/beta/skills/create
----
+# Create Skill
 
-## Create Skill
-
-**post** `/v1/skills`
+**POST** `/v1/skills`
 
 Create Skill
 
-### Header Parameters
+## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -17,7 +12,7 @@ Create Skill
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -63,6 +58,8 @@ Create Skill
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -85,7 +82,21 @@ Create Skill
 
     - `"mid-conversation-tool-changes-2026-07-01"`
 
-### Returns
+## Body parameters (form-data)
+
+- `files: array of string`
+
+  Files to upload for the skill.
+
+  All files must be in the same top-level directory and must include a SKILL.md file at the root of that directory.
+
+- `display_title: optional string or null`
+
+  Display title for the skill.
+
+  This is a human-readable label that is not included in the prompt sent to the model.
+
+## Returns
 
 - `id: string`
 
@@ -124,13 +135,15 @@ Create Skill
 
   For Skills, this is always `"skill"`.
 
+  default: skill
+
 - `updated_at: string`
 
   ISO 8601 timestamp of when the skill was last updated.
 
-### Example
+## Example
 
-```http
+```bash
 curl https://api.anthropic.com/v1/skills \
     -H 'Content-Type: multipart/form-data' \
     -H 'anthropic-version: 2023-06-01' \
@@ -139,7 +152,7 @@ curl https://api.anthropic.com/v1/skills \
     -F files='["Example data"]'
 ```
 
-#### Response
+### Response (200)
 
 ```json
 {

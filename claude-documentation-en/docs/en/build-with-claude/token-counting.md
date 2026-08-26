@@ -28,7 +28,7 @@ The [token counting](https://platform.claude.com/docs/en/api/messages-count-toke
 
 ### Supported models
 
-All [active models](https://platform.claude.com/docs/en/about-claude/models/overview) support token counting, including Claude Opus 5 and Claude Sonnet 5.
+All [active models](https://platform.claude.com/docs/en/models/overview) support token counting, including Claude Opus 5 and Claude Sonnet 5.
 
 <Note>
   Claude 4.7 and later models and Claude Mythos Preview use a newer tokenizer. The same input text produces approximately 30 percent more tokens than on earlier models. The exact increase depends on the content and workload shape. Recount prompts against the model you plan to use rather than reusing counts measured against earlier models.
@@ -516,11 +516,11 @@ All [active models](https://platform.claude.com/docs/en/about-claude/models/over
 
   ```python Python
   import base64
-  import httpx
+  import httpx2
 
   image_url = "https://platform.claude.com/docs/images/vision-example.jpg"
   image_media_type = "image/jpeg"
-  image_data = base64.standard_b64encode(httpx.get(image_url).content).decode("utf-8")
+  image_data = base64.standard_b64encode(httpx2.get(image_url).content).decode("utf-8")
 
   client = anthropic.Anthropic()
 
@@ -771,6 +771,8 @@ All [active models](https://platform.claude.com/docs/en/about-claude/models/over
 ```json Output
 { "input_tokens": 1028 }
 ```
+
+An embedded image block that sets [`"oversized_image": "error"`](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates#oversized-image-error) is rejected at count time exactly as the Messages API would reject it.
 
 ### Count tokens in messages with thinking
 

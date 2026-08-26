@@ -37,7 +37,7 @@ Because PDF support relies on Claude's vision capabilities, it is subject to the
 
 ### Supported platforms and models
 
-All [active models](https://platform.claude.com/docs/en/about-claude/models/overview) support PDF processing. For PDF support through Amazon Bedrock's Converse API, see [Amazon Bedrock PDF support](https://platform.claude.com/docs/en/build-with-claude/pdf-support#amazon-bedrock-pdf-support).
+All [active models](https://platform.claude.com/docs/en/models/overview) support PDF processing. For PDF support through Amazon Bedrock's Converse API, see [Amazon Bedrock PDF support](https://platform.claude.com/docs/en/build-with-claude/pdf-support#amazon-bedrock-pdf-support).
 
 ### Amazon Bedrock PDF support
 
@@ -425,12 +425,12 @@ If you need to send PDFs from your local system or when a URL isn't available:
 
   ```python Python
   import base64
-  import httpx
+  import httpx2
 
   # First, load and encode the PDF
   pdf_url = "https://assets.anthropic.com/m/1cd9d098ac3e6467/original/Claude-3-Model-Card-October-Addendum.pdf"
   pdf_data = base64.standard_b64encode(
-      httpx.get(pdf_url, follow_redirects=True).content
+      httpx2.get(pdf_url, follow_redirects=True).content
   ).decode("utf-8")
 
   # Alternative: Load from a local file
@@ -704,7 +704,7 @@ If you need to send PDFs from your local system or when a URL isn't available:
 
 #### Option 3: Files API
 
-For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use the [Files API](https://platform.claude.com/docs/en/build-with-claude/files) (beta):
+For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use the [Files API](https://platform.claude.com/docs/en/build-with-claude/files):
 
 <CodeGroup>
   ```bash cURL
@@ -712,7 +712,6 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
   FILE_ID=$(curl -sS -X POST https://api.anthropic.com/v1/files \
     -H "x-api-key: $ANTHROPIC_API_KEY" \
     -H "anthropic-version: 2023-06-01" \
-    -H "anthropic-beta: files-api-2025-04-14" \
     -F "file=@document.pdf" | jq -r '.id')
 
   # Then use the returned file_id in your message
@@ -720,7 +719,6 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
     -H "content-type: application/json" \
     -H "x-api-key: $ANTHROPIC_API_KEY" \
     -H "anthropic-version: 2023-06-01" \
-    -H "anthropic-beta: files-api-2025-04-14" \
     -d @- <<EOF
   {
     "model": "claude-opus-5",
@@ -745,14 +743,13 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
 
   ```bash CLI
   # First, upload your PDF to the Files API
-  FILE_ID=$(ant beta:files upload \
+  FILE_ID=$(ant files upload \
     --file ./document.pdf \
     --transform id \
     --raw-output)
 
   # Then use the returned file_id in your message
-  ant beta:messages create \
-    --beta files-api-2025-04-14 \
+  ant messages create \
     --transform content \
     --format yaml <<YAML
   model: claude-opus-5
@@ -774,13 +771,12 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
 
   # Upload the PDF file
   with open("/path/to/document.pdf", "rb") as f:
-      file_upload = client.beta.files.upload(file=("document.pdf", f, "application/pdf"))
+      file_upload = client.files.upload(file=("document.pdf", f, "application/pdf"))
 
   # Use the uploaded file in a message
-  message = client.beta.messages.create(
+  message = client.messages.create(
       model="claude-opus-5",
       max_tokens=1024,
-      betas=["files-api-2025-04-14"],
       messages=[
           {
               "role": "user",
@@ -805,17 +801,16 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
   const anthropic = new Anthropic();
 
   // Upload the PDF file
-  const fileUpload = await anthropic.beta.files.upload({
+  const fileUpload = await anthropic.files.upload({
     file: await toFile(fs.createReadStream("/path/to/document.pdf"), undefined, {
       type: "application/pdf"
     })
   });
 
   // Use the uploaded file in a message
-  const response = await anthropic.beta.messages.create({
+  const response = await anthropic.messages.create({
     model: "claude-opus-5",
     max_tokens: 1024,
-    betas: ["files-api-2025-04-14"],
     messages: [
       {
         role: "user",
@@ -840,12 +835,10 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
   ```
 
   ```csharp C#
-  using Messages = Anthropic.Models.Messages;
-
   var client = new AnthropicClient();
 
   // Upload the PDF file
-  var fileUpload = await client.Beta.Files.Upload(new FileUploadParams
+  var fileUpload = await client.Files.Upload(new FileUploadParams
   {
       File = new BinaryContent
       {
@@ -856,23 +849,22 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
   });
 
   // Use the uploaded file in a message
-  var message = await client.Beta.Messages.Create(new MessageCreateParams
+  var message = await client.Messages.Create(new MessageCreateParams
   {
-      Model = Messages::Model.ClaudeOpus5,
+      Model = Model.ClaudeOpus5,
       MaxTokens = 1024,
-      Betas = [AnthropicBeta.FilesApi2025_04_14],
       Messages =
       [
           new()
           {
               Role = Role.User,
-              Content = new List<BetaContentBlockParam>
+              Content = new List<ContentBlockParam>
               {
-                  new BetaRequestDocumentBlock
+                  new DocumentBlockParam
                   {
-                      Source = new BetaFileDocumentSource { FileID = fileUpload.ID },
+                      Source = new FileDocumentSource { FileID = fileUpload.ID },
                   },
-                  new BetaTextBlockParam("What are the key findings in this document?"),
+                  new TextBlockParam("What are the key findings in this document?"),
               },
           },
       ],
@@ -891,7 +883,7 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
   }
   defer pdfFile.Close()
 
-  fileUpload, err := client.Beta.Files.Upload(context.TODO(), anthropic.BetaFileUploadParams{
+  fileUpload, err := client.Files.Upload(context.TODO(), anthropic.FileUploadParams{
   	File: anthropic.File(pdfFile, "document.pdf", "application/pdf"),
   })
   if err != nil {
@@ -899,16 +891,15 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
   }
 
   // Use the uploaded file in a message
-  message, err := client.Beta.Messages.New(context.TODO(), anthropic.BetaMessageNewParams{
+  message, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
   	Model:     anthropic.ModelClaudeOpus5,
   	MaxTokens: 1024,
-  	Betas:     []anthropic.AnthropicBeta{anthropic.AnthropicBetaFilesAPI2025_04_14},
-  	Messages: []anthropic.BetaMessageParam{
-  		anthropic.NewBetaUserMessage(
-  			anthropic.NewBetaDocumentBlock(anthropic.BetaFileDocumentSourceParam{
+  	Messages: []anthropic.MessageParam{
+  		anthropic.NewUserMessage(
+  			anthropic.NewDocumentBlock(anthropic.FileDocumentSourceParam{
   				FileID: fileUpload.ID,
   			}),
-  			anthropic.NewBetaTextBlock("What are the key findings in this document?"),
+  			anthropic.NewTextBlock("What are the key findings in this document?"),
   		),
   	},
   })
@@ -924,28 +915,20 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
 
   // Upload the PDF file
   FileMetadata file = client
-    .beta()
     .files()
     .upload(FileUploadParams.builder().file(Path.of("/path/to/document.pdf")).build());
 
   // Use the uploaded file in a message
   MessageCreateParams params = MessageCreateParams.builder()
     .model(Model.CLAUDE_OPUS_5)
-    .addBeta(AnthropicBeta.FILES_API_2025_04_14)
     .maxTokens(1024)
-    .addUserMessageOfBetaContentBlockParams(
+    .addUserMessageOfBlockParams(
       List.of(
-        BetaContentBlockParam.ofDocument(
-          BetaRequestDocumentBlock.builder()
-            .source(
-              BetaFileDocumentSource.builder()
-                .fileId(file.id())
-                .build()
-            )
-            .build()
+        ContentBlockParam.ofDocument(
+          DocumentBlockParam.builder().fileSource(file.id()).build()
         ),
-        BetaContentBlockParam.ofText(
-          BetaTextBlockParam.builder()
+        ContentBlockParam.ofText(
+          TextBlockParam.builder()
             .text("What are the key findings in this document?")
             .build()
         )
@@ -953,7 +936,7 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
     )
     .build();
 
-  BetaMessage message = client.beta().messages().create(params);
+  Message message = client.messages().create(params);
   System.out.println(message.content());
   ```
 
@@ -963,14 +946,13 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
   $client = new Client();
 
   // Upload the PDF file
-  $file_upload = $client->beta->files->upload(
+  $file_upload = $client->files->upload(
       file: FileParam::fromResource(fopen('/path/to/document.pdf', 'r'), contentType: 'application/pdf'),
   );
 
   // Use the uploaded file in a message
-  $message = $client->beta->messages->create(
+  $message = $client->messages->create(
       maxTokens: 1024,
-      betas: ['files-api-2025-04-14'],
       messages: [
           [
               'role' => 'user',
@@ -979,7 +961,7 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
                       'type' => 'document',
                       'source' => [
                           'type' => 'file',
-                          'file_id' => $file_upload->id,
+                          'fileID' => $file_upload->id,
                       ],
                   ],
                   [
@@ -1000,16 +982,15 @@ For PDFs you'll use repeatedly, or when you want to avoid encoding overhead, use
 
   # Upload the PDF file
   file_upload = File.open("/path/to/document.pdf", "rb") do |f|
-    anthropic.beta.files.upload(
+    anthropic.files.upload(
       file: Anthropic::FilePart.new(f, filename: "document.pdf", content_type: "application/pdf")
     )
   end
 
   # Use the uploaded file in a message
-  message = anthropic.beta.messages.create(
+  message = anthropic.messages.create(
     model: "claude-opus-5",
     max_tokens: 1024,
-    betas: ["files-api-2025-04-14"],
     messages: [
       {
         role: "user",
@@ -1139,12 +1120,12 @@ Cache PDFs with [prompt caching](https://platform.claude.com/docs/en/build-with-
 
   ```python Python
   import base64
-  import httpx
+  import httpx2
 
   # First, load and encode the PDF
   pdf_url = "https://assets.anthropic.com/m/1cd9d098ac3e6467/original/Claude-3-Model-Card-October-Addendum.pdf"
   pdf_data = base64.standard_b64encode(
-      httpx.get(pdf_url, follow_redirects=True).content
+      httpx2.get(pdf_url, follow_redirects=True).content
   ).decode("utf-8")
 
   # Create a message with the cached document
@@ -1507,12 +1488,12 @@ Use the [Message Batches API](https://platform.claude.com/docs/en/build-with-cla
 
   ```python Python
   import base64
-  import httpx
+  import httpx2
 
   # First, load and encode the PDF
   pdf_url = "https://assets.anthropic.com/m/1cd9d098ac3e6467/original/Claude-3-Model-Card-October-Addendum.pdf"
   pdf_data = base64.standard_b64encode(
-      httpx.get(pdf_url, follow_redirects=True).content
+      httpx2.get(pdf_url, follow_redirects=True).content
   ).decode("utf-8")
 
   # Create a batch of requests that use the document

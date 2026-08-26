@@ -21,7 +21,7 @@ For fast, cost-effective tasks: Claude Haiku 4.5: claude-haiku-4-5-20251001
 
 ### Basic request and response
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
   ant messages create \
     --model claude-opus-5 \
@@ -66,7 +66,7 @@ For fast, cost-effective tasks: Claude Haiku 4.5: claude-haiku-4-5-20251001
 
 The Messages API is stateless, which means that you always send the full conversational history to the API. You can use this pattern to build up a conversation over time. Earlier conversational turns don't necessarily need to actually originate from Claude. You can use synthetic `assistant` messages.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
   ant messages create <<'YAML'
   model: claude-opus-5
@@ -105,7 +105,7 @@ You can prefill part of Claude's response in the last position of the input mess
   Claude 4.6 and later models and Claude Mythos Preview do not support assistant message prefill; requests to those models must end with a user message. The examples below use a model that supports prefill.
 </Note>
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
   ant messages create <<'YAML'
   model: claude-sonnet-4-5
@@ -140,7 +140,7 @@ You can prefill part of Claude's response in the last position of the input mess
 
 Claude can read both text and images in requests. Both `base64` and `url` source types are supported for images, along with the `image/jpeg`, `image/png`, `image/gif`, and `image/webp` media types.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
   IMAGE_URL="https://platform.claude.com/docs/images/vision-example.jpg"
 
@@ -181,12 +181,12 @@ Claude can read both text and images in requests. Both `base64` and `url` source
   ```python Python
   import anthropic
   import base64
-  import httpx
+  import httpx2
 
   # Option 1: Base64-encoded image
   image_url = "https://platform.claude.com/docs/images/vision-example.jpg"
   image_media_type = "image/jpeg"
-  image_data = base64.standard_b64encode(httpx.get(image_url).content).decode("utf-8")
+  image_data = base64.standard_b64encode(httpx2.get(image_url).content).decode("utf-8")
 
   message = anthropic.Anthropic().messages.create(
       model="claude-opus-5",
@@ -260,10 +260,9 @@ Thinking is supported in the following models:
 
 When thinking is on, Claude creates `thinking` content blocks where it outputs its internal reasoning. The API response includes `thinking` content blocks, followed by `text` content blocks.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
-  ant messages create \
-    --transform content --format yaml <<'YAML'
+  ant messages create --transform content --format yaml <<'YAML'
   model: claude-opus-5
   max_tokens: 16000
   thinking:
@@ -314,7 +313,7 @@ Important limitations:
 
 ### Preserving thinking blocks
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
   # First request: capture the assistant content array (thinking + tool_use
   # blocks, signatures intact) as compact JSON.
@@ -448,7 +447,7 @@ Interleaved thinking enables Claude to think between tool calls, reasoning about
 
 On older models that use manual extended thinking (Claude 4, 4.5, and Sonnet 4.6 models), enable interleaved thinking by adding the beta header `interleaved-thinking-2025-05-14` to your API request:
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
   ant beta:messages create --beta interleaved-thinking-2025-05-14 <<'YAML'
   model: claude-sonnet-4-6
@@ -719,7 +718,7 @@ When creating a Message, you can set `"stream": true` to incrementally stream th
 
 ### Streaming with SDKs
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, typescript, csharp, go, java, php, ruby">
   ```bash CLI
   ant messages create --stream --format jsonl \
     --model claude-opus-5 \

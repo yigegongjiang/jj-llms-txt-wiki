@@ -1,19 +1,14 @@
----
-title: Run Deployment Now
-url: https://platform.claude.com/docs/en/api/beta/deployments/run
----
+# Run Deployment Now
 
-## Run Deployment Now
-
-**post** `/v1/deployments/{deployment_id}/run`
+**POST** `/v1/deployments/{deployment_id}/run`
 
 Run Deployment Now
 
-### Path Parameters
+## Path parameters
 
 - `deployment_id: string`
 
-### Header Parameters
+## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
 
@@ -21,7 +16,7 @@ Run Deployment Now
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 30 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 31 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -67,6 +62,8 @@ Run Deployment Now
 
     - `"user-profiles-2026-03-24"`
 
+    - `"user-profiles-2026-08-18"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -89,9 +86,9 @@ Run Deployment Now
 
     - `"mid-conversation-tool-changes-2026-07-01"`
 
-### Returns
+## Returns
 
-- `BetaManagedAgentsDeploymentRun object { id, agent, created_at, 5 more }`
+- `BetaManagedAgentsDeploymentRun object`
 
   A persistent, append-only record of a single deployment execution. Records session creation success or failure — no session lifecycle tracking.
 
@@ -107,13 +104,15 @@ Run Deployment Now
 
     - `type: "agent"`
 
-      - `"agent"`
-
     - `version: number`
+
+      format: int32
 
   - `created_at: string`
 
     A timestamp in RFC 3339 format
+
+    format: date-time
 
   - `deployment_id: string`
 
@@ -123,7 +122,7 @@ Run Deployment Now
 
     Why the run failed to create a session. The type identifies the failure; message is human-readable detail.
 
-    - `BetaManagedAgentsEnvironmentArchivedRunError object { message, type }`
+    - `BetaManagedAgentsEnvironmentArchivedRunError object`
 
       The deployment's environment was archived.
 
@@ -133,9 +132,7 @@ Run Deployment Now
 
       - `type: "environment_archived_error"`
 
-        - `"environment_archived_error"`
-
-    - `BetaManagedAgentsAgentArchivedRunError object { message, type }`
+    - `BetaManagedAgentsAgentArchivedRunError object`
 
       The deployment's agent was archived.
 
@@ -145,9 +142,7 @@ Run Deployment Now
 
       - `type: "agent_archived_error"`
 
-        - `"agent_archived_error"`
-
-    - `BetaManagedAgentsEnvironmentNotFoundRunError object { message, type }`
+    - `BetaManagedAgentsEnvironmentNotFoundRunError object`
 
       The deployment's environment no longer exists.
 
@@ -157,9 +152,7 @@ Run Deployment Now
 
       - `type: "environment_not_found_error"`
 
-        - `"environment_not_found_error"`
-
-    - `BetaManagedAgentsVaultNotFoundRunError object { message, type }`
+    - `BetaManagedAgentsVaultNotFoundRunError object`
 
       A vault referenced by the deployment no longer exists.
 
@@ -169,9 +162,7 @@ Run Deployment Now
 
       - `type: "vault_not_found_error"`
 
-        - `"vault_not_found_error"`
-
-    - `BetaManagedAgentsVaultArchivedRunError object { message, type }`
+    - `BetaManagedAgentsVaultArchivedRunError object`
 
       A vault referenced by the deployment is archived.
 
@@ -181,9 +172,7 @@ Run Deployment Now
 
       - `type: "vault_archived_error"`
 
-        - `"vault_archived_error"`
-
-    - `BetaManagedAgentsFileNotFoundRunError object { message, type }`
+    - `BetaManagedAgentsFileNotFoundRunError object`
 
       A file resource referenced by the deployment no longer exists.
 
@@ -193,9 +182,7 @@ Run Deployment Now
 
       - `type: "file_not_found_error"`
 
-        - `"file_not_found_error"`
-
-    - `BetaManagedAgentsMemoryStoreArchivedRunError object { message, type }`
+    - `BetaManagedAgentsMemoryStoreArchivedRunError object`
 
       A memory store referenced by the deployment is archived.
 
@@ -205,9 +192,7 @@ Run Deployment Now
 
       - `type: "memory_store_archived_error"`
 
-        - `"memory_store_archived_error"`
-
-    - `BetaManagedAgentsSkillNotFoundRunError object { message, type }`
+    - `BetaManagedAgentsSkillNotFoundRunError object`
 
       A skill referenced by the deployment's agent no longer exists.
 
@@ -217,9 +202,7 @@ Run Deployment Now
 
       - `type: "skill_not_found_error"`
 
-        - `"skill_not_found_error"`
-
-    - `BetaManagedAgentsSessionResourceNotFoundRunError object { message, type }`
+    - `BetaManagedAgentsSessionResourceNotFoundRunError object`
 
       A referenced resource no longer exists and its kind was not reported.
 
@@ -229,9 +212,7 @@ Run Deployment Now
 
       - `type: "session_resource_not_found_error"`
 
-        - `"session_resource_not_found_error"`
-
-    - `BetaManagedAgentsWorkspaceArchivedRunError object { message, type }`
+    - `BetaManagedAgentsWorkspaceArchivedRunError object`
 
       The deployment's workspace was archived.
 
@@ -241,9 +222,7 @@ Run Deployment Now
 
       - `type: "workspace_archived_error"`
 
-        - `"workspace_archived_error"`
-
-    - `BetaManagedAgentsOrganizationDisabledRunError object { message, type }`
+    - `BetaManagedAgentsOrganizationDisabledRunError object`
 
       The deployment's organization is disabled.
 
@@ -253,9 +232,7 @@ Run Deployment Now
 
       - `type: "organization_disabled_error"`
 
-        - `"organization_disabled_error"`
-
-    - `BetaManagedAgentsSessionRateLimitedRunError object { message, type }`
+    - `BetaManagedAgentsSessionRateLimitedRunError object`
 
       Session creation was rejected due to rate limiting. The schedule keeps firing; subsequent runs may succeed.
 
@@ -265,9 +242,7 @@ Run Deployment Now
 
       - `type: "session_rate_limited_error"`
 
-        - `"session_rate_limited_error"`
-
-    - `BetaManagedAgentsSessionCreationRejectedRunError object { message, type }`
+    - `BetaManagedAgentsSessionCreationRejectedRunError object`
 
       The session create request was rejected with a non-retryable validation error.
 
@@ -277,9 +252,7 @@ Run Deployment Now
 
       - `type: "session_creation_rejected_error"`
 
-        - `"session_creation_rejected_error"`
-
-    - `BetaManagedAgentsUnknownRunError object { message, type }`
+    - `BetaManagedAgentsUnknownRunError object`
 
       An unknown or unexpected error caused the run to fail. A fallback variant; clients that do not recognize a new error type can match on message alone.
 
@@ -289,9 +262,7 @@ Run Deployment Now
 
       - `type: "unknown_error"`
 
-        - `"unknown_error"`
-
-    - `BetaManagedAgentsSelfHostedResourcesUnsupportedRunError object { message, type }`
+    - `BetaManagedAgentsSelfHostedResourcesUnsupportedRunError object`
 
       The deployment configures resources, but its environment is self-hosted and cannot mount them.
 
@@ -301,9 +272,7 @@ Run Deployment Now
 
       - `type: "self_hosted_resources_unsupported_error"`
 
-        - `"self_hosted_resources_unsupported_error"`
-
-    - `BetaManagedAgentsMCPEgressBlockedRunError object { message, type }`
+    - `BetaManagedAgentsMCPEgressBlockedRunError object`
 
       An MCP server host used by the deployment's agent is blocked by the environment's network policy.
 
@@ -313,8 +282,6 @@ Run Deployment Now
 
       - `type: "mcp_egress_blocked_error"`
 
-        - `"mcp_egress_blocked_error"`
-
   - `session_id: string or null`
 
     Populated on success. Null on creation failure. Exactly one of session_id or error is non-null.
@@ -323,7 +290,7 @@ Run Deployment Now
 
     Describes what triggered a deployment run, with trigger-specific metadata.
 
-    - `BetaManagedAgentsScheduleTriggerContext object { scheduled_at, type }`
+    - `BetaManagedAgentsScheduleTriggerContext object`
 
       The run was fired by the deployment's cron schedule.
 
@@ -331,25 +298,21 @@ Run Deployment Now
 
         A timestamp in RFC 3339 format
 
+        format: date-time
+
       - `type: "schedule"`
 
-        - `"schedule"`
-
-    - `BetaManagedAgentsManualTriggerContext object { type }`
+    - `BetaManagedAgentsManualTriggerContext object`
 
       The run was started manually by creating a session directly against the deployment.
 
       - `type: "manual"`
 
-        - `"manual"`
-
   - `type: "deployment_run"`
 
-    - `"deployment_run"`
+## Example
 
-### Example
-
-```http
+```bash
 curl https://api.anthropic.com/v1/deployments/$DEPLOYMENT_ID/run \
     -X POST \
     -H 'anthropic-version: 2023-06-01' \
@@ -357,7 +320,7 @@ curl https://api.anthropic.com/v1/deployments/$DEPLOYMENT_ID/run \
     -H "X-Api-Key: $ANTHROPIC_API_KEY"
 ```
 
-#### Response
+### Response (200)
 
 ```json
 {
