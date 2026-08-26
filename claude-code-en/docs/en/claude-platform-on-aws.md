@@ -262,7 +262,9 @@ export ANTHROPIC_AWS_WORKSPACE_ID=wrkspc_01ABCDEFGHIJKLMN
 export AWS_REGION=us-east-1
 ```
 
-`ANTHROPIC_AWS_WORKSPACE_ID` is required and is sent on every request as the `anthropic-workspace-id` header. Replace the example `wrkspc_01ABCDEFGHIJKLMN` value with your own workspace ID from your Claude Platform on AWS setup. The base URL is computed from `AWS_REGION` as `https://aws-external-anthropic.{region}.api.aws`. To override the URL directly, set `ANTHROPIC_AWS_BASE_URL`.
+`ANTHROPIC_AWS_WORKSPACE_ID` is required. Claude Code sends it on every request as the `anthropic-workspace-id` header. Replace the example `wrkspc_01ABCDEFGHIJKLMN` value with your own workspace ID from your Claude Platform on AWS setup.
+
+Claude Code computes the base URL as `https://aws-external-anthropic.{region}.api.aws` from the AWS region, which it resolves with the [same precedence as Amazon Bedrock](/docs/en/amazon-bedrock#3-configure-claude-code). To override the URL directly, set `ANTHROPIC_AWS_BASE_URL`.
 
 Claude Platform on AWS is opt-in even when AWS credentials are present in your environment. Amazon Bedrock and Microsoft Foundry take precedence in provider routing, so unset `CLAUDE_CODE_USE_BEDROCK` and `CLAUDE_CODE_USE_FOUNDRY` if they're set.
 
@@ -284,6 +286,8 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
 For the full list of model IDs and aliases, see [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview). For other model-related variables, see [Model configuration](/docs/en/model-config).
 
 [Prompt caching](/docs/en/prompt-caching) is enabled automatically. To request a 1-hour cache TTL instead of the 5-minute default, set `ENABLE_PROMPT_CACHING_1H=1`. The API bills 1-hour cache writes at a higher rate. See [prompt caching pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing) for the rates.
+
+To set different TTLs for your main conversation and for the requests Claude Code makes outside it, [choose the TTL yourself](/docs/en/prompt-caching#choose-the-ttl-yourself).
 
 ### 4. Launch and verify
 
