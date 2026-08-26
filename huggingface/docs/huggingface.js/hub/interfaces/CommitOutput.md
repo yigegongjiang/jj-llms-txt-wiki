@@ -15,7 +15,7 @@
 
 #### Defined in[[commit.defined-in]]
 
-[packages/hub/src/lib/commit.ts:157](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L157)
+[packages/hub/src/lib/commit.ts:182](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L182)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in[[hookoutput.defined-in]]
 
-[packages/hub/src/lib/commit.ts:161](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L161)
+[packages/hub/src/lib/commit.ts:186](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L186)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in[[pullrequesturl.defined-in]]
 
-[packages/hub/src/lib/commit.ts:156](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L156)
+[packages/hub/src/lib/commit.ts:181](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L181)

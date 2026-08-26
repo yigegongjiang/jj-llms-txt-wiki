@@ -705,7 +705,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:188](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L188)
+[inference/src/lib/getProviderHelper.ts:189](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L189)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ConversationalTaskHelper` & `TaskProviderHelper`
 
@@ -722,7 +722,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:192](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L192)
+[inference/src/lib/getProviderHelper.ts:193](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L193)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextGenerationTaskHelper` & `TaskProviderHelper`
 
@@ -739,7 +739,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:196](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L196)
+[inference/src/lib/getProviderHelper.ts:197](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L197)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextToSpeechTaskHelper` & `TaskProviderHelper`
 
@@ -756,7 +756,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:200](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L200)
+[inference/src/lib/getProviderHelper.ts:201](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L201)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextToAudioTaskHelper` & `TaskProviderHelper`
 
@@ -773,7 +773,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:204](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L204)
+[inference/src/lib/getProviderHelper.ts:205](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L205)
 
 ▸ **getProviderHelper**(`provider`, `task`): `AutomaticSpeechRecognitionTaskHelper` & `TaskProviderHelper`
 
@@ -790,7 +790,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:208](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L208)
+[inference/src/lib/getProviderHelper.ts:209](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L209)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextToVideoTaskHelper` & `TaskProviderHelper`
 
@@ -807,7 +807,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:212](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L212)
+[inference/src/lib/getProviderHelper.ts:213](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L213)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -824,7 +824,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:216](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L216)
+[inference/src/lib/getProviderHelper.ts:217](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L217)
 
 ▸ **getProviderHelper**(`provider`, `task`): `QuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -841,7 +841,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:220](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L220)
+[inference/src/lib/getProviderHelper.ts:221](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L221)
 
 ▸ **getProviderHelper**(`provider`, `task`): `AudioClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -858,7 +858,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:224](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L224)
+[inference/src/lib/getProviderHelper.ts:225](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L225)
 
 ▸ **getProviderHelper**(`provider`, `task`): `AudioToAudioTaskHelper` & `TaskProviderHelper`
 
@@ -875,7 +875,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:228](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L228)
+[inference/src/lib/getProviderHelper.ts:229](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L229)
 
 ▸ **getProviderHelper**(`provider`, `task`): `FillMaskTaskHelper` & `TaskProviderHelper`
 
@@ -892,7 +892,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:232](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L232)
+[inference/src/lib/getProviderHelper.ts:233](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L233)
 
 ▸ **getProviderHelper**(`provider`, `task`): `FeatureExtractionTaskHelper` & `TaskProviderHelper`
 
@@ -909,7 +909,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:236](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L236)
+[inference/src/lib/getProviderHelper.ts:237](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L237)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -926,7 +926,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:240](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L240)
+[inference/src/lib/getProviderHelper.ts:241](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L241)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageSegmentationTaskHelper` & `TaskProviderHelper`
 
@@ -943,7 +943,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:244](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L244)
+[inference/src/lib/getProviderHelper.ts:245](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L245)
 
 ▸ **getProviderHelper**(`provider`, `task`): `DocumentQuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -960,7 +960,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:248](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L248)
+[inference/src/lib/getProviderHelper.ts:249](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L249)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageToTextTaskHelper` & `TaskProviderHelper`
 
@@ -977,7 +977,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:252](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L252)
+[inference/src/lib/getProviderHelper.ts:253](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L253)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ObjectDetectionTaskHelper` & `TaskProviderHelper`
 
@@ -994,7 +994,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:256](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L256)
+[inference/src/lib/getProviderHelper.ts:257](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L257)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ZeroShotImageClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1011,7 +1011,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:260](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L260)
+[inference/src/lib/getProviderHelper.ts:261](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L261)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ZeroShotClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1028,7 +1028,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:264](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L264)
+[inference/src/lib/getProviderHelper.ts:265](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L265)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageToImageTaskHelper` & `TaskProviderHelper`
 
@@ -1045,7 +1045,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:268](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L268)
+[inference/src/lib/getProviderHelper.ts:269](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L269)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageToVideoTaskHelper` & `TaskProviderHelper`
 
@@ -1062,7 +1062,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:272](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L272)
+[inference/src/lib/getProviderHelper.ts:273](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L273)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageTextToImageTaskHelper` & `TaskProviderHelper`
 
@@ -1079,7 +1079,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:276](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L276)
+[inference/src/lib/getProviderHelper.ts:277](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L277)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageTextToVideoTaskHelper` & `TaskProviderHelper`
 
@@ -1096,7 +1096,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:280](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L280)
+[inference/src/lib/getProviderHelper.ts:281](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L281)
 
 ▸ **getProviderHelper**(`provider`, `task`): `SentenceSimilarityTaskHelper` & `TaskProviderHelper`
 
@@ -1113,7 +1113,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:284](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L284)
+[inference/src/lib/getProviderHelper.ts:285](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L285)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TableQuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -1130,7 +1130,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:288](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L288)
+[inference/src/lib/getProviderHelper.ts:289](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L289)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TabularClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1147,7 +1147,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:292](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L292)
+[inference/src/lib/getProviderHelper.ts:293](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L293)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TabularRegressionTaskHelper` & `TaskProviderHelper`
 
@@ -1164,7 +1164,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:296](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L296)
+[inference/src/lib/getProviderHelper.ts:297](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L297)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TokenClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1181,7 +1181,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:300](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L300)
+[inference/src/lib/getProviderHelper.ts:301](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L301)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TranslationTaskHelper` & `TaskProviderHelper`
 
@@ -1198,7 +1198,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:304](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L304)
+[inference/src/lib/getProviderHelper.ts:305](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L305)
 
 ▸ **getProviderHelper**(`provider`, `task`): `SummarizationTaskHelper` & `TaskProviderHelper`
 
@@ -1215,7 +1215,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:308](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L308)
+[inference/src/lib/getProviderHelper.ts:309](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L309)
 
 ▸ **getProviderHelper**(`provider`, `task`): `VisualQuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -1232,7 +1232,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:312](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L312)
+[inference/src/lib/getProviderHelper.ts:313](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L313)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TaskProviderHelper`
 
@@ -1249,7 +1249,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:316](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L316)
+[inference/src/lib/getProviderHelper.ts:317](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L317)
 
 ___
 

@@ -19,13 +19,15 @@ With Academia Hub, you get **an all-in-one subscription to the Hugging Face Hub 
   
   
   
+  
 
 ## What's included in the subscription
 1. **Storage:** 1 TB of private and 1 TB of public storage per seat, including our new Storage Buckets!
-2. **Compute:** $2/month/seat of credits for Inference Providers, daily higher ZeroGPU priority access for Spaces, and higher Hub rate limits.
-3. **Collaboration tools:** [Resource Groups](./security-resource-groups), [Data Studio](./data-studio) for private datasets, [Audit Logs](./audit-logs), and access controls.
-4. **Governance & security:** Seat management, centralized admin, [SSO](https://huggingface.co/docs/hub/en/enterprise-sso), [2FA](https://huggingface.co/docs/hub/en/enterprise-advanced-security), [SCIM](https://huggingface.co/docs/hub/en/enterprise-sso#user-provisioning-scim), SOC 2 certified.
-5. **Global Open Source community:** publish and collaborate alongside the researchers and builders working on the field's most-used models and datasets.
+2. **Compute:** $2/month/seat of compute credits, usable across Inference Providers, Inference Endpoints, Spaces upgraded hardware and Jobs.
+3. **Higher access and limits:** daily higher ZeroGPU priority access for Spaces, and higher Hub rate limits.
+4. **Collaboration tools:** [Resource Groups](./security-resource-groups), [Data Studio](./data-studio) for private datasets, [Audit Logs](./audit-logs), and access controls.
+5. **Governance & security:** Seat management, centralized admin, [SSO](https://huggingface.co/docs/hub/en/enterprise-sso), [2FA](https://huggingface.co/docs/hub/en/enterprise-advanced-security), [SCIM](https://huggingface.co/docs/hub/en/enterprise-sso#user-provisioning-scim), SOC 2 certified.
+6. **Global Open Source community:** publish and collaborate alongside the researchers and builders working on the field's most-used models and datasets.
 
 ## Pricing
 Starting at $10/seat/month, with volume-based discounts. 

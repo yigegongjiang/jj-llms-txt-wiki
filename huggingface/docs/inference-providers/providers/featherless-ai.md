@@ -39,7 +39,7 @@ Find out more about Chat Completion (LLM) [here](../tasks/chat-completion).
 
 <InferenceSnippet
     pipeline=text-generation
-    providersMapping={ {"featherless-ai":{"modelId":"poolside/Laguna-S-2.1","providerModelId":"poolside/Laguna-S-2.1"} } }
+    providersMapping={ {"featherless-ai":{"modelId":"OBLITERATUS/Qwen3.8-27B-OBLITERATED","providerModelId":"OBLITERATUS/Qwen3.8-27B-OBLITERATED"} } }
 conversational />
 
 ### Chat Completion (VLM)
@@ -48,7 +48,7 @@ Find out more about Chat Completion (VLM) [here](../tasks/chat-completion).
 
 <InferenceSnippet
     pipeline=image-text-to-text
-    providersMapping={ {"featherless-ai":{"modelId":"moonshotai/Kimi-K3","providerModelId":"moonshotai/Kimi-K3"} } }
+    providersMapping={ {"featherless-ai":{"modelId":"Qwen/Qwen3.8-27B","providerModelId":"Qwen/Qwen3.8-27B"} } }
 conversational />
 
 ### Text Generation
@@ -57,5 +57,5 @@ Find out more about Text Generation [here](../tasks/text-generation).
 
 <InferenceSnippet
     pipeline=text-generation
-    providersMapping={ {"featherless-ai":{"modelId":"poolside/Laguna-S-2.1","providerModelId":"poolside/Laguna-S-2.1"} } }
+    providersMapping={ {"featherless-ai":{"modelId":"OBLITERATUS/Qwen3.8-27B-OBLITERATED","providerModelId":"OBLITERATUS/Qwen3.8-27B-OBLITERATED"} } }
 />

@@ -17,7 +17,7 @@ see [copyFile](../modules#copyfile), [copyFiles](../modules#copyfiles) and [copy
 
 #### Defined in[[operation.defined-in]]
 
-[packages/hub/src/lib/commit.ts:100](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L100)
+[packages/hub/src/lib/commit.ts:116](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L116)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 #### Defined in[[path.defined-in]]
 
-[packages/hub/src/lib/commit.ts:101](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L101)
+[packages/hub/src/lib/commit.ts:117](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L117)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in[[sourcerepo.defined-in]]
 
-[packages/hub/src/lib/commit.ts:103](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L103)
+[packages/hub/src/lib/commit.ts:119](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L119)
 
 ___
 
@@ -47,4 +47,4 @@ ___
 
 #### Defined in[[sourcexethash.defined-in]]
 
-[packages/hub/src/lib/commit.ts:102](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L102)
+[packages/hub/src/lib/commit.ts:118](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L118)

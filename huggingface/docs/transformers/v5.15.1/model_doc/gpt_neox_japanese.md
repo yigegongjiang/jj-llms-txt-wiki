@@ -1,0 +1,406 @@
+# GPT-NeoX-Japanese
+
+GPT-NeoX-Japanese, a Japanese language model based on [GPT-NeoX](./gpt_neox).
+Japanese uses three types of characters (hiragana, katakana, kanji) and has a huge vocabulary. This model uses [BPEEncoder V2](https://github.com/tanreinama/Japanese-BPEEncoder_V2), a sub-word tokenizer to handle the different characters.
+
+The model also removes some bias parameters for better performance.
+
+You can find all the original GPT-NeoX-Japanese checkpoints under the [ABEJA](https://huggingface.co/abeja/models?search=gpt-neo-x) organization.
+
+> [!TIP]
+> This model was contributed by [Shinya Otani](https://github.com/SO0529), [Takayoshi Makabe](https://github.com/spider-man-tm), [Anuj Arora](https://github.com/Anuj040), and [Kyo Hattori](https://github.com/go5paopao) from [ABEJA, Inc.](https://www.abejainc.com/).
+>
+> Click on the GPT-NeoX-Japanese models in the right sidebar for more examples of how to apply GPT-NeoX-Japanese to different language tasks.
+
+The example below demonstrates how to generate text with [Pipeline](/docs/transformers/v5.15.1/en/main_classes/pipelines#transformers.Pipeline) or the [AutoModel](/docs/transformers/v5.15.1/en/model_doc/auto#transformers.AutoModel), and from the command line.
+
+```python
+from transformers import pipeline
+
+pipeline = pipeline(task="text-generation",
+                    model="abeja/gpt-neox-japanese-2.7b", device=0)
+pipeline("人とAIが協調するためには、")
+```
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model = AutoModelForCausalLM.from_pretrained("abeja/gpt-neox-japanese-2.7b", device_map="auto")
+tokenizer = AutoTokenizer.from_pretrained("abeja/gpt-neox-japanese-2.7b")
+input_ids = tokenizer("人とAIが協調するためには、", return_tensors="pt").input_ids.to(model.device)
+outputs = model.generate(input_ids)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
+Quantization reduces the memory burden of large models by representing the weights in a lower precision. Refer to the [Quantization](../quantization/overview) overview for more available quantization backends.
+
+The example below uses [bitsandbytes](../quantization/bitsandbytes) to only quantize the weights to 4-bits.
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype="float16"
+)
+model = AutoModelForCausalLM.from_pretrained(
+    "abeja/gpt-neox-japanese-2.7b",
+    quantization_config=quantization_config,
+    device_map="auto"
+)
+
+tokenizer = AutoTokenizer.from_pretrained("abeja/gpt-neox-japanese-2.7b")
+input_ids = tokenizer.encode("人とAIが協調するためには、", return_tensors="pt").to(model.device)
+output = model.generate(input_ids)
+print(tokenizer.decode(output[0], skip_special_tokens=True))
+```
+
+Use the [AttentionMaskVisualizer](https://github.com/huggingface/transformers/blob/beb9b5b02246b9b7ee81ddf938f93f44cfeaad19/src/transformers/utils/attention_visualizer.py#L139) to better understand what tokens the model can and cannot attend to.
+
+```python
+from transformers.utils.attention_visualizer import AttentionMaskVisualizer
+
+visualizer = AttentionMaskVisualizer("abeja/gpt-neox-japanese-2.7b")
+visualizer("<img>What is shown in this image?")
+```
+
+    
+
+## Resources
+
+Refer to the [Training a better GPT model: Learnings from PaLM](https://medium.com/ml-abeja/training-a-better-gpt-2-93b157662ae4) blog post for more details about how ABEJA trained GPT-NeoX-Japanese.
+
+## GPTNeoXJapaneseConfig[[transformers.GPTNeoXJapaneseConfig]]
+
+#### transformers.GPTNeoXJapaneseConfig[[transformers.GPTNeoXJapaneseConfig]]
+
+```python
+transformers.GPTNeoXJapaneseConfig(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: typing.Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, is_encoder_decoder: bool = False, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: typing.Optional[typing.Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, vocab_size: int = 32000, hidden_size: int = 2560, num_hidden_layers: int = 32, num_attention_heads: int = 32, intermediate_multiple_size: int = 4, hidden_act: str = 'gelu', max_position_embeddings: int = 2048, initializer_range: float = 0.02, layer_norm_eps: float = 1e-05, use_cache: bool = True, bos_token_id: int | None = 31996, eos_token_id: int | list[int] | None = 31999, rope_parameters: transformers.modeling_rope_utils.RopeParameters | dict | None = None, attention_dropout: float | int = 0.1, hidden_dropout: float | int = 0.0, is_decoder: bool = False, pad_token_id: int | None = None, tie_word_embeddings: bool = True)
+```
+
+[Source](https://github.com/huggingface/transformers/blob/v5.15.1/src/transformers/models/gpt_neox_japanese/configuration_gpt_neox_japanese.py#L25)
+
+**Parameters:**
+
+vocab_size (`int`, *optional*, defaults to `32000`) : Vocabulary size of the model. Defines the number of different tokens that can be represented by the `input_ids`.
+
+hidden_size (`int`, *optional*, defaults to `2560`) : Dimension of the hidden representations.
+
+num_hidden_layers (`int`, *optional*, defaults to `32`) : Number of hidden layers in the Transformer decoder.
+
+num_attention_heads (`int`, *optional*, defaults to `32`) : Number of attention heads for each attention layer in the Transformer decoder.
+
+intermediate_multiple_size (`int`, *optional*, defaults to 4) : Dimension of the "intermediate" layer in the Transformer encoder is calculated by hidden_size * intermediate_multiple_size.
+
+hidden_act (`str`, *optional*, defaults to `gelu`) : The non-linear activation function (function or string) in the decoder. For example, `"gelu"`, `"relu"`, `"silu"`, etc.
+
+max_position_embeddings (`int`, *optional*, defaults to `2048`) : The maximum sequence length that this model might ever be used with.
+
+initializer_range (`float`, *optional*, defaults to `0.02`) : The standard deviation of the truncated_normal_initializer for initializing all weight matrices.
+
+layer_norm_eps (`float`, *optional*, defaults to `1e-05`) : The epsilon used by the layer normalization layers.
+
+use_cache (`bool`, *optional*, defaults to `True`) : Whether or not the model should return the last key/values attentions (not used by all models). Only relevant if `config.is_decoder=True` or when the model is a decoder-only generative model.
+
+bos_token_id (`int`, *optional*, defaults to `31996`) : Token id used for beginning-of-stream in the vocabulary.
+
+eos_token_id (`Union[int, list[int]]`, *optional*, defaults to `31999`) : Token id used for end-of-stream in the vocabulary.
+
+rope_parameters (`Union[~modeling_rope_utils.RopeParameters, dict]`, *optional*) : Dictionary containing the configuration parameters for the RoPE embeddings. The dictionary should contain a value for `rope_theta` and optionally parameters used for scaling in case you want to use RoPE with longer `max_position_embeddings`.
+
+attention_dropout (`Union[float, int]`, *optional*, defaults to `0.1`) : The dropout ratio for the attention probabilities.
+
+hidden_dropout (`Union[float, int]`, *optional*, defaults to `0.0`) : The dropout probability for all fully connected layers in the embeddings, encoder, and pooler.
+
+is_decoder (`bool`, *optional*, defaults to `False`) : Whether the model is used as a decoder or not. If `False`, the model is used as an encoder.
+
+pad_token_id (`int`, *optional*) : Token id used for padding in the vocabulary.
+
+tie_word_embeddings (`bool`, *optional*, defaults to `True`) : Whether to tie weight embeddings according to model's `tied_weights_keys` mapping.
+
+This is the configuration class to store the configuration of a GPTNeoXJapaneseModel. It is used to instantiate a Gpt Neox Japanese
+model according to the specified arguments, defining the model architecture. Instantiating a configuration with the
+defaults will yield a similar configuration to that of the [abeja/gpt-neox-japanese-2.7b](https://huggingface.co/abeja/gpt-neox-japanese-2.7b)
+
+Configuration objects inherit from [PreTrainedConfig](/docs/transformers/v5.15.1/en/main_classes/configuration#transformers.PreTrainedConfig) and can be used to control the model outputs. Read the
+documentation from [PreTrainedConfig](/docs/transformers/v5.15.1/en/main_classes/configuration#transformers.PreTrainedConfig) for more information.
+
+Example:
+
+```python
+>>> from transformers import GPTNeoXJapaneseConfig, GPTNeoXJapaneseModel
+
+>>> # Initializing a GPTNeoXJapanese gpt-neox-japanese-2.7b style configuration
+>>> configuration = GPTNeoXJapaneseConfig()
+
+>>> # Initializing a model (with random weights) from the gpt-neox-japanese-2.7b style configuration
+>>> model = GPTNeoXJapaneseModel(configuration)
+
+>>> # Accessing the model configuration
+>>> configuration = model.config
+```
+
+## GPTNeoXJapaneseTokenizer[[transformers.GPTNeoXJapaneseTokenizer]]
+
+#### transformers.GPTNeoXJapaneseTokenizer[[transformers.GPTNeoXJapaneseTokenizer]]
+
+```python
+transformers.GPTNeoXJapaneseTokenizer(vocab_file, emoji_file, unk_token = '<|endoftext|>', pad_token = '<|endoftext|>', bos_token = '<|startoftext|>', eos_token = '<|endoftext|>', do_clean_text = False, **kwargs)
+```
+
+[Source](https://github.com/huggingface/transformers/blob/v5.15.1/src/transformers/models/gpt_neox_japanese/tokenization_gpt_neox_japanese.py#L53)
+
+**Parameters:**
+
+vocab_file (`str`) : File containing the vocabulary.
+
+emoji_file (`str`) : File containing the emoji.
+
+unk_token (`str`, *optional*, defaults to `"<|endoftext|>"`) : The unknown token. A token that is not in the vocabulary cannot be converted to an ID and is set to be this token instead.
+
+pad_token (`str`, *optional*, defaults to `"<|endoftext|>"`) : The token used for padding
+
+bos_token (`str`, *optional*, defaults to `"<|startoftext|>"`) : The beginning of sequence token.
+
+eos_token (`str`, *optional*, defaults to `"<|endoftext|>"`) : The end of sequence token.
+
+do_clean_text (`bool`, *optional*, defaults to `False`) : Whether or not to clean text for URL, EMAIL, TEL, Japanese DATE and Japanese PRICE.
+
+This tokenizer inherits from [PreTrainedTokenizer](/docs/transformers/v5.15.1/en/main_classes/tokenizer#transformers.PythonBackend) and is based on Japanese special Sub-Word-Encoding that is
+used in this repository (https://github.com/tanreinama/Japanese-BPEEncoder_V2). Check the repository for details.
+Japanese has a relatively large vocabulary and there is no separation between words. Furthermore, the language is a
+combination of hiragana, katakana, and kanji, and variants such as "1" and "①" are often used. In order to cope
+with these, this tokenizer has the following features
+- Subword-by-subword segmentation, which is intermediate between byte strings and morphological analysis.
+- BPEs are created for each Kanji, Hiragana, and Katakana character, and there are no BPEs that cross character
+  types, such as Kanji + Hiragana or Hiragana + Katakana.
+- All-byte encoding that does not require .
+- Independent of UTF codes such as 2-byte and 3-byte characters
+- Conversion of heterographs to the same token_id
+- Emoji and Emoticon are grouped into 12 types as special tags.
+
+Example:
+
+```python
+>>> from transformers import GPTNeoXJapaneseTokenizer
+
+>>> tokenizer = GPTNeoXJapaneseTokenizer.from_pretrained("abeja/gpt-neox-japanese-2.7b")
+>>> # You can confirm both 慶応 and 慶應 are encoded to 17749
+>>> tokenizer("吾輩は猫である🐯。実は慶応(慶應)大学出身")["input_ids"]
+[30014, 26883, 26638, 27228, 25, 26650, 31732, 31679, 27809, 26638, 17749, 31592, 17749, 31593, 321, 1281]
+
+>>> # Both 慶応 and 慶應 are decoded to 慶応
+>>> tokenizer.decode(tokenizer("吾輩は猫である🐯。実は慶応(慶應)大学出身")["input_ids"])
+'吾輩は猫である🐯。実は慶応(慶応)大学出身'
+```
+
+#### convert_tokens_to_string[[transformers.GPTNeoXJapaneseTokenizer.convert_tokens_to_string]]
+
+```python
+convert_tokens_to_string(tokens)
+```
+
+[Source](https://github.com/huggingface/transformers/blob/v5.15.1/src/transformers/models/gpt_neox_japanese/tokenization_gpt_neox_japanese.py#L159)
+
+Converts a sequence of tokens (string) in a single string.
+
+## GPTNeoXJapaneseModel[[transformers.GPTNeoXJapaneseModel]]
+
+#### transformers.GPTNeoXJapaneseModel[[transformers.GPTNeoXJapaneseModel]]
+
+```python
+transformers.GPTNeoXJapaneseModel(config)
+```
+
+[Source](https://github.com/huggingface/transformers/blob/v5.15.1/src/transformers/models/gpt_neox_japanese/modeling_gpt_neox_japanese.py#L378)
+
+**Parameters:**
+
+config ([GPTNeoXJapaneseModel](/docs/transformers/v5.15.1/en/model_doc/gpt_neox_japanese#transformers.GPTNeoXJapaneseModel)) : Model configuration class with all the parameters of the model. Initializing with a config file does not load the weights associated with the model, only the configuration. Check out the [from_pretrained()](/docs/transformers/v5.15.1/en/main_classes/model#transformers.PreTrainedModel.from_pretrained) method to load the model weights.
+
+The bare Gpt Neox Japanese Model outputting raw hidden-states without any specific head on top.
+
+This model inherits from [PreTrainedModel](/docs/transformers/v5.15.1/en/main_classes/model#transformers.PreTrainedModel). Check the superclass documentation for the generic methods the
+library implements for all its model (such as downloading or saving, resizing the input embeddings, pruning heads
+etc.)
+
+This model is also a PyTorch [torch.nn.Module](https://pytorch.org/docs/stable/nn.html#torch.nn.Module) subclass.
+Use it as a regular PyTorch Module and refer to the PyTorch documentation for all matter related to general usage
+and behavior.
+
+#### forward[[transformers.GPTNeoXJapaneseModel.forward]]
+
+```python
+forward(input_ids: typing.Optional[torch.LongTensor] = None, attention_mask: typing.Optional[torch.FloatTensor] = None, position_ids: typing.Optional[torch.LongTensor] = None, inputs_embeds: typing.Optional[torch.FloatTensor] = None, past_key_values: transformers.cache_utils.Cache | None = None, use_cache: bool | None = None, output_attentions: bool | None = None, output_hidden_states: bool | None = None, return_dict: bool | None = None, **kwargs)
+```
+
+[Source](https://github.com/huggingface/transformers/blob/v5.15.1/src/transformers/models/gpt_neox_japanese/modeling_gpt_neox_japanese.py#L399)
+
+**Parameters:**
+
+input_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`, *optional*) : Indices of input sequence tokens in the vocabulary. Padding will be ignored by default.  Indices can be obtained using [AutoTokenizer](/docs/transformers/v5.15.1/en/model_doc/auto#transformers.AutoTokenizer). See [PreTrainedTokenizer.encode()](/docs/transformers/v5.15.1/en/internal/tokenization_utils#transformers.PreTrainedTokenizerBase.encode) and [PreTrainedTokenizer.__call__()](/docs/transformers/v5.15.1/en/internal/tokenization_utils#transformers.PreTrainedTokenizerBase.__call__) for details.  [What are input IDs?](../glossary#input-ids)
+
+attention_mask (`torch.FloatTensor` of shape `(batch_size, sequence_length)`, *optional*) : Mask to avoid performing attention on padding token indices. Mask values selected in `[0, 1]`:  - 1 for tokens that are **not masked**, - 0 for tokens that are **masked**.  [What are attention masks?](../glossary#attention-mask)
+
+position_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`, *optional*) : Indices of positions of each input sequence tokens in the position embeddings. Selected in the range `[0, config.n_positions - 1]`.  [What are position IDs?](../glossary#position-ids)
+
+inputs_embeds (`torch.FloatTensor` of shape `(batch_size, sequence_length, hidden_size)`, *optional*) : Optionally, instead of passing `input_ids` you can choose to directly pass an embedded representation. This is useful if you want more control over how to convert `input_ids` indices into associated vectors than the model's internal embedding lookup matrix.
+
+past_key_values (`~cache_utils.Cache`, *optional*) : Pre-computed hidden-states (key and values in the self-attention blocks and in the cross-attention blocks) that can be used to speed up sequential decoding. This typically consists in the `past_key_values` returned by the model at a previous stage of decoding, when `use_cache=True` or `config.use_cache=True`.  Only [Cache](/docs/transformers/v5.15.1/en/internal/generation_utils#transformers.Cache) instance is allowed as input, see our [kv cache guide](https://huggingface.co/docs/transformers/en/kv_cache). If no `past_key_values` are passed, [DynamicCache](/docs/transformers/v5.15.1/en/internal/generation_utils#transformers.DynamicCache) will be initialized by default.  The model will output the same cache format that is fed as input.  If `past_key_values` are used, the user is expected to input only unprocessed `input_ids` (those that don't have their past key value states given to this model) of shape `(batch_size, unprocessed_length)` instead of all `input_ids` of shape `(batch_size, sequence_length)`.
+
+use_cache (`bool`, *optional*) : If set to `True`, `past_key_values` key value states are returned and can be used to speed up decoding (see `past_key_values`).
+
+output_attentions (`bool`, *optional*) : Whether or not to return the attentions tensors of all attention layers. See `attentions` under returned tensors for more detail.
+
+output_hidden_states (`bool`, *optional*) : Whether or not to return the hidden states of all layers. See `hidden_states` under returned tensors for more detail.
+
+return_dict (`bool`, *optional*) : Whether or not to return a [ModelOutput](/docs/transformers/v5.15.1/en/main_classes/output#transformers.utils.ModelOutput) instead of a plain tuple.
+
+**Returns:** [BaseModelOutputWithPast](/docs/transformers/v5.15.1/en/main_classes/output#transformers.modeling_outputs.BaseModelOutputWithPast) or `tuple(torch.FloatTensor)`
+
+A [BaseModelOutputWithPast](/docs/transformers/v5.15.1/en/main_classes/output#transformers.modeling_outputs.BaseModelOutputWithPast) or a tuple of
+`torch.FloatTensor` (if `return_dict=False` is passed or when `config.return_dict=False`) comprising various
+elements depending on the configuration ([GPTNeoXJapaneseConfig](/docs/transformers/v5.15.1/en/model_doc/gpt_neox_japanese#transformers.GPTNeoXJapaneseConfig)) and inputs.
+
+The [GPTNeoXJapaneseModel](/docs/transformers/v5.15.1/en/model_doc/gpt_neox_japanese#transformers.GPTNeoXJapaneseModel) forward method, overrides the `__call__` special method.
+
+Although the recipe for forward pass needs to be defined within this function, one should call the `Module`
+instance afterwards instead of this since the former takes care of running the pre and post processing steps while
+the latter silently ignores them.
+
+- **last_hidden_state** (`torch.FloatTensor` of shape `(batch_size, sequence_length, hidden_size)`) -- Sequence of hidden-states at the output of the last layer of the model.
+
+  If `past_key_values` is used only the last hidden-state of the sequences of shape `(batch_size, 1,
+  hidden_size)` is output.
+- **past_key_values** (`Cache`, *optional*, returned when `use_cache=True` is passed or when `config.use_cache=True`) -- It is a [Cache](/docs/transformers/v5.15.1/en/internal/generation_utils#transformers.Cache) instance. For more details, see our [kv cache guide](https://huggingface.co/docs/transformers/en/kv_cache).
+
+  Contains pre-computed hidden-states (key and values in the self-attention blocks and optionally if
+  `config.is_encoder_decoder=True` in the cross-attention blocks) that can be used (see `past_key_values`
+  input) to speed up sequential decoding.
+- **hidden_states** (`tuple(torch.FloatTensor)`, *optional*, returned when `output_hidden_states=True` is passed or when `config.output_hidden_states=True`) -- Tuple of `torch.FloatTensor` (one for the output of the embeddings, if the model has an embedding layer, +
+  one for the output of each layer) of shape `(batch_size, sequence_length, hidden_size)`.
+
+  Hidden-states of the model at the output of each layer plus the optional initial embedding outputs.
+- **attentions** (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `config.output_attentions=True`) -- Tuple of `torch.FloatTensor` (one for each layer) of shape `(batch_size, num_heads, sequence_length,
+  sequence_length)`.
+
+  Attentions weights after the attention softmax, used to compute the weighted average in the self-attention
+  heads.
+
+Example:
+
+```python
+>>> from transformers import AutoTokenizer, GPTNeoXJapaneseModel
+>>> import torch
+
+>>> tokenizer = AutoTokenizer.from_pretrained("abeja/gpt-neox-japanese-2.7b")
+>>> model = GPTNeoXJapaneseModel.from_pretrained("abeja/gpt-neox-japanese-2.7b")
+
+>>> inputs = tokenizer("日本語のGPT-neoxがHugging Faceで使えます😀", return_tensors="pt")
+>>> outputs = model(**inputs)
+
+>>> last_hidden_states = outputs.last_hidden_state
+```
+
+## GPTNeoXJapaneseForCausalLM[[transformers.GPTNeoXJapaneseForCausalLM]]
+
+#### transformers.GPTNeoXJapaneseForCausalLM[[transformers.GPTNeoXJapaneseForCausalLM]]
+
+```python
+transformers.GPTNeoXJapaneseForCausalLM(config)
+```
+
+[Source](https://github.com/huggingface/transformers/blob/v5.15.1/src/transformers/models/gpt_neox_japanese/modeling_gpt_neox_japanese.py#L503)
+
+**Parameters:**
+
+config ([GPTNeoXJapaneseForCausalLM](/docs/transformers/v5.15.1/en/model_doc/gpt_neox_japanese#transformers.GPTNeoXJapaneseForCausalLM)) : Model configuration class with all the parameters of the model. Initializing with a config file does not load the weights associated with the model, only the configuration. Check out the [from_pretrained()](/docs/transformers/v5.15.1/en/main_classes/model#transformers.PreTrainedModel.from_pretrained) method to load the model weights.
+
+GPTNeoXJapanese Model with a `language modeling` head on top for Classifier Model fine-tuning.
+
+This model inherits from [PreTrainedModel](/docs/transformers/v5.15.1/en/main_classes/model#transformers.PreTrainedModel). Check the superclass documentation for the generic methods the
+library implements for all its model (such as downloading or saving, resizing the input embeddings, pruning heads
+etc.)
+
+This model is also a PyTorch [torch.nn.Module](https://pytorch.org/docs/stable/nn.html#torch.nn.Module) subclass.
+Use it as a regular PyTorch Module and refer to the PyTorch documentation for all matter related to general usage
+and behavior.
+
+#### forward[[transformers.GPTNeoXJapaneseForCausalLM.forward]]
+
+```python
+forward(input_ids: typing.Optional[torch.LongTensor] = None, attention_mask: typing.Optional[torch.FloatTensor] = None, position_ids: typing.Optional[torch.LongTensor] = None, inputs_embeds: typing.Optional[torch.FloatTensor] = None, past_key_values: transformers.cache_utils.Cache | None = None, labels: typing.Optional[torch.LongTensor] = None, use_cache: bool | None = None, output_attentions: bool | None = None, output_hidden_states: bool | None = None, return_dict: bool | None = None, logits_to_keep: typing.Union[int, torch.Tensor] = 0, **kwargs)
+```
+
+[Source](https://github.com/huggingface/transformers/blob/v5.15.1/src/transformers/models/gpt_neox_japanese/modeling_gpt_neox_japanese.py#L522)
+
+**Parameters:**
+
+input_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`, *optional*) : Indices of input sequence tokens in the vocabulary. Padding will be ignored by default.  Indices can be obtained using [AutoTokenizer](/docs/transformers/v5.15.1/en/model_doc/auto#transformers.AutoTokenizer). See [PreTrainedTokenizer.encode()](/docs/transformers/v5.15.1/en/internal/tokenization_utils#transformers.PreTrainedTokenizerBase.encode) and [PreTrainedTokenizer.__call__()](/docs/transformers/v5.15.1/en/internal/tokenization_utils#transformers.PreTrainedTokenizerBase.__call__) for details.  [What are input IDs?](../glossary#input-ids)
+
+attention_mask (`torch.FloatTensor` of shape `(batch_size, sequence_length)`, *optional*) : Mask to avoid performing attention on padding token indices. Mask values selected in `[0, 1]`:  - 1 for tokens that are **not masked**, - 0 for tokens that are **masked**.  [What are attention masks?](../glossary#attention-mask)
+
+position_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`, *optional*) : Indices of positions of each input sequence tokens in the position embeddings. Selected in the range `[0, config.n_positions - 1]`.  [What are position IDs?](../glossary#position-ids)
+
+inputs_embeds (`torch.FloatTensor` of shape `(batch_size, sequence_length, hidden_size)`, *optional*) : Optionally, instead of passing `input_ids` you can choose to directly pass an embedded representation. This is useful if you want more control over how to convert `input_ids` indices into associated vectors than the model's internal embedding lookup matrix.
+
+past_key_values (`~cache_utils.Cache`, *optional*) : Pre-computed hidden-states (key and values in the self-attention blocks and in the cross-attention blocks) that can be used to speed up sequential decoding. This typically consists in the `past_key_values` returned by the model at a previous stage of decoding, when `use_cache=True` or `config.use_cache=True`.  Only [Cache](/docs/transformers/v5.15.1/en/internal/generation_utils#transformers.Cache) instance is allowed as input, see our [kv cache guide](https://huggingface.co/docs/transformers/en/kv_cache). If no `past_key_values` are passed, [DynamicCache](/docs/transformers/v5.15.1/en/internal/generation_utils#transformers.DynamicCache) will be initialized by default.  The model will output the same cache format that is fed as input.  If `past_key_values` are used, the user is expected to input only unprocessed `input_ids` (those that don't have their past key value states given to this model) of shape `(batch_size, unprocessed_length)` instead of all `input_ids` of shape `(batch_size, sequence_length)`.
+
+labels (`torch.LongTensor` of shape `(batch_size, sequence_length)`, *optional*) : Labels for computing the left-to-right language modeling loss (next word prediction). Indices should be in `[-100, 0, ..., config.vocab_size]` (see `input_ids` docstring) Tokens with indices set to `-100` are ignored (masked), the loss is only computed for the tokens with labels in `[0, ..., config.vocab_size]`.
+
+use_cache (`bool`, *optional*) : If set to `True`, `past_key_values` key value states are returned and can be used to speed up decoding (see `past_key_values`).
+
+output_attentions (`bool`, *optional*) : Whether or not to return the attentions tensors of all attention layers. See `attentions` under returned tensors for more detail.
+
+output_hidden_states (`bool`, *optional*) : Whether or not to return the hidden states of all layers. See `hidden_states` under returned tensors for more detail.
+
+return_dict (`bool`, *optional*) : Whether or not to return a [ModelOutput](/docs/transformers/v5.15.1/en/main_classes/output#transformers.utils.ModelOutput) instead of a plain tuple.
+
+logits_to_keep (`Union[int, torch.Tensor]`, *optional*, defaults to `0`) : If an `int`, compute logits for the last `logits_to_keep` tokens. If `0`, calculate logits for all `input_ids` (special case). Only last token logits are needed for generation, and calculating them only for that token can save memory, which becomes pretty significant for long sequences or large vocabulary size. If a `torch.Tensor`, must be 1D corresponding to the indices to keep in the sequence length dimension. This is useful when using packed tensor format (single dimension for batch and sequence length).
+
+**Returns:** [CausalLMOutputWithPast](/docs/transformers/v5.15.1/en/main_classes/output#transformers.modeling_outputs.CausalLMOutputWithPast) or `tuple(torch.FloatTensor)`
+
+A [CausalLMOutputWithPast](/docs/transformers/v5.15.1/en/main_classes/output#transformers.modeling_outputs.CausalLMOutputWithPast) or a tuple of
+`torch.FloatTensor` (if `return_dict=False` is passed or when `config.return_dict=False`) comprising various
+elements depending on the configuration ([GPTNeoXJapaneseConfig](/docs/transformers/v5.15.1/en/model_doc/gpt_neox_japanese#transformers.GPTNeoXJapaneseConfig)) and inputs.
+
+The [GPTNeoXJapaneseForCausalLM](/docs/transformers/v5.15.1/en/model_doc/gpt_neox_japanese#transformers.GPTNeoXJapaneseForCausalLM) forward method, overrides the `__call__` special method.
+
+Although the recipe for forward pass needs to be defined within this function, one should call the `Module`
+instance afterwards instead of this since the former takes care of running the pre and post processing steps while
+the latter silently ignores them.
+
+- **loss** (`torch.FloatTensor` of shape `(1,)`, *optional*, returned when `labels` is provided) -- Language modeling loss (for next-token prediction).
+- **logits** (`torch.FloatTensor` of shape `(batch_size, sequence_length, config.vocab_size)`) -- Prediction scores of the language modeling head (scores for each vocabulary token before SoftMax).
+- **past_key_values** (`Cache`, *optional*, returned when `use_cache=True` is passed or when `config.use_cache=True`) -- It is a [Cache](/docs/transformers/v5.15.1/en/internal/generation_utils#transformers.Cache) instance. For more details, see our [kv cache guide](https://huggingface.co/docs/transformers/en/kv_cache).
+
+  Contains pre-computed hidden-states (key and values in the self-attention blocks) that can be used (see
+  `past_key_values` input) to speed up sequential decoding.
+- **hidden_states** (`tuple(torch.FloatTensor)`, *optional*, returned when `output_hidden_states=True` is passed or when `config.output_hidden_states=True`) -- Tuple of `torch.FloatTensor` (one for the output of the embeddings, if the model has an embedding layer, +
+  one for the output of each layer) of shape `(batch_size, sequence_length, hidden_size)`.
+
+  Hidden-states of the model at the output of each layer plus the optional initial embedding outputs.
+- **attentions** (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `config.output_attentions=True`) -- Tuple of `torch.FloatTensor` (one for each layer) of shape `(batch_size, num_heads, sequence_length,
+  sequence_length)`.
+
+  Attentions weights after the attention softmax, used to compute the weighted average in the self-attention
+  heads.
+
+Example:
+
+```python
+>>> from transformers import AutoTokenizer, GPTNeoXJapaneseForCausalLM, GPTNeoXJapaneseConfig
+>>> import torch
+
+>>> tokenizer = AutoTokenizer.from_pretrained("abeja/gpt-neox-japanese-2.7b")
+>>> config = GPTNeoXJapaneseConfig.from_pretrained("abeja/gpt-neox-japanese-2.7b")
+>>> config.is_decoder = True
+>>> model = GPTNeoXJapaneseForCausalLM.from_pretrained("abeja/gpt-neox-japanese-2.7b", config=config)
+
+>>> inputs = tokenizer("日本語のGPT-neoxがHugging Faceで使えます😀", return_tensors="pt")
+>>> outputs = model(**inputs)
+
+>>> prediction_logits = outputs.logits
+```

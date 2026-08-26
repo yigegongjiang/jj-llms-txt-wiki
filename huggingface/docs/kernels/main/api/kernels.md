@@ -10,7 +10,7 @@
 kernels.get_kernel(repo_id: str, revision: str | None = None, version: int | None = None, backend: str | None = None, user_agent: str | dict | None = None, trust_remote_code: bool | list[str] = False)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L47)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L87)
 
 **Parameters:**
 
@@ -51,48 +51,58 @@ result = activation.relu(out, x)
 #### kernels.get_local_kernel[[kernels.get_local_kernel]]
 
 ```python
-kernels.get_local_kernel(repo_path: Path, backend: str | None = None)
+kernels.get_local_kernel(repo_path: Path, backend: str | None = None, trust_remote_code: bool | list[str] = False, user_agent: str | dict | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L117)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L157)
 
 **Parameters:**
 
-repo_path (`Path`) : The local path to the kernel repository.
+repo_path (*Path*) : The local path to the kernel repository.
 
-backend (`str`, *optional*) : The backend to load the kernel for. Can only be `cpu` or the backend that Torch is compiled for. The backend will be detected automatically if not provided.
+backend (*str*, *optional*) : The backend to load the kernel for. Can only be *cpu* or the backend that Torch is compiled for. The backend will be detected automatically if not provided.
 
-**Returns:** `ModuleType`
+user_agent (*Union[str, dict]*, *optional*) : The *user_agent* info to pass to *snapshot_download()* for internal telemetry.
+
+trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of strings will be used to verify signing identities in a future release; for now it emits a warning and falls back to the default trust check.
+
+**Returns:** `*ModuleType*`
 
 The imported kernel module.
 
 Import a kernel from a local kernel repository path.
+
+If the kernel has any (transitive) dependencies, they will be downloaded.
 
 ### has_kernel[[kernels.has_kernel]]
 
 #### kernels.has_kernel[[kernels.has_kernel]]
 
 ```python
-kernels.has_kernel(repo_id: str, revision: str | None = None, version: int | None = None, backend: str | None = None)
+kernels.has_kernel(repo_id: str, revision: str | None = None, version: int | None = None, backend: str | None = None, trust_remote_code: bool | list[str] = False)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L153)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L210)
 
 **Parameters:**
 
-repo_id (`str`) : The Hub repository containing the kernel.
+repo_id (*str*) : The Hub repository containing the kernel.
 
-revision (`str`, *optional*) : The specific revision (branch, tag, or commit) to download. Cannot be used together with `version`.
+revision (*str*, *optional*) : The specific revision (branch, tag, or commit) to download. Cannot be used together with *version*.
 
-version (`int`, *optional*) : The kernel version to download. Cannot be used together with `revision`. Either `version` or `revision` must be specified.
+version (*int*, *optional*) : The kernel version to download. Cannot be used together with *revision*. Either *version* or *revision* must be specified.
 
-backend (`str`, *optional*) : The backend to load the kernel for. Can only be `cpu` or the backend that Torch is compiled for. The backend will be detected automatically if not provided.
+backend (*str*, *optional*) : The backend to load the kernel for. Can only be *cpu* or the backend that Torch is compiled for. The backend will be detected automatically if not provided.
 
-**Returns:** `bool`
+trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of strings will be used to verify signing identities in a future release; for now it emits a warning and falls back to the default trust check.
 
-`True` if a kernel is available for the current environment.
+**Returns:** `*bool*`
 
-Check whether a kernel build exists for the current environment (Torch version and compute framework).
+*True* if a kernel is available for the current environment.
+
+Check whether a kernel build exists for the current environment (framework version and backend).
+
+If the kernel has any (transitive) dependencies, they will be checked as well.
 
 ### get_kernel_variants[[kernels.get_kernel_variants]]
 
@@ -175,7 +185,7 @@ for loaded in get_loaded_kernels():
 kernels.load_kernel(repo_id: str, lockfile: pathlib.Path | None, backend: str | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L194)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L270)
 
 **Parameters:**
 
@@ -191,6 +201,9 @@ The imported kernel module.
 
 Get a pre-downloaded, locked kernel.
 
+This function will never download anything and will fail when a kernel is
+not available locally.
+
 If `lockfile` is not specified, the lockfile will be loaded from the caller's package metadata.
 
 ### get_locked_kernel[[kernels.get_locked_kernel]]
@@ -198,16 +211,18 @@ If `lockfile` is not specified, the lockfile will be loaded from the caller's pa
 #### kernels.get_locked_kernel[[kernels.get_locked_kernel]]
 
 ```python
-kernels.get_locked_kernel(repo_id: str)
+kernels.get_locked_kernel(repo_id: str, lockfile: pathlib.Path | None, trust_remote_code: bool | list[str] = False, user_agent: str | dict | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L239)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L313)
 
 **Parameters:**
 
 repo_id (`str`) : The Hub repository containing the kernel.
 
-local_files_only (`bool`, *optional*, defaults to `False`) : Whether to only use local files and not download from the Hub.
+lockfile (`Path`, *optional*) : Path to the lockfile. If not provided, the lockfile will be loaded from the caller's package metadata.
+
+user_agent (`Union[str, dict]`, *optional*) : The `user_agent` info to pass to `snapshot_download()` for internal telemetry.
 
 **Returns:** `ModuleType`
 

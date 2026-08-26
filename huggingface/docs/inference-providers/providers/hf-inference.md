@@ -76,7 +76,7 @@ Find out more about Image Segmentation [here](../tasks/image-segmentation).
 
 <InferenceSnippet
     pipeline=image-segmentation
-    providersMapping={ {"hf-inference":{"modelId":"mattmdjaga/segformer_b2_clothes","providerModelId":"mattmdjaga/segformer_b2_clothes"} } }
+    providersMapping={ {"hf-inference":{"modelId":"nvidia/segformer-b0-finetuned-ade-512-512","providerModelId":"nvidia/segformer-b0-finetuned-ade-512-512"} } }
 />
 
 ### Object Detection
@@ -139,7 +139,7 @@ Find out more about Token Classification [here](../tasks/token-classification).
 
 <InferenceSnippet
     pipeline=token-classification
-    providersMapping={ {"hf-inference":{"modelId":"rizzoaiacademy/rizzo-pii-0.3B","providerModelId":"rizzoaiacademy/rizzo-pii-0.3B"} } }
+    providersMapping={ {"hf-inference":{"modelId":"OpenMed/OpenMed-PII-SuperClinical-Large-434M-v1","providerModelId":"OpenMed/OpenMed-PII-SuperClinical-Large-434M-v1"} } }
 />
 
 ### Translation

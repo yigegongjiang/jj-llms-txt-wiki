@@ -1,0 +1,337 @@
+# JoyAI-Image-Edit
+
+[JoyAI-Image](https://github.com/jd-opensource/JoyAI-Image) is a unified multimodal foundation model for image understanding, text-to-image generation, and instruction-guided image editing. It combines an 8B Multimodal Large Language Model (MLLM) with a 16B Multimodal Diffusion Transformer (MMDiT). A central principle of JoyAI-Image is the closed-loop collaboration between understanding, generation, and editing.
+
+JoyAI-Image-Edit supports general image editing as well as spatial editing capabilities including object move, object rotation, and camera control.
+
+| Model | Description | Download |
+|:-----:|:-----------:|:--------:|
+| JoyAI-Image-Edit | Instruction-guided image editing with precise and controllable spatial manipulation | [Hugging Face](https://huggingface.co/jdopensource/JoyAI-Image-Edit-Diffusers) |
+
+```python
+import torch
+from diffusers import JoyImageEditPipeline
+from diffusers.utils import load_image
+
+pipeline = JoyImageEditPipeline.from_pretrained(
+    "jdopensource/JoyAI-Image-Edit-Diffusers", dtype=torch.bfloat16
+)
+pipeline.to("cuda")
+
+image = load_image("https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/astronaut.jpg")
+prompt = "Add wings to the astronaut."
+
+output = pipeline(
+    image=image,
+    prompt=prompt,
+    num_inference_steps=40,
+    guidance_scale=4.0,
+    generator=torch.Generator("cuda").manual_seed(0),
+).images[0]
+output.save("joyimage_edit_output.png")
+```
+
+## Spatial editing
+
+JoyAI-Image supports three spatial editing prompt patterns: **Object Move**, **Object Rotation**, and **Camera Control**. For best results, follow the prompt templates below as closely as possible. For more information, refer to [SpatialEdit](https://github.com/EasonXiao-888/SpatialEdit).
+
+### Object Move
+
+Move a target object into a specified region marked by a red box in the input image.
+
+```text
+Move the <object> into the red box and finally remove the red box.
+```
+
+### Object Rotation
+
+Rotate an object to a specific canonical view. Supported `<view>` values: `front`, `right`, `left`, `rear`, `front right`, `front left`, `rear right`, `rear left`.
+
+```text
+Rotate the <object> to show the <view> side view.
+```
+
+### Camera Control
+
+Change the camera viewpoint while keeping the 3D scene unchanged.
+
+```text
+Move the camera.
+- Camera rotation: Yaw {y_rotation}°, Pitch {p_rotation}°.
+- Camera zoom: in/out/unchanged.
+- Keep the 3D scene static; only change the viewpoint.
+```
+
+## JoyImageEditPipeline[[diffusers.JoyImageEditPipeline]]
+
+#### diffusers.JoyImageEditPipeline[[diffusers.JoyImageEditPipeline]]
+
+```python
+diffusers.JoyImageEditPipeline(scheduler: FlowMatchEulerDiscreteScheduler, vae: AutoencoderKLWan, text_encoder: Qwen3VLForConditionalGeneration, tokenizer: Qwen2Tokenizer, transformer: JoyImageEditTransformer3DModel, processor: Qwen3VLProcessor, text_token_max_length: int = 2048)
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L100)
+
+Diffusion pipeline for image editing using the JoyImage architecture.
+
+The pipeline encodes text and image conditioning via a Qwen3-VL text encoder, denoises latents with a 3-D
+transformer, and decodes the result with a WAN VAE.
+
+Model offloading order: text_encoder -> transformer -> vae.
+
+#### __call__[[diffusers.JoyImageEditPipeline.__call__]]
+
+```python
+__call__(image: typing.Union[PIL.Image.Image, numpy.ndarray, torch.Tensor, list[PIL.Image.Image], list[numpy.ndarray], list[torch.Tensor], NoneType] = None, prompt: str | list[str] = None, height: int | None = None, width: int | None = None, num_inference_steps: int = 40, timesteps: typing.List[int] = None, sigmas: typing.List[float] = None, guidance_scale: float = 4.0, negative_prompt: typing.Union[str, typing.List[str], NoneType] = None, num_images_per_prompt: typing.Optional[int] = 1, generator: typing.Union[torch.Generator, typing.List[torch.Generator], NoneType] = None, latents: typing.Optional[torch.Tensor] = None, prompt_embeds: typing.Optional[torch.Tensor] = None, prompt_embeds_mask: typing.Optional[torch.Tensor] = None, negative_prompt_embeds: typing.Optional[torch.Tensor] = None, negative_prompt_embeds_mask: typing.Optional[torch.Tensor] = None, output_type: typing.Optional[str] = 'pil', return_dict: bool = True, callback_on_step_end: typing.Union[typing.Callable[[int, int, typing.Dict], NoneType], diffusers.callbacks.PipelineCallback, diffusers.callbacks.MultiPipelineCallbacks, NoneType] = None, callback_on_step_end_tensor_inputs: typing.List[str] = ['latents'], max_sequence_length: int = 4096, enable_denormalization: bool = True)
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L600)
+
+**Parameters:**
+
+prompt (*str* or *List[str]*) : The prompt or prompts to guide generation.
+
+height (*int*) : Height of the generated output in pixels.
+
+width (*int*) : Width of the generated output in pixels.
+
+image (*PipelineImageInput*, *optional*) : Reference image used for conditioning. When provided the pipeline operates in image-editing mode with `num_items=2`.
+
+num_inference_steps (*int*, *optional*, defaults to 40) : Number of denoising steps. More steps generally improve quality at the cost of slower inference.
+
+timesteps (*List[int]*, *optional*) : Custom timesteps for the denoising process. When provided, `num_inference_steps` is inferred from the list length.
+
+sigmas (*List[float]*, *optional*) : Custom sigmas for the denoising process. Mutually exclusive with `timesteps`.
+
+guidance_scale (*float*, *optional*, defaults to 4.0) : Classifier-free guidance scale.
+
+negative_prompt (*str* or *List[str]*, *optional*) : Negative prompt(s) used to suppress undesired content.
+
+num_images_per_prompt (*int*, *optional*, defaults to 1) : Number of generated samples per prompt.
+
+generator (*torch.Generator* or *List[torch.Generator]*, *optional*) : RNG generator(s) for deterministic sampling.
+
+latents (*torch.Tensor*, *optional*) : Pre-generated noisy latents for the target slot. Sampled from a Gaussian distribution when not provided. Can be used to seed generation from a specific starting noise tensor.
+
+prompt_embeds (*torch.Tensor*, *optional*) : Pre-computed prompt embeddings. When provided `prompt` can be omitted.
+
+prompt_embeds_mask (*torch.Tensor*, *optional*) : Attention mask for `prompt_embeds`.
+
+negative_prompt_embeds (*torch.Tensor*, *optional*) : Pre-computed negative prompt embeddings.
+
+negative_prompt_embeds_mask (*torch.Tensor*, *optional*) : Attention mask for `negative_prompt_embeds`.
+
+output_type (*str*, *optional*, defaults to `"pil"`) : Output format. Pass `"latent"` to return raw latents.
+
+return_dict (*bool*, *optional*, defaults to *True*) : Whether to return a [JoyImageEditPipelineOutput](/docs/diffusers/v0.40.0/en/api/pipelines/joyimage_edit#diffusers.JoyImageEditPipelineOutput) or a plain tensor.
+
+callback_on_step_end (*Callable*, *PipelineCallback*, *MultiPipelineCallbacks*, *optional*) : Callback invoked at the end of each denoising step with signature `(self, step: int, timestep: int, callback_kwargs: Dict)`.
+
+callback_on_step_end_tensor_inputs (*List[str]*, *optional*, defaults to `["latents"]`) : Tensor keys included in `callback_kwargs` for `callback_on_step_end`.
+
+max_sequence_length (*int*, *optional*, defaults to 4096) : Maximum sequence length for prompt encoding.
+
+enable_denormalization (*bool*, *optional*, defaults to *True*) : Denormalise latents before VAE decoding.
+
+**Returns:** [*~pipelines.joyimage.JoyImageEditPipelineOutput*] or *torch.Tensor*
+
+If `return_dict` is `True`, returns a pipeline output object containing the generated image(s).
+Otherwise returns the image tensor directly.
+
+Generate an edited image conditioned on a reference image and a text prompt.
+
+Examples:
+```python
+>>> import torch
+>>> from diffusers import JoyImageEditPipeline
+>>> from diffusers.utils import load_image
+
+>>> model_id = "jdopensource/JoyAI-Image-Edit-Diffusers"
+>>> pipe = JoyImageEditPipeline.from_pretrained(model_id, torch_dtype=torch.bfloat16)
+>>> pipe.to("cuda")
+
+>>> image = load_image("https://huggingface.co/datasets/diffusers/docs-images/resolve/main/astronaut.jpg")
+>>> output = pipe(
+...     image=image,  # pass an image for editing; omit for text-to-image generation
+...     prompt="Add wings to the astronaut.",
+...     num_inference_steps=40,
+...     guidance_scale=4.0,
+...     generator=torch.manual_seed(0),
+... )
+>>> output.images[0].save("joyimage_edit.png")
+```
+
+#### check_inputs[[diffusers.JoyImageEditPipeline.check_inputs]]
+
+```python
+check_inputs(prompt, height, width, negative_prompt = None, prompt_embeds = None, negative_prompt_embeds = None, prompt_embeds_mask = None, negative_prompt_embeds_mask = None, callback_on_step_end_tensor_inputs = None)
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L409)
+
+**Raises:** ``ValueError``
+
+- ``ValueError`` -- On any invalid combination of arguments.
+
+Validate pipeline inputs before the forward pass.
+
+#### denormalize_latents[[diffusers.JoyImageEditPipeline.denormalize_latents]]
+
+```python
+denormalize_latents(latent: Tensor)
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L476)
+
+**Parameters:**
+
+latent : Normalised latent tensor.
+
+**Returns:**
+
+Latent tensor in the scale expected by `vae.decode`.
+
+Invert `normalize_latents` to recover the original latent scale.
+
+#### encode_prompt[[diffusers.JoyImageEditPipeline.encode_prompt]]
+
+```python
+encode_prompt(prompt: typing.Union[str, typing.List[str]], device: typing.Optional[torch.device] = None, num_images_per_prompt: int = 1, prompt_embeds: typing.Optional[torch.Tensor] = None, prompt_embeds_mask: typing.Optional[torch.Tensor] = None, max_sequence_length: int = 1024, template_type: str = 'image')
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L364)
+
+**Parameters:**
+
+prompt : Prompt string or list of prompt strings.
+
+device : Target device.
+
+num_images_per_prompt : Number of outputs to generate per prompt.
+
+prompt_embeds : Pre-computed prompt embeddings.
+
+prompt_embeds_mask : Attention mask for pre-computed embeddings.
+
+max_sequence_length : Maximum output sequence length.
+
+template_type : Prompt template key (`"image"` or `"multiple_images"`).
+
+**Returns:**
+
+Tuple of (prompt_embeds, prompt_embeds_mask).
+
+Encode a text prompt into embeddings (text-only path).
+
+Pre-computed `prompt_embeds` bypass encoding entirely.
+
+#### encode_prompt_multiple_images[[diffusers.JoyImageEditPipeline.encode_prompt_multiple_images]]
+
+```python
+encode_prompt_multiple_images(prompt: typing.Union[str, typing.List[str]], device: typing.Optional[torch.device] = None, num_images_per_prompt: int = 1, images: typing.Optional[torch.Tensor] = None, prompt_embeds: typing.Optional[torch.Tensor] = None, prompt_embeds_mask: typing.Optional[torch.Tensor] = None, template_type: typing.Optional[str] = 'multiple_images', max_sequence_length: typing.Optional[int] = None)
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L286)
+
+**Parameters:**
+
+prompt : Prompt string(s), optionally containing `&amp;lt;image>\n` tokens.
+
+device : Target device.
+
+num_images_per_prompt : Number of outputs to generate per prompt.
+
+images : Pixel tensors corresponding to the inline image tokens.
+
+prompt_embeds : Pre-computed prompt embeddings.
+
+prompt_embeds_mask : Attention mask for pre-computed embeddings.
+
+template_type : Must be `"multiple_images"`.
+
+max_sequence_length : If set, truncate the output to this length (keeping the last `max_sequence_length` tokens).
+
+**Returns:**
+
+Tuple of (prompt_embeds, prompt_embeds_mask).
+
+Encode prompts that contain inline image tokens via the Qwen processor.
+
+`&amp;lt;image>\n` placeholders in each prompt string are replaced by the Qwen vision special tokens before being
+fed to the multimodal encoder.
+
+#### normalize_latents[[diffusers.JoyImageEditPipeline.normalize_latents]]
+
+```python
+normalize_latents(latent: Tensor)
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L447)
+
+**Parameters:**
+
+latent : Raw latent tensor from `vae.encode`.
+
+**Returns:**
+
+Normalised latent tensor.
+
+Normalise latents using per-channel statistics from the VAE config.
+
+Uses (latent - mean) / std when the VAE exposes `latents_mean` and `latents_std`; otherwise falls back to
+scaling by `scaling_factor`.
+
+#### prepare_latents[[diffusers.JoyImageEditPipeline.prepare_latents]]
+
+```python
+prepare_latents(batch_size: int, num_channels_latents: int, height: int, width: int, video_length: int, dtype: dtype, device: device, generator: typing.Union[torch.Generator, typing.List[torch.Generator], NoneType], latents: typing.Optional[torch.Tensor] = None, image: typing.Optional[typing.List[PIL.Image.Image]] = None, enable_denormalization: bool = True)
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_joyimage_edit.py#L502)
+
+**Parameters:**
+
+batch_size : Number of samples in the batch.
+
+num_channels_latents : Latent channel dimension from the transformer config.
+
+height : Spatial height in pixels.
+
+width : Spatial width in pixels.
+
+video_length : Number of frames (1 for image inference).
+
+dtype : Floating-point dtype for the latent tensor.
+
+device : Target device.
+
+generator : RNG generator(s) for reproducible sampling.
+
+latents : Optional user-provided initial noise for the target slot. When `None` random noise is sampled.
+
+image : Optional list of PIL reference images to VAE-encode as conditioning slots.
+
+enable_denormalization : Whether to normalise encoded reference latents.
+
+**Returns:**
+
+Tuple of `(latents, image_latents)` where `latents` has shape `(B, 1, C, T, H', W')` and
+`image_latents` has shape `(B, N_ref, C, T, H', W')` or `None` when no reference images are given.
+
+**Raises:** `ValueError`
+
+- `ValueError` -- If `generator` is a list whose length differs from `batch_size`.
+
+Prepare the initial noisy latent tensor for the denoising loop.
+
+## JoyImageEditPipelineOutput[[diffusers.JoyImageEditPipelineOutput]]
+
+#### diffusers.JoyImageEditPipelineOutput[[diffusers.JoyImageEditPipelineOutput]]
+
+```python
+diffusers.JoyImageEditPipelineOutput(images: typing.Union[typing.List[PIL.Image.Image], numpy.ndarray])
+```
+
+[Source](https://github.com/huggingface/diffusers/blob/v0.40.0/src/diffusers/pipelines/joyimage/pipeline_output.py#L11)
+
+Output class for JoyImageEdit generation pipelines.

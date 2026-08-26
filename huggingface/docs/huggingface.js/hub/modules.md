@@ -38,6 +38,7 @@
 - [ParallelDownloadOptions](interfaces/ParallelDownloadOptions)
 - [PathInfo](interfaces/PathInfo)
 - [QuantizationConfig](interfaces/QuantizationConfig)
+- [RangeEditCacheEntry](interfaces/RangeEditCacheEntry)
 - [RepoId](interfaces/RepoId)
 - [SafetensorsIndexJson](interfaces/SafetensorsIndexJson)
 - [SafetensorsShardFileInfo](interfaces/SafetensorsShardFileInfo)
@@ -94,17 +95,17 @@ ___
 
 #### Defined in[[commitoperation.defined-in]]
 
-[packages/hub/src/lib/commit.ts:106](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L106)
+[packages/hub/src/lib/commit.ts:122](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L122)
 
 ___
 
 ### CommitParams
 
-Ƭ **CommitParams**: \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `description?`: `string` ; `fetch?`: typeof [`__type`](classes/_internal_XetBlob#__type) ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `maxFolderDepth?`: `number` ; `operations`: [`CommitOperation`](modules#commitoperation)[] ; `parentCommit?`: `string` ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `title`: `string` ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\>
+Ƭ **CommitParams**: \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `description?`: `string` ; `fetch?`: typeof [`__type`](classes/_internal_XetBlob#__type) ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `maxFolderDepth?`: `number` ; `operations`: [`CommitOperation`](modules#commitoperation)[] ; `parentCommit?`: `string` ; `rangeEditCache?`: [`RangeEditCache`](modules#rangeeditcache) ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `title`: `string` ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\>
 
 #### Defined in[[commitparams.defined-in]]
 
-[packages/hub/src/lib/commit.ts:113](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L113)
+[packages/hub/src/lib/commit.ts:129](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L129)
 
 ___
 
@@ -114,7 +115,7 @@ ___
 
 #### Defined in[[commitprogressevent.defined-in]]
 
-[packages/hub/src/lib/commit.ts:174](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L174)
+[packages/hub/src/lib/commit.ts:199](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L199)
 
 ___
 
@@ -124,7 +125,7 @@ ___
 
 #### Defined in[[contentsource.defined-in]]
 
-[packages/hub/src/lib/commit.ts:40](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L40)
+[packages/hub/src/lib/commit.ts:43](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L43)
 
 ___
 
@@ -155,6 +156,24 @@ ___
 #### Defined in[[pipelinetype.defined-in]]
 
 packages/tasks/dist/commonjs/pipelines.d.ts:380
+
+___
+
+### RangeEditCache
+
+Ƭ **RangeEditCache**: `Map`\<`string`, [`RangeEditCacheEntry`](interfaces/RangeEditCacheEntry)\>
+
+In-memory state of a file previously written through the range-edit path, keyed by its
+xet hash. Lets a subsequent append (or edit of the file's last term) skip the
+reconstruction and file-chunk-hashes API calls entirely: the partial merkle state and
+verification hashes are already known.
+
+Pass the same [RangeEditCache](modules#rangeeditcache) instance to successive `commit` calls that append to
+the same file to avoid calling the CAS metadata APIs on every append.
+
+#### Defined in[[rangeeditcache.defined-in]]
+
+[packages/hub/src/utils/rangeEdit.ts:16](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/rangeEdit.ts#L16)
 
 ___
 
@@ -569,7 +588,7 @@ undefined for bucket uploads, CommitOutput otherwise
 
 #### Defined in[[commit.defined-in]]
 
-[packages/hub/src/lib/commit.ts:1003](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L1003)
+[packages/hub/src/lib/commit.ts:1030](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L1030)
 
 ___
 
@@ -595,7 +614,7 @@ CommitOutput is not present for bucket commits
 
 #### Defined in[[commititer.defined-in]]
 
-[packages/hub/src/lib/commit.ts:193](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L193)
+[packages/hub/src/lib/commit.ts:218](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L218)
 
 ___
 
@@ -615,7 +634,7 @@ ___
 
 #### Defined in[[commititerbucket.defined-in]]
 
-[packages/hub/src/lib/commit.ts:748](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L748)
+[packages/hub/src/lib/commit.ts:774](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L774)
 
 ___
 

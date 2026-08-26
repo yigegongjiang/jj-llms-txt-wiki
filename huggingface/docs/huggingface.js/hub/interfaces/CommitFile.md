@@ -8,7 +8,7 @@
 
 #### Defined in[[content.defined-in]]
 
-[packages/hub/src/lib/commit.ts:45](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L45)
+[packages/hub/src/lib/commit.ts:48](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L48)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[operation.defined-in]]
 
-[packages/hub/src/lib/commit.ts:43](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L43)
+[packages/hub/src/lib/commit.ts:46](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L46)
 
 ___
 
@@ -28,4 +28,4 @@ ___
 
 #### Defined in[[path.defined-in]]
 
-[packages/hub/src/lib/commit.ts:44](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L44)
+[packages/hub/src/lib/commit.ts:47](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/commit.ts#L47)
