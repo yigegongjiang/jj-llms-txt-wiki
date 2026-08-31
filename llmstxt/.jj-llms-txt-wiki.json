@@ -2,16 +2,16 @@
   "version": 1,
   "entries": {
     "https://llmstxt.org/ed.md": {
-      "etag": "W/\"6a79bc1f-af5\"",
-      "last_modified": "Mon, 10 Aug 2026 11:55:11 GMT"
+      "etag": "W/\"6a9521de-af5\"",
+      "last_modified": "Mon, 31 Aug 2026 06:40:30 GMT"
     },
     "https://llmstxt.org/index.md": {
-      "etag": "W/\"6a79bc1f-3526\"",
-      "last_modified": "Mon, 10 Aug 2026 11:55:11 GMT"
+      "etag": "W/\"6a9521dd-3526\"",
+      "last_modified": "Mon, 31 Aug 2026 06:40:29 GMT"
     },
     "https://llmstxt.org/intro.html.md": {
-      "etag": "W/\"6a79bc1f-eb8\"",
-      "last_modified": "Mon, 10 Aug 2026 11:55:11 GMT"
+      "etag": "W/\"6a9521dd-eb8\"",
+      "last_modified": "Mon, 31 Aug 2026 06:40:29 GMT"
     }
   }
 }
