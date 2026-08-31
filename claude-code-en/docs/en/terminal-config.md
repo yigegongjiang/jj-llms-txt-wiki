@@ -34,6 +34,11 @@ For VS Code, Cursor, Devin Desktop, Alacritty, and Zed, `/terminal-setup` writes
 
 In VS Code, Cursor, and Devin Desktop, `/terminal-setup` also updates two editor settings: it sets `terminal.integrated.gpuAcceleration` to `"off"` to prevent garbled text in the integrated terminal, and it sets `terminal.integrated.mouseWheelScrollSensitivity` for smoother scrolling in [fullscreen mode](/docs/en/fullscreen). To undo the GPU acceleration change, set it back to `"auto"` and reload the editor window. Before v2.1.157, `/terminal-setup` left GPU acceleration unchanged.
 
+In Zed, `/terminal-setup` updates your `keymap.json` in place:
+
+* If the keymap already has bindings and none of them is a Terminal `shift-enter`, Claude Code first backs it up to a copy in the same directory, such as `keymap.json.1a2b3c4d.bak`, then merges the Shift+Enter binding into your keymap, keeping your other keybindings and comments
+* If Claude Code can't read or parse the keymap, can't back it up, or can't verify the merged result, it [leaves the file unchanged and prints the keybinding block to add yourself](/docs/en/errors#terminal-setup-left-your-zed-keymap-unchanged)
+
 If you are running inside tmux, Shift+Enter also requires the [tmux configuration below](#configure-tmux) even when the outer terminal supports it.
 
 To bind newline to a different key, or to swap behavior so Enter inserts a newline and Shift+Enter submits, map the `chat:newline` and `chat:submit` actions in your [keybindings file](/docs/en/keybindings).
@@ -211,27 +216,28 @@ The reference below covers the tokens you can set in `overrides`. The interactiv
 
   Set the input box border color and the accent shown while a permission mode or indicator is active.
 
-  | Token          | Controls                                           |
-  | :------------- | :------------------------------------------------- |
-  | `promptBorder` | Input box border in Manual mode                    |
-  | `planMode`     | Plan mode accent and border                        |
-  | `autoAccept`   | Accept-edits mode accent and border                |
-  | `bashBorder`   | Input box border when entering a `!` shell command |
-  | `ide`          | IDE connection indicator                           |
-  | `fastMode`     | Fast mode indicator                                |
+  | Token          | Controls                                                                                                                                                                             |
+  | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `promptBorder` | Input box border in Manual mode                                                                                                                                                      |
+  | `planMode`     | Plan mode accent and border                                                                                                                                                          |
+  | `autoAccept`   | Accept-edits mode accent and border                                                                                                                                                  |
+  | `bashBorder`   | Input box border when entering a `!` shell command                                                                                                                                   |
+  | `ide`          | IDE connection indicator                                                                                                                                                             |
+  | `fastMode`     | Fast mode indicator                                                                                                                                                                  |
+  | `effortUltra`  | The `ultracode` tag on the input box border while [ultracode](/docs/en/model-config#adjust-effort-level) is on. Your override of this color takes effect on Claude Code v2.1.239 or later |
 
   #### Diff rendering
 
   Color added and removed code in file edits and reviews.
 
-  | Token               | Controls                                           |
-  | :------------------ | :------------------------------------------------- |
-  | `diffAdded`         | Background of added lines                          |
-  | `diffRemoved`       | Background of removed lines                        |
-  | `diffAddedDimmed`   | Background of unchanged context near added lines   |
-  | `diffRemovedDimmed` | Background of unchanged context near removed lines |
-  | `diffAddedWord`     | Word-level highlight within an added line          |
-  | `diffRemovedWord`   | Word-level highlight within a removed line         |
+  | Token               | Controls                                                                      |
+  | :------------------ | :---------------------------------------------------------------------------- |
+  | `diffAdded`         | Background of added lines                                                     |
+  | `diffRemoved`       | Background of removed lines                                                   |
+  | `diffAddedDimmed`   | Background of added lines in the dimmed diff shown after you reject an edit   |
+  | `diffRemovedDimmed` | Background of removed lines in the dimmed diff shown after you reject an edit |
+  | `diffAddedWord`     | Word-level highlight within an added line                                     |
+  | `diffRemovedWord`   | Word-level highlight within a removed line                                    |
 
   #### Fullscreen mode
 
@@ -302,7 +308,9 @@ Run `/tui fullscreen` to switch and save the preference. Your conversation relau
 
 ## Paste large content
 
-When you paste more than 800 characters or more than two lines into the prompt, Claude Code collapses the input to a placeholder such as `[Pasted text #1 +120 lines]` so the input box stays usable. The full content is still sent to Claude when you submit.
+When you paste more than 800 characters or more than three lines into the prompt, Claude Code collapses the input to a placeholder such as `[Pasted text #1 +120 lines]` so the input box stays usable. In a terminal window shorter than 12 rows the line limit drops, so Claude Code collapses a three-line paste at 11 rows and any multi-line paste at 10 rows or fewer. Claude Code still sends the full content when you submit.
+
+When you delete with a word or line shortcut such as `Ctrl+W` or `Ctrl+K`, or with a vim delete through an `f`/`t` motion such as `df]`, and the deleted range reaches inside a placeholder, Claude Code removes the placeholder whole. You can paste the deletion back to restore it, with [`Ctrl+Y`](/docs/en/interactive-mode#text-editing) after `Ctrl+W`, `Ctrl+U`, or `Ctrl+K`, or with [`p` in NORMAL mode](/docs/en/interactive-mode#editing-normal-mode) after a vim delete.
 
 Claude Code keeps the collapsed content under `~/.claude/paste-cache/`, so when you recall a prompt from [command history](/docs/en/interactive-mode#command-history) and resubmit it, Claude Code sends the full pasted content again, including in a later session, until the retention sweep removes the cache file.
 
