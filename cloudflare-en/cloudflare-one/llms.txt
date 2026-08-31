@@ -427,7 +427,6 @@ Replace legacy security perimeters with Cloudflare's network to protect your org
 - [Bitbucket Cloud](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/bitbucket-cloud/index.md): Reference information for Bitbucket Cloud in Zero Trust integrations.
 - [Box](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/box/index.md): Reference information for Box in Zero Trust integrations.
 - [Dropbox](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/dropbox/index.md): Reference information for Dropbox in Zero Trust integrations.
-- [Manage findings](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/findings/index.md): Manage findings in Zero Trust integrations.
 - [Google Cloud Platform (GCP) Cloud Storage](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/gcp-cloud-storage/index.md): Reference information for Google Cloud Platform (GCP) Cloud Storage in Zero Trust integrations.
 - [GitHub](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/github/index.md): Reference information for GitHub in Zero Trust integrations.
 - [Google Workspace](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/index.md): Reference information for Google Workspace in Zero Trust integrations.

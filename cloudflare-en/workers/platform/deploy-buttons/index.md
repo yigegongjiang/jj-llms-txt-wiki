@@ -67,7 +67,7 @@ Cloudflare will read the Wrangler configuration file of your source repo to dete
   "name": "my-worker",
   "main": "./src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
   "vars": {
     "API_HOST": "https://example.com",
   },
@@ -78,7 +78,7 @@ Cloudflare will read the Wrangler configuration file of your source repo to dete
 name = "my-worker"
 main = "./src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [vars]
 API_HOST = "https://example.com"
@@ -97,7 +97,7 @@ COOKIE_SIGNING_KEY=my-secret # comment
   "name": "my-worker",
   "main": "./src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"secrets_store_secrets": [
 		{
 			"binding": "API_KEY",
@@ -112,7 +112,7 @@ COOKIE_SIGNING_KEY=my-secret # comment
 name = "my-worker"
 main = "./src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[secrets_store_secrets]]
 binding = "API_KEY"

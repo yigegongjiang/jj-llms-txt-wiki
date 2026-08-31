@@ -93,7 +93,7 @@ For example, let us try setting and using an environment variable in a Python Wo
 		"python_workers"
 	],
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"vars": {
 		"API_HOST": "example.com"
 	}
@@ -106,7 +106,7 @@ name = "hello-python-worker"
 main = "src/entry.py"
 compatibility_flags = [ "python_workers" ]
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [vars]
 API_HOST = "example.com"

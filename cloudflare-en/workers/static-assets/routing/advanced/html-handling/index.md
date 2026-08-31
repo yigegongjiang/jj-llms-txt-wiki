@@ -33,7 +33,7 @@ This will usually give you the desired behavior automatically: individual files 
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"assets": {
 		"directory": "./dist/",
 		"html_handling": "auto-trailing-slash"
@@ -44,7 +44,7 @@ This will usually give you the desired behavior automatically: individual files 
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [assets]
 directory = "./dist/"
@@ -74,7 +74,7 @@ Alternatively, you can force trailing slashes (`force-trailing-slash`).
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"assets": {
 		"directory": "./dist/",
 		"html_handling": "force-trailing-slash"
@@ -85,7 +85,7 @@ Alternatively, you can force trailing slashes (`force-trailing-slash`).
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [assets]
 directory = "./dist/"
@@ -115,7 +115,7 @@ Or you can drop trailing slashes (`drop-trailing-slash`).
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"assets": {
 		"directory": "./dist/",
 		"html_handling": "drop-trailing-slash"
@@ -126,7 +126,7 @@ Or you can drop trailing slashes (`drop-trailing-slash`).
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [assets]
 directory = "./dist/"
@@ -156,7 +156,7 @@ Alternatively, if you have bespoke needs, you can disable the built-in HTML hand
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"assets": {
 		"directory": "./dist/",
 		"html_handling": "none"
@@ -167,7 +167,7 @@ Alternatively, if you have bespoke needs, you can disable the built-in HTML hand
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [assets]
 directory = "./dist/"

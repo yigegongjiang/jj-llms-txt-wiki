@@ -110,7 +110,7 @@ The template includes the proper Wrangler configuration:
   "name": "sandbox-code-interpreter-example",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-08-25",
+  "compatibility_date": "2026-08-28",
   "ai": {
     "binding": "AI"
   },
@@ -138,7 +138,7 @@ The template includes the proper Wrangler configuration:
 name = "sandbox-code-interpreter-example"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [ai]
 binding = "AI"

@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/dash-button/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `DashButton` component is used `1328` times on `842` pages.
+The `DashButton` component is used `1332` times on `844` pages.
 
 See all examples of pages that use DashButton
 
-Used **1328** times.
+Used **1332** times.
 
 **Pages**
 
@@ -241,7 +241,7 @@ Used **1328** times.
 * [/cloudflare-wan/troubleshooting/connectivity/](https://developers.cloudflare.com/cloudflare-wan/troubleshooting/connectivity/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/troubleshooting/connectivity.mdx)
 * [/cloudflare-wan/troubleshooting/ipsec-troubleshoot/](https://developers.cloudflare.com/cloudflare-wan/troubleshooting/ipsec-troubleshoot/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/troubleshooting/ipsec-troubleshoot.mdx)
 * [/cloudflare-wan/troubleshooting/tunnel-health/](https://developers.cloudflare.com/cloudflare-wan/troubleshooting/tunnel-health/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/troubleshooting/tunnel-health.mdx)
-* [/containers/deploy/](https://developers.cloudflare.com/containers/deploy/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/deploy.mdx)
+* [/containers/guides/deploy/](https://developers.cloudflare.com/containers/guides/deploy/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/guides/deploy.mdx)
 * [/d1/best-practices/read-replication/](https://developers.cloudflare.com/d1/best-practices/read-replication/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/best-practices/read-replication.mdx)
 * [/d1/best-practices/remote-development/](https://developers.cloudflare.com/d1/best-practices/remote-development/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/best-practices/remote-development.mdx)
 * [/d1/configuration/data-location/](https://developers.cloudflare.com/d1/configuration/data-location/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/configuration/data-location.mdx)
@@ -310,6 +310,7 @@ Used **1328** times.
 * [/email-service/examples/email-sending/sync-recipient-records/](https://developers.cloudflare.com/email-service/examples/email-sending/sync-recipient-records/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/email-service/examples/email-sending/sync-recipient-records.mdx)
 * [/email-service/get-started/route-emails/](https://developers.cloudflare.com/email-service/get-started/route-emails/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/email-service/get-started/route-emails.mdx)
 * [/email-service/reference/troubleshooting/](https://developers.cloudflare.com/email-service/reference/troubleshooting/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/email-service/reference/troubleshooting.mdx)
+* [/flagship/api-tokens/](https://developers.cloudflare.com/flagship/api-tokens/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/flagship/api-tokens.mdx)
 * [/fundamentals/account/account-security/audit-logs/](https://developers.cloudflare.com/fundamentals/account/account-security/audit-logs/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/fundamentals/account/account-security/audit-logs.mdx)
 * [/fundamentals/account/account-security/cloudflare-access/](https://developers.cloudflare.com/fundamentals/account/account-security/cloudflare-access/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/fundamentals/account/account-security/cloudflare-access.mdx)
 * [/fundamentals/account/account-security/manage-active-sessions/](https://developers.cloudflare.com/fundamentals/account/account-security/manage-active-sessions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/fundamentals/account/account-security/manage-active-sessions.mdx)
@@ -531,6 +532,7 @@ Used **1328** times.
 * [/security/](https://developers.cloudflare.com/security/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/security/index.mdx)
 * [/security/overview/](https://developers.cloudflare.com/security/overview/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/security/overview.mdx)
 * [/security/rules/](https://developers.cloudflare.com/security/rules/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/security/rules.mdx)
+* [/security/security-insights/how-it-works/](https://developers.cloudflare.com/security/security-insights/how-it-works/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/security/security-insights/how-it-works.mdx)
 * [/security/security-insights/review-insights/](https://developers.cloudflare.com/security/security-insights/review-insights/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/security/security-insights/review-insights.mdx)
 * [/security/settings/](https://developers.cloudflare.com/security/settings/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/security/settings.mdx)
 * [/security/web-assets/define-security-protections/](https://developers.cloudflare.com/security/web-assets/define-security-protections/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/security/web-assets/define-security-protections.mdx)

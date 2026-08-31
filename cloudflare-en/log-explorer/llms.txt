@@ -24,7 +24,7 @@ Store and explore your logs in the Cloudflare dashboard or API
 
 ## Manage datasets
 
-- [Manage datasets](https://developers.cloudflare.com/log-explorer/manage-datasets/index.md): Enable or disable Log Explorer datasets.
+- [Manage datasets](https://developers.cloudflare.com/log-explorer/manage-datasets/index.md): Enable, disable, or delete Log Explorer datasets.
 
 ## Log Explorer API
 

@@ -51,7 +51,7 @@ bun add @cloudflare/codemode agents @modelcontextprotocol/sdk zod
   "name": "codemode-mcp-server",  
   "main": "src/server.ts",  
   // Set this to today's date  
-  "compatibility_date": "2026-08-25",  
+  "compatibility_date": "2026-08-28",  
   "compatibility_flags": [  
     "nodejs_compat"  
   ],  
@@ -66,7 +66,7 @@ bun add @cloudflare/codemode agents @modelcontextprotocol/sdk zod
 name = "codemode-mcp-server"  
 main = "src/server.ts"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 compatibility_flags = ["nodejs_compat"]  
 [[worker_loaders]]  
 binding = "LOADER"  

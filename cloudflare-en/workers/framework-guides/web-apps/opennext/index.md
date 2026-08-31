@@ -86,7 +86,7 @@ In your project root, create a [Wrangler configuration file](https://developers.
   "name": "my-app",  
   "main": ".open-next/worker.js",  
   // Set this to today's date  
-  "compatibility_date": "2026-08-25",  
+  "compatibility_date": "2026-08-28",  
   "compatibility_flags": [  
     "nodejs_compat"  
   ],  
@@ -103,7 +103,7 @@ In your project root, create a [Wrangler configuration file](https://developers.
 name = "my-app"  
 main = ".open-next/worker.js"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 compatibility_flags = ["nodejs_compat"]  
 [assets]  
 directory = ".open-next/assets"  

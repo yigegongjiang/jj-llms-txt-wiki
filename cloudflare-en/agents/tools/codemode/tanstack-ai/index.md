@@ -43,7 +43,7 @@ bun add @cloudflare/codemode @tanstack/ai @tanstack/ai-openai zod
   "name": "tanstack-codemode",  
   "main": "src/index.ts",  
   // Set this to today's date  
-  "compatibility_date": "2026-08-25",  
+  "compatibility_date": "2026-08-28",  
   "compatibility_flags": [  
     "nodejs_compat"  
   ],  
@@ -58,7 +58,7 @@ bun add @cloudflare/codemode @tanstack/ai @tanstack/ai-openai zod
 name = "tanstack-codemode"  
 main = "src/index.ts"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 compatibility_flags = ["nodejs_compat"]  
 [[worker_loaders]]  
 binding = "LOADER"  

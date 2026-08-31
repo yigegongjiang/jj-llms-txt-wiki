@@ -29,12 +29,16 @@ Spin up isolated Workers on demand to execute code
 - [Dynamic Workers Starter](https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workers-starter/index.md): A starter template for deploying a Worker that loads and runs Dynamic Workers.
 - [Dynamic Workflows Playground](https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workflows-playground/index.md): Write workflow logic in JavaScript and watch every step execute with live console.log streaming.
 
+## platform
+
+- [Limits](https://developers.cloudflare.com/dynamic-workers/platform/limits/index.md): Limits for concurrent Dynamic Worker requests.
+
 ## usage
 
 - [Bindings](https://developers.cloudflare.com/dynamic-workers/usage/bindings/index.md): Give Dynamic Workers access to external APIs.
 - [Durable Object Facets](https://developers.cloudflare.com/dynamic-workers/usage/durable-object-facets/index.md): Run dynamically-loaded code with isolated persistent storage.
 - [Dynamic Workflows](https://developers.cloudflare.com/dynamic-workers/usage/dynamic-workflows/index.md): Run different Workflow logic for each user or tenant by combining Workflows with Dynamic Workers.
 - [Egress control](https://developers.cloudflare.com/dynamic-workers/usage/egress-control/index.md): Restrict, intercept, and audit outbound network access for dynamic Workers.
-- [Custom limits](https://developers.cloudflare.com/dynamic-workers/usage/limits/index.md): Limit resource usage of Dynamic Workers.
+- [Custom resource limits](https://developers.cloudflare.com/dynamic-workers/usage/limits/index.md): Set CPU time and subrequest limits.
 - [Observability](https://developers.cloudflare.com/dynamic-workers/usage/observability/index.md): Capture, retrieve, and forward logs from dynamic Workers.
 - [Static assets](https://developers.cloudflare.com/dynamic-workers/usage/static-assets/index.md): Serve static files alongside Dynamic Worker code.

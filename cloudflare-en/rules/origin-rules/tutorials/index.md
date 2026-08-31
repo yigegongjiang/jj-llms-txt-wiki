@@ -18,7 +18,7 @@ Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ | ---------- |
 | [Point to Pages with a custom domain](https://developers.cloudflare.com/rules/origin-rules/tutorials/point-to-pages-with-custom-domain/)         | last year    | Beginner   |
 | [Point to R2 bucket with a custom domain](https://developers.cloudflare.com/rules/origin-rules/tutorials/point-to-r2-bucket-with-custom-domain/) | last year    | Beginner   |
-| [Change URI path and Host header](https://developers.cloudflare.com/rules/origin-rules/tutorials/change-uri-path-and-host-header/)               | last year    | Beginner   |
+| [Change URI path and Host header](https://developers.cloudflare.com/rules/origin-rules/tutorials/change-uri-path-and-host-header/)               | 2 years ago  | Beginner   |
 
 Was this helpful?
 

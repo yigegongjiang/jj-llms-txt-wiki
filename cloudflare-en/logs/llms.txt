@@ -22,6 +22,7 @@ Access detailed logs with metadata from Cloudflare products
 - [Custom fields](https://developers.cloudflare.com/logs/logpush/logpush-job/custom-fields/index.md): Log custom request and response headers.
 - [Datasets](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/index.md): Browse available Logpush dataset fields by category.
 - [Access requests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/access_requests/index.md)
+- [Account Abuse Protection Events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/account_abuse_protection_events/index.md)
 - [Audit Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/audit_logs/index.md)
 - [Audit Logs V2](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/audit_logs_v2/index.md)
 - [Browser Isolation User Actions](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/biso_user_actions/index.md)
@@ -38,6 +39,7 @@ Access detailed logs with metadata from Cloudflare products
 - [Gateway HTTP](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_http/index.md)
 - [Gateway Network](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_network/index.md)
 - [IPSec Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/ipsec_logs/index.md)
+- [Magic BGP Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/magic_bgp_logs/index.md)
 - [Magic IDS Detections](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/magic_ids_detections/index.md)
 - [MCP Portal Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/mcp_portal_logs/index.md)
 - [Magic Network Monitoring Flow Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/mnm_flow_logs/index.md)
@@ -51,6 +53,7 @@ Access detailed logs with metadata from Cloudflare products
 - [Workers Trace Events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/workers_trace_events/index.md)
 - [Zero Trust Network Session Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero_trust_network_sessions/index.md)
 - [CMB support by dataset](https://developers.cloudflare.com/data-localization/metadata-boundary/logpush-datasets/index.md): Learn about cmb support by dataset  in Cloudflare Logs.
+- [Account Abuse Protection Events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/account_abuse_protection_events/index.md)
 - [DNS logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/dns_logs/index.md)
 - [Firewall events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/firewall_events/index.md)
 - [HTTP requests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http_requests/index.md)

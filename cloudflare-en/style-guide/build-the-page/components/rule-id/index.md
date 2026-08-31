@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/rule-id/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `RuleID` component is used `751` times on `115` pages.
+The `RuleID` component is used `755` times on `117` pages.
 
 See all examples of pages that use RuleID
 
-Used **751** times.
+Used **755** times.
 
 **Pages**
 

@@ -146,7 +146,7 @@ The Workflow configuration is defined in the `wrangler.jsonc` file. This file in
 	"name": "workflows-waitforevent",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1,
@@ -182,7 +182,7 @@ The Workflow configuration is defined in the `wrangler.jsonc` file. This file in
 name = "workflows-waitforevent"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [observability]
 enabled = true

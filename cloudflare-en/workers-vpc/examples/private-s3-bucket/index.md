@@ -106,7 +106,7 @@ Update your Wrangler configuration file:
 	"name": "private-s3-gateway",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"vpc_services": [
 		{
 			"binding": "S3_STORAGE",
@@ -121,7 +121,7 @@ Update your Wrangler configuration file:
 name = "private-s3-gateway"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[vpc_services]]
 binding = "S3_STORAGE"

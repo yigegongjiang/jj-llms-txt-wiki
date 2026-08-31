@@ -39,7 +39,7 @@ Configure your Wrangler file with the email binding:
 {
 	"name": "email-sending-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"send_email": [{ "name": "EMAIL" }],
 }
 ```
@@ -47,7 +47,7 @@ Configure your Wrangler file with the email binding:
 ```toml
 name = "email-sending-worker"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[send_email]]
 name = "EMAIL"
@@ -63,7 +63,7 @@ Set `remote: true` on the email binding in your Wrangler configuration:
 {
 	"name": "email-sending-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"send_email": [
 		{
 			"name": "EMAIL",
@@ -76,7 +76,7 @@ Set `remote: true` on the email binding in your Wrangler configuration:
 ```toml
 name = "email-sending-worker"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[send_email]]
 name = "EMAIL"

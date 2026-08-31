@@ -37,7 +37,7 @@ Add a `cache` block to your Wrangler configuration:
 	"name": "my-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"cache": {
 		"enabled": true,
 	},
@@ -48,7 +48,7 @@ Add a `cache` block to your Wrangler configuration:
 name = "my-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [cache]
 enabled = true
@@ -67,7 +67,7 @@ To turn caching off, set `cache.enabled` to `false` (or remove the `cache` block
 	"name": "my-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"cache": {
 		"enabled": false,
 	},
@@ -78,7 +78,7 @@ To turn caching off, set `cache.enabled` to `false` (or remove the `cache` block
 name = "my-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [cache]
 enabled = false
@@ -99,7 +99,7 @@ Requires Wrangler 4.107.0 or above.
 	"name": "my-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"cache": {
 		"enabled": true,
 	},
@@ -116,7 +116,7 @@ Requires Wrangler 4.107.0 or above.
 name = "my-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [cache]
 enabled = true
@@ -170,7 +170,7 @@ If you want to maximize cache hit rate and are willing to accept slower rollouts
 	"name": "my-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"cache": {
 		"enabled": true,
 		"cross_version_cache": true,
@@ -182,7 +182,7 @@ If you want to maximize cache hit rate and are willing to accept slower rollouts
 name = "my-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [cache]
 enabled = true
@@ -202,7 +202,7 @@ The `cache` block can be set at the top level and overridden per [environment](h
 	"name": "my-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"cache": {
 		"enabled": false,
 	},
@@ -220,7 +220,7 @@ The `cache` block can be set at the top level and overridden per [environment](h
 name = "my-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [cache]
 enabled = false

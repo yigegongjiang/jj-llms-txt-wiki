@@ -18,7 +18,7 @@ View tutorials to help you get started with D1.
 
 | Name                                                                                                                                      | Last Updated | Difficulty   |
 | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ------------ |
-| [Build a Comments API](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/)                                              | 5 months ago | Intermediate |
+| [Build a Comments API](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/)                                              | 6 months ago | Intermediate |
 | [Query D1 using Prisma ORM](https://developers.cloudflare.com/d1/tutorials/d1-and-prisma-orm/)                                            | last year    | Beginner     |
 | [Using D1 Read Replication for your e-commerce website](https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/) | last year    | Beginner     |
 | [Bulk import to D1 using REST API](https://developers.cloudflare.com/d1/tutorials/import-to-d1-with-rest-api/)                            | 2 years ago  | Beginner     |

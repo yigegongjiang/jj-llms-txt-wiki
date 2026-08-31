@@ -53,7 +53,7 @@ The Wrangler configuration file does not specify either `nodejs_compat` or `node
 { "name": "test",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25"
+	"compatibility_date": "2026-08-28"
 	# no nodejs_compat flags here
 }
 ```
@@ -62,7 +62,7 @@ The Wrangler configuration file does not specify either `nodejs_compat` or `node
 name = "test"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 ```
 
 In our `src/index.ts` file, we use the `process` object, which is a Node.js global, unavailable in the Workerd runtime:

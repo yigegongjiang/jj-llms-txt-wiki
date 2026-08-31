@@ -69,6 +69,7 @@ RealtimeKit, SFU and TURN
 - [FAQ](https://developers.cloudflare.com/realtime/realtimekit/faq/index.md): Frequently asked questions about RealtimeKit meetings, recordings, and SDK usage.
 - [Legal](https://developers.cloudflare.com/realtime/realtimekit/legal/index.md): Privacy policy, terms of service, and third-party licenses for RealtimeKit.
 - [Third party licenses](https://developers.cloudflare.com/realtime/realtimekit/legal/3rdparty/index.md): Third-party license information for RealtimeKit web, mobile, and recording SDKs.
+- [Network allowlist](https://developers.cloudflare.com/realtime/realtimekit/network-allowlist/index.md): Allow the domains and ports required for RealtimeKit connectivity.
 - [Pricing](https://developers.cloudflare.com/realtime/realtimekit/pricing/index.md): RealtimeKit pricing for audio, video, recording, and transcription features.
 - [Quickstart](https://developers.cloudflare.com/realtime/realtimekit/quickstart/index.md): Set up RealtimeKit in your application with API tokens, SDK installation, and your first meeting.
 - [Recording](https://developers.cloudflare.com/realtime/realtimekit/recording-guide/index.md): Record RealtimeKit meetings as composite recordings or separate participant audio tracks.
@@ -93,6 +94,7 @@ RealtimeKit, SFU and TURN
 - [Notices](https://developers.cloudflare.com/realtime/realtimekit/release-notes/notice-board/index.md): Important notices and announcements for the RealtimeKit platform.
 - [React Native Core SDK](https://developers.cloudflare.com/realtime/realtimekit/release-notes/react-native-core/index.md): Release notes and changelog for the RealtimeKit React Native Core SDK.
 - [React Native UI Kit SDK](https://developers.cloudflare.com/realtime/realtimekit/release-notes/react-native-ui-kit/index.md): Release notes and changelog for the RealtimeKit React Native UI Kit SDK.
+- [Recording SDK](https://developers.cloudflare.com/realtime/realtimekit/release-notes/recording-sdk/index.md): Release notes for the RealtimeKit Recording SDK.
 - [Web Core SDK](https://developers.cloudflare.com/realtime/realtimekit/release-notes/web-core/index.md): Release notes and changelog for the RealtimeKit Web Core SDK.
 - [Web UI Kit](https://developers.cloudflare.com/realtime/realtimekit/release-notes/web-ui-kit/index.md): Release notes and changelog for the RealtimeKit Web UI Kit SDK.
 - [REST API Reference](https://developers.cloudflare.com/api/resources/realtime_kit/index.md): REST API reference for managing RealtimeKit apps, meetings, participants, and recordings.
@@ -689,7 +691,7 @@ RealtimeKit, SFU and TURN
 
 ## Realtime SFU
 
-- [Realtime SFU](https://developers.cloudflare.com/realtime/sfu/index.md): Build real-time serverless video, audio, and data applications with Cloudflare Realtime SFU.
+- [Realtime SFU](https://developers.cloudflare.com/realtime/sfu/index.md): Build custom audio, video, and data applications from WebRTC primitives with Cloudflare Realtime SFU.
 - [Realtime vs Regular SFUs](https://developers.cloudflare.com/realtime/sfu/calls-vs-sfus/index.md): Compare Cloudflare Realtime SFU with traditional centralized SFUs for WebRTC applications.
 - [Changelog](https://developers.cloudflare.com/realtime/sfu/changelog/index.md): Changelog and release notes for the Cloudflare Realtime SFU platform.
 - [DataChannels](https://developers.cloudflare.com/realtime/sfu/datachannels/index.md): Send low-latency application data between clients with Realtime SFU DataChannels.

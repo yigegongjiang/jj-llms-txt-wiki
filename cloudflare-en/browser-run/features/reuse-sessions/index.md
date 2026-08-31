@@ -85,7 +85,7 @@ Your Worker configuration must include the `nodejs_compat` compatibility flag an
 	"name": "browser-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"browser": {
 		"binding": "MYBROWSER",
@@ -98,7 +98,7 @@ Your Worker configuration must include the `nodejs_compat` compatibility flag an
 name = "browser-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [browser]

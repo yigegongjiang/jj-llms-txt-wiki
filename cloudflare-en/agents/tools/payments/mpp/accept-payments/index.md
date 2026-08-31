@@ -142,7 +142,7 @@ bun add agents mppx @modelcontextprotocol/sdk zod
   "name": "mpp-server",  
   "main": "src/index.ts",  
   // Set this to today's date  
-  "compatibility_date": "2026-08-25",  
+  "compatibility_date": "2026-08-28",  
   "compatibility_flags": [  
     "nodejs_compat"  
   ],  
@@ -168,7 +168,7 @@ bun add agents mppx @modelcontextprotocol/sdk zod
 name = "mpp-server"  
 main = "src/index.ts"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 compatibility_flags = ["nodejs_compat"]  
 [[durable_objects.bindings]]  
 name = "MCP_OBJECT"  

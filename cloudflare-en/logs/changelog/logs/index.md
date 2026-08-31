@@ -16,6 +16,56 @@ Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/logs.xml)
 
+## 2026-08-26
+
+  
+**Azure Functions-based Microsoft Sentinel connector deprecation**  
+
+Cloudflare Enterprise customers using the [Azure Functions-based Microsoft Sentinel connector ↗](https://marketplace.microsoft.com/en-us/product/cloudflare.cloudflare%5Fsentinel?tab=Overview) must migrate to the [Cloudflare for Microsoft Sentinel Codeless Connector Framework (CCF) connector ↗](https://marketplace.microsoft.com/en-us/product/cloudflare.azure-sentinel-solution-cloudflare-ccf?tab=Overview) by 2026-09-14.
+
+Microsoft is deprecating the Azure Monitor HTTP Data Collector API. Support for the API ends on 2026-09-14\. As a result, Cloudflare will no longer maintain the Azure Functions-based connector after that date.
+
+To migrate, follow the [Microsoft Sentinel integration setup guide](https://developers.cloudflare.com/analytics/analytics-integrations/sentinel/).
+
+#### Additional resources
+
+* [Download Cloudflare's CCF Sentinel Solution ↗](https://marketplace.microsoft.com/en-us/product/azure-application/cloudflare.azure-sentinel-solution-cloudflare-ccf?tab=Overview)
+* [Microsoft Sentinel data lake overview ↗](https://learn.microsoft.com/en-us/azure/sentinel/datalake/sentinel-lake-overview)
+* [About the CCF platform ↗](https://learn.microsoft.com/en-us/azure/sentinel/create-codeless-connector)
+
+For more information, refer to Microsoft's [Azure Monitor HTTP Data Collector API deprecation notice ↗](https://learn.microsoft.com/en-us/previous-versions/azure/azure-monitor/logs/data-collector-api?tabs=powershell).
+
+## 2026-08-20
+
+  
+**New Logpush datasets and updated fields across multiple Logpush datasets in Cloudflare Logs**  
+
+Cloudflare has updated [Logpush datasets](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/):
+
+#### New datasets
+
+* **Account Abuse Protection Events**: A new dataset with fields including `AuthenticationIdentityProvider`, `AuthenticationMethod`, `AuthenticationStatus`, `BotScore`, `ClientASN`, `ClientCity`, `ClientCountry`, `ClientIP`, `Email`, `EphemeralID`, `EventSource`, `EventType`, `FraudEmailRisk`, `Host`, `JA4`, `RayID`, `Timestamp`, `UserAgent`, and `UserID`.
+* **Magic BGP Logs**: A new dataset with fields including `Direction`, `EventData`, `EventKind`, `EventTimestamp`, `TunnelID`, and `TunnelName`.
+
+#### Updated fields in existing datasets
+
+* **Firewall events** (added): `AISecurityCustomTopicCategories`, `WAFRequestSignatureCategories`, and `WAFRequestSignatureRefs`.
+* **Gateway HTTP** (added): `ExperimentalFeatures` and `PackageInfo`.
+* **HTTP requests** (added): `AISecurityCustomTopicCategories`, `ClientTLSKeyExchangeGroup`, `WAFRequestSignatureCategories`, and `WAFRequestSignatureRefs`.
+
+For the complete field definitions for each dataset, refer to [Logpush datasets](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/).
+
+## 2026-08-20
+
+  
+**Per-zone post-quantum visibility in Logpush and Log Explorer**  
+
+[Cloudflare Radar ↗](https://radar.cloudflare.com/post-quantum) publishes global statistics on post-quantum key agreement adoption across all Cloudflare traffic, but until now customers had no way to see the same measurement scoped to their own zones. This is now possible because the [http\_requests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http%5Frequests/) Logpush dataset — also queryable in [Log Explorer](https://developers.cloudflare.com/log-explorer/) — includes a new `ClientTLSKeyExchangeGroup` field.
+
+The field reports the TLS key exchange group negotiated on the client-to-Cloudflare connection, by group name. Post-quantum connections appear as `X25519MLKEM768`, and classical connections appear as `X25519`, `P-256`, or another named group. A value of `UNK` means the group could not be determined, and `NONE` means TLS was not used.
+
+With this field, you can build per-zone reports showing what percentage of your inbound HTTPS traffic is protected by post-quantum key agreement, break the number down by hostname, path, user agent, or country, and push the data into your SIEM via any [Logpush destination](https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/).
+
 ## 2026-07-07
 
   

@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/wrangler-config/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `WranglerConfig` component is used `670` times on `372` pages.
+The `WranglerConfig` component is used `672` times on `373` pages.
 
 See all examples of pages that use WranglerConfig
 
-Used **670** times.
+Used **672** times.
 
 **Pages**
 
@@ -94,16 +94,16 @@ Used **670** times.
 * [/cloudflare-one/access-controls/policies/external-evaluation/](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/external-evaluation/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/policies/external-evaluation.mdx)
 * [/cloudflare-one/tutorials/entra-id-risky-users/](https://developers.cloudflare.com/cloudflare-one/tutorials/entra-id-risky-users/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/tutorials/entra-id-risky-users.mdx)
 * [/cloudflare-one/tutorials/extend-sso-with-workers/](https://developers.cloudflare.com/cloudflare-one/tutorials/extend-sso-with-workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/tutorials/extend-sso-with-workers.mdx)
+* [/containers/concepts/placement/](https://developers.cloudflare.com/containers/concepts/placement/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/concepts/placement.mdx)
+* [/containers/configuration/rollouts/](https://developers.cloudflare.com/containers/configuration/rollouts/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/configuration/rollouts.mdx)
 * [/containers/examples/container-backend/](https://developers.cloudflare.com/containers/examples/container-backend/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/examples/container-backend.mdx)
 * [/containers/examples/cron/](https://developers.cloudflare.com/containers/examples/cron/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/examples/cron.mdx)
 * [/containers/examples/env-vars-and-secrets/](https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/examples/env-vars-and-secrets.mdx)
 * [/containers/faq/](https://developers.cloudflare.com/containers/faq/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/faq.mdx)
-* [/containers/get-started/](https://developers.cloudflare.com/containers/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/get-started.mdx)
+* [/containers/get-started/](https://developers.cloudflare.com/containers/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/get-started/index.mdx)
+* [/containers/guides/image-management/](https://developers.cloudflare.com/containers/guides/image-management/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/guides/image-management.mdx)
+* [/containers/guides/ssh/](https://developers.cloudflare.com/containers/guides/ssh/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/guides/ssh.mdx)
 * [/containers/](https://developers.cloudflare.com/containers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/index.mdx)
-* [/containers/platform-details/image-management/](https://developers.cloudflare.com/containers/platform-details/image-management/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform-details/image-management.mdx)
-* [/containers/platform-details/placement/](https://developers.cloudflare.com/containers/platform-details/placement/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform-details/placement.mdx)
-* [/containers/platform-details/rollouts/](https://developers.cloudflare.com/containers/platform-details/rollouts/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform-details/rollouts.mdx)
-* [/containers/ssh/](https://developers.cloudflare.com/containers/ssh/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/ssh.mdx)
 * [/d1/best-practices/local-development/](https://developers.cloudflare.com/d1/best-practices/local-development/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/best-practices/local-development.mdx)
 * [/d1/configuration/environments/](https://developers.cloudflare.com/d1/configuration/environments/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/configuration/environments.mdx)
 * [/d1/examples/query-d1-from-python-workers/](https://developers.cloudflare.com/d1/examples/query-d1-from-python-workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/examples/query-d1-from-python-workers.mdx)
@@ -259,6 +259,7 @@ Used **670** times.
 * [/workers/languages/python/ffi/](https://developers.cloudflare.com/workers/languages/python/ffi/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/languages/python/ffi.mdx)
 * [/workers/languages/python/how-python-workers-work/](https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/languages/python/how-python-workers-work.mdx)
 * [/workers/languages/python/packages/fastapi/](https://developers.cloudflare.com/workers/languages/python/packages/fastapi/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/languages/python/packages/fastapi.mdx)
+* [/workers/languages/python/packages/flask/](https://developers.cloudflare.com/workers/languages/python/packages/flask/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/languages/python/packages/flask.mdx)
 * [/workers/local-development/](https://developers.cloudflare.com/workers/local-development/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/local-development/index.mdx)
 * [/workers/observability/exporting-opentelemetry-data/axiom/](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/axiom/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/observability/exporting-opentelemetry-data/axiom.mdx)
 * [/workers/observability/exporting-opentelemetry-data/grafana-cloud/](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/grafana-cloud/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/observability/exporting-opentelemetry-data/grafana-cloud.mdx)

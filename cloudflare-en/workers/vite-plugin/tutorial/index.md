@@ -89,7 +89,7 @@ Refer to the [API reference](https://developers.cloudflare.com/workers/vite-plug
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "cloudflare-vite-tutorial",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"assets": {
 		"not_found_handling": "single-page-application"
 	}
@@ -100,7 +100,7 @@ Refer to the [API reference](https://developers.cloudflare.com/workers/vite-plug
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "cloudflare-vite-tutorial"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [assets]
 not_found_handling = "single-page-application"
@@ -180,7 +180,7 @@ bun add -d @cloudflare/workers-types
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "cloudflare-vite-tutorial",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"assets": {
 		"not_found_handling": "single-page-application"
 	},
@@ -192,7 +192,7 @@ bun add -d @cloudflare/workers-types
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "cloudflare-vite-tutorial"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 main = "./worker/index.ts"
 
 [assets]
@@ -232,7 +232,7 @@ If you would instead like to define the routes that invoke your Worker explicitl
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "cloudflare-vite-tutorial",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"assets": {
 		"not_found_handling": "single-page-application",
 		"run_worker_first": [
@@ -247,7 +247,7 @@ If you would instead like to define the routes that invoke your Worker explicitl
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "cloudflare-vite-tutorial"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 main = "./worker/index.ts"
 
 [assets]

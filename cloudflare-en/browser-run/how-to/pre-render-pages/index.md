@@ -45,7 +45,7 @@ Add a Browser Run binding to your Wrangler configuration:
   "name": "my-prerender-worker",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-08-25",
+  "compatibility_date": "2026-08-28",
   "browser": {
     "binding": "BROWSER"
   }
@@ -56,7 +56,7 @@ Add a Browser Run binding to your Wrangler configuration:
 name = "my-prerender-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [browser]
 binding = "BROWSER"

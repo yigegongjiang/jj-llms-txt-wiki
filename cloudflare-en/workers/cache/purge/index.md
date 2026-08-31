@@ -306,7 +306,7 @@ Add the [version metadata binding](https://developers.cloudflare.com/workers/run
 	"name": "my-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"cache": { "enabled": true, "cross_version_cache": true },
 	"version_metadata": { "binding": "CF_VERSION_METADATA" },
 }
@@ -316,7 +316,7 @@ Add the [version metadata binding](https://developers.cloudflare.com/workers/run
 name = "my-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [cache]
 enabled = true

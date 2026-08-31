@@ -148,7 +148,7 @@ In your project root, create a Wrangler configuration file with the following co
 {  
 	"name": "my-astro-app",  
 	// Set this to today's date  
-	"compatibility_date": "2026-08-25",  
+	"compatibility_date": "2026-08-28",  
 	"assets": {  
 		"directory": "./dist"  
 	}  
@@ -157,7 +157,7 @@ In your project root, create a Wrangler configuration file with the following co
 ```toml  
 name = "my-astro-app"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 [assets]  
 directory = "./dist"  
 ```  
@@ -217,7 +217,7 @@ In your project root, create a Wrangler configuration file with the following co
 	"main": "./dist/_worker.js/index.js",  
 	// Update to today's date  
 	// Set this to today's date  
-	"compatibility_date": "2026-08-25",  
+	"compatibility_date": "2026-08-28",  
 	"compatibility_flags": ["nodejs_compat"],  
 	"assets": {  
 		"binding": "ASSETS",  
@@ -232,7 +232,7 @@ In your project root, create a Wrangler configuration file with the following co
 name = "my-astro-app"  
 main = "./dist/_worker.js/index.js"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 compatibility_flags = [ "nodejs_compat" ]  
 [assets]  
 binding = "ASSETS"  

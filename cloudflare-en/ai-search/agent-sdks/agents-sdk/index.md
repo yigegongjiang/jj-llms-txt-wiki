@@ -93,7 +93,7 @@ Replace your [Wrangler configuration file](https://developers.cloudflare.com/wor
   "name": "ai-search-agent",
   "main": "src/server.ts",
   // Set this to today's date
-  "compatibility_date": "2026-08-25",
+  "compatibility_date": "2026-08-28",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -130,7 +130,7 @@ Replace your [Wrangler configuration file](https://developers.cloudflare.com/wor
 name = "ai-search-agent"
 main = "src/server.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 compatibility_flags = ["nodejs_compat"]
 
 [ai]

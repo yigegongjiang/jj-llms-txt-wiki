@@ -93,7 +93,7 @@ npm install -D @cloudflare/vite-plugin @vitejs/plugin-react vite vite-plugin-sin
 	"name": "my-chess-app",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"durable_objects": {
 		"bindings": [
@@ -120,7 +120,7 @@ npm install -D @cloudflare/vite-plugin @vitejs/plugin-react vite vite-plugin-sin
 name = "my-chess-app"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[durable_objects.bindings]]

@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/typescript-example/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `TypeScriptExample` component is used `1468` times on `314` pages.
+The `TypeScriptExample` component is used `1469` times on `315` pages.
 
 See all examples of pages that use TypeScriptExample
 
-Used **1468** times.
+Used **1469** times.
 
 **Pages**
 
@@ -131,9 +131,9 @@ Used **1468** times.
 * [/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json.mdx)
 * [/cloudflare-one/tutorials/access-workers/](https://developers.cloudflare.com/cloudflare-one/tutorials/access-workers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/tutorials/access-workers.mdx)
 * [/cloudflare-one/tutorials/detect-mcp-traffic-gateway-logs/](https://developers.cloudflare.com/cloudflare-one/tutorials/detect-mcp-traffic-gateway-logs/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/tutorials/detect-mcp-traffic-gateway-logs.mdx)
-* [/containers/container-class/](https://developers.cloudflare.com/containers/container-class/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/container-class.mdx)
 * [/containers/examples/r2-fuse-mount/](https://developers.cloudflare.com/containers/examples/r2-fuse-mount/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/examples/r2-fuse-mount.mdx)
-* [/containers/execute-commands/](https://developers.cloudflare.com/containers/execute-commands/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/execute-commands.mdx)
+* [/containers/guides/execute-commands/](https://developers.cloudflare.com/containers/guides/execute-commands/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/guides/execute-commands.mdx)
+* [/containers/reference/container-class/](https://developers.cloudflare.com/containers/reference/container-class/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/reference/container-class.mdx)
 * [/d1/best-practices/read-replication/](https://developers.cloudflare.com/d1/best-practices/read-replication/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/best-practices/read-replication.mdx)
 * [/d1/get-started/](https://developers.cloudflare.com/d1/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/get-started.mdx)
 * [/d1/tutorials/build-a-comments-api/](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/tutorials/build-a-comments-api.mdx)

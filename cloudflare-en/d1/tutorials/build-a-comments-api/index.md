@@ -86,7 +86,7 @@ Confirm that your Wrangler configuration file contains the `d1_databases` bindin
   "name": "d1-comments-api",  
   "main": "src/index.ts",  
   // Set this to today's date  
-  "compatibility_date": "2026-08-25",  
+  "compatibility_date": "2026-08-28",  
   "d1_databases": [  
     {  
       "binding": "DB",  
@@ -100,7 +100,7 @@ Confirm that your Wrangler configuration file contains the `d1_databases` bindin
 name = "d1-comments-api"  
 main = "src/index.ts"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 [[d1_databases]]  
 binding = "DB" # available in your Worker on env.DB  
 database_name = "d1-comments-api"  

@@ -30,7 +30,7 @@ From the configuration perspective, enabling Python Workflows requires adding th
 	"name": "workflows-starter",
 	"main": "src/index.py",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"compatibility_flags": ["python_workflows", "python_workers"],
 	"workflows": [
 		{
@@ -50,7 +50,7 @@ From the configuration perspective, enabling Python Workflows requires adding th
 name = "workflows-starter"
 main = "src/index.py"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 compatibility_flags = [ "python_workflows", "python_workers" ]
 
 [[workflows]]

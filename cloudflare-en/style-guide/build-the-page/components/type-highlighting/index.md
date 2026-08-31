@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/type-highlighting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Type` component is used `1492` times on `77` pages.
+The `Type` component is used `1493` times on `78` pages.
 
 See all examples of pages that use Type
 
-Used **1492** times.
+Used **1493** times.
 
 **Pages**
 
@@ -32,6 +32,7 @@ Used **1492** times.
 * [/durable-objects/api/alarms/](https://developers.cloudflare.com/durable-objects/api/alarms/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/api/alarms.mdx)
 * [/durable-objects/api/base/](https://developers.cloudflare.com/durable-objects/api/base/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/api/base.mdx)
 * [/durable-objects/api/sqlite-storage-api/](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/api/sqlite-storage-api.mdx)
+* [/durable-objects/api/state/](https://developers.cloudflare.com/durable-objects/api/state/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/api/state.mdx)
 * [/durable-objects/best-practices/websockets/](https://developers.cloudflare.com/durable-objects/best-practices/websockets/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/best-practices/websockets.mdx)
 * [/durable-objects/reference/durable-objects-migrations/](https://developers.cloudflare.com/durable-objects/reference/durable-objects-migrations/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/reference/durable-objects-migrations.mdx)
 * [/dynamic-workers/api-reference/](https://developers.cloudflare.com/dynamic-workers/api-reference/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/dynamic-workers/api-reference.mdx)

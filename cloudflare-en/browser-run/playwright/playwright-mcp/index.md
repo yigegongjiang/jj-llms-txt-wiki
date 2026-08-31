@@ -72,7 +72,7 @@ Your Worker configuration must include the `nodejs_compat` compatibility flag an
 	"name": "playwright-mcp-example",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"browser": {
 		"binding": "BROWSER",
@@ -99,7 +99,7 @@ Your Worker configuration must include the `nodejs_compat` compatibility flag an
 name = "playwright-mcp-example"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [browser]

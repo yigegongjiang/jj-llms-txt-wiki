@@ -18,6 +18,10 @@ Feature flags evaluated at the edge for Cloudflare Workers
 
 - [Concepts](https://developers.cloudflare.com/flagship/concepts/index.md): Understand Flagship core concepts including apps, flags, variants, targeting rules, evaluation context, and flag propagation.
 
+## API tokens
+
+- [API tokens](https://developers.cloudflare.com/flagship/api-tokens/index.md): Create account-wide or app-scoped API tokens for Flagship. App-scoped tokens can access only the Flagship apps you select.
+
 ## Configuration
 
 - [Configuration](https://developers.cloudflare.com/flagship/configuration/index.md): Add and configure a Flagship binding in your Wrangler configuration file to evaluate feature flags in a Worker.

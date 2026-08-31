@@ -259,7 +259,7 @@ Add a `vars` table at the end of your Wrangler file:
 	"name": "workers-airtable-form",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"vars": {
 		"AIRTABLE_BASE_ID": "exampleBaseId",
 		"AIRTABLE_TABLE_NAME": "Form Submissions"
@@ -272,7 +272,7 @@ Add a `vars` table at the end of your Wrangler file:
 name = "workers-airtable-form"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [vars]
 AIRTABLE_BASE_ID = "exampleBaseId"

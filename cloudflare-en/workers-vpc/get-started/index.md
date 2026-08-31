@@ -160,7 +160,7 @@ Add the VPC Service binding to your Wrangler configuration file:
 	"name": "workers-vpc-app",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"vpc_services": [
 		{
 			"binding": "VPC_SERVICE",
@@ -175,7 +175,7 @@ Add the VPC Service binding to your Wrangler configuration file:
 name = "workers-vpc-app"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[vpc_services]]
 binding = "VPC_SERVICE"

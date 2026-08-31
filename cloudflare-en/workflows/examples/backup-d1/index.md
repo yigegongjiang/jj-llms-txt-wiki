@@ -127,7 +127,7 @@ Here is a [Wrangler configuration file](https://developers.cloudflare.com/worker
 	"name": "backup-d1",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
@@ -157,7 +157,7 @@ Here is a [Wrangler configuration file](https://developers.cloudflare.com/worker
 name = "backup-d1"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [vars]

@@ -385,6 +385,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [How Python Workers Work](https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/index.md): Learn how Python Workers run via Pyodide in V8 isolates and how local development works.
 - [Packages](https://developers.cloudflare.com/workers/languages/python/packages/index.md): Manage and use Python packages in Cloudflare Workers with Pywrangler.
 - [FastAPI](https://developers.cloudflare.com/workers/languages/python/packages/fastapi/index.md): Build Python Workers APIs using FastAPI with the built-in ASGI server.
+- [Flask](https://developers.cloudflare.com/workers/languages/python/packages/flask/index.md): Run Flask applications in Python Workers.
 - [Langchain](https://developers.cloudflare.com/workers/languages/python/packages/langchain/index.md): Use LangChain Python packages to build AI applications on Cloudflare Workers.
 - [Standard Library](https://developers.cloudflare.com/workers/languages/python/stdlib/index.md): Python standard library availability and limitations in Cloudflare Workers.
 - [Rust](https://developers.cloudflare.com/workers/languages/rust/index.md): Write Workers in 100% Rust using the [`workers-rs` crate](https://github.com/cloudflare/workers-rs)
@@ -420,6 +421,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Agents SDK](https://developers.cloudflare.com/agents/index.md): Build AI agents on Cloudflare Workers using the Agents SDK.
 - [LangChain](https://developers.cloudflare.com/workers/languages/python/packages/langchain/index.md): Build AI-powered applications on Cloudflare Workers using LangChain.
 - [FastAPI](https://developers.cloudflare.com/workers/languages/python/packages/fastapi/index.md): Deploy FastAPI applications on Cloudflare Workers with Python support.
+- [Flask](https://developers.cloudflare.com/workers/languages/python/packages/flask/index.md): Deploy Flask applications on Cloudflare Workers with Python support.
 - [Hono](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/hono/index.md): Build lightweight web APIs on Cloudflare Workers using the Hono framework.
 - [Deploy an existing project](https://developers.cloudflare.com/workers/framework-guides/automatic-configuration/index.md): Learn how Wrangler automatically detects and configures your project for Cloudflare Workers.
 - [Astro](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/index.md): Create an Astro application and deploy it to Cloudflare Workers with Workers Assets.

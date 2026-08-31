@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/steps/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Steps` component is used `688` times on `329` pages.
+The `Steps` component is used `690` times on `331` pages.
 
 See all examples of pages that use Steps
 
-Used **688** times.
+Used **690** times.
 
 **Pages**
 
@@ -130,8 +130,8 @@ Used **688** times.
 * [/cloudflare-one/data-loss-prevention/test-scan/](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/test-scan/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/data-loss-prevention/test-scan/index.mdx)
 * [/cloudflare-one/networks/connectors/granular-permissions/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/granular-permissions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/granular-permissions.mdx)
 * [/cloudflare-wan/configuration/appliance/configure-virtual-appliance/](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/configure-virtual-appliance/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/configuration/appliance/configure-virtual-appliance.mdx)
-* [/containers/deploy/](https://developers.cloudflare.com/containers/deploy/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/deploy.mdx)
-* [/containers/platform-details/image-management/](https://developers.cloudflare.com/containers/platform-details/image-management/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform-details/image-management.mdx)
+* [/containers/guides/deploy/](https://developers.cloudflare.com/containers/guides/deploy/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/guides/deploy.mdx)
+* [/containers/guides/image-management/](https://developers.cloudflare.com/containers/guides/image-management/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/guides/image-management.mdx)
 * [/d1/get-started/](https://developers.cloudflare.com/d1/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/get-started.mdx)
 * [/d1/tutorials/build-a-comments-api/](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/tutorials/build-a-comments-api.mdx)
 * [/d1/tutorials/build-an-api-to-access-d1/](https://developers.cloudflare.com/d1/tutorials/build-an-api-to-access-d1/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/tutorials/build-an-api-to-access-d1.mdx)
@@ -302,6 +302,8 @@ Used **688** times.
 * [/workers/framework-guides/web-apps/redwoodsdk/](https://developers.cloudflare.com/workers/framework-guides/web-apps/redwoodsdk/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/framework-guides/web-apps/redwoodsdk.mdx)
 * [/workers/framework-guides/web-apps/tanstack-start/](https://developers.cloudflare.com/workers/framework-guides/web-apps/tanstack-start/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/framework-guides/web-apps/tanstack-start.mdx)
 * [/workers/framework-guides/web-apps/vike/](https://developers.cloudflare.com/workers/framework-guides/web-apps/vike/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/framework-guides/web-apps/vike.mdx)
+* [/workers/languages/python/packages/fastapi/](https://developers.cloudflare.com/workers/languages/python/packages/fastapi/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/languages/python/packages/fastapi.mdx)
+* [/workers/languages/python/packages/flask/](https://developers.cloudflare.com/workers/languages/python/packages/flask/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/languages/python/packages/flask.mdx)
 * [/workers/local-development/environment-variables/](https://developers.cloudflare.com/workers/local-development/environment-variables/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/local-development/environment-variables.mdx)
 * [/workers/local-development/](https://developers.cloudflare.com/workers/local-development/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/local-development/index.mdx)
 * [/workers/local-development/local-explorer/](https://developers.cloudflare.com/workers/local-development/local-explorer/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/workers/local-development/local-explorer.mdx)

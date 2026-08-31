@@ -145,7 +145,7 @@ export default defineConfig({
 	"$schema": "node_modules/wrangler/config-schema.json",  
 	"name": "<YOUR_PROJECT_NAME>",  
 	// Set this to today's date  
-	"compatibility_date": "2026-08-25",  
+	"compatibility_date": "2026-08-28",  
 	"compatibility_flags": ["nodejs_compat"],  
 	"main": "@tanstack/react-start/server-entry",  
 	"observability": {  
@@ -157,7 +157,7 @@ export default defineConfig({
 "$schema" = "node_modules/wrangler/config-schema.json"  
 name = "<YOUR_PROJECT_NAME>"  
 # Set this to today's date  
-compatibility_date = "2026-08-25"  
+compatibility_date = "2026-08-28"  
 compatibility_flags = [ "nodejs_compat" ]  
 main = "@tanstack/react-start/server-entry"  
 [observability]  

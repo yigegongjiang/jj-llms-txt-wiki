@@ -75,7 +75,7 @@ Add an AI Search namespace binding to your Wrangler configuration:
   "name": "ai-search-citations",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-08-25",
+  "compatibility_date": "2026-08-28",
   "ai_search_namespaces": [
     {
       "binding": "AI_SEARCH",
@@ -89,7 +89,7 @@ Add an AI Search namespace binding to your Wrangler configuration:
 name = "ai-search-citations"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[ai_search_namespaces]]
 binding = "AI_SEARCH"

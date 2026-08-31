@@ -171,7 +171,7 @@ export class MyAgent extends Agent {
 	"name": "my-app",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"durable_objects": {
 		"bindings": [{ "name": "MY_AGENT", "class_name": "MyAgent" }],
 	},
@@ -190,7 +190,7 @@ export class MyAgent extends Agent {
 name = "my-app"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[durable_objects.bindings]]
 name = "MY_AGENT"

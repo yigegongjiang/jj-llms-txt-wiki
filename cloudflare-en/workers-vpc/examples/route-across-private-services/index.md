@@ -52,7 +52,7 @@ Update your Wrangler configuration file:
 	"name": "api-gateway",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"vpc_services": [
 		{
 			"binding": "USER_SERVICE",
@@ -71,7 +71,7 @@ Update your Wrangler configuration file:
 name = "api-gateway"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[vpc_services]]
 binding = "USER_SERVICE"

@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/details/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Details` component is used `985` times on `341` pages.
+The `Details` component is used `984` times on `339` pages.
 
 See all examples of pages that use Details
 
-Used **985** times.
+Used **984** times.
 
 **Pages**
 
@@ -73,7 +73,6 @@ Used **985** times.
 * [/cloudflare-one/access-controls/applications/non-http/infrastructure-apps/](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/infrastructure-apps/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/applications/non-http/infrastructure-apps.mdx)
 * [/cloudflare-one/access-controls/policies/common-policies/](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/common-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/policies/common-policies.mdx)
 * [/cloudflare-one/access-controls/policies/mfa-requirements/](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/mfa-requirements/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/access-controls/policies/mfa-requirements.mdx)
-* [/cloudflare-one/cloud-and-saas-findings/manage-findings/](https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/manage-findings/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/cloud-and-saas-findings/manage-findings.mdx)
 * [/cloudflare-one/cloud-and-saas-findings/policies/](https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/cloud-and-saas-findings/policies.mdx)
 * [/cloudflare-one/email-security/settings/detection-settings/allow-policies/](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/allow-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/email-security/settings/detection-settings/allow-policies.mdx)
 * [/cloudflare-one/insights/dex/diagnostics/speed-test/](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/insights/dex/diagnostics/speed-test.mdx)
@@ -81,7 +80,6 @@ Used **985** times.
 * [/cloudflare-one/insights/dex/tests/http/](https://developers.cloudflare.com/cloudflare-one/insights/dex/tests/http/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/insights/dex/tests/http.mdx)
 * [/cloudflare-one/insights/dex/tests/traceroute/](https://developers.cloudflare.com/cloudflare-one/insights/dex/tests/traceroute/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/insights/dex/tests/traceroute.mdx)
 * [/cloudflare-one/insights/network-visibility/diagnostics/packet-captures/](https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/diagnostics/packet-captures/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/insights/network-visibility/diagnostics/packet-captures.mdx)
-* [/cloudflare-one/integrations/cloud-and-saas/findings/](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/findings/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/integrations/cloud-and-saas/findings/index.mdx)
 * [/cloudflare-one/networks/connectors/cloudflare-mesh/containers/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/containers/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-mesh/containers.mdx)
 * [/cloudflare-one/networks/connectors/cloudflare-mesh/get-started/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-mesh/get-started.mdx)
 * [/cloudflare-one/networks/connectors/cloudflare-mesh/high-availability/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/high-availability/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-mesh/high-availability.mdx)

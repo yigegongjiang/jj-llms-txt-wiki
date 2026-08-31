@@ -10,17 +10,33 @@ Enhance your Workers with serverless containers
 
 - [Containers](https://developers.cloudflare.com/containers/index.md): Run serverless containers alongside Workers to handle resource-intensive workloads, custom runtimes, and existing container images on Cloudflare.
 
-## Getting started
+## Get started
 
-- [Getting started](https://developers.cloudflare.com/containers/get-started/index.md): Deploy your first Container on Cloudflare by building an image, configuring a Worker, and routing requests to container instances.
+- [Get started](https://developers.cloudflare.com/containers/get-started/index.md): Deploy your first Container on Cloudflare by building an image, configuring a Worker, and routing requests to container instances.
 
-## Container Interface
+## Concepts
 
-- [Container Interface](https://developers.cloudflare.com/containers/container-class/index.md): API reference for the Container interface and utility functions
+- [Concepts](https://developers.cloudflare.com/containers/concepts/index.md): Understand the key ideas behind Containers, including their lifecycle and placement.
+- [Lifecycle of a Container](https://developers.cloudflare.com/containers/concepts/architecture/index.md): Understand how a Container is deployed, started, routed, and shut down across Cloudflare's network.
+- [Placement](https://developers.cloudflare.com/containers/concepts/placement/index.md): Control where your containers run with regional and jurisdictional constraints.
 
-## Execute commands
+## Guides
 
-- [Execute commands](https://developers.cloudflare.com/containers/execute-commands/index.md): Run additional processes inside an active Container.
+- [Guides](https://developers.cloudflare.com/containers/guides/index.md): Task-focused guides for deploying containers, developing locally, managing images, executing commands, and connecting over SSH.
+- [Deploy Containers](https://developers.cloudflare.com/containers/guides/deploy/index.md): Deploy from your machine or Workers Builds, including how images and container instances update.
+- [Execute commands](https://developers.cloudflare.com/containers/guides/execute-commands/index.md): Run additional processes inside an active Container.
+- [Image Management](https://developers.cloudflare.com/containers/guides/image-management/index.md): Learn how to use Cloudflare Registry, Docker Hub, and Amazon ECR images with Containers.
+- [Local Development](https://developers.cloudflare.com/containers/guides/local-dev/index.md): Learn how to run Container-enabled Workers locally with `wrangler dev` and `vite dev`.
+- [Handle outbound traffic](https://developers.cloudflare.com/containers/guides/outbound-traffic/index.md): Intercept and handle outbound HTTP from containers using Workers.
+- [SSH](https://developers.cloudflare.com/containers/guides/ssh/index.md): Connect to running container instances with SSH.
+
+## Configuration
+
+- [Configuration](https://developers.cloudflare.com/containers/configuration/index.md): Configure Containers — connect them to Workers and bindings, set environment variables, tune scaling and routing, and manage rollouts.
+- [Environment Variables](https://developers.cloudflare.com/containers/configuration/environment-variables/index.md): Runtime and user-defined environment variables available inside Container instances.
+- [Rollouts](https://developers.cloudflare.com/containers/configuration/rollouts/index.md): How container instances update after a deploy, including step percentages, grace periods, and rollout modes.
+- [Scaling and Routing](https://developers.cloudflare.com/containers/configuration/scaling-and-routing/index.md): Scale Container instances using explicit IDs or the getRandom helper for stateless load balancing.
+- [Connect to Workers and Bindings](https://developers.cloudflare.com/containers/configuration/workers-connections/index.md): Access KV, R2, Durable Objects, and other bindings from a container.
 
 ## Examples
 
@@ -33,44 +49,20 @@ Enhance your Workers with serverless containers
 - [Status Hooks](https://developers.cloudflare.com/containers/examples/status-hooks/index.md): Execute Workers code in reaction to Container status changes
 - [Websocket to Container](https://developers.cloudflare.com/containers/examples/websocket/index.md): Forwarding a Websocket request to a Container
 
-## Platform Reference
+## Reference
 
-- [Platform Reference](https://developers.cloudflare.com/containers/platform-details/architecture/index.md): Technical reference for the Containers platform, covering architecture, limits, scaling, networking, and image management.
-- [Lifecycle of a Container](https://developers.cloudflare.com/containers/platform-details/architecture/index.md): Understand how a Container is deployed, started, routed, and shut down across Cloudflare's network.
+- [Reference](https://developers.cloudflare.com/containers/reference/index.md): Lookup details for the Containers platform, including the Container class, the Durable Object interface, and Wrangler configuration and commands.
+- [Container Interface](https://developers.cloudflare.com/containers/reference/container-class/index.md): API reference for the Container interface and utility functions
 - [Durable Object Interface](https://developers.cloudflare.com/durable-objects/api/container/index.md): API reference for the low-level Durable Object methods that control Container instances.
-- [Environment Variables](https://developers.cloudflare.com/containers/platform-details/environment-variables/index.md): Runtime and user-defined environment variables available inside Container instances.
-- [Image Management](https://developers.cloudflare.com/containers/platform-details/image-management/index.md): Learn how to use Cloudflare Registry, Docker Hub, and Amazon ECR images with Containers.
-- [Limits and Instance Types](https://developers.cloudflare.com/containers/platform-details/limits/index.md): Available Container instance types and account-level limits for memory, vCPU, disk, and image storage.
-- [Handle outbound traffic](https://developers.cloudflare.com/containers/platform-details/outbound-traffic/index.md): Intercept and handle outbound HTTP from containers using Workers.
-- [Placement](https://developers.cloudflare.com/containers/platform-details/placement/index.md): Control where your containers run with regional and jurisdictional constraints.
-- [Rollouts](https://developers.cloudflare.com/containers/platform-details/rollouts/index.md): How container instances update after a deploy, including step percentages, grace periods, and rollout modes.
-- [Scaling and Routing](https://developers.cloudflare.com/containers/platform-details/scaling-and-routing/index.md): Scale Container instances using explicit IDs or the getRandom helper for stateless load balancing.
-- [Connect to Workers and Bindings](https://developers.cloudflare.com/containers/platform-details/workers-connections/index.md): Access KV, R2, Durable Objects, and other bindings from a container.
-
-## Local Development
-
-- [Local Development](https://developers.cloudflare.com/containers/local-dev/index.md): Learn how to run Container-enabled Workers locally with `wrangler dev` and `vite dev`.
-
-## Deploy Containers
-
-- [Deploy Containers](https://developers.cloudflare.com/containers/deploy/index.md): Deploy from your machine or Workers Builds, including how images and container instances update.
-
-## Wrangler Configuration
-
+- [Wrangler Commands](https://developers.cloudflare.com/workers/wrangler/commands/containers/index.md): Wrangler CLI commands for developing, building, pushing, and deploying Containers.
 - [Wrangler Configuration](https://developers.cloudflare.com/workers/wrangler/configuration/index.md#containers): Wrangler configuration options for defining Containers, including image source, instance types, and rollout settings.
 
-## Wrangler Commands
+## Platform
 
-- [Wrangler Commands](https://developers.cloudflare.com/workers/wrangler/commands/containers/index.md): Wrangler CLI commands for developing, building, pushing, and deploying Containers.
+- [Platform](https://developers.cloudflare.com/containers/platform/index.md): Product-wide information for Containers, including pricing and limits.
+- [Limits and Instance Types](https://developers.cloudflare.com/containers/platform/limits/index.md): Available Container instance types and account-level limits for memory, vCPU, disk, and image storage.
+- [Pricing](https://developers.cloudflare.com/containers/platform/pricing/index.md): Billing rates for Containers vCPU, memory, disk, and network egress, including included usage on the Workers Paid plan.
 
 ## Frequently Asked Questions
 
 - [Frequently Asked Questions](https://developers.cloudflare.com/containers/faq/index.md): Answers to common questions about Containers, including logging, scaling, cold starts, disk persistence, and rollouts.
-
-## SSH
-
-- [SSH](https://developers.cloudflare.com/containers/ssh/index.md): Connect to running container instances with SSH.
-
-## Pricing
-
-- [Pricing](https://developers.cloudflare.com/containers/pricing/index.md): Billing rates for Containers vCPU, memory, disk, and network egress, including included usage on the Workers Paid plan.

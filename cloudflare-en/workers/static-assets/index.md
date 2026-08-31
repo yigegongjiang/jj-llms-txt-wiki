@@ -56,7 +56,7 @@ The **assets directory** specified in your [Wrangler configuration file](https:/
   "name": "my-spa",
   "main": "src/index.js",
   // Set this to today's date
-  "compatibility_date": "2026-08-25",
+  "compatibility_date": "2026-08-28",
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS"
@@ -69,7 +69,7 @@ The **assets directory** specified in your [Wrangler configuration file](https:/
 name = "my-spa"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [assets]
 directory = "./dist"
@@ -146,7 +146,7 @@ If you want the Worker code to execute before serving assets, you can use the `r
 {
 	"name": "my-spa-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"main": "./src/index.ts",
 	"assets": {
 		"directory": "./dist/",
@@ -160,7 +160,7 @@ If you want the Worker code to execute before serving assets, you can use the `r
 ```toml
 name = "my-spa-worker"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 main = "./src/index.ts"
 
 [assets]

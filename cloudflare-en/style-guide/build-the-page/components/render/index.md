@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/render/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `Render` component is used `3781` times on `1736` pages.
+The `Render` component is used `3789` times on `1738` pages.
 
 See all examples of pages that use Render
 
-Used **3781** times.
+Used **3789** times.
 
 **Pages**
 
@@ -514,6 +514,7 @@ Used **3781** times.
 * [/cloudflare-one/team-and-resources/devices/user-side-certificates/custom-certificate/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/user-side-certificates/custom-certificate/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/devices/user-side-certificates/custom-certificate.mdx)
 * [/cloudflare-one/team-and-resources/devices/user-side-certificates/manual-deployment/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/user-side-certificates/manual-deployment/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/devices/user-side-certificates/manual-deployment.mdx)
 * [/cloudflare-one/team-and-resources/users/risk-score/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/risk-score/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/users/risk-score.mdx)
+* [/cloudflare-one/team-and-resources/users/scim/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/scim/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/users/scim.mdx)
 * [/cloudflare-one/team-and-resources/users/seat-management/](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/team-and-resources/users/seat-management.mdx)
 * [/cloudflare-one/traffic-policies/dns-policies/common-policies/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/common-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/dns-policies/common-policies.mdx)
 * [/cloudflare-one/traffic-policies/dns-policies/](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/traffic-policies/dns-policies/index.mdx)
@@ -565,9 +566,9 @@ Used **3781** times.
 * [/cloudflare-wan/load-balancing/](https://developers.cloudflare.com/cloudflare-wan/load-balancing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/load-balancing.mdx)
 * [/cloudflare-wan/zero-trust/](https://developers.cloudflare.com/cloudflare-wan/zero-trust/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/zero-trust/index.mdx)
 * [/containers/faq/](https://developers.cloudflare.com/containers/faq/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/faq.mdx)
-* [/containers/get-started/](https://developers.cloudflare.com/containers/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/get-started.mdx)
-* [/containers/platform-details/limits/](https://developers.cloudflare.com/containers/platform-details/limits/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform-details/limits.mdx)
-* [/containers/pricing/](https://developers.cloudflare.com/containers/pricing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/pricing.mdx)
+* [/containers/get-started/](https://developers.cloudflare.com/containers/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/get-started/index.mdx)
+* [/containers/platform/limits/](https://developers.cloudflare.com/containers/platform/limits/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform/limits.mdx)
+* [/containers/platform/pricing/](https://developers.cloudflare.com/containers/platform/pricing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/containers/platform/pricing.mdx)
 * [/d1/get-started/](https://developers.cloudflare.com/d1/get-started/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/get-started.mdx)
 * [/d1/platform/limits/](https://developers.cloudflare.com/d1/platform/limits/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/platform/limits.mdx)
 * [/d1/platform/pricing/](https://developers.cloudflare.com/d1/platform/pricing/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/d1/platform/pricing.mdx)
@@ -741,6 +742,7 @@ Used **3781** times.
 * [/firewall/cf-firewall-rules/](https://developers.cloudflare.com/firewall/cf-firewall-rules/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/firewall/cf-firewall-rules/index.mdx)
 * [/firewall/](https://developers.cloudflare.com/firewall/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/firewall/index.mdx)
 * [/firewall/troubleshooting/required-changes-to-enable-url-normalization/](https://developers.cloudflare.com/firewall/troubleshooting/required-changes-to-enable-url-normalization/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/firewall/troubleshooting/required-changes-to-enable-url-normalization.mdx)
+* [/flagship/api-tokens/](https://developers.cloudflare.com/flagship/api-tokens/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/flagship/api-tokens.mdx)
 * [/fundamentals/account/account-security/manage-active-sessions/](https://developers.cloudflare.com/fundamentals/account/account-security/manage-active-sessions/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/fundamentals/account/account-security/manage-active-sessions.mdx)
 * [/fundamentals/account/account-security/review-audit-logs/](https://developers.cloudflare.com/fundamentals/account/account-security/review-audit-logs/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/fundamentals/account/account-security/review-audit-logs.mdx)
 * [/fundamentals/account/account-security/scim-setup/authentik/](https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/authentik/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/fundamentals/account/account-security/scim-setup/authentik.mdx)

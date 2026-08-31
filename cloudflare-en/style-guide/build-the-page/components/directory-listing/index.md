@@ -14,11 +14,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/directory-listing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The `DirectoryListing` component is used `602` times on `596` pages.
+The `DirectoryListing` component is used `603` times on `597` pages.
 
 See all examples of pages that use DirectoryListing
 
-Used **602** times.
+Used **603** times.
 
 **Pages**
 
@@ -260,6 +260,7 @@ Used **602** times.
 * [/durable-objects/platform/](https://developers.cloudflare.com/durable-objects/platform/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/platform/index.mdx)
 * [/durable-objects/reference/](https://developers.cloudflare.com/durable-objects/reference/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/durable-objects/reference/index.mdx)
 * [/dynamic-workers/examples/](https://developers.cloudflare.com/dynamic-workers/examples/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/dynamic-workers/examples/index.mdx)
+* [/dynamic-workers/platform/](https://developers.cloudflare.com/dynamic-workers/platform/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/dynamic-workers/platform/index.mdx)
 * [/dynamic-workers/usage/](https://developers.cloudflare.com/dynamic-workers/usage/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/dynamic-workers/usage/index.mdx)
 * [/email-security/account-setup/](https://developers.cloudflare.com/email-security/account-setup/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/email-security/account-setup/index.mdx)
 * [/email-security/account-setup/sso/](https://developers.cloudflare.com/email-security/account-setup/sso/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/email-security/account-setup/sso/index.mdx)

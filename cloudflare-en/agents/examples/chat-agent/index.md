@@ -49,7 +49,7 @@ Replace your `wrangler.jsonc` with:
 	"name": "chat-agent",
 	"main": "src/server.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-25",
+	"compatibility_date": "2026-08-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"ai": { "binding": "AI" },
 	"durable_objects": {
@@ -63,7 +63,7 @@ Replace your `wrangler.jsonc` with:
 name = "chat-agent"
 main = "src/server.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [ai]

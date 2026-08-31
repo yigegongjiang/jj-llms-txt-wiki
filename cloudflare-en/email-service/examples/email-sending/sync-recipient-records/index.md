@@ -69,7 +69,7 @@ Bind the KV namespace and register the Worker as the queue consumer:
   "name": "recipient-record-sync",
   "main": "src/index.ts",
   // Set this to today's date
-  "compatibility_date": "2026-08-25",
+  "compatibility_date": "2026-08-28",
   "kv_namespaces": [
     {
       "binding": "RECIPIENTS",
@@ -93,7 +93,7 @@ Bind the KV namespace and register the Worker as the queue consumer:
 name = "recipient-record-sync"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-25"
+compatibility_date = "2026-08-28"
 
 [[kv_namespaces]]
 binding = "RECIPIENTS"
