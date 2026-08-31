@@ -39,13 +39,13 @@ assertEquals(greaterThan(s0, s1), false);
 assertEquals(lessThan(s0, s1), true);
 ```
 
-<h2 id="versions">
-Versions</h2>
+<h2 id="versions" class="anchorable"><a href="#versions" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Versions</h2>
 <p>A "version" is described by the <code>v2.0.0</code> specification found at
 <a href="https://semver.org" rel="nofollow">https://semver.org</a>.</p>
 <p>A leading <code>"="</code> or <code>"v"</code> character is stripped off and ignored.</p>
-<h2 id="format">
-Format</h2>
+<h2 id="format" class="anchorable"><a href="#format" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Format</h2>
 <p>Semantic versions can be formatted as strings, by default they
 are formatted as <code>full</code>. Below is a diagram showing the various
 formatting options.</p>
@@ -66,8 +66,8 @@ primary    │   │
  └─────────────── major
 ```
 
-<h2 id="ranges">
-Ranges</h2>
+<h2 id="ranges" class="anchorable"><a href="#ranges" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Ranges</h2>
 <p>A version <a href="https://github.com/denoland/std/blob/HEAD/@std/semver@1.0.8/doc/~/Range" rel="nofollow"><code>Range</code></a> is a set of <a href="https://github.com/denoland/std/blob/HEAD/@std/semver@1.0.8/doc/~/Comparator" rel="nofollow"><code>Comparator</code></a>s which specify
 versions that satisfy the range.</p>
 <p>A <a href="https://github.com/denoland/std/blob/HEAD/@std/semver@1.0.8/doc/~/Comparator" rel="nofollow"><code>Comparator</code></a> is composed of an <a href="https://github.com/denoland/std/blob/HEAD/@std/semver@1.0.8/doc/~/Operator" rel="nofollow"><code>Operator</code></a> and a
@@ -91,8 +91,8 @@ matches a range if and only if every comparator in at least one of the
 <code>1.2.8</code>, and <code>1.2.99</code>, but not the versions <code>1.2.6</code>, <code>1.3.0</code>, or <code>1.1.0</code>.</p>
 <p>The range <code>1.2.7 || &gt;=1.2.9 &lt;2.0.0</code> would match the versions <code>1.2.7</code>, <code>1.2.9</code>,
 and <code>1.4.6</code>, but not the versions <code>1.2.8</code> or <code>2.0.0</code>.</p>
-<h3 id="prerelease-tags">
-Prerelease Tags</h3>
+<h3 id="prerelease-tags" class="anchorable"><a href="#prerelease-tags" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Prerelease Tags</h3>
 <p>If a version has a prerelease tag (for example, <code>1.2.3-alpha.3</code>) then it will
 only be allowed to satisfy comparator sets if at least one comparator with the
 same <code>[major, minor, patch]</code> tuple also has a prerelease tag.</p>
@@ -111,8 +111,8 @@ indicated the intent to use <em>that specific</em> set of alpha/beta/rc versions
 including a prerelease tag in the range, the user is indicating that they are
 aware of the risk. However, it is still not appropriate to assume that they have
 opted into taking a similar risk on the <em>next</em> set of prerelease versions.</p>
-<h4 id="prerelease-identifiers">
-Prerelease Identifiers</h4>
+<h4 id="prerelease-identifiers" class="anchorable"><a href="#prerelease-identifiers" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Prerelease Identifiers</h4>
 <p>The method <a href="https://github.com/denoland/std/blob/HEAD/@std/semver@1.0.8/doc/~/increment" rel="nofollow"><code>increment</code></a> takes an additional <code>identifier</code> string
 argument that will append the value of the string as a prerelease identifier:</p>
 
@@ -123,19 +123,19 @@ import { assertEquals } from "@std/assert";
 assertEquals(increment(parse("1.2.3"), "prerelease", { prerelease: "alpha" }), parse("1.2.4-alpha.0"));
 ```
 
-<h3 id="build-metadata">
-Build Metadata</h3>
+<h3 id="build-metadata" class="anchorable"><a href="#build-metadata" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Build Metadata</h3>
 <p>Build metadata is <code>.</code> delimited alpha-numeric string.
 When parsing a version it is retained on the <code>build: string[]</code> field
 of the SemVer instance. When incrementing there is an additional parameter that
 can set the build metadata on the SemVer instance.</p>
-<h3 id="advanced-range-syntax">
-Advanced Range Syntax</h3>
+<h3 id="advanced-range-syntax" class="anchorable"><a href="#advanced-range-syntax" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Advanced Range Syntax</h3>
 <p>Advanced range syntax desugars to primitive comparators in deterministic ways.</p>
 <p>Advanced ranges may be combined in the same way as primitive comparators using
 white space or <code>||</code>.</p>
-<h4 id="hyphen-ranges-x.y.z---a.b.c">
-Hyphen Ranges <code>X.Y.Z - A.B.C</code></h4>
+<h4 id="hyphen-ranges-x.y.z---a.b.c" class="anchorable"><a href="#hyphen-ranges-x.y.z---a.b.c" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Hyphen Ranges <code>X.Y.Z - A.B.C</code></h4>
 <p>Specifies an inclusive set.</p>
 <ul>
 <li><code>1.2.3 - 2.3.4</code> := <code>&gt;=1.2.3 &lt;=2.3.4</code></li>
@@ -152,8 +152,8 @@ but nothing that would be greater than the provided tuple parts.</p>
 <li><code>1.2.3 - 2.3</code> := <code>&gt;=1.2.3 &lt;2.4.0</code></li>
 <li><code>1.2.3 - 2</code> := <code>&gt;=1.2.3 &lt;3.0.0</code></li>
 </ul>
-<h4 id="x-ranges-1.2.x-1.x-1.2.*-*">
-X-Ranges <code>1.2.x</code> <code>1.X</code> <code>1.2.*</code> <code>*</code></h4>
+<h4 id="x-ranges-1.2.x-1.x-1.2.*-*" class="anchorable"><a href="#x-ranges-1.2.x-1.x-1.2.*-*" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>X-Ranges <code>1.2.x</code> <code>1.X</code> <code>1.2.*</code> <code>*</code></h4>
 <p>Any of <code>X</code>, <code>x</code>, or <code>*</code> may be used to "stand in" for one of the numeric values
 in the <code>[major, minor, patch]</code> tuple.</p>
 <ul>
@@ -168,8 +168,8 @@ fact optional.</p>
 <li><code>1</code> := <code>1.x.x</code> := <code>&gt;=1.0.0 &lt;2.0.0</code></li>
 <li><code>1.2</code> := <code>1.2.x</code> := <code>&gt;=1.2.0 &lt;1.3.0</code></li>
 </ul>
-<h4 id="tilde-ranges-1.2.3-1.2-1">
-Tilde Ranges <code>~1.2.3</code> <code>~1.2</code> <code>~1</code></h4>
+<h4 id="tilde-ranges-1.2.3-1.2-1" class="anchorable"><a href="#tilde-ranges-1.2.3-1.2-1" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Tilde Ranges <code>~1.2.3</code> <code>~1.2</code> <code>~1</code></h4>
 <p>Allows patch-level changes if a minor version is specified on the comparator.
 Allows minor-level changes if not.</p>
 <ul>
@@ -184,8 +184,8 @@ Allows minor-level changes if not.</p>
 <code>beta.2</code>. So, <code>1.2.3-beta.4</code> would be allowed, but <code>1.2.4-beta.2</code> would not,
 because it is a prerelease of a different <code>[major, minor, patch]</code> tuple.</li>
 </ul>
-<h4 id="caret-ranges-^1.2.3-^0.2.5-^0.0.4">
-Caret Ranges <code>^1.2.3</code> <code>^0.2.5</code> <code>^0.0.4</code></h4>
+<h4 id="caret-ranges-^1.2.3-^0.2.5-^0.0.4" class="anchorable"><a href="#caret-ranges-^1.2.3-^0.2.5-^0.0.4" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Caret Ranges <code>^1.2.3</code> <code>^0.2.5</code> <code>^0.0.4</code></h4>
 <p>Allows changes that do not modify the left-most non-zero element in the
 <code>[major, minor, patch]</code> tuple. In other words, this allows patch and minor
 updates for versions <code>1.0.0</code> and above, patch updates for versions
@@ -223,8 +223,8 @@ flexibility within those values, even if the major version is zero.</p>
 <li><code>^1.x</code> := <code>&gt;=1.0.0 &lt;2.0.0</code></li>
 <li><code>^0.x</code> := <code>&gt;=0.0.0 &lt;1.0.0</code></li>
 </ul>
-<h3 id="range-grammar">
-Range Grammar</h3>
+<h3 id="range-grammar" class="anchorable"><a href="#range-grammar" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Range Grammar</h3>
 <p>Putting all this together, here is a Backus-Naur grammar for ranges, for the
 benefit of parser authors:</p>
 

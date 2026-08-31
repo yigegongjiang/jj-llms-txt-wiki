@@ -21,8 +21,8 @@ import { red } from "@std/fmt/colors";
 console.log(red(format(1337))); // Prints "1.34 kB"
 ```
 
-<h1 id="runtime-compatibility">
-Runtime compatibility</h1>
+<h1 id="runtime-compatibility" class="anchorable"><a href="#runtime-compatibility" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Runtime compatibility</h1>
 <p><a href="https://jsr.io/@std/fmt/doc/bytes/~" rel="nofollow">bytes</a>,
 <a href="https://jsr.io/@std/fmt/doc/colors/~" rel="nofollow">colors</a>, and
 <a href="https://jsr.io/@std/fmt/doc/duration/~" rel="nofollow">duration</a> supports all major runtimes.

@@ -8,8 +8,8 @@
 
 <p>Provides user-friendly <code>serve</code> on top of Deno's native HTTP server
 and other utilities for creating HTTP servers and clients.</p>
-<h2 id="file-server">
-File Server</h2>
+<h2 id="file-server" class="anchorable"><a href="#file-server" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>File Server</h2>
 <p>A small program for serving local files over HTTP.</p>
 
 ```js
@@ -21,18 +21,18 @@ Listening on:
 <p>When the <code>--allow-sys=networkInterfaces</code> permission is provided, the file
 server will also display the local area network addresses that can be used to
 access the server.</p>
-<h2 id="http-status-code-and-status-text">
-HTTP Status Code and Status Text</h2>
+<h2 id="http-status-code-and-status-text" class="anchorable"><a href="#http-status-code-and-status-text" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>HTTP Status Code and Status Text</h2>
 <p>Helper for processing status code and status text.</p>
-<h2 id="http-errors">
-HTTP errors</h2>
+<h2 id="http-errors" class="anchorable"><a href="#http-errors" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>HTTP errors</h2>
 <p>Provides error classes for each HTTP error status code as well as utility
 functions for handling HTTP errors in a structured way.</p>
-<h2 id="methods">
-Methods</h2>
+<h2 id="methods" class="anchorable"><a href="#methods" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Methods</h2>
 <p>Provides helper functions and types to work with HTTP method strings safely.</p>
-<h2 id="negotiation">
-Negotiation</h2>
+<h2 id="negotiation" class="anchorable"><a href="#negotiation" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Negotiation</h2>
 <p>A set of functions which can be used to negotiate content types, encodings and
 languages when responding to requests.</p>
 <blockquote>
@@ -41,8 +41,8 @@ languages when responding to requests.</p>
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Charset" rel="nofollow">clients omit and servers should ignore</a>
 therefore is not provided.</p>
 </blockquote>
-<h2 id="user-agent-handling">
-User agent handling</h2>
+<h2 id="user-agent-handling" class="anchorable"><a href="#user-agent-handling" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>User agent handling</h2>
 <p>The <a href="https://github.com/denoland/std/blob/HEAD/@std/http@1.1.3/doc/~/UserAgent" rel="nofollow"><code>UserAgent</code></a> class provides user agent string parsing, allowing
 a user agent flag to be semantically understood.</p>
 <p>For example to integrate the user agent provided in the header <code>User-Agent</code>
@@ -58,8 +58,8 @@ Deno.serve((req) => {
 });
 ```
 
-<h3 id="routing">
-Routing</h3>
+<h3 id="routing" class="anchorable"><a href="#routing" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Routing</h3>
 <p><code>route</code> provides an easy way to route requests to different
 handlers based on the request path and method.</p>
 

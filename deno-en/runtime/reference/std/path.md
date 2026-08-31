@@ -12,8 +12,8 @@ of the current OS, either <code>windows</code> for Microsoft Windows, or <code>p
 every other operating system, eg. Linux, MacOS, BSD etc.</p>
 <p>To use functions for a specific path style regardless of the current OS
 import the modules from the platform sub directory instead.</p>
-<h2 id="basic-path-operations">
-Basic Path Operations</h2>
+<h2 id="basic-path-operations" class="anchorable"><a href="#basic-path-operations" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Basic Path Operations</h2>
 
 ```js
 import * as path from "@std/path";
@@ -65,8 +65,8 @@ if (Deno.build.os === "windows") {
 }
 ```
 
-<h2 id="path-parsing-and-formatting">
-Path Parsing and Formatting</h2>
+<h2 id="path-parsing-and-formatting" class="anchorable"><a href="#path-parsing-and-formatting" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Path Parsing and Formatting</h2>
 
 ```js
 import * as path from "@std/path";
@@ -101,8 +101,8 @@ if (Deno.build.os === "windows") {
 }
 ```
 
-<h2 id="url-conversion">
-URL Conversion</h2>
+<h2 id="url-conversion" class="anchorable"><a href="#url-conversion" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>URL Conversion</h2>
 
 ```js
 import * as path from "@std/path";
@@ -118,8 +118,8 @@ if (Deno.build.os === "windows") {
 }
 ```
 
-<h2 id="path-properties">
-Path Properties</h2>
+<h2 id="path-properties" class="anchorable"><a href="#path-properties" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Path Properties</h2>
 
 ```js
 import * as path from "@std/path";
@@ -147,8 +147,8 @@ if (Deno.build.os === "windows") {
 }
 ```
 
-<h2 id="glob-pattern-utilities">
-Glob Pattern Utilities</h2>
+<h2 id="glob-pattern-utilities" class="anchorable"><a href="#glob-pattern-utilities" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Glob Pattern Utilities</h2>
 
 ```js
 import * as path from "@std/path";

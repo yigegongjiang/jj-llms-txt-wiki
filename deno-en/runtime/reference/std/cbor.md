@@ -17,8 +17,8 @@ wide range of data types, including integers, strings, arrays, and maps, in a
 space-efficient manner.
 <a href="https://datatracker.ietf.org/doc/html/rfc8949" rel="nofollow">RFC 8949 - Concise Binary Object Representation (CBOR)</a>
 spec.</p>
-<h3 id="limitations">
-Limitations</h3>
+<h3 id="limitations" class="anchorable"><a href="#limitations" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Limitations</h3>
 <ul>
 <li>This implementation only supports the encoding and decoding of
 "Text String" keys.</li>

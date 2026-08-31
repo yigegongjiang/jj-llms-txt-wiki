@@ -10,10 +10,10 @@
 <a href="https://daily-dev-tips.com/posts/what-exactly-is-frontmatter/" rel="nofollow">front matter</a>
 from strings. Adapted from
 <a href="https://github.com/jxson/front-matter/blob/36f139ef797bd9e5196a9ede03ef481d7fbca18e/index.js" rel="nofollow">jxson/front-matter</a>.</p>
-<h2 id="supported-formats">
-Supported formats</h2>
-<h3 id="json">
-JSON</h3>
+<h2 id="supported-formats" class="anchorable"><a href="#supported-formats" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Supported formats</h2>
+<h3 id="json" class="anchorable"><a href="#json" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>JSON</h3>
 
 ```js
 import { test, extractJson } from "@std/front-matter";
@@ -46,8 +46,8 @@ delimiters.</p>
 }
 ```
 
-<h3 id="toml">
-TOML</h3>
+<h3 id="toml" class="anchorable"><a href="#toml" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>TOML</h3>
 
 ```js
 import { test, extractToml } from "@std/front-matter";
@@ -86,8 +86,8 @@ not = 'cool?'
 +++
 ```
 
-<h3 id="yaml">
-YAML</h3>
+<h3 id="yaml" class="anchorable"><a href="#yaml" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>YAML</h3>
 
 ```js
 import { test, extractYaml } from "@std/front-matter";

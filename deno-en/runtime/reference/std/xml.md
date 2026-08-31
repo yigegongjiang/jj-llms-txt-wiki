@@ -11,8 +11,8 @@
 <a href="https://www.w3.org/TR/xml/" rel="nofollow">XML 1.0 (Fifth Edition)</a>, with opt-in
 support for <a href="https://www.w3.org/TR/xml11/" rel="nofollow">XML 1.1 (Second Edition)</a>
 via the <code>xmlVersion</code> parsing option.</p>
-<h2 id="parsing-apis">
-Parsing APIs</h2>
+<h2 id="parsing-apis" class="anchorable"><a href="#parsing-apis" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Parsing APIs</h2>
 <p>Three parsing APIs are provided for different use cases:</p>
 <table>
 <thead>
@@ -40,10 +40,10 @@ Parsing APIs</h2>
 </tr>
 </tbody>
 </table>
-<h2 id="quick-examples">
-Quick Examples</h2>
-<h3 id="dom-style-parsing">
-DOM-style parsing</h3>
+<h2 id="quick-examples" class="anchorable"><a href="#quick-examples" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Quick Examples</h2>
+<h3 id="dom-style-parsing" class="anchorable"><a href="#dom-style-parsing" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>DOM-style parsing</h3>
 
 ```js
 import { parse } from "@std/xml";
@@ -53,8 +53,8 @@ const doc = parse("<root><item>Hello</item></root>");
 assertEquals(doc.root.name.local, "root");
 ```
 
-<h3 id="high-performance-streaming-with-callbacks">
-High-performance streaming with callbacks</h3>
+<h3 id="high-performance-streaming-with-callbacks" class="anchorable"><a href="#high-performance-streaming-with-callbacks" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>High-performance streaming with callbacks</h3>
 <p>For maximum throughput when processing large files:</p>
 
 ```js
@@ -72,8 +72,8 @@ await parseXmlStream(textStream, {
 console.log(`Found ${itemCount} items`);
 ```
 
-<h3 id="streaming-with-byte-streams">
-Streaming with byte streams</h3>
+<h3 id="streaming-with-byte-streams" class="anchorable"><a href="#streaming-with-byte-streams" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Streaming with byte streams</h3>
 <p>For convenience with fetch responses:</p>
 
 ```js
@@ -88,8 +88,8 @@ await parseXmlStreamFromBytes(response.body!, {
 });
 ```
 
-<h3 id="xml-1.1-mode">
-XML 1.1 mode</h3>
+<h3 id="xml-1.1-mode" class="anchorable"><a href="#xml-1.1-mode" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>XML 1.1 mode</h3>
 <p>Pass <code>xmlVersion: "1.1"</code> to opt in to XML 1.1 parsing rules. The option is
 independent of the document's <code>&lt;?xml version="..."?&gt;</code> declaration.</p>
 
@@ -104,15 +104,15 @@ assertEquals(doc.root.name.local, "root");
 assertThrows(() => parse(xml));
 ```
 
-<h2 id="doctype-handling">
-DOCTYPE handling</h2>
+<h2 id="doctype-handling" class="anchorable"><a href="#doctype-handling" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>DOCTYPE handling</h2>
 <p><code>&lt;!DOCTYPE ...&gt;</code> declarations are rejected by default to avoid processing
 hostile DTD content. Pass <code>disallowDoctype: false</code> to tolerate them in
 trusted input (e.g. legacy XHTML or RSS feeds). DTD contents are still
 ignored — only the five predefined entities (<code>lt</code>, <code>gt</code>, <code>amp</code>, <code>apos</code>,
 <code>quot</code>) are ever expanded.</p>
-<h2 id="position-tracking">
-Position Tracking</h2>
+<h2 id="position-tracking" class="anchorable"><a href="#position-tracking" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Position Tracking</h2>
 <p>Both parsers support optional position tracking (line, column, offset) for
 debugging and error reporting:</p>
 <ul>

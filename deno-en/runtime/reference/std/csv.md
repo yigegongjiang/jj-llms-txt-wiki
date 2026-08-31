@@ -7,8 +7,8 @@
 ## Overview
 
 <p>Reads and writes comma-separated values (CSV) files.</p>
-<h2 id="parsing-csv">
-Parsing CSV</h2>
+<h2 id="parsing-csv" class="anchorable"><a href="#parsing-csv" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Parsing CSV</h2>
 
 ```js
 import { parse } from "@std/csv/parse";
@@ -43,8 +43,8 @@ assertEquals(parse(csvWithComments, { comment: "#", skipFirstRow: true }), [
 ]);
 ```
 
-<h2 id="parsing-csv-from-a-stream">
-Parsing CSV from a Stream</h2>
+<h2 id="parsing-csv-from-a-stream" class="anchorable"><a href="#parsing-csv-from-a-stream" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Parsing CSV from a Stream</h2>
 
 ```js
 import { CsvParseStream } from "@std/csv/parse-stream";
@@ -72,8 +72,8 @@ assertEquals(records, [
 // }
 ```
 
-<h2 id="stringifying-data-to-csv">
-Stringifying Data to CSV</h2>
+<h2 id="stringifying-data-to-csv" class="anchorable"><a href="#stringifying-data-to-csv" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Stringifying Data to CSV</h2>
 
 ```js
 import { stringify } from "@std/csv/stringify";
@@ -95,8 +95,8 @@ const customColumns = stringify(objectData, { columns: ["city", "name", "age"] }
 assertEquals(customColumns, "city,name,age\r\nnew york,john,30\r\nlos angeles,mary,25\r\n");
 ```
 
-<h2 id="streaming-stringify-data-to-csv">
-Streaming Stringify Data to CSV</h2>
+<h2 id="streaming-stringify-data-to-csv" class="anchorable"><a href="#streaming-stringify-data-to-csv" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Streaming Stringify Data to CSV</h2>
 
 ```js
 import { CsvStringifyStream } from "@std/csv/stringify-stream";
@@ -125,8 +125,8 @@ const content = await Deno.readTextFile(path);
 assertEquals(content, "id,name\r\n1,one\r\n2,two\r\n3,three\r\n");
 ```
 
-<h2 id="csv-format-information">
-CSV Format Information</h2>
+<h2 id="csv-format-information" class="anchorable"><a href="#csv-format-information" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>CSV Format Information</h2>
 <p>There are many kinds of CSV files; this module supports the format described
 in <a href="https://www.rfc-editor.org/rfc/rfc4180.html" rel="nofollow">RFC 4180</a>.</p>
 <p>A csv file contains zero or more records of one or more fields per record.

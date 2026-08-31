@@ -22,8 +22,8 @@ assertEquals(parse("GREETING=hello world"), { GREETING: "hello world" });
 assertEquals(stringify({ GREETING: "hello world" }), "GREETING='hello world'");
 ```
 
-<h2 id="migrating-from-load()">
-Migrating from <code>load()</code></h2>
+<h2 id="migrating-from-load()" class="anchorable"><a href="#migrating-from-load()" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Migrating from <code>load()</code></h2>
 <p><a href="https://github.com/denoland/std/blob/HEAD/@std/dotenv@0.225.8/doc/~/load" rel="nofollow"><code>load</code></a>, <a href="https://github.com/denoland/std/blob/HEAD/@std/dotenv@0.225.8/doc/~/loadSync" rel="nofollow"><code>loadSync</code></a> and the <code>@std/dotenv/load</code> side-effect
 module are deprecated in favor of the runtime's
 <a href="https://docs.deno.com/runtime/reference/env_variables/" rel="nofollow">--env-file</a>

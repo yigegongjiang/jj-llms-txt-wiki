@@ -7,8 +7,8 @@
 ## Overview
 
 <p>Utilities for encoding and decoding common formats like hex, base64, and varint.</p>
-<h2 id="basic-usage">
-Basic Usage</h2>
+<h2 id="basic-usage" class="anchorable"><a href="#basic-usage" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Basic Usage</h2>
 
 ```js
 import { encodeBase64, decodeBase64 } from "@std/encoding";
@@ -19,8 +19,8 @@ assertEquals(encodeBase64(foobar), "Zm9vYmFy");
 assertEquals(decodeBase64("Zm9vYmFy"), foobar);
 ```
 
-<h2 id="various-encoding-formats">
-Various Encoding Formats</h2>
+<h2 id="various-encoding-formats" class="anchorable"><a href="#various-encoding-formats" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Various Encoding Formats</h2>
 
 ```js
 import {
@@ -52,8 +52,8 @@ assertEquals(new TextDecoder().decode(decodeBase64("SGVsbG8gd29ybGQh")), "Hello 
 assertEquals(new TextDecoder().decode(decodeAscii85("87cURD]j7BEbo80")), "Hello world!");
 ```
 
-<h2 id="url-safe-base64">
-URL-Safe Base64</h2>
+<h2 id="url-safe-base64" class="anchorable"><a href="#url-safe-base64" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>URL-Safe Base64</h2>
 
 ```js
 import { encodeBase64, encodeBase64Url } from "@std/encoding";
@@ -67,8 +67,8 @@ assertEquals(encodeBase64("subjects?"), "c3ViamVjdHM/"); // slash is not URL-saf
 assertEquals(encodeBase64Url("subjects?"), "c3ViamVjdHM_"); // _ is URL-safe
 ```
 
-<h2 id="binary-data-encoding">
-Binary Data Encoding</h2>
+<h2 id="binary-data-encoding" class="anchorable"><a href="#binary-data-encoding" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Binary Data Encoding</h2>
 
 ```js
 import { encodeHex, encodeBase64 } from "@std/encoding";
@@ -80,8 +80,8 @@ assertEquals(encodeHex(binaryData), "deadbeef");
 assertEquals(encodeBase64(binaryData), "3q2+7w==");
 ```
 
-<h2 id="varint-encoding">
-Varint Encoding</h2>
+<h2 id="varint-encoding" class="anchorable"><a href="#varint-encoding" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Varint Encoding</h2>
 <p>Learn more from the <a href="https://protobuf.dev/programming-guides/encoding/#varints" rel="nofollow">protobuf Varint encoding docs</a>.</p>
 
 ```js

@@ -10,8 +10,8 @@
 <a href="https://toml.io" rel="nofollow">TOML</a> encoded data.</p>
 <p>Be sure to read the supported types as not every spec is supported at the
 moment and the handling in TypeScript side is a bit different.</p>
-<h2 id="supported-types-and-handling">
-Supported types and handling</h2>
+<h2 id="supported-types-and-handling" class="anchorable"><a href="#supported-types-and-handling" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Supported types and handling</h2>
 <ul>
 <li> <a href="https://toml.io/en/latest#keys" rel="nofollow">Keys</a></li>
 <li> <a href="https://toml.io/en/latest#string" rel="nofollow">String</a></li>
@@ -29,22 +29,22 @@ Supported types and handling</h2>
 <li> <a href="https://toml.io/en/latest#array-of-tables" rel="nofollow">Array of Tables</a></li>
 </ul>
 <p><em>Supported with warnings see <a href="#Warning" rel="nofollow">Warning</a>.</em></p>
-<h3 id="warning">
-Warning</h3>
-<h4 id="string">
-String</h4>
+<h3 id="warning" class="anchorable"><a href="#warning" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Warning</h3>
+<h4 id="string" class="anchorable"><a href="#string" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>String</h4>
 <p>Due to the spec, there is no flag to detect regex properly in a TOML
 declaration. So the regex is stored as string.</p>
-<h4 id="integer">
-Integer</h4>
+<h4 id="integer" class="anchorable"><a href="#integer" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Integer</h4>
 <p>For <strong>Binary</strong> / <strong>Octal</strong> / <strong>Hexadecimal</strong> numbers, they are stored as string
 to be not interpreted as Decimal.</p>
-<h4 id="local-time">
-Local Time</h4>
+<h4 id="local-time" class="anchorable"><a href="#local-time" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Local Time</h4>
 <p>Because local time does not exist in JavaScript, the local time is stored as a
 string.</p>
-<h4 id="array-of-tables">
-Array of Tables</h4>
+<h4 id="array-of-tables" class="anchorable"><a href="#array-of-tables" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Array of Tables</h4>
 <p>At the moment only simple declarations like below are supported:</p>
 
 ```js

@@ -46,8 +46,8 @@ baz:
 `);
 ```
 
-<h2 id="limitations">
-Limitations</h2>
+<h2 id="limitations" class="anchorable"><a href="#limitations" class="anchor" aria-label="Anchor" tabindex="-1" rel="nofollow">
+</a>Limitations</h2>
 <ul>
 <li><code>binary</code> type is currently not stable.</li>
 </ul>
