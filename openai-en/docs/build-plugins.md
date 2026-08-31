@@ -22,6 +22,9 @@ once to make the same listing discoverable from supported surfaces in both
 products. During development, use a local marketplace to test the package
 before submitting it to the universal directory.
 
+For workspace distribution through GitHub, see
+[Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
 Start with a skill when you are still iterating on one personal workflow.
 Build a plugin when you want to share that workflow, package related skills,
 connect to an external service, or distribute a stable capability to a team.

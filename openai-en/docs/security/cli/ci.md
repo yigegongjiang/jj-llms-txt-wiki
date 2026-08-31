@@ -173,15 +173,20 @@ short retention window appropriate for your repository.
 
 ## Add the GitLab CI/CD pipeline
 
+For a production workflow with protected default-branch scans, opt-in scheduled
+deep scans, separate SARIF policy gating, and optional verified draft merge
+requests, use [Run Codex Security in GitLab
+CI/CD](https://learn.chatgpt.com/docs/security/cli/ci/gitlab).
+
 GitLab can ingest
 [SARIF 2.1.0 reports](https://docs.gitlab.com/ci/yaml/artifacts_reports/#artifactsreportssarif)
 on GitLab Ultimate 19.2 or later. Add a masked and hidden
 `CODEX_SECURITY_API_KEY` CI/CD variable before you run the pipeline.
 
-Add the `security` stage and Codex Security job to the root `.gitlab-ci.yml`.
-Keep any existing stages and jobs in the file. The example scans merge-request
-changes by default. Set `CODEX_SECURITY_FULL_SCAN_DEFAULT_BRANCH` to `"true"`
-to also scan the complete default branch:
+The following minimal example adds a scan-only `security` job to the root
+`.gitlab-ci.yml`. Keep any existing stages and jobs in the file. It scans
+merge-request changes by default. Set `CODEX_SECURITY_FULL_SCAN_DEFAULT_BRANCH`
+to `"true"` to also scan the complete default branch:
 
 ```yaml
 variables:
@@ -218,7 +223,7 @@ codex-security:
         --ignore-scripts \
         --no-audit \
         --no-fund \
-        @openai/codex-security
+        @openai/codex-security@0.1.20
       export CODEX_SECURITY_BIN="$CODEX_SECURITY_CLI_DIR/node_modules/.bin/codex-security"
       test -x "$CODEX_SECURITY_BIN"
       "$CODEX_SECURITY_BIN" --version
@@ -323,6 +328,9 @@ changes before running the job. If you
 [protect `CODEX_SECURITY_API_KEY`](https://docs.gitlab.com/ci/pipelines/merge_request_pipelines/#control-access-to-protected-variables-and-runners),
 GitLab makes it available only for same-project merge requests between
 protected branches and only when the user can access the target branch.
+
+The dedicated GitLab guide expands this minimal job into the production
+workflow linked at the start of this section.
 
 ## Choose a severity policy
 

@@ -2,10 +2,16 @@
 
 > For the complete documentation index, see [llms.txt](https://learn.chatgpt.com/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-ChatGPT Work runs cloud tasks in an isolated environment on OpenAI-managed
-infrastructure. This guide explains what those tasks can access, which controls
-administrators can apply, and how retention and auditing apply to different
-categories of information.
+ChatGPT Work is part of your existing ChatGPT workspace and follows its
+applicable privacy, security, and data-handling policies. For Business,
+Enterprise, and Edu workspaces, existing protections include encryption in
+transit and at rest, and OpenAI doesn't use business data to train its models by
+default.
+
+Work Cloud also introduces hosted task execution and optional tools that can
+access connected systems or take authorized actions. Review the permissions,
+retention settings, and available audit records for the capabilities your
+organization enables.
 
 Capabilities and controls depend on the workspace plan, rollout, configuration,
 and connected integration. For the broader execution model, see the
@@ -81,11 +87,12 @@ plugin can use an app as one of its underlying tools. Making a plugin available
 doesn't automatically enable the underlying app, authorize an account, or
 approve every action the integration can perform.
 
-A task that uses an app or connector can proceed only when:
+A task that uses a connected app, directly or through a plugin, can proceed
+only when:
 
 - The workspace enables the app and any plugin that requires it.
 - The person has the necessary workspace or role access.
-- The connection is authorized for an individual, shared, or agent-owned
+- The connection uses an authorized individual, shared, or agent-owned
   account.
 - The connected account, approved scopes, and available app action settings
   permit the requested information or operation.
@@ -97,10 +104,10 @@ workspace, options can include **Always ask**, **Any changes**, **Important
 actions**, and **Never ask**. With **Any changes**, supported reads can proceed
 without a prompt while changes require confirmation.
 
-When the approval policy allows it, an authorized action, including a write,
-can run without a prompt. This doesn't expand the app's allowed actions,
-workspace access, or the connected account's permissions. ChatGPT can still
-block some high-risk actions.
+An authorized write can run without a prompt when the configured policy allows
+it. This doesn't expand the app's allowed actions, workspace access, or the
+connected account's permissions. ChatGPT can still block some high-risk
+actions.
 
 Confirm the plugin and each underlying app are available in the workspace.
 Review role access, connected-account authorization, and action permissions as
@@ -125,8 +132,8 @@ synced index, that copy follows the rules for its saved location.
 ## Cloud browser and network access
 
 The cloud browser, web search, connected apps, and code or shell networking are
-separate capabilities, and can each be configured. Restricting one doesn't
-automatically disable the others.
+separate capabilities. Restricting one doesn't automatically disable the
+others.
 
 ### Cloud browser
 
@@ -136,6 +143,8 @@ browsing; a cloud task can run without it.
 
 The hosted browser doesn't inherit the user's local browser profile, open tabs,
 existing sign-ins, saved passwords, password manager, or browsing history.
+Where supported, users can sign in separately through a secure hosted sign-in
+flow. This doesn't grant access to their local browser session.
 
 Supported website interactions can include public forms and can combine
 information from an authorized app with a website task. Where available,
@@ -165,9 +174,8 @@ See [Code and shell sandboxing](https://learn.chatgpt.com/docs/sandboxing?surfac
 
 ## Data handling and retention
 
-Business, Enterprise, and Edu workspace data is encrypted in transit and at
-rest. OpenAI doesn't use an organization's business inputs or outputs to train
-or improve its models by default. See
+Work Cloud follows the applicable ChatGPT workspace privacy and security
+protections described above. See
 [Enterprise privacy](https://openai.com/enterprise-privacy/).
 
 Information associated with a cloud task doesn't follow one universal
@@ -229,18 +237,18 @@ Review the controls that apply to each part of a cloud task:
 - **Browser and networking:** Assess cloud browser access and code or shell
   public-network access independently.
 
-Where separate **Work Cloud** and **Work Local** controls are available, enable
-**Work Cloud** and disable **Work Local** for the intended role to permit cloud
-Work without local execution. Where local Work and Codex share a control,
-review the effect on both before disabling local execution. These controls
-don't prevent an authorized person from intentionally uploading a file to a
-cloud task.
+Enable **Work Cloud** only for approved users or groups. Where separate
+**Work Cloud** and **Work Local** controls are available, enable **Work Cloud**
+and disable **Work Local** for the intended role to permit cloud Work without
+local execution. Where local Work and Codex share a control, review the effect
+on both before disabling local execution. These controls don't prevent an
+authorized person from intentionally uploading a file to a cloud task.
 
 For supported role permissions with **Default**, **On**, and **Off** states,
-**Default** inherits the workspace setting, **On** grants access, and an
-explicit **Off** in any applicable ordinary role denies access. Some Work and
-plugin settings use different, two-state controls. Verify each person's
-effective access, especially when more than one role applies. See
+**Default** inherits the workspace setting, **On** grants access, and **Off**
+removes access through that role. If a user has multiple custom roles, another
+role can still grant access. Some Work and plugin settings use different,
+two-state controls. Verify effective access across all assigned roles. See
 [Role-based access control](https://help.openai.com/en/articles/11750701-rbac).
 
 Where available, the **Work Cloud** permission applies across supported web,
@@ -268,14 +276,15 @@ connected-system audit logs, and the retention policies of systems receiving
 exported records. See the
 [OpenAI Compliance Platform](https://help.openai.com/en/articles/9261474-compliance-api-for-chatgpt-enterprise-edu-and-chatgpt-for-teachers).
 
-## Start with a restricted, useful workflow
+## Start with a small pilot
 
-A security team can upload a current vendor advisory, compare it with an
-authorized asset inventory, and review a draft exposure assessment before
-taking action. If cloud browsing or an app connection isn't enabled, the team
-can provide the advisory and an approved inventory extract directly.
+Choose one practical task for a small group. For example, a security team could
+compare an approved vendor advisory with an authorized inventory and review a
+draft exposure assessment before deciding what to do. If cloud browsing or
+connected apps are unavailable, provide the advisory and an approved inventory
+extract directly.
 
-Start with a small group and enable only the access needed for the task. Verify
-connected-account permissions, data retention, human review points, and
-available logs before expanding the rollout. For rollout planning, see the
+Enable only the access the task requires. Confirm connected-account
+permissions, retention settings, available audit records, and where a person
+should review the result before expanding access. For rollout planning, see the
 [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup).

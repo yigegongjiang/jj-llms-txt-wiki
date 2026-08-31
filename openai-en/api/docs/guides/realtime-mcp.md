@@ -85,6 +85,29 @@ event = {
 ws.send(json.dumps(event))
 ```
 
+```ruby
+connection.session.update(
+  type: :realtime,
+  model: "gpt-realtime-2.1",
+  tools: [{
+    type: :function,
+    name: "lookup_order",
+    description: "Look up an order by its order number.",
+    parameters: {
+      type: "object",
+      properties: {
+        order_number: {
+          type: "string",
+          description: "The customer-facing order number."
+        }
+      },
+      required: ["order_number"]
+    }
+  }],
+  tool_choice: :auto
+)
+```
+
 
 When the model calls the function, listen for the function call item, run your application logic, then send the output back:
 
@@ -124,6 +147,15 @@ event = {
 
 ws.send(json.dumps(event))
 ws.send(json.dumps({"type": "response.create"}))
+```
+
+```ruby
+connection.conversation.items.create(
+  type: :function_call_output,
+  call_id: call_id,
+  output: JSON.generate(status: "shipped", delivery_date: "2026-05-09")
+)
+connection.response.create(tool_choice: :none)
 ```
 
 
@@ -191,6 +223,21 @@ event = {
 ws.send(json.dumps(event))
 ```
 
+```ruby
+connection.session.update(
+  type: :realtime,
+  model: "gpt-realtime-2.1",
+  output_modalities: [:text],
+  tools: [{
+    type: :mcp,
+    server_label: "openai_docs",
+    server_url: "https://developers.openai.com/mcp",
+    allowed_tools: ["search_openai_docs", "fetch_openai_doc"],
+    require_approval: :never
+  }]
+)
+```
+
 
 Built-in connectors use the same MCP tool shape, but pass `connector_id`
 instead of `server_url`. For example, Google Calendar uses
@@ -251,6 +298,24 @@ event = {
 ws.send(json.dumps(event))
 ```
 
+```ruby
+access_token = ENV.fetch("OPENAI_MCP_ACCESS_TOKEN")
+
+connection.session.update(
+  type: :realtime,
+  model: "gpt-realtime-2.1",
+  output_modalities: [:text],
+  tools: [{
+    type: :mcp,
+    server_label: "google_calendar",
+    connector_id: "connector_googlecalendar",
+    authorization: access_token,
+    allowed_tools: ["search_events", "read_event"],
+    require_approval: :never
+  }]
+)
+```
+
 
 Remote MCP servers 
   **don't automatically receive the full conversation context**,
@@ -270,9 +335,10 @@ A typical flow looks like this:
 1. The user speaks or sends text, and a response is created, either by your client or automatically by the session configuration.
 1. If the model chooses an MCP tool, you will see `response.mcp_call_arguments.delta` and `response.mcp_call_arguments.done`.
 1. **If approval is required**, the server adds a conversation item whose `item.type` is `mcp_approval_request`. Your client must answer it with an `mcp_approval_response` item.
-1. Once the tool runs, you will see `response.mcp_call.in_progress`. On success, you will later receive a [`response.output_item.done`](https://developers.openai.com/api/reference/resources/realtime) event whose `item.type` is `mcp_call`; on failure, you will receive [`response.mcp_call.failed`](https://developers.openai.com/api/reference/resources/realtime). The assistant message item and `response.done` complete the turn.
+1. Once the tool runs, you will see `response.mcp_call.in_progress`. On success, you will later receive a [`response.output_item.done`](https://developers.openai.com/api/reference/resources/realtime) event whose `item.type` is `mcp_call`; on failure, you will receive [`response.mcp_call.failed`](https://developers.openai.com/api/reference/resources/realtime).
+1. `response.done` for a response can arrive before its MCP calls finish. After the response is done and all of its MCP calls have finished, send another [`response.create`](https://developers.openai.com/api/reference/resources/realtime) event to let the model use the results and proceed with the conversation. Repeat this step if the model makes additional MCP calls. The Realtime API doesn't create these follow-up responses automatically.
 
-This event handler covers the main checkpoints:
+This event handler logs the main MCP lifecycle events; it doesn't manage follow-up responses:
 
 Listen for MCP events during a Realtime session
 
@@ -425,6 +491,67 @@ def on_message(ws, message):
         print("Realtime turn complete.")
 ```
 
+```ruby
+connection.each do |event|
+  case event
+  when OpenAI::Realtime::McpListToolsInProgress
+    puts("Listing MCP tools for item: #{event.item_id}")
+  when OpenAI::Realtime::McpListToolsFailed
+    warn("MCP tool listing failed for item: #{event.item_id}")
+    break
+  when OpenAI::Realtime::McpListToolsCompleted
+    puts("MCP tools ready for item: #{event.item_id}")
+    connection.response.create(
+      output_modalities: [:text],
+      input: [{
+        type: :message,
+        role: :user,
+        content: [{
+          type: :input_text,
+          text: "Which Realtime API transport should browser clients use?"
+        }]
+      }],
+      tool_choice: :required
+    )
+  when OpenAI::Realtime::ConversationItemDone
+    item = event.item
+    case item
+    when OpenAI::Realtime::RealtimeMcpListTools
+      names = item.tools.map(&:name).join(", ")
+      puts("MCP tools ready on #{item.server_label}: #{names}")
+    when OpenAI::Realtime::RealtimeMcpApprovalRequest
+      puts("Approval required for: #{item.name} #{item.arguments}")
+    end
+  when OpenAI::Realtime::ResponseMcpCallArgumentsDone
+    puts("Final MCP call arguments: #{event.arguments}")
+  when OpenAI::Realtime::ResponseMcpCallInProgress
+    puts("Running MCP tool for item: #{event.item_id}")
+  when OpenAI::Realtime::ResponseMcpCallCompleted
+    puts("MCP tool call completed: #{event.item_id}")
+  when OpenAI::Realtime::ResponseMcpCallFailed
+    warn("MCP tool call failed: #{event.item_id}")
+    break
+  when OpenAI::Realtime::ResponseOutputItemDoneEvent
+    item = event.item
+    case item
+    when OpenAI::Realtime::RealtimeMcpToolCall
+      puts("MCP output from #{item.server_label}.#{item.name}: #{item.output}")
+    when OpenAI::Realtime::RealtimeConversationItemAssistantMessage
+      text = item.content.filter_map do |content|
+        content.text if content.type == :output_text
+      end.join
+      puts("Assistant: #{text}")
+    end
+  when OpenAI::Realtime::RealtimeErrorEvent
+    warn("Realtime API error: #{event.error.message}")
+    break
+  when OpenAI::Realtime::ResponseDoneEvent
+    puts("Realtime turn complete.")
+    break
+  end
+end
+```
+
 
 ## Common failures
 
@@ -470,6 +597,17 @@ def approve_mcp_request(ws, approval_request_id):
     }
 
     ws.send(json.dumps(event))
+```
+
+```ruby
+approval_request_id = item.id
+
+connection.conversation.items.create(
+  type: :mcp_approval_response,
+  id: "mcp_approval_#{approval_request_id}",
+  approval_request_id: approval_request_id,
+  approve: true
+)
 ```
 
 
@@ -545,6 +683,27 @@ event = {
 ws.send(json.dumps(event))
 ```
 
+```ruby
+connection.response.create(
+  output_modalities: [:text],
+  input: [{
+    type: :message,
+    role: :user,
+    content: [{
+      type: :input_text,
+      text: "Which Realtime API transport should browser clients use?"
+    }]
+  }],
+  tools: [{
+    type: :mcp,
+    server_label: "openai_docs",
+    server_url: "https://developers.openai.com/mcp",
+    allowed_tools: ["search_openai_docs", "fetch_openai_doc"],
+    require_approval: :never
+  }]
+)
+```
+
 
 This is useful when only one response needs external context, or when different turns should use different MCP servers.
 
@@ -617,6 +776,18 @@ event = {
 }
 
 ws.send(json.dumps(event))
+```
+
+```ruby
+connection.response.create(
+  output_modalities: [:text],
+  input: [{
+    type: :message,
+    role: :user,
+    content: [{type: :input_text, text: "Check my schedule this afternoon."}]
+  }],
+  tools: [{type: :mcp, server_label: "google_calendar"}]
+)
 ```
 
 

@@ -225,7 +225,7 @@ The server returns the user agent string it will present to upstream services pl
 - `mcpServerOpenaiFormElicitation` - allow downstream MCP servers to send the
   OpenAI extended-form variant of `mcpServer/elicitation/request`.
 
-**Important**: Use `clientInfo.name` to identify your client for the OpenAI Compliance Logs Platform. If you are developing a new Codex integration intended for enterprise use, please contact OpenAI to get it added to a known clients list. For more context, see the [Codex logs reference](https://chatgpt.com/admin/api-reference#tag/Logs:-Codex).
+**Important**: Use `clientInfo.name` to identify your client for the OpenAI Compliance Logs Platform. If you are developing a new Codex integration intended for enterprise use, please contact OpenAI to get it added to a known clients list. For more context, see the [Codex logs reference](https://chatgpt.com/public/admin/api-reference#tag/Codex).
 
 Example (from the Codex VS Code extension):
 

@@ -136,7 +136,7 @@
           analytics, domain verification, and role-based access control
           ([RBAC](https://help.openai.com/en/articles/11750701-rbac))
         - Audit logs and usage monitoring via the [Compliance
-          API](https://chatgpt.com/admin/api-reference#tag/Codex-Tasks)
+          API](https://chatgpt.com/public/admin/api-reference#tag/Codex%20Tasks)
         - Data retention and data residency controls
         - Other [ChatGPT features](https://chatgpt.com/pricing) as part of the
           Enterprise plan

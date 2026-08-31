@@ -369,7 +369,7 @@ When you sign in with ChatGPT, Codex works best with the recommended models list
       slug="gpt-5.5"
       imageLabel="5.5"
       wallpaperUrl="/images/api/models/gpt-5.5.jpg"
-      description="Previous-generation frontier model for complex coding, computer use, knowledge work, and research workflows."
+      description="Previous-generation flagship model for complex coding, computer use, knowledge work, and research workflows."
       data={{
         features: [
           {
@@ -404,7 +404,7 @@ When you sign in with ChatGPT, Codex works best with the recommended models list
       slug="gpt-5.4"
       imageLabel="5.4"
       wallpaperUrl="/images/api/models/gpt-5.4.jpg"
-      description="Frontier model for professional work with strong coding, reasoning, tool use, and agentic workflow capabilities."
+      description="Flagship model for professional work with strong coding, reasoning, tool use, and agentic workflow capabilities."
       data={{
         features: [
           {

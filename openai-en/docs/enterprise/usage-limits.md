@@ -31,6 +31,7 @@ source-system permissions or govern Platform API usage or billing.
 
 ## Related docs
 
+- [ChatGPT Work: usage and cost](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-usage-and-cost)
 - [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup)
 - [Governance](https://learn.chatgpt.com/docs/enterprise/governance)
 - [Workspace analytics](https://learn.chatgpt.com/docs/enterprise/workspace-analytics)

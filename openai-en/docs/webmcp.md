@@ -110,6 +110,24 @@ safety risks, see the
 [Safety Bug Bounty program](https://openai.com/index/safety-bug-bounty/). Follow
 each program's scope and submission instructions.
 
+## Limitations
+
+ChatGPT's built-in browser currently supports a subset of the WebMCP APIs.
+The following features aren't supported:
+
+- **Declarative API:** Tools defined through HTML form attributes aren't
+  available as site tools.
+- **Tools in iframes:** The browser doesn't discover tools registered inside
+  iframes, including same-origin and cross-origin iframes.
+
+Use JavaScript to register tools in the top-level page, as shown in the
+[next section](#add-webmcp-to-your-website). ChatGPT Work and Codex may still
+interact with forms using regular browser capabilities, but those interactions
+aren't WebMCP tool calls.
+
+The WebMCP specification and Chrome's developer guide describe the broader
+APIs, including features that aren't currently supported in the built-in browser.
+
 ## Add WebMCP to your website
 
 You can ask Codex to add WebMCP support to the web app or

@@ -43,6 +43,9 @@ browser for installation. See
 [Build plugins](https://developers.openai.com/plugins/build/plugins) for
 packaging and distribution.
 
+To import workspace plugins from GitHub and keep them up to date, see
+[Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
 ### Export the public catalog for review
 
 Eligible ChatGPT Enterprise workspace owners and admins can download a CSV of

@@ -6,7 +6,7 @@ Use the Compliance API for security, legal, governance, and investigation
 workflows that require auditable records. Use analytics, not compliance records,
 to measure adoption and trends.
 
-The authenticated [Admin API reference](https://chatgpt.com/admin/api-reference)
+The [Admin API reference](https://chatgpt.com/public/admin/api-reference)
 is the source of truth for current access requirements, event coverage, routes,
 schemas, filters, retention, and request behavior.
 
@@ -28,11 +28,11 @@ or the [Analytics API](https://learn.chatgpt.com/docs/enterprise/analytics-api) 
 
 ## Get started
 
-1. Open the [Admin API reference](https://chatgpt.com/admin/api-reference) and
+1. Open the [Admin API reference](https://chatgpt.com/public/admin/api-reference) and
    confirm that your administrator role can access the compliance resources
    you need.
 2. Use the append-only compliance log stream for ongoing collection. Check the
-   authenticated reference for the currently supported resources and retrieval
+   API reference for the currently supported resources and retrieval
    patterns.
 3. [Download log files](#download-logs) and test ingestion into a non-production
    security information and event management (SIEM) system or data lake.
@@ -42,7 +42,7 @@ or the [Analytics API](https://learn.chatgpt.com/docs/enterprise/analytics-api) 
 
 For example, a security team can stream immutable compliance events into its
 SIEM for investigations, or route those events into an approved electronic
-discovery workflow. Use the authenticated reference for the current routes and
+discovery workflow. Use the API reference for the current routes and
 schemas rather than copying an endpoint contract from this guide.
 
 ### Download logs
@@ -76,10 +76,10 @@ PowerShell 7 to save UTF-8 without a byte-order mark:
 ## Confirm the administration boundaries
 
 Compliance coverage follows the ChatGPT workspace and the products represented
-in the current authenticated reference. Platform API organization data follows
+in the current API reference. Platform API organization data follows
 its own API data and administration controls.
 
-The authenticated reference owns the current routes, event coverage, schemas,
+The API reference owns the current routes, event coverage, schemas,
 filters, retention behavior, permission requirements, and request mechanics.
 This page doesn't duplicate that contract.
 

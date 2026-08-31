@@ -123,6 +123,10 @@ The Plugins Directory organizes plugins into tabs:
 
 Use the separate **Installed** row to review plugins you already installed.
 
+Workspace admins can import and sync a GitHub marketplace for their team. See
+[Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management) for setup and access
+requirements.
+
 ### Install and use a plugin
 
 Once you open the Plugins Directory:

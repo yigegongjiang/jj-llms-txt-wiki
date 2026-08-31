@@ -12,12 +12,12 @@ for the administration boundaries.
 
 ## Choose a reporting surface
 
-| Surface                     | Use it for                                                    | Contract owner                                                                                           |
-| --------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| ChatGPT workspace analytics | Interactive, workspace-wide adoption and engagement reporting | [Workspace analytics Help Center guidance](https://help.openai.com/en/articles/10875114)                 |
-| Codex analytics             | Interactive reporting focused on Codex adoption and activity  | The authenticated [Codex analytics dashboard](https://admin.openai.com/analytics/codex)                  |
-| Analytics API               | Programmatic, aggregated Codex reporting                      | The authenticated [Codex Analytics API reference](https://chatgpt.com/codex/cloud/settings/apireference) |
-| Compliance API              | Audit, security, legal, and investigation records             | The authenticated [Admin API reference](https://chatgpt.com/admin/api-reference)                         |
+| Surface                     | Use it for                                                    | Contract owner                                                                                                         |
+| --------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| ChatGPT workspace analytics | Interactive, workspace-wide adoption and engagement reporting | [Workspace analytics Help Center guidance](https://help.openai.com/en/articles/10875114)                               |
+| Codex analytics             | Interactive reporting focused on Codex adoption and activity  | The authenticated [Codex analytics dashboard](https://admin.openai.com/analytics/codex)                                |
+| Analytics API               | Programmatic, aggregated Codex reporting                      | The [Codex Analytics API reference](https://chatgpt.com/public/admin/api-reference#tag/Codex%20Enterprise%20Analytics) |
+| Compliance API              | Audit, security, legal, and investigation records             | The [Admin API reference](https://chatgpt.com/public/admin/api-reference)                                              |
 
 ## Review ChatGPT workspace analytics
 
@@ -40,7 +40,7 @@ schema contract. Dashboard categories, fields, filters, and export formats can
 change independently of this page.
 
 For automated reporting, use the [Analytics API](https://learn.chatgpt.com/docs/enterprise/analytics-api)
-and follow its authenticated reference. For auditable records, use the
+and follow its API reference. For auditable records, use the
 [Compliance API](https://learn.chatgpt.com/docs/enterprise/compliance-api).
 
 ## Interpret reporting data

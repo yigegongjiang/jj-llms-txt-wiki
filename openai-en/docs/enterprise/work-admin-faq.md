@@ -341,8 +341,16 @@ servers, hooks, command rules, and other supported runtime behavior.
 ### How does ChatGPT Work usage translate into spend over time?
 
 [ChatGPT Work and Codex share pricing, credits, and usage limits](https://learn.chatgpt.com/docs/pricing).
-Consumption varies with the model and capability, context size, task duration,
-tool use, and output size. Standard Chat usage is separate.
+For eligible credit-based agreements, review employees' combined Chat and Work
+usage against the shared workspace credit allocation. Consumption varies with
+the model, applicable reasoning or speed settings, processed input and output,
+and eligible tools or features.
+
+Using committed credits doesn't automatically increase your invoice. Actual
+charges depend on the remaining credit balance, contracted rates, account
+overage eligibility, and configured workspace overage limit. For planning
+examples, effective user limits, reporting boundaries, and billing details,
+see [ChatGPT Work: usage and cost](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-usage-and-cost).
 
 The highest-variance patterns are often workflows that run frequently,
 retrieve or process large amounts of information, call multiple tools or apps,

@@ -97,7 +97,7 @@ Assign the identity to the workspace and required groups, then sync it. The iden
 
 If your workspace has access, use a ChatGPT Admin API key to manage accounts, tokens, and sharing. Read operations require `chatgpt.enterprise.service_account.read`; changes require `chatgpt.enterprise.service_account.write`. A service-account token can't authenticate Admin API requests.
 
-Check the authenticated [Admin API reference](https://chatgpt.com/admin/api-reference) for available operations and current request paths.
+Check the [Admin API reference](https://chatgpt.com/public/admin/api-reference) for available operations and current request paths.
 
 ### Accounts
 
@@ -143,7 +143,7 @@ The Admin API can also list, add, update, and remove shared-account access. Its 
 - Revoke exposed tokens immediately and investigate the account's recent activity.
 - Disable or delete unused accounts in the workspace or Admin API. Both actions revoke all active tokens. Disabled accounts can be re-enabled with new tokens; deletion can't be undone.
 
-Runs are attributed to the service account. Available workspace analytics and audit records can also identify who created tokens or changed account settings. Confirm event coverage in the authenticated [Admin API reference](https://chatgpt.com/admin/api-reference).
+Runs are attributed to the service account. Available workspace analytics and audit records can also identify who created tokens or changed account settings. Confirm event coverage in the [Admin API reference](https://chatgpt.com/public/admin/api-reference).
 
 ## Related docs
 

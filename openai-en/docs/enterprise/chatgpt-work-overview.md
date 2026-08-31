@@ -21,6 +21,10 @@ For a focused review of hosted execution, connected-account permissions,
 browser and network settings, retention, and audit visibility, see
 [ChatGPT Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security).
 
+For device access, local browser sessions, managed policies, and local data
+handling, see
+[ChatGPT Work local security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-local-security).
+
 ## Execution isolation, files, and device access
 
 The files and tools available to ChatGPT Work depend on where Work is running,
