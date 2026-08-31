@@ -1,6 +1,6 @@
 # Fine-Tuning LLMs with TRL CLI on SageMaker
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 This notebook shows how to fine-tune language models on AWS SageMaker using the **`trl sft` CLI** - the same command used by [trl-jobs](https://github.com/huggingface/trl-jobs) on HuggingFace.
 
@@ -23,15 +23,15 @@ This notebook shows how to fine-tune language models on AWS SageMaker using the 
 >> %pip install sagemaker --upgrade --quiet
 ```
 
-[33mWARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)[0m[33m
-[0m[33mWARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)[0m[33m
-[0m[33mWARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)[0m[33m
-[0m[33mWARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)[0m[33m
-[0m[33mWARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)[0m[33m
-[0m[33mWARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)[0m[33m
-[0m
-[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m25.1.1[0m[39;49m -> [0m[32;49m25.3[0m
-[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
+WARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ackaging (/opt/pytorch/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.1.1 -&gt; 25.3
+[notice] To update, run: pip install --upgrade pip
 Note: you may need to restart the kernel to use updated packages.
 
 This example uses the [SageMaker Python SDK v3](https://github.com/aws/sagemaker-python-sdk). v3 introduces a new, framework-agnostic API built around `ModelBuilder` (inference) and `ModelTrainer` (training), which replaces the v2 `HuggingFaceModel` and `HuggingFace` classes.
@@ -75,8 +75,8 @@ sagemaker.config INFO - Not applying SDK defaults from location: /home/ec2-user/
 ```python
 >> # Initialize SageMaker session
 >> sagemaker_session = Session()
->> iam = boto3.client('iam')
->> role = iam.get_role(RoleName='sagemaker-dlcs')['Role']['Arn']
+>> iam = boto3.client("iam")
+>> role = iam.get_role(RoleName="sagemaker-dlcs")["Role"]["Arn"]
 >> region = sagemaker_session.boto_region_name
 >> account_id = boto3.client("sts").get_caller_identity()["Account"]
 
@@ -434,7 +434,7 @@ If you launched with `wait=False`, you can monitor the job here.
 
 ```python
 >> # Get the job name
->> training_job_name = trainer.latest_training_job.name if hasattr(trainer, 'latest_training_job') else base_job_name
+>> training_job_name = trainer.latest_training_job.name if hasattr(trainer, "latest_training_job") else base_job_name
 >> print(f"Job name: {training_job_name}")
 
 >> # View in console

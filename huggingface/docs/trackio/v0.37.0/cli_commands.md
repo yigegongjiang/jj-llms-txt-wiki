@@ -1,0 +1,606 @@
+# CLI Commands
+
+Trackio provides a comprehensive set of CLI commands that enable you to query project, run, metric, and Space information without needing to start the MCP server. Commands work against local data by default, or against a remote HF Space when `--space` is provided. This is particularly useful for LLM agents and automation scripts. With structured JSON output and programmatic access to all experiment data, Trackio is designed to support autonomous ML experiments run by LLMs.
+
+## Querying Remote Spaces
+
+All `list`, `get`, and `query` commands that read dashboard data support querying a remote Hugging Face Space instead of local data. Pass the `--space` flag with either a Space ID or full URL:
+
+```sh
+# Using a Space ID
+trackio list projects --space username/my-space
+
+# Using a Space URL
+trackio list projects --space https://username-my-space.hf.space
+
+# Works with any list/get/query command
+trackio get metric --project "my-project" --run "my-run" --metric "loss" --space username/my-space
+```
+
+For private Spaces, pass `--hf-token` or ensure you are logged in via `huggingface-cli login`:
+
+```sh
+trackio list projects --space username/private-space --hf-token hf_xxxxx
+```
+
+> **Note:** The `show`, `status`, `sync`, `freeze`, `skills`, `registry`, and `list spaces` commands do not support `--space`. Use `trackio list spaces` to discover Trackio dashboards on the Hugging Face Hub, then pass one of those Space IDs to commands such as `trackio list projects --space username/my-space`.
+
+## Registry Commands
+
+Create a registry and, when useful, define a typed collection before linking into it:
+
+```sh
+trackio registry create models --description "Models we deploy"
+trackio registry create-collection models/churn-model --type model --description "Churn predictor"
+```
+
+Link a local artifact version, promote a collection version by moving an alias, or unlink a version:
+
+```sh
+trackio registry link models/churn-model experiments/resnet:v3 --alias staging
+trackio registry promote models/churn-model production v0
+trackio registry unlink models/churn-model v0
+```
+
+Inspect collections and their audit history:
+
+```sh
+trackio registry list models
+trackio registry show models/churn-model
+trackio registry events models
+```
+
+All registry commands accept `--bucket-id org/bucket` for a bucket-backed registry and `--json` for structured output. `--alias` is repeatable. Targets may be written as either `models/churn-model` or `registry-models/churn-model`.
+
+The `link` command resolves `project/artifact:version-or-alias` from local Trackio data; omit the suffix to resolve `latest`. Publishing an artifact that only exists on a remote Space still uses the Python API so Trackio can record the source's remote storage coordinates.
+
+## Sync Command
+
+Upload a local project to a Hugging Face Space:
+
+```sh
+trackio sync --project "my-project" --space-id "username/space_id"
+```
+
+Deploy as a static Space (reads from an HF Bucket, no server needed):
+
+```sh
+trackio sync --project "my-project" --space-id "username/space_id" --sdk static
+```
+
+Static Spaces serve data directly from the browser and therefore require public snapshot data. `--sdk static --private` is not supported; use the default Gradio SDK for private dashboards.
+
+Sync all projects that have unsynced data to their configured Spaces:
+
+```sh
+trackio sync --all
+```
+
+| Flag | Description |
+|------|-------------|
+| `--project` | The name of the project to sync (required unless `--all` is used) |
+| `--space-id` | The HF Space ID to sync to (e.g. `username/space_id`). If not provided, uses the previously-configured Space |
+| `--all` | Sync all projects with unsynced data |
+| `--sdk` | `gradio` (default) for a live server, or `static` for a read-only bucket-backed Space |
+| `--private` | Make the Space private if creating a new Gradio Space. Not supported with `--sdk static` |
+| `--force` | Overwrite the existing database without prompting |
+
+## Freeze Command
+
+Create a read-only static Space snapshot from a live Gradio Space:
+
+```sh
+trackio freeze --space-id "username/my-space" --project "my-project"
+```
+
+Specify a custom destination Space:
+
+```sh
+trackio freeze --space-id "username/my-space" --project "my-project" --new-space-id "username/my-snapshot"
+```
+
+| Flag | Description |
+|------|-------------|
+| `--space-id` | The source Gradio Space ID (required) |
+| `--project` | The project to freeze (required) |
+| `--new-space-id` | The destination static Space ID. Defaults to `{space_id}_static` |
+| `--private` | Not supported for static frozen snapshots |
+
+> **Note:** The source must be a Gradio Space with a bucket mounted at `/data`. If the destination Space already exists and is not a Trackio static Space, `freeze` will refuse to overwrite it.
+> The frozen Space is a snapshot. Later metrics synced to the original Gradio Space do not appear in the frozen static Space unless you run `freeze` again.
+> Static frozen snapshots require public destination data, so `trackio freeze --private` is not supported.
+
+## List Commands
+
+### List All Projects
+
+List all available projects:
+
+```sh
+trackio list projects
+```
+
+Output in JSON format:
+
+```sh
+trackio list projects --json
+```
+
+### List Trackio Spaces
+
+List Trackio dashboard Spaces owned by your Hugging Face account and organizations:
+
+```sh
+trackio list spaces
+```
+
+Output in JSON format:
+
+```sh
+trackio list spaces --json
+```
+
+List Trackio Spaces under a specific user or organization namespace:
+
+```sh
+trackio list spaces --author "username-or-org"
+```
+
+Limit the number of returned Spaces:
+
+```sh
+trackio list spaces --limit 10
+```
+
+For private Spaces, pass `--hf-token` or ensure you are logged in via `huggingface-cli login`.
+
+### List Runs for a Project
+
+List all runs in a specific project:
+
+```sh
+trackio list runs --project "my-project"
+```
+
+Output in JSON format:
+
+```sh
+trackio list runs --project "my-project" --json
+```
+
+### List Metrics for a Run
+
+List all metrics tracked in a specific run:
+
+```sh
+trackio list metrics --project "my-project" --run "my-run"
+```
+
+Output in JSON format:
+
+```sh
+trackio list metrics --project "my-project" --run "my-run" --json
+```
+
+### List System Metrics for a Run
+
+List all system metrics (e.g., GPU metrics) for a specific run:
+
+```sh
+trackio list system-metrics --project "my-project" --run "my-run"
+```
+
+Output in JSON format:
+
+```sh
+trackio list system-metrics --project "my-project" --run "my-run" --json
+```
+
+### List Reports
+
+List markdown reports in a project (across all runs):
+
+```sh
+trackio list reports --project "my-project"
+```
+
+List markdown reports for a specific run:
+
+```sh
+trackio list reports --project "my-project" --run "my-run"
+```
+
+Output in JSON format:
+
+```sh
+trackio list reports --project "my-project" --run "my-run" --json
+```
+
+### List Traces
+
+List [traces](./traces) (agent or conversation sessions) across all runs in a project:
+
+```sh
+trackio list traces --project "my-project"
+```
+
+Each row shows the trace's status, wall-clock latency, cost, operation count, and
+the user request that started it. Filter by run, step, or text:
+
+```sh
+trackio list traces --project "my-project" --run "production"
+trackio list traces --project "my-project" --step 12
+trackio list traces --project "my-project" --search "rate limit"
+```
+
+Search matches message content, trace metadata, and each span's name, kind,
+model, status, and error. Control ordering and paging:
+
+```sh
+trackio list traces --project "my-project" --sort step_desc --limit 100 --offset 50
+```
+
+`--sort` accepts `request_time_desc` (default), `request_time_asc`, `step_asc`,
+and `step_desc`. Adding `--json` includes a `summary` rollup per trace.
+
+## Get Commands
+
+### Get Trace
+
+Show one trace with its full execution tree:
+
+```sh
+trackio get trace --project "my-project" --trace-id "fe04ed264a8a4bd6afcf266b56d9297e"
+```
+
+```
+Trace fe04ed264a8a4bd6afcf266b56d9297e
+  Run:      production
+  Totals:   error | 25.0s | $0.33 | 101338 in / 1804 out tokens | 21 operation(s)
+
+Execution:
+  answer-research-question [span]  25.0s
+    generate-research-response [span]  23.7s
+      acquire-sandbox [span]  914ms
+      dispatch-model-request [span]  2.18s
+        provider-request [generation]  2.18s  my-model  8347->239 tok  $0.03
+      ERROR run-bash-command [tool]  168ms
+        -> {"exit_code": 2, "stderr": "hf datasets list: error: unrecognized arguments: --full"}
+```
+
+`--trace-id` accepts the short id printed by `trackio list traces` or the full
+stored id. Add `--json` for the complete trace, including span inputs and
+outputs.
+
+### Get Trace Summary
+
+Roll every span up by operation name to see where latency, tokens, and cost go,
+and which operations fail:
+
+```sh
+trackio get trace-summary --project "my-project"
+```
+
+```
+operation                  | kind       | calls | errors | avg_ms  | max_ms  | input_tokens | output_tokens | cost_usd
+provider-request           | generation | 205   | 0      | 3380.8  | 5535.0  | 2915829      | 63020         | 9.6928
+run-bash-command           | tool       | 157   | 25     | 818.4   | 1548.0  | 0            | 0             | 0.0
+acquire-sandbox            | span       | 48    | 0      | 2438.6  | 10615.0 | 0            | 0             | 0.0
+```
+
+Restrict to one run with `--run`, or emit machine-readable rows with `--json`.
+For anything the rollup does not cover, query the `traces` table directly with
+[`trackio query project`](#query-command) — `spans` is a JSON column, so
+`json_each` works.
+
+### Get Project Summary
+
+Get a detailed summary of a project, including the number of runs and recent activity:
+
+```sh
+trackio get project --project "my-project"
+```
+
+Output in JSON format:
+
+```sh
+trackio get project --project "my-project" --json
+```
+
+The summary includes:
+- Project name
+- Number of runs
+- List of all runs
+- Last activity (maximum step across all runs)
+
+### Get Run Summary
+
+Get a detailed summary of a specific run, including metrics and configuration:
+
+```sh
+trackio get run --project "my-project" --run "my-run"
+```
+
+Output in JSON format:
+
+```sh
+trackio get run --project "my-project" --run "my-run" --json
+```
+
+The summary includes:
+- Project and run names
+- Number of log entries
+- Last step
+- List of all metrics
+- Run configuration (excluding internal fields)
+
+### Get Metric Values
+
+Get all values for a specific metric in a run:
+
+```sh
+trackio get metric --project "my-project" --run "my-run" --metric "loss"
+```
+
+Output in JSON format:
+
+```sh
+trackio get metric --project "my-project" --run "my-run" --metric "loss" --json
+```
+
+The output includes:
+- Step number
+- Timestamp
+- Metric value
+
+#### Filtering by Step or Time
+
+You can filter metric values to a specific step or a window around a step/timestamp. This is useful for inspecting metrics around the time an alert was fired.
+
+```sh
+# Get metric at exactly step 200
+trackio get metric --project "my-project" --run "my-run" --metric "loss" --step 200
+
+# Get metrics in a window around step 200 (±10 steps, the default)
+trackio get metric --project "my-project" --run "my-run" --metric "loss" --around 200
+
+# Get metrics in a window around step 200 (±50 steps)
+trackio get metric --project "my-project" --run "my-run" --metric "loss" --around 200 --window 50
+
+# Get metrics within ±60 seconds of a timestamp
+trackio get metric --project "my-project" --run "my-run" --metric "loss" --at-time "2025-06-01T12:05:30" --window 60
+```
+
+| Flag | Description |
+|------|-------------|
+| `--step N` | Return the metric at exactly step N |
+| `--around N` | Return metrics in a window around step N |
+| `--at-time T` | Return metrics in a window around ISO 8601 timestamp T |
+| `--window W` | Window size: ±steps for `--around`, ±seconds for `--at-time` (default: 10) |
+
+### Get Metrics Snapshot
+
+Get **all** metrics at/around a step or timestamp in a single call. This is the fastest way for an agent to understand the state of a run at a specific point — for example, right when an alert fired.
+
+```sh
+# All metrics at step 200
+trackio get snapshot --project "my-project" --run "my-run" --step 200 --json
+
+# All metrics in a window around step 200 (±5 steps)
+trackio get snapshot --project "my-project" --run "my-run" --around 200 --window 5 --json
+
+# All metrics within ±60 seconds of a timestamp
+trackio get snapshot --project "my-project" --run "my-run" --at-time "2025-06-01T12:05:30" --window 60 --json
+```
+
+Example JSON output:
+
+```json
+{
+  "project": "my-project",
+  "run": "my-run",
+  "around": 200,
+  "window": 5,
+  "metrics": {
+    "loss": [
+      {"step": 196, "timestamp": "2025-06-01T12:04:50", "value": 0.42},
+      {"step": 200, "timestamp": "2025-06-01T12:05:30", "value": 0.45}
+    ],
+    "accuracy": [
+      {"step": 196, "timestamp": "2025-06-01T12:04:50", "value": 0.88},
+      {"step": 200, "timestamp": "2025-06-01T12:05:30", "value": 0.87}
+    ],
+    "lr": [
+      {"step": 196, "timestamp": "2025-06-01T12:04:50", "value": 0.0001},
+      {"step": 200, "timestamp": "2025-06-01T12:05:30", "value": 0.0001}
+    ]
+  }
+}
+```
+
+### Get System Metric Values
+
+Get system metric values for a run. If no metric name is provided, all system metrics are returned:
+
+```sh
+# Get all system metrics
+trackio get system-metric --project "my-project" --run "my-run"
+
+# Get a specific system metric
+trackio get system-metric --project "my-project" --run "my-run" --metric "gpu_utilization"
+```
+
+Output in JSON format:
+
+```sh
+trackio get system-metric --project "my-project" --run "my-run" --metric "gpu_utilization" --json
+```
+
+### Get Report Content
+
+Print markdown report entries for a specific report name in a run:
+
+```sh
+trackio get report --project "my-project" --run "my-run" --report "training_report"
+```
+
+Output in JSON format:
+
+```sh
+trackio get report --project "my-project" --run "my-run" --report "training_report" --json
+```
+
+## Query Command
+
+Use `trackio query` when you need a catch-all read-only SQL query that is not already covered by `trackio list` or `trackio get`.
+
+### Run a Query Against a Project Database
+
+```sh
+trackio query project --project "my-project" --sql "SELECT run_name, MAX(step) AS last_step FROM metrics GROUP BY run_name ORDER BY last_step DESC"
+```
+
+Output in JSON format:
+
+```sh
+trackio query project --project "my-project" --sql "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name" --json
+```
+
+Query a remote Space:
+
+```sh
+trackio query project --project "my-project" --sql "SELECT COUNT(*) AS num_alerts FROM alerts" --space username/my-space --json
+```
+
+`trackio query` only supports read-only `SELECT`, `WITH`, and safe schema `PRAGMA` queries.
+
+Common schema inspection examples:
+
+```sh
+# Inspect table columns
+trackio query project --project "my-project" --sql "PRAGMA table_info(metrics)"
+
+# Inspect indexes
+trackio query project --project "my-project" --sql "PRAGMA index_list(alerts)"
+
+# List tables
+trackio query project --project "my-project" --sql "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name"
+```
+
+The response includes:
+
+- `project`
+- `query`
+- `columns`
+- `rows`
+- `row_count`
+
+For the full SQLite and parquet layout, see the [Storage Schema and Direct Queries](./storage_schema).
+
+## Output Formats
+
+All `list`, `get`, and `query` commands support two output formats:
+
+1. **Human-readable** (default): Formatted text output suitable for terminal viewing
+2. **JSON** (with `--json` flag): Structured JSON output suitable for programmatic consumption
+
+## Error Handling
+
+The CLI commands include comprehensive validation and error handling:
+
+- If a project doesn't exist, an error message is displayed
+- If a run doesn't exist in a project, an error message is displayed
+- If a metric doesn't exist in a run, an error message is displayed
+- If a report doesn't exist in a run, an error message is displayed
+- If a query is not read-only, the CLI exits with an error
+
+All errors are written to stderr and the command exits with a non-zero exit code.
+
+## Example Workflow
+
+Here's a typical workflow for exploring your Trackio data:
+
+```sh
+# 1. List all projects
+trackio list projects
+
+# 2. List runs in a project
+trackio list runs --project "my-project"
+
+# 3. Get project summary
+trackio get project --project "my-project"
+
+# 4. Get run summary
+trackio get run --project "my-project" --run "my-run"
+
+# 5. List metrics in the run
+trackio list metrics --project "my-project" --run "my-run"
+
+# 6. Get specific metric values
+trackio get metric --project "my-project" --run "my-run" --metric "loss"
+
+# 7. Get all metrics at a specific step (e.g. where an alert fired)
+trackio get snapshot --project "my-project" --run "my-run" --step 200 --json
+
+# 8. Get system metrics (if available)
+trackio list system-metrics --project "my-project" --run "my-run"
+
+# 9. List reports in a run
+trackio list reports --project "my-project" --run "my-run"
+
+# 10. Print report markdown in terminal
+trackio get report --project "my-project" --run "my-run" --report "training_report"
+
+# 11. Run a direct SQL query
+trackio query project --project "my-project" --sql "SELECT run_name, MAX(step) AS last_step FROM metrics GROUP BY run_name"
+```
+
+### Querying a Remote Space
+
+The same workflow works against a remote Space — just add `--space`:
+
+```sh
+# List projects on a remote Space
+trackio list projects --space username/my-space
+
+# Get metric values from a remote Space
+trackio get metric --project "my-project" --run "my-run" --metric "loss" --space username/my-space --json
+```
+
+## Use Cases
+
+### LLM Agents
+
+These CLI commands are particularly useful for LLM agents that need to:
+- Discover available projects and runs
+- Query metric values programmatically
+- Inspect metrics around an alert with `get snapshot` or `get metric --around`
+- Run direct SQL for cases not covered by the structured commands
+- Get summaries without starting a server
+- Parse structured JSON output for further processing
+
+### Automation Scripts
+
+You can use these commands in shell scripts and automation pipelines:
+
+```sh
+#!/bin/bash
+PROJECT="my-project"
+RUN="my-run"
+
+# Get the latest loss value
+LATEST_LOSS=$(trackio get metric --project "$PROJECT" --run "$RUN" --metric "loss" --json | jq -r '.values[-1].value')
+echo "Latest loss: $LATEST_LOSS"
+```
+
+### Integration with Other Tools
+
+The JSON output format makes it easy to integrate with other tools:
+
+```sh
+# Pipe to jq for filtering
+trackio list runs --project "my-project" --json | jq '.runs[] | select(startswith("train"))'
+
+# Export to file
+trackio get run --project "my-project" --run "my-run" --json > run_summary.json
+```

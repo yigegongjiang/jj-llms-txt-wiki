@@ -1,6 +1,6 @@
 # Deploy an AI Agent on AWS Inferentia2 with SageMaker
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
  This notebook demontrates how to deploy an open-ource LLM on a real-time AWS endpoint with Neuron devices using Hugging Face library `optimum-neuron`, `strands-agent` and AWS Sagemaker.
 
@@ -83,7 +83,7 @@ sagemaker.config INFO - Not applying SDK defaults from location: /home/ec2-user/
 ***🔑 Configure SageMaker Role***
 
 ```python
-sagemaker_role_name = "sagemaker-dlcs" # TODO: change to your own role name
+sagemaker_role_name = "sagemaker-dlcs"  # TODO: change to your own role name
 iam = boto3.client("iam")
 role = iam.get_role(RoleName=sagemaker_role_name)["Role"]["Arn"]
 ```
@@ -179,7 +179,7 @@ llm_image = "763104351884.dkr.ecr.us-east-1.amazonaws.com/huggingface-vllm-infer
 Now that we have a Neuron-compiled model and a deployment image, we can configure a SageMaker real-time endpoint using the **Hugging Face SageMaker SDK**
 
 ```python
-import os 
+import os
 from sagemaker.huggingface import HuggingFaceModel
 
 # sagemaker config
@@ -188,12 +188,12 @@ health_check_timeout = 3600  # additional time to load the model
 
 config = {
     "SM_ON_MODEL": "florentgbelidji/granite-3.3-8b-instruct-neuron-bs-1-seq-16384-tp-8",
-    "SM_ON_TENSOR_PARALLEL_SIZE": "8",# corresponds to the number of Neuron cores
+    "SM_ON_TENSOR_PARALLEL_SIZE": "8",  # corresponds to the number of Neuron cores
     "SM_ON_BATCH_SIZE": "1",  # max batch size for the model
     "SM_ON_SEQUENCE_LENGTH": "16384",  # max length of generated text
-    "SM_ON_ENABLE_AUTO_TOOL_CHOICE": "true", # enables tool choice
-    "SM_ON_TOOL_CALL_PARSER": "granite", # enables tool call parsing with parser configured for granite
-    "SM_ON_MAX_NUM_BATCHED_TOKENS": "8192", # max number of tokens in a batch, control prefill chunking
+    "SM_ON_ENABLE_AUTO_TOOL_CHOICE": "true",  # enables tool choice
+    "SM_ON_TOOL_CALL_PARSER": "granite",  # enables tool call parsing with parser configured for granite
+    "SM_ON_MAX_NUM_BATCHED_TOKENS": "8192",  # max number of tokens in a batch, control prefill chunking
     "HF_TOKEN": os.environ["HF_TOKEN"],
 }
 
@@ -203,12 +203,7 @@ endpoint_name = "granite-8b-instruct-neuron-bs-1-seq-16384-tp-8-demo-endpoint"
 ***Create Sagemaker Model***
 
 ```python
-llm_model = HuggingFaceModel(
-    role=role, 
-    image_uri=llm_image, 
-    env=config, 
-    name=endpoint_name
-    )
+llm_model = HuggingFaceModel(role=role, image_uri=llm_image, env=config, name=endpoint_name)
 ```
 
 ***🚀 Deploy***
@@ -239,15 +234,15 @@ print(llm.endpoint_name)
 If your endpoint is still running run the following:
 
 ```python
-existing_endpoint_name = "granite-8b-instruct-neuron-bs-1-seq-163-2025-11-25-16-35-23-419" # TODO: change to your own endpoint name
+existing_endpoint_name = (
+    "granite-8b-instruct-neuron-bs-1-seq-163-2025-11-25-16-35-23-419"  # TODO: change to your own endpoint name
+)
 ```
 
 ```python
 from sagemaker.predictor import Predictor
-llm = Predictor(
-    endpoint_name=existing_endpoint_name , 
-    sagemaker_session=sess
-                )
+
+llm = Predictor(endpoint_name=existing_endpoint_name, sagemaker_session=sess)
 ```
 
 **Test**
@@ -315,8 +310,7 @@ model = SageMakerAIModel(
         "max_tokens": 2048,
         "temperature": 0.2,
         "stream": False,
-        
-    }
+    },
 )
 ```
 
@@ -333,7 +327,7 @@ from ddgs import DDGS
 
 # define a tool to search the web
 @tool()
-def web_search(query:str, max_results=5)->dict:
+def web_search(query: str, max_results=5) -> dict:
     results = ""
     with DDGS() as ddgs:
         results = [r for r in ddgs.text(query, max_results=max_results)]
@@ -353,6 +347,7 @@ Tool #1: web_search
 
 ```python
 >> from pprint import pprint
+
 >> pprint(response.message["content"][0]["text"])
 ```
 
@@ -455,7 +450,8 @@ This integration lets your agent use the Hugging Face Hub as a powerful knowledg
 ```python
 from strands.tools.mcp import MCPClient
 from mcp.client.streamable_http import streamablehttp_client
-#MCP URL
+
+# MCP URL
 hf_mcp_url = "https://huggingface.co/mcp"
 hf_token = os.environ.get("HF_TOKEN")
 
@@ -470,7 +466,7 @@ mcp_client = MCPClient(
 ```
 
 ```python
-#Use the MCP client as a tool
+# Use the MCP client as a tool
 agent = Agent(model=model, tools=[mcp_client])
 ```
 

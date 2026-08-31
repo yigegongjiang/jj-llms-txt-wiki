@@ -1,6 +1,6 @@
 # Batch-embed a corpus with SageMaker asynchronous inference
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 ## What asynchronous inference is
 
@@ -121,9 +121,7 @@ ENDPOINT_NAME = os.getenv("SAGEMAKER_ENDPOINT_NAME", f"{PROJECT}-{RUN_ID}")
 
 MAX_INSTANCE_COUNT = int(os.getenv("MAX_INSTANCE_COUNT", "4"))
 BACKLOG_PER_INSTANCE_TARGET = float(os.getenv("BACKLOG_PER_INSTANCE_TARGET", "5"))
-MAX_CONCURRENT_INVOCATIONS_PER_INSTANCE = int(
-    os.getenv("MAX_CONCURRENT_INVOCATIONS_PER_INSTANCE", "4")
-)
+MAX_CONCURRENT_INVOCATIONS_PER_INSTANCE = int(os.getenv("MAX_CONCURRENT_INVOCATIONS_PER_INSTANCE", "4"))
 
 SUCCESS_SNS_TOPIC_ARN = os.getenv("SUCCESS_SNS_TOPIC_ARN")
 ERROR_SNS_TOPIC_ARN = os.getenv("ERROR_SNS_TOPIC_ARN")

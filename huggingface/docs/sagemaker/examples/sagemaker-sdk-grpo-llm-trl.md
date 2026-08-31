@@ -1,6 +1,6 @@
 # Improve tool calling with GRPO on Amazon SageMaker
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 In this notebook, you'll fine-tune **`HuggingFaceTB/SmolLM3-3B`** to produce better single-turn tool calls. The training signal is fully verifiable: instead of asking another model to judge the answer, we compare the model's generated tool call with the ground-truth call from the dataset.
 
@@ -86,14 +86,14 @@ print("role:  ", role)
 `MODEL_ID` is the base model and `INSTANCE_TYPE` the training hardware. `PUBLIC_IMAGE` is the public image that carries the TRL/GRPO training stack; the next step mirrors it into a private ECR repo (`ECR_REPO`) that SageMaker can actually pull from, and sets `TRAINING_IMAGE` to that private URI.
 
 ```python
-MODEL_ID = "HuggingFaceTB/SmolLM3-3B"      # SmolLM3, HF's 3B instruct model
-INSTANCE_TYPE = "ml.p4d.24xlarge"          # 8 x A100 40GB
+MODEL_ID = "HuggingFaceTB/SmolLM3-3B"  # SmolLM3, HF's 3B instruct model
+INSTANCE_TYPE = "ml.p4d.24xlarge"  # 8 x A100 40GB
 
 # Public image carrying the TRL/GRPO training stack. SageMaker can't pull a
 # public registry directly (see the next cell), so we mirror it into a private
 # ECR repo in your account and train from that.
 PUBLIC_IMAGE = "public.ecr.aws/u9a4y4p1/huggingface/hubcap:aws-pytorch-training_2.11.0-transformers5.10.2-gpu-py312-cu130-amzn2023-sagemaker"
-ECR_REPO = "hf-trl-grpo"                    # private repo created in your account
+ECR_REPO = "hf-trl-grpo"  # private repo created in your account
 ```
 
 ## Copy the training image to a private ECR repo
@@ -119,7 +119,7 @@ def ensure_crane():
     """Path to a `crane` binary, downloading a release build if it isn't on PATH."""
     if found := shutil.which("crane"):
         return found
-    system = platform.system()                                     # Darwin / Linux
+    system = platform.system()  # Darwin / Linux
     machine = {"aarch64": "arm64"}.get(platform.machine(), platform.machine())  # x86_64 / arm64
     asset = f"go-containerregistry_{system}_{machine}.tar.gz"
     url = f"https://github.com/google/go-containerregistry/releases/latest/download/{asset}"
@@ -174,7 +174,7 @@ import shutil
 from pathlib import Path
 import json
 
-N_TRAIN = 2000   # a small subset keeps this demo cheap; the full set is 60k
+N_TRAIN = 2000  # a small subset keeps this demo cheap; the full set is 60k
 
 def has_one_answer(row):
     try:
@@ -238,6 +238,7 @@ Both functions are written to `src/rewards.py` so the training job can import th
 
 ```python
 from pathlib import Path
+
 Path("src").mkdir(exist_ok=True)
 ```
 
@@ -367,9 +368,11 @@ sample = '<tool_call>{"name": "get_weather", "arguments": {"city": "Paris", "uni
 gt = '[{"name": "get_weather", "arguments": {"unit": "c", "city": "Paris"}}]'
 
 print("parsed:     ", parse_tool_calls(sample))
-print("exact-match:", tool_call_reward([sample], answers=[gt]))   # [1.0] (argument order ignored)
-print("format:     ", format_reward([sample]))                    # [1.0]
-print("wrong call: ", tool_call_reward(['<tool_call>{"name": "x", "arguments": {}}</tool_call>'], answers=[gt]))  # [0.0]
+print("exact-match:", tool_call_reward([sample], answers=[gt]))  # [1.0] (argument order ignored)
+print("format:     ", format_reward([sample]))  # [1.0]
+print(
+    "wrong call: ", tool_call_reward(['<tool_call>{"name": "x", "arguments": {}}</tool_call>'], answers=[gt])
+)  # [0.0]
 ```
 
 ## The training script
@@ -597,24 +600,24 @@ trainer = ModelTrainer(
         "model_id": MODEL_ID,
         "max_steps": 20 if DEBUG_NO_UPDATE else 50,
         "per_device_train_batch_size": 2,
-        "gradient_accumulation_steps": 8,      # global batch = 8 GPUs x 2 x 8
+        "gradient_accumulation_steps": 8,  # global batch = 8 GPUs x 2 x 8
         "num_generations": 8,
         "learning_rate": 0.0 if DEBUG_NO_UPDATE else 1e-8,
-        "beta": 0.1,                            # keep the reference model + KL term enabled
+        "beta": 0.1,  # keep the reference model + KL term enabled
         "temperature": 0.7,
         "top_p": 1.0,
         "top_k": 0,
         "max_grad_norm": 0.05,
         "max_completion_length": 128,
-        "reward_weights": "1.0,0.5",          # exact match + lighter format shaping
-        "repetition_penalty": 1.05,            # discourage max-length loops
+        "reward_weights": "1.0,0.5",  # exact match + lighter format shaping
+        "repetition_penalty": 1.05,  # discourage max-length loops
         "log_completions": False,
         "num_completions_to_print": 8,
         "stop_on_collapse": True,
         "remove_invalid_values": False,
         "renormalize_logits": True,
         "gradient_checkpointing": True,
-        "deepspeed": "ds_zero3.json",          # shard model + optimizer state across the 8 GPUs
+        "deepspeed": "ds_zero3.json",  # shard model + optimizer state across the 8 GPUs
     },
 )
 

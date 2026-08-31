@@ -1,6 +1,6 @@
 # Evaluate LLMs with Hugging Face Lighteval on Amazon SageMaker
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 In this sagemaker example, we are going to learn how to evaluate LLMs using Hugging Face [lighteval](https://github.com/huggingface/lighteval/tree/main).  LightEval is a lightweight LLM evaluation suite that powers [Hugging Face Open LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard). 
 
@@ -31,8 +31,8 @@ sagemaker_session_bucket = sess.default_bucket()
 try:
     role = get_execution_role()
 except Exception:
-    iam = boto3.client('iam')
-    role = iam.get_role(RoleName='sagemaker_execution_role')['Role']['Arn']
+    iam = boto3.client("iam")
+    role = iam.get_role(RoleName="sagemaker_execution_role")["Role"]["Arn"]
 
 print(f"sagemaker role arn: {role}")
 print(f"sagemaker bucket: {sess.default_bucket()}")
@@ -72,10 +72,10 @@ from sagemaker.train.configs import SourceCode, Compute, OutputDataConfig
 from sagemaker.core import image_uris
 
 # evaluation configuration
-model_id = "HuggingFaceH4/zephyr-7b-beta"   # Hugging Face Model ID to evaluate
-task = "leaderboard|truthfulqa:mc|0"         # suite|task|num_few_shot (comma-separate for multiple tasks)
-model_dtype = "bfloat16"                      # torch dtype used to load the model weights
-output_dir = "/opt/ml/model"                  # SageMaker uploads this directory to S3 after the job
+model_id = "HuggingFaceH4/zephyr-7b-beta"  # Hugging Face Model ID to evaluate
+task = "leaderboard|truthfulqa:mc|0"  # suite|task|num_few_shot (comma-separate for multiple tasks)
+model_dtype = "bfloat16"  # torch dtype used to load the model weights
+output_dir = "/opt/ml/model"  # SageMaker uploads this directory to S3 after the job
 
 instance_type = "ml.g5.4xlarge"
 
@@ -103,17 +103,17 @@ command = (
 huggingface_estimator = ModelTrainer(
     sagemaker_session=sess,
     role=role,
-    base_job_name="lighteval",                     # the name of the training job
+    base_job_name="lighteval",  # the name of the training job
     training_image=training_image,
     source_code=SourceCode(
-        source_dir="scripts",                      # directory uploaded to the job (contains requirements.txt)
-        requirements="requirements.txt",           # dependencies installed before running the command
-        command=command,                           # lighteval CLI invocation
+        source_dir="scripts",  # directory uploaded to the job (contains requirements.txt)
+        requirements="requirements.txt",  # dependencies installed before running the command
+        command=command,  # lighteval CLI invocation
     ),
     compute=Compute(
-        instance_type=instance_type,               # instance type used for the evaluation job
-        instance_count=1,                          # the number of instances used
-        volume_size_in_gb=300,                     # the size of the EBS volume in GB
+        instance_type=instance_type,  # instance type used for the evaluation job
+        instance_count=1,  # the number of instances used
+        volume_size_in_gb=300,  # the size of the EBS volume in GB
     ),
     output_data_config=OutputDataConfig(
         s3_output_path=f"s3://{sess.default_bucket()}/lighteval/output",

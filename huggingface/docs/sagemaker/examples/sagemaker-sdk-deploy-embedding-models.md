@@ -1,6 +1,6 @@
 # How to deploy Embedding Models to Amazon SageMaker using new Hugging Face Embedding DLC
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 This is an example on how to deploy the open Embedding Models, like [Snowflake/snowflake-arctic-embed-l](https://huggingface.co/Snowflake/snowflake-arctic-embed-l), [BAAI/bge-large-en-v1.5](https://huggingface.co/BAAI/bge-large-en-v1.5) or [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) to Amazon SageMaker for inference using the new Hugging Face Embedding Inference Container. We will deploy the [Snowflake/snowflake-arctic-embed-m](https://huggingface.co/Snowflake/snowflake-arctic-embed-m) one of the best open Embedding Models for retrieval and ranking on the [MTEB Leaderboard](https://huggingface.co/spaces/mteb/leaderboard). 
 
@@ -55,8 +55,8 @@ sagemaker_session_bucket = sess.default_bucket()
 try:
     role = get_execution_role()
 except Exception:
-    iam = boto3.client('iam')
-    role = iam.get_role(RoleName='sagemaker_execution_role')['Role']['Arn']
+    iam = boto3.client("iam")
+    role = iam.get_role(RoleName="sagemaker_execution_role")["Role"]["Arn"]
 
 print(f"sagemaker role arn: {role}")
 print(f"sagemaker session region: {sess.boto_region_name}")
@@ -159,7 +159,11 @@ print(f"number of threads: {number_of_threads}")
 print(f"number of requests per thread: {number_of_requests}")
 
 # input counted at https://huggingface.co/spaces/Xenova/the-tokenizer-playground for ~100 tokens
-payload = json.dumps({"inputs": "Hugging Face is a company and a popular platform in the field of natural language processing (NLP) and machine learning. They are known for their contributions to the development of state-of-the-art models for various NLP tasks and for providing a platform that facilitates the sharing and usage of pre-trained models. One of the key offerings from Hugging Face is the Transformers library, which is an open-source library for working with a variety of pre-trained transformer models, including those for text generation, translation, summarization, question answering, and more. The library is widely used in the research and development of NLP applications and is supported by a large and active community. Hugging Face also provides a model hub where users can discover, share, and download pre-trained models. Additionally, they offer tools and frameworks to make it easier for developers to integrate and use these models in their own projects. The company has played a significant role in advancing the field of NLP and making cutting-edge models more accessible to the broader community. Hugging Face also provides a model hub where users can discover, share, and download pre-trained models. Additionally, they offer tools and frameworks to make it easier for developers and ma"})
+payload = json.dumps(
+    {
+        "inputs": "Hugging Face is a company and a popular platform in the field of natural language processing (NLP) and machine learning. They are known for their contributions to the development of state-of-the-art models for various NLP tasks and for providing a platform that facilitates the sharing and usage of pre-trained models. One of the key offerings from Hugging Face is the Transformers library, which is an open-source library for working with a variety of pre-trained transformer models, including those for text generation, translation, summarization, question answering, and more. The library is widely used in the research and development of NLP applications and is supported by a large and active community. Hugging Face also provides a model hub where users can discover, share, and download pre-trained models. Additionally, they offer tools and frameworks to make it easier for developers to integrate and use these models in their own projects. The company has played a significant role in advancing the field of NLP and making cutting-edge models more accessible to the broader community. Hugging Face also provides a model hub where users can discover, share, and download pre-trained models. Additionally, they offer tools and frameworks to make it easier for developers and ma"
+    }
+)
 
 def send_requests():
     for _ in range(number_of_requests):
@@ -182,7 +186,9 @@ _Note: We ran the same test on a `ml.g5.xlarge` with 1x NVIDIA A10G GPU. Embeddi
 GPU instance are much faster than CPU instances, but they are also more expensive. If you want to bulk process embeddings, you can use a GPU instance. If you want to run a small endpoint with low costs, you can use a CPU instance. We plan to work on a dedicated benchmark for the Hugging Face Embedding DLC in the future.
 
 ```python
-print(f"https://console.aws.amazon.com/cloudwatch/home?region={sess.boto_region_name}#metricsV2:graph=~(metrics~(~(~'AWS*2fSageMaker~'ModelLatency~'EndpointName~'{emb.endpoint_name}~'VariantName~'AllTraffic))~view~'timeSeries~stacked~false~region~'{sess.boto_region_name}~start~'-PT5M~end~'P0D~stat~'Average~period~30);query=~'*7bAWS*2fSageMaker*2cEndpointName*2cVariantName*7d*20{emb.endpoint_name}")
+print(
+    f"https://console.aws.amazon.com/cloudwatch/home?region={sess.boto_region_name}#metricsV2:graph=~(metrics~(~(~'AWS*2fSageMaker~'ModelLatency~'EndpointName~'{emb.endpoint_name}~'VariantName~'AllTraffic))~view~'timeSeries~stacked~false~region~'{sess.boto_region_name}~start~'-PT5M~end~'P0D~stat~'Average~period~30);query=~'*7bAWS*2fSageMaker*2cEndpointName*2cVariantName*7d*20{emb.endpoint_name}"
+)
 ```
 
 ![cw](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/deploy-embedding-models/cw.png)

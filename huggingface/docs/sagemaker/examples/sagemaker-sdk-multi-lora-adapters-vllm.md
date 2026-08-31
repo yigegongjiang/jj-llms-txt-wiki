@@ -1,6 +1,6 @@
 # Serve many LoRA adapters from one endpoint with Hugging Face vLLM
 
-Written by Dario SalvatiLast updated 2026-08-05
+Written by Dario SalvatiLast updated 2026-08-31
 
 ![](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/multi-lora-adapters-vllm/cover.png)
 
@@ -234,9 +234,7 @@ endpoint_config = EndpointConfig.create(
             instance_type=INSTANCE_TYPE,
             initial_instance_count=1,
             inference_ami_version="al2-ami-sagemaker-inference-gpu-3-1",
-            routing_config=ProductionVariantRoutingConfig(
-                routing_strategy="LEAST_OUTSTANDING_REQUESTS"
-            ),
+            routing_config=ProductionVariantRoutingConfig(routing_strategy="LEAST_OUTSTANDING_REQUESTS"),
         )
     ],
     region=REGION,
@@ -295,12 +293,14 @@ def complete(prompt: str, component: str, max_tokens: int = 120) -> str:
         EndpointName=ENDPOINT_NAME,
         InferenceComponentName=component,
         ContentType="application/json",
-        Body=json.dumps({
-            "model": BASE_MODEL,
-            "prompt": prompt,
-            "max_tokens": max_tokens,
-            "temperature": 0.0,
-        }),
+        Body=json.dumps(
+            {
+                "model": BASE_MODEL,
+                "prompt": prompt,
+                "max_tokens": max_tokens,
+                "temperature": 0.0,
+            }
+        ),
         CustomAttributes="route=/v1/completions",
     )
     return json.loads(response["Body"].read())["choices"][0]["text"]
@@ -355,9 +355,7 @@ def attach_adapter(alias: str) -> InferenceComponent:
         endpoint_name=ENDPOINT_NAME,
         specification=InferenceComponentSpecification(
             base_inference_component_name=BASE_COMPONENT_NAME,
-            container=InferenceComponentContainerSpecification(
-                artifact_url=adapter_artifacts[alias]
-            ),
+            container=InferenceComponentContainerSpecification(artifact_url=adapter_artifacts[alias]),
         ),
         region=REGION,
     )
@@ -411,7 +409,10 @@ try:
 except ClientError as error:
     print(error.response["Error"]["Message"])
 
-print("headline still served:", complete(PROMPTS["headline"], adapter_components["headline"].inference_component_name).strip())
+print(
+    "headline still served:",
+    complete(PROMPTS["headline"], adapter_components["headline"].inference_component_name).strip(),
+)
 ```
 
 ## Notes for production

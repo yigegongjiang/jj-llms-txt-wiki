@@ -1,6 +1,6 @@
 # Fine-tune and deploy embedding models with Amazon SageMaker
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 Embedding models are crucial for successful RAG applications, but they're often trained on general knowledge, which limits their effectiveness for company or domain specific adoption. Customizing embedding for your domain specific data can significantly boost the retrieval performance of your RAG Application. With the new release of [Sentence Transformers 3](https://huggingface.co/blog/train-sentence-transformers) and the [Hugging Face Embedding Container](https://huggingface.co/blog/sagemaker-huggingface-embedding), it's easier than ever to fine-tune and deploy embedding models.
 
@@ -45,8 +45,8 @@ sagemaker_session_bucket = sess.default_bucket()
 try:
     role = get_execution_role()
 except Exception:
-    iam = boto3.client('iam')
-    role = iam.get_role(RoleName='sagemaker_execution_role')['Role']['Arn']
+    iam = boto3.client("iam")
+    role = iam.get_role(RoleName="sagemaker_execution_role")["Role"]["Arn"]
 
 print(f"sagemaker role arn: {role}")
 print(f"sagemaker bucket: {sess.default_bucket()}")
@@ -79,7 +79,7 @@ from datasets import load_dataset
 
 # Load dataset from the hub
 dataset = load_dataset("philschmid/finanical-rag-embedding-dataset", split="train")
-input_path = f's3://{sess.default_bucket()}/datasets/rag-embedding'
+input_path = f"s3://{sess.default_bucket()}/datasets/rag-embedding"
 
 # rename columns
 dataset = dataset.rename_column("question", "anchor")
@@ -102,7 +102,9 @@ test_dataset_s3_path = f"{input_path}/test/dataset.json"
 print(f"Training data uploaded to:")
 print(train_dataset_s3_path)
 print(test_dataset_s3_path)
-print(f"https://s3.console.aws.amazon.com/s3/buckets/{sess.default_bucket()}/?region={sess.boto_region_name}&prefix={input_path.split('/', 3)[-1]}/")
+print(
+    f"https://s3.console.aws.amazon.com/s3/buckets/{sess.default_bucket()}/?region={sess.boto_region_name}&prefix={input_path.split('/', 3)[-1]}/"
+)
 ```
 
 ## 3. Fine-tune Embedding model on Amazon SageMaker
@@ -127,7 +129,7 @@ from sagemaker.train.configs import SourceCode, Compute, StoppingCondition
 from sagemaker.core import image_uris
 
 # define Training Job Name
-job_name = 'bge-base-exp1'
+job_name = "bge-base-exp1"
 
 # define hyperparameters, which are passed into the training job as `--key value` CLI args
 training_arguments = {
@@ -138,7 +140,7 @@ training_arguments = {
     "learning_rate": 2e-5,  # learning rate
 }
 
-instance_type = 'ml.g5.xlarge'
+instance_type = "ml.g5.xlarge"
 
 # Retrieve the Hugging Face PyTorch training DLC image URI
 training_image = image_uris.retrieve(
@@ -155,23 +157,23 @@ training_image = image_uris.retrieve(
 huggingface_estimator = ModelTrainer(
     sagemaker_session=sess,
     role=role,
-    base_job_name=job_name,                        # the name of the training job
+    base_job_name=job_name,  # the name of the training job
     training_image=training_image,
     source_code=SourceCode(
-        source_dir="scripts",                      # directory which includes all the files needed for training
-        entry_script="run_mnr.py",                 # train script
-        requirements="requirements.txt",           # dependencies installed before running the script
+        source_dir="scripts",  # directory which includes all the files needed for training
+        entry_script="run_mnr.py",  # train script
+        requirements="requirements.txt",  # dependencies installed before running the script
     ),
     compute=Compute(
-        instance_type=instance_type,               # instances type used for the training job
-        instance_count=1,                          # the number of instances used for training
+        instance_type=instance_type,  # instances type used for the training job
+        instance_count=1,  # the number of instances used for training
     ),
     stopping_condition=StoppingCondition(
-        max_runtime_in_seconds=2 * 24 * 60 * 60,   # maximum runtime in seconds (days * hours * minutes * seconds)
+        max_runtime_in_seconds=2 * 24 * 60 * 60,  # maximum runtime in seconds (days * hours * minutes * seconds)
     ),
     hyperparameters=training_arguments,
     environment={
-        "HUGGINGFACE_HUB_CACHE": "/tmp/.cache",     # set env variable to cache models in /tmp
+        "HUGGINGFACE_HUB_CACHE": "/tmp/.cache",  # set env variable to cache models in /tmp
     },
 )
 ```

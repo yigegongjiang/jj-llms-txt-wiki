@@ -1,6 +1,6 @@
 # DeepSeek OCR Pipeline on SageMaker Training Jobs
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 📖 **Context**: This notebook is part of the [VLM-OCR Recipes on GPU Infrastructure](https://huggingface.co/blog/florentgbelidji/vlm-ocr-recipes-gpu-infra) article, which explains the architecture and design decisions behind this pipeline.
 
@@ -160,7 +160,9 @@ from datasets import load_dataset
 from itertools import islice
 from IPython.display import display
 
-ds = load_dataset("HuggingFaceM4/FineVision", "olmOCR-mix-0225-documents", split="train", streaming=True).shuffle(seed=123)
+ds = load_dataset("HuggingFaceM4/FineVision", "olmOCR-mix-0225-documents", split="train", streaming=True).shuffle(
+    seed=123
+)
 for i, s in enumerate(islice(ds, 3)):
     print(f"--- Doc {i} ---")
     img = s["images"][0]
@@ -239,8 +241,8 @@ from sagemaker.core.helper.session_helper import Session, get_execution_role
 ```python
 # Initialize SageMaker session
 sagemaker_session = Session()
-iam = boto3.client('iam')
-role = iam.get_role(RoleName='sagemaker_execution_role')['Role']['Arn']
+iam = boto3.client("iam")
+role = iam.get_role(RoleName="sagemaker_execution_role")["Role"]["Arn"]
 region = sagemaker_session.boto_region_name
 account_id = boto3.client("sts").get_caller_identity()["Account"]
 
@@ -259,7 +261,9 @@ S3_PREFIX = f"{PROJECT_NAME}"
 S3_OUTPUT_URI = f"s3://{BUCKET_NAME}/{S3_PREFIX}"
 
 # vLLM Container - use SageMaker vLLM DLC
-TRAINING_IMAGE = f"763104351884.dkr.ecr.{region}.amazonaws.com/vllm:0.12.0-gpu-py312-cu129-ubuntu22.04-sagemaker-v1.0"  # GPU stages
+TRAINING_IMAGE = (
+    f"763104351884.dkr.ecr.{region}.amazonaws.com/vllm:0.12.0-gpu-py312-cu129-ubuntu22.04-sagemaker-v1.0"  # GPU stages
+)
 LIGHTWEIGHT_IMAGE = f"763104351884.dkr.ecr.{region}.amazonaws.com/pytorch-training:2.4.0-cpu-py311-ubuntu22.04-sagemaker"  # CPU-only assemble
 
 # Instance configuration
@@ -295,14 +299,13 @@ from pathlib import Path
 REPO_DIR = Path("llm-lab")
 if not REPO_DIR.exists():
     subprocess.run(
-        ["git", "clone", "--depth", "1",
-         "https://github.com/fgbelidji/llm-lab.git", str(REPO_DIR)],
+        ["git", "clone", "--depth", "1", "https://github.com/fgbelidji/llm-lab.git", str(REPO_DIR)],
         check=True,
     )
 
 # Locations of the pipeline code within the cloned repo
-PIPELINE_DIR = REPO_DIR / "batch-ocr-inference"   # contains the `llm_ocr` package
-SAGEMAKER_DIR = PIPELINE_DIR / "sagemaker"        # contains entry.sh + sm_job_runner.py
+PIPELINE_DIR = REPO_DIR / "batch-ocr-inference"  # contains the `llm_ocr` package
+SAGEMAKER_DIR = PIPELINE_DIR / "sagemaker"  # contains entry.sh + sm_job_runner.py
 print(f"Cloned pipeline code into: {PIPELINE_DIR.resolve()}")
 ```
 
@@ -348,12 +351,10 @@ BASE_ENV = {
     "MAX_MODEL_LEN": "8192",
     "GPU_MEMORY_UTILIZATION": "0.90",
     "TENSOR_PARALLEL_SIZE": "1",
-    
     # HuggingFace authentication (for source datasets)
     # Note: For production, consider using AWS Secrets Manager instead of env vars
     "HF_TOKEN": os.environ.get("HF_TOKEN", ""),
     "HF_HUB_ENABLE_HF_TRANSFER": "1",
-    
     # Prompts
     "DOC_PROMPT": "<image>\n<|grounding|>Convert this document to Markdown.",
     "DOC_MAX_TOKENS": "4096",
@@ -368,32 +369,34 @@ BASE_ENV = {
 
 ```python
 # Import IO and rendering utilities from llm_ocr
-import sys; sys.path.insert(0, str(PIPELINE_DIR))
+import sys
+
+sys.path.insert(0, str(PIPELINE_DIR))
 from llm_ocr.sm_io import load_dataset_from_s3
 from llm_ocr.document import render_sample_markdown, display_markdown, display_samples
 
 def launch_stage(stage: str, env: dict = None, use_gpu: bool = True):
     """Launch a pipeline stage as a SageMaker Training Job.
-    
+
     Args:
         stage: Pipeline stage (extract, describe, assemble)
         env: Stage-specific environment variables (optional)
         use_gpu: Whether to use GPU instance and image (default True)
-        
+
     Returns:
         Tuple of (ModelTrainer, job_name)
     """
     import uuid
-    
+
     # Generate unique base job name
     unique_id = uuid.uuid4().hex[:8]
     base_name = f"{PROJECT_NAME}-{stage}-{unique_id}"
-    
+
     # Merge base env with stage-specific env
     full_env = {**BASE_ENV, "PIPELINE_STAGE": stage}
     if env:
         full_env.update(env)
-    
+
     # Select image and instance based on GPU usage
     if use_gpu:
         image_uri = TRAINING_IMAGE
@@ -402,7 +405,7 @@ def launch_stage(stage: str, env: dict = None, use_gpu: bool = True):
         # Lightweight config for CPU-only stages (assemble)
         image_uri = LIGHTWEIGHT_IMAGE
         instance_type = INSTANCE_TYPE_CPU
-    
+
     # Create trainer
     trainer = ModelTrainer(
         sagemaker_session=sagemaker_session,
@@ -427,31 +430,28 @@ def launch_stage(stage: str, env: dict = None, use_gpu: bool = True):
         environment=full_env,
         training_image=image_uri,
     )
-    
+
     print(f"Launching {stage} stage...")
     trainer.train(wait=False)
-    
+
     # Find the actual job name using list_training_jobs API
     sm_client = sagemaker_session.sagemaker_client
     time.sleep(2)  # Brief wait for job to register
     response = sm_client.list_training_jobs(
-        NameContains=base_name,
-        SortBy='CreationTime',
-        SortOrder='Descending',
-        MaxResults=1
+        NameContains=base_name, SortBy="CreationTime", SortOrder="Descending", MaxResults=1
     )
-    
-    if response['TrainingJobSummaries']:
-        actual_job_name = response['TrainingJobSummaries'][0]['TrainingJobName']
+
+    if response["TrainingJobSummaries"]:
+        actual_job_name = response["TrainingJobSummaries"][0]["TrainingJobName"]
     else:
         actual_job_name = base_name  # Fallback
-    
+
     print(f"Job started: {actual_job_name}")
     return trainer, actual_job_name
 
 def wait_for_job(job_name: str, poll_interval: int = 30, timeout: int = 10800):
     """Wait for a SageMaker Training Job to complete.
-    
+
     Args:
         job_name: The exact job name
         poll_interval: Seconds between status checks
@@ -459,31 +459,31 @@ def wait_for_job(job_name: str, poll_interval: int = 30, timeout: int = 10800):
     """
     sm_client = sagemaker_session.sagemaker_client
     start_time = time.time()
-    
+
     print(f"Waiting for job {job_name}...")
-    
+
     while time.time() - start_time < timeout:
         response = sm_client.describe_training_job(TrainingJobName=job_name)
-        status = response['TrainingJobStatus']
-        
+        status = response["TrainingJobStatus"]
+
         elapsed = time.time() - start_time
         mins, secs = divmod(int(elapsed), 60)
-        
-        if status == 'Completed':
+
+        if status == "Completed":
             print(f"  {job_name}: Completed ✓ ({mins:02d}:{secs:02d})")
             return response
-        elif status == 'Failed':
+        elif status == "Failed":
             print(f"  {job_name}: Failed ✗")
             print(f"  Reason: {response.get('FailureReason', 'Unknown')}")
             return response
-        elif status == 'Stopped':
+        elif status == "Stopped":
             print(f"  {job_name}: Stopped")
             return response
         else:
             print(f"  {job_name}: {status}... ({mins:02d}:{secs:02d})")
-        
+
         time.sleep(poll_interval)
-    
+
     raise TimeoutError(f"Job {job_name} did not complete within {timeout}s")
 ```
 
@@ -540,13 +540,10 @@ stage1_env = {
     "DATASET_CONFIG": SOURCE_CONFIG,
     "DATASET_SPLIT": "train",
     "MAX_SAMPLES": str(MAX_SAMPLES),
-    
     # Local output directory
     "OUTPUT_DIR": "./outputs",
-    
     # Batch settings
     "EXTRACT_BATCH_SIZE": "128",
-    
     # S3 output (single location for all stages)
     "S3_OUTPUT_URI": S3_OUTPUT_URI,
 }
@@ -580,10 +577,8 @@ Input is read from S3 (output of Stage 1), output is saved to S3.
 stage2_env = {
     # Local output directory
     "OUTPUT_DIR": "./outputs",
-    
     # Batch settings
     "DESCRIBE_BATCH_SIZE": "128",
-    
     # S3 input and output (same location - updates in place)
     "S3_INPUT_URI": f"{S3_OUTPUT_URI}/dataset",
     "S3_OUTPUT_URI": S3_OUTPUT_URI,
@@ -619,11 +614,9 @@ Enrich markdown with figure captions to create the final dataset. This stage run
 stage3_env = {
     # Local output directory
     "OUTPUT_DIR": "./outputs",
-    
     # S3 input and output (same location - updates in place)
     "S3_INPUT_URI": f"{S3_OUTPUT_URI}/dataset",
     "S3_OUTPUT_URI": S3_OUTPUT_URI,
-    
     # Assemble stage doesn't need GPU
     "SKIP_SERVER_LAUNCH": "true",
 }
@@ -674,19 +667,22 @@ display_markdown(ds_final[1])
 The OCR pipeline has finished. Your dataset is available in S3:
 
 ```python
-print(f"\n" + "="*60)
+print(f"\n" + "=" * 60)
 print("Pipeline Complete!")
-print("="*60)
+print("=" * 60)
 print(f"\nS3 Output Location: {S3_OUTPUT_URI}")
 print(f"  - Dataset: {S3_OUTPUT_URI}/dataset/")
 print(f"  - Files: {S3_OUTPUT_URI}/outputs/")
 print(f"\nS3 Job Output: s3://{BUCKET_NAME}/{S3_PREFIX}/output/")
 print("\nJob Summary:")
-for i, (name, result) in enumerate([
-    ("Extract", stage1_result),
-    ("Describe", stage2_result),
-    ("Assemble", stage3_result),
-], 1):
+for i, (name, result) in enumerate(
+    [
+        ("Extract", stage1_result),
+        ("Describe", stage2_result),
+        ("Assemble", stage3_result),
+    ],
+    1,
+):
     status = result["TrainingJobStatus"]
     print(f"  {i}. {name}: {status}")
 ```

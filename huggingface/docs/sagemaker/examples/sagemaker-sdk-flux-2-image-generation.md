@@ -1,6 +1,6 @@
 # Decorate your house with Flux.2 and Amazon SageMaker AI
 
-Written by Enrique Hernández CalabrésLast updated 2026-08-05
+Written by Enrique Hernández CalabrésLast updated 2026-08-31
 
 ![](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/flux-2-image-generation/cover.png)
 
@@ -113,10 +113,7 @@ try:
         instance_type=INSTANCE_TYPE,
     )
 except Exception as e:
-    image_uri = (
-        f"763104351884.dkr.ecr.{REGION}.amazonaws.com/"
-        f"huggingface-vllm-omni:{VLLM_OMNI_IMAGE_TAG}"
-    )
+    image_uri = f"763104351884.dkr.ecr.{REGION}.amazonaws.com/huggingface-vllm-omni:{VLLM_OMNI_IMAGE_TAG}"
     print(f"SageMaker SDK image lookup failed ({e}); using fallback URI.")
 
 print(image_uri)
@@ -260,11 +257,7 @@ def extract_image_from_response(response_body: bytes) -> Image.Image:
     if isinstance(content, str):
         content = json.loads(content)
 
-    image_url = next(
-        item["image_url"]["url"]
-        for item in content
-        if item.get("type") == "image_url"
-    )
+    image_url = next(item["image_url"]["url"] for item in content if item.get("type") == "image_url")
     encoded_image = image_url.split(",", 1)[1]
     return Image.open(io.BytesIO(base64.b64decode(encoded_image)))
 
@@ -276,31 +269,33 @@ PROMPT = (
 response = runtime.invoke_endpoint(
     EndpointName=ENDPOINT_NAME,
     ContentType="application/json",
-    Body=json.dumps({
-        "model": MODEL_ID,
-        "messages": [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": PROMPT,
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": image_to_data_uri(input_image)},
-                    },
-                ],
-            }
-        ],
-        "extra_body": {
-            "height": height,
-            "width": width,
-            "num_inference_steps": 30,
-            "guidance_scale": 1,
-            "seed": 42,
-        },
-    }),
+    Body=json.dumps(
+        {
+            "model": MODEL_ID,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": PROMPT,
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": image_to_data_uri(input_image)},
+                        },
+                    ],
+                }
+            ],
+            "extra_body": {
+                "height": height,
+                "width": width,
+                "num_inference_steps": 30,
+                "guidance_scale": 1,
+                "seed": 42,
+            },
+        }
+    ),
     CustomAttributes="route=/v1/chat/completions",
 )
 
@@ -350,27 +345,29 @@ The same endpoint can also be used for text-to-image generation by sending only 
 text_to_image_response = runtime.invoke_endpoint(
     EndpointName=ENDPOINT_NAME,
     ContentType="application/json",
-    Body=json.dumps({
-        "model": MODEL_ID,
-        "messages": [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": "A cozy kitchen with a warm color palette, oak furniture, and a clean editorial style.",
-                    }
-                ],
-            }
-        ],
-        "extra_body": {
-            "height": 512,
-            "width": 512,
-            "num_inference_steps": 30,
-            "guidance_scale": 1,
-            "seed": 42,
-        },
-    }),
+    Body=json.dumps(
+        {
+            "model": MODEL_ID,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "A cozy kitchen with a warm color palette, oak furniture, and a clean editorial style.",
+                        }
+                    ],
+                }
+            ],
+            "extra_body": {
+                "height": 512,
+                "width": 512,
+                "num_inference_steps": 30,
+                "guidance_scale": 1,
+                "seed": 42,
+            },
+        }
+    ),
     CustomAttributes="route=/v1/chat/completions",
 )
 
@@ -414,11 +411,7 @@ def extract_image_from_payload(payload: dict) -> Image.Image:
     if isinstance(content, str):
         content = json.loads(content)
 
-    image_url = next(
-        item["image_url"]["url"]
-        for item in content
-        if item.get("type") == "image_url"
-    )
+    image_url = next(item["image_url"]["url"] for item in content if item.get("type") == "image_url")
     encoded_image = image_url.split(",", 1)[1]
     return Image.open(io.BytesIO(base64.b64decode(encoded_image)))
 
@@ -445,17 +438,19 @@ def invoke_flux(image_path: str, prompt: str, seed: int, steps: int, guidance_sc
     response = runtime.invoke_endpoint(
         EndpointName=ENDPOINT_NAME,
         ContentType="application/json",
-        Body=json.dumps({
-            "model": MODEL_ID,
-            "messages": [{"role": "user", "content": content}],
-            "extra_body": {
-                "height": height,
-                "width": width,
-                "num_inference_steps": int(steps),
-                "guidance_scale": float(guidance_scale),
-                "seed": int(seed),
-            },
-        }),
+        Body=json.dumps(
+            {
+                "model": MODEL_ID,
+                "messages": [{"role": "user", "content": content}],
+                "extra_body": {
+                    "height": height,
+                    "width": width,
+                    "num_inference_steps": int(steps),
+                    "guidance_scale": float(guidance_scale),
+                    "seed": int(seed),
+                },
+            }
+        ),
         CustomAttributes="route=/v1/chat/completions",
     )
 

@@ -1,6 +1,6 @@
 # Deploy Qwen3-TTS for ad voiceovers on Amazon SageMaker AI
 
-Written by Enrique Hernández CalabrésLast updated 2026-08-05
+Written by Enrique Hernández CalabrésLast updated 2026-08-31
 
 ![](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/tts-qwen-sagemaker-vllm-omni/cover.png)
 
@@ -129,10 +129,7 @@ In order to tell AWS which DLC we want to use, we need to specify its `image_uri
 ...         instance_type=INSTANCE_TYPE,
 ...     )
 >> except Exception as e:
-...     image_uri = (
-...         f"763104351884.dkr.ecr.{REGION}.amazonaws.com/"
-...         f"huggingface-vllm-omni:{VLLM_OMNI_IMAGE_TAG}"
-...     )
+...     image_uri = f"763104351884.dkr.ecr.{REGION}.amazonaws.com/huggingface-vllm-omni:{VLLM_OMNI_IMAGE_TAG}"
 ...     print(f"SageMaker SDK image lookup failed ({e}); using fallback URI.")
 
 >> print(image_uri)
@@ -247,13 +244,15 @@ client = boto_sess.client("sagemaker-runtime")
 response = client.invoke_endpoint(
     EndpointName=CUSTOM_VOICE_ENDPOINT_NAME,
     ContentType="application/json",
-    Body=json.dumps({
-        "model": CUSTOM_VOICE_MODEL_ID,
-        "input": "Did you know how easy it is to deploy a model to Amazon SageMaker?",
-        "voice": "vivian",
-        "language": "English",
-        "instructions": "Please speak in a slow and clear manner, like in a professional ad for a product.",
-    }),
+    Body=json.dumps(
+        {
+            "model": CUSTOM_VOICE_MODEL_ID,
+            "input": "Did you know how easy it is to deploy a model to Amazon SageMaker?",
+            "voice": "vivian",
+            "language": "English",
+            "instructions": "Please speak in a slow and clear manner, like in a professional ad for a product.",
+        }
+    ),
     CustomAttributes="route=/v1/audio/speech",
 )
 
@@ -335,23 +334,23 @@ REFERENCE_AUDIO_PATH = Path("audio_message.wav")
 REFERENCE_TRANSCRIPT = "Hello, my friend Enrique, I here working while there is noise in the street and I cannot focus and I seeing people in the swimming pool right now and I'm jealous and I will have chicken for lunch today."
 
 if not REFERENCE_AUDIO_PATH.is_file():
-    raise FileNotFoundError(
-        "Set REFERENCE_AUDIO_PATH to a local audio file before running this cell."
-    )
+    raise FileNotFoundError("Set REFERENCE_AUDIO_PATH to a local audio file before running this cell.")
 
 response = client.invoke_endpoint(
     EndpointName=BASE_ENDPOINT_NAME,
     ContentType="application/json",
-    Body=json.dumps({
-        "model": BASE_MODEL_ID,
-        "task_type": "Base",
-        "input": "Hello, this is a cloned voice.",
-        "voice": "default",
-        "language": "English",
-        "ref_audio": encode_audio_to_data_uri(REFERENCE_AUDIO_PATH),
-        "ref_text": REFERENCE_TRANSCRIPT,
-        "response_format": "wav",
-    }),
+    Body=json.dumps(
+        {
+            "model": BASE_MODEL_ID,
+            "task_type": "Base",
+            "input": "Hello, this is a cloned voice.",
+            "voice": "default",
+            "language": "English",
+            "ref_audio": encode_audio_to_data_uri(REFERENCE_AUDIO_PATH),
+            "ref_text": REFERENCE_TRANSCRIPT,
+            "response_format": "wav",
+        }
+    ),
     CustomAttributes="route=/v1/audio/speech",
 )
 
@@ -397,8 +396,17 @@ VOICES = {
 }
 
 LANGUAGES = [
-    "Auto", "English", "Chinese", "Japanese", "Korean", "German", "French",
-    "Russian", "Portuguese", "Spanish", "Italian",
+    "Auto",
+    "English",
+    "Chinese",
+    "Japanese",
+    "Korean",
+    "German",
+    "French",
+    "Russian",
+    "Portuguese",
+    "Spanish",
+    "Italian",
 ]
 
 def encode_audio_to_data_uri(audio_path: str) -> str:
@@ -518,9 +526,7 @@ with gr.Blocks(title="Ad Voiceover Studio", theme=gr.themes.Soft()) as demo:
                         choices=list(VOICES.keys()),
                         value="Ryan — dynamic male with strong rhythm (English)",
                     )
-                    custom_language = gr.Dropdown(
-                        label="Language", choices=LANGUAGES, value="English"
-                    )
+                    custom_language = gr.Dropdown(label="Language", choices=LANGUAGES, value="English")
                 custom_instructions = gr.Textbox(
                     label="Delivery instructions (optional)",
                     placeholder="e.g. Speak slowly and clearly, like a premium product ad.",
@@ -570,9 +576,7 @@ with gr.Blocks(title="Ad Voiceover Studio", theme=gr.themes.Soft()) as demo:
                         placeholder="Write the line the cloned voice should read...",
                         lines=6,
                     )
-                    clone_language = gr.Dropdown(
-                        label="Language", choices=LANGUAGES, value="English"
-                    )
+                    clone_language = gr.Dropdown(label="Language", choices=LANGUAGES, value="English")
                     reference_audio = gr.Audio(
                         label="Reference audio",
                         type="filepath",
@@ -611,9 +615,7 @@ with gr.Blocks(title="Ad Voiceover Studio", theme=gr.themes.Soft()) as demo:
             )
     else:
         with gr.Tab("Voice cloning (optional)"):
-            gr.Markdown(
-                "Run the optional Qwen3-TTS Base deployment section before using voice cloning."
-            )
+            gr.Markdown("Run the optional Qwen3-TTS Base deployment section before using voice cloning.")
 
 ENABLE_MCP_SERVER = True
 

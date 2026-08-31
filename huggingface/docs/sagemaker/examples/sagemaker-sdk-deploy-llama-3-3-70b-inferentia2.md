@@ -1,6 +1,6 @@
 # Deploy Llama 3.3 70B on AWS Inferentia2
 
-Last updated 2026-08-05
+Last updated 2026-08-31
 
 In this tutorial you will learn how to deploy [/meta-llama/Llama-3.3-70B-Instruct](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) model on AWS Inferentia2 with Hugging Face Optimum on Amazon SageMaker. We are going to use the Hugging Face TGI Neuron Container, a purpose-built Inference Container to easily deploy LLMs on AWS Inferentia2 powered by[ Text Generation Inference](https://huggingface.co/docs/text-generation-inference/index) and [Optimum Neuron](https://huggingface.co/docs/optimum-neuron/index).
 
@@ -47,8 +47,8 @@ sagemaker_session_bucket = sess.default_bucket()
 try:
     role = get_execution_role()
 except Exception:
-    iam = boto3.client('iam')
-    role = iam.get_role(RoleName='sagemaker_execution_role')['Role']['Arn']
+    iam = boto3.client("iam")
+    role = iam.get_role(RoleName="sagemaker_execution_role")["Role"]["Arn"]
 
 print(f"sagemaker role arn: {role}")
 print(f"sagemaker session region: {sess.boto_region_name}")
@@ -124,21 +124,23 @@ from sagemaker.core.shapes import ContainerDefinition
 model_id = "meta-llama/Llama-3.3-70B-Instruct"  # model_id from hf.co/models
 
 health_check_timeout = 3600  # additional time to load the model
-volume_size = 512            # size in GB of the EBS volume
+volume_size = 512  # size in GB of the EBS volume
 
 # TGI Neuron endpoint configuration (passed to the container as env vars)
 config = {
     "HF_MODEL_ID": model_id,
-    "HF_NUM_CORES": "24",            # number of neuron cores used for compilation
-    "HF_AUTO_CAST_TYPE": "bf16",     # dtype used to compile the model
-    "MAX_BATCH_SIZE": "4",           # max batch size (== batch size used for compilation)
-    "MAX_INPUT_TOKENS": "4000",      # max length of input text
-    "MAX_TOTAL_TOKENS": "4096",      # max generated length (== sequence length used for compilation)
+    "HF_NUM_CORES": "24",  # number of neuron cores used for compilation
+    "HF_AUTO_CAST_TYPE": "bf16",  # dtype used to compile the model
+    "MAX_BATCH_SIZE": "4",  # max batch size (== batch size used for compilation)
+    "MAX_INPUT_TOKENS": "4000",  # max length of input text
+    "MAX_TOTAL_TOKENS": "4096",  # max generated length (== sequence length used for compilation)
     "MESSAGES_API_ENABLED": "true",  # enable the OpenAI-compatible Messages API
     "HF_TOKEN": "<REPLACE WITH YOUR TOKEN>",  # needed to access gated models like Llama
 }
 
-assert config["HF_TOKEN"] != "<REPLACE WITH YOUR TOKEN>", "Please replace '<REPLACE WITH YOUR TOKEN>' with your Hugging Face Hub API token"
+assert config["HF_TOKEN"] != "<REPLACE WITH YOUR TOKEN>", (
+    "Please replace '<REPLACE WITH YOUR TOKEN>' with your Hugging Face Hub API token"
+)
 
 # Create the SageMaker Model directly from the container image + env vars (no model data):
 # the TGI Neuron container pulls HF_MODEL_ID (and its pre-compiled Neuron cache) from the Hub
@@ -212,14 +214,14 @@ Parameters can be defined as in the `parameters` attribute of the payload. Check
 
 ```python
 # Prompt to generate
-messages=[
-    { "role": "system", "content": "You are a helpful assistant." },
-    { "role": "user", "content": "What is deep learning in one sentence?" }
+messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is deep learning in one sentence?"},
 ]
 
 # Generation arguments https://platform.openai.com/docs/api-reference/chat/create
 parameters = {
-    "max_tokens":100,
+    "max_tokens": 100,
 }
 ```
 

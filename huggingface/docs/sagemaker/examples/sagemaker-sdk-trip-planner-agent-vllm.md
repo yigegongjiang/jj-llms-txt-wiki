@@ -1,6 +1,6 @@
 # Build a reasoning trip-planning agent on Amazon SageMaker AI with Hugging Face vLLM
 
-Written by Dario SalvatiLast updated 2026-08-05
+Written by Dario SalvatiLast updated 2026-08-31
 
 ![](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/trip-planner-agent-vllm/cover.png)
 
@@ -216,14 +216,14 @@ weather_tool = {
 response = runtime.invoke_endpoint(
     EndpointName=ENDPOINT_NAME,
     ContentType="application/json",
-    Body=json.dumps({
-        "model": MODEL_ID,
-        "messages": [
-            {"role": "user", "content": "What should I pack for Lisbon on 2026-10-12?"}
-        ],
-        "tools": [weather_tool],
-        "tool_choice": "auto",
-    }),
+    Body=json.dumps(
+        {
+            "model": MODEL_ID,
+            "messages": [{"role": "user", "content": "What should I pack for Lisbon on 2026-10-12?"}],
+            "tools": [weather_tool],
+            "tool_choice": "auto",
+        }
+    ),
     CustomAttributes="route=/v1/chat/completions",
 )
 
@@ -463,16 +463,16 @@ async def chat(message, history):
                 result = block.get("toolResult")
                 if not result:
                     continue
-                text = "\n".join(
-                    item.get("text", "") for item in result.get("content", []) if "text" in item
-                ).strip()
+                text = "\n".join(item.get("text", "") for item in result.get("content", []) if "text" in item).strip()
                 if text:
                     status = result.get("status", "success").upper()
-                    turn.append(gr.ChatMessage(
-                        role="assistant",
-                        content=text,
-                        metadata={"title": f"✅ Tool result [{status}]"},
-                    ))
+                    turn.append(
+                        gr.ChatMessage(
+                            role="assistant",
+                            content=text,
+                            metadata={"title": f"✅ Tool result [{status}]"},
+                        )
+                    )
                     kind = None
                     yield turn
 
