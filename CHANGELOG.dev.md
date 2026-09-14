@@ -7,6 +7,13 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.22.0] - 2026-09-14
+
+### Added
+
+- `llms-full.txt` 的页头 `URL:` 现支持相对 URL（按入口文档地址解析），此前只接受绝对 URL 而整站失败；Fumadocs 一类站点可直接同步。
+  - `full::resolve_page_url` 仅在 `Url::parse` 报 `RelativeUrlWithoutBase` 时用入口的 `final_url` 做 `base.join`，再走 `parse_entry_url` 复验 scheme/host；绝对 URL 路径不变，`has_encoded_unsafe_segment` 仍在 join 前查原始值。
+
 ## [0.21.1] - 2026-08-16
 
 ### Fixed

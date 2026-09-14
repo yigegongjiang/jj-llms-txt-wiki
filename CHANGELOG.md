@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.22.0] - 2026-09-14
+
+### Added
+
+- `llms-full.txt` 的页头 `URL:` 现支持相对 URL（按入口文档地址解析），此前只接受绝对 URL 而整站失败；Fumadocs 一类站点可直接同步。
+
 ## [0.21.1] - 2026-08-16
 
 ### Fixed

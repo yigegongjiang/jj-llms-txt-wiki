@@ -88,8 +88,10 @@ pub async fn crawl(
         // large, so the per-document cap (a content-page rule) must not apply here.
         let outcome = client.fetch(&canonical_entry, None, None).await;
         observer.event(CrawlEvent::Finished(canonical_entry.to_string()));
-        let body = match outcome {
-            Ok(FetchOutcome::Document { body, .. }) => body,
+        let (base, body) = match outcome {
+            Ok(FetchOutcome::Document {
+                final_url, body, ..
+            }) => (final_url, body),
             Ok(FetchOutcome::Missing) => {
                 return Err(format!("llms-full.txt entry is missing: {canonical_entry}"));
             }
@@ -116,7 +118,7 @@ pub async fn crawl(
                 "{canonical_entry} served an HTML page, not an llms-full.txt aggregate"
             ));
         }
-        let pages = split(&body).map_err(|error| format!("{canonical_entry}: {error}"))?;
+        let pages = split(&body, &base).map_err(|error| format!("{canonical_entry}: {error}"))?;
         let mut outputs = Vec::with_capacity(pages.len());
         for page in pages {
             let canonical = CanonicalUrl::new(page.url);
@@ -166,9 +168,9 @@ fn looks_like_html(body: &str) -> bool {
     head.starts_with("<!doctype html") || head.starts_with("<html")
 }
 
-fn split(body: &str) -> Result<Vec<FullPage>, String> {
+fn split(body: &str, base: &Url) -> Result<Vec<FullPage>, String> {
     let lines = scan_lines(body);
-    let headers = collect_headers(&lines)?;
+    let headers = collect_headers(&lines, base)?;
     if headers.is_empty() {
         return Err("llms-full.txt contains no valid page headers".to_owned());
     }
@@ -208,15 +210,15 @@ fn split(body: &str) -> Result<Vec<FullPage>, String> {
 /// Pick the bundle's header variant and collect its pages. Marker headers win:
 /// a bundle that declares even one `URL:` marker is split exactly as before, so
 /// the bare-URL form can never reinterpret an already-working bundle.
-fn collect_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String> {
-    let markers = collect_marker_headers(lines)?;
+fn collect_headers(lines: &[Line<'_>], base: &Url) -> Result<Vec<PageHeader>, String> {
+    let markers = collect_marker_headers(lines, base)?;
     if markers.is_empty() {
-        return collect_bare_headers(lines);
+        return collect_bare_headers(lines, base);
     }
     Ok(markers)
 }
 
-fn collect_marker_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String> {
+fn collect_marker_headers(lines: &[Line<'_>], base: &Url) -> Result<Vec<PageHeader>, String> {
     let mut seen_urls = HashSet::new();
     let mut headers = Vec::new();
     for (heading, line) in lines.iter().enumerate() {
@@ -233,7 +235,7 @@ fn collect_marker_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String>
                 lines[url_line].number
             ));
         }
-        let url = accept_page_url(raw, lines[url_line].number, &mut seen_urls)?;
+        let url = accept_page_url(raw, lines[url_line].number, base, &mut seen_urls)?;
         headers.push(PageHeader {
             heading,
             url_line,
@@ -253,7 +255,7 @@ fn collect_marker_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String>
 /// leaves same-level accidents, which then have to carry a page-shaped URL and
 /// stay unique across the bundle — cheap enough to keep a rare false page from
 /// stealing a slice of its neighbour.
-fn collect_bare_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String> {
+fn collect_bare_headers(lines: &[Line<'_>], base: &Url) -> Result<Vec<PageHeader>, String> {
     let candidates: Vec<(usize, usize)> = lines
         .iter()
         .enumerate()
@@ -275,7 +277,7 @@ fn collect_bare_headers(lines: &[Line<'_>]) -> Result<Vec<PageHeader>, String> {
     for (heading, _) in candidates.iter().filter(|(_, found)| *found == level) {
         let url_line = heading + 1;
         let raw = bare_url(lines[url_line].text).expect("bare header URL");
-        let url = accept_page_url(raw, lines[url_line].number, &mut seen_urls)?;
+        let url = accept_page_url(raw, lines[url_line].number, base, &mut seen_urls)?;
         headers.push(PageHeader {
             heading: *heading,
             url_line,
@@ -304,15 +306,35 @@ fn dominant_level(candidates: &[(usize, usize)]) -> Option<usize> {
         .find(|level| counts[*level] == most)
 }
 
+/// A page URL, absolute or resolved against `base` (the bundle's own final URL).
+/// Some generators emit a site-root path instead of a full URL — Fumadocs writes
+/// `URL: /docs/x` — which only means anything relative to the bundle it came in.
+/// Only a value that cannot parse standalone is rebased, so an absolute `file:`
+/// URL still fails validation instead of being silently reinterpreted; the join
+/// is re-validated because a protocol-relative `//host/x` replaces the authority.
+fn resolve_page_url(raw: &str, base: &Url) -> Result<Url, String> {
+    if matches!(
+        Url::parse(raw),
+        Err(url::ParseError::RelativeUrlWithoutBase)
+    ) {
+        let joined = base
+            .join(raw)
+            .map_err(|error| format!("invalid URL {raw}: {error}"))?;
+        return parse_entry_url(joined.as_str());
+    }
+    parse_entry_url(raw)
+}
+
 fn accept_page_url(
     raw: &str,
     line: usize,
+    base: &Url,
     seen: &mut HashSet<CanonicalUrl>,
 ) -> Result<Url, String> {
     if has_encoded_unsafe_segment(raw) {
         return Err(format!("unsafe page URL at line {line}: {raw}"));
     }
-    let url = parse_entry_url(raw)
+    let url = resolve_page_url(raw, base)
         .map_err(|error| format!("invalid page URL at line {line}: {error}"))?;
     if !seen.insert(CanonicalUrl::new(url.clone())) {
         return Err(format!("duplicate page URL at line {line}: {url}"));
@@ -473,7 +495,18 @@ fn trim_newlines(value: &str) -> &str {
 
 #[cfg(test)]
 mod tests {
-    use super::split;
+    use super::FullPage;
+    use url::Url;
+
+    /// Bundles in these tests declare absolute page URLs; the base only matters
+    /// for the relative-marker cases, which pass their own.
+    fn split(body: &str) -> Result<Vec<FullPage>, String> {
+        split_from(body, "https://example.com/llms-full.txt")
+    }
+
+    fn split_from(body: &str, base: &str) -> Result<Vec<FullPage>, String> {
+        super::split(body, &Url::parse(base).unwrap())
+    }
 
     #[test]
     fn splits_pages_and_preserves_page_content() {
@@ -596,5 +629,33 @@ mod tests {
     fn bare_url_pages_keep_their_title_when_empty() {
         let pages = split("### Empty\nhttps://example.com/empty.md\n").unwrap();
         assert_eq!(pages[0].markdown, "# Empty\n");
+    }
+
+    /// Fumadocs writes the site-root path instead of a full URL; it resolves
+    /// against the bundle's own URL, so the pages land under the docs host.
+    #[test]
+    fn resolves_relative_url_markers_against_the_bundle() {
+        let pages = split_from(
+            "# One\n\nURL: /docs/one\n\nBody one.\n\n# Two\n\nURL: two\n\nBody two.\n",
+            "https://www.example.com/docs/llms-full.txt",
+        )
+        .unwrap();
+        assert_eq!(pages.len(), 2);
+        assert_eq!(pages[0].url.as_str(), "https://www.example.com/docs/one");
+        assert_eq!(pages[1].url.as_str(), "https://www.example.com/docs/two");
+    }
+
+    /// Rebasing MUST NOT widen what counts as a page URL: an absolute non-HTTP
+    /// URL parses on its own and is rejected, and an unsafe segment is caught on
+    /// the raw value before any join can normalize it away.
+    #[test]
+    fn relative_rebase_keeps_page_url_validation() {
+        for body in [
+            "# One\n\nURL: file:///tmp/one\n\nBody\n",
+            "# One\n\nURL: mailto:a@example.com\n\nBody\n",
+            "# One\n\nURL: /%2e%2e/one\n\nBody\n",
+        ] {
+            assert!(split(body).is_err(), "{body}");
+        }
     }
 }
