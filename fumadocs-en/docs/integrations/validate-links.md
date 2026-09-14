@@ -1,0 +1,85 @@
+# Fumadocs (Framework Mode): Validate Links
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/(framework)/integrations/validate-links.mdx
+
+Ensure your links are correct.
+
+## Setup [#setup]
+
+You can use [`next-validate-link`](https://next-validate-link.vercel.app) to validate your links in content files.
+
+> This guide is mainly for **Fumadocs MDX**, see the docs of `next-validate-link` for other setups.
+
+Create a script:
+
+```ts title="scripts/lint.ts"
+import { type FileObject, printErrors, scanURLs, validateFiles } from 'next-validate-link';
+import { source } from '@/lib/source';
+
+async function checkLinks() {
+  const scanned = await scanURLs({
+    // pick a preset for your React framework
+    preset: 'next',
+    populate: {
+      'docs/[[...slug]]': source.getPages().map((page) => {
+        return {
+          value: {
+            slug: page.slugs,
+          },
+          hashes: getHeadings(page),
+        };
+      }),
+    },
+  });
+
+  printErrors(
+    await validateFiles(await getFiles(), {
+      scanned,
+      // check `href` attributes in different MDX components
+      markdown: {
+        components: {
+          Card: { attributes: ['href'] },
+        },
+      },
+      // check relative paths
+      checkRelativePaths: 'as-url',
+    }),
+    true,
+  );
+}
+
+function getHeadings({ data }: (typeof source)['$inferPage']): string[] {
+  return data.toc.map((item) => item.url.slice(1));
+}
+
+function getFiles() {
+  const promises = source.getPages().map(async (page): Promise<FileObject> => ({
+    path: page.absolutePath,
+    content: await page.data.getText('raw'),
+    url: page.url,
+    data: page.data,
+  }));
+
+  return Promise.all(promises);
+}
+
+void checkLinks();
+```
+
+### Running Lint [#running-lint]
+
+To access the `source` object outside of app runtime, configure [Fumadocs MDX Loader](/docs/mdx/loader/bun) for Bun.
+
+Then, run the script to validate links:
+
+```bash
+bun ./scripts/lint.ts
+```
+
+<Callout title="Node.js Loader">
+
+You might need to configure TypeScript transpiling (or newer version of Node.js), and [Fumadocs MDX Loader](/docs/mdx/loader/node).
+
+Without special reasons, using Bun or [`tsx`](https://github.com/privatenumber/tsx) would be simpler.
+
+</Callout>

@@ -1,0 +1,196 @@
+# Fumadocs (Framework Mode): createOpenAPIPage()
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/(framework)/integrations/openapi/api-page.mdx
+
+The component for rendering OpenAPI docs content
+
+## Overview [#overview]
+
+Fumadocs OpenAPI uses a `<OpenAPIPage />` component to render page contents, it should be a client component.
+
+```tsx title="components/api-page.tsx"
+'use client';
+import { createOpenAPIPage } from 'fumadocs-openapi/ui';
+
+export const OpenAPIPage = createOpenAPIPage({
+  // config
+});
+```
+
+### Generate Code Usages [#generate-code-usages]
+
+Generate code usage examples for each API endpoint.
+
+```tsx title="components/api-page.tsx" twoslash
+'use client';
+import { createOpenAPIPage } from 'fumadocs-openapi/ui';
+import {
+  createCodeUsageGeneratorRegistry,
+  type CodeUsageGenerator,
+} from 'fumadocs-openapi/requests/generators';
+import { registerDefault } from 'fumadocs-openapi/requests/generators/all';
+
+const codeUsages = createCodeUsageGeneratorRegistry();
+
+// include defaults
+registerDefault(codeUsages);
+
+// add custom generators
+codeUsages.add('custom-id', {
+  label: 'My Example',
+  lang: 'js',
+  generate(data, { mediaAdapters }) {
+    // request data
+    console.log(data);
+
+    return 'const response = "hello world";';
+  },
+});
+
+export const OpenAPIPage = createOpenAPIPage({
+  // [!code ++]
+  codeUsages,
+});
+```
+
+In addition, you can also specify code samples via OpenAPI schema.
+
+```yaml
+paths:
+  /plants:
+    get:
+      x-codeSamples:
+        - lang: js
+          label: JavaScript SDK
+          source: |
+            const planter = require('planter');
+            planter.list({ unwatered: true });
+```
+
+### Internationalization [#internationalization]
+
+Assuming you have configured [Internationalization](/docs/internationalization) at UI level:
+
+```tsx title="layout.shared.tsx"
+import { defineI18n } from 'fumadocs-core/i18n';
+import { uiTranslations } from 'fumadocs-ui/i18n';
+import { openapiTranslations } from 'fumadocs-openapi/i18n';
+
+const i18n = defineI18n({
+  languages: ['en', 'cn'],
+  defaultLanguage: 'en',
+});
+
+export const translations = i18n
+  .translations()
+  .extend(uiTranslations())
+  // [!code ++]
+  .extend(openapiTranslations())
+  .add({
+    cn: {
+      displayName: 'Chinese',
+      // [!code ++]
+      'Body(playground)': '請求正文',
+    },
+  });
+```
+
+See [Translations](/docs/ui/translations) for more details.
+
+## Media Adapters [#media-adapters]
+
+You can create a media adapter to support other media types in API pages, a media adapter implements:
+
+- Converting value into `fetch()` body compatible with corresponding media type.
+- Generate code example based on different programming language/tool.
+
+```tsx title="components/api-page.tsx" twoslash
+'use client';
+import { createOpenAPIPage } from 'fumadocs-openapi/ui';
+import type { MediaAdapter } from 'fumadocs-openapi';
+
+const mediaAdapters: Record<string, MediaAdapter> = {
+  // example: custom `application/json
+  'application/json': {
+    encode(data) {
+      return JSON.stringify(data.body);
+    },
+    // returns code that inits a `body` variable, used for request body
+    generateExample(data, ctx) {
+      if (ctx.lang === 'js') {
+        return `const body = "hello world"`;
+      }
+
+      if (ctx.lang === 'python') {
+        return `body = "hello world"`;
+      }
+
+      if (ctx.lang === 'go' && 'addImport' in ctx) {
+        ctx.addImport('strings');
+
+        return `body := strings.NewReader("hello world")`;
+      }
+    },
+  },
+};
+
+export const OpenAPIPage = createOpenAPIPage({
+  // [!code ++]
+  mediaAdapters,
+});
+```
+
+## Customise UI [#customise-ui]
+
+For customisations beyond the available options, you can install the UI into your codebase with Fumadocs CLI, and use it in place of the built-in renderers.
+
+### API Playground [#api-playground]
+
+```npm
+npx @fumadocs/cli add fumadocs/openapi/playground
+```
+
+```tsx title="components/api-page.tsx"
+'use client';
+import { createOpenAPIPage } from 'fumadocs-openapi/ui';
+import PlaygroundClient from '@/components/api/playground';
+import { AuthProvider } from '@/components/api/playground/auth';
+
+export const OpenAPIPage = createOpenAPIPage({
+  playground: {
+    provider: ({ children }) => <AuthProvider>{children}</AuthProvider>,
+    render: ({ path, method, operation, pathItem }) => (
+      <PlaygroundClient
+        route={path}
+        method={method}
+        operation={operation}
+        pathItem={pathItem}
+        writeOnly
+        readOnly={false}
+      />
+    ),
+  },
+});
+```
+
+The installed files access the runtime of API pages from `fumadocs-openapi/ui`, such as the render context. You can also use it to build your own playground from scratch.
+
+### Schema UI [#schema-ui]
+
+The UI for rendering JSON schemas.
+
+```npm
+npx @fumadocs/cli add fumadocs/api-docs/schema
+```
+
+```tsx title="components/api-page.tsx"
+'use client';
+import { createOpenAPIPage } from 'fumadocs-openapi/ui';
+import { Schema } from '@/components/api/schema';
+
+export const OpenAPIPage = createOpenAPIPage({
+  schemaUI: {
+    render: (props) => <Schema {...props} />,
+  },
+});
+```

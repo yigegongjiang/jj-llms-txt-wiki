@@ -1,0 +1,302 @@
+# Fumadocs Core (the core library of Fumadocs): Page Slugs & Page Tree
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/headless/page-conventions.mdx
+
+Customize generated page slugs and page tree.
+
+> This guide only applies for content sources that uses `loader()` API, such as **Fumadocs MDX**.
+
+## Overview [#overview]
+
+Fumadocs generates **page slugs** and **page tree** (sidebar items) from your content directory using [`loader()`](/docs/headless/source-api),
+the routing functionality will be handled by your React framework.
+
+You can define folders and pages similar to file-system based routing.
+
+<Files>
+  <Folder name="content/docs (content directory)" defaultOpen>
+    <File name="index.mdx" />
+    <File name="getting-started.mdx" />
+  </Folder>
+</Files>
+
+To customize its output further, you may use [Loader Plugins](/docs/headless/source-api/plugins).
+
+## File [#file]
+
+For [MDX](https://mdxjs.com) & Markdown file, you can customize page information from frontmatter.
+
+```mdx
+---
+title: My Page
+description: Best document ever
+icon: HomeIcon
+---
+
+## Learn More
+```
+
+Fumadocs detects from the following properties to construct page trees.
+
+| name          | description                           |
+| ------------- | ------------------------------------- |
+| `title`       | The title of page                     |
+| `description` | The description of page               |
+| `icon`        | The name of icon, see [Icons](#icons) |
+
+<Callout title='Good to Know'>
+
+Page information is supplied by the content source such as **Fumadocs MDX**.
+
+On Fumadocs MDX, you can specify a [`schema`](/docs/mdx/collections#schema-1) option to customize frontmatter schema.
+
+</Callout>
+
+### Slugs [#slugs]
+
+The slugs of a page are generated from its file path.
+
+| path (relative to content folder) | slugs             |
+| --------------------------------- | ----------------- |
+| `./dir/page.mdx`                  | `['dir', 'page']` |
+| `./dir/index.mdx`                 | `['dir']`         |
+
+## Folder [#folder]
+
+Organize multiple pages, you can create a [Meta file](#meta) to customize folders.
+
+### Folder Group [#folder-group]
+
+By default, putting a file into folder will change its slugs.
+You can wrap the folder name in parentheses to avoid impacting the slugs of child files.
+
+| path (relative to content folder) | slugs      |
+| --------------------------------- | ---------- |
+| `./(group-name)/page.mdx`         | `['page']` |
+
+### Root Folder [#root-folder]
+
+Marks the folder as a root folder, only items in the opened root folder will be visible.
+
+```json title="meta.json"
+{
+  "title": "Name of Folder",
+  "description": "The description of root folder (optional)",
+  "root": true
+}
+```
+
+For example, when you are opening root folder `framework`, the other folders (e.g. `headless`) are not shown on the sidebar and other navigation elements.
+
+<Files>
+  <Folder name="framework" defaultOpen>
+    <File name="index.mdx" />
+    <File name="current-page.mdx" className="text-fd-primary! bg-fd-primary/10!" />
+    <File name="other-pages.mdx" />
+  </Folder>
+  <Folder name="headless (hidden)" className="opacity-50" disabled defaultOpen>
+    <File name="my-page.mdx" />
+  </Folder>
+</Files>
+
+<Callout title='Fumadocs UI'>
+
+Fumadocs UI renders root folders as [Layout Tabs](/docs/ui/layouts/docs#layout-tabs), which allows users to switch between them.
+
+</Callout>
+
+### Root Type [#root-type]
+
+`root` also accepts a string, the **type** of root folder:
+root folders of the same type under the same parent scope are interchangeable, such as versions of the same docs.
+
+<Files>
+  <Folder name="v1" defaultOpen>
+    <File name="meta.json" />
+    <File name="index.mdx" />
+    <File name="guide.mdx" className="text-fd-primary! bg-fd-primary/10!" />
+  </Folder>
+  <Folder name="v2" defaultOpen>
+    <File name="meta.json" />
+    <File name="index.mdx" />
+    <File name="guide.mdx" className="text-fd-primary! bg-fd-primary/10!" />
+  </Folder>
+</Files>
+
+```json tab="v1/meta.json"
+{
+  "title": "1.0.0",
+  "root": "version"
+}
+```
+
+```json tab="v2/meta.json"
+{
+  "title": "2.0.0",
+  "root": "version"
+}
+```
+
+`root: true` is simply the default type, displayed as tabs.
+
+Switching to another root folder of the same type maps a page to its **structural projection**, the page at the same path relative to the root folder:
+
+| Page                  | Projection in `v2`                                  |
+| --------------------- | --------------------------------------------------- |
+| `v1/guide.mdx`        | `v2/guide.mdx`                                      |
+| `v1/python/guide.mdx` | `v2/python/guide.mdx`, nested root folders are kept |
+
+<Callout title='Fumadocs UI'>
+
+Fumadocs UI renders a [dropdown](/docs/ui/layouts/docs#tabs-groups) for each root folder on the current page's path to switch between root folders of its type, see [Versioning](/docs/navigation#versioning) for a complete example.
+
+</Callout>
+
+## Meta [#meta]
+
+Customize folders by creating a `meta.json` file in the folder.
+
+```json title="meta.json"
+{
+  "title": "Display Name",
+  "icon": "MyIcon",
+  "pages": ["index", "getting-started"],
+  "defaultOpen": true
+}
+```
+
+| name          | description                                  |
+| ------------- | -------------------------------------------- |
+| `title`       | Display name                                 |
+| `icon`        | The name of icon, see [Icons](#icons)        |
+| `defaultOpen` | Open the folder by default                   |
+| `collapsible` | Collapsible folder content (default: `true`) |
+| `pages`       | Folder items (see below)                     |
+| `pagesIndex`  | The index item (see below)                   |
+
+### Pages [#pages]
+
+Folder items are sorted alphabetically by default, you can add or control the order of items using `pages`.
+
+```json title="meta.json"
+{
+  "pages": ["index", "getting-started"]
+}
+```
+
+> When specified, items are not included unless they are listed in `pages`.
+
+| Type              | Syntax                                                           | Description                                                                           |
+| ----------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Path**          | `./path/to/page`                                                 | a path to page or folder.                                                             |
+| **Separator**     | `---Label---`<br/>`---[Icon]Label---`                            | a separator between two sections (icon supported).                                    |
+| **Link**          | `[Text](url)`<br/>`[Icon][Text](url)`<br/>`external:[Text](url)` | insert links (icon supported)<br/>add a `external:` prefix to mark links as external. |
+| **Rest**          | `...`                                                            | include remaining pages (sorted alphabetically).                                      |
+| **Reversed Rest** | `z...a`                                                          | reversed **Rest** item.                                                               |
+| **Extract**       | `...folder`                                                      | extract the items from a folder.                                                      |
+| **Except**        | `!item`                                                          | Exclude an item from `...` or `z...a`.                                                |
+
+```json title="meta.json"
+{
+  "pages": [
+    "components",
+    "---My Separator---",
+    "...folder",
+    "...",
+    "!file",
+    "!otherFolder",
+    "[Vercel](https://vercel.com)",
+    "[Triangle][Vercel](https://vercel.com)"
+  ]
+}
+```
+
+<Callout type='warn' title="No Duplicated URL">
+
+The same page URL must not appear more than once in the entire page tree.
+Duplicated page items are not allowed for the same reason.
+
+This is intentional, such that Fumadocs can locate the active tree item purely based on current pathname.
+
+</Callout>
+
+### Folder Index [#folder-index]
+
+When folder owns a index item, it becomes clickable and jumps to the index item when clicked.
+
+By default, it is the `index` file under each folder. You can specify the index item of a folder, it accepts **Path** and **Link**.
+
+```json tab="meta.json (Path)"
+{
+  // assume there's a "overview.mdx" file under the folder
+  "pagesIndex": "overview"
+}
+```
+
+```json tab="meta.json (Link)"
+{
+  "pagesIndex": "[Example](https://example.com)"
+}
+```
+
+## Icons [#icons]
+
+Since Fumadocs doesn't include an icon library, you have to convert the icon names to JSX elements in runtime, and render it as a component.
+
+You can add an [`icon` handler](/docs/headless/source-api#icons) to `loader()`.
+
+## i18n Routing [#i18n-routing]
+
+You can define different style for i18n routing.
+
+```ts title="lib/i18n.ts"
+import type { I18nConfig } from 'fumadocs-core/i18n';
+
+export const i18n: I18nConfig = {
+  // default
+  parser: 'dot',
+  // or
+  parser: 'dir',
+};
+```
+
+<Tabs items={['dot', 'dir']}>
+
+  <Tab>
+
+    Add Markdown/meta files for different languages by attending `.{locale}` to your file name, like:
+
+    <Files>
+      <Folder name="content/docs" defaultOpen>
+        <File name="meta.json" />
+        <File name="meta.cn.json" />
+        <File name="get-started.mdx" />
+        <File name="get-started.cn.mdx" />
+      </Folder>
+    </Files>
+
+    For the default locale, the locale code is optional.
+
+  </Tab>
+
+  <Tab>
+
+    All content files are grouped by language folders:
+
+    <Files>
+      <Folder name="content/docs" defaultOpen>
+        <Folder name='en' defaultOpen>
+          <File name="meta.json" />
+          <File name="get-started.mdx" />
+        </Folder>
+
+        <Folder name='cn' defaultOpen>
+          <File name="meta.json" />
+          <File name="get-started.mdx" />
+        </Folder>
+      </Folder>
+    </Files>
+
+  </Tab>
+
+</Tabs>

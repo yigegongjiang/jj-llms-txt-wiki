@@ -1,0 +1,143 @@
+# Fumadocs CLI (the CLI tool for automating Fumadocs apps): User Guide
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/cli/index.mdx
+
+The CLI tool that automates setups and installs components.
+
+## Installation [#installation]
+
+Initialize a config for CLI:
+
+```package-install
+npx @fumadocs/cli
+```
+
+You can change the output paths of components in the config.
+
+### Init [#init]
+
+Set up Fumadocs on an existing app, it supports Next.js, React Router, Tanstack Start and Waku.
+
+```package-install
+npx @fumadocs/cli init
+```
+
+To avoid conflicts with your app, the docs pages are added in a dedicated route group (e.g. `app/(docs)` on Next.js) with their own provider and layout, route handlers like the search API follow the [examples](https://github.com/fuma-nama/fumadocs/tree/dev/examples). Only a few edits are made to existing files:
+
+- Fumadocs MDX plugin in your framework config.
+- Fumadocs UI styles in your global CSS.
+- `suppressHydrationWarning` on the `<html>` element of your root layout, for the theme switch.
+- `.source` in `.gitignore`.
+
+Pass `--i18n` to set up [internationalization](/docs/internationalization): the docs routes get a locale segment (optional for the default locale where the router supports it), a `lib/i18n.ts` config and, on Next.js, a proxy scoped to the docs routes. Other features follow the i18n config of your project.
+
+It asks before overwriting a file, pass `--yes` to skip prompts and `--no-install` to only write dependencies to `package.json`.
+
+### Features [#features]
+
+Configure a feature on your project, it installs the needed components & routes, and wires them into your app.
+
+```package-install
+npx @fumadocs/cli feature ai --provider openrouter
+```
+
+| Feature    | Description                                                                                |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| `docs`     | Set up Fumadocs, same as `init`.                                                           |
+| `ai`       | [Ask AI](/docs/integrations/llms#ask-ai) dialog, `--provider`.                             |
+| `llms`     | [LLM routes](/docs/integrations/llms): `llms.txt`, `llms-full.txt` and per-page Markdown.  |
+| `mcp`      | [MCP server](/docs/integrations/llms#mcp-server) to search and read the docs.              |
+| `webmcp`   | [WebMCP](/docs/integrations/llms#webmcp) tools for AI agents in the browser, experimental. |
+| `og`       | Open Graph image generation, `--engine`.                                                   |
+| `search`   | 3rd party [search solution](/docs/search), `--provider`.                                   |
+| `feedback` | [Feedback](/docs/integrations/feedback) component on docs pages.                           |
+| `epub`     | Route to [export EPUB](/docs/guides/export-epub).                                          |
+| `lint`     | Configure ESLint (Next.js only), Biome or Oxlint, `--linter`.                              |
+
+Features adapt to your setup:
+
+- Fumadocs MDX with the [Macro API](/docs/mdx/macro) or a `source.config.ts`, other content sources can't use `llms`, `mcp` and `epub`.
+- The `baseUrl` of your docs, `src/` directory, `next.config.ts`, i18n, static export and SPA modes.
+- React Router with file-based routes: the routes to register are printed instead.
+
+The paths of routes are placed under the constants of `lib/shared.ts`.
+
+See help for the available options:
+
+```package-install
+npx @fumadocs/cli feature -h
+```
+
+### Components [#components]
+
+Select and install components.
+
+```package-install
+npx @fumadocs/cli add
+```
+
+You can pass component names directly.
+
+```package-install
+npx @fumadocs/cli add banner files
+```
+
+#### How the magic works? [#how-the-magic-works]
+
+The CLI fetches the latest version of component from the GitHub repository of Fumadocs.
+When you install a component, it is guaranteed to be up-to-date.
+
+In addition, it also transforms import paths.
+Make sure to use the latest version of CLI
+
+> This is highly inspired by Shadcn UI.
+
+### Customize [#customize]
+
+A simple way to customize Fumadocs layouts.
+
+```package-install
+npx @fumadocs/cli customize
+```
+
+### Tree [#tree]
+
+Generate files tree for Fumadocs UI `Files` component, using the `tree` command from your terminal.
+
+```package-install
+npx @fumadocs/cli tree ./my-dir ./output.tsx
+```
+
+You can output MDX files too:
+
+```package-install
+npx @fumadocs/cli tree ./my-dir ./output.mdx
+```
+
+See help for further details:
+
+```package-install
+npx @fumadocs/cli tree -h
+```
+
+#### Example Output [#example-output]
+
+```tsx title="output.tsx"
+import { File, Folder, Files } from 'fumadocs-ui/components/files';
+
+export default (
+  <Files>
+    <Folder name="app">
+      <File name="layout.tsx" />
+      <File name="page.tsx" />
+      <File name="global.css" />
+    </Folder>
+    <Folder name="components">
+      <File name="button.tsx" />
+      <File name="tabs.tsx" />
+      <File name="dialog.tsx" />
+    </Folder>
+    <File name="package.json" />
+  </Files>
+);
+```

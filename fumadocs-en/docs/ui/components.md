@@ -1,0 +1,48 @@
+# Fumadocs UI (the default theme of Fumadocs): Components
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/ui/components/index.mdx
+
+Additional components to improve your docs
+
+## Overview [#overview]
+
+Additional components that you can use:
+
+<DocsCategory />
+
+### MDX Components [#mdx-components]
+
+The default MDX components include Cards, Callouts, Code Blocks and Headings.
+
+```ts
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+```
+
+### Relative Link [#relative-link]
+
+<Callout type="warn">Server Component only.</Callout>
+
+To support links with relative file path in `href`, override the default `a` component with:
+
+```tsx title="app/docs/[[...slug]]/page.tsx"
+import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { source } from '@/lib/source';
+import { getMDXComponents } from '@/components/mdx';
+
+const page = source.getPage(['...']);
+
+return (
+  <MdxContent
+    components={getMDXComponents({
+      // override the `a` tag
+      a: createRelativeLink(source, page),
+    })}
+  />
+);
+```
+
+```mdx
+[My Link](./file.mdx)
+```
+
+Example: [`../../(integrations)/feedback.mdx`](<../../(integrations)/feedback.mdx>)

@@ -1,0 +1,20 @@
+# Fumadocs (Framework Mode): Internationalization
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/(framework)/internationalization/index.mdx
+
+Support multiple languages in your documentation
+
+<Callout title="Fumadocs CLI">
+
+`npx @fumadocs/cli init --i18n` sets up a new docs with i18n, or configure it manually below.
+
+</Callout>
+
+## Overview [#overview]
+
+You'll have to configure i18n routing on your React framework and Fumadocs.
+
+Fumadocs is not a full-powered i18n library, it's up to you when internationalizing the rest of your app.
+You can also use other libraries with Fumadocs like [next-intl](https://github.com/amannn/next-intl) on Next.js.
+
+<DocsCategory />

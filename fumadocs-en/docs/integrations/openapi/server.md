@@ -1,0 +1,104 @@
+# Fumadocs (Framework Mode): createOpenAPI()
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/(framework)/integrations/openapi/server.mdx
+
+The OpenAPI server instance.
+
+## OpenAPI Server [#openapi-server]
+
+The main config for Fumadocs OpenAPI.
+
+> It should not be referenced in browser environments.
+
+### `input` [#input]
+
+The OpenAPI schemas to read from.
+
+- File Paths
+- External URLs
+- Functions (see below)
+
+```ts tab="Basic"
+import { createOpenAPI } from 'fumadocs-openapi/server';
+
+export const openapi = createOpenAPI({
+  input: ['./unkey.json'],
+});
+```
+
+```ts tab="Functions"
+import { createOpenAPI } from 'fumadocs-openapi/server';
+
+export const openapi = createOpenAPI({
+  input: {
+    // [id]: downloaded OpenAPI Schema
+    my_schema: async () => {
+      const res = await fetch('https://registry.scalar.com/@scalar/apis/galaxy/latest?format=json');
+      return res.json();
+    },
+  },
+});
+```
+
+## Creating Proxy [#creating-proxy]
+
+A proxy server is useful for executing HTTP (`fetch`) requests, as it doesn't have CORS constraints like on the browser.
+We can use it for executing HTTP requests on the OpenAPI playground, when the target API endpoints do not have CORS configured correctly.
+
+<Callout type="warn" title="Warning">
+  Do not use this on unreliable sites and API endpoints, the proxy server will forward all received
+  headers & body, including HTTP-only `Cookies` and `Authorization` header.
+</Callout>
+
+### Setup [#setup]
+
+Create a route handler for proxy server.
+
+```ts tab="Next.js" title="app/api/proxy/route.ts"
+import { openapi } from '@/lib/openapi';
+
+export const { GET, HEAD, PUT, POST, PATCH, DELETE } = openapi.createProxy({
+  // important: set a list of allowed origins for proxied requests
+  allowedOrigins: ['https://example.com'],
+});
+```
+
+```ts tab="Tanstack Start" title="app/routes/api/proxy.ts"
+import { openapi } from '@/lib/openapi';
+import { createFileRoute } from '@tanstack/react-router';
+
+const proxy = openapi.createProxy({
+  // important: set a list of allowed origins for proxied requests
+  allowedOrigins: ['https://example.com'],
+});
+
+export const Route = createFileRoute('/api/proxy')({
+  server: {
+    handlers: {
+      // Handles all methods by default, or specify individual methods (GET, POST, etc.)
+      ANY: async ({ request }) => {
+        return proxy.handle(request);
+      },
+    },
+  },
+});
+```
+
+```ts tab="Waku" title="src/pages/_api/api/proxy.ts"
+import { openapi } from '@/lib/openapi';
+
+export const { GET, HEAD, PUT, POST, PATCH, DELETE } = openapi.createProxy({
+  // important: set a list of allowed origins for proxied requests
+  allowedOrigins: ['https://example.com'],
+});
+```
+
+And set the proxy URL in `createOpenAPI`.
+
+```ts title="lib/openapi.ts"
+import { createOpenAPI } from 'fumadocs-openapi/server';
+
+export const openapi = createOpenAPI({
+  proxyUrl: '/api/proxy', // [!code ++]
+});
+```

@@ -1,0 +1,193 @@
+# Fumadocs (Framework Mode): Tanstack Start
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/(framework)/manual-installation/tanstack-start.mdx
+
+Setup Fumadocs on Tanstack Start.
+
+## Getting Started [#getting-started]
+
+Before continuing, make sure to configure:
+
+- Tailwind CSS 4.
+- Fumadocs MDX: follow the [Vite setup guide](/docs/mdx/vite) and create essential files like `lib/source.ts`.
+
+### Installation [#installation]
+
+```npm
+npm i fumadocs-core fumadocs-ui
+```
+
+### Styles [#styles]
+
+Add the following to your Tailwind CSS file:
+
+```css title="styles/app.css"
+@import 'tailwindcss';
+/* [!code ++:2] */
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+```
+
+### Create Pages [#create-pages]
+
+Create the following files:
+
+```tsx tab="components/mdx.tsx"
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import type { MDXComponents } from 'mdx/types';
+
+export function getMDXComponents(components?: MDXComponents) {
+  return {
+    ...defaultMdxComponents,
+    ...components,
+  } satisfies MDXComponents;
+}
+
+export const useMDXComponents = getMDXComponents;
+
+declare global {
+  type MDXProvidedComponents = ReturnType<typeof getMDXComponents>;
+}
+
+```
+```tsx tab="lib/layout.shared.tsx"
+import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+
+export function baseOptions(): BaseLayoutProps {
+  return {
+    nav: {
+      title: 'Tanstack Start',
+    },
+  };
+}
+
+```
+```tsx tab="routes/docs/$.tsx"
+import { createFileRoute, notFound } from '@tanstack/react-router';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { createServerFn } from '@tanstack/react-start';
+import { docs, source } from '@/lib/source';
+import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/docs/page';
+import { baseOptions } from '@/lib/layout.shared';
+import { useFumadocsLoader } from 'fumadocs-core/source/client';
+import { Suspense, use } from 'react';
+import { useMDXComponents } from '@/components/mdx';
+
+export const Route = createFileRoute('/docs/$')({
+  component: Page,
+  loader: async ({ params }) => {
+    const slugs = params._splat?.split('/') ?? [];
+    const data = await serverLoader({ data: slugs });
+    await docs.getPage(data.path)?.preload();
+    return data;
+  },
+});
+
+const serverLoader = createServerFn({
+  method: 'GET',
+})
+  .validator((slugs: string[]) => slugs)
+  .handler(async ({ data: slugs }) => {
+    const page = source.getPage(slugs);
+    if (!page) throw notFound();
+
+    return {
+      path: page.path,
+      pageTree: await source.serializePageTree(source.getPageTree()),
+    };
+  });
+
+function Content({ path }: { path: string }) {
+  const page = docs.getPage(path);
+  if (!page) throw new Error(`unknown page: ${path}`);
+
+  const { toc } = use(page.load());
+  const MDX = page.body;
+
+  return (
+    <DocsPage toc={toc}>
+      <DocsTitle>{page.title}</DocsTitle>
+      <DocsDescription>{page.description}</DocsDescription>
+      <DocsBody>
+        <MDX components={useMDXComponents()} />
+      </DocsBody>
+    </DocsPage>
+  );
+}
+
+function Page() {
+  const data = useFumadocsLoader(Route.useLoaderData());
+
+  return (
+    <DocsLayout {...baseOptions()} tree={data.pageTree}>
+      <Suspense>
+        <Content path={data.path} />
+      </Suspense>
+    </DocsLayout>
+  );
+}
+
+```
+```ts tab="routes/api/search.ts"
+import { createFileRoute } from '@tanstack/react-router';
+import { source } from '@/lib/source';
+import { createFromSource } from 'fumadocs-core/search/server';
+
+const server = createFromSource(source);
+
+export const Route = createFileRoute('/api/search')({
+  server: {
+    handlers: {
+      GET: async ({ request }) => server.GET(request),
+    },
+  },
+});
+
+```
+
+Wrap your entire app under Fumadocs providers:
+
+```tsx title="__root.tsx"
+import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
+import * as React from 'react';
+import { RootProvider } from 'fumadocs-ui/provider/tanstack';
+
+export const Route = createRootRoute({
+  component: RootComponent,
+});
+
+function RootComponent() {
+  return (
+    <RootDocument>
+      <Outlet />
+    </RootDocument>
+  );
+}
+
+function RootDocument({ children }: { children: React.ReactNode }) {
+  return (
+    <html suppressHydrationWarning>
+      <head>
+        <HeadContent />
+      </head>
+      <body className="flex flex-col min-h-screen">
+        {/* [!code ++] */}
+        <RootProvider>{children}</RootProvider>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
+### Done [#done]
+
+You can start writing documents at `content/docs`:
+
+```mdx title="content/docs/index.mdx"
+---
+title: Hello World
+---
+
+I love Fumadocs
+```

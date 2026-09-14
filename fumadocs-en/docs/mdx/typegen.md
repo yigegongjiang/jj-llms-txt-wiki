@@ -1,0 +1,28 @@
+# Fumadocs MDX (the built-in content source): Generate Types
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/mdx/typegen.mdx
+
+Generate types without running dev/build server
+
+### Overview [#overview]
+
+You can run `fumadocs-mdx` to generate types & entry files (the `.source` folder).
+
+Optionally, you can run it in post install to ensure types are generated when initializing the project.
+
+```json title="package.json"
+{
+  "scripts": {
+    "postinstall": "fumadocs-mdx"
+  }
+}
+```
+
+If your project uses a custom path for configuration file or output directory, you can provide them as command arguments:
+
+```npm
+npx fumadocs-mdx "config-path" "output-dir"
+```
+
+- `config-path`: Fumadocs MDX config file, default to `source.config.ts`.
+- `output-dir`: Directory of generated files, default to `.source`.

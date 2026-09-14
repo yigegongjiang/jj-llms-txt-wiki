@@ -1,0 +1,159 @@
+# Fumadocs UI (the default theme of Fumadocs): Navbar
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/ui/layouts/nav.mdx
+
+Navbar/header configurations.
+
+## Configurations [#configurations]
+
+Options for navbar (header).
+
+### $Fumadocs
+
+| Prop               | Type        | Description                                |
+| ------------------ | ----------- | ------------------------------------------ |
+| `enabled?`         | `union`     |                                            |
+| `title?`           | `union`     |                                            |
+| `url?`             | `string`    | Redirect url of title Default: `'/'`       |
+| `transparentMode?` | `union`     | Use transparent background Default: `none` |
+| `component?`       | `ReactNode` | **Deprecated.**                            |
+
+
+### Transparent Mode [#transparent-mode]
+
+To make the navbar background transparent, you can configure transparent mode.
+
+```tsx tab="All" title="lib/layout.shared.tsx"
+import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+
+export function baseOptions(): BaseLayoutProps {
+  return {
+    nav: {
+      title: 'My App',
+      // [!code ++]
+      transparentMode: 'top',
+    },
+  };
+}
+```
+
+```tsx tab="Home Layout"
+import { baseOptions } from '@/lib/layout.shared';
+import { HomeLayout } from 'fumadocs-ui/layouts/home';
+import type { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  const base = baseOptions();
+  return (
+    <HomeLayout
+      {...base}
+      nav={{
+        ...base.nav,
+        // [!code ++]
+        transparentMode: 'top',
+      }}
+    >
+      {children}
+    </HomeLayout>
+  );
+}
+```
+
+```tsx tab="Docs Layout"
+import { baseOptions } from '@/lib/layout.shared';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import type { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  const base = baseOptions();
+  return (
+    <DocsLayout
+      {...base}
+      nav={{
+        ...base.nav,
+        // [!code ++]
+        transparentMode: 'top',
+      }}
+    >
+      {children}
+    </DocsLayout>
+  );
+}
+```
+
+| Mode     | Description                              |
+| -------- | ---------------------------------------- |
+| `always` | Always use a transparent background      |
+| `top`    | When at the top of page                  |
+| `none`   | Disable transparent background (default) |
+
+### Replace Navbar [#replace-navbar]
+
+To replace the navbar in different layouts, set `nav.component` to your own component.
+
+```tsx tab="All" title="lib/layout.shared.tsx"
+import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+
+export function baseOptions(): BaseLayoutProps {
+  return {
+    nav: {
+      // [!code ++]
+      component: <CustomNavbar />,
+    },
+  };
+}
+```
+
+```tsx tab="Home Layout"
+import { baseOptions } from '@/lib/layout.shared';
+import { HomeLayout } from 'fumadocs-ui/layouts/home';
+import type { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  const base = baseOptions();
+  return (
+    <HomeLayout
+      {...base}
+      nav={{
+        ...base.nav,
+        // [!code ++]
+        component: <CustomNavbar />,
+      }}
+    >
+      {children}
+    </HomeLayout>
+  );
+}
+```
+
+```tsx tab="Docs Layout"
+import { baseOptions } from '@/lib/layout.shared';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import type { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  const base = baseOptions();
+  return (
+    <DocsLayout
+      {...base}
+      nav={{
+        ...base.nav,
+        // [!code ++]
+        component: <CustomNavbar />,
+      }}
+    >
+      {children}
+    </DocsLayout>
+  );
+}
+```
+
+Fumadocs uses **CSS Variables** to share the size of layout components, and fit each layout component into appropriate position.
+
+You need to override `--fd-nav-height` to the exact height of your custom navbar, this can be done with a CSS stylesheet (e.g. in `global.css`):
+
+```css
+:root {
+  --fd-nav-height: 80px !important;
+}
+```

@@ -1,0 +1,92 @@
+# Fumadocs Core (the core library of Fumadocs): Remark TS to JS
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/headless/mdx/remark-ts2js.mdx
+
+A remark plugin to transform TypeScript codeblocks into two tabs of codeblock with its JavaScript variant.
+
+## Usage [#usage]
+
+Install dependencies:
+
+```npm tab="Fumadocs MDX"
+npm i fumadocs-docgen
+```
+
+```npm tab="Satteri"
+npm i @fumadocs/satteri
+```
+
+Add the remark plugin:
+
+```ts title="source.config.ts" tab="Fumadocs MDX"
+import { remarkTypeScriptToJavaScript } from 'fumadocs-docgen/remark-ts2js';
+import { defineConfig } from 'fumadocs-mdx/config';
+
+export default defineConfig({
+  mdxOptions: {
+    remarkPlugins: [remarkTypeScriptToJavaScript],
+  },
+});
+```
+
+```ts title="source.config.ts" tab="Satteri"
+import { remarkTs2js } from '@fumadocs/satteri/remark-ts2js';
+
+export default defineConfig({
+  docs: {
+    compiler: 'satteri',
+    async satteriOptions() {
+      return {
+        mdastPlugins: [remarkTs2js()],
+      };
+    },
+  },
+});
+```
+
+```ts tab="MDX Compiler"
+import { remarkTypeScriptToJavaScript } from 'fumadocs-docgen/remark-ts2js';
+import { compile } from '@mdx-js/mdx';
+
+await compile('...', {
+  remarkPlugins: [remarkTypeScriptToJavaScript],
+});
+```
+
+Finally, make sure to define the required MDX components: `Tabs` and `Tab`.
+
+```tsx title="components/mdx.tsx (Fumadocs UI)"
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import defaultComponents from 'fumadocs-ui/mdx';
+import type { MDXComponents } from 'mdx/types';
+
+export function getMDXComponents(components?: MDXComponents) {
+  return {
+    ...defaultComponents,
+    // [!code ++:2]
+    Tab,
+    Tabs,
+    ...components,
+  } satisfies MDXComponents;
+}
+```
+
+You can now enable it on TypeScript/TSX codeblocks, like:
+
+````md
+```tsx ts2js
+import { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  return <div>{children}</div>;
+}
+```
+````
+
+```tsx ts2js
+import { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  return <div>{children}</div>;
+}
+```

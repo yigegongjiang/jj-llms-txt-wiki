@@ -1,0 +1,71 @@
+# Fumadocs (Framework Mode): Math
+
+Source: https://raw.githubusercontent.com/fuma-nama/fumadocs/refs/heads/main/apps/docs/content/docs/(framework)/markdown/math.mdx
+
+Writing math equations in Markdown/MDX.
+
+## Getting Started [#getting-started]
+
+```package-install
+remark-math rehype-katex katex
+```
+
+### Add Plugins [#add-plugins]
+
+Add the required remark/rehype plugins, the code might be vary depending on your content source.
+
+```ts title="source.config.ts" tab="Fumadocs MDX"
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+import { defineConfig } from 'fumadocs-mdx/config';
+
+export default defineConfig({
+  mdxOptions: {
+    remarkPlugins: [remarkMath],
+    // Place it at first, it should be executed before the syntax highlighter
+    rehypePlugins: (v) => [rehypeKatex, ...v],
+  },
+});
+```
+
+### Add Stylesheet [#add-stylesheet]
+
+Add the following to root layout to make it looks great:
+
+```tsx title="layout.tsx"
+import 'katex/dist/katex.css';
+```
+
+### Done [#done]
+
+Type some TeX expression in your documents, like the Pythagoras theorem:
+
+````mdx
+Inline: $$c = \pm\sqrt{a^2 + b^2}$$
+
+```math
+c = \pm\sqrt{a^2 + b^2}
+```
+````
+
+Inline: $$c = \pm\sqrt{a^2 + b^2}$$
+
+```math
+c = \pm\sqrt{a^2 + b^2}
+```
+
+Taylor Expansion (expressing holomorphic function $$f(x)$$ in power series):
+
+```math
+\displaystyle {\begin{aligned}T_{f}(z)&=\sum _{k=0}^{\infty }{\frac {(z-c)^{k}}{2\pi i}}\int _{\gamma }{\frac {f(w)}{(w-c)^{k+1}}}\,dw\\&={\frac {1}{2\pi i}}\int _{\gamma }{\frac {f(w)}{w-c}}\sum _{k=0}^{\infty }\left({\frac {z-c}{w-c}}\right)^{k}\,dw\\&={\frac {1}{2\pi i}}\int _{\gamma }{\frac {f(w)}{w-c}}\left({\frac {1}{1-{\frac {z-c}{w-c}}}}\right)\,dw\\&={\frac {1}{2\pi i}}\int _{\gamma }{\frac {f(w)}{w-z}}\,dw=f(z),\end{aligned}}
+```
+
+<Callout title="Tip">
+
+    You can actually copy equations on Wikipedia, they will be converted into a KaTeX string when you paste it.
+
+```math
+\displaystyle S[{\boldsymbol {q}}]=\int _{a}^{b}L(t,{\boldsymbol {q}}(t),{\dot {\boldsymbol {q}}}(t))\,dt.
+```
+
+</Callout>
