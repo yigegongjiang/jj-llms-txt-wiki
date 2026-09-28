@@ -95,7 +95,10 @@ caution.
 - You should label a tool with the `readOnlyHint` annotation if it only retrieves
   or lists data and does not change anything outside the conversation.
 - Write or destructive tools (for example, creating, updating, deleting, posting, sending) must be explicitly marked using the `readOnlyHint` and `destructiveHint`.
-- Tools that interact with external systems, accounts, public platforms, or create publicly-visible content must be explicitly labeled using the `openWorldHint` annotation.
+- Set `openWorldHint` to `true` for tools that access the public internet or
+  open-ended external entities, including read-only web search. A tool limited
+  to a bounded private account or workspace can set it to `false`, even when
+  that service is externally hosted.
 - Incorrect or missing action labels are a common cause of rejection. Double-check that the `readOnlyHint`, `openWorldHint`, and `destructiveHint` annotations are correctly set, and provide a detailed justification for each when submitting the plugin.
 
 #### Minimal and purpose-driven inputs
@@ -130,8 +133,6 @@ that require additional login steps, such as a new account sign-up or 2FA
 through an inaccessible account, will be rejected.
 
 ## Commerce and monetization
-
-{/* vale off */}
 
 Currently, plugins may conduct commerce **only for physical goods**. Selling digital products or services—including subscriptions, digital content, tokens, or credits—is not allowed, whether offered directly or indirectly (for example, through freemium upsells).
 
@@ -209,8 +210,6 @@ Instant Checkout, which is currently in beta, is currently available only to sel
 
 Until then, standard external checkout is the required approach. No other third-party checkout solutions may be embedded or hosted within the plugin UI. To learn more, see our [docs on Agentic Commerce](https://developers.openai.com/commerce/).
 
-{/* vale on */}
-
 ### Advertising
 
 Plugins must not serve advertisements and must not exist primarily as an
@@ -253,14 +252,26 @@ disparaging alternatives.
 
 ### Iframes and embedded pages
 
-Plugins with UI can opt in to iframe usage by setting `frameDomains` in the
-resource CSP (`_meta.ui.csp.frameDomains`), but we strongly encourage you to
-build the UI without this pattern. If you choose to use `frameDomains`, be
-aware that:
+Plugins with UI can embed pages from their MCP server's own registrable domain,
+including full existing editors and admin interfaces. For example, a server at
+`https://api.example.com/mcp` can embed `https://app.example.com`: both use the
+registrable domain `example.com`. Separate tenants on a shared hosting service
+count as different domains; using the same hosting provider does not establish
+ownership.
 
-- It is only intended for cases where embedding a third-party experience is essential (for example, a notebook, IDE, or similar environment).
-- Those plugins receive extra manual review and are often not approved for broad distribution.
-- During development, any developer can test `frameDomains` in developer mode, but approval for public listing is limited to trusted scenarios.
+Declare each required iframe origin in the resource CSP using
+`_meta.ui.csp.frameDomains` (or the legacy
+`_meta["openai/widgetCSP"].frame_domains`). For third-party domains, iframe
+embeds should be limited to cases where the embedded experience is essential.
+
+You must still provide a justification when submitting a plugin that uses
+iframes. Explain what each embedded page does, why the plugin embeds it, and
+who controls its domain. Iframe use can require additional review or
+escalation and may lead to slower approval or rejection if the content cannot
+be assessed. Sharing the MCP server's domain does not guarantee approval.
+
+All other plugin requirements still apply to embedded pages, including the
+[checkout](#checkout) and [privacy](#privacy) requirements.
 
 ## Privacy
 

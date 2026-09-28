@@ -29,15 +29,14 @@ For each tool:
 - **Read-only hint:** annotate `readOnlyHint: true` on tools that only retrieve
   or compute information and never create, update, delete, or send data outside
   the conversation.
-- For tools that are not read-only:
-  - **Destructive hint** - annotate `destructiveHint: false` on tools that do not delete or overwrite user data.
-  - **Open-world hint** - annotate `openWorldHint: false` on tools that do not publish content or reach outside the user's account.
-
-{/* vale Vale.Terms = NO */}
+- **Destructive hint:** Annotate `destructiveHint: false` on tools that don't
+  delete or overwrite user data.
+- **Open-world hint:** Annotate `openWorldHint: true` when a tool accesses the
+  public internet or open-ended external entities, including read-only tools
+  such as web search. Use `false` for a tool limited to a bounded private
+  account or workspace, even when that service is externally hosted.
 
 ## Evaluate in developer mode
-
-{/* vale Vale.Terms = YES */}
 
 1. In ChatGPT, turn on Developer mode from **Settings → Security and login**,
    then register your MCP server at
@@ -57,7 +56,7 @@ After each revision, repeat the evaluation. Aim for high precision on negative p
 
 ## Production monitoring
 
-Once your connector is live:
+Once your MCP server is live:
 
 - Review tool-call analytics weekly. Spikes in “wrong tool” confirmations usually indicate metadata drift.
 - Capture user feedback and update descriptions to cover common misconceptions.

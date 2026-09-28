@@ -28,6 +28,13 @@
           href: "/codex/enterprise/admin-setup",
           icon: "users",
         },
+      ],
+    },
+    {
+      title: "ChatGPT Work",
+      description:
+        "Review the ChatGPT Work overview and administration reference.",
+      pages: [
         {
           title: "ChatGPT Work Overview",
           description:
@@ -78,13 +85,6 @@
           icon: "key",
         },
         {
-          title: "Workload identity",
-          description:
-            "Let trusted workloads use Codex without long-lived credentials.",
-          href: "/codex/enterprise/workload-identity",
-          icon: "key",
-        },
-        {
           title: "Personal Access Tokens",
           description: "Create and manage tokens for programmatic access.",
           href: "/codex/enterprise/access-tokens",
@@ -112,6 +112,13 @@
           icon: "users",
         },
         {
+          title: "User lifecycle management",
+          description:
+            "Provision employees, update group access, and revoke departing users' credentials.",
+          href: "/codex/enterprise/user-lifecycle",
+          icon: "userLock",
+        },
+        {
           title: "Roles and workspace permissions",
           description:
             "Use the canonical map of workspace, runtime, API, plugin, and source-system controls.",
@@ -124,6 +131,13 @@
             "Manage GPT sharing, ownership, connected apps, and third-party actions across your workspace.",
           href: "/codex/enterprise/gpts-and-sharing",
           icon: "userLock",
+        },
+        {
+          title: "Migrate custom GPTs to plugins",
+          description:
+            "Plan your workspace transition, migrate individual GPTs or eligible batches, and test and share replacement plugins.",
+          href: "/codex/migrate-custom-gpts",
+          icon: "tools",
         },
         {
           title: "Managed configuration",
@@ -206,6 +220,13 @@
           description:
             "Review workspace-level ChatGPT adoption and Codex usage.",
           href: "/codex/enterprise/workspace-analytics",
+          icon: "dataControls",
+        },
+        {
+          title: "Usage Insights",
+          description:
+            "Explore usage across ChatGPT Work and Codex and assess workflow results with your team.",
+          href: "/codex/enterprise/usage-insights",
           icon: "dataControls",
         },
         {

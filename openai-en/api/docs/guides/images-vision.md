@@ -27,7 +27,7 @@ To learn more about the input and output modalities supported by our models, ref
 
 ## Generate or edit images
 
-With the Images API, choose `gpt-image-2` to generate images from text or edit existing images. With the Responses API, choose a mainline model that supports the image generation tool; the tool handles GPT Image model selection.
+With the Images API, choose `gpt-image-2.5-sunburst` to generate images from text or edit existing images. With the Responses API, choose a mainline model that supports the image generation tool; the tool handles GPT Image model selection.
 
 
 
@@ -38,7 +38,7 @@ import OpenAI from "openai";
 const openai = new OpenAI();
 
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input:
     "Generate an image of gray tabby cat hugging an otter with an orange scarf",
   tools: [{ type: "image_generation" }],
@@ -63,7 +63,7 @@ import base64
 client = OpenAI()
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input="Generate an image of gray tabby cat hugging an otter with an orange scarf",
     tools=[{"type": "image_generation"}],
 )
@@ -97,7 +97,7 @@ func main() {
 	client := openai.NewClient()
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfString: openai.String("Generate an image of a gray tabby cat hugging an otter with an orange scarf."),
 		},
@@ -139,7 +139,7 @@ import java.util.Base64;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("Generate an image of a gray tabby cat hugging an otter with an orange scarf.")
         .addTool(Tool.ImageGeneration.builder().build())
         .build();
@@ -162,7 +162,7 @@ ResponsesClient client = new(key);
 
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
 };
 options.InputItems.Add(
     ResponseItem.CreateUserMessageItem(
@@ -190,9 +190,9 @@ require "openai"
 
 client = OpenAI::Client.new
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "Generate an image of a gray tabby cat hugging an otter with an orange scarf.",
-  tools: [{type: :image_generation}]
+  tools: [{ type: :image_generation }]
 )
 
 image_call = response.output.find do |item|
@@ -210,7 +210,7 @@ File.binwrite(
 
 ```bash
 openai responses create \
-  --model gpt-5.6 \
+  --model gpt-6-astra \
   --raw-output \
   --transform 'output.#(type=="image_generation_call").result' <<'YAML' | base64 --decode > cat_and_otter.png
 tools:
@@ -258,7 +258,7 @@ import OpenAI from "openai";
 const openai = new OpenAI();
 
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -284,7 +284,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -317,7 +317,7 @@ func main() {
 	client := openai.NewClient()
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfInputItemList: responses.ResponseInputParam{
 				responses.ResponseInputItemParamOfMessage(
@@ -364,7 +364,7 @@ ResponseInputItem imageInput =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(List.of(imageInput))
         .build();
 
@@ -387,7 +387,7 @@ Uri imageUrl = new(
 );
 
 ResponseResult response = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateUserMessageItem(
             [
@@ -407,12 +407,15 @@ require "openai"
 client = OpenAI::Client.new
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :user,
       content: [
-        {type: :input_text, text: "What's in this image?"},
+        {
+          type: :input_text,
+          text: "What's in this image?"
+        },
         {
           type: :input_image,
           detail: :auto,
@@ -431,7 +434,7 @@ curl https://api.openai.com/v1/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {
         "role": "user",
@@ -449,7 +452,7 @@ curl https://api.openai.com/v1/responses \
 
 ```bash
 openai responses create \
-  --model gpt-5.6 \
+  --model gpt-6-astra \
   --raw-output \
   --transform 'output.#(type=="message").content.0.text' <<'YAML'
 input:
@@ -481,7 +484,7 @@ const imagePath = "fixtures/example.jpg";
 const base64Image = fs.readFileSync(imagePath, "base64");
 
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -521,7 +524,7 @@ base64_image = encode_image(image_path)
 
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -561,7 +564,7 @@ func main() {
 	imageURL := "data:image/png;base64," + base64.StdEncoding.EncodeToString(image)
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfInputItemList: responses.ResponseInputParam{
 				responses.ResponseInputItemParamOfMessage(
@@ -616,7 +619,7 @@ ResponseInputItem imageInput =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(List.of(imageInput))
         .build();
 
@@ -645,7 +648,7 @@ using Stream stream = await http.GetStreamAsync(imageUrl);
 BinaryData imageData = BinaryData.FromStream(stream, "image/png");
 
 ResponseResult response1 = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateUserMessageItem(
             [
@@ -663,7 +666,7 @@ byte[] bytes = await http.GetByteArrayAsync(imageUrl);
 imageData = BinaryData.FromBytes(bytes, "image/png");
 
 ResponseResult response2 = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateUserMessageItem(
             [
@@ -685,12 +688,15 @@ client = OpenAI::Client.new
 image = Base64.strict_encode64(File.binread("image.png"))
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :user,
       content: [
-        {type: :input_text, text: "What's in this image?"},
+        {
+          type: :input_text,
+          text: "What's in this image?"
+        },
         {
           type: :input_image,
           detail: :auto,
@@ -733,7 +739,7 @@ async function createFile(filePath) {
 const fileId = await createFile("fixtures/example.jpg");
 
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -772,7 +778,7 @@ def create_file(file_path):
 file_id = create_file("path_to_your_image.jpg")
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -819,7 +825,7 @@ func main() {
 	}
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfInputItemList: responses.ResponseInputParam{
 				responses.ResponseInputItemParamOfMessage(
@@ -868,7 +874,7 @@ var response =
         .responses()
         .create(
             ResponseCreateParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .inputOfResponse(
                     List.of(
                         ResponseInputItem.ofMessage(
@@ -916,7 +922,7 @@ OpenAIFile file = await files.UploadFileAsync(
 );
 
 ResponseResult response = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateUserMessageItem(
             [
@@ -941,13 +947,20 @@ uploaded = client.files.create(
 )
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :user,
       content: [
-        {type: :input_text, text: "What's in this image?"},
-        {type: :input_image, detail: :auto, file_id: uploaded.id}
+        {
+          type: :input_text,
+          text: "What's in this image?"
+        },
+        {
+          type: :input_image,
+          detail: :auto,
+          file_id: uploaded.id
+        }
       ]
     }
   ]
@@ -968,6 +981,10 @@ Use supported image files that are clear enough for the model to analyze.
 | File types   | PNG (`.png`), JPEG (`.jpeg` or `.jpg`), WEBP (`.webp`), and non-animated GIF (`.gif`) |
 | Request size | Up to 512 MB total payload per request                                                |
 | Image count  | Up to 1,500 images per request                                                        |
+
+For [patch-based image inputs](#patch-based-image-tokenization), the API supports up to 30,000 patches per image after applying the resizing rules for the selected model and `detail` level. This limit applies across supported detail levels and to each image separately, not to the combined patch count of the request.
+
+Lower model- and detail-specific resizing budgets still apply. Images that exceed the 30,000-patch limit after processing are rejected, not automatically resized to meet it. Reduce the image's dimensions and try again.
 
 Image tokens and the rest of your prompt must also fit the model's input and context limits. A token estimate does not guarantee that a request meets every input limit. Image use must comply with our [usage policies](https://openai.com/policies/usage-policies/).
 
@@ -997,17 +1014,36 @@ Use the following guidance to choose a detail level:
 | `original`   | Large, dense, spatially sensitive, or computer-use images, when supported by the model.                                     |
 | `auto`       | Use the model's default sizing behavior, shown in the model sizing table.                                                   |
 
-For tasks that require fine visual detail or precise coordinates, such as optical character recognition (OCR), small-object detection, or computer use, use `"detail": "original"` when supported. Original detail can still resize images that exceed the model's limits. For coordinate-sensitive tasks, resize images to fit those limits before sending them and map returned coordinates back to the original image. See the [Computer use guide](https://developers.openai.com/api/docs/guides/tools-computer-use) for coordinate handling.
+For tasks that require fine visual detail or precise coordinates, such as optical character recognition (OCR), small-object detection, or computer use, use `"detail": "original"` when supported. Original detail can still resize images to meet the model's pixel-dimension limit or resizing patch budget, but not to meet the separate 30,000-patch rejection limit. For coordinate-sensitive tasks, resize images to fit those limits before sending them and map returned coordinates back to the original image. See the [Computer use guide](https://developers.openai.com/api/docs/guides/tools-computer-use) for coordinate handling.
 
 ### Model sizing behavior
 
-The following table covers the general-purpose vision models available in the [image input cost calculator](https://developers.openai.com/api/docs/guides/image-cost-calculator). Other models and specialized variants can use different limits. All resizing preserves aspect ratio without enlarging smaller images.
+The following table summarizes sizing behavior for general-purpose vision models. Other models and specialized variants can use different limits. All resizing preserves aspect ratio without enlarging smaller images.
 
 <table>
   <tr>
     <th>Model family</th>
     <th>Supported detail levels</th>
     <th>Patch and resizing behavior</th>
+  </tr>
+  <tr>
+    <td>
+      `gpt-6-astra`
+    </td>
+    <td>
+      `low`, `high`, `original`,
+      `auto`
+    </td>
+    <td>
+      `low` fits within 512 × 512 pixels. `high` allows up
+      to 2,500 patches and a 65,535-pixel maximum dimension. Both limits apply. 
+      `original` preserves the image's dimensions, except that images
+      larger than 65,535 pixels on either side are scaled down to fit that
+      limit. If the resulting image requires more than 
+      [30,000 patches](#image-input-requirements), the API rejects
+      the request; the image is not resized to fit the patch limit. 
+      `auto` uses the same sizing behavior as `original`.
+    </td>
   </tr>
   <tr>
     <td>
@@ -1020,8 +1056,12 @@ The following table covers the general-purpose vision models available in the [i
     </td>
     <td>
       `low` fits within 512 × 512 pixels. `high` fits
-      within 2048 × 2048 pixels and 2,500 patches. `original` fits
-      within 65,535 × 65,535 pixels, with no patch-budget limit. 
+      within 2048 × 2048 pixels and 2,500 patches. `original` 
+      preserves the image's dimensions, except that images larger than 65,535
+      pixels on either side are scaled down to fit that limit. If the resulting
+      image requires more than 
+      [30,000 patches](#image-input-requirements), the API rejects
+      the request; the image is not resized to fit the patch limit. 
       `auto` uses the same sizing behavior as `original`.
     </td>
   </tr>
@@ -1099,7 +1139,7 @@ Use the [image input cost calculator](https://developers.openai.com/api/docs/gui
 
 ### Patch-based image tokenization
 
-Some models tokenize images by covering them with 32px x 32px patches. Many model and detail-level combinations define a maximum patch budget. First, the API fits the image within the selected detail level's pixel-dimension limit, preserving aspect ratio and rounding to integer pixels without enlarging smaller images. The token cost is then determined as follows:
+Some models tokenize images by covering them with 32px x 32px patches. Many model and detail-level combinations define a resizing patch budget. First, the API fits the image within the selected detail level's pixel-dimension limit, preserving aspect ratio and rounding to integer pixels without enlarging smaller images. The token cost is then determined as follows:
 
 A. Compute how many 32px x 32px patches are needed to cover the image after applying the pixel-dimension limit. A patch may extend beyond the image boundary.
 
@@ -1107,9 +1147,7 @@ A. Compute how many 32px x 32px patches are needed to cover the image after appl
 patch_count = ceil(width/32)×ceil(height/32)
 ```
 
-GPT-5.6 Sol, Terra, and Luna have no patch-budget limit for `original` or `auto`. After applying their pixel-dimension limit, skip the patch-budget resizing step. Large images can therefore use more tokens than with earlier models; resize them before sending or select `low` or `high` to control token use.
-
-B. When a patch budget applies and the image exceeds it, scale the image down proportionally. Adjust the scale to stay within budget after converting to integer pixel dimensions and computing patch coverage. Keep full precision until calculating the final dimensions.
+B. When the selected model and detail level specify a resizing patch budget, scale the image down proportionally if it exceeds that budget. Otherwise, skip this step. Adjust the scale to stay within budget after converting to integer pixel dimensions and computing patch coverage. Keep full precision until calculating the final dimensions.
 
 ```
 shrink_factor = sqrt((32^2 * patch_budget) / (width * height))
@@ -1125,10 +1163,13 @@ C. If step B resized the image, round down the final scaled width and height to 
 resized_patch_count = ceil(resized_width/32)×ceil(resized_height/32)
 ```
 
+If this count exceeds 30,000 patches, the API rejects the request. Check this limit before applying the token multiplier.
+
 D. Multiply the patch count by the model's multiplier and round up to get the billable image input tokens. Apply the model's input price to those tokens once; the multiplier does not apply to other prompt tokens or to the price again.
 
 | Model                                  | Multiplier |
 | -------------------------------------- | ---------- |
+| `gpt-6-astra`                          | 1.2        |
 | `gpt-5.6-sol`                          | 1.2        |
 | `gpt-5.6-terra`                        | 1.2        |
 | `gpt-5.6-luna`                         | 1.2        |
@@ -1147,12 +1188,13 @@ _For `gpt-4.1-mini`, this applies to the 2025-04-14 snapshot._
 
 \* Deprecated and scheduled for shutdown. See the [deprecation schedule](https://developers.openai.com/api/docs/deprecations) for dates and replacements. These models aren't included in the calculator or the model sizing table above.
 
-**Cost calculation examples for `gpt-5.4` with `detail: high`**
+**Image token calculation examples for `gpt-6-astra` with `detail: high`**
 
-This combination uses a 2048-pixel maximum dimension, a 2,500-patch budget, and a 1.2× multiplier.
+This combination uses a 65,535-pixel maximum dimension, a 2,500-patch budget, and a 1.2× multiplier.
 
 - A 1024 × 1024 image needs `32 × 32 = 1024` patches. No resizing is needed. The billable image input is `ceil(1024 × 1.2) = 1229` tokens.
 - A 2048 × 2048 image initially needs `64 × 64 = 4096` patches. The patch budget reduces it to 1600 × 1600 pixels, or `50 × 50 = 2500` patches. The estimate is `ceil(2500 × 1.2) = 3000` tokens.
+- A 4096 × 512 image stays at its original size: `128 × 16 = 2048` patches and `ceil(2048 × 1.2) = 2458` tokens.
 
 Floating-point rounding in billing can make the final count differ from the estimate by one token.
 

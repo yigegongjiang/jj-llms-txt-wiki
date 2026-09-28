@@ -6,7 +6,7 @@
 
 Model ID: `chatgpt-image-latest`
 
-This points to the Image snapshot previously used in ChatGPT. We recommend [GPT-Image-2](/api/docs/models/gpt-image-2) for API use.
+This points to the Image snapshot previously used in ChatGPT. We recommend [GPT-Image-2.5 Sunburst](/api/docs/models/gpt-image-2.5-sunburst) for API use.
 
 ## Model details
 
@@ -65,6 +65,7 @@ Pricing is based on the number of tokens used, or other metrics based on the mod
 
 | Endpoint | Route | Support |
 | --- | --- | --- |
+| Live | `v1/live/sessions` | Not supported |
 | Chat Completions | `v1/chat/completions` | Not supported |
 | Responses | `v1/responses` | Not supported |
 | Realtime | `v1/realtime` | Not supported |

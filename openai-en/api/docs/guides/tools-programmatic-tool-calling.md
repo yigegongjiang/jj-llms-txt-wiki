@@ -2,9 +2,9 @@
 
 > For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-Programmatic Tool Calling lets a model write and run JavaScript that coordinates the tools in a Responses API request. A program can call tools in parallel, use loops and conditions, and keep intermediate results in the hosted runtime. This is useful when a task needs a sequence of related tool calls or needs to process large tool outputs before returning a result.
+Programmatic Tool Calling lets a model write and run JavaScript that coordinates its tools. A program can call tools in parallel, use loops and conditions, and keep intermediate results in the hosted runtime. This is useful when a task needs a sequence of related tool calls or needs to process large tool outputs before returning a result.
 
-Your application decides whether Programmatic Tool Calling is available and which eligible tools the model can call directly, from a program, or either way. It continues to run any client-owned tool calls.
+In the Responses API, your application decides whether Programmatic Tool Calling is available and which eligible tools the model can call directly, from a program, or either way. It continues to run any client-owned tool calls. The [Agents API](#agents-api) enables Programmatic Tool Calling by default and manages the agent loop for you.
 
 Check the [model page](https://developers.openai.com/api/docs/models) before enabling Programmatic Tool Calling.
 
@@ -12,7 +12,7 @@ Check the [model page](https://developers.openai.com/api/docs/models) before ena
 
 OpenAI runs each generated program in a fresh, isolated V8 runtime. The runtime supports JavaScript with top-level `await`, but it does not provide Node.js, package installation, direct network access, a general-purpose filesystem, subprocess execution, a console, or persistent JavaScript state between program executions. Programs can interact with external systems only through tools enabled in the request and can emit output with `text(...)` or `image(...)`.
 
-Programmatic Tool Calling supports Zero Data Retention (ZDR) workflows without requiring a persistent code-execution container. ZDR must be enabled for the organization or project; setting `store: false` enables stateless continuation but does not enable ZDR by itself. Eligibility and retention depend on the complete request, including its model, tools, and third-party services; see [data controls](https://developers.openai.com/api/docs/guides/your-data).
+For Responses API requests, Programmatic Tool Calling supports Zero Data Retention (ZDR) workflows without requiring a persistent code-execution container. ZDR must be enabled for the organization or project; setting `store: false` enables stateless continuation but does not enable ZDR by itself. Eligibility and retention depend on the complete request, including its model, tools, and third-party services; see [data controls](https://developers.openai.com/api/docs/guides/your-data).
 
 ## Choose when to use Programmatic Tool Calling
 
@@ -29,7 +29,7 @@ Use Programmatic Tool Calling when a stage has predictable control flow and code
 
 ## Configure Programmatic Tool Calling
 
-Add the `programmatic_tool_calling` hosted tool to the request. Then set `allowed_callers` on each eligible tool that the program can invoke.
+For the Responses API, add the `programmatic_tool_calling` hosted tool to the request. Then set `allowed_callers` on each eligible tool that the program can invoke.
 
 Enable Programmatic Tool Calling
 
@@ -225,6 +225,7 @@ Run a programmatic tool-calling loop
 
 ```javascript
 import OpenAI from "openai";
+import { toResponseInputItems } from "openai/lib/responses/ResponseInputItems";
 
 const client = new OpenAI();
 
@@ -233,7 +234,6 @@ const implementations = {
   get_demand: async ({ sku }) => ({ sku, requested_units: 31 }),
 };
 
-/** @type {OpenAI.Responses.Tool[]} */
 const tools = [
   {
     type: "function",
@@ -284,7 +284,6 @@ const tools = [
   { type: "programmatic_tool_calling" },
 ];
 
-/** @type {OpenAI.Responses.ResponseInput} */
 const input = [
   {
     role: "user",
@@ -304,8 +303,8 @@ while (true) {
     throw new Error(`Response ended with status ${response.status}`);
   }
 
-  // Preserve every output item, including program and reasoning items.
-  input.push(...response.output);
+  // Preserve replayable output, including program and reasoning items.
+  input.push(...toResponseInputItems(response.output));
 
   const calls = response.output.filter((item) => item.type === "function_call");
 
@@ -325,13 +324,13 @@ while (true) {
       if (!run) throw new Error(`Unknown tool: ${call.name}`);
 
       const result = await run(JSON.parse(call.arguments));
-      return /** @type {const} */ ({
+      return {
         type: "function_call_output",
         call_id: call.call_id,
         output: JSON.stringify(result),
         // Preserve caller so the runtime can resume the correct program.
         caller: call.caller,
-      });
+      };
     })
   );
 
@@ -345,7 +344,7 @@ import json
 from openai import OpenAI
 
 client = OpenAI()
-model = "gpt-5.6"
+model = "gpt-6-astra"
 
 
 def get_inventory(sku):
@@ -459,6 +458,316 @@ while True:
         )
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+type toolArguments struct {
+	SKU string `json:"sku"`
+}
+
+func main() {
+	client := openai.NewClient()
+	input := responses.ResponseInputParam{
+		responses.ResponseInputItemParamOfMessage(
+			"Compare inventory with demand for sku_123.",
+			responses.EasyInputMessageRoleUser,
+		),
+	}
+	tools := []responses.ToolUnionParam{
+		functionTool(
+			"get_inventory",
+			"Return an object with sku (string) and available_units (number).",
+			"available_units",
+		),
+		functionTool(
+			"get_demand",
+			"Return an object with sku (string) and requested_units (number).",
+			"requested_units",
+		),
+		programmaticTool(),
+	}
+
+	for {
+		response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
+			Model: "gpt-6-astra",
+			Store: openai.Bool(false),
+			Input: responses.ResponseNewParamsInputUnion{OfInputItemList: input},
+			Tools: tools,
+		})
+		if err != nil {
+			panic(err)
+		}
+		if response.Status != "completed" {
+			panic(fmt.Errorf("response ended with status %s", response.Status))
+		}
+
+		// Preserve every output item, including program and reasoning items.
+		input = append(input, outputAsInput(response.Output)...)
+
+		calls := functionCalls(response.Output)
+		if len(calls) == 0 {
+			if text, ok := finalMessageText(response); ok {
+				fmt.Println(text)
+				break
+			}
+			continue
+		}
+
+		for _, call := range calls {
+			result, err := runTool(call.Name, call.Arguments)
+			if err != nil {
+				panic(err)
+			}
+			output, err := json.Marshal(result)
+			if err != nil {
+				panic(err)
+			}
+
+			toolOutput := responses.ResponseInputItemParamOfFunctionCallOutput(string(output))
+			toolOutput.OfFunctionCallOutput.CallID = openai.String(call.CallID)
+			caller := call.Caller.AsProgram()
+			if caller.CallerID == "" {
+				panic("function call is missing its program caller")
+			}
+			// Preserve caller so the runtime can resume the correct program.
+			toolOutput.OfFunctionCallOutput.Caller.OfProgram =
+				&responses.ResponseInputItemFunctionCallOutputCallerProgramParam{
+					CallerID: caller.CallerID,
+				}
+			input = append(input, toolOutput)
+		}
+	}
+}
+
+func functionTool(name, description, resultField string) responses.ToolUnionParam {
+	parameters := map[string]any{
+		"type": "object",
+		"properties": map[string]any{
+			"sku": map[string]any{"type": "string"},
+		},
+		"required":             []string{"sku"},
+		"additionalProperties": false,
+	}
+	outputSchema := map[string]any{
+		"type": "object",
+		"properties": map[string]any{
+			"sku":       map[string]any{"type": "string"},
+			resultField: map[string]any{"type": "number"},
+		},
+		"required":             []string{"sku", resultField},
+		"additionalProperties": false,
+	}
+	tool := responses.ToolParamOfFunction(name, parameters, true)
+	tool.OfFunction.Description = openai.String(description)
+	tool.OfFunction.AllowedCallers = []string{"programmatic"}
+	tool.OfFunction.OutputSchema = outputSchema
+	return tool
+}
+
+func programmaticTool() responses.ToolUnionParam {
+	tool := responses.NewToolProgrammaticToolCallingParam()
+	return responses.ToolUnionParam{OfProgrammaticToolCalling: &tool}
+}
+
+func outputAsInput(
+	output []responses.ResponseOutputItemUnion,
+) []responses.ResponseInputItemUnionParam {
+	input := make([]responses.ResponseInputItemUnionParam, 0, len(output))
+	for _, item := range output {
+		var converted responses.ResponseInputItemUnion
+		if err := json.Unmarshal([]byte(item.RawJSON()), &converted); err != nil {
+			panic(err)
+		}
+		input = append(input, converted.ToParam())
+	}
+	return input
+}
+
+func functionCalls(
+	output []responses.ResponseOutputItemUnion,
+) []responses.ResponseFunctionToolCall {
+	calls := make([]responses.ResponseFunctionToolCall, 0)
+	for _, item := range output {
+		if item.Type == "function_call" {
+			calls = append(calls, item.AsFunctionCall())
+		}
+	}
+	return calls
+}
+
+func finalMessageText(response *responses.Response) (string, bool) {
+	for _, item := range response.Output {
+		if item.Type != "message" {
+			continue
+		}
+		text := response.OutputText()
+		if text != "" {
+			return text, true
+		}
+		for _, content := range item.AsMessage().Content {
+			if content.Type == "refusal" {
+				return content.AsRefusal().Refusal, true
+			}
+		}
+		return "", true
+	}
+	return "", false
+}
+
+func runTool(name, argumentsJSON string) (map[string]any, error) {
+	var arguments toolArguments
+	if err := json.Unmarshal([]byte(argumentsJSON), &arguments); err != nil {
+		return nil, fmt.Errorf("parse %s arguments: %w", name, err)
+	}
+
+	switch name {
+	case "get_inventory":
+		return map[string]any{"sku": arguments.SKU, "available_units": 42}, nil
+	case "get_demand":
+		return map[string]any{"sku": arguments.SKU, "requested_units": 31}, nil
+	default:
+		return nil, fmt.Errorf("unknown tool: %s", name)
+	}
+}
+```
+
+```ruby
+require "json"
+require "openai"
+
+client = OpenAI::Client.new
+
+def get_inventory(sku:)
+  {
+    sku: sku,
+    available_units: 42
+  }
+end
+
+def get_demand(sku:)
+  {
+    sku: sku,
+    requested_units: 31
+  }
+end
+
+implementations = {
+  "get_inventory" => method(:get_inventory),
+  "get_demand" => method(:get_demand)
+}
+tools = [
+  {
+    type: :function,
+    name: "get_inventory",
+    description: "Return an object with sku (string) and available_units (number).",
+    parameters: {
+      type: :object,
+      properties: { sku: { type: :string } },
+      required: ["sku"],
+      additionalProperties: false
+    },
+    output_schema: {
+      type: :object,
+      properties: {
+        sku: { type: :string },
+        available_units: { type: :number }
+      },
+      required: %w[sku available_units],
+      additionalProperties: false
+    },
+    allowed_callers: [:programmatic],
+    strict: true
+  },
+  {
+    type: :function,
+    name: "get_demand",
+    description: "Return an object with sku (string) and requested_units (number).",
+    parameters: {
+      type: :object,
+      properties: { sku: { type: :string } },
+      required: ["sku"],
+      additionalProperties: false
+    },
+    output_schema: {
+      type: :object,
+      properties: {
+        sku: { type: :string },
+        requested_units: { type: :number }
+      },
+      required: %w[sku requested_units],
+      additionalProperties: false
+    },
+    allowed_callers: [:programmatic],
+    strict: true
+  },
+  { type: :programmatic_tool_calling }
+]
+input = [
+  {
+    role: :user,
+    content: "Compare inventory with demand for sku_123."
+  }
+]
+
+loop do
+  response = client.responses.create(
+    model: "gpt-6-astra",
+    store: false,
+    input: input,
+    tools: tools
+  )
+  unless response.status == OpenAI::Responses::ResponseStatus::COMPLETED
+    raise "Response ended with status #{response.status}"
+  end
+
+  # Preserve every output item, including program and reasoning items.
+  input.concat(response.output)
+  calls = response.output.grep(OpenAI::Models::Responses::ResponseFunctionToolCall)
+
+  if calls.empty?
+    message = response.output.find do |item|
+      item.is_a?(OpenAI::Models::Responses::ResponseOutputMessage)
+    end
+    next unless message.is_a?(OpenAI::Models::Responses::ResponseOutputMessage)
+
+    refusal = message.content.find do |content|
+      content.is_a?(OpenAI::Models::Responses::ResponseOutputRefusal)
+    end
+    text = response.output_text
+    if text.empty? &&
+       refusal.is_a?(OpenAI::Models::Responses::ResponseOutputRefusal)
+      text = refusal.refusal
+    end
+    puts(text)
+    break
+  end
+
+  calls.each do |call|
+    implementation = implementations.fetch(call.name) do
+      raise ArgumentError, "Unknown tool: #{call.name}"
+    end
+    result = implementation.call(**JSON.parse(call.arguments, symbolize_names: true))
+    output = {
+      type: :function_call_output,
+      call_id: call.call_id,
+      output: JSON.generate(result)
+    }
+    # Preserve caller so the runtime can resume the correct program.
+    output[:caller] = call.caller_.to_h if call.caller_
+    input << output
+  end
+end
+```
+
 
 When you store responses, you can continue from `previous_response_id` instead of resending all earlier response items. Send the new `function_call_output` items as the next input. With `store: false`, replay the complete sequence in order, including every `program`, reasoning, function-call, function-call-output, and `program_output` item.
 
@@ -474,15 +783,11 @@ For stateless reasoning-model requests, replay every returned reasoning item. Ea
 - Give tools specific names and descriptions so the model can compose them correctly.
 - Require application-level approval before high-impact actions, regardless of the caller.
 
-{/* vale Vale.Terms = NO */}
-
 ## Evaluate Programmatic Tool Calling
 
 Programmatic Tool Calling can reduce the amount of intermediate tool output added to model context, but the effect depends on the task and tool responses. Start with direct tool calling as a baseline, then compare both approaches on representative tasks.
 
 Define the final-answer quality bar and required evidence before measuring efficiency. Evaluate token use and tool calls alongside correctness, completeness, and evidence coverage, and make any accepted quality tradeoff explicit.
-
-{/* vale Vale.Terms = YES */}
 
 Measure:
 
@@ -491,6 +796,27 @@ Measure:
 - Model turns, tool calls, retries, and recovery behavior.
 - Safety outcomes, especially for side effects and approval requirements.
 - Whether the route that ran matched the intended workflow stage.
+
+## Agents API
+
+In the [Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview), Programmatic Tool Calling runs in the OpenAI-managed agent harness and is enabled by default. The harness gives the agent an `exec` tool and makes its existing tools available inside generated JavaScript. You don't need to wrap those tools as command-line programs or install them in the sandbox.
+
+To disable Programmatic Tool Calling, include this entry in `agent.tools`:
+
+```json
+{
+  "type": "programmatic_tool_calling",
+  "enabled": false
+}
+```
+
+Omitting the entry or its `enabled` field leaves Programmatic Tool Calling enabled. A type-only entry, `{ "type": "programmatic_tool_calling" }`, also keeps it enabled. The `allowed_callers` configuration and Responses continuation loop above describe the Responses API integration.
+
+Programmatic Tool Calling also works in conversation-only sessions with `environment.type` set to `none`. Bash, executor MCPs, and other tools that run in a sandbox still require an [execution environment](https://developers.openai.com/api/docs/guides/agents-api/environments/self-hosted).
+
+Orchestrating a tool in JavaScript doesn't change where the tool runs. A shell call runs commands in the sandbox; the JavaScript runtime doesn't start system processes itself. Executor MCPs still use the sandbox, and function tools still call your application server. The agent processes their results before deciding what enters model context.
+
+Use the routing guidance above to define which workflow stages should use code. Follow [Functions](https://developers.openai.com/api/docs/guides/agents-api/tools/functions) and [MCP connections](https://developers.openai.com/api/docs/guides/agents-api/tools/mcp) for Agents API configuration and call handling.
 
 ## Related guides
 

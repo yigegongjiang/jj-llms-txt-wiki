@@ -46,7 +46,7 @@ Ask the model to plan and emit patches
 
 ```javascript
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: fileContext,
   tools: [{ type: "apply_patch" }],
 });
@@ -88,7 +88,7 @@ Help me rename the fib() function to fibonacci()
 """
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=RESPONSE_INPUT,
     tools=[{"type": "apply_patch"}],
 )
@@ -103,7 +103,7 @@ patch_calls = [
 
 ```go
 response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-	Model: "gpt-5.6",
+	Model: "gpt-6-astra",
 	Input: responses.ResponseNewParamsInputUnion{OfString: openai.String(responseInput)},
 	Tools: []responses.ToolUnionParam{{OfApplyPatch: &responses.ApplyPatchToolParam{}}},
 })
@@ -126,7 +126,7 @@ import com.openai.models.responses.ResponseCreateParams;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input(
             "Rename fib() to fibonacci() in lib/fib.py and update run.py to use the new name.")
         .addTool(ApplyPatchTool.builder().build())
@@ -142,9 +142,9 @@ require "openai"
 
 client = OpenAI::Client.new
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "Rename fib() to fibonacci() in lib/fib.py and update run.py to use the new name.",
-  tools: [{type: :apply_patch}]
+  tools: [{ type: :apply_patch }]
 )
 
 patch_calls = response.output.select { |item| item.type == :apply_patch_call }
@@ -183,7 +183,6 @@ Example apply_patch_call object
 Apply the patch and return results
 
 ```javascript
-/** @type {import("openai/resources/responses/responses").ResponseInput} */
 const results = patchCalls.map((call) => {
   const { success, output } = applyOperation(call.operation);
 
@@ -196,7 +195,7 @@ const results = patchCalls.map((call) => {
 });
 
 const followup = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   previous_response_id: response.id,
   input: results,
   tools: [{ type: "apply_patch" }],
@@ -223,7 +222,7 @@ for call in patch_calls:
     )
 
 followup = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     previous_response_id=response.id,
     input=results,
     tools=[{"type": "apply_patch"}],
@@ -243,7 +242,7 @@ for _, call := range patchCalls {
 	results = append(results, result)
 }
 _, err = client.Responses.New(context.Background(), responses.ResponseNewParams{
-	Model:              "gpt-5.6",
+	Model:              "gpt-6-astra",
 	PreviousResponseID: openai.String(response.ID),
 	Input:              responses.ResponseNewParamsInputUnion{OfInputItemList: results},
 	Tools:              []responses.ToolUnionParam{{OfApplyPatch: &responses.ApplyPatchToolParam{}}},
@@ -263,7 +262,7 @@ import java.util.List;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofApplyPatchCallOutput(
@@ -290,15 +289,17 @@ client = OpenAI::Client.new
 response_id = ENV.fetch("OPENAI_RESPONSE_ID")
 patch_call_id = ENV.fetch("OPENAI_APPLY_PATCH_CALL_ID")
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   previous_response_id: response_id,
-  input: [{
-    type: :apply_patch_call_output,
-    call_id: patch_call_id,
-    status: :completed,
-    output: "Patch applied successfully."
-  }],
-  tools: [{type: :apply_patch}]
+  input: [
+    {
+      type: :apply_patch_call_output,
+      call_id: patch_call_id,
+      status: :completed,
+      output: "Patch applied successfully."
+    }
+  ],
+  tools: [{ type: :apply_patch }]
 )
 
 puts(response.output_text)
@@ -362,7 +363,6 @@ Use the apply patch tool with the Agents SDK
 import { applyDiff, Agent, run, applyPatchTool } from "@openai/agents";
 
 class WorkspaceEditor {
-  /** @returns {Promise<import("@openai/agents").ApplyPatchResult>} */
   async createFile(operation) {
     // convert the diff to the file content
     const content = applyDiff("", operation.diff, "create");
@@ -370,7 +370,6 @@ class WorkspaceEditor {
     return { status: "completed", output: `Created ${operation.path}` };
   }
 
-  /** @returns {Promise<import("@openai/agents").ApplyPatchResult>} */
   async updateFile(operation) {
     // read the file content from the file system
     const current = "";
@@ -380,7 +379,6 @@ class WorkspaceEditor {
     return { status: "completed", output: `Updated ${operation.path}` };
   }
 
-  /** @returns {Promise<import("@openai/agents").ApplyPatchResult>} */
   async deleteFile(operation) {
     // delete the file from the file system
     return { status: "completed", output: `Deleted ${operation.path}` };
@@ -391,7 +389,7 @@ const editor = new WorkspaceEditor();
 
 const agent = new Agent({
   name: "Patch Assistant",
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions:
     "You can edit files inside the /tmp directory using the apply_patch tool.",
   tools: [
@@ -443,7 +441,7 @@ editor = WorkspaceEditor()
 
 agent = Agent(
     name="Patch Assistant",
-    model="gpt-5.6",
+    model="gpt-6-astra",
     instructions="You can edit files inside the /tmp directory using the apply_patch tool.",
     tools=[
         ApplyPatchTool(

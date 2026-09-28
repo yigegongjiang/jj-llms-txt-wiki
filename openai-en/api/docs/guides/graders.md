@@ -235,6 +235,38 @@ response = requests.post(
 print("run response:", response.text)
 ```
 
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+grader = {
+  "type" => "score_model",
+  "name" => "my_score_model",
+  "input" => [
+    {
+      "role" => "system",
+      "content" => "You are an expert grader. If the reference and model answer are exact matches, output a score of 1. If they are somewhat similar in meaning, output a score in 0.5. Otherwise, give a score of 0."
+    }, {
+      "role" => "user",
+      "content" => "Reference: {{ item.reference_answer }}. Model answer: {{ sample.output_text }}"
+    }
+  ],
+  "pass_threshold" => 0.5,
+  "model" => "o4-mini-2025-04-16",
+  "range" => [0, 1],
+  "sampling_params" => {
+    "max_completions_tokens" => 32768,
+    "top_p" => 1,
+    "reasoning_effort" => "medium"
+  }
+}
+item = { reference_answer: 1.0 }
+model_sample = "0.9"
+
+pp(client.fine_tuning.alpha.graders.validate(grader: grader))
+pp(client.fine_tuning.alpha.graders.run(grader: grader, item: item, model_sample: model_sample))
+```
+
 
 #### Score model grader outputs
 
@@ -344,7 +376,7 @@ The second argument supplied is a dictionary populated with input grading contex
 }
 ```
 
-Here's a working example:
+Here's a working example. For Ruby, save the `grade` function shown above, including its import, as `grader.py`. Place `grader.py` in the directory where you run the example. The supplied function returns `1.0`; replace its body with your grading logic.
 
 ```python
 import os
@@ -389,6 +421,23 @@ response = requests.post(
 )
 print("run request_id:", response.headers["x-request-id"])
 print("run response:", response.text)
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+# Save your Python grading function as grader.py before running this example.
+grading_function = File.read("grader.py")
+grader = {
+  type: :python,
+  source: grading_function
+}
+item = { reference_answer: "fuzzy wuzzy had no hair" }
+model_sample = "fuzzy wuzzy was a bear"
+
+pp(client.fine_tuning.alpha.graders.validate(grader: grader))
+pp(client.fine_tuning.alpha.graders.run(grader: grader, item: item, model_sample: model_sample))
 ```
 
 

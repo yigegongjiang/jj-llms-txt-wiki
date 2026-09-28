@@ -1,29 +1,32 @@
-# MCP server review requirements
+# Remote MCP server review requirements
 
 > For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-Prepare an MCP server and its optional UI for public review as part of a
+Prepare a remote MCP server and its optional UI for public review as part of a
 plugin.
 
-Submit and publish the complete plugin, including its skills, MCP server, and
-  optional UI, through the plugin submission portal. See
+This page covers remote MCP submissions. Submit and publish the complete
+  plugin, including its skills, MCP server, and optional UI, through the plugin
+  submission portal. See
   [Submit plugins](https://developers.openai.com/plugins/deploy/submission) for the
-  source-of-truth submission flow and 
+  source-of-truth submission flow. See
   [Build an MCP server](https://developers.openai.com/plugins/build/mcp-server) for how
   server-backed capabilities fit into plugins.
 
-## Prepare MCP capabilities for plugin submission
+<a id="prepare-mcp-capabilities-for-plugin-submission"></a>
 
-Use this page for requirements that apply when a plugin includes an MCP server:
-organization verification, management permissions, server requirements,
+## Prepare remote MCP capabilities for plugin submission
+
+Use this page for requirements that apply when a plugin includes a remote MCP
+server: organization verification, management permissions, server requirements,
 review snapshots, and version maintenance.
 
-When the plugin works in
+When the remote MCP server works in
 [developer mode](https://developers.openai.com/plugins/deploy/connect-chatgpt#test-an-mcp-server-optional),
 submit it
 for review in the
 [plugin submission portal](https://platform.openai.com/plugins). This page
-covers the MCP server and optional UI requirements for that submission.
+covers the remote MCP server and optional UI requirements for that submission.
 
 Only submit the plugin if you intend for it to be publicly available in the
 countries you define during submission. For private or workspace-only use, use
@@ -44,7 +47,7 @@ approval, and publishing, see
 
 ### Organization verification
 
-Before submitting a plugin with MCP, complete identity verification
+Before submitting any plugin, complete identity verification
 in the [OpenAI Platform Dashboard](https://platform.openai.com/settings/organization/general)
 for the name you plan to publish under in the directory.
 
@@ -56,13 +59,15 @@ business name will result in rejection.
 
 ### Plugin submission permissions
 
-To create plugin drafts with MCP and submit them for review, you need
+To create plugin drafts and submit them for review, you need
 the `api.apps.write` permission. To view drafts and review status in the
 Dashboard, you need the `api.apps.read` permission. Organization owners
 automatically have both permissions, and can grant them to non-owners through
 roles in the [OpenAI Platform Dashboard](https://platform.openai.com/settings/organization/roles).
 
-### MCP server requirements
+<a id="mcp-server-requirements"></a>
+
+### Remote MCP server requirements
 
 - Your MCP server is hosted on a publicly accessible domain
 - You are not using a local or testing endpoint
@@ -174,7 +179,7 @@ Review timelines may vary as we continue to build and scale our processes. Pleas
 - **Tool hint annotations do not appear to match the tool's behavior:**
   - **readOnlyHint:** Set to `true` if it strictly fetches/looks up/lists/retrieves data and does not modify anything. Set to `false` if the tool can create/update/delete anything, trigger actions (send emails/messages, run jobs, enqueue tasks, write logs, start workflows), or otherwise change state.
   - **Destructive hint:** Set the destructive annotation to `true` if the tool can cause irreversible outcomes (deleting, overwriting, sending messages or transactions you can't undo, revoking access, or destructive admin actions), even in only select modes, through default parameters, or through indirect side effects. Ensure the justification explains what is irreversible and under what conditions, including safeguards such as confirmation steps, dry-run options, or scoping constraints. Otherwise, set it to `false`.
-  - **openWorldHint:** Set to `true` if it can write to or change publicly visible internet state (for example, posting to social media, blogs, or forums; sending emails, SMS, or messages to external recipients; creating public tickets or issues; publishing pages; pushing code or content to public endpoints; submitting forms to third parties; or otherwise affecting systems outside a private or first-party context). Set to `false` only if it operates entirely within closed or private systems (including internal writes) and cannot change the state of the publicly visible internet.
+  - **openWorldHint:** Set to `true` if the tool accesses the public internet or open-ended external entities. This includes read-only tools such as web search and write tools that post to public platforms, send messages to external recipients, publish content, push code, or submit forms. Set to `false` if the tool is limited to a bounded private account or workspace, even when that service is externally hosted.
 
 ## Publication and distribution
 
@@ -216,38 +221,56 @@ communications team.
 Treat the metadata exposed by your MCP server as a versioned API contract for
 the plugin. When you scan the MCP endpoint in the plugin submission portal,
 OpenAI stores the discovered metadata with that draft version. Submitting the
-version sends that stored snapshot for review. The published plugin uses this
-metadata snapshot while tool calls and UI resources continue to use your live
-MCP server.
+version sends that stored snapshot for review. After publication, continuous
+review updates tool definitions without requiring a new plugin version. Tool
+calls and UI resources continue to use your live MCP server.
+
+### Continuous review and tool updates
+
+OpenAI periodically fetches your MCP server's tools and compares them with the
+published definitions, including their descriptions, schemas, and annotations.
+
+- **Deleted tools:** Removed from the published tool list as soon as a scan
+  detects the deletion, without waiting for automated checks.
+- **New tools:** Made available after they pass automated checks. Until then,
+  they aren't available to users.
+- **Changed tools:** The previous definition stays live until the updated
+  definition passes automated checks or a scan detects that you removed the tool.
+  Passing updates replace the previous definition automatically.
+
+Each tool can pass independently. For example, you add `create_note`, change
+`search` to accept a `folder` parameter, and delete `archive_note`. The next
+scan removes `archive_note` immediately. If `create_note` passes but the
+`search` update is held, users get `create_note` and keep the old `search`
+definition without `folder`.
+
+Keep your server compatible with the live definition while an update is held.
+OpenAI retains the definition, not a copy of your server implementation.
+An incomplete check doesn't approve an update, even if it has no findings.
+
+### Other changes
 
 Use this table to determine how to ship each change:
 
-| Change                                                                                                                                                                                                   | Required action                                                                                                                                                                 | When users see the change                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Tool list, names, titles, descriptions, input or output schemas, annotations, tool security schemes, tool `_meta` fields (including UI resource references and visibility), or MCP server `instructions` | Deploy the change, create or update a draft version, scan the endpoint, submit the version for review, and publish it after approval.                                           | After you publish the approved version. Until then, users continue to use the currently published snapshot. |
-| UI resource URI or linked resource metadata, including content security policy (CSP) settings                                                                                                            | Deploy the change, create or update a draft version, scan the endpoint, submit the version for review, and publish it after approval.                                           | After you publish the approved version.                                                                     |
-| Backward-compatible content update served from the same published UI resource URI                                                                                                                        | Deploy the content update. You don't need to scan, submit, or publish a new version if the URI and published contract remain compatible.                                        | After deployment. ChatGPT may continue serving cached resource contents for up to one hour.                 |
-| Server-only fix or change to live tool results, including result `_meta`, or business data                                                                                                               | Deploy the server change. You don't need to scan, submit, or publish a new version if the change preserves the published contract.                                              | Through your live endpoint after deployment.                                                                |
-| MCP server origin (`scheme`, `hostname`, or `port`)                                                                                                                                                      | To change the origin, create a new plugin, then complete its scan, submission, review, and publication flow. To change only the endpoint path, use the normal new-version flow. | After you publish the new plugin or approved version.                                                       |
+| Change                                                                                                                                            | Required action                                                                                                                                                                 | When users see the change                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Tool security schemes, tool `_meta` fields, UI resource references, or linked resource metadata, including content security policy (CSP) settings | Deploy the change. These fields are reviewed with the tool definition through continuous review.                                                                                | After the updated tool definition passes automated checks.                                                      |
+| MCP server `instructions`                                                                                                                         | Deploy the change. Shared instructions are reviewed with the affected tools.                                                                                                    | After the required checks complete without holding existing tool updates or finding issues in the instructions. |
+| Backward-compatible content update served from the same published UI resource URI                                                                 | Deploy the content update. You don't need to scan, submit, or publish a new version if the URI and published contract remain compatible.                                        | After deployment. ChatGPT may continue serving cached resource contents for up to one hour.                     |
+| Server-only fix or change to live tool results, including result `_meta`, or business data                                                        | Deploy the server change. You don't need to scan, submit, or publish a new version if the change preserves the published contract.                                              | Through your live endpoint after deployment.                                                                    |
+| MCP server origin (`scheme`, `hostname`, or `port`)                                                                                               | To change the origin, create a new plugin, then complete its scan, submission, review, and publication flow. To change only the endpoint path, use the normal new-version flow. | After you publish the new plugin or approved version.                                                           |
 
-Breaking changes to the MCP server contract inside a published plugin aren't
-currently supported. Removing or renaming a tool, making a schema incompatible,
-or serving incompatible content at or removing content from a published UI
-resource URI can break the current version as soon as the server change
-deploys. Make backward-compatible updates instead:
-
-1. Add new tools, fields, or UI resources while continuing to honor the published contracts.
-2. Submit the updated metadata as a new version.
-3. Publish the approved version and keep the old contracts available.
-
-You can deploy server-only fixes without submitting a new version if they preserve the published contract. If a deployment breaks the published version, roll back the server change rather than waiting for a new version to complete review.
+Server changes take effect before a scan can discover or approve them. Keep
+existing input schemas and each published UI resource URI working during that gap.
+If a deployment breaks the live contract, roll back the server change rather
+than waiting for review.
 
 ### Submitting new versions for review
 
-Once your plugin is published, its submitted information and reviewed metadata
-snapshot are locked for safety. To update either, create a new draft version of
-the existing plugin and resubmit that version for review. Each resubmission
-starts a new review. In the release notes, describe what changed.
+To change submitted plugin information or imported skills, create a new draft
+version of the existing plugin and resubmit it for review. Continuous tool
+review doesn't replace this process. Each resubmission starts a new review.
+In the release notes, describe what changed.
 
 The MCP server origin (`scheme`, `hostname`, or `port`) can't change between
 versions. To use a different origin, submit a new plugin with the new MCP

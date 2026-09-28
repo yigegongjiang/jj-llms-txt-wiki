@@ -164,7 +164,7 @@ require "openai"
 client = OpenAI::Client.new
 response = client.responses.create(
   model: "gpt-5.2",
-  reasoning: {effort: :minimal},
+  reasoning: { effort: :minimal },
   input: "Explain the bug and propose a fix."
 )
 puts(response.output_text)
@@ -279,7 +279,7 @@ require "openai"
 client = OpenAI::Client.new
 response = client.responses.create(
   model: "gpt-5.2",
-  text: {verbosity: :low},
+  text: { verbosity: :low },
   input: "Explain the bug and propose a fix."
 )
 puts(response.output_text)
@@ -592,7 +592,6 @@ curl --request POST \
 
 
 
-
 ## Prompting best practices
 
 ### 2. Key behavioral differences
@@ -811,12 +810,20 @@ require "openai"
 client = OpenAI::Client.new
 response = client.responses.create(
   model: "gpt-5.2",
-  input: [{role: :user, content: "Write a very long poem about a dog."}]
+  input: [
+    {
+      role: :user,
+      content: "Write a very long poem about a dog."
+    }
+  ]
 )
 compaction = client.responses.compact(
   model: "gpt-5.2",
   input: [
-    {role: :user, content: "Write a very long poem about a dog."},
+    {
+      role: :user,
+      content: "Write a very long poem about a dog."
+    },
     *response.output
   ]
 )
@@ -1054,7 +1061,6 @@ Do not lead with a blunt refusal if you can safely provide something helpful imm
 First deliver what you can (safe partial answers, verified material, or a closely related helpful alternative), then clearly state any limitations (policy limits, missing/behind-paywall data, unverifiable claims).
 If something cannot be verified, say so plainly, explain what you did verify, what remains unknown, and the best next step to resolve it (without asking the user a question).
 ```
-
 
 ## Further reading
 

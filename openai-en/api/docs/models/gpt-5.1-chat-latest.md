@@ -7,7 +7,7 @@
 Model ID: `gpt-5.1-chat-latest`
 
 GPT-5.1 Chat points to the GPT-5.1 snapshot currently used in ChatGPT.
-We recommend [GPT-5.6](/api/docs/models/gpt-5.6-sol) for most API usage, but feel free to use this GPT-5.1 Chat model to test our latest improvements for chat use cases.
+We recommend [GPT-6 Astra](/api/docs/models/gpt-6-astra) for most API usage, but feel free to use this GPT-5.1 Chat model to test our latest improvements for chat use cases.
 
 ## Model details
 
@@ -35,6 +35,7 @@ Pricing is based on the number of tokens used, or other metrics based on the mod
 
 | Endpoint | Route | Support |
 | --- | --- | --- |
+| Live | `v1/live/sessions` | Not supported |
 | Chat Completions | `v1/chat/completions` | Supported |
 | Responses | `v1/responses` | Supported |
 | Realtime | `v1/realtime` | Not supported |

@@ -168,6 +168,17 @@ remote MCP stdio.
 - `bearer_token_env_var` (optional): Environment variable name for a bearer token to send in `Authorization`.
 - `http_headers` (optional): Map of header names to static values.
 - `env_http_headers` (optional): Map of header names to environment variable names (values pulled from the environment).
+- `http_headers_helper` (optional): Local command that prints a JSON object of
+  header names and string values, such as `{"X-Auth": "temporary-token"}`.
+  Supported for HTTP MCP connections made from the local environment; not for
+  stdio servers or connections made through a remote execution environment.
+
+Codex caches helper headers for the connection. After a same-origin POST
+returns `401` or `403`, it refreshes the headers once and retries only if the
+helper returns changed values. Explicit bearer tokens and OAuth credentials
+take precedence over a helper-provided `Authorization` header.
+An OAuth `403` response that reports insufficient scope doesn't trigger a
+helper refresh.
 
 If no credential source resolves, Codex can connect to the server without
 authentication. Run `codex mcp login <server-name>` separately to start an MCP
@@ -185,6 +196,15 @@ OAuth login.
   tools from this server. Supported values are `auto`, `prompt`, `writes`, and
   `approve`. The `writes` mode prompts for tools that aren't marked read-only.
 - `tools.<tool>.approval_mode` (optional): Per-tool approval behavior override.
+- `tools.<tool>.output_token_limit` (optional): Positive token budget for one
+  tool's output, before the standard 20% serialization allowance. Overrides the
+  model's default output truncation budget for that tool.
+
+The top-level `mcp_optional_startup_grace_ms` setting controls how long Codex
+waits for optional MCP servers when building the initial tool catalog. It
+defaults to `1000` milliseconds. Set it to `0` to wait for each server's
+`startup_timeout_sec` instead. Required servers still use their startup
+timeouts.
 
 #### OAuth client registration and callbacks
 
@@ -356,6 +376,7 @@ enabled = true
 
 [mcp_servers.chrome_devtools.tools.open]
 approval_mode = "approve"
+output_token_limit = 30000
 ```
 
 ### Plugin-provided MCP servers

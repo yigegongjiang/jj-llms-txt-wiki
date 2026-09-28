@@ -13,27 +13,58 @@ to its scope.
 - `GET /ad_groups/{ad_group_id}/insights`
 - `GET /ads/{ad_id}/insights`
 
-Use `POST /conversions/insights` for attributed conversion totals.
+Use `POST /conversions/insights` for goal conversion totals and optional attributed event details.
 
 ## Conversion insights
 
-Authorized `POST /conversions/insights` responses include `conversions`,
-`click_through_conversions`, and `view_through_conversions`. `conversions` is
-always equal to `click_through_conversions`; view-through conversions are a
-separate, supplemental metric and are not added to that total.
+Use `POST /v1/conversions/insights` to retrieve campaign goal conversion counts and, optionally, attributed standard and custom event metrics. Goal counts include click-through and view-through conversions within the selected reporting windows. Events do not need to be campaign goals to appear in the optional event details.
 
-Click-through attribution follows the applicable configured click window.
-View-through reporting availability is independent of the advertiser's
-configured click window, and view-through attribution uses a fixed one-day
-window after an eligible ad impression. When a conversion is eligible for both,
-the click takes precedence.
+### Request body
 
-View-through conversions are for reporting only. CPA, post-click CVR, bidding,
-billing, and conversion optimization remain click-through-based. In Ads
-Manager, view-through conversion reporting is available at the campaign level
-for accounts with this reporting available.
+| Field                                  | Values and behavior                                                                                                                                                                                                                                                                                                          |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `aggregation_level`                    | Required. `campaign`, `ad_group`, or `ad`.                                                                                                                                                                                                                                                                                   |
+| `time_ranges`                          | Required array containing exactly one JSON-encoded time-range object. Use full days in the account's timezone, with an exclusive end, covering at most 365 days.                                                                                                                                                             |
+| `time_granularity`                     | `none` (default) for period totals, or `daily`.                                                                                                                                                                                                                                                                              |
+| `entity_ids`                           | Nonempty list of entity IDs at the selected aggregation level. Required when `group_by_entity` is `true`; omit when `group_by_entity` is `false` to report across the account.                                                                                                                                               |
+| `group_by_entity`                      | Defaults to `true`. Set to `false` to combine the selected entities for each date or breakdown, using the ad account ID as `entity_id`.                                                                                                                                                                                      |
+| `breakdown`                            | `country`, `device`, or `null` (default).                                                                                                                                                                                                                                                                                    |
+| `attribution_time_basis`               | `ad_event_time` (default) groups and filters by the attributed ad interaction's date; `conversion_time` uses the conversion date and has limited non-goal event coverage.                                                                                                                                                    |
+| `attribution_window_days`              | Click window: `7`, `14`, or `30`. Omitted or `null` defaults to `30`.                                                                                                                                                                                                                                                        |
+| `view_through_attribution_window_days` | View window: `0` to exclude views, or `1` for one day. Omitted or `null` defaults to `1`.                                                                                                                                                                                                                                    |
+| `include`                              | Omit or send `[]` for summary rows only. Send `["attributed_events"]` to add nested event details without changing the reporting clock, windows, or metric values for matching summary rows.                                                                                                                                 |
+| `event_names`                          | Optional selector requiring `include: ["attributed_events"]`. Omit for all events, or provide 1–500 names containing at least one non-whitespace character of up to 256 characters each. Names match exactly, and the API removes duplicates. This filters nested details only; goal counts and summary sales are unchanged. |
+| `include_zero_rows`                    | Defaults to `true`. With the event expansion and `false`, retain rows with a nonzero goal count, summary sales amount, or selected event count. A sales-bearing row remains present even when its selected event details are empty.                                                                                          |
+
+The click and view defaults apply independently. These options select the report's attribution windows; they do not change campaign conversion goals or optimization settings. If an outcome is eligible for both click-through and view-through attribution, the click takes precedence.
+
+An `event_names` entry must be configured in the account's conversion event settings, including archived settings, or present in its published received-event history. Validation covers the account independently of the requested entities and dates. Newly received events without conversion settings can be selected after their history is published; retained history is not an all-time event registry. A recognized event can have no attributed activity in the requested report.
+
+Unknown names, an empty `event_names` array, `null`, or an event selector without the expansion return HTTP 400. Unsupported reporting windows also return HTTP 400.
+
+### Response
+
+The response contains `object: "list"`, `data`, `count`, and `account_currency`. `count` is the number of summary rows in `data`, not the number of conversions or nested events.
+
+| Summary field                                           | Meaning                                                                                                                                                                           |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `entity_id`                                             | Entity ID, or the ad account ID when `group_by_entity` is `false`.                                                                                                                |
+| `date`, `country`, `device`                             | Present when applicable to the requested daily granularity or breakdown.                                                                                                          |
+| `conversions`                                           | Goal conversions from clicks plus views within the selected windows.                                                                                                              |
+| `click_through_conversions`, `view_through_conversions` | Goal counts by attribution type. The view count is zero when the view window is `0`.                                                                                              |
+| `order_created_attributed_sales`                        | Attributed purchase value across goal and non-goal `order_created` events, returned as an unrounded decimal string or `null` when unavailable.                                    |
+| `order_created_attributed_sales_currency`               | Currency for summary sales.                                                                                                                                                       |
+| `attributed_events`                                     | Present only when requested in `include`. Contains event metrics for the summary row's entity, date, and breakdown. An empty array means no matching event details were returned. |
+
+Each nested event includes `entity_id`, `event_name`, `event_kind` (`standard` or `custom`), `attributed_event_count`, `attributed_event_value_amount`, `attributed_event_value_count`, and `attributed_event_value_currency`. Event counts include goal and non-goal activity. Reporting event rows also provide click/view counts and `conversion_event_setting_breakdowns` for matched campaign goals; applicable date and segment fields identify the reporting scope. Unavailable event amounts and currencies are `null`.
+
+Non-goal-only rows can have positive event counts or sales and zero `conversions`. A recognized but inactive event selection can yield `attributed_events: []` on a retained summary row. Empty event details do not confirm that historical data has finished processing.
+
+Responses are limited to 2,000 summary rows and, when expanded, 2,000 event rows in total. Each event's goal-setting breakdown is also limited to 2,000 entries. Exceeding a limit returns HTTP 413 rather than a partial result. This endpoint has no pagination cursor: reduce the entity list, split the report into non-overlapping date ranges, or select fewer event names when event details exceed the limit.
 
 ### Campaign example
+
+This request returns campaign goal totals for September 1–7, 2026, in an account using `America/New_York`. It uses the default ad-event time basis and 30-day click / 1-day view windows.
 
 ```bash
 curl -sS -X POST "https://api.ads.openai.com/v1/conversions/insights" \
@@ -41,27 +72,32 @@ curl -sS -X POST "https://api.ads.openai.com/v1/conversions/insights" \
   -H "Content-Type: application/json" \
   --data '{
     "aggregation_level": "campaign",
-    "time_ranges": ["{\"type\":\"unix_range\",\"start\":\"1738368000\",\"end\":\"1738454400\"}"],
-    "entity_ids": ["campaign_1"]
+    "time_ranges": ["{\"type\":\"unix_range\",\"start\":\"1788235200\",\"end\":\"1788840000\"}"],
+    "entity_ids": ["cmpn_123"]
   }'
 ```
 
-Representative response:
+Replace the sample campaign ID with your own. This illustrative response has 7 click-through and 3 view-through goal conversions, for a total of 10:
 
 ```json
 {
   "object": "list",
+  "account_currency": "USD",
   "data": [
     {
-      "entity_id": "campaign_1",
-      "conversions": 7,
+      "entity_id": "cmpn_123",
+      "conversions": 10,
       "click_through_conversions": 7,
-      "view_through_conversions": 3
+      "view_through_conversions": 3,
+      "order_created_attributed_sales": "0",
+      "order_created_attributed_sales_currency": "USD"
     }
   ],
   "count": 1
 }
 ```
+
+See [Report goal and non-goal events](https://developers.openai.com/ads/reporting#report-goal-and-non-goal-events) for a complete event-expansion request and response.
 
 ## Terminology
 
@@ -69,14 +105,15 @@ Representative response:
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `{aggregation_level}`            | `ad_account`, `campaign`, `ad_group`, `ad`                                                                                                                                                                                                                                                                                                                                                          | Public row entities. The endpoint sets scope; `aggregation_level` chooses the row entity inside that scope.                                                                                                                                                                                                                                                                                                 |
 | `time_granularity`               | `hourly`, `daily`, `monthly`, `none`                                                                                                                                                                                                                                                                                                                                                                | Bucket size. `none` returns one bucket for the full requested window.                                                                                                                                                                                                                                                                                                                                       |
-| `segments[]`                     | `product`, `country`, `device`                                                                                                                                                                                                                                                                                                                                                                      | Optional extra breakdown dimension. `{segment}` below means the requested segment value.                                                                                                                                                                                                                                                                                                                    |
+| `segments[]`                     | `product`, `country`, `device`, `platform`                                                                                                                                                                                                                                                                                                                                                          | Optional extra breakdown dimension. `{segment}` below means the requested segment value.                                                                                                                                                                                                                                                                                                                    |
 | `{entity}`                       | The row `{aggregation_level}` or requested `{segment}`                                                                                                                                                                                                                                                                                                                                              | Entity named in `override_segment_group_order[]`. Use it when requesting grouped metrics in a segmented request.                                                                                                                                                                                                                                                                                            |
 | `{metric}`                       | `impressions`, `clicks`, `spend`, `ctr`, `cpc`, `cpm`                                                                                                                                                                                                                                                                                                                                               | Aggregated numeric fields.                                                                                                                                                                                                                                                                                                                                                                                  |
 | `{aggregation_level}.id`         | `ad_account.id`, `campaign.id`, `ad_group.id`, `ad.id`                                                                                                                                                                                                                                                                                                                                              | Canonical aggregation-level ID fields. They are valid when that aggregation level is present in the row.                                                                                                                                                                                                                                                                                                    |
 | `{aggregation_level}.{metric}`   | `campaign.impressions`, `ad.clicks`, `ad_group.spend`                                                                                                                                                                                                                                                                                                                                               | Metric for the row aggregation level. For default rows, use `{aggregation_level}.{metric}`. In segmented requests, grouped metrics can name the entity or segment in `override_segment_group_order[]`.                                                                                                                                                                                                      |
 | `{aggregation_level}.{metadata}` | `ad_account.name`, `ad_account.url`, `ad_account.budget.lifetime`, `ad_account.budget.daily`; `campaign.name`, `campaign.description`, `campaign.status`, `campaign.start_time`, `campaign.end_time`, `campaign.budget.lifetime`, `campaign.budget.daily`; `ad_group.name`, `ad_group.description`, `ad_group.status`; `ad.title`, `ad.copy`, `ad.link`, `ad.name`, `ad.status`, `ad.review_status` | Canonical aggregation-level metadata fields. They are valid when that aggregation level is present in the row.                                                                                                                                                                                                                                                                                              |
-| `{segment}.{metric}`             | `product.impressions`, `country.clicks`, `device.spend`                                                                                                                                                                                                                                                                                                                                             | Metric for the requested segment group. Valid only when the matching `segments[]` value is present.                                                                                                                                                                                                                                                                                                         |
+| `{segment}.{metric}`             | `product.impressions`, `country.clicks`, `device.spend`, `platform.impressions`                                                                                                                                                                                                                                                                                                                     | Metric for the requested segment group. Valid only when the matching `segments[]` value is present.                                                                                                                                                                                                                                                                                                         |
 | `{segment}.{metadata}`           | `product.feed_id`, `product.item_id`, `product.title`, `product.description`, `product.body`, `product.target_url`, `product.image_url`, `product.brand`, `product.seller_name`, `product.price`, `product.availability`; `country.name`; `device.type`                                                                                                                                             | Canonical segment metadata fields. Valid only when the matching `segments[]` value is present.                                                                                                                                                                                                                                                                                                              |
+| `platform`                       | See [Platform breakdown](#platform-breakdown).                                                                                                                                                                                                                                                                                                                                                      | Canonical platform field. Valid only with `segments[]=platform`.                                                                                                                                                                                                                                                                                                                                            |
 | `metadata.{field}`               | `metadata.readable_time`, `metadata.timezone`                                                                                                                                                                                                                                                                                                                                                       | Report metadata. The response returns flat keys such as `readable_time` and `timezone`.                                                                                                                                                                                                                                                                                                                     |
 | `{product}.{id}`                 | `product.feed_id`, `product.item_id`, `product.feed_item_id`                                                                                                                                                                                                                                                                                                                                        | Use `product.feed_id` and `product.item_id` to project identity. Use `product.feed_item_id` only in `filters[]` for an exact feed/item pair.                                                                                                                                                                                                                                                                |
 | `filters[].operator`             | `IN`, `GREATER_THAN`, `LESS_THAN`                                                                                                                                                                                                                                                                                                                                                                   | Filter operators. `IN` is for equality-style filters. `GREATER_THAN` and `LESS_THAN` are for numeric thresholds.                                                                                                                                                                                                                                                                                            |
@@ -134,7 +171,7 @@ wire keys, such as `campaign.id` to `campaign_id`,
 | -------------------------------- | --------------------------------------------------------------------------------------- |
 | `segments[]`                     | Add one optional breakdown dimension for enabled ad accounts.                           |
 | `time_granularity`               | Segmented requests support `none`, `daily`, and `monthly`.                              |
-| Segment fields                   | Use `{segment}.{metadata}` only when that segment is requested.                         |
+| Segment fields                   | Request fields only for the selected segment.                                           |
 | `override_segment_group_order[]` | Include the row's `aggregation_level` and the requested segment exactly once, in order. |
 
 #### Product example
@@ -145,6 +182,38 @@ wire keys, such as `campaign.id` to `campaign_id`,
 | Product fields       | Project `product.*` fields from [Terminology](#terminology).                                              |
 | Product-first rows   | Set `override_segment_group_order[]=product`, then `override_segment_group_order[]=<aggregation_level>`.  |
 | Zero-impression rows | Add `includes[]=zero_impression_products`; see [Includes](#includes) for required order and availability. |
+
+#### Platform breakdown
+
+Add `segments[]=platform` to split delivery metrics by ChatGPT app or web
+browser. Include `fields[]=platform` to return the platform value in each row.
+Platform is a separate dimension from the `device` breakdown.
+
+| Response value | Platform    |
+| -------------- | ----------- |
+| `android_app`  | Android app |
+| `android_web`  | Android web |
+| `desktop_web`  | Desktop web |
+| `ios_app`      | iOS app     |
+| `ios_web`      | iOS web     |
+| `web`          | Web         |
+
+Historical `web` rows keep combined web totals. They aren't split
+retroactively into Android web, Desktop web, or iOS web rows.
+
+A `platform` filter with `IN` and `web` includes all web platforms: `web`,
+`android_web`, `desktop_web`, and `ios_web`. For example:
+
+```json
+{ "field": "platform", "operator": "IN", "value": ["web"] }
+```
+
+Use `android_web`, `desktop_web`, or `ios_web` to filter to specific web
+platforms. These filters don't include historical `web` rows. Platform segments
+support delivery metrics; conversions aren't supported.
+
+To choose where a campaign can deliver, see
+[Platform Targeting](https://developers.openai.com/ads/platform-targeting).
 
 ### Includes
 

@@ -35,7 +35,6 @@ We also released GPT-5.1-Codex. That model behaves differently from GPT-5.1; see
 - The model supports function calling and OpenAI-hosted tools, including web search, file search, image generation, code interpreter, and apply patch.
 - GPT-5.1-Codex variants are optimized separately for agentic coding workflows.
 
-
 ## Prompting best practices
 
 ### Agentic steerability
@@ -340,6 +339,12 @@ client.responses().create(params).output().stream()
     .forEach(text -> System.out.println(text.text()));
 ```
 
+```ruby
+response = client.responses.create(
+  model: "gpt-5.1", input: response_input, tools: [{ type: :apply_patch }]
+)
+```
+
 
 When the model decides to execute an apply_patch tool, you will receive an apply_patch_call function type within the response stream. Within the operation object, you’ll receive a type field (with one of `create_file`, `update_file`, or `delete_file`) and the diff to implement.
 
@@ -376,6 +381,15 @@ When the model decides to execute an apply_patch tool, you will receive an apply
 }
 ```
 
+```ruby
+output = {
+  type: :apply_patch_call_output,
+  call_id: call_id,
+  status: success ? :completed : :failed,
+  output: log_output
+}
+```
+
 
 #### Using the shell tool
 
@@ -385,6 +399,10 @@ The shell tool is invoked in the same way as apply_patch: include it as a tool o
 
 ```python
 tools = [{"type": "shell"}]
+```
+
+```ruby
+tools = [{ type: :shell }]
 ```
 
 
@@ -604,4 +622,3 @@ As you continue to grow your agentic systems (e.g., broadening scope or increasi
 To summarize, GPT-5.1 builds on the foundation set by GPT-5 and adds things like quicker thinking for easy questions, steerability when it comes to model output, new tools for coding use cases, and the option to set reasoning to `none` when your tasks don't require heavy thinking.
 
 Review the [GPT-5.1 model and API guidance](#model-api-and-feature-updates), or read the [blog post](https://openai.com/index/gpt-5-1-for-developers/) to learn more.
-

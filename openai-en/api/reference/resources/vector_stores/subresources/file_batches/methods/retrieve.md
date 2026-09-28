@@ -68,7 +68,7 @@ Retrieves a vector store file batch.
 
   - `vector_store_id: string`
 
-    The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.
+    The ID of the [vector store](/api/reference/resources/vector_stores) that the [File](/api/reference/resources/files) is attached to.
 
 ### Example
 
@@ -120,7 +120,7 @@ curl https://api.openai.com/v1/vector_stores/vs_abc123/file_batches/vsfb_abc123 
     "completed": 1,
     "failed": 0,
     "cancelled": 0,
-    "total": 0,
+    "total": 0
   }
 }
 ```

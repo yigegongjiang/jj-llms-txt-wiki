@@ -47,7 +47,7 @@ or "Other". Respond with only one of those words.
 const ticket = "My monitor won't turn on - help!";
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     { role: "developer", content: instructions },
     { role: "user", content: ticket },
@@ -71,7 +71,7 @@ or "Other". Respond with only one of those words.
 ticket = "My monitor won't turn on - help!"
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {"role": "developer", "content": instructions},
         {"role": "user", "content": ticket},
@@ -96,7 +96,7 @@ func main() {
 	client := openai.NewClient()
 	instructions := "You are an expert in categorizing IT support tickets. Given the support ticket below, categorize the request into one of \"Hardware\", \"Software\", or \"Other\". Respond with only one of those words."
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(instructions, responses.EasyInputMessageRoleDeveloper),
 			responses.ResponseInputItemParamOfMessage("My monitor won't turn on - help!", responses.EasyInputMessageRoleUser),
@@ -119,7 +119,7 @@ import java.util.List;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -150,7 +150,7 @@ string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
 ResponsesClient client = new(key);
 
 ResponseResult response = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateDeveloperMessageItem(
             "Categorize the IT support ticket as Hardware, Software, or Other. Respond with only one of those words."
@@ -172,10 +172,16 @@ instructions = <<~INSTRUCTIONS
   Respond with only one of those words.
 INSTRUCTIONS
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
-    {role: :developer, content: instructions},
-    {role: :user, content: "My monitor won't turn on - help!"}
+    {
+      role: :developer,
+      content: instructions
+    },
+    {
+      role: :user,
+      content: "My monitor won't turn on - help!"
+    }
   ]
 )
 puts(response.output_text)
@@ -186,7 +192,7 @@ curl https://api.openai.com/v1/responses \
     -H "Authorization: Bearer $OPENAI_API_KEY" \
     -H "Content-Type: application/json" \
     -d '{
-        "model": "gpt-5.6",
+        "model": "gpt-6-astra",
         "input": [
             {
                 "role": "developer",
@@ -282,8 +288,23 @@ require "openai"
 client = OpenAI::Client.new
 evaluation = client.evals.create(
   name: "Support answer quality",
-  data_source_config: {type: :custom, item_schema: {type: :object, properties: {input: {type: :string}}, required: ["input"]}},
-  testing_criteria: [{type: :string_check, name: "mentions_refund", input: "{{sample.output_text}}", operation: :contains, reference: "refund"}]
+  data_source_config: {
+    type: :custom,
+    item_schema: {
+      type: :object,
+      properties: { input: { type: :string } },
+      required: ["input"]
+    }
+  },
+  testing_criteria: [
+    {
+      type: :string_check,
+      name: "mentions_refund",
+      input: "{{sample.output_text}}",
+      operation: :contains,
+      reference: "refund"
+    }
+  ]
 )
 puts(evaluation.id)
 ```
@@ -412,7 +433,7 @@ Now that we have defined how we want our app to behave in an eval, let's constru
 
 ### Uploading test data
 
-There are several ways to provide test data for eval runs, but it may be convenient to upload a [JSONL](https://jsonlines.org/) file that contains data in the schema we specified when we created our eval. A sample JSONL file that conforms to the schema we set up is below:
+You can provide test data for eval runs in several ways, but it may be convenient to upload a [JSONL](https://jsonlines.org/) file that contains data in the schema we specified when we created our eval. A sample JSONL file that conforms to the schema we set up is below:
 
 ```json
 { "item": { "ticket_text": "My monitor won't turn on!", "correct_label": "Hardware" } }
@@ -549,7 +570,7 @@ const run = await openai.evals.runs.create("YOUR_EVAL_ID", {
   name: "Categorization text run",
   data_source: {
     type: "responses",
-    model: "gpt-5.6",
+    model: "gpt-6-astra",
     input_messages: {
       type: "template",
       template: [
@@ -578,7 +599,7 @@ run = client.evals.runs.create(
     name="Categorization text run",
     data_source={
         "type": "responses",
-        "model": "gpt-5.6",
+        "model": "gpt-6-astra",
         "input_messages": {
             "type": "template",
             "template": [
@@ -605,7 +626,10 @@ run = client.evals.runs.create(
   name: "Categorization text run",
   data_source: {
     type: :responses,
-    source: {type: :file_id, id: "YOUR_FILE_ID"},
+    source: {
+      type: :file_id,
+      id: "YOUR_FILE_ID"
+    },
     input_messages: {
       type: :template,
       template: [
@@ -613,10 +637,13 @@ run = client.evals.runs.create(
           role: :developer,
           content: "Categorize the ticket as Hardware, Software, or Other."
         },
-        {role: :user, content: "{{ item.ticket_text }}"}
+        {
+          role: :user,
+          content: "{{ item.ticket_text }}"
+        }
       ]
     },
-    model: "gpt-5.6"
+    model: "gpt-6-astra"
   }
 )
 puts(run.id)
@@ -630,7 +657,7 @@ curl https://api.openai.com/v1/evals/YOUR_EVAL_ID/runs \
         "name": "Categorization text run",
         "data_source": {
             "type": "responses",
-            "model": "gpt-5.6",
+            "model": "gpt-6-astra",
             "input_messages": {
                 "type": "template",
                 "template": [
@@ -822,7 +849,7 @@ You'll need the UUID of both your eval and eval run to fetch its status. When yo
 
 The API response contains granular information about test criteria results, API usage for generating model responses, and a `report_url` property that takes you to a page in the dashboard where you can explore the results visually.
 
-In our simple test, the model reliably generated the content we wanted for a small test case sample. In reality, you will often have to run your eval with more criteria, different prompts, and different data sets. But the process above gives you all the tools you need to build robust evals for your LLM apps!
+In our test, the model reliably generated the content we wanted for a small test case sample. In reality, you will often have to run your eval with more criteria, different prompts, and different data sets. But the process above gives you all the tools you need to build robust evals for your LLM apps!
 
 ## Next steps
 

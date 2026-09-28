@@ -12,7 +12,9 @@ Some benefits of Structured Outputs include:
 1. **Explicit refusals:** Safety-based model refusals are now programmatically detectable
 1. **Simpler prompting:** No need for strongly worded prompts to achieve consistent formatting
 
-In addition to supporting JSON Schema in the REST API, the OpenAI SDKs for [Python](https://github.com/openai/openai-python/blob/main/helpers.md#structured-outputs-parsing-helpers) and [JavaScript](https://github.com/openai/openai-node/blob/master/helpers.md#structured-outputs-parsing-helpers) also make it easy to define object schemas using [Pydantic](https://docs.pydantic.dev/latest/) and [Zod](https://zod.dev/) respectively. Below, you can see how to extract information from unstructured text that conforms to a schema defined in code.
+In addition to supporting JSON Schema in the REST API, the OpenAI libraries for [Python](https://github.com/openai/openai-python/blob/main/helpers.md#structured-outputs-parsing-helpers) and [JavaScript](https://github.com/openai/openai-node/blob/master/helpers.md#structured-outputs-parsing-helpers) also let you define object schemas using [`pydantic.BaseModel`](https://docs.pydantic.dev/latest/) and [`z.object`](https://zod.dev/) respectively. Below, you can see how to extract information from unstructured text that conforms to a schema defined in code.
+
+The Ruby SDK supports schemas defined with Sorbet `T::Struct` and returns typed parsed results.
 
 
 
@@ -32,7 +34,7 @@ const CalendarEvent = z.object({
 });
 
 const response = await openai.responses.parse({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     { role: "system", content: "Extract the event information." },
     {
@@ -62,7 +64,7 @@ class CalendarEvent(BaseModel):
 
 
 response = client.responses.parse(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {"role": "system", "content": "Extract the event information."},
         {
@@ -101,7 +103,7 @@ func main() {
 	}
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("Extract the event information.")},
@@ -152,7 +154,7 @@ Map<String, Object> schema =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -211,7 +213,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonSchemaFormat(
@@ -236,44 +238,49 @@ Console.WriteLine(response.GetOutputText());
 ```
 
 ```ruby
+# gem install openai sorbet-runtime
 require "openai"
+require "openai/helpers/sorbet"
+
+class CalendarEvent < T::Struct
+  const :name, String
+  const :date, String
+  const :participants, T::Array[String]
+end
 
 client = OpenAI::Client.new
-event_schema = {
-  type: :object,
-  properties: {
-    name: {type: :string},
-    date: {type: :string},
-    participants: {type: :array, items: {type: :string}}
-  },
-  required: %w[name date participants],
-  additionalProperties: false
-}
+schema = OpenAI::StructuredOutput.from_sorbet(CalendarEvent)
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
-    {role: :system, content: "Extract the event information."},
-    {role: :user, content: "Alice and Bob are going to a science fair on Friday."}
-  ],
-  text: {
-    format: {
-      type: :json_schema,
-      name: "event",
-      strict: true,
-      schema: event_schema
+    {
+      role: :system,
+      content: "Extract the event information."
+    },
+    {
+      role: :user,
+      content: "Alice and Bob are going to a science fair on Friday."
     }
-  }
+  ],
+  text: schema
 )
 
-puts(response.output_text)
+raise "Response ended with status: #{response.status}" unless response.status == OpenAI::Responses::ResponseStatus::COMPLETED
+
+message = response.output.grep(OpenAI::Responses::ResponseOutputMessage).fetch(0)
+output_text = message.content.grep(OpenAI::Responses::ResponseOutputText).first
+raise "No structured output returned (the model may have refused)" unless output_text
+
+event = T.cast(output_text.parsed, CalendarEvent)
+puts(event.name, event.date, event.participants.join(", "))
 ```
 
 
 
 ### Supported models
 
-Structured Outputs is available in our [latest large language models](https://developers.openai.com/api/docs/models), starting with GPT-4o. For new projects, start with [`gpt-5.6`](https://developers.openai.com/api/docs/models/gpt-5.6-sol). Older models like `gpt-4-turbo` and earlier may use [JSON mode](#json-mode) instead.
+Structured Outputs is available in our [latest large language models](https://developers.openai.com/api/docs/models), starting with GPT-4o. For new projects, start with [`gpt-6-astra`](https://developers.openai.com/api/docs/models/gpt-6-astra). Older models like `gpt-4-turbo` and earlier may use [JSON mode](#json-mode) instead.
 
 
 
@@ -300,7 +307,7 @@ Conversely, Structured Outputs via `response_format` are more suitable when you 
 
 For example, if you are building a math tutoring application, you might want the assistant to respond to your user using a specific JSON Schema so that you can generate a UI that displays different parts of the model's output in distinct ways.
 
-Put simply:
+In practice:
 
 
 
@@ -375,7 +382,7 @@ const MathReasoning = z.object({
 });
 
 const response = await openai.responses.parse({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "system",
@@ -410,7 +417,7 @@ class MathReasoning(BaseModel):
 
 
 response = client.responses.parse(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "system",
@@ -457,7 +464,7 @@ func main() {
 	}
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("You are a helpful math tutor. Guide the user through the solution step by step.")},
@@ -522,7 +529,7 @@ Map<String, Object> schema =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -590,7 +597,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonSchemaFormat(
@@ -615,8 +622,8 @@ client = OpenAI::Client.new
 step_schema = {
   type: :object,
   properties: {
-    explanation: {type: :string},
-    output: {type: :string}
+    explanation: { type: :string },
+    output: { type: :string }
   },
   required: %w[explanation output],
   additionalProperties: false
@@ -624,21 +631,27 @@ step_schema = {
 math_schema = {
   type: :object,
   properties: {
-    steps: {type: :array, items: step_schema},
-    final_answer: {type: :string}
+    steps: {
+      type: :array,
+      items: step_schema
+    },
+    final_answer: { type: :string }
   },
   required: %w[steps final_answer],
   additionalProperties: false
 }
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :system,
       content: "You are a helpful math tutor. Guide the user through the solution step by step."
     },
-    {role: :user, content: "How can I solve 8x + 7 = -23?"}
+    {
+      role: :user,
+      content: "How can I solve 8x + 7 = -23?"
+    }
   ],
   text: {
     format: {
@@ -658,7 +671,7 @@ curl https://api.openai.com/v1/responses \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {
         "role": "system",
@@ -764,7 +777,7 @@ const ResearchPaperExtraction = z.object({
 });
 
 const response = await openai.responses.parse({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "system",
@@ -796,7 +809,7 @@ class ResearchPaperExtraction(BaseModel):
 
 
 response = client.responses.parse(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "system",
@@ -852,7 +865,7 @@ func main() {
 	}
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("You are an expert at structured data extraction. You will be given unstructured text from a research paper and should convert it into the given structure.")},
@@ -904,7 +917,7 @@ Map<String, Object> schema =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -972,7 +985,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonSchemaFormat(
@@ -1015,23 +1028,32 @@ TEXT
 paper_schema = {
   type: :object,
   properties: {
-    title: {type: :string},
-    authors: {type: :array, items: {type: :string}},
-    abstract: {type: :string},
-    keywords: {type: :array, items: {type: :string}}
+    title: { type: :string },
+    authors: {
+      type: :array,
+      items: { type: :string }
+    },
+    abstract: { type: :string },
+    keywords: {
+      type: :array,
+      items: { type: :string }
+    }
   },
   required: %w[title authors abstract keywords],
   additionalProperties: false
 }
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :system,
       content: "Extract structured data from the supplied research paper text."
     },
-    {role: :user, content: research_paper}
+    {
+      role: :user,
+      content: research_paper
+    }
   ],
   text: {
     format: {
@@ -1051,7 +1073,7 @@ curl https://api.openai.com/v1/responses \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {
         "role": "system",
@@ -1150,7 +1172,7 @@ const UI = z.lazy(() =>
 );
 
 const response = await openai.responses.parse({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "system",
@@ -1171,7 +1193,6 @@ const ui = response.output_parsed;
 
 ```python
 from enum import Enum
-from typing import List
 
 from openai import OpenAI
 from pydantic import BaseModel
@@ -1196,8 +1217,8 @@ class Attribute(BaseModel):
 class UI(BaseModel):
     type: UIType
     label: str
-    children: List["UI"]
-    attributes: List[Attribute]
+    children: list["UI"]
+    attributes: list[Attribute]
 
 
 UI.model_rebuild()  # This is required to enable recursive types
@@ -1208,7 +1229,7 @@ class Response(BaseModel):
 
 
 response = client.responses.parse(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "system",
@@ -1248,7 +1269,7 @@ func main() {
 	}
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("You are a UI generator AI. Convert the user input into a UI.")},
@@ -1285,7 +1306,7 @@ import java.util.Map;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -1404,7 +1425,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonSchemaFormat(
@@ -1433,15 +1454,18 @@ ui_schema = {
       type: :string,
       enum: %w[div button header section field form]
     },
-    label: {type: :string},
-    children: {type: :array, items: {"$ref" => "#"}},
+    label: { type: :string },
+    children: {
+      type: :array,
+      items: { "$ref" => "#" }
+    },
     attributes: {
       type: :array,
       items: {
         type: :object,
         properties: {
-          name: {type: :string},
-          value: {type: :string}
+          name: { type: :string },
+          value: { type: :string }
         },
         required: %w[name value],
         additionalProperties: false
@@ -1453,10 +1477,16 @@ ui_schema = {
 }
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
-    {role: :system, content: "Convert the user request into a UI definition."},
-    {role: :user, content: "Make a user profile form."}
+    {
+      role: :system,
+      content: "Convert the user request into a UI definition."
+    },
+    {
+      role: :user,
+      content: "Make a user profile form."
+    }
   ],
   text: {
     format: {
@@ -1477,7 +1507,7 @@ curl https://api.openai.com/v1/responses \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {
         "role": "system",
@@ -1651,7 +1681,7 @@ const ContentCompliance = z.object({
 });
 
 const response = await openai.responses.parse({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "system",
@@ -1673,7 +1703,6 @@ const compliance = response.output_parsed;
 
 ```python
 from enum import Enum
-from typing import Optional
 
 from openai import OpenAI
 from pydantic import BaseModel
@@ -1689,12 +1718,12 @@ class Category(str, Enum):
 
 class ContentCompliance(BaseModel):
     is_violating: bool
-    category: Optional[Category]
-    explanation_if_violating: Optional[str]
+    category: Category | None
+    explanation_if_violating: str | None
 
 
 response = client.responses.parse(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "system",
@@ -1723,7 +1752,7 @@ func main() {
 	client := openai.NewClient()
 	schema := contentComplianceSchema()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage("Determine if the user input violates specific guidelines and explain if they do.", responses.EasyInputMessageRoleSystem),
 			responses.ResponseInputItemParamOfMessage("How do I prepare for a job interview?", responses.EasyInputMessageRoleUser),
@@ -1795,7 +1824,7 @@ Map<String, Object> schema =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -1857,7 +1886,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonSchemaFormat(
@@ -1901,13 +1930,16 @@ compliance_schema = {
 }
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :system,
       content: "Determine whether the user input violates the guidelines and explain any violation."
     },
-    {role: :user, content: "How do I prepare for a job interview?"}
+    {
+      role: :user,
+      content: "How do I prepare for a job interview?"
+    }
   ],
   text: {
     format: {
@@ -1928,7 +1960,7 @@ curl https://api.openai.com/v1/responses \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {
         "role": "system",
@@ -2040,7 +2072,7 @@ For example:
 
 ```javascript
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "system",
@@ -2083,7 +2115,7 @@ console.log(response.output_text);
 
 ```python
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "system",
@@ -2137,7 +2169,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("You are a helpful math tutor. Guide the user through the solution step by step.")},
@@ -2213,7 +2245,7 @@ Map<String, Object> schema =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -2281,7 +2313,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonSchemaFormat(
@@ -2311,27 +2343,30 @@ math_schema = {
       items: {
         type: :object,
         properties: {
-          explanation: {type: :string},
-          output: {type: :string}
+          explanation: { type: :string },
+          output: { type: :string }
         },
         required: %w[explanation output],
         additionalProperties: false
       }
     },
-    final_answer: {type: :string}
+    final_answer: { type: :string }
   },
   required: %w[steps final_answer],
   additionalProperties: false
 }
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :system,
       content: "You are a helpful math tutor. Guide the user through the solution step by step."
     },
-    {role: :user, content: "How can I solve 8x + 7 = -23?"}
+    {
+      role: :user,
+      content: "How can I solve 8x + 7 = -23?"
+    }
   ],
   text: {
     format: {
@@ -2351,7 +2386,7 @@ curl https://api.openai.com/v1/responses \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {
         "role": "system",
@@ -2418,7 +2453,7 @@ This can happen in the case of a refusal, if the model refuses to answer for saf
 ```javascript
 try {
   const response = await openai.responses.create({
-    model: "gpt-5.6",
+    model: "gpt-6-astra",
     input: [
       {
         role: "system",
@@ -2498,7 +2533,7 @@ try {
 ```python
 try:
     response = client.responses.create(
-        model="gpt-5.6",
+        model="gpt-6-astra",
         input=[
             {
                 "role": "system",
@@ -2574,7 +2609,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("You are a helpful math tutor. Guide the user through the solution step by step.")},
@@ -2643,7 +2678,7 @@ import java.util.Map;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -2757,7 +2792,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     MaxOutputTokenCount = 300,
     TextOptions = new ResponseTextOptions
     {
@@ -2802,8 +2837,8 @@ client = OpenAI::Client.new
 step_schema = {
   type: :object,
   properties: {
-    explanation: {type: :string},
-    output: {type: :string}
+    explanation: { type: :string },
+    output: { type: :string }
   },
   required: %w[explanation output],
   additionalProperties: false
@@ -2811,21 +2846,27 @@ step_schema = {
 math_schema = {
   type: :object,
   properties: {
-    steps: {type: :array, items: step_schema},
-    final_answer: {type: :string}
+    steps: {
+      type: :array,
+      items: step_schema
+    },
+    final_answer: { type: :string }
   },
   required: %w[steps final_answer],
   additionalProperties: false
 }
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :system,
       content: "You are a helpful math tutor. Guide the user through the solution step by step."
     },
-    {role: :user, content: "How can I solve 8x + 7 = -23?"}
+    {
+      role: :user,
+      content: "How can I solve 8x + 7 = -23?"
+    }
   ],
   max_output_tokens: 1_024,
   text: {
@@ -2886,7 +2927,7 @@ const MathReasoning = z.object({
 });
 
 const response = await openai.responses.parse({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "system",
@@ -2933,7 +2974,7 @@ class MathReasoning(BaseModel):
 
 
 response = client.responses.parse(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "system",
@@ -2974,7 +3015,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("You are a helpful math tutor. Guide the user through the solution step by step.")},
@@ -3062,7 +3103,7 @@ Map<String, Object> schema =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -3135,7 +3176,7 @@ BinaryData schema = BinaryData.FromString(
 );
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonSchemaFormat(
@@ -3172,27 +3213,30 @@ math_schema = {
       items: {
         type: :object,
         properties: {
-          explanation: {type: :string},
-          output: {type: :string}
+          explanation: { type: :string },
+          output: { type: :string }
         },
         required: %w[explanation output],
         additionalProperties: false
       }
     },
-    final_answer: {type: :string}
+    final_answer: { type: :string }
   },
   required: %w[steps final_answer],
   additionalProperties: false
 }
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :system,
       content: "You are a helpful math tutor. Guide the user through the solution step by step."
     },
-    {role: :user, content: "How can I solve 8x + 7 = -23?"}
+    {
+      role: :user,
+      content: "How can I solve 8x + 7 = -23?"
+    }
   ],
   text: {
     format: {
@@ -3283,9 +3327,9 @@ Structured Outputs can still contain mistakes. If you see mistakes, try adjustin
 
 #### Avoid JSON schema divergence
 
-To prevent your JSON Schema and corresponding types in your programming language from diverging, we strongly recommend using the native Pydantic/zod sdk support.
+To prevent your JSON Schema and corresponding types in your programming language from diverging, we strongly recommend using native SDK schema helpers where available.
 
-If you prefer to specify the JSON schema directly, you could add CI rules that flag when either the JSON schema or underlying data objects are edited, or add a CI step that auto-generates the JSON Schema from type definitions (or vice-versa).
+If you prefer to specify the JSON schema directly, you could add CI rules that flag when either the JSON schema or underlying data objects are edited, or add a CI step that automatically generates the JSON Schema from type definitions (or vice-versa).
 
 ## Streaming
 
@@ -3315,7 +3359,7 @@ const EntitiesSchema = z.object({
 const openai = new OpenAI();
 const stream = openai.responses
   .stream({
-    model: "gpt-5.6",
+    model: "gpt-6-astra",
     input: [
       { role: "user", content: "What's the weather like in Paris today?" },
     ],
@@ -3342,22 +3386,20 @@ console.log(result);
 ```
 
 ```python
-from typing import List
-
 from openai import OpenAI
 from pydantic import BaseModel
 
 
 class EntitiesModel(BaseModel):
-    attributes: List[str]
-    colors: List[str]
-    animals: List[str]
+    attributes: list[str]
+    colors: list[str]
+    animals: list[str]
 
 
 client = OpenAI()
 
 with client.responses.stream(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {"role": "system", "content": "Extract entities from the input text"},
         {
@@ -3397,7 +3439,7 @@ import java.util.Map;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -3468,6 +3510,65 @@ try (StreamResponse<ResponseStreamEvent> stream = client.responses().createStrea
                     });
           });
 }
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+entities_schema = {
+  type: :object,
+  properties: {
+    attributes: {
+      type: :array,
+      items: { type: :string }
+    },
+    colors: {
+      type: :array,
+      items: { type: :string }
+    },
+    animals: {
+      type: :array,
+      items: { type: :string }
+    }
+  },
+  required: %w[attributes colors animals],
+  additionalProperties: false
+}
+
+stream = client.responses.stream(
+  model: "gpt-6-astra",
+  input: [
+    {
+      role: :system,
+      content: "Extract entities from the input text."
+    },
+    {
+      role: :user,
+      content: "The quick brown fox jumps over the lazy dog with piercing blue eyes."
+    }
+  ],
+  text: {
+    format: {
+      type: :json_schema,
+      name: "entities",
+      strict: true,
+      schema: entities_schema
+    }
+  }
+)
+
+stream.each do |event|
+  case event
+  when OpenAI::Models::Responses::ResponseRefusalDeltaEvent,
+       OpenAI::Models::Responses::ResponseTextDeltaEvent
+    print(event.delta)
+  when OpenAI::Models::Responses::ResponseErrorEvent
+    warn(event.message)
+  when OpenAI::Models::Responses::ResponseCompletedEvent
+    puts("\nCompleted")
+  end
+end
 ```
 
 
@@ -4002,7 +4103,7 @@ const we_did_not_specify_stop_tokens = true;
 
 try {
   const response = await openai.responses.create({
-    model: "gpt-5.6",
+    model: "gpt-6-astra",
     input: [
       {
         role: "system",
@@ -4065,7 +4166,7 @@ we_did_not_specify_stop_tokens = True
 
 try:
     response = client.responses.create(
-        model="gpt-5.6",
+        model="gpt-6-astra",
         input=[
             {
                 "role": "system",
@@ -4130,7 +4231,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage(
 				responses.ResponseInputMessageContentListParam{responses.ResponseInputContentParamOfInputText("You are a helpful assistant designed to output JSON.")},
@@ -4188,7 +4289,7 @@ import java.util.List;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofEasyInputMessage(
@@ -4247,7 +4348,7 @@ ResponsesClient client = new(key);
 
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     TextOptions = new ResponseTextOptions
     {
         TextFormat = ResponseTextFormat.CreateJsonObjectFormat(),
@@ -4293,24 +4394,27 @@ require "openai"
 
 client = OpenAI::Client.new
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
-    {role: :system, content: "You are a helpful assistant designed to output JSON."},
+    {
+      role: :system,
+      content: "You are a helpful assistant designed to output JSON."
+    },
     {
       role: :user,
       content: "Who won the World Series in 2020? Respond in the format {winner: ...}."
     }
   ],
-  text: {format: {type: :json_object}}
+  text: { format: { type: :json_object } }
 )
 
 if response.status == OpenAI::Responses::ResponseStatus::INCOMPLETE
   warn("The JSON response is incomplete.")
 else
   refusal = response.output
-    .grep(OpenAI::Models::Responses::ResponseOutputMessage)
-    .flat_map(&:content)
-    .find { |content| content.is_a?(OpenAI::Models::Responses::ResponseOutputRefusal) }
+                    .grep(OpenAI::Models::Responses::ResponseOutputMessage)
+                    .flat_map(&:content)
+                    .find { |content| content.is_a?(OpenAI::Models::Responses::ResponseOutputRefusal) }
 
   if refusal.is_a?(OpenAI::Models::Responses::ResponseOutputRefusal)
     puts(refusal.refusal)

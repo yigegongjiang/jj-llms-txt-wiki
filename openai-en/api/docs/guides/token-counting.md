@@ -6,10 +6,10 @@ Token counting lets you determine how many input tokens a request will use befor
 
 - **Optimize prompts** to fit within context limits
 - **Estimate costs** before making API calls
-- **Route requests** based on size (e.g., smaller prompts to faster models)
+- **Route requests** based on size (for example, smaller prompts to faster models)
 - **Avoid surprises** with images and files—no more character-based estimation
 
-The [input token count endpoint](https://developers.openai.com/api/reference/python/resources/responses/subresources/input_tokens/methods/count) accepts the same input format as the [Responses API](https://developers.openai.com/api/reference/resources/responses/methods/create). Pass text, messages, images, files, tools, or conversations—the API returns the exact count the model will receive.
+The [input token count endpoint](https://developers.openai.com/api/reference/resources/responses/subresources/input_tokens/methods/count) accepts the same input format as the [Responses API](https://developers.openai.com/api/reference/resources/responses/methods/create). Pass text, messages, images, files, tools, or conversations—the API returns the exact count the model will receive.
 
 The count includes formatting tokens used to represent request structure, such as message roles and boundaries. These tokens might not appear in the text or fields you tokenize locally.
 
@@ -19,7 +19,7 @@ Local tokenizers like [tiktoken](https://github.com/openai/tiktoken) work for pl
 
 - **Images and files** are not supported—estimates like `characters / 4` are inaccurate
 - **Tools and schemas** add tokens that are hard to count locally
-- **Model-specific behavior** can change tokenization (e.g., reasoning, caching)
+- **Model-specific behavior** can change tokenization (for example, reasoning, caching)
 
 The token counting API handles all of these. Use the same payload you would send to `responses.create` and get an accurate count. Then plug the result into your message validation or cost estimation flow.
 
@@ -33,7 +33,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.inputTokens.count({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "Tell me a joke.",
 });
 
@@ -46,7 +46,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.input_tokens.count(
-    model="gpt-5.6", input="Tell me a joke."
+    model="gpt-6-astra", input="Tell me a joke."
 )
 print(response.input_tokens)
 ```
@@ -65,7 +65,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
-		Model: openai.String("gpt-5.6"),
+		Model: openai.String("gpt-6-astra"),
 		Input: responses.InputTokenCountParamsInputUnion{OfString: openai.String("Tell me a joke.")},
 	})
 	if err != nil {
@@ -86,7 +86,7 @@ var count =
         .inputTokens()
         .count(
             InputTokenCountParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .input("Tell me a joke.")
                 .build());
 
@@ -99,7 +99,7 @@ require "openai"
 client = OpenAI::Client.new
 
 count = client.responses.input_tokens.count(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "Tell me a joke."
 )
 
@@ -111,14 +111,14 @@ curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": "Tell me a joke."
   }'
 ```
 
 ```bash
 openai responses:input-tokens count \
-  --model gpt-5.6 \
+  --model gpt-6-astra \
   --input "Tell me a joke." \
   --raw-output \
   --transform input_tokens
@@ -135,7 +135,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.inputTokens.count({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     { role: "user", content: "What is 2 + 2?" },
     { role: "assistant", content: "2 + 2 equals 4." },
@@ -152,7 +152,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.input_tokens.count(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {"role": "user", "content": "What is 2 + 2?"},
         {"role": "assistant", "content": "2 + 2 equals 4."},
@@ -181,7 +181,7 @@ func main() {
 		responses.ResponseInputItemParamOfMessage("What about 3 + 3?", responses.EasyInputMessageRoleUser),
 	}
 	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
-		Model: openai.String("gpt-5.6"),
+		Model: openai.String("gpt-6-astra"),
 		Input: responses.InputTokenCountParamsInputUnion{OfResponseInputItemArray: input},
 	})
 	if err != nil {
@@ -205,7 +205,7 @@ var count =
         .inputTokens()
         .count(
             InputTokenCountParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .inputOfResponseInputItems(
                     List.of(
                         ResponseInputItem.ofEasyInputMessage(
@@ -233,13 +233,22 @@ require "openai"
 
 client = OpenAI::Client.new
 conversation = [
-  {role: :user, content: "What is 2 + 2?"},
-  {role: :assistant, content: "2 + 2 equals 4."},
-  {role: :user, content: "What about 3 + 3?"}
+  {
+    role: :user,
+    content: "What is 2 + 2?"
+  },
+  {
+    role: :assistant,
+    content: "2 + 2 equals 4."
+  },
+  {
+    role: :user,
+    content: "What about 3 + 3?"
+  }
 ]
 
 count = client.responses.input_tokens.count(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: conversation
 )
 
@@ -251,7 +260,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {"role": "user", "content": "What is 2 + 2?"},
       {"role": "assistant", "content": "2 + 2 equals 4."},
@@ -264,7 +273,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'
-model: gpt-5.6
+model: gpt-6-astra
 input:
   - role: user
     content: What is 2 + 2?
@@ -286,7 +295,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.inputTokens.count({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions: "You are a helpful assistant that explains concepts simply.",
   input: "Explain quantum computing in one sentence.",
 });
@@ -300,7 +309,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.input_tokens.count(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     instructions="You are a helpful assistant that explains concepts simply.",
     input="Explain quantum computing in one sentence.",
 )
@@ -321,7 +330,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
-		Model:        openai.String("gpt-5.6"),
+		Model:        openai.String("gpt-6-astra"),
 		Instructions: openai.String("You are a helpful assistant that explains concepts simply."),
 		Input:        responses.InputTokenCountParamsInputUnion{OfString: openai.String("Explain quantum computing in one sentence.")},
 	})
@@ -343,7 +352,7 @@ var count =
         .inputTokens()
         .count(
             InputTokenCountParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .input("Explain quantum computing in one sentence.")
                 .instructions("You are a helpful assistant that explains concepts simply.")
                 .build());
@@ -357,7 +366,7 @@ require "openai"
 client = OpenAI::Client.new
 
 count = client.responses.input_tokens.count(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions: "You are a helpful assistant that explains concepts simply.",
   input: "Explain quantum computing in one sentence."
 )
@@ -370,7 +379,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "instructions": "You are a helpful assistant that explains concepts simply.",
     "input": "Explain quantum computing in one sentence."
   }'
@@ -380,7 +389,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'
-model: gpt-5.6
+model: gpt-6-astra
 instructions: You are a helpful assistant that explains concepts simply.
 input: Explain quantum computing in one sentence.
 YAML
@@ -399,7 +408,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.inputTokens.count({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -425,7 +434,7 @@ client = OpenAI()
 
 # Use file_id from uploaded file, or image_url for a URL
 response = client.responses.input_tokens.count(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -465,7 +474,7 @@ func main() {
 		),
 	}
 	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
-		Model: openai.String("gpt-5.6"),
+		Model: openai.String("gpt-6-astra"),
 		Input: responses.InputTokenCountParamsInputUnion{OfResponseInputItemArray: input},
 	})
 	if err != nil {
@@ -489,7 +498,7 @@ var count =
         .inputTokens()
         .count(
             InputTokenCountParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .inputOfResponseInputItems(
                     List.of(
                         ResponseInputItem.ofMessage(
@@ -514,7 +523,7 @@ require "openai"
 client = OpenAI::Client.new
 
 count = client.responses.input_tokens.count(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: :user,
@@ -524,7 +533,10 @@ count = client.responses.input_tokens.count(
           image_url: "https://api.nga.gov/iiif/a2e6da57-3cd1-4235-b20e-95dcaefed6c8/full/!800,800/0/default.jpg",
           detail: :auto
         },
-        {type: :input_text, text: "Summarize this chart."}
+        {
+          type: :input_text,
+          text: "Summarize this chart."
+        }
       ]
     }
   ]
@@ -538,7 +550,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [{
       "role": "user",
       "content": [
@@ -553,7 +565,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'
-model: gpt-5.6
+model: gpt-6-astra
 input:
   - role: user
     content:
@@ -579,7 +591,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.inputTokens.count({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   tools: [
     {
       type: "function",
@@ -606,7 +618,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.input_tokens.count(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     tools=[
         {
             "type": "function",
@@ -648,7 +660,7 @@ func main() {
 	tool := responses.ToolParamOfFunction("get_weather", parameters, true)
 	tool.OfFunction.Description = openai.String("Get the current weather in a location")
 	count, err := client.Responses.InputTokens.Count(context.Background(), responses.InputTokenCountParams{
-		Model: openai.String("gpt-5.6"),
+		Model: openai.String("gpt-6-astra"),
 		Input: responses.InputTokenCountParamsInputUnion{OfString: openai.String("What is the weather in San Francisco?")},
 		Tools: []responses.ToolUnionParam{tool},
 	})
@@ -674,7 +686,7 @@ var count =
         .inputTokens()
         .count(
             InputTokenCountParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .input("What is the weather in San Francisco?")
                 .addTool(
                     FunctionTool.builder()
@@ -705,7 +717,7 @@ require "openai"
 client = OpenAI::Client.new
 
 count = client.responses.input_tokens.count(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "What is the weather in San Francisco?",
   tools: [
     {
@@ -715,7 +727,7 @@ count = client.responses.input_tokens.count(
       strict: true,
       parameters: {
         type: "object",
-        properties: {location: {type: "string"}},
+        properties: { location: { type: "string" } },
         required: ["location"],
         additionalProperties: false
       }
@@ -731,7 +743,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "tools": [{
       "type": "function",
       "name": "get_weather",
@@ -750,7 +762,7 @@ curl https://api.openai.com/v1/responses/input_tokens \
 openai responses:input-tokens count \
   --raw-output \
   --transform input_tokens <<'YAML'
-model: gpt-5.6
+model: gpt-6-astra
 tools:
   - type: function
     name: get_weather
@@ -769,7 +781,7 @@ YAML
 
 ## Count tokens with files
 
-[File inputs](https://developers.openai.com/api/docs/guides/file-inputs)—currently PDFs—are supported. Pass `file_id`, `file_url`, or `file_data` as you would for `responses.create`. The token count reflects the model’s full processed input.
+[File inputs](https://developers.openai.com/api/docs/guides/file-inputs) (currently PDFs) are supported. Pass `file_id`, `file_url`, or `file_data` as you would for `responses.create`. The token count reflects the model’s full processed input.
 
 ## Understand output token counts
 
@@ -781,7 +793,7 @@ The `max_output_tokens` and `max_completion_tokens` parameters limit all tokens 
 
 ## API reference
 
-For full parameters and response shape, see the [Count input tokens API reference](https://developers.openai.com/api/reference/python/resources/responses/subresources/input_tokens/methods/count). The endpoint is:
+For full parameters and response shape, see the [Count input tokens API reference](https://developers.openai.com/api/reference/resources/responses/subresources/input_tokens/methods/count). The endpoint is:
 
 ```
 POST /v1/responses/input_tokens

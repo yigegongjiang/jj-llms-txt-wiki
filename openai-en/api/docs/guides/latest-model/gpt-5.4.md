@@ -167,7 +167,7 @@ require "openai"
 client = OpenAI::Client.new
 response = client.responses.create(
   model: "gpt-5.4",
-  reasoning: {effort: :minimal},
+  reasoning: { effort: :minimal },
   input: "Explain the bug and propose a fix."
 )
 puts(response.output_text)
@@ -282,7 +282,7 @@ require "openai"
 client = OpenAI::Client.new
 response = client.responses.create(
   model: "gpt-5.4",
-  text: {verbosity: :low},
+  text: { verbosity: :low },
   input: "Explain the bug and propose a fix."
 )
 puts(response.output_text)
@@ -579,7 +579,7 @@ require "openai"
 client = OpenAI::Client.new
 response = client.responses.create(
   model: "gpt-5.4",
-  reasoning: {effort: :medium},
+  reasoning: { effort: :medium },
   input: "Explain the bug and propose a fix."
 )
 puts(response.output_text)
@@ -767,7 +767,6 @@ curl --request POST \
   ]
 }'
 ```
-
 
 
 
@@ -1366,7 +1365,6 @@ GPT-5.4 performs especially well when the task requires multi-step evidence gath
 - Review [Model, API, and feature updates](#model-api-and-feature-updates) for model capabilities, parameters, and API compatibility details.
 - Read [Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering) for broader prompting strategies that apply across model families.
 - Read [Compaction](https://developers.openai.com/api/docs/guides/compaction) if you are building long-running GPT-5.4 sessions in the Responses API.
-
 
 ## Further reading
 

@@ -274,6 +274,15 @@ model to decide whether a user has access.
 See [Authenticate users](https://developers.openai.com/plugins/build/auth) for OAuth discovery, security
 schemes, and authorization challenges.
 
+To improve the experience of using multiple accounts, expose an authenticated,
+read-only profile tool and mark it with `_meta["openai/profile"]: true`.
+OpenAI uses the profile information to identify connected accounts consistently
+and help users tell them apart. Resolve the profile from the request's validated
+credentials, and keep every tool call scoped to those credentials. Users can
+connect multiple accounts without a profile tool. See
+[Support multiple accounts](https://developers.openai.com/plugins/build/auth#support-multiple-accounts) for
+the schema and implementation example.
+
 ## Tool annotations and elicitation
 
 Set annotations according to actual behavior:
@@ -281,7 +290,10 @@ Set annotations according to actual behavior:
 - `readOnlyHint`: `true` only when the tool cannot change state.
 - `destructiveHint`: `true` when a tool can cause irreversible or difficult to
   reverse outcomes.
-- `openWorldHint`: `true` when a tool can affect public or external systems.
+- `openWorldHint`: `true` when a tool accesses the public internet or open-ended
+  external entities, including through read-only actions such as web search.
+  A tool limited to a bounded private account or workspace can set this to
+  `false`, even when that service is externally hosted.
 
 Annotations help ChatGPT and Codex choose appropriate confirmation and safety
 behavior. They do not replace authorization, validation, or confirmation in

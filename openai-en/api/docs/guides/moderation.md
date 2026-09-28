@@ -6,6 +6,8 @@ Use OpenAI moderation models to detect harmful content in text and images. You c
 
 The `omni-moderation-latest` model accepts text and image inputs. It doesn't classify audio. The moderation endpoint is free to use, and image files can be up to 20 MB.
 
+**Child safety:** Do not send known or suspected child sexual abuse material (CSAM) to the Moderation API. The API is not designed for CSAM detection or handling and is not a substitute for dedicated child-safety safeguards. See our [CSAM guidance](https://developers.openai.com/api/docs/guides/csam-guidance) for steps to prevent, detect, respond to, and report CSAM.
+
 ## Choose a moderation workflow
 
 | Workflow                                                        | Use when                                                                                                     |
@@ -33,7 +35,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -63,7 +65,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -103,7 +105,7 @@ func main() {
 	client := openai.NewClient()
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfString: openai.String("A user asks for instructions to make a harmful weapon. Draft a brief refusal and offer a safer alternative."),
 		},
@@ -145,7 +147,7 @@ import java.util.Map;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input(
             "A user asks for instructions to make a harmful weapon. Draft a brief refusal and offer a safer alternative.")
         .putAdditionalBodyProperty(
@@ -153,27 +155,31 @@ ResponseCreateParams params =
         .build();
 
 var response = client.responses().create(params);
-JsonValue moderation = response._additionalProperties().get("moderation");
-if (moderation == null) {
-  throw new IllegalStateException("The response did not include moderation results");
-}
-Map<?, ?> results = moderation.convert(Map.class);
+var moderation =
+    response
+        .moderation()
+        .orElseThrow(
+            () -> new IllegalStateException("The response did not include moderation results"));
 List<Boolean> flags = new ArrayList<>();
-for (String side : List.of("input", "output")) {
-  if (!(results.get(side) instanceof Map<?, ?> result)) {
-    throw new IllegalStateException("Missing " + side + " moderation result");
-  }
-  if ("error".equals(result.get("type"))) {
-    throw new IllegalStateException(String.valueOf(result.get("message")));
-  }
-  if (!"moderation_result".equals(result.get("type"))) {
-    throw new IllegalStateException("Unexpected " + side + " moderation result type");
-  }
-  if (!(result.get("flagged") instanceof Boolean flagged)) {
-    throw new IllegalStateException("Missing " + side + " moderation flag");
-  }
-  flags.add(flagged);
+
+var input = moderation.input();
+if (input.isError()) {
+  throw new IllegalStateException(input.asError().message());
 }
+if (!input.isModerationResult()) {
+  throw new IllegalStateException("Missing input moderation flag");
+}
+flags.add(input.asModerationResult().flagged());
+
+var output = moderation.output();
+if (output.isError()) {
+  throw new IllegalStateException(output.asError().message());
+}
+if (!output.isModerationResult()) {
+  throw new IllegalStateException("Missing output moderation flag");
+}
+flags.add(output.asModerationResult().flagged());
+
 flags.forEach(System.out::println);
 ```
 
@@ -183,9 +189,9 @@ require "openai"
 client = OpenAI::Client.new
 
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "A user asks for instructions to make a harmful weapon. Draft a brief refusal and offer a safer alternative.",
-  moderation: {model: "omni-moderation-latest"}
+  moderation: { model: "omni-moderation-latest" }
 )
 
 puts(response.moderation)
@@ -484,7 +490,10 @@ client = OpenAI::Client.new
 moderation = client.moderations.create(
   model: OpenAI::Models::ModerationModel::OMNI_MODERATION_LATEST,
   input: [
-    {type: :text, text: "Text to classify goes here."},
+    {
+      type: :text,
+      text: "Text to classify goes here."
+    },
     {
       type: :image_url,
       image_url: {

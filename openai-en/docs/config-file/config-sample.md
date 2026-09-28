@@ -31,9 +31,9 @@ Use the snippet below as a reference. Copy only the keys and sections you need i
 
 ################################################################################
 
-# Primary model used by Codex. Recommended example for most users: "gpt-5.6".
+# Primary model used by Codex. Recommended example for most users: "gpt-6-sol".
 
-model = "gpt-5.6"
+model = "gpt-6-sol"
 
 # Communication style for supported models. Allowed values: none | friendly | pragmatic
 
@@ -41,7 +41,7 @@ model = "gpt-5.6"
 
 # Optional model override for /review. Default: unset (uses current session model).
 
-# review_model = "gpt-5.6"
+# review_model = "gpt-6-sol"
 
 # Provider id selected from [model_providers]. Default: "openai".
 
@@ -79,11 +79,11 @@ model_provider = "openai"
 
 ################################################################################
 
-# Reasoning effort: minimal | low | medium | high | xhigh
+# Reasoning effort advertised by the selected model; supported levels vary by model and client.
 
 # model_reasoning_effort = "medium"
 
-# Optional override used when Codex runs in plan mode: none | minimal | low | medium | high | xhigh
+# Optional reasoning effort override for Plan mode; use a level supported by the selected model.
 
 # plan_mode_reasoning_effort = "high"
 
@@ -138,8 +138,6 @@ model_provider = "openai"
 ################################################################################
 
 # When to ask for command approval:
-
-# - untrusted: only known-safe read-only commands auto-run; others prompt
 
 # - on-request: model decides when to ask (default)
 
@@ -224,6 +222,12 @@ chatgpt_base_url = "https://chatgpt.com/backend-api/"
 # Preferred store for MCP OAuth credentials: auto (default) | file | keyring
 
 mcp_oauth_credentials_store = "auto"
+
+# Shared wait for optional MCP servers before building the initial tool catalog.
+
+# Default: 1000 ms. Set to 0 to wait for each server's startup_timeout_sec instead.
+
+# mcp_optional_startup_grace_ms = 1000
 
 # Optional global fixed port for MCP OAuth callback: 1-65535. Default: unset.
 
@@ -355,11 +359,11 @@ web_search = "cached"
 
 # Default model for spawned agents. An explicit spawn model takes precedence.
 
-# default_subagent_model = "gpt-5.6-terra"
+# default_subagent_model = "gpt-6-sol"
 
 # Default reasoning effort for spawned agents. An explicit spawn effort takes precedence.
 
-# default_subagent_reasoning_effort = "high"
+# default_subagent_reasoning_effort = "medium"
 
 # Record a model-visible message when an agent turn is interrupted. Default: true
 
@@ -376,6 +380,14 @@ web_search = "cached"
 # Skills (per-skill overrides)
 
 ################################################################################
+
+# Token budget for the available-skills catalog. Default: 2% of the model context
+
+# window. Explicit values must be positive and are capped at 10000 tokens.
+
+# [skills]
+
+# max_context_tokens = 2000
 
 # Disable or re-enable a specific skill without deleting it.
 
@@ -659,7 +671,7 @@ show_tooltips = true
 
 # [tui.model_availability_nux]
 
-# "gpt-5.6-terra" = 1
+# "gpt-6-sol" = 1
 
 # Enable or disable analytics for this machine. When unset, Codex uses its default behavior.
 
@@ -685,7 +697,7 @@ enabled = true
 
 # "hide_gpt-5.1-codex-max_migration_prompt" = true
 
-# model_migrations = { "gpt-5.4" = "gpt-5.6-terra" }
+# model_migrations = { "gpt-5.4" = "gpt-6-sol" }
 
 ################################################################################
 
@@ -837,6 +849,10 @@ enabled = true
 
 # oauth_resource = "https://docs.example.com/" # optional OAuth resource
 
+# [mcp_servers.docs.tools.search]
+
+# output_token_limit = 30000 # positive token budget, before the 20% serialization allowance
+
 # --- Example: Streamable HTTP transport ---
 
 # [mcp_servers.github]
@@ -852,6 +868,8 @@ enabled = true
 # http_headers = { "X-Example" = "value" } # optional static headers
 
 # env_http_headers = { "X-Auth" = "AUTH_ENV" } # optional headers populated from env vars
+
+# http_headers_helper = "company-auth mcp-headers" # local command that prints a JSON header map
 
 # startup_timeout_sec = 10.0 # optional
 
@@ -1061,7 +1079,7 @@ enabled = true
 
 # For example, a CI profile could live at $CODEX_HOME/ci.config.toml:
 
-# model = "gpt-5.6-terra"
+# model = "gpt-6-sol"
 
 # approval_policy = "on-request"
 

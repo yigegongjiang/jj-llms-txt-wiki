@@ -11,8 +11,9 @@ only receives prompt context. Large document sets, generated artifacts,
 commands, previews, and resumable work all need an environment the agent can
 inspect and change.
 
-Sandbox agents are available in the TypeScript and Python Agents SDKs. They
-  are in beta, so API details, defaults, and supported capabilities may change.
+Sandbox agents are available in the TypeScript and Python Agents SDKs.
+
+This guide covers sandboxes in the Agents SDK, where your application runs the harness. For an OpenAI-managed harness, use [Agents API: Connect a sandbox](https://developers.openai.com/api/docs/guides/agents-api/environments/self-hosted).
 
 Use sandboxes when the agent needs to manipulate files, run commands, mount a
 data room, produce artifacts, expose a service, or continue stateful work
@@ -34,6 +35,11 @@ review, and recovery state outside any one container.
 
 
   <figure>
+    
+
+![Diagram showing an agent harness running inside sandbox compute with filesystem access and gateway-mediated access to data, APIs, and the web.](<https://developers.openai.com/images/api/agents/harness_with_compute.png>)
+
+
     <figcaption className="mt-3 text-sm text-gray-600 dark:text-gray-400">
       Running the harness inside the sandbox can be convenient for prototypes,
       but it puts orchestration and model-directed execution in the same compute
@@ -42,6 +48,11 @@ review, and recovery state outside any one container.
   </figure>
 
   <figure>
+    
+
+![Diagram showing an agent harness separate from sandbox compute, where the harness accesses trusted services and the sandbox executes commands against a filesystem.](<https://developers.openai.com/images/api/agents/harness_separate_from_compute.png>)
+
+
     <figcaption className="mt-3 text-sm text-gray-600 dark:text-gray-400">
       The harness can run in your infrastructure while the sandbox handles
       provider-specific, stateful execution.
@@ -294,7 +305,7 @@ const manifest = new Manifest({
 
 const agent = new SandboxAgent({
   name: "Renewal Packet Analyst",
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions:
     "Review the workspace before answering. Keep the response concise, " +
     "business-focused, and cite the file names that support each conclusion.",
@@ -346,7 +357,7 @@ manifest = Manifest(
 
 agent = SandboxAgent(
     name="Renewal Packet Analyst",
-    model="gpt-5.6",
+    model="gpt-6-astra",
     instructions=(
         "Review the workspace before answering. Keep the response concise, "
         "business-focused, and cite the file names that support each conclusion."
@@ -392,7 +403,7 @@ import { DockerSandboxClient } from "@openai/agents/sandbox/local";
 
 const agent = new SandboxAgent({
   name: "Workspace reviewer",
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions: "Inspect the sandbox workspace before answering.",
 });
 
@@ -490,7 +501,7 @@ const client = new UnixLocalSandboxClient({
 });
 const agent = new SandboxAgent({
   name: "Workspace builder",
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions: "Inspect the sandbox workspace before answering.",
 });
 

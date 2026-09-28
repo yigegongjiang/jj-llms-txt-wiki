@@ -160,11 +160,18 @@ project trackers.
 - Install the plugins most relevant to your work.
 - To point ChatGPT to a specific tool, type `@` and the plugin name in your prompt.
 
-Learn more about [plugins](https://learn.chatgpt.com/docs/plugins).
+Learn more about [plugins](https://learn.chatgpt.com/docs/plugins). To make a workflow reusable,
+[create and edit a plugin](https://learn.chatgpt.com/docs/build-plugins) through a conversation with ChatGPT.
 
 <a id="use-work-mode-efficiently"></a>
 
 ## Use ChatGPT Work efficiently
+
+Choose [GPT-6 Astra](https://learn.chatgpt.com/docs/models#gpt-6-astra) for demanding work that needs
+careful reasoning, visual judgment, or a polished final file. For simpler tasks,
+consider Sol or Luna. Select from the models
+available in your model selector and check [plan usage](https://learn.chatgpt.com/docs/pricing)
+before starting a large task.
 
 ChatGPT Work is best for substantial tasks that involve multiple steps, sources, or
 tools, or require a completed deliverable. Longer or more complex tasks may use
@@ -179,6 +186,9 @@ Use Chat instead for quick questions, short rewrites, and decisions where you
 only need advice.
 
 Learn more about [working efficiently](https://learn.chatgpt.com/docs/prompting#prompting-for-work).
+
+If a task pauses for a safety review, follow the notice and review any available
+findings before continuing. See [safety monitoring and paused tasks](https://learn.chatgpt.com/docs/agent-approvals-security#safety-monitoring-and-paused-tasks).
 
 ## More use cases
 

@@ -6,7 +6,7 @@
 
 Model ID: `gpt-5.2-chat-latest`
 
-GPT-5.2 Chat points to the GPT-5.2 snapshot used in ChatGPT. This model has been deprecated. We recommend [GPT-5.6](/api/docs/models/gpt-5.6-sol) for most API usage.
+GPT-5.2 Chat points to the GPT-5.2 snapshot used in ChatGPT. This model has been deprecated. We recommend [GPT-6 Astra](/api/docs/models/gpt-6-astra) for most API usage.
 
 ## Model details
 
@@ -34,6 +34,7 @@ Pricing is based on the number of tokens used, or other metrics based on the mod
 
 | Endpoint | Route | Support |
 | --- | --- | --- |
+| Live | `v1/live/sessions` | Not supported |
 | Chat Completions | `v1/chat/completions` | Supported |
 | Responses | `v1/responses` | Supported |
 | Realtime | `v1/realtime` | Not supported |

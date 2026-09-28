@@ -8,21 +8,21 @@
 
 **post** `/chat/completions`
 
-**Starting a new project?** We recommend trying [Responses](/docs/api-reference/responses)
+**Starting a new project?** We recommend trying [Responses](/api/reference/resources/responses)
 to take advantage of the latest OpenAI platform features. Compare
-[Chat Completions with Responses](/docs/guides/responses-vs-chat-completions?api-mode=responses).
+[Chat Completions with Responses](/api/docs/guides/migrate-to-responses?api-mode=responses).
 
 ---
 
 Creates a model response for the given chat conversation. Learn more in the
-[text generation](/docs/guides/text-generation), [vision](/docs/guides/vision),
-and [audio](/docs/guides/audio) guides.
+[text generation](/api/docs/guides/text), [vision](/api/docs/guides/images-vision),
+and [audio](/api/docs/guides/audio) guides.
 
 Parameter support can differ depending on the model used to generate the
 response, particularly for newer reasoning models. Parameters that are only
 supported for reasoning models are noted below. For the current state of
 unsupported parameters in reasoning models,
-[refer to the reasoning guide](/docs/guides/reasoning).
+[refer to the reasoning guide](/api/docs/guides/reasoning).
 
 Returns a chat completion object, or a streamed sequence of chat completion
 chunk objects if the request is streamed.
@@ -32,9 +32,9 @@ chunk objects if the request is streamed.
 - `messages: array of ChatCompletionMessageParam`
 
   A list of messages comprising the conversation so far. Depending on the
-  [model](/docs/models) you use, different message types (modalities) are
-  supported, like [text](/docs/guides/text-generation),
-  [images](/docs/guides/vision), and [audio](/docs/guides/audio).
+  [model](/api/docs/models) you use, different message types (modalities) are
+  supported, like [text](/api/docs/guides/text),
+  [images](/api/docs/guides/images-vision), and [audio](/api/docs/guides/audio).
 
   - `ChatCompletionDeveloperMessageParam object { content, role, name }`
 
@@ -139,11 +139,11 @@ chunk objects if the request is streamed.
 
       - `ArrayOfContentParts = array of ChatCompletionContentPart`
 
-        An array of content parts with a defined type. Supported options differ based on the [model](/docs/models) being used to generate the response. Can contain text, image, or audio inputs.
+        An array of content parts with a defined type. Supported options differ based on the [model](/api/docs/models) being used to generate the response. Can contain text, image, or audio inputs.
 
         - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-          Learn about [text inputs](/docs/guides/text-generation).
+          Learn about [text inputs](/api/docs/guides/text).
 
           - `text: string`
 
@@ -159,7 +159,7 @@ chunk objects if the request is streamed.
 
         - `ChatCompletionContentPartImage object { image_url, type, prompt_cache_breakpoint }`
 
-          Learn about [image inputs](/docs/guides/vision).
+          Learn about [image inputs](/api/docs/guides/images-vision).
 
           - `image_url: object { url, detail }`
 
@@ -169,7 +169,7 @@ chunk objects if the request is streamed.
 
             - `detail: optional "auto" or "low" or "high"`
 
-              Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
+              Specifies the detail level of the image. Learn more in the [Vision guide](/api/docs/guides/images-vision#choose-an-image-detail-level).
 
               - `"auto"`
 
@@ -195,7 +195,7 @@ chunk objects if the request is streamed.
 
         - `ChatCompletionContentPartInputAudio object { input_audio, type, prompt_cache_breakpoint }`
 
-          Learn about [audio inputs](/docs/guides/audio).
+          Learn about [audio inputs](/api/docs/guides/audio).
 
           - `input_audio: object { data, format }`
 
@@ -229,7 +229,7 @@ chunk objects if the request is streamed.
 
         - `FileContentPart object { file, type, prompt_cache_breakpoint }`
 
-          Learn about [file inputs](/docs/guides/text) for text generation.
+          Learn about [file inputs](/api/docs/guides/text) for text generation.
 
           - `file: object { file_data, file_id, filename }`
 
@@ -286,7 +286,7 @@ chunk objects if the request is streamed.
     - `audio: optional object { id }  or null`
 
       Data about a previous audio response from the model.
-      [Learn more](/docs/guides/audio).
+      [Learn more](/api/docs/guides/audio).
 
       - `id: string`
 
@@ -306,7 +306,7 @@ chunk objects if the request is streamed.
 
         - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-          Learn about [text inputs](/docs/guides/text-generation).
+          Learn about [text inputs](/api/docs/guides/text).
 
         - `ChatCompletionContentPartRefusal object { refusal, type }`
 
@@ -448,21 +448,27 @@ chunk objects if the request is streamed.
 
       - `"function"`
 
-- `model: string or "gpt-5.6-sol" or "gpt-5.6-terra" or "gpt-5.6-luna" or 80 more`
+- `model: string or "gpt-6-astra" or "gpt-6-sol" or "gpt-6-luna" or 85 more`
 
-  Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
+  Model ID used to generate the response, like `gpt-6-astra` or `o3`. OpenAI
   offers a wide range of models with different capabilities, performance
-  characteristics, and price points. Refer to the [model guide](/docs/models)
+  characteristics, and price points. Refer to the [model guide](/api/docs/models)
   to browse and compare available models.
 
   - `string`
 
-  - `"gpt-5.6-sol" or "gpt-5.6-terra" or "gpt-5.6-luna" or 80 more`
+  - `"gpt-6-astra" or "gpt-6-sol" or "gpt-6-luna" or 85 more`
 
-    Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
+    Model ID used to generate the response, like `gpt-6-astra` or `o3`. OpenAI
     offers a wide range of models with different capabilities, performance
-    characteristics, and price points. Refer to the [model guide](/docs/models)
+    characteristics, and price points. Refer to the [model guide](/api/docs/models)
     to browse and compare available models.
+
+    - `"gpt-6-astra"`
+
+    - `"gpt-6-sol"`
+
+    - `"gpt-6-luna"`
 
     - `"gpt-5.6-sol"`
 
@@ -564,6 +570,10 @@ chunk objects if the request is streamed.
 
     - `"gpt-4o-2024-05-13"`
 
+    - `"gpt-audio-mini"`
+
+    - `"gpt-audio-mini-2025-12-15"`
+
     - `"gpt-4o-audio-preview"`
 
     - `"gpt-4o-audio-preview-2024-10-01"`
@@ -633,7 +643,7 @@ chunk objects if the request is streamed.
 - `audio: optional ChatCompletionAudioParam or null`
 
   Parameters for audio output. Required when audio output is requested with
-  `modalities: ["audio"]`. [Learn more](/docs/guides/audio).
+  `modalities: ["audio"]`. [Learn more](/api/docs/guides/audio).
 
   - `format: "wav" or "aac" or "mp3" or 3 more`
 
@@ -747,7 +757,7 @@ chunk objects if the request is streamed.
 
   - `parameters: optional FunctionParameters`
 
-    The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+    The parameters the functions accepts, described as a JSON Schema object. See the [guide](/api/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
 
     Omitting `parameters` defines a function with an empty parameter list.
 
@@ -770,16 +780,16 @@ chunk objects if the request is streamed.
 
 - `max_completion_tokens: optional number or null`
 
-  An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/docs/guides/reasoning).
+  An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/api/docs/guides/reasoning).
 
 - `max_tokens: optional number or null`
 
-  The maximum number of [tokens](/tokenizer) that can be generated in the
+  The maximum number of [tokens](https://platform.openai.com/tokenizer) that can be generated in the
   chat completion. This value can be used to control
   [costs](https://openai.com/api/pricing/) for text generated via API.
 
   This value is now deprecated in favor of `max_completion_tokens`, and is
-  not compatible with [o-series models](/docs/guides/reasoning).
+  not compatible with [o-series models](/api/docs/guides/reasoning).
 
 - `metadata: optional Metadata or null`
 
@@ -798,7 +808,7 @@ chunk objects if the request is streamed.
   `["text"]`
 
   The `gpt-4o-audio-preview` model can also be used to
-  [generate audio](/docs/guides/audio). To request that this model generate
+  [generate audio](/api/docs/guides/audio). To request that this model generate
   both text and audio responses, you can use:
 
   `["text", "audio"]`
@@ -845,12 +855,14 @@ chunk objects if the request is streamed.
 
 - `parallel_tool_calls: optional boolean`
 
-  Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+  Whether to enable [parallel function calling](/api/docs/guides/function-calling#parallel-function-calling) during tool use.
 
 - `prediction: optional ChatCompletionPredictionContent or null`
 
-  Static predicted output content, such as the content of a text file that is
-  being regenerated.
+  Configuration for a [Predicted Output](/api/docs/guides/predicted-outputs),
+  which can greatly improve response times when large parts of the model
+  response are known ahead of time. This is most common when you are
+  regenerating a file with only minor changes to most of the content.
 
   - `content: string or array of ChatCompletionContentPartText`
 
@@ -865,7 +877,7 @@ chunk objects if the request is streamed.
 
     - `ArrayOfContentParts = array of ChatCompletionContentPartText`
 
-      An array of content parts with a defined type. Supported options differ based on the [model](/docs/models) being used to generate the response. Can contain text inputs.
+      An array of content parts with a defined type. Supported options differ based on the [model](/api/docs/models) being used to generate the response. Can contain text inputs.
 
       - `text: string`
 
@@ -894,11 +906,11 @@ chunk objects if the request is streamed.
 
 - `prompt_cache_key: optional string or null`
 
-  Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](/docs/guides/prompt-caching).
+  Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](/api/docs/guides/prompt-caching).
 
 - `prompt_cache_options: optional object { mode, ttl }`
 
-  Options for prompt caching. Supported for `gpt-5.6` and later models. By default, OpenAI automatically chooses one implicit cache breakpoint. You can add explicit breakpoints to content blocks with `prompt_cache_breakpoint`. Each request can write up to four breakpoints. For cache matching, OpenAI considers up to the latest 80 breakpoints in the conversation, without a content-block lookback limit. Set `mode` to `explicit` to disable the implicit breakpoint. The `ttl` defaults to `30m`, which is currently the only supported value. See the [prompt caching guide](/docs/guides/prompt-caching) for current details.
+  Options for prompt caching. Supported for `gpt-5.6` and later models. By default, OpenAI automatically chooses one implicit cache breakpoint. You can add explicit breakpoints to content blocks with `prompt_cache_breakpoint`. Each request can write up to four breakpoints. For cache matching, OpenAI considers up to the latest 80 breakpoints in the conversation, without a content-block lookback limit. Set `mode` to `explicit` to disable the implicit breakpoint. The `ttl` defaults to `30m`, which is currently the only supported value. See the [prompt caching guide](/api/docs/guides/prompt-caching) for current details.
 
   - `mode: optional "implicit" or "explicit"`
 
@@ -918,7 +930,7 @@ chunk objects if the request is streamed.
 
   Deprecated. Use `prompt_cache_options.ttl` instead.
 
-  The retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](/docs/guides/prompt-caching#prompt-cache-retention).
+  The retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](/api/docs/guides/prompt-caching#prompt-cache-retention).
   This field expresses a maximum retention policy, while
   `prompt_cache_options.ttl` expresses a minimum cache lifetime. The two
   fields are independent and do not interact.
@@ -940,7 +952,7 @@ chunk objects if the request is streamed.
   Reducing reasoning effort can result in faster responses and fewer tokens
   used on reasoning in a response. Not all reasoning models support every
   value. See the
-  [reasoning guide](https://platform.openai.com/docs/guides/reasoning)
+  [reasoning guide](/api/docs/guides/reasoning)
   for model-specific support.
 
   - `"none"`
@@ -964,7 +976,7 @@ chunk objects if the request is streamed.
   Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
   Structured Outputs which ensures the model will match your supplied JSON
   schema. Learn more in the [Structured Outputs
-  guide](/docs/guides/structured-outputs).
+  guide](/api/docs/guides/structured-outputs).
 
   Setting to `{ "type": "json_object" }` enables the older JSON mode, which
   ensures the message the model generates is valid JSON. Using `json_schema`
@@ -983,7 +995,7 @@ chunk objects if the request is streamed.
   - `ResponseFormatJSONSchema object { json_schema, type }`
 
     JSON Schema response format. Used to generate structured JSON responses.
-    Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+    Learn more about [Structured Outputs](/api/docs/guides/structured-outputs).
 
     - `json_schema: object { name, description, schema, strict }`
 
@@ -1010,7 +1022,7 @@ chunk objects if the request is streamed.
         If set to true, the model will always follow the exact schema defined
         in the `schema` field. Only a subset of JSON Schema is supported when
         `strict` is `true`. To learn more, read the [Structured Outputs
-        guide](/docs/guides/structured-outputs).
+        guide](/api/docs/guides/structured-outputs).
 
     - `type: "json_schema"`
 
@@ -1034,7 +1046,7 @@ chunk objects if the request is streamed.
 - `safety_identifier: optional string or null`
 
   A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.
-  The IDs should be a string that uniquely identifies each user, with a maximum length of 64 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](/docs/guides/safety-best-practices#safety-identifiers).
+  The IDs should be a string that uniquely identifies each user, with a maximum length of 64 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](/api/docs/guides/safety-best-practices#implement-safety-identifiers).
 
 - `seed: optional number or null`
 
@@ -1048,7 +1060,7 @@ chunk objects if the request is streamed.
 
   - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.
   - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.
-  - If set to '[flex](/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
+  - If set to '[flex](/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
   - To opt-in to [Fast mode](/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.
   - When not set, the default behavior is 'auto'.
 
@@ -1080,8 +1092,8 @@ chunk objects if the request is streamed.
 - `store: optional boolean or null`
 
   Whether or not to store the output of this chat completion request for
-  use in our [model distillation](/docs/guides/distillation) or
-  [evals](/docs/guides/evals) products.
+  use in our [model distillation](/api/docs/guides/supervised-fine-tuning#distilling-from-a-larger-model) or
+  [evals](/api/docs/guides/evals) products.
 
   Supports text and image inputs. Note: image inputs over 8MB will be dropped.
 
@@ -1089,8 +1101,8 @@ chunk objects if the request is streamed.
 
   If set to true, the model response data will be streamed to the client
   as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
-  See the [Streaming section below](/docs/api-reference/chat/streaming)
-  for more information, along with the [streaming responses](/docs/guides/streaming-responses)
+  See the [Streaming section below](/api/reference/resources/chat/subresources/completions/streaming-events)
+  for more information, along with the [streaming responses](/api/docs/guides/streaming-responses)
   guide for more information on how to handle the streaming events.
 
 - `stream_options: optional ChatCompletionStreamOptions or null`
@@ -1218,8 +1230,8 @@ chunk objects if the request is streamed.
 - `tools: optional array of ChatCompletionTool`
 
   A list of tools the model may call. You can provide either
-  [custom tools](/docs/guides/function-calling#custom-tools) or
-  [function tools](/docs/guides/function-calling).
+  [custom tools](/api/docs/guides/function-calling#custom-tools) or
+  [function tools](/api/docs/guides/function-calling).
 
   - `ChatCompletionFunctionTool object { function, type }`
 
@@ -1237,13 +1249,13 @@ chunk objects if the request is streamed.
 
       - `parameters: optional FunctionParameters`
 
-        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/api/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
 
         Omitting `parameters` defines a function with an empty parameter list.
 
       - `strict: optional boolean or null`
 
-        Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+        Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/api/docs/guides/function-calling).
 
     - `type: "function"`
 
@@ -1334,7 +1346,7 @@ chunk objects if the request is streamed.
 
   This field is being replaced by `safety_identifier` and `prompt_cache_key`. Use `prompt_cache_key` instead to maintain caching optimizations.
   A stable identifier for your end-users.
-  Used to boost cache hit rates by better bucketing similar requests and  to help OpenAI detect and prevent abuse. [Learn more](/docs/guides/safety-best-practices#safety-identifiers).
+  Used to boost cache hit rates by better bucketing similar requests and  to help OpenAI detect and prevent abuse. [Learn more](/api/docs/guides/safety-best-practices#implement-safety-identifiers).
 
 - `verbosity: optional "low" or "medium" or "high" or null`
 
@@ -1352,7 +1364,7 @@ chunk objects if the request is streamed.
 - `web_search_options: optional object { search_context_size, user_location }`
 
   This tool searches the web for relevant results to use in a response.
-  Learn more about the [web search tool](/docs/guides/tools-web-search?api-mode=chat).
+  Learn more about the [web search tool](/api/docs/guides/tools-web-search).
 
   - `search_context_size: optional "low" or "medium" or "high"`
 
@@ -1511,7 +1523,7 @@ chunk objects if the request is streamed.
       - `annotations: optional array of object { type, url_citation }`
 
         Annotations for the message, when applicable, as when using the
-        [web search tool](/docs/guides/tools-web-search?api-mode=chat).
+        [web search tool](/api/docs/guides/tools-web-search).
 
         - `type: "url_citation"`
 
@@ -1542,7 +1554,7 @@ chunk objects if the request is streamed.
       - `audio: optional ChatCompletionAudio or null`
 
         If the audio output modality is requested, this object contains data
-        about the audio response from the model. [Learn more](/docs/guides/audio).
+        about the audio response from the model. [Learn more](/api/docs/guides/audio).
 
         - `id: string`
 
@@ -1805,7 +1817,7 @@ chunk objects if the request is streamed.
 
     - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.
     - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.
-    - If set to '[flex](/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
+    - If set to '[flex](/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
     - To opt-in to [Fast mode](/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.
     - When not set, the default behavior is 'auto'.
 
@@ -1874,10 +1886,6 @@ chunk objects if the request is streamed.
 
         Text output tokens generated by the model.
 
-    - `compute_units: optional number or null`
-
-      Compute units for the request. Currently null when available.
-
     - `prompt_tokens_details: optional object { audio_tokens, cache_write_tokens, cached_tokens, 2 more }`
 
       Breakdown of tokens used in the prompt.
@@ -1915,7 +1923,7 @@ curl https://api.openai.com/v1/chat/completions \
               "role": "developer"
             }
           ],
-          "model": "gpt-5.4",
+          "model": "gpt-6-astra",
           "n": 1,
           "prompt_cache_key": "prompt-cache-key-1234",
           "safety_identifier": "safety-identifier-1234",
@@ -2075,7 +2083,6 @@ curl https://api.openai.com/v1/chat/completions \
       "rejected_prediction_tokens": 0,
       "text_tokens": 0
     },
-    "compute_units": 0,
     "prompt_tokens_details": {
       "audio_tokens": 0,
       "cache_write_tokens": 0,
@@ -2094,7 +2101,7 @@ curl https://api.openai.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "VAR_chat_model_id",
+    "model": "gpt-6-astra",
     "messages": [
       {
         "role": "developer",
@@ -2115,7 +2122,7 @@ curl https://api.openai.com/v1/chat/completions \
   "id": "chatcmpl-B9MBs8CjcvOU2jLn4n570S5qMJKcT",
   "object": "chat.completion",
   "created": 1741569952,
-  "model": "gpt-5.4",
+  "model": "gpt-6-astra",
   "choices": [
     {
       "index": 0,
@@ -2155,7 +2162,7 @@ curl https://api.openai.com/v1/chat/completions \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer $OPENAI_API_KEY" \
 -d '{
-  "model": "gpt-5.4",
+  "model": "gpt-6-astra",
   "messages": [
     {
       "role": "user",
@@ -2196,7 +2203,7 @@ curl https://api.openai.com/v1/chat/completions \
   "id": "chatcmpl-abc123",
   "object": "chat.completion",
   "created": 1699896916,
-  "model": "gpt-4o-mini",
+  "model": "gpt-6-astra",
   "choices": [
     {
       "index": 0,
@@ -2238,7 +2245,7 @@ curl https://api.openai.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "gpt-5.4",
+    "model": "gpt-6-astra",
     "messages": [
       {
         "role": "user",
@@ -2267,7 +2274,7 @@ curl https://api.openai.com/v1/chat/completions \
   "id": "chatcmpl-B9MHDbslfkBeAs8l4bebGdFOJ6PeG",
   "object": "chat.completion",
   "created": 1741570283,
-  "model": "gpt-5.4",
+  "model": "gpt-6-astra",
   "choices": [
     {
       "index": 0,
@@ -2307,13 +2314,14 @@ curl https://api.openai.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "VAR_chat_model_id",
+    "model": "gpt-6-astra",
     "messages": [
       {
         "role": "user",
         "content": "Hello!"
       }
     ],
+    "reasoning_effort": "none",
     "logprobs": true,
     "top_logprobs": 2
   }'
@@ -2326,7 +2334,7 @@ curl https://api.openai.com/v1/chat/completions \
   "id": "chatcmpl-123",
   "object": "chat.completion",
   "created": 1702685778,
-  "model": "gpt-4o-mini",
+  "model": "gpt-6-astra",
   "choices": [
     {
       "index": 0,
@@ -2520,7 +2528,7 @@ curl https://api.openai.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "VAR_chat_model_id",
+    "model": "gpt-6-astra",
     "messages": [
       {
         "role": "developer",
@@ -2538,13 +2546,13 @@ curl https://api.openai.com/v1/chat/completions \
 #### Response
 
 ```json
-{"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-4o-mini", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
+{"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-6-astra", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
 
-{"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-4o-mini", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{"content":"Hello"},"logprobs":null,"finish_reason":null}]}
+{"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-6-astra", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{"content":"Hello"},"logprobs":null,"finish_reason":null}]}
 
 ....
 
-{"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-4o-mini", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
+{"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-6-astra", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
 ```
 
 ## Delete chat completion
@@ -2760,7 +2768,7 @@ with the `store` parameter set to `true` will be returned.
       - `annotations: optional array of object { type, url_citation }`
 
         Annotations for the message, when applicable, as when using the
-        [web search tool](/docs/guides/tools-web-search?api-mode=chat).
+        [web search tool](/api/docs/guides/tools-web-search).
 
         - `type: "url_citation"`
 
@@ -2791,7 +2799,7 @@ with the `store` parameter set to `true` will be returned.
       - `audio: optional ChatCompletionAudio or null`
 
         If the audio output modality is requested, this object contains data
-        about the audio response from the model. [Learn more](/docs/guides/audio).
+        about the audio response from the model. [Learn more](/api/docs/guides/audio).
 
         - `id: string`
 
@@ -3054,7 +3062,7 @@ with the `store` parameter set to `true` will be returned.
 
     - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.
     - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.
-    - If set to '[flex](/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
+    - If set to '[flex](/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
     - To opt-in to [Fast mode](/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.
     - When not set, the default behavior is 'auto'.
 
@@ -3122,10 +3130,6 @@ with the `store` parameter set to `true` will be returned.
       - `text_tokens: optional number`
 
         Text output tokens generated by the model.
-
-    - `compute_units: optional number or null`
-
-      Compute units for the request. Currently null when available.
 
     - `prompt_tokens_details: optional object { audio_tokens, cache_write_tokens, cached_tokens, 2 more }`
 
@@ -3328,7 +3332,6 @@ curl https://api.openai.com/v1/chat/completions \
           "rejected_prediction_tokens": 0,
           "text_tokens": 0
         },
-        "compute_units": 0,
         "prompt_tokens_details": {
           "audio_tokens": 0,
           "cache_write_tokens": 0,
@@ -3363,7 +3366,7 @@ curl https://api.openai.com/v1/chat/completions \
     {
       "object": "chat.completion",
       "id": "chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2",
-      "model": "gpt-5.4",
+      "model": "gpt-6-astra",
       "created": 1738960610,
       "request_id": "req_ded8ab984ec4bf840f37566c1011c417",
       "tool_choice": null,
@@ -3528,7 +3531,7 @@ with the `store` parameter set to `true` will be returned.
       - `annotations: optional array of object { type, url_citation }`
 
         Annotations for the message, when applicable, as when using the
-        [web search tool](/docs/guides/tools-web-search?api-mode=chat).
+        [web search tool](/api/docs/guides/tools-web-search).
 
         - `type: "url_citation"`
 
@@ -3559,7 +3562,7 @@ with the `store` parameter set to `true` will be returned.
       - `audio: optional ChatCompletionAudio or null`
 
         If the audio output modality is requested, this object contains data
-        about the audio response from the model. [Learn more](/docs/guides/audio).
+        about the audio response from the model. [Learn more](/api/docs/guides/audio).
 
         - `id: string`
 
@@ -3822,7 +3825,7 @@ with the `store` parameter set to `true` will be returned.
 
     - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.
     - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.
-    - If set to '[flex](/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
+    - If set to '[flex](/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
     - To opt-in to [Fast mode](/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.
     - When not set, the default behavior is 'auto'.
 
@@ -3890,10 +3893,6 @@ with the `store` parameter set to `true` will be returned.
       - `text_tokens: optional number`
 
         Text output tokens generated by the model.
-
-    - `compute_units: optional number or null`
-
-      Compute units for the request. Currently null when available.
 
     - `prompt_tokens_details: optional object { audio_tokens, cache_write_tokens, cached_tokens, 2 more }`
 
@@ -4076,7 +4075,6 @@ curl https://api.openai.com/v1/chat/completions/$COMPLETION_ID \
       "rejected_prediction_tokens": 0,
       "text_tokens": 0
     },
-    "compute_units": 0,
     "prompt_tokens_details": {
       "audio_tokens": 0,
       "cache_write_tokens": 0,
@@ -4102,7 +4100,7 @@ curl https://api.openai.com/v1/chat/completions/chatcmpl-abc123 \
 {
   "object": "chat.completion",
   "id": "chatcmpl-abc123",
-  "model": "gpt-4o-2024-08-06",
+  "model": "gpt-6-astra",
   "created": 1738960610,
   "request_id": "req_ded8ab984ec4bf840f37566c1011c417",
   "tool_choice": null,
@@ -4274,7 +4272,7 @@ the only supported modification is to update the `metadata` field.
       - `annotations: optional array of object { type, url_citation }`
 
         Annotations for the message, when applicable, as when using the
-        [web search tool](/docs/guides/tools-web-search?api-mode=chat).
+        [web search tool](/api/docs/guides/tools-web-search).
 
         - `type: "url_citation"`
 
@@ -4305,7 +4303,7 @@ the only supported modification is to update the `metadata` field.
       - `audio: optional ChatCompletionAudio or null`
 
         If the audio output modality is requested, this object contains data
-        about the audio response from the model. [Learn more](/docs/guides/audio).
+        about the audio response from the model. [Learn more](/api/docs/guides/audio).
 
         - `id: string`
 
@@ -4568,7 +4566,7 @@ the only supported modification is to update the `metadata` field.
 
     - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.
     - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.
-    - If set to '[flex](/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
+    - If set to '[flex](/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
     - To opt-in to [Fast mode](/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.
     - When not set, the default behavior is 'auto'.
 
@@ -4636,10 +4634,6 @@ the only supported modification is to update the `metadata` field.
       - `text_tokens: optional number`
 
         Text output tokens generated by the model.
-
-    - `compute_units: optional number or null`
-
-      Compute units for the request. Currently null when available.
 
     - `prompt_tokens_details: optional object { audio_tokens, cache_write_tokens, cached_tokens, 2 more }`
 
@@ -4828,7 +4822,6 @@ curl https://api.openai.com/v1/chat/completions/$COMPLETION_ID \
       "rejected_prediction_tokens": 0,
       "text_tokens": 0
     },
-    "compute_units": 0,
     "prompt_tokens_details": {
       "audio_tokens": 0,
       "cache_write_tokens": 0,
@@ -4855,7 +4848,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 {
   "object": "chat.completion",
   "id": "chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2",
-  "model": "gpt-4o-2024-08-06",
+  "model": "gpt-6-astra",
   "created": 1738960610,
   "request_id": "req_ded8ab984ec4bf840f37566c1011c417",
   "tool_choice": null,
@@ -5040,7 +5033,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
       - `annotations: optional array of object { type, url_citation }`
 
         Annotations for the message, when applicable, as when using the
-        [web search tool](/docs/guides/tools-web-search?api-mode=chat).
+        [web search tool](/api/docs/guides/tools-web-search).
 
         - `type: "url_citation"`
 
@@ -5071,7 +5064,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
       - `audio: optional ChatCompletionAudio or null`
 
         If the audio output modality is requested, this object contains data
-        about the audio response from the model. [Learn more](/docs/guides/audio).
+        about the audio response from the model. [Learn more](/api/docs/guides/audio).
 
         - `id: string`
 
@@ -5334,7 +5327,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.
     - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.
-    - If set to '[flex](/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
+    - If set to '[flex](/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
     - To opt-in to [Fast mode](/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.
     - When not set, the default behavior is 'auto'.
 
@@ -5402,10 +5395,6 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
       - `text_tokens: optional number`
 
         Text output tokens generated by the model.
-
-    - `compute_units: optional number or null`
-
-      Compute units for the request. Currently null when available.
 
     - `prompt_tokens_details: optional object { audio_tokens, cache_write_tokens, cached_tokens, 2 more }`
 
@@ -5488,7 +5477,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
   - `audio: optional object { id }  or null`
 
     Data about a previous audio response from the model.
-    [Learn more](/docs/guides/audio).
+    [Learn more](/api/docs/guides/audio).
 
     - `id: string`
 
@@ -5508,7 +5497,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
       - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-        Learn about [text inputs](/docs/guides/text-generation).
+        Learn about [text inputs](/api/docs/guides/text).
 
         - `text: string`
 
@@ -5623,7 +5612,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 - `ChatCompletionAudio object { id, data, expires_at, transcript }`
 
   If the audio output modality is requested, this object contains data
-  about the audio response from the model. [Learn more](/docs/guides/audio).
+  about the audio response from the model. [Learn more](/api/docs/guides/audio).
 
   - `id: string`
 
@@ -5649,7 +5638,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 - `ChatCompletionAudioParam object { format, voice }`
 
   Parameters for audio output. Required when audio output is requested with
-  `modalities: ["audio"]`. [Learn more](/docs/guides/audio).
+  `modalities: ["audio"]`. [Learn more](/api/docs/guides/audio).
 
   - `format: "wav" or "aac" or "mp3" or 3 more`
 
@@ -5713,7 +5702,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
   Represents a streamed chunk of a chat completion response returned
   by the model, based on the provided input.
-  [Learn more](/docs/guides/streaming-responses).
+  [Learn more](/api/docs/guides/streaming-responses).
 
   - `id: string`
 
@@ -6034,7 +6023,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.
     - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.
-    - If set to '[flex](/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
+    - If set to '[flex](/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.
     - To opt-in to [Fast mode](/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.
     - When not set, the default behavior is 'auto'.
 
@@ -6109,10 +6098,6 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
         Text output tokens generated by the model.
 
-    - `compute_units: optional number or null`
-
-      Compute units for the request. Currently null when available.
-
     - `prompt_tokens_details: optional object { audio_tokens, cache_write_tokens, cached_tokens, 2 more }`
 
       Breakdown of tokens used in the prompt.
@@ -6141,11 +6126,11 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
 - `ChatCompletionContentPart = ChatCompletionContentPartText or ChatCompletionContentPartImage or ChatCompletionContentPartInputAudio or object { file, type, prompt_cache_breakpoint }`
 
-  Learn about [text inputs](/docs/guides/text-generation).
+  Learn about [text inputs](/api/docs/guides/text).
 
   - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-    Learn about [text inputs](/docs/guides/text-generation).
+    Learn about [text inputs](/api/docs/guides/text).
 
     - `text: string`
 
@@ -6169,7 +6154,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
   - `ChatCompletionContentPartImage object { image_url, type, prompt_cache_breakpoint }`
 
-    Learn about [image inputs](/docs/guides/vision).
+    Learn about [image inputs](/api/docs/guides/images-vision).
 
     - `image_url: object { url, detail }`
 
@@ -6179,7 +6164,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
       - `detail: optional "auto" or "low" or "high"`
 
-        Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
+        Specifies the detail level of the image. Learn more in the [Vision guide](/api/docs/guides/images-vision#choose-an-image-detail-level).
 
         - `"auto"`
 
@@ -6205,7 +6190,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
   - `ChatCompletionContentPartInputAudio object { input_audio, type, prompt_cache_breakpoint }`
 
-    Learn about [audio inputs](/docs/guides/audio).
+    Learn about [audio inputs](/api/docs/guides/audio).
 
     - `input_audio: object { data, format }`
 
@@ -6239,7 +6224,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
   - `FileContentPart object { file, type, prompt_cache_breakpoint }`
 
-    Learn about [file inputs](/docs/guides/text) for text generation.
+    Learn about [file inputs](/api/docs/guides/text) for text generation.
 
     - `file: object { file_data, file_id, filename }`
 
@@ -6277,7 +6262,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
 - `ChatCompletionContentPartImage object { image_url, type, prompt_cache_breakpoint }`
 
-  Learn about [image inputs](/docs/guides/vision).
+  Learn about [image inputs](/api/docs/guides/images-vision).
 
   - `image_url: object { url, detail }`
 
@@ -6287,7 +6272,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - `detail: optional "auto" or "low" or "high"`
 
-      Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
+      Specifies the detail level of the image. Learn more in the [Vision guide](/api/docs/guides/images-vision#choose-an-image-detail-level).
 
       - `"auto"`
 
@@ -6315,7 +6300,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
 - `ChatCompletionContentPartInputAudio object { input_audio, type, prompt_cache_breakpoint }`
 
-  Learn about [audio inputs](/docs/guides/audio).
+  Learn about [audio inputs](/api/docs/guides/audio).
 
   - `input_audio: object { data, format }`
 
@@ -6365,7 +6350,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
 - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-  Learn about [text inputs](/docs/guides/text-generation).
+  Learn about [text inputs](/api/docs/guides/text).
 
   - `text: string`
 
@@ -6565,13 +6550,13 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - `parameters: optional FunctionParameters`
 
-      The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+      The parameters the functions accepts, described as a JSON Schema object. See the [guide](/api/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
 
       Omitting `parameters` defines a function with an empty parameter list.
 
     - `strict: optional boolean or null`
 
-      Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+      Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/api/docs/guides/function-calling).
 
   - `type: "function"`
 
@@ -6602,7 +6587,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
   - `annotations: optional array of object { type, url_citation }`
 
     Annotations for the message, when applicable, as when using the
-    [web search tool](/docs/guides/tools-web-search?api-mode=chat).
+    [web search tool](/api/docs/guides/tools-web-search).
 
     - `type: "url_citation"`
 
@@ -6633,7 +6618,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
   - `audio: optional ChatCompletionAudio or null`
 
     If the audio output modality is requested, this object contains data
-    about the audio response from the model. [Learn more](/docs/guides/audio).
+    about the audio response from the model. [Learn more](/api/docs/guides/audio).
 
     - `id: string`
 
@@ -6889,11 +6874,11 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
       - `ArrayOfContentParts = array of ChatCompletionContentPart`
 
-        An array of content parts with a defined type. Supported options differ based on the [model](/docs/models) being used to generate the response. Can contain text, image, or audio inputs.
+        An array of content parts with a defined type. Supported options differ based on the [model](/api/docs/models) being used to generate the response. Can contain text, image, or audio inputs.
 
         - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-          Learn about [text inputs](/docs/guides/text-generation).
+          Learn about [text inputs](/api/docs/guides/text).
 
           - `text: string`
 
@@ -6909,7 +6894,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
         - `ChatCompletionContentPartImage object { image_url, type, prompt_cache_breakpoint }`
 
-          Learn about [image inputs](/docs/guides/vision).
+          Learn about [image inputs](/api/docs/guides/images-vision).
 
           - `image_url: object { url, detail }`
 
@@ -6919,7 +6904,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
             - `detail: optional "auto" or "low" or "high"`
 
-              Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
+              Specifies the detail level of the image. Learn more in the [Vision guide](/api/docs/guides/images-vision#choose-an-image-detail-level).
 
               - `"auto"`
 
@@ -6945,7 +6930,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
         - `ChatCompletionContentPartInputAudio object { input_audio, type, prompt_cache_breakpoint }`
 
-          Learn about [audio inputs](/docs/guides/audio).
+          Learn about [audio inputs](/api/docs/guides/audio).
 
           - `input_audio: object { data, format }`
 
@@ -6979,7 +6964,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
         - `FileContentPart object { file, type, prompt_cache_breakpoint }`
 
-          Learn about [file inputs](/docs/guides/text) for text generation.
+          Learn about [file inputs](/api/docs/guides/text) for text generation.
 
           - `file: object { file_data, file_id, filename }`
 
@@ -7036,7 +7021,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
     - `audio: optional object { id }  or null`
 
       Data about a previous audio response from the model.
-      [Learn more](/docs/guides/audio).
+      [Learn more](/api/docs/guides/audio).
 
       - `id: string`
 
@@ -7056,7 +7041,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
         - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-          Learn about [text inputs](/docs/guides/text-generation).
+          Learn about [text inputs](/api/docs/guides/text).
 
         - `ChatCompletionContentPartRefusal object { refusal, type }`
 
@@ -7320,7 +7305,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - `ArrayOfContentParts = array of ChatCompletionContentPartText`
 
-      An array of content parts with a defined type. Supported options differ based on the [model](/docs/models) being used to generate the response. Can contain text inputs.
+      An array of content parts with a defined type. Supported options differ based on the [model](/api/docs/models) being used to generate the response. Can contain text inputs.
 
       - `text: string`
 
@@ -7384,7 +7369,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-      Learn about [text inputs](/docs/guides/text-generation).
+      Learn about [text inputs](/api/docs/guides/text).
 
       - `text: string`
 
@@ -7408,7 +7393,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - `ChatCompletionContentPartImage object { image_url, type, prompt_cache_breakpoint }`
 
-      Learn about [image inputs](/docs/guides/vision).
+      Learn about [image inputs](/api/docs/guides/images-vision).
 
       - `image_url: object { url, detail }`
 
@@ -7418,7 +7403,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
         - `detail: optional "auto" or "low" or "high"`
 
-          Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
+          Specifies the detail level of the image. Learn more in the [Vision guide](/api/docs/guides/images-vision#choose-an-image-detail-level).
 
           - `"auto"`
 
@@ -7573,13 +7558,13 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
       - `parameters: optional FunctionParameters`
 
-        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/api/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
 
         Omitting `parameters` defines a function with an empty parameter list.
 
       - `strict: optional boolean or null`
 
-        Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
+        Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/api/docs/guides/function-calling).
 
     - `type: "function"`
 
@@ -7806,11 +7791,11 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
     - `ArrayOfContentParts = array of ChatCompletionContentPart`
 
-      An array of content parts with a defined type. Supported options differ based on the [model](/docs/models) being used to generate the response. Can contain text, image, or audio inputs.
+      An array of content parts with a defined type. Supported options differ based on the [model](/api/docs/models) being used to generate the response. Can contain text, image, or audio inputs.
 
       - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-        Learn about [text inputs](/docs/guides/text-generation).
+        Learn about [text inputs](/api/docs/guides/text).
 
         - `text: string`
 
@@ -7834,7 +7819,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
       - `ChatCompletionContentPartImage object { image_url, type, prompt_cache_breakpoint }`
 
-        Learn about [image inputs](/docs/guides/vision).
+        Learn about [image inputs](/api/docs/guides/images-vision).
 
         - `image_url: object { url, detail }`
 
@@ -7844,7 +7829,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
           - `detail: optional "auto" or "low" or "high"`
 
-            Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
+            Specifies the detail level of the image. Learn more in the [Vision guide](/api/docs/guides/images-vision#choose-an-image-detail-level).
 
             - `"auto"`
 
@@ -7870,7 +7855,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
       - `ChatCompletionContentPartInputAudio object { input_audio, type, prompt_cache_breakpoint }`
 
-        Learn about [audio inputs](/docs/guides/audio).
+        Learn about [audio inputs](/api/docs/guides/audio).
 
         - `input_audio: object { data, format }`
 
@@ -7904,7 +7889,7 @@ curl -X POST https://api.openai.com/v1/chat/completions/chat_abc123 \
 
       - `FileContentPart object { file, type, prompt_cache_breakpoint }`
 
-        Learn about [file inputs](/docs/guides/text) for text generation.
+        Learn about [file inputs](/api/docs/guides/text) for text generation.
 
         - `file: object { file_data, file_id, filename }`
 
@@ -7997,7 +7982,7 @@ returned.
 
     - `ChatCompletionContentPartText object { text, type, prompt_cache_breakpoint }`
 
-      Learn about [text inputs](/docs/guides/text-generation).
+      Learn about [text inputs](/api/docs/guides/text).
 
       - `text: string`
 
@@ -8021,7 +8006,7 @@ returned.
 
     - `ChatCompletionContentPartImage object { image_url, type, prompt_cache_breakpoint }`
 
-      Learn about [image inputs](/docs/guides/vision).
+      Learn about [image inputs](/api/docs/guides/images-vision).
 
       - `image_url: object { url, detail }`
 
@@ -8031,7 +8016,7 @@ returned.
 
         - `detail: optional "auto" or "low" or "high"`
 
-          Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
+          Specifies the detail level of the image. Learn more in the [Vision guide](/api/docs/guides/images-vision#choose-an-image-detail-level).
 
           - `"auto"`
 

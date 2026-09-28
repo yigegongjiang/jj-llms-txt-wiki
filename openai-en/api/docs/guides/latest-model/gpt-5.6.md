@@ -17,7 +17,9 @@ GPT-5.6 also introduces a new naming scheme. The `gpt-5.6` alias routes requests
 
 When migrating from GPT-5.5 or GPT-5.4, start with your current GPT-5.5 or GPT-5.4 reasoning setting, then test the same setting and one level lower on representative tasks. GPT-5.6 can often maintain or improve quality with fewer tokens, but the best setting depends on your workload.
 
-## What is new
+<a id="what-is-new" className="scroll-mt-[110px]"></a>
+
+## What's new
 
 - **Programmatic Tool Calling:** GPT-5.6 can write JavaScript to call eligible tools, pass results between calls, and process intermediate outputs in a hosted runtime. Use [Programmatic Tool Calling](https://developers.openai.com/api/docs/guides/tools-programmatic-tool-calling) for bounded, tool-heavy workflows that do not require fresh model judgment between each step. Programmatic Tool Calling is ZDR-compatible with no additional container costs.
 - **Multi-agent [beta]:** [Multi-agent](https://developers.openai.com/api/docs/guides/responses-multi-agent) lets a GPT-5.6 instance coordinate multiple subagents in parallel and synthesize their results. Similar to ultra mode in Codex, this can reduce wall-clock time and improve performance for complex tasks that divide cleanly into independent workstreams. Multi-agent is available as a beta feature in the Responses API as we iterate on developer feedback.
@@ -28,7 +30,7 @@ When migrating from GPT-5.5 or GPT-5.4, start with your current GPT-5.5 or GPT-5
 - **Token efficiency:** GPT-5.6 reaches flagship-level performance with fewer output tokens.
 - **Frontend design:** GPT-5.6 creates more polished and usable websites and applications, with stronger layout, visual hierarchy, and design judgment.
 - **Intent understanding:** GPT-5.6 can better infer the user's underlying goal and intended level of work from context, so you often do not need to prescribe every step. Continue to provide domain context, hard constraints, approval boundaries, and success criteria. Tell the model when an important ambiguity should trigger a question.
-- **Original image detail:** GPT-5.6 preserves the original dimensions of images sent with `original` or `auto` detail instead of resizing them to a patch budget or pixel-dimension limit. Large images can use more input tokens and increase latency. Learn how to [choose an image detail level](https://developers.openai.com/api/docs/guides/images-vision#choose-an-image-detail-level).
+- **Original image detail:** GPT-5.6 preserves image dimensions with `original` or `auto` detail, except that images larger than 65,535 pixels on either side are scaled down to fit that limit. The API rejects images that still exceed the [30,000-patch limit](https://developers.openai.com/api/docs/guides/images-vision#image-input-requirements), rather than resizing them to fit it. Large images can use more input tokens and increase latency. Learn how to [choose an image detail level](https://developers.openai.com/api/docs/guides/images-vision#choose-an-image-detail-level).
 
 ## Safeguards
 
@@ -38,9 +40,7 @@ If your application serves individual end users, send a stable, privacy-preservi
 
 We are continuously evolving these safeguards so that they are robust and effective in holding up to adversarial pressure, while preserving access to legitimate work such as code review, vulnerability research, patch development, debugging, security education, and defensive testing.
 
-
-
-
+<a id="migrate-to-gpt-56"></a>
 
 ## Migration quickstart
 

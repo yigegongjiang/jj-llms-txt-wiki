@@ -7,7 +7,7 @@
 Model ID: `gpt-5.2`
 
 GPT-5.2 is our previous flagship model for complex professional work.
-We recommend using the latest [GPT-5.6](/api/docs/models/gpt-5.6-sol). Learn more on the [Model guidance](/api/docs/guides/latest-model) page. Reasoning.effort supports: none (default), low, medium, high and xhigh.
+We recommend using the latest [GPT-6 Astra](/api/docs/models/gpt-6-astra). Learn more on the [Model guidance](/api/docs/guides/latest-model) page. Reasoning.effort supports: none (default), low, medium, high and xhigh.
 
 ## Model details
 
@@ -35,6 +35,7 @@ Pricing is based on the number of tokens used, or other metrics based on the mod
 
 | Endpoint | Route | Support |
 | --- | --- | --- |
+| Live | `v1/live/sessions` | Not supported |
 | Chat Completions | `v1/chat/completions` | Supported |
 | Responses | `v1/responses` | Supported |
 | Realtime | `v1/realtime` | Not supported |

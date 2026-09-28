@@ -185,8 +185,8 @@ CreateResponseOptions options = new()
     BackgroundModeEnabled = true,
 };
 options.Tools.Add(ResponseTool.CreateWebSearchPreviewTool());
-string vectorStoreId = Environment.GetEnvironmentVariable("OPENAI_EXAMPLE_VECTOR_STORE_ID")
-    ?? throw new InvalidOperationException("Set OPENAI_EXAMPLE_VECTOR_STORE_ID to search your research documents.");
+// Replace this illustrative value with your research data source.
+string vectorStoreId = "vs_123";
 options.Tools.Add(ResponseTool.CreateFileSearchTool([vectorStoreId]));
 options.Tools.Add(ResponseTool.CreateCodeInterpreterTool(container));
 options.InputItems.Add(
@@ -220,17 +220,24 @@ Console.WriteLine(response.GetOutputText());
 ```
 
 ```ruby
+# Replace the illustrative IDs and URLs below with your own resource values.
 require "openai"
 
 client = OpenAI::Client.new
-vector_store_id = ENV.fetch("OPENAI_VECTOR_STORE_ID")
+vector_store_id = "vs_123"
 response = client.responses.create(
   model: "o3-deep-research",
   input: "Research the economic impact of semaglutide on global healthcare systems. Include measurable outcomes and cite primary sources.",
   tools: [
-    {type: :web_search_preview},
-    {type: :file_search, vector_store_ids: [vector_store_id]},
-    {type: :code_interpreter, container: {type: :auto}}
+    { type: :web_search_preview },
+    {
+      type: :file_search,
+      vector_store_ids: [vector_store_id]
+    },
+    {
+      type: :code_interpreter,
+      container: { type: :auto }
+    }
   ],
   background: true
 )
@@ -365,7 +372,7 @@ IMPORTANT: Do NOT conduct any research yourself, just gather information that wi
 const input = "Research surfboards for me. I'm interested in ...";
 
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input,
   instructions,
 });
@@ -393,7 +400,7 @@ IMPORTANT: Do NOT conduct any research yourself, just gather information that wi
 input_text = "Research surfboards for me. I'm interested in ..."
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=input_text,
     instructions=instructions,
 )
@@ -427,7 +434,7 @@ IMPORTANT: Do NOT conduct any research yourself, just gather information that wi
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model:        "gpt-5.6",
+		Model:        "gpt-6-astra",
 		Instructions: openai.String(instructions),
 		Input:        responses.ResponseNewParamsInputUnion{OfString: openai.String("Research surfboards for me. I'm interested in ...")},
 	})
@@ -445,7 +452,7 @@ import com.openai.models.responses.ResponseCreateParams;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("Research surfboards for me. I'm interested in ...")
         .instructions(
             "Ask concise questions to gather all missing requirements. Do not conduct the research yet.")
@@ -467,7 +474,7 @@ ResponsesClient client = new(key);
 
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     Instructions =
         """
         You are talking to a user who is asking for a research task to be conducted.
@@ -495,7 +502,7 @@ require "openai"
 
 client = OpenAI::Client.new
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions: "Ask concise questions to gather all missing requirements. Do not conduct the research yet.",
   input: "Research surfboards for me. I'm interested in ..."
 )
@@ -508,7 +515,7 @@ curl https://api.openai.com/v1/responses \
 -H "Authorization: Bearer $OPENAI_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-  "model": "gpt-5.6",
+  "model": "gpt-6-astra",
   "input": "Research surfboards for me. Im interested in ...",
   "instructions": "You are talking to a user who is asking for a research task to be conducted. Your job is to gather more information from the user to successfully complete the task. GUIDELINES: - Be concise while gathering all necessary information** - Make sure to gather all the information needed to carry out the research task in a concise, well-structured manner. - Use bullet points or numbered lists if appropriate for clarity. - Don't ask for unnecessary information, or information that the user has already provided. IMPORTANT: Do NOT conduct any research yourself, just gather information that will be given to a researcher to conduct the research task."
 }'
@@ -590,7 +597,7 @@ Examples:
 const input = "Research surfboards for me. I'm interested in ...";
 
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input,
   instructions,
 });
@@ -672,7 +679,7 @@ Examples:
 input_text = "Research surfboards for me. I'm interested in ..."
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=input_text,
     instructions=instructions,
 )
@@ -760,7 +767,7 @@ Examples:
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model:        "gpt-5.6",
+		Model:        "gpt-6-astra",
 		Instructions: openai.String(instructions),
 		Input:        responses.ResponseNewParamsInputUnion{OfString: openai.String("Research surfboards for me. I'm interested in ...")},
 	})
@@ -845,7 +852,7 @@ String researchInstructions =
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("Research surfboards for me. I'm interested in ...")
         .instructions(researchInstructions)
         .build();
@@ -866,7 +873,7 @@ ResponsesClient client = new(key);
 
 CreateResponseOptions options = new()
 {
-    Model = "gpt-5.6",
+    Model = "gpt-6-astra",
     Instructions =
         """
         You will receive a research task from a user. Produce instructions for the
@@ -901,7 +908,7 @@ require "openai"
 
 client = OpenAI::Client.new
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   instructions: "Rewrite the user's request as detailed research instructions. Preserve all stated preferences, identify open-ended dimensions, request primary sources, and specify a clear report format. Do not perform the research.",
   input: "Research surfboards for me. I'm interested in ..."
 )
@@ -914,7 +921,7 @@ curl https://api.openai.com/v1/responses \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": "Research surfboards for me. Im interested in ...",
     "instructions": "You are a helpful assistant that generates a prompt for a deep research task. Examine the users prompt and generate a set of clarifying questions that will help the deep research model generate a better response."
   }'
@@ -1064,6 +1071,7 @@ func main() {
 ```
 
 ```java
+// Replace the illustrative IDs and URLs below with your own resource values.
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.Reasoning;
@@ -1081,7 +1089,7 @@ ResponseCreateParams params =
         .addTool(
             Tool.Mcp.builder()
                 .serverLabel("mycompany_mcp_server")
-                .serverUrl(System.getenv("OPENAI_MCP_SERVER_URL"))
+                .serverUrl("https://mcp.example.com/mcp")
                 .requireApproval(Tool.Mcp.RequireApproval.McpToolApprovalSetting.NEVER)
                 .build())
         .build();
@@ -1121,13 +1129,13 @@ CreateResponseOptions options = new()
         ReasoningSummaryVerbosity = ResponseReasoningSummaryVerbosity.Auto,
     },
 };
-string serverUrl = Environment.GetEnvironmentVariable("OPENAI_MCP_SERVER_URL")
-    ?? throw new InvalidOperationException("Set OPENAI_MCP_SERVER_URL to connect your research data source.");
+// Replace this illustrative value with your research data source.
+string serverUrl = "https://mcp.example.com/mcp";
 options.Tools.Add(
     ResponseTool.CreateMcpTool(
         "mycompany_mcp_server",
         new Uri(serverUrl),
-        toolCallApprovalPolicy: GlobalMcpToolCallApprovalPolicy.NeverRequireApproval
+        toolCallApprovalPolicy: DefaultMcpToolCallApprovalPolicy.NeverRequireApproval
     )
 );
 options.InputItems.Add(
@@ -1150,21 +1158,24 @@ Console.WriteLine(response.GetOutputText());
 ```
 
 ```ruby
+# Replace the illustrative IDs and URLs below with your own resource values.
 require "openai"
 
 client = OpenAI::Client.new
-mcp_server_url = ENV.fetch("OPENAI_MCP_SERVER_URL")
+mcp_server_url = "https://mcp.example.com/mcp"
 response = client.responses.create(
   model: "o3-deep-research",
   input: "What patterns appear in our closed-lost Salesforce opportunities?",
   instructions: "Produce a source-backed deep research report.",
-  reasoning: {summary: :auto},
-  tools: [{
-    type: :mcp,
-    server_label: "mycompany_mcp_server",
-    server_url: mcp_server_url,
-    require_approval: :never
-  }],
+  reasoning: { summary: :auto },
+  tools: [
+    {
+      type: :mcp,
+      server_label: "mycompany_mcp_server",
+      server_url: mcp_server_url,
+      require_approval: :never
+    }
+  ],
   background: true
 )
 

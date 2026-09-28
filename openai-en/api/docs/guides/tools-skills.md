@@ -2,15 +2,17 @@
 
 > For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-Agent Skills let you upload and reuse versioned bundles of files in hosted and local shell environments.
+Agent Skills give an agent reusable instructions and supporting files for a task. Use them with Responses API shell tools or make them available in an [Agents API sandbox](#agents-api).
 
-We support Skills in two form factors: local execution and hosted,
-  container-based execution. To run code on your own machine, use the local
-  execution mode of the [shell tool](https://developers.openai.com/api/docs/guides/tools-shell).
+The upload, attachment, and versioning instructions below describe Responses API shell tools. Agents API sessions discover skills from directories in their sandbox.
+
+The Responses API supports Skills in two form factors: local execution and
+  hosted, container-based execution. To run code on your own machine, use the
+  local execution mode of the [shell tool](https://developers.openai.com/api/docs/guides/tools-shell).
 
 ## What's a skill
 
-A skill is a versioned bundle of files plus a `SKILL.md` manifest (front matter + instructions). Skills are modular instructions you can use to codify processes and conventions, from company style guides to multi-step workflows.
+A skill is a directory of files with a `SKILL.md` manifest (front matter + instructions). Skills are modular instructions you can use to codify processes and conventions, from company style guides to multi-step workflows. Uploaded skills use versioned bundles.
 
 Skills are compatible with the open [Agent Skills standard](https://agentskills.io/home).
 
@@ -25,6 +27,23 @@ description: Add or multiply numbers.
 Use this skill when you need a quick sum or product of numbers.
 ```
 
+
+During skill discovery, the model sees the skill's name and description. Write a description that explains both what the skill does and when to use it. For example, "Review and redline vendor agreements using the fallback clauses" gives the model more useful context than "Helps with legal work."
+
+Keep the main instructions in `SKILL.md` and link to supporting files as needed:
+
+```text
+review-pr/
+├── SKILL.md
+├── references/
+│   └── review-guidelines.md
+├── scripts/
+│   └── check-changes.sh
+└── assets/
+    └── review-template.md
+```
+
+Use `references/` for background material, `scripts/` for repeatable actions, and `assets/` for reusable templates.
 
 ## Create a skill
 
@@ -68,7 +87,7 @@ curl -L 'https://api.openai.com/v1/responses' \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "tools": [
       {
         "type": "shell",
@@ -91,7 +110,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   tools: [
     {
       type: "shell",
@@ -113,7 +132,7 @@ console.log(response.output_text);
 
 ```python
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     tools=[
         {
             "type": "shell",
@@ -158,7 +177,7 @@ func main() {
 		}},
 	}}
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Tools: []responses.ToolUnionParam{tool},
 		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Use the skills to add 144 and 377, then compute triangle area with base 9 height 13.")},
 	})
@@ -181,7 +200,7 @@ String skillId = "<skill_id>";
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input(
             "Use the skills to add 144 and 377, then compute a triangle area with base 9 and height 13.")
         .putAdditionalBodyProperty(
@@ -216,18 +235,27 @@ require "openai"
 
 client = OpenAI::Client.new
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "Use the skills to add 144 and 377, then compute a triangle area with base 9 and height 13.",
-  tools: [{
-    type: :shell,
-    environment: {
-      type: :container_auto,
-      skills: [
-        {type: :skill_reference, skill_id: "<skill_id>"},
-        {type: :skill_reference, skill_id: "<skill_id>", version: "2"}
-      ]
+  tools: [
+    {
+      type: :shell,
+      environment: {
+        type: :container_auto,
+        skills: [
+          {
+            type: :skill_reference,
+            skill_id: "<skill_id>"
+          },
+          {
+            type: :skill_reference,
+            skill_id: "<skill_id>",
+            version: "2"
+          }
+        ]
+      }
     }
-  }]
+  ]
 )
 
 puts(response.output_text)
@@ -254,7 +282,7 @@ curl -L 'https://api.openai.com/v1/responses' \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "tools": [
       {
         "type": "shell",
@@ -280,7 +308,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   tools: [
     {
       type: "shell",
@@ -305,7 +333,7 @@ console.log(response.output_text);
 
 ```python
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     tools=[
         {
             "type": "shell",
@@ -350,7 +378,7 @@ func main() {
 		}},
 	}}
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Tools: []responses.ToolUnionParam{tool},
 		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Use the csv-insights skill and run locally to summarize today's CSV reports in this repo.")},
 	})
@@ -373,7 +401,7 @@ String skillPath = "<path-to-skill-folder>";
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("Use the csv-insights skill to summarize today's CSV reports.")
         .putAdditionalBodyProperty(
             "tools",
@@ -407,28 +435,78 @@ require "openai"
 
 client = OpenAI::Client.new
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "Use the csv-insights skill to summarize today's CSV reports.",
-  tools: [{
-    type: :shell,
-    environment: {
-      type: :local,
-      skills: [{
-        name: "csv-insights",
-        description: "Summarize CSV files and produce a Markdown report.",
-        path: "<path-to-skill-folder>"
-      }]
+  tools: [
+    {
+      type: :shell,
+      environment: {
+        type: :local,
+        skills: [
+          {
+            name: "csv-insights",
+            description: "Summarize CSV files and produce a Markdown report.",
+            path: "<path-to-skill-folder>"
+          }
+        ]
+      }
     }
-  }]
+  ]
 )
 
 puts(response.output_text)
 ```
 
 
+## Agents API
+
+To use skills in the [Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview), put the skill directories in the sandbox and register their parent directories in `environment.capability_directories` when creating the session. These are called **capability directories**. The harness uses them to discover skills; this setup doesn't use the hosted shell's `skill_reference` attachment format.
+
+For example, place a contract-review skill and a pull-request-review skill in the sandbox:
+
+```text
+/workspace/capabilities/
+├── legal/
+│   └── contract-redline/
+│       ├── SKILL.md
+│       └── references/
+│           └── fallback-clauses.md
+└── engineering/
+    └── review-pr/
+        ├── SKILL.md
+        └── references/
+            └── review-guidelines.md
+```
+
+Use this environment configuration in the session-creation request:
+
+```json
+{
+  "environment": {
+    "type": "self_hosted",
+    "workspace_directory": "/workspace",
+    "capability_directories": [
+      "/workspace/capabilities/legal",
+      "/workspace/capabilities/engineering"
+    ]
+  }
+}
+```
+
+Capability directories have these requirements:
+
+- Paths must point to directories inside the sandbox.
+- Paths must be absolute and unique, and cannot contain `.` or `..` path segments.
+- A session can register up to 32 capability directories.
+- Directories must already exist in the environment.
+
+Once the sandbox becomes available, the harness searches these directories for `SKILL.md` files and adds each discovered skill's name and description to context. The model can select relevant skills and read their full instructions and supporting files.
+
+See [Agent configuration](https://developers.openai.com/api/docs/guides/agents-api/configuration) for session setup and [Connect a sandbox](https://developers.openai.com/api/docs/guides/agents-api/environments/self-hosted) for the execution environment. Review the skills and their supporting files before making them available to the agent, and follow the [sandbox security guidance](https://developers.openai.com/api/docs/guides/agents-api/environments/security).
+
 ## Skills in the user prompt
 
-When skills are available to the tool, the platform adds each skill's `name`, `description`, and `path` to user prompt context so the model knows the skill exists.
+For Responses API shell tools, the platform adds each available skill's `name`, `description`, and `path` to user prompt context so the model knows the skill exists.
 
 The model decides whether to invoke a skill based on this metadata. If the model invokes a skill, it uses the `path` to read the full Markdown instructions from `SKILL.md`.
 
@@ -559,4 +637,4 @@ For workflows that can perform write or high-impact actions, require explicit ap
 
 #### Validate data residency and retention requirements
 
-We support Skills in two form factors: local execution and hosted container-based execution. Hosted skills follow the same container lifecycle as hosted shell: mounted skills and container files remain available while the container is active and are discarded when the container expires or is deleted. If you want execution to stay entirely on infrastructure you manage, use local shell mode. Read more about our [data controls](https://developers.openai.com/api/docs/guides/your-data).
+The Responses API supports Skills in two form factors: local execution and hosted container-based execution. Hosted skills follow the same container lifecycle as hosted shell: mounted skills and container files remain available while the container is active and are discarded when the container expires or is deleted. If you want execution to stay entirely on infrastructure you manage, use local shell mode. For Agents API sandboxes, see [Sandbox lifecycle](https://developers.openai.com/api/docs/guides/agents-api/environments/lifecycle). Read more about our [data controls](https://developers.openai.com/api/docs/guides/your-data).

@@ -58,7 +58,6 @@ import { toResponseInputItems } from "openai/lib/responses/ResponseInputItems";
 
 const client = new OpenAI();
 
-/** @type {import("openai/resources/responses/responses").ResponseInput} */
 const conversation = [
   {
     type: "message",
@@ -220,17 +219,24 @@ client
 require "openai"
 
 client = OpenAI::Client.new
-conversation = [{
-  type: :message,
-  role: :user,
-  content: "Let's begin a long coding task."
-}]
+conversation = [
+  {
+    type: :message,
+    role: :user,
+    content: "Let's begin a long coding task."
+  }
+]
 
 response = client.responses.create(
   model: "gpt-5.3-codex",
   input: conversation,
   store: false,
-  context_management: [{type: :compaction, compact_threshold: 200_000}]
+  context_management: [
+    {
+      type: :compaction,
+      compact_threshold: 200_000
+    }
+  ]
 )
 conversation.concat(response.output)
 conversation << {
@@ -242,7 +248,12 @@ next_response = client.responses.create(
   model: "gpt-5.3-codex",
   input: conversation,
   store: false,
-  context_management: [{type: :compaction, compact_threshold: 200_000}]
+  context_management: [
+    {
+      type: :compaction,
+      compact_threshold: 200_000
+    }
+  ]
 )
 puts(next_response.output_text)
 ```
@@ -290,27 +301,20 @@ import OpenAI from "openai";
 
 const client = new OpenAI();
 
-/** @type {import("openai/resources/responses/responses").ResponseInput} */
 const conversation = [{ role: "user", content: "Plan a trip to Kyoto." }];
 
 const compacted = await client.responses.compact({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: conversation,
 });
 
-/** @type {import("openai/resources/responses/responses").ResponseInput} */
 const nextInput = [
-  ...compacted.output.map(
-    (item) =>
-      /** @type {import("openai/resources/responses/responses").ResponseInputItem} */ (
-        item
-      )
-  ),
+  ...compacted.output.map((item) => item),
   { role: "user", content: "Add two more days to the itinerary." },
 ];
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: nextInput,
   store: false,
 });
@@ -324,7 +328,7 @@ long_input_items_array = [{"role": "user", "content": "Plan a trip to Kyoto."}]
 
 # 1) Compact the current window
 compacted = client.responses.compact(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=long_input_items_array,
 )
 
@@ -339,7 +343,7 @@ next_input = [
 ]
 
 next_response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=next_input,
     store=False,  # Keep the flow ZDR-friendly
 )
@@ -365,7 +369,7 @@ func main() {
 		responses.ResponseInputItemParamOfMessage("Plan a trip to Kyoto.", responses.EasyInputMessageRoleUser),
 	}
 	compacted, err := client.Responses.Compact(context.Background(), responses.ResponseCompactParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseCompactParamsInputUnion{OfResponseInputItemArray: longInputItems},
 	})
 	if err != nil {
@@ -379,7 +383,7 @@ func main() {
 		responses.ResponseInputItemParamOfMessage(scanner.Text(), responses.EasyInputMessageRoleUser),
 	)
 	nextResponse, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Store: openai.Bool(false),
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: nextInput},
 	})
@@ -417,7 +421,7 @@ var compacted =
         .responses()
         .compact(
             ResponseCompactParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .input("Plan a trip to Kyoto.")
                 .build());
 var input = new ArrayList<ResponseInputItem>();
@@ -445,7 +449,7 @@ client
     .responses()
     .create(
         ResponseCreateParams.builder()
-            .model("gpt-5.6")
+            .model("gpt-6-astra")
             .inputOfResponse(input)
             .store(false)
             .build())
@@ -461,17 +465,26 @@ client
 require "openai"
 
 client = OpenAI::Client.new
-long_input = [{role: :user, content: "Plan a trip to Kyoto."}]
+long_input = [
+  {
+    role: :user,
+    content: "Plan a trip to Kyoto."
+  }
+]
 compaction = client.responses.compact(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: long_input
 )
 next_input = [
   *compaction.output,
-  {type: :message, role: :user, content: "Add restaurant recommendations."}
+  {
+    type: :message,
+    role: :user,
+    content: "Add restaurant recommendations."
+  }
 ]
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: next_input,
   store: false
 )

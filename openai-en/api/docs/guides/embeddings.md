@@ -268,6 +268,29 @@ try (var writer = Files.newBufferedWriter(output)) {
 System.out.println(output);
 ```
 
+```ruby
+require "csv"
+require "fileutils"
+require "json"
+require "openai"
+
+client = OpenAI::Client.new
+reviews = ["A rich cup of coffee.", "A bright herbal tea."]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: reviews.map { |review| review.tr("\n", " ") }
+)
+
+FileUtils.mkdir_p("output")
+CSV.open("output/embedded_1k_reviews.csv", "w") do |csv|
+  csv << ["combined", "ada_embedding"]
+  response.data.each do |embedding|
+    csv << [reviews.fetch(embedding.index), JSON.generate(embedding.embedding)]
+  end
+end
+```
+
 
 To load the data from a saved file, you can run the following:
 
@@ -388,6 +411,24 @@ Console.WriteLine(
 );
 ```
 
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: "Testing 123",
+  encoding_format: :float
+)
+
+shortened = response.data.fetch(0).embedding.first(256)
+magnitude = Math.sqrt(shortened.sum { |value| value**2 })
+normalized = shortened.map { |value| magnitude.zero? ? 0 : value / magnitude }
+
+puts(normalized)
+```
+
 
 Dynamically changing the dimensions enables very flexible usage. For example, when using a vector data store that only supports embeddings up to 1024 dimensions long, developers can now still use our best embedding model `text-embedding-3-large` and specify a value of 1024 for the `dimensions` API parameter, which will shorten the embedding down from 3072 dimensions, trading off some accuracy in exchange for the smaller vector size.
 
@@ -486,6 +527,38 @@ ChatCompletionCreateParams params =
 client.chat().completions().create(params).choices().stream()
     .flatMap(choice -> choice.message().content().stream())
     .forEach(System.out::println);
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+article = "At the 2022 Winter Olympics, Great Britain won women's curling and Sweden won men's curling."
+question = <<~QUESTION
+  Use the article below to answer the question. If the answer cannot be found, say "I don't know."
+
+  Article:
+  #{article}
+
+  Question: Which athletes won the gold medal in curling at the 2022 Winter Olympics?
+QUESTION
+
+response = client.chat.completions.create(
+  model: "gpt-4.1-mini",
+  messages: [
+    {
+      role: :system,
+      content: "You answer questions about the 2022 Winter Olympics."
+    },
+    {
+      role: :user,
+      content: question
+    }
+  ],
+  temperature: 0
+)
+
+puts(response.choices.fetch(0).message.content)
 ```
 
 
@@ -598,6 +671,39 @@ IntStream.range(0, reviews.size())
     .limit(3)
     .map(reviews::get)
     .forEach(System.out::println);
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+reviews = [
+  "A rich cup of coffee.",
+  "Smooth beans in tomato sauce.",
+  "Dark chocolate with orange."
+]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: reviews + ["delicious beans"]
+)
+
+query = response.data.fetch(-1).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(query).sum { |value, query_value| value * query_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  query_magnitude = Math.sqrt(query.sum { |value| value**2 })
+  dot_product / (magnitude * query_magnitude)
+end
+
+results = reviews.map.with_index do |review, index|
+  {
+    review: review,
+    score: similarity.call(response.data.fetch(index).embedding)
+  }
+end.sort_by { |result| -result.fetch(:score) }.first(3)
+
+puts(results)
 ```
 
 
@@ -713,6 +819,38 @@ IntStream.range(0, functions.size())
     .forEach(System.out::println);
 ```
 
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+functions = [
+  "function add(a, b) { return a + b; }",
+  "function complete(prompt) { return prompt; }"
+]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: functions + ["Completions API tests"]
+)
+
+query = response.data.fetch(-1).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(query).sum { |value, query_value| value * query_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  query_magnitude = Math.sqrt(query.sum { |value| value**2 })
+  dot_product / (magnitude * query_magnitude)
+end
+
+results = functions.map.with_index do |source, index|
+  {
+    source: source,
+    score: similarity.call(response.data.fetch(index).embedding)
+  }
+end.sort_by { |result| -result.fetch(:score) }
+
+puts(results)
+```
+
 
 
 
@@ -766,10 +904,10 @@ console.log(recommendations);
 
 ```python
 def recommendations_from_strings(
-    strings: List[str],
+    strings: list[str],
     index_of_source_string: int,
     model="text-embedding-3-small",
-) -> List[int]:
+) -> list[int]:
     """Return nearest neighbors of a given string."""
 
     # get embeddings for all strings
@@ -835,6 +973,40 @@ var nearestNeighbors =
         .toList();
 
 System.out.println(nearestNeighbors);
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+strings = [
+  "A cheetah is a fast land animal.",
+  "A peregrine falcon is a fast bird.",
+  "A tortoise moves slowly."
+]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: strings
+)
+
+query = response.data.fetch(0).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(query).sum { |value, query_value| value * query_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  query_magnitude = Math.sqrt(query.sum { |value| value**2 })
+  dot_product / (magnitude * query_magnitude)
+end
+
+recommendations = response.data.map.with_index do |embedding, index|
+  {
+    index: index,
+    text: strings.fetch(index),
+    similarity: similarity.call(embedding.embedding)
+  }
+end.sort_by { |recommendation| -recommendation.fetch(:similarity) }
+
+puts(recommendations)
 ```
 
 
@@ -1048,6 +1220,31 @@ List<Float> review = embeddings.get(2).embedding();
 double negative = cosineSimilarity(review, embeddings.get(0).embedding());
 double positive = cosineSimilarity(review, embeddings.get(1).embedding());
 System.out.println(positive > negative ? "positive" : "negative");
+```
+
+```ruby
+require "openai"
+
+client = OpenAI::Client.new
+labels = ["negative", "positive"]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: labels + ["The coffee arrived quickly and tastes great."]
+)
+
+review = response.data.fetch(-1).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(review).sum { |value, review_value| value * review_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  review_magnitude = Math.sqrt(review.sum { |value| value**2 })
+  dot_product / (magnitude * review_magnitude)
+end
+
+negative, positive = response.data.first(2).map do |embedding|
+  similarity.call(embedding.embedding)
+end
+puts((positive > negative) ? "positive" : "negative")
 ```
 
 

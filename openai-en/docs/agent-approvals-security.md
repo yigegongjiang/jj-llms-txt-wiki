@@ -14,6 +14,37 @@ For a high-level explanation of how sandboxing works across the ChatGPT desktop 
 Codex CLI, and IDE extension, see [sandboxing](https://learn.chatgpt.com/docs/sandboxing).
 For a broader enterprise security overview, see the [Codex security white paper](https://trust.openai.com/?itemUid=382f924d-54f3-43a8-a9df-c39e6c959958&source=click).
 
+## Migrate from the retired `untrusted` approval policy
+
+Codex and ChatGPT Work no longer support `approval_policy = "untrusted"`.
+The retired setting can prevent either client from starting. Remove it from
+user or project configuration, profile files, startup scripts, and managed
+defaults. For interactive, read-only use:
+
+```toml
+sandbox_mode = "read-only"
+approval_policy = "on-request"
+```
+
+Or run `codex --sandbox read-only --ask-for-approval on-request`.
+
+With `on-request`, commands allowed by the sandbox can run without approval,
+read accessible files, and use network access if enabled.
+
+To preserve the stricter command-approval rule, omit an explicit
+`approval_policy` and add a project entry to your user-level
+`~/.codex/config.toml`:
+
+```toml
+[projects."/path/to/project"]
+trust_level = "untrusted"
+```
+
+Commands then require approval unless an execution-policy rule allows them.
+This also disables project-local configuration. Explicitly setting `on-request`
+overrides the project-derived policy; managed `allowed_approval_policies` must
+include `untrusted` to permit it.
+
 ## Sandbox and approvals
 
 Codex security controls come from two layers that work together:
@@ -32,7 +63,30 @@ Codex asks for approval to edit files outside the workspace or to run commands t
 
 Codex can also elicit approval for app (connector) tool calls that advertise side effects, even when the action isn't a shell command or file change. Destructive app/MCP tool calls always require approval when the tool advertises a destructive annotation (unless the tool advertises a read annotation, which takes priority).
 
-## Network access <ElevatedRiskBadge class="ml-2" />
+## Safety monitoring and paused tasks
+
+GPT-6 Astra includes safety monitoring in Codex and ChatGPT Work. Monitoring
+runs asynchronously and can pause a task if it detects potentially unsafe model
+behavior. A pause can arrive after the activity that triggered it; monitoring
+doesn't replace sandboxing, permissions, or review of the result.
+
+If a task pauses, read the notice and review the findings when available. Resume
+only after checking that the task can safely continue. If the notice says the
+task has ended or doesn't offer an option to resume, you can't resume from that
+surface.
+
+| Surface and data controls                                                                               | Findings and resume                                       |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Codex and ChatGPT Work clients with the findings and resume flow, without the data controls listed here | Review the findings before resuming.                      |
+| Codex CLI and mobile                                                                                    | Full findings and resume aren't available. The task ends. |
+| Zero data retention, Modified Abuse Monitoring, or non-US data storage residency                        | Full findings and resume aren't available. The task ends. |
+
+Safety monitoring evaluates model behavior during a task.
+[Automatic approval review](https://learn.chatgpt.com/docs/sandboxing/auto-review) evaluates individual actions that
+already require approval before those actions run. An action approved by
+automatic approval review can still be part of a task that monitoring later pauses.
+
+## Network access<ElevatedRiskBadge class="ml-2"></ElevatedRiskBadge>
 
 For Codex cloud, see [agent internet access](https://learn.chatgpt.com/docs/cloud/internet-access) to enable full internet access or a domain allow list.
 
@@ -184,6 +238,11 @@ Codex cloud tasks, or the client's model and authentication requests. These
 surfaces use separate service connections, feature settings, workspace
 policies, or environment controls.
 
+Browser tools separately check managed network denies and exclusive allowlists
+before accessing an origin. Browser origin policies can further restrict site
+access, uploads, downloads, and developer tools. See
+[managed browser controls](https://learn.chatgpt.com/docs/enterprise/managed-configuration#control-browser-and-computer-use).
+
 For managed users, combine command network policy with controls such as
 `allowed_web_search_modes`, approved `mcp_servers`, and feature requirements
 for apps, plugins, browsers, or Computer Use. See
@@ -284,26 +343,23 @@ can constrain it with `allowed_approvals_reviewers`.
 
 ### Common sandbox and approval combinations
 
-| Intent                                                            | Flags / config                                                                                                                      | Effect                                                                                                                                           |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Auto (preset)                                                     | _no flags needed_ or `--sandbox workspace-write --ask-for-approval on-request`                                                      | Codex can read files, make edits, and run commands in the workspace. Codex requires approval to edit outside the workspace or to access network. |
-| Safe read-only browsing                                           | `--sandbox read-only --ask-for-approval on-request`                                                                                 | Codex can read files and answer questions. Codex requires approval to make edits, run commands, or access network.                               |
-| Read-only non-interactive (CI)                                    | `--sandbox read-only --ask-for-approval never`                                                                                      | Codex can only read files; never asks for approval.                                                                                              |
-| Automatically edit but ask for approval to run untrusted commands | `--sandbox workspace-write --ask-for-approval untrusted`                                                                            | Codex can read and edit files but asks for approval before running untrusted commands.                                                           |
-| Auto-review mode                                                  | `--sandbox workspace-write --ask-for-approval on-request -c approvals_reviewer=auto_review` or `approvals_reviewer = "auto_review"` | Same sandbox boundary as standard on-request mode, but eligible approval requests are reviewed by Auto-review instead of surfacing to the user.  |
-| Dangerous full access                                             | `--dangerously-bypass-approvals-and-sandbox` (alias: `--yolo`)                                                                      | <ElevatedRiskBadge /> No sandbox; no approvals _(not recommended)_                                                                               |
+| Intent                         | Flags / config                                                                                                                      | Effect                                                                                                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Auto (preset)                  | _no flags needed_ or `--sandbox workspace-write --ask-for-approval on-request`                                                      | Codex can read files, make edits, and run commands in the workspace. Codex requires approval to edit outside the workspace or to access network. |
+| Safe read-only browsing        | `--sandbox read-only --ask-for-approval on-request`                                                                                 | Codex can read files and run commands within the read-only sandbox. Actions outside the sandbox can require approval.                            |
+| Read-only non-interactive (CI) | `--sandbox read-only --ask-for-approval never`                                                                                      | Codex can read files and run commands within the read-only sandbox; it never asks for approval.                                                  |
+| Auto-review mode               | `--sandbox workspace-write --ask-for-approval on-request -c approvals_reviewer=auto_review` or `approvals_reviewer = "auto_review"` | Same sandbox boundary as standard on-request mode, but eligible approval requests are reviewed by Auto-review instead of surfacing to the user.  |
+| Dangerous full access          | `--dangerously-bypass-approvals-and-sandbox` (alias: `--yolo`)                                                                      | <ElevatedRiskBadge /> No sandbox; no approvals _(not recommended)_                                                                               |
 
 For non-interactive runs, use `codex exec --sandbox workspace-write`; Codex keeps older `codex exec --full-auto` invocations as a deprecated compatibility path and prints a warning.
-
-With `--ask-for-approval untrusted`, Codex runs only known-safe read operations automatically. Commands that can mutate state or trigger external execution paths (for example, destructive Git operations or Git output/config-override flags) require approval.
 
 #### Configuration in `config.toml`
 
 For the broader configuration workflow, see [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic), [Advanced Config](https://learn.chatgpt.com/docs/config-file/config-advanced#approval-policies-and-sandbox-modes), and the [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference).
 
 ```toml
-# Always ask for approval mode
-approval_policy = "untrusted"
+# Interactive approvals with a read-only sandbox
+approval_policy = "on-request"
 sandbox_mode    = "read-only"
 allow_login_shell = false # optional hardening: disallow login shells for shell-based tools
 
@@ -407,7 +463,7 @@ To try it:
 
 1. Install Visual Studio Code and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
 2. Copy the Codex example `.devcontainer` setup into your repository, or start from the Codex repository directly.
-3. In VS Code, run **Dev Containers: Open Folder in Container...** and select `.devcontainer/devcontainer.secure.json`.
+3. In VS Code, run `Dev Containers: Open Folder in Container...` and select `.devcontainer/devcontainer.secure.json`.
 4. After the container starts, open a terminal and run `codex`.
 
 You can also start the container from the CLI:

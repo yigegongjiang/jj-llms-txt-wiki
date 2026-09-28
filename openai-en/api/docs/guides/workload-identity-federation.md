@@ -25,12 +25,9 @@ guidance below, then follow the section for the product your workload uses.
 
 - **OpenAI API:** Continue to [Use workload identity with the OpenAI
   API](#use-workload-identity-with-the-openai-api).
-- **Codex:** Follow [Use workload identity with
-  Codex](https://developers.openai.com/codex/enterprise/workload-identity) for the complete Admin Portal and
-  runtime setup.
+- **Codex:** See [Use workload identity with Codex](#use-workload-identity-with-codex).
 
-Administrators can also [manage Codex providers and rules with the Admin
-API](https://developers.openai.com/api/docs/guides/workload-identity-federation/admin-api). See the [Codex
+See the [Codex
 federation rule
 reference](https://developers.openai.com/api/docs/guides/workload-identity-federation/federation-rules) for
 rule and lifecycle behavior.
@@ -331,6 +328,23 @@ or call the token exchange endpoint directly. For request and response fields,
 authorization behavior, and current limitations, see the
 [workload identity token exchange reference](https://developers.openai.com/api/reference/workload-identity-federation).
 
+#### Renew the access token
+
+If you manage token exchange directly, keep `access_token` and `expires_at`
+together when passing the credential from a token service to an application.
+The `expires_at` field is an absolute UTC expiration expressed as a Unix
+timestamp in seconds. Schedule renewal before that time, allowing for clock
+differences and request latency.
+
+The `expires_in` field is the token's lifetime in seconds from issuance. For
+example, a token issued at 12:00 UTC with `expires_in: 3600` expires at 13:00
+UTC, even if another service receives it at 12:05 UTC. Transport and processing
+time don't extend the token's lifetime. See the [response
+fields](https://developers.openai.com/api/reference/workload-identity-federation#response) for details.
+
+Token exchange doesn't return a refresh token. To renew, repeat the exchange
+with a valid external identity token or client certificate.
+
 ## Use workload identity with Codex
 
 Use this path for trusted Codex automation in a managed ChatGPT workspace.
@@ -341,17 +355,7 @@ Codex workload identity federation is in beta and must be enabled for your
   workspace. To request access, contact your OpenAI representative or [OpenAI
   Support](https://help.openai.com/en/articles/6614161-how-can-i-contact-support).
 
-Follow [Use workload identity with
-Codex](https://developers.openai.com/codex/enterprise/workload-identity) for the complete administrator and
-runtime procedure. It covers provider-specific token sources, federation rules,
-the required token-file configuration, credential precedence, supported Codex
-surfaces, rotation, and verification. For optional audit attribution, Codex
-accepts `OPENAI_WORKLOAD_IDENTITY_CONTEXT`; the Codex guide defines its schema,
-privacy limits, and audit behavior.
-
-Use the [Admin
-API](https://developers.openai.com/api/docs/guides/workload-identity-federation/admin-api) to manage Codex
-providers and rules programmatically. The [federation rule
+The [federation rule
 reference](https://developers.openai.com/api/docs/guides/workload-identity-federation/federation-rules)
 explains how one rule can accept more than one external subject while mapping to one
 ChatGPT principal.
@@ -399,9 +403,7 @@ then run `codex login status` again.
 
 ## Related docs
 
-- [Use workload identity with Codex](https://developers.openai.com/codex/enterprise/workload-identity)
 - [Codex federation rule reference](https://developers.openai.com/api/docs/guides/workload-identity-federation/federation-rules)
-- [Manage Codex workload identity with the Admin API](https://developers.openai.com/api/docs/guides/workload-identity-federation/admin-api)
 - [Workload identity token exchange reference](https://developers.openai.com/api/reference/workload-identity-federation)
 - [Codex authentication](https://developers.openai.com/codex/auth)
 - [Codex environment variables](https://developers.openai.com/codex/config-file/environment-variables)

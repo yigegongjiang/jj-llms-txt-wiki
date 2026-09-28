@@ -232,27 +232,11 @@ const CITATION_STOP = "\uE201";
 const SOURCE_ID_RE = /^[A-Za-z0-9_-]+$/;
 const LINE_LOCATOR_RE = /^L\d+(?:-L\d+)?$/;
 
-/**
- * @typedef {Object} Citation
- * @property {string} raw
- * @property {string} family
- * @property {string[]} source_ids
- * @property {string | null} locator
- * @property {number} start
- * @property {number} end
- */
-
-/**
- * Extract citations such as:
- *
- *   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_STOP}
- *   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_DELIMITER}L8-L13{CITATION_STOP}
- *   {CITATION_START}cite{CITATION_DELIMITER}turn0search0{CITATION_DELIMITER}turn1news2{CITATION_STOP}
- *
- * @param {string} text
- * @param {{ families?: string[] }} [options]
- * @returns {Citation[]}
- */
+// Extract citations such as:
+//
+//   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_STOP}
+//   {CITATION_START}cite{CITATION_DELIMITER}turn0file0{CITATION_DELIMITER}L8-L13{CITATION_STOP}
+//   {CITATION_START}cite{CITATION_DELIMITER}turn0search0{CITATION_DELIMITER}turn1news2{CITATION_STOP}
 function extractCitations(text, { families = ["cite"] } = {}) {
   if (families.length === 0) {
     return [];
@@ -267,7 +251,6 @@ function extractCitations(text, { families = ["cite"] } = {}) {
     "g"
   );
 
-  /** @type {Citation[]} */
   const citations = [];
 
   for (const match of text.matchAll(tokenRe)) {
@@ -304,11 +287,6 @@ function extractCitations(text, { families = ["cite"] } = {}) {
   return citations;
 }
 
-/**
- * @param {string} text
- * @param {Iterable<Citation>} citations
- * @returns {string}
- */
 function stripCitations(text, citations) {
   let cleanText = text;
   const sortedCitations = Array.from(citations).sort(
@@ -326,7 +304,8 @@ function stripCitations(text, citations) {
 
 ```python
 import re
-from typing import Iterable, TypedDict
+from collections.abc import Iterable
+from typing import TypedDict
 
 CITATION_START = "\ue200"
 CITATION_DELIMITER = "\ue202"
@@ -411,6 +390,56 @@ def strip_citations(text: str, citations: Iterable[Citation]) -> str:
         clean_text = clean_text[: citation["start"]] + clean_text[citation["end"] :]
 
     return clean_text
+```
+
+```ruby
+CITATION_START = "\u{E200}"
+CITATION_DELIMITER = "\u{E202}"
+CITATION_STOP = "\u{E201}"
+
+SOURCE_ID_RE = /\A[A-Za-z0-9_-]+\z/
+LINE_LOCATOR_RE = /\AL\d+(?:-L\d+)?\z/
+
+def extract_citations(text, families: ["cite"])
+  return [] if families.empty?
+
+  family_pattern = families.map { |family| Regexp.escape(family) }.join("|")
+  token_re = Regexp.new(
+    "#{Regexp.escape(CITATION_START)}" \
+      "(?<family>#{family_pattern})" \
+      "#{Regexp.escape(CITATION_DELIMITER)}" \
+      "(?<body>.*?)" \
+      "#{Regexp.escape(CITATION_STOP)}",
+    Regexp::MULTILINE
+  )
+
+  text.enum_for(:scan, token_re).map do
+    match = Regexp.last_match
+    next unless match
+
+    body = match[:body]
+    next unless body
+
+    parts = body.split(CITATION_DELIMITER).map(&:strip).reject(&:empty?)
+    locator = parts.pop if parts.last&.match?(LINE_LOCATOR_RE)
+    next if parts.empty? || parts.any? { |part| !part.match?(SOURCE_ID_RE) }
+
+    {
+      raw: match[0],
+      family: match[:family],
+      source_ids: parts,
+      locator: locator,
+      start: match.begin(0),
+      end: match.end(0)
+    }
+  end.compact
+end
+
+def strip_citations(text, citations)
+  citations.sort_by { |citation| -citation.fetch(:start) }.each_with_object(text.dup) do |citation, clean|
+    clean[citation.fetch(:start)...citation.fetch(:end)] = ""
+  end
+end
 ```
 
 

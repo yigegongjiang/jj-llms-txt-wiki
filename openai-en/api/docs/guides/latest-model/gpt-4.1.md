@@ -33,7 +33,6 @@ Please read on for prompt examples you can use as a reference, and remember that
 - GPT-4.1 and GPT-4.1 mini support supervised fine-tuning.
 - Supported tools include function calling, web search, file search, image generation, code interpreter, and remote MCP.
 
-
 ## Prompting best practices
 
 ### 1. Agentic Workflows
@@ -950,6 +949,84 @@ APPLY_PATCH_TOOL = {
 }
 ```
 
+```ruby
+require "json"
+
+APPLY_PATCH_TOOL_DESC = <<~PROMPT
+  This is a custom utility that makes it more convenient to add, remove, move, or edit code files. `apply_patch` effectively allows you to execute a diff/patch against a file, but the format of the diff specification is unique to this task, so pay careful attention to these instructions. To use the `apply_patch` command, you should pass a message of the following structure as "input":
+
+  %%bash
+  apply_patch <<"EOF"
+  *** Begin Patch
+  [YOUR_PATCH]
+  *** End Patch
+  EOF
+
+  Where [YOUR_PATCH] is the actual content of your patch, specified in the following V4A diff format.
+
+  *** [ACTION] File: [path/to/file] -> ACTION can be one of Add, Update, or Delete.
+  For each snippet of code that needs to be changed, repeat the following:
+  [context_before] -> See below for further instructions on context.
+  - [old_code] -> Precede the old code with a minus sign.
+  + [new_code] -> Precede the new, replacement code with a plus sign.
+  [context_after] -> See below for further instructions on context.
+
+  For instructions on [context_before] and [context_after]:
+  - By default, show 3 lines of code immediately above and 3 lines immediately below each change. If a change is within 3 lines of a previous change, do NOT duplicate the first change’s [context_after] lines in the second change’s [context_before] lines.
+  - If 3 lines of context is insufficient to uniquely identify the snippet of code within the file, use the @@ operator to indicate the class or function to which the snippet belongs. For instance, we might have:
+  @@ class BaseClass
+  [3 lines of pre-context]
+  - [old_code]
+  + [new_code]
+  [3 lines of post-context]
+
+  - If a code block is repeated so many times in a class or function such that even a single @@ statement and 3 lines of context cannot uniquely identify the snippet of code, you can use multiple `@@` statements to jump to the right context. For instance:
+
+  @@ class BaseClass
+  @@ 	def method():
+  [3 lines of pre-context]
+  - [old_code]
+  + [new_code]
+  [3 lines of post-context]
+
+  Note, then, that we do not use line numbers in this diff format, as the context is enough to uniquely identify code. An example of a message that you might pass as "input" to this function, in order to apply a patch, is shown below.
+
+  %%bash
+  apply_patch <<"EOF"
+  *** Begin Patch
+  *** Update File: pygorithm/searching/binary_search.py
+  @@ class BaseClass
+  @@     def search():
+  -          pass
+  +          raise NotImplementedError()
+
+  @@ class Subclass
+  @@     def search():
+  -          pass
+  +          raise NotImplementedError()
+
+  *** End Patch
+  EOF
+
+PROMPT
+
+tool = {
+  name: "apply_patch",
+  description: APPLY_PATCH_TOOL_DESC,
+  parameters: {
+    type: "object",
+    properties: {
+      input: {
+        type: "string",
+        description: "The apply_patch command to execute."
+      }
+    },
+    required: ["input"]
+  }
+}
+puts(JSON.generate(tool))
+```
+
 
 ### Reference Implementation: apply_patch.py
 
@@ -966,16 +1043,9 @@ A self-contained **pure-Python 3.9+** utility for applying human-readable
 from __future__ import annotations
 
 import pathlib
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import (
-    Callable,
-    Dict,
-    List,
-    Optional,
-    Tuple,
-    Union,
-)
 
 
 # --------------------------------------------------------------------------- #
@@ -990,14 +1060,14 @@ class ActionType(str, Enum):
 @dataclass
 class FileChange:
     type: ActionType
-    old_content: Optional[str] = None
-    new_content: Optional[str] = None
-    move_path: Optional[str] = None
+    old_content: str | None = None
+    new_content: str | None = None
+    move_path: str | None = None
 
 
 @dataclass
 class Commit:
-    changes: Dict[str, FileChange] = field(default_factory=dict)
+    changes: dict[str, FileChange] = field(default_factory=dict)
 
 
 # --------------------------------------------------------------------------- #
@@ -1013,21 +1083,21 @@ class DiffError(ValueError):
 @dataclass
 class Chunk:
     orig_index: int = -1
-    del_lines: List[str] = field(default_factory=list)
-    ins_lines: List[str] = field(default_factory=list)
+    del_lines: list[str] = field(default_factory=list)
+    ins_lines: list[str] = field(default_factory=list)
 
 
 @dataclass
 class PatchAction:
     type: ActionType
-    new_file: Optional[str] = None
-    chunks: List[Chunk] = field(default_factory=list)
-    move_path: Optional[str] = None
+    new_file: str | None = None
+    chunks: list[Chunk] = field(default_factory=list)
+    move_path: str | None = None
 
 
 @dataclass
 class Patch:
-    actions: Dict[str, PatchAction] = field(default_factory=dict)
+    actions: dict[str, PatchAction] = field(default_factory=dict)
 
 
 # --------------------------------------------------------------------------- #
@@ -1035,8 +1105,8 @@ class Patch:
 # --------------------------------------------------------------------------- #
 @dataclass
 class Parser:
-    current_files: Dict[str, str]
-    lines: List[str]
+    current_files: dict[str, str]
+    lines: list[str]
     index: int = 0
     patch: Patch = field(default_factory=Patch)
     fuzz: int = 0
@@ -1053,7 +1123,7 @@ class Parser:
         return line.rstrip("\r")
 
     # ------------- scanning convenience ----------------------------------- #
-    def is_done(self, prefixes: Optional[Tuple[str, ...]] = None) -> bool:
+    def is_done(self, prefixes: tuple[str, ...] | None = None) -> bool:
         if self.index >= len(self.lines):
             return True
         if (
@@ -1064,7 +1134,7 @@ class Parser:
             return True
         return False
 
-    def startswith(self, prefix: Union[str, Tuple[str, ...]]) -> bool:
+    def startswith(self, prefix: str | tuple[str, ...]) -> bool:
         return self._norm(self._cur_line()).startswith(prefix)
 
     def read_str(self, prefix: str) -> str:
@@ -1185,7 +1255,7 @@ class Parser:
         return action
 
     def _parse_add_file(self) -> PatchAction:
-        lines: List[str] = []
+        lines: list[str] = []
         while not self.is_done(
             ("*** End Patch", "*** Update File:", "*** Delete File:", "*** Add File:")
         ):
@@ -1200,8 +1270,8 @@ class Parser:
 #  Helper functions
 # --------------------------------------------------------------------------- #
 def find_context_core(
-    lines: List[str], context: List[str], start: int
-) -> Tuple[int, int]:
+    lines: list[str], context: list[str], start: int
+) -> tuple[int, int]:
     if not context:
         return start, 0
 
@@ -1222,8 +1292,8 @@ def find_context_core(
 
 
 def find_context(
-    lines: List[str], context: List[str], start: int, eof: bool
-) -> Tuple[int, int]:
+    lines: list[str], context: list[str], start: int, eof: bool
+) -> tuple[int, int]:
     if eof:
         new_index, fuzz = find_context_core(lines, context, len(lines) - len(context))
         if new_index != -1:
@@ -1234,12 +1304,12 @@ def find_context(
 
 
 def peek_next_section(
-    lines: List[str], index: int
-) -> Tuple[List[str], List[Chunk], int, bool]:
-    old: List[str] = []
-    del_lines: List[str] = []
-    ins_lines: List[str] = []
-    chunks: List[Chunk] = []
+    lines: list[str], index: int
+) -> tuple[list[str], list[Chunk], int, bool]:
+    old: list[str] = []
+    del_lines: list[str] = []
+    ins_lines: list[str] = []
+    chunks: list[Chunk] = []
     mode = "keep"
     orig_index = index
 
@@ -1319,7 +1389,7 @@ def _get_updated_file(text: str, action: PatchAction, path: str) -> str:
     if action.type is not ActionType.UPDATE:
         raise DiffError("_get_updated_file called with non-update action")
     orig_lines = text.split("\n")
-    dest_lines: List[str] = []
+    dest_lines: list[str] = []
     orig_index = 0
 
     for chunk in action.chunks:
@@ -1342,7 +1412,7 @@ def _get_updated_file(text: str, action: PatchAction, path: str) -> str:
     return "\n".join(dest_lines)
 
 
-def patch_to_commit(patch: Patch, orig: Dict[str, str]) -> Commit:
+def patch_to_commit(patch: Patch, orig: dict[str, str]) -> Commit:
     commit = Commit()
     for path, action in patch.actions.items():
         if action.type is ActionType.DELETE:
@@ -1369,7 +1439,7 @@ def patch_to_commit(patch: Patch, orig: Dict[str, str]) -> Commit:
 # --------------------------------------------------------------------------- #
 #  User-facing helpers
 # --------------------------------------------------------------------------- #
-def text_to_patch(text: str, orig: Dict[str, str]) -> Tuple[Patch, int]:
+def text_to_patch(text: str, orig: dict[str, str]) -> tuple[Patch, int]:
     lines = text.splitlines()  # preserves blank lines, no strip()
     if (
         len(lines) < 2
@@ -1383,7 +1453,7 @@ def text_to_patch(text: str, orig: Dict[str, str]) -> Tuple[Patch, int]:
     return parser.patch, parser.fuzz
 
 
-def identify_files_needed(text: str) -> List[str]:
+def identify_files_needed(text: str) -> list[str]:
     lines = text.splitlines()
     return [
         line[len("*** Update File: ") :]
@@ -1396,7 +1466,7 @@ def identify_files_needed(text: str) -> List[str]:
     ]
 
 
-def identify_files_added(text: str) -> List[str]:
+def identify_files_added(text: str) -> list[str]:
     lines = text.splitlines()
     return [
         line[len("*** Add File: ") :]
@@ -1408,7 +1478,7 @@ def identify_files_added(text: str) -> List[str]:
 # --------------------------------------------------------------------------- #
 #  File-system helpers
 # --------------------------------------------------------------------------- #
-def load_files(paths: List[str], open_fn: Callable[[str], str]) -> Dict[str, str]:
+def load_files(paths: list[str], open_fn: Callable[[str], str]) -> dict[str, str]:
     return {path: open_fn(path) for path in paths}
 
 
@@ -1526,5 +1596,3 @@ def search():
 `</edit>`
 """
 ````
-
-

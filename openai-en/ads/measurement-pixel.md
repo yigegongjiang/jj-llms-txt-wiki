@@ -229,11 +229,11 @@ the shape of the accompanying data. For example, `order_created` uses the
 
 The options object supports these fields:
 
-| Field               | When to use it                                                                                       |
-| ------------------- | ---------------------------------------------------------------------------------------------------- |
-| `event_id`          | Set a unique ID to identify the same event sent from the browser and server.                         |
-| `custom_event_name` | Name a custom event. This field is required for custom events and isn't supported for standard ones. |
-| `opt_out`           | Set to `true` to opt out the event from future user-level personalization. Defaults to `false`.      |
+| Field               | When to use it                                                                                                                                                                                                                                                                      |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `event_id`          | Set a unique ID to identify the same event sent from the browser and server.                                                                                                                                                                                                        |
+| `custom_event_name` | Name a custom event. This field is required for custom events and isn't supported for standard ones.                                                                                                                                                                                |
+| `opt_out`           | Set to `true` to opt out the event from future user-level personalization. Defaults to `false`. For clarity, OpenAI does not currently use data collected via the measurement pixel for user-level personalization. If we do so in the future, we will respect this opt-out toggle. |
 
 ### Send a custom event
 
@@ -389,11 +389,7 @@ oaiq("measure", "trial_started", {
 });
 ```
 
-{/* vale Vale.Spelling = NO */}
-
 ## Deduplicate browser and server events
-
-{/* vale Vale.Spelling = YES */}
 
 If you send the same conversion from both the Measurement Pixel and a
 server-side integration, reuse the same `event_id` in both places.
@@ -435,6 +431,32 @@ The Pixel handles several transport details for you:
   the resulting SHA-256 hash with conversion events.
 
 No manual configuration of these details is necessary when using the pixel.
+
+## Cookie expiry
+
+When measurement consent is granted, the Pixel uses these first-party cookies
+on your website:
+
+| Cookie     | Expiry                                     |
+| ---------- | ------------------------------------------ |
+| `__oppref` | 30 days after the Pixel writes the cookie. |
+| `__obref`  | 365 days after creation.                   |
+
+- `__oppref` stores the `oppref` attribution identifier from the landing page URL.
+  Each time the Pixel captures a non-empty `oppref` URL parameter, including the
+  same value again, it resets the cookie's expiry to 30 days. Reading the stored
+  cookie on a visit without that parameter does not extend its expiry.
+- `__obref` stores a randomly generated browser reference for your website. The
+  Pixel reuses a valid stored reference without extending its expiry. If the
+  cookie is missing or invalid, the Pixel creates a new reference with a new
+  365-day expiry.
+
+These are the lifetimes requested by the Pixel. Browser restrictions or clearing
+cookies can shorten them. Calling `oaiq("consent", false)` removes both cookies;
+see [Control measurement consent](https://developers.openai.com/ads/measurement-pixel#control-measurement-consent).
+
+Cookie expiry is separate from conversion attribution windows and conversion-data
+retention. The durations above describe browser cookie storage only.
 
 ## Troubleshooting
 

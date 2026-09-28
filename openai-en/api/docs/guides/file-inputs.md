@@ -2,11 +2,19 @@
 
 > For the complete documentation index, see [llms.txt](/llms.txt). Markdown versions of documentation pages are available by appending `.md` to the page URL.
 
-OpenAI models can accept files as `input_file` items. In the Responses API, you can send a file as Base64-encoded data, a file ID returned by the Files API (`/v1/files`), or an external URL.
+File input support depends on the API endpoint. The Responses API accepts the file types listed below as `input_file` items. Chat Completions accepts only PDF files as `file` content parts.
+
+| Input method                           | Responses API                     | Chat Completions |
+| -------------------------------------- | --------------------------------- | ---------------- |
+| Base64-encoded file data (`file_data`) | Supported file types listed below | PDF only         |
+| Uploaded file ID (`file_id`)           | Supported file types listed below | PDF only         |
+| External file URL (`file_url`)         | Supported file types listed below | Not supported    |
+
+Use the Responses API for non-PDF file inputs. To use text from a file in Chat Completions, read the file in your application and send its contents as a `text` content part.
 
 ## How it works
 
-`input_file` processing depends on the file type:
+In the Responses API, `input_file` processing depends on the file type:
 
 - **PDF files**: On models with vision capabilities, such as `gpt-4o` and later models, the API extracts both text and page images and sends both to the model.
 - **Non-PDF document and text files** (for example, `.docx`, `.pptx`, `.txt`, and code files): the API extracts text only.
@@ -19,8 +27,8 @@ Use these related tools when they better match your task:
 
 ## Non-PDF image and chart limitations
 
-For non-PDF files, the API doesn't extract embedded images or charts into the
-model context.
+For non-PDF files, the Responses API doesn't extract embedded images or charts
+into the model context.
 
 To preserve chart and diagram fidelity, convert the file to PDF first, then
 send the PDF as `input_file`.
@@ -28,7 +36,7 @@ send the PDF as `input_file`.
 ## How spreadsheet augmentation works
 
 For spreadsheet-like files (such as `.xlsx`, `.xls`, `.csv`, `.tsv`, and
-`.iif`), `input_file` uses a spreadsheet-specific augmentation process.
+`.iif`), the Responses API uses a spreadsheet-specific augmentation process.
 
 Instead of passing entire sheets to the model, the API parses up to the first
 1,000 rows per sheet and adds model-generated summary and header metadata so the
@@ -73,8 +81,10 @@ A minimal Responses API request body with explicit high detail looks like this:
 
 ## Accepted file types
 
-The following table lists common file types accepted in `input_file`. The full
-list of extensions and MIME types appears later on this page.
+The following table lists common file types accepted by the Responses API as
+`input_file` items. The full list of extensions and MIME types appears later on
+this page. Chat Completions supports only `.pdf` (`application/pdf`) for both
+`file_data` and `file_id`.
 
 | Category       | Common extensions                                   |
 | -------------- | --------------------------------------------------- |
@@ -97,7 +107,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -124,7 +134,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -160,7 +170,7 @@ func main() {
 	client := openai.NewClient()
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfInputItemList: responses.ResponseInputParam{
 				responses.ResponseInputItemParamOfMessage(
@@ -199,7 +209,7 @@ import java.util.List;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofMessage(
@@ -234,7 +244,7 @@ Uri fileUrl = new(
 );
 
 ResponseResult response = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateUserMessageItem(
             [
@@ -256,7 +266,7 @@ require "openai"
 openai = OpenAI::Client.new
 
 response = openai.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -282,7 +292,7 @@ curl "https://api.openai.com/v1/responses" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $OPENAI_API_KEY" \
     -d '{
-        "model": "gpt-5.6",
+        "model": "gpt-6-astra",
         "input": [
             {
                 "role": "user",
@@ -325,7 +335,7 @@ const file = await client.files.create({
 });
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -354,7 +364,7 @@ client = OpenAI()
 file = client.files.create(file=open("draconomicon.pdf", "rb"), purpose="user_data")
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -405,7 +415,7 @@ func main() {
 	}
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfInputItemList: responses.ResponseInputParam{
 				responses.ResponseInputItemParamOfMessage(
@@ -457,7 +467,7 @@ var response =
         .responses()
         .create(
             ResponseCreateParams.builder()
-                .model("gpt-5.6")
+                .model("gpt-6-astra")
                 .inputOfResponse(
                     List.of(
                         ResponseInputItem.ofMessage(
@@ -491,7 +501,7 @@ OpenAIFile file = await files.UploadFileAsync(
 );
 
 ResponseResult response = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateUserMessageItem(
             [
@@ -519,13 +529,19 @@ file = openai.files.create(
 )
 
 response = openai.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
       content: [
-        {type: "input_file", file_id: file.id},
-        {type: "input_text", text: "What is the first dragon in the book?"}
+        {
+          type: "input_file",
+          file_id: file.id
+        },
+        {
+          type: "input_text",
+          text: "What is the first dragon in the book?"
+        }
       ]
     }
   ]
@@ -544,7 +560,7 @@ curl "https://api.openai.com/v1/responses" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $OPENAI_API_KEY" \
     -d '{
-        "model": "gpt-5.6",
+        "model": "gpt-6-astra",
         "input": [
             {
                 "role": "user",
@@ -585,7 +601,7 @@ const data = fs.readFileSync("fixtures/draconomicon.pdf");
 const base64String = data.toString("base64");
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     {
       role: "user",
@@ -619,7 +635,7 @@ with open("draconomicon.pdf", "rb") as f:
 base64_string = base64.b64encode(data).decode("utf-8")
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {
             "role": "user",
@@ -664,7 +680,7 @@ func main() {
 	fileData := "data:application/pdf;base64," + base64.StdEncoding.EncodeToString(data)
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{
 			OfInputItemList: responses.ResponseInputParam{
 				responses.ResponseInputItemParamOfMessage(
@@ -709,7 +725,7 @@ String pdfData =
         .encodeToString(Files.readAllBytes(Path.of(System.getenv("OPENAI_EXAMPLE_FILE_PATH"))));
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .inputOfResponse(
             List.of(
                 ResponseInputItem.ofMessage(
@@ -740,7 +756,7 @@ ResponsesClient client = new(key);
 
 BinaryData fileBytes = BinaryData.FromBytes(await File.ReadAllBytesAsync("draconomicon.pdf"));
 ResponseResult response = await client.CreateResponseAsync(
-    "gpt-5.6",
+    "gpt-6-astra",
     [
         ResponseItem.CreateUserMessageItem(
             [
@@ -767,18 +783,23 @@ require "openai"
 client = OpenAI::Client.new
 pdf_data = Base64.strict_encode64(File.binread("draconomicon.pdf"))
 response = client.responses.create(
-  model: "gpt-5.6",
-  input: [{
-    role: :user,
-    content: [
-      {
-        type: :input_file,
-        filename: "document.pdf",
-        file_data: "data:application/pdf;base64,#{pdf_data}"
-      },
-      {type: :input_text, text: "Summarize this document."}
-    ]
-  }]
+  model: "gpt-6-astra",
+  input: [
+    {
+      role: :user,
+      content: [
+        {
+          type: :input_file,
+          filename: "document.pdf",
+          file_data: "data:application/pdf;base64,#{pdf_data}"
+        },
+        {
+          type: :input_text,
+          text: "Summarize this document."
+        }
+      ]
+    }
+  ]
 )
 
 puts(response.output_text)
@@ -789,7 +810,7 @@ curl "https://api.openai.com/v1/responses" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $OPENAI_API_KEY" \
     -d '{
-        "model": "gpt-5.6",
+        "model": "gpt-6-astra",
         "input": [
             {
                 "role": "user",
@@ -824,6 +845,9 @@ Keep these constraints in mind when you use file inputs:
 - **File upload purpose:** You can upload files with any supported [purpose](https://developers.openai.com/api/reference/resources/files/methods/create#files-create-purpose), but use `user_data` for files you plan to pass as model inputs.
 
 ## Full list of accepted file types
+
+This list applies to the Responses API. Chat Completions supports only `.pdf`
+(`application/pdf`) for both `file_data` and `file_id`.
 
 | Category       | Extensions                                                                                                                                                                                                                                                                                                                                                 | MIME types                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

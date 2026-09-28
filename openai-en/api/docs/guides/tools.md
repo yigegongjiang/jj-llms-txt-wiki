@@ -4,6 +4,8 @@
 
 When generating model responses or building agents, you can extend capabilities using built‑in tools, function calling, Programmatic Tool Calling, tool search, and remote MCP servers. These enable the model to search the web, retrieve from your files, load deferred tool definitions at runtime, call your own functions, compose tool calls in JavaScript, or access third‑party services. Only `gpt-5.4` and later models support `tool_search`.
 
+Choose the integration for your runtime: configure tools on [Responses API requests](#usage-in-the-api), on [Agents API agents](#agents-api), or in [Agents SDK definitions](#usage-in-the-agents-sdk). Tool availability, configuration, and call handling depend on the integration. The examples below use the Responses API.
+
 
 
 Web search
@@ -15,7 +17,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   tools: [{ type: "web_search" }],
   input: "What was a positive news story from today?",
 });
@@ -29,7 +31,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     tools=[{"type": "web_search"}],
     input="What was a positive news story from today?",
 )
@@ -51,7 +53,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Tools: []responses.ToolUnionParam{
 			responses.ToolParamOfWebSearch(responses.WebSearchToolTypeWebSearch),
 		},
@@ -72,7 +74,7 @@ import com.openai.models.responses.WebSearchTool;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("What was a positive news story from today?")
         .addTool(WebSearchTool.builder().type(WebSearchTool.Type.WEB_SEARCH).build())
         .build();
@@ -91,7 +93,7 @@ using OpenAI.Responses;
 string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
 ResponsesClient client = new(key);
 
-CreateResponseOptions options = new() { Model = "gpt-5.6" };
+CreateResponseOptions options = new() { Model = "gpt-6-astra" };
 options.Tools.Add(ResponseTool.CreateWebSearchTool());
 options.InputItems.Add(
     ResponseItem.CreateUserMessageItem("What was a positive news story from today?")
@@ -108,8 +110,8 @@ require "openai"
 openai = OpenAI::Client.new
 
 response = openai.responses.create(
-  model: "gpt-5.6",
-  tools: [{type: "web_search"}],
+  model: "gpt-6-astra",
+  tools: [{ type: "web_search" }],
   input: "What was a positive news story from today?"
 )
 
@@ -121,7 +123,7 @@ curl "https://api.openai.com/v1/responses" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $OPENAI_API_KEY" \
     -d '{
-        "model": "gpt-5.6",
+        "model": "gpt-6-astra",
         "tools": [{"type": "web_search"}],
         "input": "what was a positive news story from today?"
 }'
@@ -129,7 +131,7 @@ curl "https://api.openai.com/v1/responses" \
 
 ```bash
 openai responses create \
-  --model gpt-5.6 \
+  --model gpt-6-astra \
   --raw-output \
   --transform 'output.#(type=="message").content.0.text' <<'YAML'
 tools:
@@ -152,7 +154,7 @@ import OpenAI from "openai";
 const openai = new OpenAI();
 
 const response = await openai.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "What is deep research by OpenAI?",
   tools: [
     {
@@ -170,7 +172,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input="What is deep research by OpenAI?",
     tools=[{"type": "file_search", "vector_store_ids": ["<vector_store_id>"]}],
 )
@@ -191,7 +193,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("What is deep research by OpenAI?")},
 		Tools: []responses.ToolUnionParam{responses.ToolParamOfFileSearch([]string{"<vector_store_id>"})},
 	})
@@ -212,7 +214,7 @@ String vectorStoreId = "<vector_store_id>";
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("What is deep research by OpenAI?")
         .addFileSearchTool(List.of(vectorStoreId))
         .build();
@@ -232,7 +234,7 @@ string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
 string vectorStoreId = "<vector_store_id>";
 ResponsesClient client = new(key);
 
-CreateResponseOptions options = new() { Model = "gpt-5.6" };
+CreateResponseOptions options = new() { Model = "gpt-6-astra" };
 options.Tools.Add(
     ResponseTool.CreateFileSearchTool([vectorStoreId])
 );
@@ -251,7 +253,7 @@ require "openai"
 openai = OpenAI::Client.new
 
 response = openai.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "What is deep research by OpenAI?",
   tools: [
     {
@@ -278,7 +280,6 @@ import OpenAI from "openai";
 
 const client = new OpenAI();
 
-/** @type {OpenAI.Responses.NamespaceTool} */
 const crmNamespace = {
   type: "namespace",
   name: "crm",
@@ -317,7 +318,7 @@ const crmNamespace = {
 };
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "List open orders for customer CUST-12345.",
   // highlight-start:subtle
   tools: [crmNamespace, { type: "tool_search" }],
@@ -371,7 +372,7 @@ crm_namespace = {
 }
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input="List open orders for customer CUST-12345.",
     tools=[
         crm_namespace,
@@ -417,7 +418,7 @@ func main() {
 		},
 	)
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model:             "gpt-5.6",
+		Model:             "gpt-6-astra",
 		Input:             responses.ResponseNewParamsInputUnion{OfString: openai.String("List open orders for customer CUST-12345.")},
 		Tools:             []responses.ToolUnionParam{namespace, {OfToolSearch: &responses.ToolSearchToolParam{}}},
 		ParallelToolCalls: openai.Bool(false),
@@ -441,7 +442,7 @@ import java.util.Map;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("List open orders for customer CUST-12345.")
         .parallelToolCalls(false)
         .addTool(
@@ -496,12 +497,12 @@ require "openai"
 client = OpenAI::Client.new
 parameters = {
   type: :object,
-  properties: {customer_id: {type: :string}},
+  properties: { customer_id: { type: :string } },
   required: ["customer_id"],
   additionalProperties: false
 }
 response = client.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: "List open orders for customer CUST-12345.",
   parallel_tool_calls: false,
   tools: [
@@ -525,7 +526,7 @@ response = client.responses.create(
         }
       ]
     },
-    {type: :tool_search}
+    { type: :tool_search }
   ]
 )
 
@@ -545,7 +546,6 @@ Function calling
 import OpenAI from "openai";
 const client = new OpenAI();
 
-/** @type {OpenAI.Responses.Tool[]} */
 const tools = [
   {
     type: "function",
@@ -567,7 +567,7 @@ const tools = [
 ];
 
 const response = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
     { role: "user", content: "What is the weather like in Paris today?" },
   ],
@@ -603,7 +603,7 @@ tools = [
 ]
 
 response = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     input=[
         {"role": "user", "content": "What is the weather like in Paris today?"},
     ],
@@ -641,7 +641,7 @@ func main() {
 	tool.OfFunction.Description = openai.String("Get current temperature for a given location.")
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: responses.ResponseInputParam{
 			responses.ResponseInputItemParamOfMessage("What is the weather like in Paris today?", responses.EasyInputMessageRoleUser),
 		}},
@@ -665,7 +665,7 @@ import java.util.Map;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("What is the weather like in Paris today?")
         .addTool(
             FunctionTool.builder()
@@ -700,7 +700,7 @@ using OpenAI.Responses;
 string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
 ResponsesClient client = new(key);
 
-CreateResponseOptions options = new() { Model = "gpt-5.6" };
+CreateResponseOptions options = new() { Model = "gpt-6-astra" };
 options.Tools.Add(
     ResponseTool.CreateFunctionTool(
         functionName: "get_weather",
@@ -779,9 +779,12 @@ tools = [
 ]
 
 response = openai.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   input: [
-    {role: "user", content: "What is the weather like in Paris today?"}
+    {
+      role: "user",
+      content: "What is the weather like in Paris today?"
+    }
   ],
   tools: tools
 )
@@ -794,7 +797,7 @@ curl -X POST https://api.openai.com/v1/responses \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-5.6",
+    "model": "gpt-6-astra",
     "input": [
       {"role": "user", "content": "What is the weather like in Paris today?"}
     ],
@@ -834,7 +837,7 @@ curl https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \ 
 -H "Authorization: Bearer $OPENAI_API_KEY" \ 
 -d '{
-  "model": "gpt-5.6",
+  "model": "gpt-6-astra",
     "tools": [
       {
         "type": "mcp",
@@ -853,7 +856,7 @@ import OpenAI from "openai";
 const client = new OpenAI();
 
 const resp = await client.responses.create({
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   tools: [
     {
       type: "mcp",
@@ -876,7 +879,7 @@ from openai import OpenAI
 client = OpenAI()
 
 resp = client.responses.create(
-    model="gpt-5.6",
+    model="gpt-6-astra",
     tools=[
         {
             "type": "mcp",
@@ -911,7 +914,7 @@ func main() {
 	tool.OfMcp.RequireApproval = responses.ToolMcpRequireApprovalUnionParam{OfMcpToolApprovalSetting: openai.String("never")}
 
 	response, err := client.Responses.New(context.Background(), responses.ResponseNewParams{
-		Model: "gpt-5.6",
+		Model: "gpt-6-astra",
 		Tools: []responses.ToolUnionParam{tool},
 		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String("Roll 2d4+1")},
 	})
@@ -930,7 +933,7 @@ import com.openai.models.responses.Tool;
 
 ResponseCreateParams params =
     ResponseCreateParams.builder()
-        .model("gpt-5.6")
+        .model("gpt-6-astra")
         .input("Roll 2d4+1")
         .addTool(
             Tool.Mcp.builder()
@@ -956,12 +959,12 @@ using OpenAI.Responses;
 string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
 ResponsesClient client = new(key);
 
-CreateResponseOptions options = new() { Model = "gpt-5.6" };
+CreateResponseOptions options = new() { Model = "gpt-6-astra" };
 options.Tools.Add(
     ResponseTool.CreateMcpTool(
         serverLabel: "dmcp",
         serverUri: new Uri("https://dmcp-server.deno.dev/mcp"),
-        toolCallApprovalPolicy: GlobalMcpToolCallApprovalPolicy.NeverRequireApproval
+        toolCallApprovalPolicy: DefaultMcpToolCallApprovalPolicy.NeverRequireApproval
     )
 );
 options.InputItems.Add(ResponseItem.CreateUserMessageItem("Roll 2d4+1"));
@@ -977,7 +980,7 @@ require "openai"
 openai = OpenAI::Client.new
 
 response = openai.responses.create(
-  model: "gpt-5.6",
+  model: "gpt-6-astra",
   tools: [
     {
       type: "mcp",
@@ -1073,6 +1076,12 @@ Based on the provided [prompt](https://developers.openai.com/api/docs/guides/tex
 Some advanced workflows can also load more tool definitions during the interaction. For example, [tool search](https://developers.openai.com/api/docs/guides/tools-tool-search) can defer function definitions until the model decides they're needed.
 
 You can explicitly control or guide this behavior by setting the `tool_choice` parameter [in the API request](https://developers.openai.com/api/reference/resources/responses/methods/create).
+
+## Agents API
+
+The [Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview) runs the agent loop for you. Configure tools in `agent.tools`, handle function calls in your application, and connect a sandbox when the tools need an execution environment.
+
+See [Functions](https://developers.openai.com/api/docs/guides/agents-api/tools/functions) to call application code, [MCP connections](https://developers.openai.com/api/docs/guides/agents-api/tools/mcp) to connect tool servers, and [sandbox configuration](https://developers.openai.com/api/docs/guides/agents-api/configuration#environment-settings) for tools that need an execution environment. [Programmatic Tool Calling](https://developers.openai.com/api/docs/guides/tools-programmatic-tool-calling#agents-api) is enabled by default. [Skills](https://developers.openai.com/api/docs/guides/tools-skills#agents-api) are discovered through the sandbox's capability directories.
 
 ## Usage in the Agents SDK
 
