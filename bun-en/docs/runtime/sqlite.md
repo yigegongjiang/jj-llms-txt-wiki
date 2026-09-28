@@ -648,6 +648,8 @@ const db = new Database();
 db.loadExtension("myext");
 ```
 
+Workers can repeat `setCustomSQLite()` with the exact same path. Bun rejects a different path after SQLite loads.
+
 </Note>
 
 ### `.fileControl(cmd: number, value: any)`
