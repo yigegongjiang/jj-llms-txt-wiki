@@ -102,7 +102,7 @@ and **Password / API Token** (you will have to generate one).
 
 ![Configuring OTel in Grafana Cloud](./images/how-to/grafana/grafana-3.png)
 
-Next, add the following to your `otel-collector.yml` file to define how how
+Next, add the following to your `otel-collector.yml` file to define how
 telemetry data should be collected and exported to Grafana Cloud:
 
 ```yml title="otel-collector.yml"

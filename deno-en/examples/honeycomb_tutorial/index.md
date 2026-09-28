@@ -79,7 +79,7 @@ the container. The file is renamed to `/otel-config.yml` inside the container.
 run when the container starts. It tells the OpenTelemetry Collector to use the
 configuration file we copied in the previous step.
 
-Next, add the following to your `otel-collector.yml` file to define how how
+Next, add the following to your `otel-collector.yml` file to define how
 telemetry data should be collected and exported to Honeycomb:
 
 ```yml title="otel-collector.yml"

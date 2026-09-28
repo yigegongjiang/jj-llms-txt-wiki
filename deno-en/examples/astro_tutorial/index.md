@@ -39,7 +39,7 @@ this will set us up with a basic Astro project structure, including a
 ## Start the Astro server
 
 We can start the local Astro server with the `dev` task. In your terminal,
-change directory into your new project and run run
+change directory into your new project and run
 
 ```sh
 deno task dev
