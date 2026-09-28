@@ -1,3 +1,8 @@
+---
+title: Models
+url: https://platform.claude.com/docs/en/api/beta/models
+---
+
 # Models
 
 ## List Models
@@ -24,7 +29,7 @@ The Models API response can be used to determine which models are available for 
 
   Defaults to `20`. Ranges from `1` to `1000`.
 
-  default: 20, maximum: 1000, minimum: 1
+  default: 20, minimum: 1, maximum: 1000
 
 ### Headers
 
@@ -34,7 +39,7 @@ The Models API response can be used to determine which models are available for 
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -82,6 +87,8 @@ The Models API response can be used to determine which models are available for 
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -118,9 +125,35 @@ The Models API response can be used to determine which models are available for 
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Returns
 
 - `data: array of BetaModelInfo`
+
+  - `type: "model"`
+
+    Object type.
+
+    For Models, this is always `"model"`.
+
+    default: model
 
   - `id: string`
 
@@ -132,7 +165,7 @@ The Models API response can be used to determine which models are available for 
 
   - `capabilities: BetaModelCapabilities or null`
 
-    Model capability information.
+    Object mapping capability names to their support details. Keys are always present for all known capabilities.
 
     - `batch: BetaCapabilitySupport`
 
@@ -150,21 +183,33 @@ The Models API response can be used to determine which models are available for 
 
       Whether the model supports code execution tools.
 
+    - `compaction: BetaCompactionCapability or null`
+
+      Server-side compaction support (the top-level `compaction` parameter) and the accepted `compaction.type` values.
+
+      - `summarize: BetaCapabilitySupport`
+
+        Whether the summarize compaction type is supported.
+
+      - `supported: boolean`
+
+        Whether this capability is supported by the model.
+
     - `context_management: BetaContextManagementCapability`
 
       Context management support and available strategies.
 
       - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the clear_thinking_20251015 strategy is supported.
 
       - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the clear_tool_uses_20250919 strategy is supported.
 
       - `compact_20260112: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the compact_20260112 strategy is supported.
 
       - `supported: boolean`
 
@@ -196,7 +241,7 @@ The Models API response can be used to determine which models are available for 
 
       - `xhigh: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the model supports xhigh effort level.
 
     - `image_input: BetaCapabilitySupport`
 
@@ -248,14 +293,6 @@ The Models API response can be used to determine which models are available for 
 
     Maximum value for the `max_tokens` parameter when using this model.
 
-  - `type: "model"`
-
-    Object type.
-
-    For Models, this is always `"model"`.
-
-    default: model
-
 - `first_id: string or null`
 
   First ID in the `data` list. Can be used as the `before_id` for the previous page.
@@ -294,6 +331,12 @@ curl https://api.anthropic.com/v1/models \
           "supported": true
         },
         "code_execution": {
+          "supported": true
+        },
+        "compaction": {
+          "summarize": {
+            "supported": true
+          },
           "supported": true
         },
         "context_management": {
@@ -382,7 +425,7 @@ The Models API response can be used to determine information about a specific mo
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -430,6 +473,8 @@ The Models API response can be used to determine information about a specific mo
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -466,9 +511,35 @@ The Models API response can be used to determine information about a specific mo
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Returns
 
 - `BetaModelInfo object`
+
+  - `type: "model"`
+
+    Object type.
+
+    For Models, this is always `"model"`.
+
+    default: model
 
   - `id: string`
 
@@ -480,7 +551,7 @@ The Models API response can be used to determine information about a specific mo
 
   - `capabilities: BetaModelCapabilities or null`
 
-    Model capability information.
+    Object mapping capability names to their support details. Keys are always present for all known capabilities.
 
     - `batch: BetaCapabilitySupport`
 
@@ -498,21 +569,33 @@ The Models API response can be used to determine information about a specific mo
 
       Whether the model supports code execution tools.
 
+    - `compaction: BetaCompactionCapability or null`
+
+      Server-side compaction support (the top-level `compaction` parameter) and the accepted `compaction.type` values.
+
+      - `summarize: BetaCapabilitySupport`
+
+        Whether the summarize compaction type is supported.
+
+      - `supported: boolean`
+
+        Whether this capability is supported by the model.
+
     - `context_management: BetaContextManagementCapability`
 
       Context management support and available strategies.
 
       - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the clear_thinking_20251015 strategy is supported.
 
       - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the clear_tool_uses_20250919 strategy is supported.
 
       - `compact_20260112: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the compact_20260112 strategy is supported.
 
       - `supported: boolean`
 
@@ -544,7 +627,7 @@ The Models API response can be used to determine information about a specific mo
 
       - `xhigh: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the model supports xhigh effort level.
 
     - `image_input: BetaCapabilitySupport`
 
@@ -596,14 +679,6 @@ The Models API response can be used to determine information about a specific mo
 
     Maximum value for the `max_tokens` parameter when using this model.
 
-  - `type: "model"`
-
-    Object type.
-
-    For Models, this is always `"model"`.
-
-    default: model
-
 ### Example
 
 ```bash
@@ -628,6 +703,12 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
       "supported": true
     },
     "code_execution": {
+      "supported": true
+    },
+    "compaction": {
+      "summarize": {
+        "supported": true
+      },
       "supported": true
     },
     "context_management": {
@@ -701,6 +782,26 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
     Whether this capability is supported by the model.
 
+### Beta Compaction Capability
+
+- `BetaCompactionCapability object`
+
+  Compaction capability details: whether the model accepts the top-level
+  `compaction` request parameter, with one entry per supported
+  `compaction.type` value.
+
+  - `summarize: BetaCapabilitySupport`
+
+    Whether the summarize compaction type is supported.
+
+    - `supported: boolean`
+
+      Whether this capability is supported by the model.
+
+  - `supported: boolean`
+
+    Whether this capability is supported by the model.
+
 ### Beta Context Management Capability
 
 - `BetaContextManagementCapability object`
@@ -709,7 +810,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
   - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
-    Indicates whether a capability is supported.
+    Whether the clear_thinking_20251015 strategy is supported.
 
     - `supported: boolean`
 
@@ -717,11 +818,11 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
   - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
-    Indicates whether a capability is supported.
+    Whether the clear_tool_uses_20250919 strategy is supported.
 
   - `compact_20260112: BetaCapabilitySupport or null`
 
-    Indicates whether a capability is supported.
+    Whether the compact_20260112 strategy is supported.
 
   - `supported: boolean`
 
@@ -759,7 +860,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
   - `xhigh: BetaCapabilitySupport or null`
 
-    Indicates whether a capability is supported.
+    Whether the model supports xhigh effort level.
 
 ### Beta Model Capabilities
 
@@ -783,21 +884,33 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
     Whether the model supports code execution tools.
 
+  - `compaction: BetaCompactionCapability or null`
+
+    Server-side compaction support (the top-level `compaction` parameter) and the accepted `compaction.type` values.
+
+    - `summarize: BetaCapabilitySupport`
+
+      Whether the summarize compaction type is supported.
+
+    - `supported: boolean`
+
+      Whether this capability is supported by the model.
+
   - `context_management: BetaContextManagementCapability`
 
     Context management support and available strategies.
 
     - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
-      Indicates whether a capability is supported.
+      Whether the clear_thinking_20251015 strategy is supported.
 
     - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
-      Indicates whether a capability is supported.
+      Whether the clear_tool_uses_20250919 strategy is supported.
 
     - `compact_20260112: BetaCapabilitySupport or null`
 
-      Indicates whether a capability is supported.
+      Whether the compact_20260112 strategy is supported.
 
     - `supported: boolean`
 
@@ -829,7 +942,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
     - `xhigh: BetaCapabilitySupport or null`
 
-      Indicates whether a capability is supported.
+      Whether the model supports xhigh effort level.
 
   - `image_input: BetaCapabilitySupport`
 
@@ -867,6 +980,14 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
 - `BetaModelInfo object`
 
+  - `type: "model"`
+
+    Object type.
+
+    For Models, this is always `"model"`.
+
+    default: model
+
   - `id: string`
 
     Unique model identifier.
@@ -877,7 +998,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
   - `capabilities: BetaModelCapabilities or null`
 
-    Model capability information.
+    Object mapping capability names to their support details. Keys are always present for all known capabilities.
 
     - `batch: BetaCapabilitySupport`
 
@@ -895,21 +1016,33 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
       Whether the model supports code execution tools.
 
+    - `compaction: BetaCompactionCapability or null`
+
+      Server-side compaction support (the top-level `compaction` parameter) and the accepted `compaction.type` values.
+
+      - `summarize: BetaCapabilitySupport`
+
+        Whether the summarize compaction type is supported.
+
+      - `supported: boolean`
+
+        Whether this capability is supported by the model.
+
     - `context_management: BetaContextManagementCapability`
 
       Context management support and available strategies.
 
       - `clear_thinking_20251015: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the clear_thinking_20251015 strategy is supported.
 
       - `clear_tool_uses_20250919: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the clear_tool_uses_20250919 strategy is supported.
 
       - `compact_20260112: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the compact_20260112 strategy is supported.
 
       - `supported: boolean`
 
@@ -941,7 +1074,7 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
 
       - `xhigh: BetaCapabilitySupport or null`
 
-        Indicates whether a capability is supported.
+        Whether the model supports xhigh effort level.
 
     - `image_input: BetaCapabilitySupport`
 
@@ -992,14 +1125,6 @@ curl https://api.anthropic.com/v1/models/$MODEL_ID \
   - `max_tokens: number or null`
 
     Maximum value for the `max_tokens` parameter when using this model.
-
-  - `type: "model"`
-
-    Object type.
-
-    For Models, this is always `"model"`.
-
-    default: model
 
 ### Beta Thinking Capability
 

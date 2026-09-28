@@ -1,3 +1,8 @@
+---
+title: Download a Claude-generated file
+url: https://platform.claude.com/docs/en/api/compliance/apps/chats/generated_files/download
+---
+
 # Download a Claude-generated file
 
 **GET** `/v1/compliance/apps/chats/generated-files/{claude_gen_file_id}/content`
@@ -18,5 +23,6 @@ Downloads the binary content of a file the assistant created via tool use.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/generated-files/$CLAUDE_GEN_FILE_ID/content \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```

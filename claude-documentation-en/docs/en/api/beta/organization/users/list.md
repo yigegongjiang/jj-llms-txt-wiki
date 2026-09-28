@@ -1,3 +1,8 @@
+---
+title: List Users
+url: https://platform.claude.com/docs/en/api/beta/organization/users/list
+---
+
 # List Users
 
 **GET** `/v1/organizations/users`
@@ -26,7 +31,7 @@ List the organization's members.
 
   Defaults to `20`. Ranges from `1` to `1000`.
 
-  default: 20, maximum: 1000, minimum: 1
+  default: 20, minimum: 1, maximum: 1000
 
 - `roles: optional array of string`
 
@@ -37,6 +42,14 @@ List the organization's members.
 ## Returns
 
 - `data: array of BetaOrganizationUser`
+
+  - `type: "user"`
+
+    Object type.
+
+    For Users, this is always `"user"`.
+
+    default: user
 
   - `id: string`
 
@@ -77,14 +90,6 @@ List the organization's members.
     - `"primary_owner"`
 
     - `"user"`
-
-  - `type: "user"`
-
-    Object type.
-
-    For Users, this is always `"user"`.
-
-    default: user
 
 - `first_id: string or null`
 

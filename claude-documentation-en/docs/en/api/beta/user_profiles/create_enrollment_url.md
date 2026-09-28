@@ -1,3 +1,8 @@
+---
+title: Create Enrollment URL
+url: https://platform.claude.com/docs/en/api/beta/user_profiles/create_enrollment_url
+---
+
 # Create Enrollment URL
 
 **POST** `/v1/user_profiles/{user_profile_id}/enrollment_url`
@@ -8,6 +13,8 @@ Create Enrollment URL
 
 - `user_profile_id: string`
 
+  The ID of the user profile to create an enrollment URL for (`uprof_...`).
+
 ## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -16,7 +23,7 @@ Create Enrollment URL
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -64,6 +71,8 @@ Create Enrollment URL
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -100,19 +109,39 @@ Create Enrollment URL
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ## Returns
 
 - `BetaUserProfileEnrollmentURL object`
 
-  - `expires_at: string`
-
-    A timestamp in RFC 3339 format
-
-    format: date-time
+  A URL to give to the entity that a user profile represents, so that the entity can enroll for a trust grant.
 
   - `type: "enrollment_url"`
 
     Object type. Always `enrollment_url`.
+
+  - `expires_at: string`
+
+    When this enrollment URL expires, in RFC 3339 format.
+
+    format: date-time
 
   - `url: string`
 

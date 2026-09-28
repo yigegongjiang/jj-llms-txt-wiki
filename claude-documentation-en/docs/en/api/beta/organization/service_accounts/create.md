@@ -1,3 +1,8 @@
+---
+title: Create Service Account
+url: https://platform.claude.com/docs/en/api/beta/organization/service_accounts/create
+---
+
 # Create Service Account
 
 **POST** `/v1/organizations/service_accounts`
@@ -22,7 +27,7 @@ accounts.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -70,6 +75,8 @@ accounts.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -106,13 +113,25 @@ accounts.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 ## Body parameters
 
 - `name: string`
 
   Slug identifier (lowercase, digits, hyphens). Unique within the organization; a duplicate name returns 409.
 
-  maxLength: 255, minLength: 1
+  minLength: 1, maxLength: 255
 
 - `description: optional string or null`
 
@@ -136,6 +155,10 @@ accounts.
 
   A service account is a pure identity: name + org. Authorization lives on
   whatever references it (federation rules).
+
+  - `type: "service_account"`
+
+    default: service_account
 
   - `id: string`
 
@@ -176,10 +199,6 @@ accounts.
     - `"admin"`
 
     - `"developer"`
-
-  - `type: "service_account"`
-
-    default: service_account
 
   - `updated_at: string`
 

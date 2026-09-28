@@ -2,6 +2,34 @@
 title: Programmatic tool calling
 url: https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling
 description: Let Claude call your tools from code in the code execution container, cutting model round trips and token use in multi-tool workflows.
+featureMetadata:
+  status: ga
+  zdr: not-eligible
+  supportedModels:
+    - claude-fable-5-1
+    - claude-mythos-5-1
+    - claude-fable-5
+    - claude-mythos-5
+    - claude-opus-5-5
+    - claude-opus-5
+    - claude-opus-4-8
+    - claude-opus-4-7
+    - claude-opus-4-6
+    - claude-opus-4-5-20251101
+    - claude-sonnet-5
+    - claude-sonnet-4-6
+    - claude-sonnet-4-5-20250929
+  supportedPlatforms:
+    Claude API: ga
+    Claude Platform on AWS: ga
+    Amazon Bedrock: not available
+    Google Cloud: not available
+    Microsoft Foundry:
+      availability: ga
+      note: On [Microsoft Foundry](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry), programmatic tool calling requires a [Hosted on Anthropic deployment](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#additional-features-not-supported-when-hosted-on-azure).
+  details:
+    - Programmatic tool calling requires the code execution tool with the `code_execution_20260120` or later [tool version](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions).
+    - Claude Haiku 4.5 accepts the `code_execution_20260120` and later tool versions but doesn't support programmatic tool calling.
 ---
 
 Programmatic tool calling allows Claude to write code that calls your tools programmatically within a [code execution](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool) container, rather than requiring round trips through the model for each tool invocation. This reduces latency for multi-tool workflows and decreases token consumption by allowing Claude to filter or process data before it reaches the model's context window. On agentic search benchmarks like [BrowseComp](https://arxiv.org/abs/2504.12516) and [DeepSearchQA](https://github.com/google-deepmind/deepsearchqa), which test multistep web research and complex information retrieval, adding programmatic tool calling on top of basic search tools improved performance by an average of 11% while using 24% fewer input tokens (see [Improved web search with dynamic filtering](https://claude.com/blog/improved-web-search-with-dynamic-filtering)).
@@ -12,32 +40,7 @@ Consider checking budget compliance across 20 employees: the traditional approac
   For a deeper look at the inference and context costs that programmatic tool calling addresses, see [Advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use).
 </Tip>
 
-<Note>
-  This feature requires the code execution tool to be enabled.
-</Note>
-
-<Note>
-  For how zero data retention (ZDR) applies to this feature, see [API and data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention).
-</Note>
-
-## Model compatibility
-
-Programmatic tool calling requires `code_execution_20260120` or later, which is supported on the following models:
-
-| Model                                          |
-| ---------------------------------------------- |
-| Claude Fable 5 (claude-fable-5)                |
-| Claude Mythos 5 (claude-mythos-5)              |
-| Claude Opus 5 (claude-opus-5)                  |
-| Claude Opus 4.8 (claude-opus-4-8)              |
-| Claude Opus 4.7 (claude-opus-4-7)              |
-| Claude Opus 4.6 (claude-opus-4-6)              |
-| Claude Sonnet 5 (claude-sonnet-5)              |
-| Claude Sonnet 4.6 (claude-sonnet-4-6)          |
-| Claude Opus 4.5 (claude-opus-4-5-20251101)     |
-| Claude Sonnet 4.5 (claude-sonnet-4-5-20250929) |
-
-For the full code execution tool version matrix, see the [code execution tool model compatibility table](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#model-compatibility). Programmatic tool calling is available on the Claude API, [Claude Platform on AWS](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws), and [Microsoft Foundry](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry). On Microsoft Foundry, programmatic tool calling requires a [Hosted on Anthropic deployment](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#additional-features-not-supported-when-hosted-on-azure). It is not currently available on Amazon Bedrock or Google Cloud.
+Programmatic tool calling requires the [code execution tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool) with tool version `code_execution_20260120` or later.
 
 ## Quick start
 
@@ -50,7 +53,7 @@ Here's an example where Claude programmatically queries a database multiple time
       --header "anthropic-version: 2023-06-01" \
       --header "content-type: application/json" \
       --data '{
-          "model": "claude-opus-5",
+          "model": "claude-opus-5-5",
           "max_tokens": 4096,
           "messages": [
               {
@@ -84,7 +87,7 @@ Here's an example where Claude programmatically queries a database multiple time
 
   ```bash CLI
   ant messages create <<'YAML'
-  model: claude-opus-5
+  model: claude-opus-5-5
   max_tokens: 4096
   messages:
     - role: user
@@ -115,7 +118,7 @@ Here's an example where Claude programmatically queries a database multiple time
   client = anthropic.Anthropic()
 
   response = client.messages.create(
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       max_tokens=4096,
       messages=[
           {
@@ -147,7 +150,7 @@ Here's an example where Claude programmatically queries a database multiple time
   const client = new Anthropic();
 
   const response = await client.messages.create({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     messages: [
       {
@@ -188,7 +191,7 @@ Here's an example where Claude programmatically queries a database multiple time
 
   var parameters = new MessageCreateParams
   {
-      Model = Model.ClaudeOpus5,
+      Model = Model.ClaudeOpus5_5,
       MaxTokens = 4096,
       Messages = [
           new() {
@@ -223,7 +226,7 @@ Here's an example where Claude programmatically queries a database multiple time
   client := anthropic.NewClient()
 
   response, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
-  	Model:     anthropic.ModelClaudeOpus5,
+  	Model:     anthropic.ModelClaudeOpus5_5,
   	MaxTokens: 4096,
   	Messages: []anthropic.MessageParam{
   		anthropic.NewUserMessage(anthropic.NewTextBlock("Query sales data for the West, East, and Central regions, then tell me which region had the highest revenue")),
@@ -260,7 +263,7 @@ Here's an example where Claude programmatically queries a database multiple time
       AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
       MessageCreateParams params = MessageCreateParams.builder()
-          .model(Model.CLAUDE_OPUS_5)
+          .model(Model.CLAUDE_OPUS_5_5)
           .maxTokens(4096L)
           .addUserMessage("Query sales data for the West, East, and Central regions, then tell me which region had the highest revenue")
           .addTool(CodeExecutionTool20260120.builder().build())
@@ -293,7 +296,7 @@ Here's an example where Claude programmatically queries a database multiple time
       messages: [
           ['role' => 'user', 'content' => 'Query sales data for the West, East, and Central regions, then tell me which region had the highest revenue'],
       ],
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       tools: [
           [
               'type' => 'code_execution_20260120',
@@ -324,7 +327,7 @@ Here's an example where Claude programmatically queries a database multiple time
   client = Anthropic::Client.new
 
   message = client.messages.create(
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     messages: [
       {
@@ -528,7 +531,7 @@ Send the full conversation history plus your tool result. Three details matter o
       --header "anthropic-version: 2023-06-01" \
       --header "content-type: application/json" \
       --data '{
-          "model": "claude-opus-5",
+          "model": "claude-opus-5-5",
           "max_tokens": 4096,
           "container": "container_xyz789",
           "messages": [
@@ -598,7 +601,7 @@ Send the full conversation history plus your tool result. Three details matter o
 
   ```bash CLI
   ant messages create <<'YAML'
-  model: claude-opus-5
+  model: claude-opus-5-5
   max_tokens: 4096
   container: container_xyz789
   messages:
@@ -653,7 +656,7 @@ Send the full conversation history plus your tool result. Three details matter o
 
   ```python Python
   response = client.messages.create(
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       max_tokens=4096,
       container="container_xyz789",  # Reuse the container
       messages=[
@@ -720,7 +723,7 @@ Send the full conversation history plus your tool result. Three details matter o
 
   ```typescript TypeScript
   const response = await client.messages.create({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     container: "container_xyz789", // Reuse the container
     messages: [
@@ -796,7 +799,7 @@ Send the full conversation history plus your tool result. Three details matter o
 
   var parameters = new MessageCreateParams
   {
-      Model = Model.ClaudeOpus5,
+      Model = Model.ClaudeOpus5_5,
       MaxTokens = 4096,
       Container = "container_xyz789",
       Messages =
@@ -872,7 +875,7 @@ Send the full conversation history plus your tool result. Three details matter o
   client := anthropic.NewClient()
 
   response, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
-  	Model:     anthropic.ModelClaudeOpus5,
+  	Model:     anthropic.ModelClaudeOpus5_5,
   	MaxTokens: 4096,
   	Container: anthropic.MessageCreateParamsContainerUnion{
   		OfString: anthropic.String("container_xyz789"),
@@ -947,7 +950,7 @@ Send the full conversation history plus your tool result. Three details matter o
       AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
       MessageCreateParams params = MessageCreateParams.builder()
-          .model(Model.CLAUDE_OPUS_5)
+          .model(Model.CLAUDE_OPUS_5_5)
           .maxTokens(4096L)
           .container("container_xyz789")
           .addUserMessage("Query customer purchase history from the last quarter and identify our top 5 customers by revenue")
@@ -1046,7 +1049,7 @@ Send the full conversation history plus your tool result. Three details matter o
               ],
           ],
       ],
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       container: 'container_xyz789',
       // Same tools array as the original request
       tools: [
@@ -1081,7 +1084,7 @@ Send the full conversation history plus your tool result. Three details matter o
   client = Anthropic::Client.new
 
   message = client.messages.create(
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     container: "container_xyz789",
     messages: [

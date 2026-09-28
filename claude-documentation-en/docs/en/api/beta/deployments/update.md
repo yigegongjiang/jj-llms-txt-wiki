@@ -1,3 +1,8 @@
+---
+title: Update Deployment
+url: https://platform.claude.com/docs/en/api/beta/deployments/update
+---
+
 # Update Deployment
 
 **POST** `/v1/deployments/{deployment_id}`
@@ -8,6 +13,8 @@ Update Deployment
 
 - `deployment_id: string`
 
+  Unique identifier of the deployment to update.
+
 ## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -16,7 +23,7 @@ Update Deployment
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -64,6 +71,8 @@ Update Deployment
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -100,6 +109,24 @@ Update Deployment
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ## Body parameters
 
 - `agent: optional string or BetaManagedAgentsAgentParams`
@@ -112,13 +139,13 @@ Update Deployment
 
     Specification for an Agent. Provide a specific `version` or use the short-form `agent="agent_id"` for the most recent version
 
+    - `type: "agent"`
+
     - `id: string`
 
       The `agent` ID.
 
       minLength: 1, maxLength: 128
-
-    - `type: "agent"`
 
     - `version: optional number`
 
@@ -128,11 +155,13 @@ Update Deployment
 
 - `budget: optional BetaManagedAgentsBudgetLimit or null`
 
-  A hard spend ceiling. The session stops issuing new model requests once the tracked list cost reaches `max_list_cost`.
+  Spend ceiling for future sessions. Full replacement. Omit to preserve; send null to clear (sessions created afterwards are uncapped). The deployment agent's model must have a public list price, or the request is rejected; a multiagent roster is re-validated in full when each fire copies the cap, which fails closed the same way.
+
+  - `type: "limit"`
 
   - `max_list_cost: BetaMonetaryAmount`
 
-    A monetary amount in a specific currency.
+    Maximum list cost the session may accrue. List price is used regardless of any negotiated discount, so the cap fires at or before the actual charge.
 
     - `amount: string`
 
@@ -141,8 +170,6 @@ Update Deployment
     - `currency: BetaCurrency`
 
       Uppercase ISO-4217 currency code. `USD` is the only currency currently supported; the accepted set is closed and grows only when a new currency is priced.
-
-  - `type: "limit"`
 
 - `description: optional string or null`
 
@@ -164,6 +191,8 @@ Update Deployment
 
     Parameters for sending a user message to the session.
 
+    - `type: "user.message"`
+
     - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock or BetaManagedAgentsRedactedBlock`
 
       Array of content blocks for the user message.
@@ -172,25 +201,29 @@ Update Deployment
 
         Regular text content.
 
+        - `type: "text"`
+
         - `text: string`
 
           The text content.
 
           minLength: 1
 
-        - `type: "text"`
-
       - `BetaManagedAgentsImageBlock object`
 
         Image content specified directly as base64 data or as a reference via a URL.
 
+        - `type: "image"`
+
         - `source: BetaManagedAgentsBase64ImageSource or BetaManagedAgentsURLImageSource or BetaManagedAgentsFileImageSource`
 
-          Union type for image source variants.
+          The source of the image data.
 
           - `BetaManagedAgentsBase64ImageSource object`
 
             Base64-encoded image data.
+
+            - `type: "base64"`
 
             - `data: string`
 
@@ -203,8 +236,6 @@ Update Deployment
               MIME type of the image (e.g., "image/png", "image/jpeg", "image/gif", "image/webp").
 
               minLength: 1
-
-            - `type: "base64"`
 
           - `BetaManagedAgentsURLImageSource object`
 
@@ -222,27 +253,29 @@ Update Deployment
 
             Image referenced by file ID.
 
+            - `type: "file"`
+
             - `file_id: string`
 
               ID of a previously uploaded file.
 
               minLength: 1
 
-            - `type: "file"`
-
-        - `type: "image"`
-
       - `BetaManagedAgentsDocumentBlock object`
 
         Document content, either specified directly as base64 data, as text, or as a reference via a URL.
 
+        - `type: "document"`
+
         - `source: BetaManagedAgentsBase64DocumentSource or BetaManagedAgentsPlainTextDocumentSource or BetaManagedAgentsURLDocumentSource or BetaManagedAgentsFileDocumentSource`
 
-          Union type for document source variants.
+          The source of the document data.
 
           - `BetaManagedAgentsBase64DocumentSource object`
 
             Base64-encoded document data.
+
+            - `type: "base64"`
 
             - `data: string`
 
@@ -256,11 +289,11 @@ Update Deployment
 
               minLength: 1
 
-            - `type: "base64"`
-
           - `BetaManagedAgentsPlainTextDocumentSource object`
 
             Plain text document content.
+
+            - `type: "text"`
 
             - `data: string`
 
@@ -271,8 +304,6 @@ Update Deployment
             - `media_type: "text/plain"`
 
               MIME type of the text content. Must be "text/plain".
-
-            - `type: "text"`
 
           - `BetaManagedAgentsURLDocumentSource object`
 
@@ -290,15 +321,13 @@ Update Deployment
 
             Document referenced by file ID.
 
+            - `type: "file"`
+
             - `file_id: string`
 
               ID of a previously uploaded file.
 
               minLength: 1
-
-            - `type: "file"`
-
-        - `type: "document"`
 
         - `context: optional string or null`
 
@@ -314,11 +343,11 @@ Update Deployment
 
         - `type: "redacted"`
 
-    - `type: "user.message"`
-
   - `BetaManagedAgentsUserDefineOutcomeEventParams object`
 
     Parameters for defining an outcome the agent should work toward. The agent begins work on receipt.
+
+    - `type: "user.define_outcome"`
 
     - `description: string`
 
@@ -326,31 +355,29 @@ Update Deployment
 
     - `rubric: BetaManagedAgentsFileRubricParams or BetaManagedAgentsTextRubricParams`
 
-      Rubric for grading the quality of an outcome.
+      How to grade the outcome. Text or file reference.
 
       - `BetaManagedAgentsFileRubricParams object`
 
         Rubric referenced by a file uploaded via the Files API.
 
+        - `type: "file"`
+
         - `file_id: string`
 
           ID of the rubric file.
 
-        - `type: "file"`
-
       - `BetaManagedAgentsTextRubricParams object`
 
         Rubric content provided inline as text.
+
+        - `type: "text"`
 
         - `content: string`
 
           Rubric content. Plain text or markdown — the grader treats it as freeform text. Maximum 262144 characters.
 
           maxLength: 262144
-
-        - `type: "text"`
-
-    - `type: "user.define_outcome"`
 
     - `max_iterations: optional number or null`
 
@@ -362,19 +389,19 @@ Update Deployment
 
     Privileged context for the accompanying turn and all subsequent turns, appended to the session's system context as a `role: "system"` turn rather than replacing the top-level system prompt. At most one per request: it must be the final event and immediately follow the `user.message`, `user.tool_result`, or `user.custom_tool_result` it accompanies. Only supported on models that accept mid-conversation system messages.
 
+    - `type: "system.message"`
+
     - `content: array of BetaManagedAgentsSystemContentBlock`
 
       System content blocks to append. Text-only.
+
+      - `type: "text"`
 
       - `text: string`
 
         The text content.
 
         minLength: 1
-
-      - `type: "text"`
-
-    - `type: "system.message"`
 
 - `metadata: optional map[string] or null`
 
@@ -394,12 +421,6 @@ Update Deployment
 
     Mount a GitHub repository into the session's container.
 
-    - `authorization_token: string`
-
-      GitHub authorization token used to clone the repository.
-
-      minLength: 1, maxLength: 4096
-
     - `type: "github_repository"`
 
     - `url: string`
@@ -408,11 +429,19 @@ Update Deployment
 
       minLength: 1, maxLength: 2048
 
+    - `authorization_token: optional string`
+
+      GitHub authorization token used to clone the repository. Required for private repositories; optional for public ones.
+
+      minLength: 1, maxLength: 4096
+
     - `checkout: optional BetaManagedAgentsBranchCheckout or BetaManagedAgentsCommitCheckout or null`
 
       Branch or commit to check out. Defaults to the repository's default branch.
 
       - `BetaManagedAgentsBranchCheckout object`
+
+        - `type: "branch"`
 
         - `name: string`
 
@@ -420,17 +449,15 @@ Update Deployment
 
           minLength: 1, maxLength: 255
 
-        - `type: "branch"`
-
       - `BetaManagedAgentsCommitCheckout object`
+
+        - `type: "commit"`
 
         - `sha: string`
 
           Full commit SHA to check out.
 
           minLength: 7, maxLength: 64
-
-        - `type: "commit"`
 
     - `mount_path: optional string or null`
 
@@ -442,13 +469,13 @@ Update Deployment
 
     Mount a file uploaded via the Files API into the session.
 
+    - `type: "file"`
+
     - `file_id: string`
 
       ID of a previously uploaded file.
 
       minLength: 1, maxLength: 128
-
-    - `type: "file"`
 
     - `mount_path: optional string or null`
 
@@ -460,15 +487,15 @@ Update Deployment
 
     Parameters for attaching a memory store to an agent session.
 
+    - `type: "memory_store"`
+
     - `memory_store_id: string`
 
       The memory store ID (memstore_...). Must belong to the caller's organization and workspace.
 
-    - `type: "memory_store"`
-
     - `access: optional "read_write" or "read_only" or null`
 
-      Access mode for an attached memory store.
+      Access mode for the mounted store. Defaults to read_write. read_only mounts the store as a read-only filesystem.
 
       - `"read_write"`
 
@@ -482,7 +509,9 @@ Update Deployment
 
 - `schedule: optional BetaManagedAgentsScheduleParams or null`
 
-  5-field POSIX cron schedule. Literal wall-clock matching in the configured timezone.
+  Cron schedule. Full replacement. Omit to preserve; send null to clear (revert to manual-only).
+
+  - `type: "cron"`
 
   - `expression: string`
 
@@ -496,8 +525,6 @@ Update Deployment
 
     minLength: 1
 
-  - `type: "cron"`
-
 - `vault_ids: optional array of string or null`
 
   Vault IDs. Full replacement. Omit to preserve; send empty array or null to clear. Maximum 50.
@@ -508,17 +535,19 @@ Update Deployment
 
   A deployment is a configured instance of an agent — it binds the agent to everything needed to run it autonomously: an environment, credentials, initial events, and an optional schedule.
 
+  - `type: "deployment"`
+
   - `id: string`
 
     Unique identifier for this deployment.
 
   - `agent: BetaManagedAgentsAgentReference`
 
-    A resolved agent reference with a concrete version.
-
-    - `id: string`
+    Reference to the agent this deployment runs, resolved to a concrete version.
 
     - `type: "agent"`
+
+    - `id: string`
 
     - `version: number`
 
@@ -526,13 +555,13 @@ Update Deployment
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    Time the deployment was archived. Null if not archived.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    Time the deployment was created.
 
     format: date-time
 
@@ -552,6 +581,8 @@ Update Deployment
 
       A user message sent to the session.
 
+      - `type: "user.message"`
+
       - `content: array of BetaManagedAgentsTextBlock or BetaManagedAgentsImageBlock or BetaManagedAgentsDocumentBlock or BetaManagedAgentsRedactedBlock`
 
         Array of content blocks for the user message.
@@ -560,25 +591,29 @@ Update Deployment
 
           Regular text content.
 
+          - `type: "text"`
+
           - `text: string`
 
             The text content.
 
             minLength: 1
 
-          - `type: "text"`
-
         - `BetaManagedAgentsImageBlock object`
 
           Image content specified directly as base64 data or as a reference via a URL.
 
+          - `type: "image"`
+
           - `source: BetaManagedAgentsBase64ImageSource or BetaManagedAgentsURLImageSource or BetaManagedAgentsFileImageSource`
 
-            Union type for image source variants.
+            The source of the image data.
 
             - `BetaManagedAgentsBase64ImageSource object`
 
               Base64-encoded image data.
+
+              - `type: "base64"`
 
               - `data: string`
 
@@ -591,8 +626,6 @@ Update Deployment
                 MIME type of the image (e.g., "image/png", "image/jpeg", "image/gif", "image/webp").
 
                 minLength: 1
-
-              - `type: "base64"`
 
             - `BetaManagedAgentsURLImageSource object`
 
@@ -610,27 +643,29 @@ Update Deployment
 
               Image referenced by file ID.
 
+              - `type: "file"`
+
               - `file_id: string`
 
                 ID of a previously uploaded file.
 
                 minLength: 1
 
-              - `type: "file"`
-
-          - `type: "image"`
-
         - `BetaManagedAgentsDocumentBlock object`
 
           Document content, either specified directly as base64 data, as text, or as a reference via a URL.
 
+          - `type: "document"`
+
           - `source: BetaManagedAgentsBase64DocumentSource or BetaManagedAgentsPlainTextDocumentSource or BetaManagedAgentsURLDocumentSource or BetaManagedAgentsFileDocumentSource`
 
-            Union type for document source variants.
+            The source of the document data.
 
             - `BetaManagedAgentsBase64DocumentSource object`
 
               Base64-encoded document data.
+
+              - `type: "base64"`
 
               - `data: string`
 
@@ -644,11 +679,11 @@ Update Deployment
 
                 minLength: 1
 
-              - `type: "base64"`
-
             - `BetaManagedAgentsPlainTextDocumentSource object`
 
               Plain text document content.
+
+              - `type: "text"`
 
               - `data: string`
 
@@ -659,8 +694,6 @@ Update Deployment
               - `media_type: "text/plain"`
 
                 MIME type of the text content. Must be "text/plain".
-
-              - `type: "text"`
 
             - `BetaManagedAgentsURLDocumentSource object`
 
@@ -678,15 +711,13 @@ Update Deployment
 
               Document referenced by file ID.
 
+              - `type: "file"`
+
               - `file_id: string`
 
                 ID of a previously uploaded file.
 
                 minLength: 1
-
-              - `type: "file"`
-
-          - `type: "document"`
 
           - `context: optional string or null`
 
@@ -702,11 +733,11 @@ Update Deployment
 
           - `type: "redacted"`
 
-      - `type: "user.message"`
-
     - `BetaManagedAgentsDeploymentUserDefineOutcomeEvent object`
 
       An outcome the agent should work toward. The agent begins work on receipt.
+
+      - `type: "user.define_outcome"`
 
       - `description: string`
 
@@ -714,29 +745,27 @@ Update Deployment
 
       - `rubric: BetaManagedAgentsFileRubric or BetaManagedAgentsTextRubric`
 
-        Rubric for grading the quality of an outcome.
+        How to grade the outcome. Text or file reference.
 
         - `BetaManagedAgentsFileRubric object`
 
           Rubric referenced by a file uploaded via the Files API.
 
+          - `type: "file"`
+
           - `file_id: string`
 
             ID of the rubric file.
-
-          - `type: "file"`
 
         - `BetaManagedAgentsTextRubric object`
 
           Rubric content provided inline as text.
 
+          - `type: "text"`
+
           - `content: string`
 
             Rubric content. Plain text or markdown — the grader treats it as freeform text.
-
-          - `type: "text"`
-
-      - `type: "user.define_outcome"`
 
       - `max_iterations: optional number or null`
 
@@ -748,19 +777,19 @@ Update Deployment
 
       Privileged context for the accompanying turn and all subsequent turns, appended to the session's system context as a `role: "system"` turn rather than replacing the top-level system prompt.
 
+      - `type: "system.message"`
+
       - `content: array of BetaManagedAgentsSystemContentBlock`
 
         System content blocks to append. Text-only.
+
+        - `type: "text"`
 
         - `text: string`
 
           The text content.
 
           minLength: 1
-
-        - `type: "text"`
-
-      - `type: "system.message"`
 
   - `metadata: map[string]`
 
@@ -772,7 +801,7 @@ Update Deployment
 
   - `paused_reason: BetaManagedAgentsDeploymentPausedReason or null`
 
-    Why a deployment is paused. Non-null exactly when `status` is `paused`.
+    Why the deployment is `paused`. Non-null exactly when `status` is `paused`; null otherwise.
 
     - `BetaManagedAgentsManualDeploymentPausedReason object`
 
@@ -784,9 +813,11 @@ Update Deployment
 
       A scheduled fire recorded a failed run whose error auto-pauses the deployment.
 
+      - `type: "error"`
+
       - `error: BetaManagedAgentsDeploymentPausedReasonError`
 
-        The error that triggered an auto-pause. Matches the failed run's `error.type`.
+        The failed run's error.
 
         - `BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError object`
 
@@ -872,8 +903,6 @@ Update Deployment
 
           - `type: "mcp_egress_blocked_error"`
 
-      - `type: "error"`
-
   - `resources: array of BetaManagedAgentsSessionResourceConfig`
 
     Resources attached to sessions created from this deployment. Echoes the input minus write-only credentials.
@@ -894,23 +923,23 @@ Update Deployment
 
         - `BetaManagedAgentsBranchCheckout object`
 
+          - `type: "branch"`
+
           - `name: string`
 
             Branch name to check out.
 
             minLength: 1, maxLength: 255
 
-          - `type: "branch"`
-
         - `BetaManagedAgentsCommitCheckout object`
+
+          - `type: "commit"`
 
           - `sha: string`
 
             Full commit SHA to check out.
 
             minLength: 7, maxLength: 64
-
-          - `type: "commit"`
 
       - `mount_path: optional string or null`
 
@@ -920,11 +949,11 @@ Update Deployment
 
       A file mounted into each session's container.
 
+      - `type: "file"`
+
       - `file_id: string`
 
         ID of a previously uploaded file.
-
-      - `type: "file"`
 
       - `mount_path: optional string or null`
 
@@ -934,15 +963,15 @@ Update Deployment
 
       A memory store attached to each session created from this deployment.
 
+      - `type: "memory_store"`
+
       - `memory_store_id: string`
 
         The memory store ID (memstore_...). Must belong to the caller's organization and workspace.
 
-      - `type: "memory_store"`
-
       - `access: optional "read_write" or "read_only" or null`
 
-        Access mode for an attached memory store.
+        Access mode for the mounted store. Defaults to `read_write`. `read_only` mounts the store as a read-only filesystem.
 
         - `"read_write"`
 
@@ -954,7 +983,9 @@ Update Deployment
 
   - `schedule: BetaManagedAgentsSchedule or null`
 
-    5-field POSIX cron schedule with computed runtime timestamps.
+    Recurring cron schedule. Presence enables scheduled execution; null means manual-only. Includes computed timestamps (next fire times, last run) on the cron variant.
+
+    - `type: "cron"`
 
     - `expression: string`
 
@@ -968,11 +999,9 @@ Update Deployment
 
       minLength: 1
 
-    - `type: "cron"`
-
     - `last_run_at: optional string or null`
 
-      A timestamp in RFC 3339 format
+      Time the most recent scheduled run actually started. Null until one completes; preserved after the deployment is archived. Manual runs do not update this.
 
       format: date-time
 
@@ -982,17 +1011,19 @@ Update Deployment
 
   - `status: BetaManagedAgentsDeploymentStatus`
 
-    Lifecycle status of a deployment.
+    Computed status of the deployment: `active` or `paused`. Archived deployments report `active` with `archived_at` set.
 
     - `"active"`
 
+      The deployment is active and can run sessions. Archived deployments also report this status; check `archived_at` to distinguish them.
+
     - `"paused"`
 
-  - `type: "deployment"`
+      The deployment is paused. Autonomous triggers are suppressed; manual runs are still permitted.
 
   - `updated_at: string`
 
-    A timestamp in RFC 3339 format
+    Time the deployment was last updated.
 
     format: date-time
 
@@ -1002,11 +1033,13 @@ Update Deployment
 
   - `budget: optional BetaManagedAgentsBudgetLimit or null`
 
-    A hard spend ceiling. The session stops issuing new model requests once the tracked list cost reaches `max_list_cost`.
+    Spend ceiling stamped onto each session created from this deployment. Absent when no budget is set.
+
+    - `type: "limit"`
 
     - `max_list_cost: BetaMonetaryAmount`
 
-      A monetary amount in a specific currency.
+      Maximum list cost the session may accrue. List price is used regardless of any negotiated discount, so the cap fires at or before the actual charge.
 
       - `amount: string`
 
@@ -1016,8 +1049,6 @@ Update Deployment
 
         Uppercase ISO-4217 currency code. `USD` is the only currency currently supported; the accepted set is closed and grows only when a new currency is priced.
 
-    - `type: "limit"`
-
 ## Example
 
 ```bash
@@ -1026,7 +1057,13 @@ curl https://api.anthropic.com/v1/deployments/$DEPLOYMENT_ID \
     -H 'anthropic-version: 2023-06-01' \
     -H 'anthropic-beta: managed-agents-2026-04-01' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY" \
-    -d '{}'
+    -d '{
+          "schedule": {
+            "expression": "0 9 * * 1-5",
+            "timezone": "America/Los_Angeles",
+            "type": "cron"
+          }
+        }'
 ```
 
 ### Response (200)

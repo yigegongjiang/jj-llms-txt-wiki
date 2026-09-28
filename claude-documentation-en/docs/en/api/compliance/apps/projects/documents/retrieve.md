@@ -1,3 +1,8 @@
+---
+title: Get project document content
+url: https://platform.claude.com/docs/en/api/compliance/apps/projects/documents/retrieve
+---
+
 # Get project document content
 
 **GET** `/v1/compliance/apps/projects/documents/{document_id}`
@@ -36,11 +41,7 @@ Get detailed information for a specific project document.
 
 - `user: object or null`
 
-  The user who created a project or project document.
-
-  Fields that reference this type are null when the creator's account has
-  been deleted or the creator is no longer a member of an organization the
-  key may read.
+  Document creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
   - `id: string`
 
@@ -54,6 +55,7 @@ Get detailed information for a specific project document.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/documents/$DOCUMENT_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

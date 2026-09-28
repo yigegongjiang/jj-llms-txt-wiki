@@ -1,3 +1,8 @@
+---
+title: List Compliance Role Permissions
+url: https://platform.claude.com/docs/en/api/compliance/organizations/roles/permissions/list
+---
+
 # List Compliance Role Permissions
 
 **GET** `/v1/compliance/organizations/{org_uuid}/roles/{role_id}/permissions`
@@ -20,7 +25,7 @@ List Compliance Role Permissions
 
   Maximum results (default: 500, max: 1000)
 
-  default: 500, maximum: 1000, minimum: 1
+  default: 500, minimum: 1, maximum: 1000
 
 - `page: optional string`
 
@@ -60,6 +65,7 @@ List Compliance Role Permissions
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/organizations/$ORG_UUID/roles/$ROLE_ID/permissions \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

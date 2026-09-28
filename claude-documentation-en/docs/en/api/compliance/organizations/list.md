@@ -1,3 +1,8 @@
+---
+title: List organizations
+url: https://platform.claude.com/docs/en/api/compliance/organizations/list
+---
+
 # List organizations
 
 **GET** `/v1/compliance/organizations`
@@ -14,7 +19,7 @@ Returns organizations sorted by creation date in ascending order. Use
 
   Maximum results (default: 1000, max: 1000)
 
-  default: 1000, maximum: 1000, minimum: 1
+  default: 1000, minimum: 1, maximum: 1000
 
 - `page: optional string`
 
@@ -54,6 +59,7 @@ Returns organizations sorted by creation date in ascending order. Use
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/organizations \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

@@ -1,3 +1,8 @@
+---
+title: Generated Files
+url: https://platform.claude.com/docs/en/api/compliance/apps/chats/generated_files
+---
+
 # Generated Files
 
 ## Get Claude-generated file metadata
@@ -54,6 +59,7 @@ Use the sibling `/content` endpoint to download the bytes.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/generated-files/$CLAUDE_GEN_FILE_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -91,6 +97,7 @@ Downloads the binary content of a file the assistant created via tool use.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/generated-files/$CLAUDE_GEN_FILE_ID/content \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

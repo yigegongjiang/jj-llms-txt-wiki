@@ -25,7 +25,7 @@ The Claude API includes the following APIs:
 
 * **[Messages API](https://platform.claude.com/docs/en/api/messages/create)**: Send messages to Claude for conversational interactions (`POST /v1/messages`)
 * **[Message Batches API](https://platform.claude.com/docs/en/api/messages/batches/create)**: Process large volumes of Messages requests asynchronously with 50% cost reduction (`POST /v1/messages/batches`)
-* **[Token Counting API](https://platform.claude.com/docs/en/api/messages-count-tokens)**: Count tokens in a message before sending to manage costs and rate limits (`POST /v1/messages/count_tokens`)
+* **[Token Counting API](https://platform.claude.com/docs/en/api/messages/count_tokens)**: Count tokens in a message before sending to manage costs and rate limits (`POST /v1/messages/count_tokens`)
 * **[Models API](https://platform.claude.com/docs/en/api/models/list)**: List available Claude models and their details (`GET /v1/models`)
 * **[Files API](https://platform.claude.com/docs/en/api/files/upload)**: Upload and manage files for use across multiple API calls (`POST /v1/files`, `GET /v1/files`)
 * **[Skills API](https://platform.claude.com/docs/en/api/skills/create)**: Create and manage custom agent skills (`POST /v1/skills`, `GET /v1/skills`)
@@ -44,8 +44,8 @@ For details on each authentication method and when to use it, see [Authenticatio
 
 | Header                   | Value                                                                                                                                                                                                                                                                    | Required                                                                                                                                                             |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `x-api-key`              | Your API key from Console                                                                                                                                                                                                                                                | One of `x-api-key` or `Authorization`                                                                                                                                |
-| `Authorization`          | `Bearer <token>`, where `<token>` is a short-lived access token obtained from `POST /v1/oauth/token` through [Workload Identity Federation](https://platform.claude.com/docs/en/manage-claude/workload-identity-federation)                                              | One of `x-api-key` or `Authorization`                                                                                                                                |
+| `Authorization`          | `Bearer <token>`, where `<token>` is your API key or a short-lived access token obtained from `POST /v1/oauth/token` through [Workload Identity Federation](https://platform.claude.com/docs/en/manage-claude/workload-identity-federation)                              | Yes, unless `x-api-key` is set                                                                                                                                       |
+| `x-api-key`              | Your API key from Console. Legacy fallback for `Authorization`, still supported                                                                                                                                                                                          | No                                                                                                                                                                   |
 | `anthropic-workspace-id` | ID of the [workspace](https://platform.claude.com/docs/en/manage-claude/workspaces) the request runs in (for example, `wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ`). See [Select a workspace](https://platform.claude.com/docs/en/manage-claude/authentication#select-a-workspace). | Required with a multi-workspace API key. Optional for other API keys. Not used with Workload Identity Federation tokens, which select a workspace at token exchange. |
 | `anthropic-version`      | API version (for example, `2023-06-01`)                                                                                                                                                                                                                                  | Yes                                                                                                                                                                  |
 | `content-type`           | `application/json`                                                                                                                                                                                                                                                       | Yes                                                                                                                                                                  |
@@ -56,7 +56,7 @@ When accessing Claude through a [cloud platform](https://platform.claude.com/doc
 
 ### Getting API keys
 
-The API is made available through the web [Console](https://platform.claude.com/). You can use [playground](https://platform.claude.com/playground) to try out the API in the browser and then generate API keys in [Account Settings](https://platform.claude.com/settings/keys). You choose each key's type (see [Key types](https://platform.claude.com/docs/en/manage-claude/authentication#key-types)) and its [expiration](https://platform.claude.com/docs/en/manage-claude/authentication#key-expiration) when you create it. Use [workspaces](https://platform.claude.com/settings/workspaces) to separate environments and [control spend](https://platform.claude.com/docs/en/api/rate-limits) by use case.
+The API is made available through the web [Console](https://platform.claude.com/). You can use [playground](https://platform.claude.com/playground) to try out the API in the browser and then generate API keys in [Account Settings](https://platform.claude.com/settings/keys) (see [Get your Claude API key](https://platform.claude.com/docs/en/get-api-key)). You choose each key's type (see [Key types](https://platform.claude.com/docs/en/manage-claude/authentication#key-types)) and its [expiration](https://platform.claude.com/docs/en/manage-claude/authentication#key-expiration) when you create it. Use [workspaces](https://platform.claude.com/settings/workspaces) to separate environments and [control spend](https://platform.claude.com/docs/en/api/rate-limits) by use case.
 
 ## Client SDKs
 
@@ -64,7 +64,7 @@ Anthropic provides official SDKs that simplify API integration by handling authe
 
 **Benefits:**
 
-* Automatic header management (`x-api-key`, `anthropic-version`, `content-type`)
+* Automatic header management (authentication, `anthropic-version`, `content-type`)
 * Type-safe request and response handling
 * Built-in retry logic and error handling
 * Streaming support

@@ -1,3 +1,8 @@
+---
+title: Archive Federation Issuer
+url: https://platform.claude.com/docs/en/api/beta/organization/federation/issuers/archive
+---
+
 # Archive Federation Issuer
 
 **POST** `/v1/organizations/federation_issuers/{federation_issuer_id}/archive`
@@ -25,7 +30,7 @@ issuer cannot be changed), or recreate them against another issuer.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -73,6 +78,8 @@ issuer cannot be changed), or recreate them against another issuer.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -109,6 +116,18 @@ issuer cannot be changed), or recreate them against another issuer.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 ## Returns
 
 - `BetaFederationIssuer object`
@@ -117,6 +136,10 @@ issuer cannot be changed), or recreate them against another issuer.
 
   Records an external IdP the organization trusts for the RFC 7523
   jwt-bearer grant. The `issuer_url` must match the JWT `iss` claim exactly.
+
+  - `type: "federation_issuer"`
+
+    default: federation_issuer
 
   - `id: string`
 
@@ -192,13 +215,13 @@ issuer cannot be changed), or recreate them against another issuer.
 
       JWKS supplied directly; no network fetch.
 
+      - `type: "inline"`
+
       - `keys: array of map[unknown]`
 
         Inline JWK objects.
 
         minItems: 1
-
-      - `type: "inline"`
 
   - `jwks_polling_disabled_at: string or null`
 
@@ -216,11 +239,7 @@ issuer cannot be changed), or recreate them against another issuer.
 
   - `poll_status: BetaFederationIssuerPollStatus or null`
 
-    Status of automatic JWKS polling for a federation issuer.
-
-    Anthropic periodically fetches the issuer's signing keys in the
-    background. These fields summarize the most recent fetches so the
-    health of the JWKS endpoint can be monitored.
+    Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer retrieval and list responses, including archived issuers. Typically null for inline-key issuers (no polling), or when poll status is temporarily unavailable or polling has not started yet.
 
     - `consecutive_failures: number`
 
@@ -237,10 +256,6 @@ issuer cannot be changed), or recreate them against another issuer.
       When the next fetch is scheduled. Null if paused.
 
       format: date-time
-
-  - `type: "federation_issuer"`
-
-    default: federation_issuer
 
   - `updated_at: string`
 

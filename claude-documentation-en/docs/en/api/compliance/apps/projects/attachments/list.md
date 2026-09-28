@@ -1,3 +1,8 @@
+---
+title: List project attachments
+url: https://platform.claude.com/docs/en/api/compliance/apps/projects/attachments/list
+---
+
 # List project attachments
 
 **GET** `/v1/compliance/apps/projects/{project_id}/attachments`
@@ -25,7 +30,7 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
   Maximum results (default: 20, max: 100)
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -37,13 +42,19 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
 ## Returns
 
-- `data: array of object or object`
+- `data: array of ComplianceProjectFileReference or ComplianceProjectDocReference`
 
   List of attachments sorted chronologically by created_at, tie break by id
 
   - `ComplianceProjectFileReference object`
 
     File attachment reference for compliance responses.
+
+    - `type: "project_file"`
+
+      Discriminator marking this as a binary file
+
+      default: project_file
 
     - `id: string`
 
@@ -71,15 +82,15 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
       Size in bytes of the file's preferred downloadable variant, when recorded. Null otherwise. Use the per-file `/metadata` endpoint for the authoritative value.
 
-    - `type: "project_file"`
-
-      Discriminator marking this as a binary file
-
-      default: project_file
-
   - `ComplianceProjectDocReference object`
 
     Project document attachment reference for compliance responses.
+
+    - `type: "project_doc"`
+
+      Discriminator marking this as a plain text document
+
+      default: project_doc
 
     - `id: string`
 
@@ -101,12 +112,6 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
       default: text/plain
 
-    - `type: "project_doc"`
-
-      Discriminator marking this as a plain text document
-
-      default: project_doc
-
     - `updated_at: string or null`
 
       Last-modified timestamp of the document. Reserved for future use — currently always null.
@@ -125,6 +130,7 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID/attachments \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

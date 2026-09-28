@@ -1,3 +1,8 @@
+---
+title: List Compliance Groups
+url: https://platform.claude.com/docs/en/api/compliance/groups/list
+---
+
 # List Compliance Groups
 
 **GET** `/v1/compliance/groups`
@@ -10,7 +15,7 @@ List Compliance Groups
 
   Maximum results (default: 500, max: 1000)
 
-  default: 500, maximum: 1000, minimum: 1
+  default: 500, minimum: 1, maximum: 1000
 
 - `name_prefix: optional string`
 
@@ -38,7 +43,9 @@ List Compliance Groups
 
   - `created_at: string or null`
 
-    Group creation timestamp (ISO 8601)
+    Group creation timestamp (RFC 3339)
+
+    format: date-time
 
   - `description: string`
 
@@ -58,7 +65,9 @@ List Compliance Groups
 
   - `updated_at: string or null`
 
-    Group last-updated timestamp (ISO 8601)
+    Group last-updated timestamp (RFC 3339)
+
+    format: date-time
 
 - `has_more: boolean`
 
@@ -72,6 +81,7 @@ List Compliance Groups
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/groups \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -82,7 +92,7 @@ curl https://api.anthropic.com/v1/compliance/groups \
   "data": [
     {
       "id": "rbac_group_012rppKaSVsmTo6NqRDXQXNF",
-      "created_at": "2025-03-12T18:22:41.123456",
+      "created_at": "2025-03-12T18:22:41.123456Z",
       "description": "All members of the engineering organization",
       "name": "Engineering Team",
       "roles": [
@@ -90,7 +100,7 @@ curl https://api.anthropic.com/v1/compliance/groups \
         "rbac_role_01HtCd4mFoAseWS3RnzKcwE7"
       ],
       "source_type": "scim",
-      "updated_at": "2025-03-14T09:05:17.456789"
+      "updated_at": "2025-03-14T09:05:17.456789Z"
     }
   ],
   "has_more": true,

@@ -2,13 +2,15 @@
 title: Session event stream
 url: https://platform.claude.com/docs/en/managed-agents/events-and-streaming
 description: Send events, stream responses, and interrupt or redirect your session mid-execution.
+featureMetadata:
+  topic:
+    title: Managed Agents
+    url: https://platform.claude.com/docs/en/managed-agents/overview
+  status: beta
+  betaHeader: managed-agents-2026-04-01
 ---
 
 Communication with Claude Managed Agents is event-based. You send user events to the agent, and receive agent and session events back to track status.
-
-<Note>
-  Managed Agents API requests require the `managed-agents-2026-04-01` beta header, except memory store endpoints, which use `agent-memory-2026-07-22` instead. The SDK sets the correct beta header automatically. See [Beta headers](https://platform.claude.com/docs/en/api/beta-headers#endpoint-specific-headers).
-</Note>
 
 ## Event types
 
@@ -461,18 +463,20 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
         ]
       });
 
-      for await (const event of stream) {
-        if (event.type === "agent.message") {
-          for (const block of event.content) {
-            if (block.type === "text") {
-              process.stdout.write(block.text);
+      events: for await (const event of stream) {
+        switch (event.type) {
+          case "agent.message":
+            for (const block of event.content) {
+              if (block.type === "text") {
+                process.stdout.write(block.text);
+              }
             }
-          }
-        } else if (event.type === "session.status_idle") {
-          break;
-        } else if (event.type === "session.error") {
-          console.log(`\n[Error: ${event.error?.message ?? "unknown"}]`);
-          break;
+            break;
+          case "session.status_idle":
+            break events;
+          case "session.error":
+            console.log(`\n[Error: ${event.error?.message ?? "unknown"}]`);
+            break events;
         }
       }
       ```
@@ -505,7 +509,10 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
           {
               foreach (var block in message.Content)
               {
-                  Console.Write(block.Text);
+                  if (block.Value is BetaManagedAgentsTextBlock textBlock)
+                  {
+                      Console.Write(textBlock.Text);
+                  }
               }
           }
           else if (streamEvent.Value is BetaManagedAgentsSessionStatusIdleEvent)
@@ -575,19 +582,22 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
           );
 
           Iterable<BetaManagedAgentsStreamSessionEvents> events = stream.stream()::iterator;
+          events:
           for (var event : events) {
-              if (event.isAgentMessage()) {
-                  event.asAgentMessage().content().forEach(block -> block.text().ifPresent(textBlock -> IO.print(textBlock.text())));
-              } else if (event.isSessionStatusIdle()) {
-                  break;
-              } else if (event.isSessionError()) {
-                  // The `message` field spans all error variants; read it from the raw JSON.
-                  var errorMessage =
-                      event.asSessionError().error()._json().orElse(null) instanceof JsonObject json
-                          ? json.values().get("message").asStringOrThrow()
-                          : "unknown";
-                  IO.println("\n[Error: " + errorMessage + "]");
-                  break;
+              switch (event.type().value()) {
+                  case AGENT_MESSAGE -> event.asAgentMessage().content().forEach(block -> block.text().ifPresent(textBlock -> IO.print(textBlock.text())));
+                  case SESSION_STATUS_IDLE -> {
+                      break events;
+                  }
+                  case SESSION_ERROR -> {
+                      // The `message` field spans all error variants; read it from the raw JSON.
+                      var errorMessage =
+                          event.asSessionError().error()._json().orElse(null) instanceof JsonObject json
+                              ? json.values().get("message").asStringOrThrow()
+                              : "unknown";
+                      IO.println("\n[Error: " + errorMessage + "]");
+                      break events;
+                  }
               }
           }
       }
@@ -607,12 +617,12 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
       );
 
       foreach ($stream as $event) {
-          match ($event->type) {
-              'agent.message' => array_walk(
+          match (true) {
+              $event instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsAgentMessageEvent => array_walk(
                   $event->content,
-                  static fn ($block) => $block->type === 'text' ? print($block->text) : null,
+                  static fn ($block) => $block instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsTextBlock ? print($block->text) : null,
               ),
-              'session.error' => printf("\n[Error: %s]", $event->error?->message ?? 'unknown'),
+              $event instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsSessionErrorEvent => printf("\n[Error: %s]", $event->error?->message ?? 'unknown'),
               default => null,
           };
           if ($event->type === 'session.status_idle' || $event->type === 'session.error') {
@@ -635,12 +645,12 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
       )
 
       stream.each do |event|
-        case event.type
-        in :"agent.message"
+        case event
+        when Anthropic::Beta::Sessions::BetaManagedAgentsAgentMessageEvent
           event.content.each { print it.text }
-        in :"session.status_idle"
+        when Anthropic::Beta::Sessions::BetaManagedAgentsSessionStatusIdleEvent
           break
-        in :"session.error"
+        when Anthropic::Beta::Sessions::BetaManagedAgentsSessionErrorEvent
           puts "\n[Error: #{event.error&.message || "unknown"}]"
           break
         else
@@ -738,19 +748,21 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
       }
 
       // Tail live events, skipping anything already seen
-      for await (const event of stream) {
+      tail: for await (const event of stream) {
         // Preview events (event_start/event_delta) carry no top-level id
         if (event.type === "event_start" || event.type === "event_delta") continue;
         if (seenEventIds.has(event.id)) continue;
         seenEventIds.add(event.id);
-        if (event.type === "agent.message") {
-          for (const block of event.content) {
-            if (block.type === "text") {
-              process.stdout.write(block.text);
+        switch (event.type) {
+          case "agent.message":
+            for (const block of event.content) {
+              if (block.type === "text") {
+                process.stdout.write(block.text);
+              }
             }
-          }
-        } else if (event.type === "session.status_idle") {
-          break;
+            break;
+          case "session.status_idle":
+            break tail;
         }
       }
       ```
@@ -777,7 +789,10 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
           {
               foreach (var block in message.Content)
               {
-                  Console.Write(block.Text);
+                  if (block.Value is BetaManagedAgentsTextBlock textBlock)
+                  {
+                      Console.Write(textBlock.Text);
+                  }
               }
           }
           else if (streamEvent.Value is BetaManagedAgentsSessionStatusIdleEvent)
@@ -861,10 +876,10 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
               continue;
           }
           $seenEventIds[$event->id] = true;
-          match ($event->type) {
-              'agent.message' => array_walk(
+          match (true) {
+              $event instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsAgentMessageEvent => array_walk(
                   $event->content,
-                  static fn ($block) => $block->type === 'text' ? print($block->text) : null,
+                  static fn ($block) => $block instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsTextBlock ? print($block->text) : null,
               ),
               default => null,
           };
@@ -885,10 +900,10 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
       # Tail live events, skipping anything already seen — Set#add? returns nil for duplicates
       stream.each do |event|
         next unless seen_event_ids.add?(event.id)
-        case event.type
-        in :"agent.message"
+        case event
+        when Anthropic::Beta::Sessions::BetaManagedAgentsAgentMessageEvent
           event.content.each { print it.text }
-        in :"session.status_idle"
+        when Anthropic::Beta::Sessions::BetaManagedAgentsSessionStatusIdleEvent
           break
         else
           # ignore other event types
@@ -907,13 +922,11 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
         -H "x-api-key: $ANTHROPIC_API_KEY" \
         -H "anthropic-version: 2023-06-01" \
         -H "anthropic-beta: managed-agents-2026-04-01" \
-        -H "content-type: application/json" \
-        | jq -r '.data[] | "[\(.type)] \(.processed_at)"'
+        -H "content-type: application/json"
       ```
 
       ```bash CLI
-      ant beta:sessions:events list --session-id "$SESSION_ID" \
-        --format jsonl --transform '{type,processed_at}'
+      ant beta:sessions:events list --session-id "$SESSION_ID" --format jsonl
       ```
 
       ```python Python
@@ -978,14 +991,13 @@ Every persisted event includes a `processed_at` timestamp set when the event fin
       curl --fail-with-body -sS "https://api.anthropic.com/v1/sessions/$SESSION_ID/events?beta=true&types[]=agent.tool_use&types[]=agent.tool_result" \
         -H "x-api-key: $ANTHROPIC_API_KEY" \
         -H "anthropic-version: 2023-06-01" \
-        -H "anthropic-beta: managed-agents-2026-04-01" \
-        | jq -r '.data[] | "[\(.type)] \(.processed_at)"'
+        -H "anthropic-beta: managed-agents-2026-04-01"
       ```
 
       ```bash CLI
       ant beta:sessions:events list --session-id "$SESSION_ID" \
         --type agent.tool_use --type agent.tool_result \
-        --format jsonl --transform '{type,processed_at}'
+        --format jsonl
       ```
 
       ```python Python
@@ -1268,35 +1280,47 @@ Guarantees the pattern relies on:
     ]
   });
 
-  for await (const event of stream) {
-    if (event.type === "event_start") {
-      // 1. Note the announced id and open the snapshot. Deltas and the
-      //    buffered event carry the same id.
-      const preview = accumulateManagedAgentsEvent(undefined, event);
-      if (preview) previews.set(event.event.id, preview);
-      console.log(`event_start             ${event.event.type} ${event.event.id}`);
-    } else if (event.type === "event_delta") {
-      // 2. Fold the fragment into the snapshot and render it
-      const preview = accumulateManagedAgentsEvent(previews.get(event.event_id), event);
-      if (preview) {
-        previews.set(event.event_id, preview);
-        const text = preview.content.map((block) => block.text).join("");
-        console.log(`event_delta             preview: ${JSON.stringify(text)}`);
+  deltas: for await (const event of stream) {
+    switch (event.type) {
+      case "event_start": {
+        // 1. Note the announced id and open the snapshot. Deltas and the
+        //    buffered event carry the same id.
+        const preview = accumulateManagedAgentsEvent(undefined, event);
+        if (preview) previews.set(event.event.id, preview);
+        console.log(`event_start             ${event.event.type} ${event.event.id}`);
+        break;
       }
-    } else if (event.type === "agent.message") {
-      // 3. The buffered event is the record: it replaces and closes the preview
-      const message = accumulateManagedAgentsEvent(previews.get(event.id), event);
-      previews.delete(event.id);
-      const text = message.content.map((block) => block.text).join("");
-      console.log(`agent.message           ${event.id} ${JSON.stringify(text)}`);
-    } else if (event.type === "span.model_request_end") {
-      // 4. No more deltas are coming. Close any preview that was never reconciled.
-      for (const eventId of previews.keys()) {
-        console.log(`span.model_request_end  closing preview for ${eventId}`);
+      case "event_delta": {
+        // 2. Fold the fragment into the snapshot and render it
+        const preview = accumulateManagedAgentsEvent(previews.get(event.event_id), event);
+        if (preview) {
+          previews.set(event.event_id, preview);
+          const text = preview.content
+            .map((block) => (block.type === "text" ? block.text : ""))
+            .join("");
+          console.log(`event_delta             preview: ${JSON.stringify(text)}`);
+        }
+        break;
       }
-      previews.clear();
-    } else if (event.type === "session.status_idle") {
-      break;
+      case "agent.message": {
+        // 3. The buffered event is the record: it replaces and closes the preview
+        const message = accumulateManagedAgentsEvent(previews.get(event.id), event);
+        previews.delete(event.id);
+        const text = message.content
+          .map((block) => (block.type === "text" ? block.text : ""))
+          .join("");
+        console.log(`agent.message           ${event.id} ${JSON.stringify(text)}`);
+        break;
+      }
+      case "span.model_request_end":
+        // 4. No more deltas are coming. Close any preview that was never reconciled.
+        for (const eventId of previews.keys()) {
+          console.log(`span.model_request_end  closing preview for ${eventId}`);
+        }
+        previews.clear();
+        break;
+      case "session.status_idle":
+        break deltas;
     }
   }
   stream.controller.abort();
@@ -1359,7 +1383,9 @@ Guarantees the pattern relies on:
       {
           // Deltas are best-effort: discard the preview and use the buffered event
           previews.Remove(message.ID);
-          Console.WriteLine($"agent.message           {message.ID} {string.Concat(message.Content.Select(block => block.Text))}");
+          var text = string.Concat(message.Content.Select(block =>
+              block.TryPickBetaManagedAgentsTextBlock(out var textBlock) ? textBlock.Text : ""));
+          Console.WriteLine($"agent.message           {message.ID} {text}");
       }
       else if (streamEvent.TryPickSpanModelRequestEndEvent(out _))
       {
@@ -1456,34 +1482,43 @@ Guarantees the pattern relies on:
       );
 
       Iterable<BetaManagedAgentsStreamSessionEvents> events = stream.stream()::iterator;
+      deltas:
       for (var event : events) {
-          if (event.isEventStart() && event.asEventStart().event().isAgentMessage()) {
-              var preview = event.asEventStart().event().asAgentMessage();
-              IO.println("event_start             " + preview.type().asString() + " " + preview.id());
-          } else if (event.isEventDelta()) {
-              var eventDelta = event.asEventDelta();
-              var fragment = eventDelta.delta();
-              var buffer = previews
-                  .computeIfAbsent(eventDelta.eventId(), _ -> new HashMap<>())
-                  .computeIfAbsent(fragment.index().orElse(0L), _ -> new StringBuilder());
-              buffer.append(fragment.content().text());
-              IO.println("event_delta             preview: " + buffer);
-          } else if (event.isAgentMessage()) {
-              // The buffered event is the record: drop its preview, render its content
-              var message = event.asAgentMessage();
-              previews.remove(message.id());
-              var text = message.content().stream()
-                  .flatMap(block -> block.text().stream())
-                  .map(textBlock -> textBlock.text())
-                  .collect(Collectors.joining());
-              IO.println("agent.message           " + message.id() + " " + text);
-          } else if (event.isSpanModelRequestEnd()) {
-              // No more deltas are coming. Close any preview whose buffered event never arrived.
-              previews.keySet().forEach(eventId ->
-                  IO.println("span.model_request_end  closing preview for " + eventId));
-              previews.clear();
-          } else if (event.isSessionStatusIdle()) {
-              break;
+          switch (event.type().value()) {
+              case EVENT_START -> {
+                  if (event.asEventStart().event().isAgentMessage()) {
+                      var preview = event.asEventStart().event().asAgentMessage();
+                      IO.println("event_start             " + preview.type().asString() + " " + preview.id());
+                  }
+              }
+              case EVENT_DELTA -> {
+                  var eventDelta = event.asEventDelta();
+                  var fragment = eventDelta.delta();
+                  var buffer = previews
+                      .computeIfAbsent(eventDelta.eventId(), _ -> new HashMap<>())
+                      .computeIfAbsent(fragment.index().orElse(0L), _ -> new StringBuilder());
+                  buffer.append(fragment.content().text());
+                  IO.println("event_delta             preview: " + buffer);
+              }
+              case AGENT_MESSAGE -> {
+                  // The buffered event is the record: drop its preview, render its content
+                  var message = event.asAgentMessage();
+                  previews.remove(message.id());
+                  var text = message.content().stream()
+                      .flatMap(block -> block.text().stream())
+                      .map(textBlock -> textBlock.text())
+                      .collect(Collectors.joining());
+                  IO.println("agent.message           " + message.id() + " " + text);
+              }
+              case SPAN_MODEL_REQUEST_END -> {
+                  // No more deltas are coming. Close any preview whose buffered event never arrived.
+                  previews.keySet().forEach(eventId ->
+                      IO.println("span.model_request_end  closing preview for " + eventId));
+                  previews.clear();
+              }
+              case SESSION_STATUS_IDLE -> {
+                  break deltas;
+              }
           }
       }
   }
@@ -1516,23 +1551,23 @@ Guarantees the pattern relies on:
   end
 
   stream.each do |event|
-    case event.type
-    in :event_start
+    case event
+    when Anthropic::Beta::BetaManagedAgentsStartEvent
       puts "event_start             #{event.event.type} #{event.event.id}"
-    in :event_delta
+    when Anthropic::Beta::BetaManagedAgentsDeltaEvent
       delta = event.delta
       fragment = delta.content.text
       buffers[event.event_id][delta.index || 0] << fragment
       puts "event_delta             preview: #{buffers[event.event_id][delta.index || 0].inspect}"
-    in :"agent.message"
+    when Anthropic::Beta::Sessions::BetaManagedAgentsAgentMessageEvent
       # Replace: drop the accumulated preview and render the complete event.
       buffers.delete(event.id)
       puts "agent.message           #{event.id} #{event.content.map(&:text).join.inspect}"
-    in :"span.model_request_end"
+    when Anthropic::Beta::Sessions::BetaManagedAgentsSpanModelRequestEndEvent
       # No more deltas are coming. Close any preview that was never reconciled.
       buffers.each_key { |event_id| puts "span.model_request_end  closing preview for #{event_id}" }
       buffers.clear
-    in :"session.status_idle"
+    when Anthropic::Beta::Sessions::BetaManagedAgentsSessionStatusIdleEvent
       break
     else
       # ignore other event types
@@ -1549,7 +1584,7 @@ The thread stream's path is easy to get wrong: it is `/threads/{thread_id}/strea
 
 The preview events themselves don't change. `event_start` and `event_delta` have the same shape on a thread stream as on the session-level stream, and the [accumulate and reconcile](https://platform.claude.com/docs/en/managed-agents/events-and-streaming#accumulate-and-reconcile) pattern applies as written. The one adjustment is bookkeeping: run one accumulator instance per stream connection.
 
-<CodeGroup defaultLanguage="cURL">
+<CodeGroup>
   ```bash cURL
   # List the session's threads and pick a child: child threads carry a non-null
   # parent_thread_id, and the primary thread's parent_thread_id is null.
@@ -1682,16 +1717,22 @@ The preview events themselves don't change. `event_start` and `event_delta` have
     event_deltas: ["agent.message"],
   });
 
-  for await (const event of stream) {
-    if (event.type === "event_delta") {
-      process.stdout.write(event.delta.content.text);
-    } else if (event.type === "agent.message") {
-      // The buffered event is the authoritative record; render its content.
-      process.stdout.write("\n");
-      const text = event.content.map((block) => block.text).join("");
-      console.log(text);
-    } else if (event.type === "session.thread_status_idle") {
-      break;
+  threadDeltas: for await (const event of stream) {
+    switch (event.type) {
+      case "event_delta":
+        process.stdout.write(event.delta.content.text);
+        break;
+      case "agent.message": {
+        // The buffered event is the authoritative record; render its content.
+        process.stdout.write("\n");
+        const text = event.content
+          .map((block) => (block.type === "text" ? block.text : ""))
+          .join("");
+        console.log(text);
+        break;
+      }
+      case "session.thread_status_idle":
+        break threadDeltas;
     }
   }
   stream.controller.abort();
@@ -1720,7 +1761,9 @@ The preview events themselves don't change. `event_start` and `event_delta` have
       {
           // The buffered event is the authoritative record; render its content.
           Console.WriteLine();
-          Console.WriteLine(string.Concat(message.Content.Select(block => block.Text)));
+          var text = string.Concat(message.Content.Select(block =>
+              block.TryPickBetaManagedAgentsTextBlock(out var textBlock) ? textBlock.Text : ""));
+          Console.WriteLine(text);
       }
       else if (streamEvent.TryPickSessionThreadStatusIdleEvent(out _))
       {
@@ -1794,16 +1837,19 @@ The preview events themselves don't change. `event_start` and `event_delta` have
               .build()
   )) {
       Iterable<BetaManagedAgentsStreamSessionThreadEvents> events = stream.stream()::iterator;
+      threadDeltas:
       for (var event : events) {
-          if (event.isEventDelta()) {
-              IO.print(event.asEventDelta().delta().content().text());
-          } else if (event.isAgentMessage()) {
-              // The buffered event is the authoritative record; render its content.
-              IO.println();
-              event.asAgentMessage().content().forEach(block -> block.text().ifPresent(textBlock -> IO.print(textBlock.text())));
-              IO.println();
-          } else if (event.isSessionThreadStatusIdle()) {
-              break;
+          switch (event.type().value()) {
+              case EVENT_DELTA -> IO.print(event.asEventDelta().delta().content().text());
+              case AGENT_MESSAGE -> {
+                  // The buffered event is the authoritative record; render its content.
+                  IO.println();
+                  event.asAgentMessage().content().forEach(block -> block.text().ifPresent(textBlock -> IO.print(textBlock.text())));
+                  IO.println();
+              }
+              case SESSION_THREAD_STATUS_IDLE -> {
+                  break threadDeltas;
+              }
           }
       }
   }
@@ -1827,15 +1873,15 @@ The preview events themselves don't change. `event_start` and `event_delta` have
   )
 
   stream.each do |event|
-    case event.type
-    in :event_delta
+    case event
+    when Anthropic::Beta::BetaManagedAgentsDeltaEvent
       print event.delta.content.text
-    in :"agent.message"
+    when Anthropic::Beta::Sessions::BetaManagedAgentsAgentMessageEvent
       # The buffered event is the authoritative record; render its content.
       puts
       event.content.each { print it.text }
       puts
-    in :"session.thread_status_idle"
+    when Anthropic::Beta::Sessions::BetaManagedAgentsSessionThreadStatusIdleEvent
       break
     else
       # ignore other event types
@@ -2090,27 +2136,29 @@ When the agent invokes a [custom tool](https://platform.claude.com/docs/en/manag
   $stream = $client->beta->sessions->events->streamStream($session->id);
 
   foreach ($stream as $event) {
-      if ($event->type === 'session.status_idle' && $event->stopReason) {
-          if ($event->stopReason->type === 'requires_action') {
-              foreach ($event->stopReason->eventIDs as $eventId) {
-                  // Look up the custom tool use event and execute it
-                  $toolEvent = $eventsById[$eventId];
-                  $result = callTool($toolEvent->name, $toolEvent->input);
+      if ($event instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsSessionStatusIdleEvent && $event->stopReason) {
+          switch (true) {
+              case $event->stopReason instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsSessionRequiresAction:
+                  foreach ($event->stopReason->eventIDs as $eventId) {
+                      // Look up the custom tool use event and execute it
+                      $toolEvent = $eventsById[$eventId];
+                      $result = callTool($toolEvent->name, $toolEvent->input);
 
-                  // Send the result back
-                  $client->beta->sessions->events->send(
-                      $session->id,
-                      events: [
-                          [
-                              'type' => 'user.custom_tool_result',
-                              'custom_tool_use_id' => $eventId,
-                              'content' => [['type' => 'text', 'text' => $result]],
+                      // Send the result back
+                      $client->beta->sessions->events->send(
+                          $session->id,
+                          events: [
+                              [
+                                  'type' => 'user.custom_tool_result',
+                                  'custom_tool_use_id' => $eventId,
+                                  'content' => [['type' => 'text', 'text' => $result]],
+                              ],
                           ],
-                      ],
-                  );
-              }
-          } elseif ($event->stopReason->type === 'end_turn') {
-              break;
+                      );
+                  }
+                  break;
+              case $event->stopReason instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsSessionEndTurn:
+                  break 2;
           }
       }
   }
@@ -2119,26 +2167,29 @@ When the agent invokes a [custom tool](https://platform.claude.com/docs/en/manag
   ```ruby Ruby
   client.beta.sessions.events.stream_events(session.id).each do |event|
     case event
-    in {type: :"session.status_idle", stop_reason: {type: :requires_action, event_ids:}}
-      event_ids.each do |event_id|
-        # Look up the custom tool use event and execute it
-        tool_event = events_by_id[event_id]
-        result = call_tool.call(tool_event.name, tool_event.input)
-        # Send the result back
-        client.beta.sessions.events.send_(
-          session.id,
-          events: [
-            {
-              type: "user.custom_tool_result",
-              custom_tool_use_id: event_id,
-              content: [{type: "text", text: result}]
-            }
-          ]
-        )
+    when Anthropic::Beta::Sessions::BetaManagedAgentsSessionStatusIdleEvent
+      stop_reason = event.stop_reason
+      case stop_reason
+      when Anthropic::Beta::Sessions::BetaManagedAgentsSessionRequiresAction
+        stop_reason.event_ids.each do |event_id|
+          # Look up the custom tool use event and execute it
+          tool_event = events_by_id[event_id]
+          result = call_tool.call(tool_event.name, tool_event.input)
+          # Send the result back
+          client.beta.sessions.events.send_(
+            session.id,
+            events: [
+              {
+                type: "user.custom_tool_result",
+                custom_tool_use_id: event_id,
+                content: [{type: "text", text: result}]
+              }
+            ]
+          )
+        end
+      when Anthropic::Beta::Sessions::BetaManagedAgentsSessionEndTurn
+        break
       end
-    in {type: :"session.status_idle", stop_reason: {type: :end_turn}}
-      break
-    else
     end
   end
   ```
@@ -2146,12 +2197,30 @@ When the agent invokes a [custom tool](https://platform.claude.com/docs/en/manag
 
 ### Tool confirmation
 
-When a [permission policy](https://platform.claude.com/docs/en/managed-agents/permission-policies) requires confirmation before a tool executes:
+A tool call waits for your confirmation under an `always_ask` [permission policy](https://platform.claude.com/docs/en/managed-agents/permission-policies), or under `auto` when the server reaches no determination. When that happens:
 
 1. The session emits an `agent.tool_use` or `agent.mcp_tool_use` event.
-2. The session pauses with a `session.status_idle` event containing `stop_reason: requires_action`. The blocking event IDs are in the `stop_reason.event_ids` array.
+2. The session pauses with a `session.status_idle` event whose `stop_reason.type` is `requires_action`. The blocking event IDs are in the `stop_reason.event_ids` array.
 3. Send a `user.tool_confirmation` event for each, passing the event ID in the `tool_use_id` parameter. Set `result` to `"allow"` or `"deny"`. Use `deny_message` to explain a denial.
 4. Once all blocking events are resolved, the session transitions back to `running`.
+
+Each `agent.tool_use` and `agent.mcp_tool_use` event carries `evaluated_permission` (`allow`, `ask`, or `deny`), and only events whose `evaluated_permission` is `"ask"` wait for a confirmation. Most events also carry an `evaluation` object that records which policy produced that outcome, described under [See how each call was evaluated](https://platform.claude.com/docs/en/managed-agents/permission-policies#see-how-each-call-was-evaluated). For example, a `bash` call paused under an `always_ask` policy appears on the stream as follows:
+
+```json
+{
+  "type": "agent.tool_use",
+  "id": "sevt_01def...",
+  "name": "bash",
+  "input": {
+    "command": "pip install -r requirements.txt"
+  },
+  "evaluated_permission": "ask",
+  "evaluation": {
+    "type": "always_ask"
+  },
+  "processed_at": "2026-03-25T14:01:45Z"
+}
+```
 
 <CodeGroup>
   ```bash cURL
@@ -2331,23 +2400,25 @@ When a [permission policy](https://platform.claude.com/docs/en/managed-agents/pe
   $stream = $client->beta->sessions->events->streamStream($session->id);
 
   foreach ($stream as $event) {
-      if ($event->type === 'session.status_idle' && $event->stopReason) {
-          if ($event->stopReason->type === 'requires_action') {
-              foreach ($event->stopReason->eventIDs as $eventId) {
-                  // Approve the pending tool call
-                  $client->beta->sessions->events->send(
-                      $session->id,
-                      events: [
-                          [
-                              'type' => 'user.tool_confirmation',
-                              'tool_use_id' => $eventId,
-                              'result' => 'allow',
+      if ($event instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsSessionStatusIdleEvent && $event->stopReason) {
+          switch (true) {
+              case $event->stopReason instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsSessionRequiresAction:
+                  foreach ($event->stopReason->eventIDs as $eventId) {
+                      // Approve the pending tool call
+                      $client->beta->sessions->events->send(
+                          $session->id,
+                          events: [
+                              [
+                                  'type' => 'user.tool_confirmation',
+                                  'tool_use_id' => $eventId,
+                                  'result' => 'allow',
+                              ],
                           ],
-                      ],
-                  );
-              }
-          } elseif ($event->stopReason->type === 'end_turn') {
-              break;
+                      );
+                  }
+                  break;
+              case $event->stopReason instanceof \Anthropic\Beta\Sessions\Events\ManagedAgentsSessionEndTurn:
+                  break 2;
           }
       }
   }
@@ -2356,19 +2427,22 @@ When a [permission policy](https://platform.claude.com/docs/en/managed-agents/pe
   ```ruby Ruby
   client.beta.sessions.events.stream_events(session.id).each do |event|
     case event
-    in {type: :"session.status_idle", stop_reason: {type: :requires_action, event_ids:}}
-      event_ids.each do |event_id|
-        # Approve the pending tool call
-        client.beta.sessions.events.send_(
-          session.id,
-          events: [
-            {type: "user.tool_confirmation", tool_use_id: event_id, result: "allow"}
-          ]
-        )
+    when Anthropic::Beta::Sessions::BetaManagedAgentsSessionStatusIdleEvent
+      stop_reason = event.stop_reason
+      case stop_reason
+      when Anthropic::Beta::Sessions::BetaManagedAgentsSessionRequiresAction
+        stop_reason.event_ids.each do |event_id|
+          # Approve the pending tool call
+          client.beta.sessions.events.send_(
+            session.id,
+            events: [
+              {type: "user.tool_confirmation", tool_use_id: event_id, result: "allow"}
+            ]
+          )
+        end
+      when Anthropic::Beta::Sessions::BetaManagedAgentsSessionEndTurn
+        break
       end
-    in {type: :"session.status_idle", stop_reason: {type: :end_turn}}
-      break
-    else
     end
   end
   ```
@@ -2384,7 +2458,7 @@ Sessions persist between interactions. Conversation history is preserved unless 
 
 To resume a session, send a `user.message` event to it as usual:
 
-<CodeGroup defaultLanguage="CLI">
+<CodeGroup>
   ```bash cURL
   # In production, pass the stored ID of the session you want to resume.
   curl --fail-with-body -sS "https://api.anthropic.com/v1/sessions/$SESSION_ID/events?beta=true" \
@@ -2563,12 +2637,12 @@ No event resumes a session paused at its cap. Instead, update the session's budg
 ### Sending system messages
 
 <Note>
-  `system.message` is currently supported by Claude Opus 4.8, Claude Fable 5, Claude Mythos 5, and Claude Opus 5. If the agent's primary model does not support mid-conversation system injection, the event is rejected with a `model_does_not_support_mid_conversation_system` validation error; subagent models are not checked, because `system.message` lands on the primary thread only.
+  `system.message` is supported by Claude Fable 5.1, Claude Mythos 5.1, Claude Fable 5, Claude Mythos 5, Claude Opus 5.5, Claude Opus 5, and Claude Opus 4.8. If the agent's primary model does not support mid-conversation system injection, the event is rejected with a `model_does_not_support_mid_conversation_system` validation error. Subagent models are not checked, because `system.message` lands on the primary thread only.
 </Note>
 
 Send a `system.message` event to give the agent privileged system-level context that applies to the accompanying turn and all subsequent turns. Unlike the `system` field on the agent definition (which sets the top-level system prompt), `system.message` content is appended to the session's system context as a `role: "system"` turn rather than replacing that prompt. Use it when the agent needs updated system-level guidance mid-session: a different persona, revised constraints, or context fetched at runtime that should shape the model's behavior going forward.
 
-<CodeGroup defaultLanguage="CLI">
+<CodeGroup>
   ```bash cURL
   curl --fail-with-body -sS "https://api.anthropic.com/v1/sessions/$SESSION_ID/events?beta=true" \
     -H "x-api-key: $ANTHROPIC_API_KEY" \
@@ -2768,6 +2842,8 @@ The Claude Console includes a session viewer for inspecting what an agent did wi
   * **Threads** lists every thread with its status, context size, and cost. Select a thread to view its details, such as the agent, model, context usage, and cost.
 
 Append `?event={event_id}` to a session URL to open the session at a specific event.
+
+With `ant beta:sessions connect`, you can open the same viewer from the `ant` CLI or follow the session in your terminal. See [Connect to a Managed Agents session from your terminal](https://platform.claude.com/docs/en/cli-sdks-libraries/cli/sessions-connect).
 
 ## Debugging tips
 

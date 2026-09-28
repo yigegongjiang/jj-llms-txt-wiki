@@ -1,3 +1,8 @@
+---
+title: Federation
+url: https://platform.claude.com/docs/en/api/beta/organization/federation
+---
+
 # Federation
 
 ## Federation › Issuers
@@ -28,7 +33,7 @@ matched as the JWT's `iss` claim and is not fetched.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -76,6 +81,8 @@ matched as the JWT's `iss` claim and is not fetched.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -112,6 +119,18 @@ matched as the JWT's `iss` claim and is not fetched.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Body parameters
 
 - `issuer_url: string`
@@ -124,7 +143,7 @@ matched as the JWT's `iss` claim and is not fetched.
 
   Slug identifier (lowercase, digits, hyphens). Unique within the organization; a duplicate name returns 409.
 
-  maxLength: 255, minLength: 1
+  minLength: 1, maxLength: 255
 
 - `check_jti: optional boolean or null`
 
@@ -172,19 +191,19 @@ matched as the JWT's `iss` claim and is not fetched.
 
     JWKS supplied directly; no network fetch.
 
+    - `type: "inline"`
+
     - `keys: array of map[unknown]`
 
       Inline JWK objects.
 
       minItems: 1
 
-    - `type: "inline"`
-
 - `max_jwt_lifetime_seconds: optional number or null`
 
   Maximum allowed iat→exp spread for assertions from this issuer (1-176400 seconds, i.e. up to 49h). Defaults to 3600 (1h). Assertions must carry both `iat` and `exp`; a missing `iat` is rejected.
 
-  maximum: 176400, exclusiveMinimum: 0
+  minimum: 1, maximum: 176400
 
 #### Returns
 
@@ -194,6 +213,10 @@ matched as the JWT's `iss` claim and is not fetched.
 
   Records an external IdP the organization trusts for the RFC 7523
   jwt-bearer grant. The `issuer_url` must match the JWT `iss` claim exactly.
+
+  - `type: "federation_issuer"`
+
+    default: federation_issuer
 
   - `id: string`
 
@@ -269,13 +292,13 @@ matched as the JWT's `iss` claim and is not fetched.
 
       JWKS supplied directly; no network fetch.
 
+      - `type: "inline"`
+
       - `keys: array of map[unknown]`
 
         Inline JWK objects.
 
         minItems: 1
-
-      - `type: "inline"`
 
   - `jwks_polling_disabled_at: string or null`
 
@@ -293,11 +316,7 @@ matched as the JWT's `iss` claim and is not fetched.
 
   - `poll_status: BetaFederationIssuerPollStatus or null`
 
-    Status of automatic JWKS polling for a federation issuer.
-
-    Anthropic periodically fetches the issuer's signing keys in the
-    background. These fields summarize the most recent fetches so the
-    health of the JWKS endpoint can be monitored.
+    Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer retrieval and list responses, including archived issuers. Typically null for inline-key issuers (no polling), or when poll status is temporarily unavailable or polling has not started yet.
 
     - `consecutive_failures: number`
 
@@ -314,10 +333,6 @@ matched as the JWT's `iss` claim and is not fetched.
       When the next fetch is scheduled. Null if paused.
 
       format: date-time
-
-  - `type: "federation_issuer"`
-
-    default: federation_issuer
 
   - `updated_at: string`
 
@@ -394,7 +409,7 @@ Archived issuers are excluded unless `include_archived=true`.
 
   Number of results per page.
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -408,7 +423,7 @@ Archived issuers are excluded unless `include_archived=true`.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -456,6 +471,8 @@ Archived issuers are excluded unless `include_archived=true`.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -492,9 +509,25 @@ Archived issuers are excluded unless `include_archived=true`.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
 
 - `data: array of BetaFederationIssuer`
+
+  - `type: "federation_issuer"`
+
+    default: federation_issuer
 
   - `id: string`
 
@@ -570,13 +603,13 @@ Archived issuers are excluded unless `include_archived=true`.
 
       JWKS supplied directly; no network fetch.
 
+      - `type: "inline"`
+
       - `keys: array of map[unknown]`
 
         Inline JWK objects.
 
         minItems: 1
-
-      - `type: "inline"`
 
   - `jwks_polling_disabled_at: string or null`
 
@@ -594,11 +627,7 @@ Archived issuers are excluded unless `include_archived=true`.
 
   - `poll_status: BetaFederationIssuerPollStatus or null`
 
-    Status of automatic JWKS polling for a federation issuer.
-
-    Anthropic periodically fetches the issuer's signing keys in the
-    background. These fields summarize the most recent fetches so the
-    health of the JWKS endpoint can be monitored.
+    Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer retrieval and list responses, including archived issuers. Typically null for inline-key issuers (no polling), or when poll status is temporarily unavailable or polling has not started yet.
 
     - `consecutive_failures: number`
 
@@ -615,10 +644,6 @@ Archived issuers are excluded unless `include_archived=true`.
       When the next fetch is scheduled. Null if paused.
 
       format: date-time
-
-  - `type: "federation_issuer"`
-
-    default: federation_issuer
 
   - `updated_at: string`
 
@@ -699,7 +724,7 @@ Retrieve a federation issuer by its ID (`fdis_...`).
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -747,6 +772,8 @@ Retrieve a federation issuer by its ID (`fdis_...`).
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -783,6 +810,18 @@ Retrieve a federation issuer by its ID (`fdis_...`).
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
 
 - `BetaFederationIssuer object`
@@ -791,6 +830,10 @@ Retrieve a federation issuer by its ID (`fdis_...`).
 
   Records an external IdP the organization trusts for the RFC 7523
   jwt-bearer grant. The `issuer_url` must match the JWT `iss` claim exactly.
+
+  - `type: "federation_issuer"`
+
+    default: federation_issuer
 
   - `id: string`
 
@@ -866,13 +909,13 @@ Retrieve a federation issuer by its ID (`fdis_...`).
 
       JWKS supplied directly; no network fetch.
 
+      - `type: "inline"`
+
       - `keys: array of map[unknown]`
 
         Inline JWK objects.
 
         minItems: 1
-
-      - `type: "inline"`
 
   - `jwks_polling_disabled_at: string or null`
 
@@ -890,11 +933,7 @@ Retrieve a federation issuer by its ID (`fdis_...`).
 
   - `poll_status: BetaFederationIssuerPollStatus or null`
 
-    Status of automatic JWKS polling for a federation issuer.
-
-    Anthropic periodically fetches the issuer's signing keys in the
-    background. These fields summarize the most recent fetches so the
-    health of the JWKS endpoint can be monitored.
+    Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer retrieval and list responses, including archived issuers. Typically null for inline-key issuers (no polling), or when poll status is temporarily unavailable or polling has not started yet.
 
     - `consecutive_failures: number`
 
@@ -911,10 +950,6 @@ Retrieve a federation issuer by its ID (`fdis_...`).
       When the next fetch is scheduled. Null if paused.
 
       format: date-time
-
-  - `type: "federation_issuer"`
-
-    default: federation_issuer
 
   - `updated_at: string`
 
@@ -993,7 +1028,7 @@ session.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -1041,6 +1076,8 @@ session.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -1076,6 +1113,18 @@ session.
     - `"thinking-display-updates-2026-08-18"`
 
     - `"ce-user-management-2026-07-13"`
+
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
 
 #### Body parameters
 
@@ -1131,13 +1180,13 @@ session.
 
     JWKS supplied directly; no network fetch.
 
+    - `type: "inline"`
+
     - `keys: array of map[unknown]`
 
       Inline JWK objects.
 
       minItems: 1
-
-    - `type: "inline"`
 
 - `jwks_polling_disabled: optional boolean or null`
 
@@ -1147,13 +1196,13 @@ session.
 
   Maximum allowed iat→exp spread for assertions from this issuer (1-176400 seconds, i.e. up to 49h). Assertions must carry both `iat` and `exp`; a missing `iat` is rejected.
 
-  maximum: 176400, exclusiveMinimum: 0
+  minimum: 1, maximum: 176400
 
 - `name: optional string or null`
 
   Replaces the slug identifier (lowercase, digits, hyphens). Unique within the organization; a duplicate name returns 409.
 
-  maxLength: 255, minLength: 1
+  minLength: 1, maxLength: 255
 
 #### Returns
 
@@ -1163,6 +1212,10 @@ session.
 
   Records an external IdP the organization trusts for the RFC 7523
   jwt-bearer grant. The `issuer_url` must match the JWT `iss` claim exactly.
+
+  - `type: "federation_issuer"`
+
+    default: federation_issuer
 
   - `id: string`
 
@@ -1238,13 +1291,13 @@ session.
 
       JWKS supplied directly; no network fetch.
 
+      - `type: "inline"`
+
       - `keys: array of map[unknown]`
 
         Inline JWK objects.
 
         minItems: 1
-
-      - `type: "inline"`
 
   - `jwks_polling_disabled_at: string or null`
 
@@ -1262,11 +1315,7 @@ session.
 
   - `poll_status: BetaFederationIssuerPollStatus or null`
 
-    Status of automatic JWKS polling for a federation issuer.
-
-    Anthropic periodically fetches the issuer's signing keys in the
-    background. These fields summarize the most recent fetches so the
-    health of the JWKS endpoint can be monitored.
+    Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer retrieval and list responses, including archived issuers. Typically null for inline-key issuers (no polling), or when poll status is temporarily unavailable or polling has not started yet.
 
     - `consecutive_failures: number`
 
@@ -1283,10 +1332,6 @@ session.
       When the next fetch is scheduled. Null if paused.
 
       format: date-time
-
-  - `type: "federation_issuer"`
-
-    default: federation_issuer
 
   - `updated_at: string`
 
@@ -1365,7 +1410,7 @@ issuer cannot be changed), or recreate them against another issuer.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -1413,6 +1458,8 @@ issuer cannot be changed), or recreate them against another issuer.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -1449,6 +1496,18 @@ issuer cannot be changed), or recreate them against another issuer.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
 
 - `BetaFederationIssuer object`
@@ -1457,6 +1516,10 @@ issuer cannot be changed), or recreate them against another issuer.
 
   Records an external IdP the organization trusts for the RFC 7523
   jwt-bearer grant. The `issuer_url` must match the JWT `iss` claim exactly.
+
+  - `type: "federation_issuer"`
+
+    default: federation_issuer
 
   - `id: string`
 
@@ -1532,13 +1595,13 @@ issuer cannot be changed), or recreate them against another issuer.
 
       JWKS supplied directly; no network fetch.
 
+      - `type: "inline"`
+
       - `keys: array of map[unknown]`
 
         Inline JWK objects.
 
         minItems: 1
-
-      - `type: "inline"`
 
   - `jwks_polling_disabled_at: string or null`
 
@@ -1556,11 +1619,7 @@ issuer cannot be changed), or recreate them against another issuer.
 
   - `poll_status: BetaFederationIssuerPollStatus or null`
 
-    Status of automatic JWKS polling for a federation issuer.
-
-    Anthropic periodically fetches the issuer's signing keys in the
-    background. These fields summarize the most recent fetches so the
-    health of the JWKS endpoint can be monitored.
+    Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer retrieval and list responses, including archived issuers. Typically null for inline-key issuers (no polling), or when poll status is temporarily unavailable or polling has not started yet.
 
     - `consecutive_failures: number`
 
@@ -1577,10 +1636,6 @@ issuer cannot be changed), or recreate them against another issuer.
       When the next fetch is scheduled. Null if paused.
 
       format: date-time
-
-  - `type: "federation_issuer"`
-
-    default: federation_issuer
 
   - `updated_at: string`
 
@@ -1663,7 +1718,7 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -1711,6 +1766,8 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -1746,6 +1803,18 @@ manage rules whose `oauth_scope` is `workspace:developer` or
     - `"thinking-display-updates-2026-08-18"`
 
     - `"ce-user-management-2026-07-13"`
+
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
 
 #### Body parameters
 
@@ -1783,7 +1852,7 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   Slug identifier (lowercase, digits, hyphens). Unique within the organization; a duplicate name returns 409.
 
-  maxLength: 255, minLength: 1
+  minLength: 1, maxLength: 255
 
 - `oauth_scope: string`
 
@@ -1795,11 +1864,11 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+  - `type: "service_account"`
+
   - `service_account_id: string`
 
     Tagged ID of the service account to mint tokens for.
-
-  - `type: "service_account"`
 
   - `service_account_name: optional string or null`
 
@@ -1823,7 +1892,7 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   Lifetime in seconds for access tokens minted via this rule (60-86400). Defaults to 3600 (1h). Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
 
-  maximum: 86400, minimum: 60
+  minimum: 60, maximum: 86400
 
 - `workspace_id: optional string or null`
 
@@ -1843,6 +1912,10 @@ manage rules whose `oauth_scope` is `workspace:developer` or
   of that workspace (it is implicitly a member of the default workspace);
   rules carrying only the legacy `workspace_id` binding do not enforce
   this.
+
+  - `type: "federation_rule"`
+
+    default: federation_rule
 
   - `id: string`
 
@@ -1926,11 +1999,11 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
     Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+    - `type: "service_account"`
+
     - `service_account_id: string`
 
       Tagged ID of the service account to mint tokens for.
-
-    - `type: "service_account"`
 
     - `service_account_name: optional string or null`
 
@@ -1939,10 +2012,6 @@ manage rules whose `oauth_scope` is `workspace:developer` or
   - `token_lifetime_seconds: number`
 
     Lifetime in seconds of access tokens minted via this rule. Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
-
-  - `type: "federation_rule"`
-
-    default: federation_rule
 
   - `updated_at: string`
 
@@ -2050,7 +2119,7 @@ unless `include_archived=true`.
 
   Number of results per page.
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -2064,7 +2133,7 @@ unless `include_archived=true`.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -2112,6 +2181,8 @@ unless `include_archived=true`.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -2148,9 +2219,25 @@ unless `include_archived=true`.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
 
 - `data: array of BetaFederationRule`
+
+  - `type: "federation_rule"`
+
+    default: federation_rule
 
   - `id: string`
 
@@ -2234,11 +2321,11 @@ unless `include_archived=true`.
 
     Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+    - `type: "service_account"`
+
     - `service_account_id: string`
 
       Tagged ID of the service account to mint tokens for.
-
-    - `type: "service_account"`
 
     - `service_account_name: optional string or null`
 
@@ -2247,10 +2334,6 @@ unless `include_archived=true`.
   - `token_lifetime_seconds: number`
 
     Lifetime in seconds of access tokens minted via this rule. Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
-
-  - `type: "federation_rule"`
-
-    default: federation_rule
 
   - `updated_at: string`
 
@@ -2351,7 +2434,7 @@ Retrieve a federation rule by its ID (`fdrl_...`).
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -2399,6 +2482,8 @@ Retrieve a federation rule by its ID (`fdrl_...`).
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -2435,6 +2520,18 @@ Retrieve a federation rule by its ID (`fdrl_...`).
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
 
 - `BetaFederationRule object`
@@ -2449,6 +2546,10 @@ Retrieve a federation rule by its ID (`fdrl_...`).
   of that workspace (it is implicitly a member of the default workspace);
   rules carrying only the legacy `workspace_id` binding do not enforce
   this.
+
+  - `type: "federation_rule"`
+
+    default: federation_rule
 
   - `id: string`
 
@@ -2532,11 +2633,11 @@ Retrieve a federation rule by its ID (`fdrl_...`).
 
     Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+    - `type: "service_account"`
+
     - `service_account_id: string`
 
       Tagged ID of the service account to mint tokens for.
-
-    - `type: "service_account"`
 
     - `service_account_name: optional string or null`
 
@@ -2545,10 +2646,6 @@ Retrieve a federation rule by its ID (`fdrl_...`).
   - `token_lifetime_seconds: number`
 
     Lifetime in seconds of access tokens minted via this rule. Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
-
-  - `type: "federation_rule"`
-
-    default: federation_rule
 
   - `updated_at: string`
 
@@ -2656,7 +2753,7 @@ Console session.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -2704,6 +2801,8 @@ Console session.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -2740,6 +2839,18 @@ Console session.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Body parameters
 
 - `applies_to_all_workspaces: optional boolean or null`
@@ -2758,11 +2869,7 @@ Console session.
 
 - `match: optional BetaFederationRuleMatch or null`
 
-  Does the incoming JWT qualify?
-
-  All populated fields must pass; omitted fields are skipped. At least one
-  of `subject_prefix` (other than a wildcard-only value like `*`), `claims`,
-  or `condition` is required; `audience` alone is not sufficient.
+  Replaces the entire match object. All populated matcher fields must pass.
 
   - `audience: optional string or null`
 
@@ -2790,7 +2897,7 @@ Console session.
 
   Replaces the slug identifier (lowercase, digits, hyphens). Unique within the organization; a duplicate name returns 409.
 
-  maxLength: 255, minLength: 1
+  minLength: 1, maxLength: 255
 
 - `oauth_scope: optional string or null`
 
@@ -2800,13 +2907,13 @@ Console session.
 
 - `target: optional BetaServiceAccountTarget or null`
 
-  Bind to a fixed service account by ID.
+  Replaces the entire target object. Currently always a `service_account` target.
+
+  - `type: "service_account"`
 
   - `service_account_id: string`
 
     Tagged ID of the service account to mint tokens for.
-
-  - `type: "service_account"`
 
   - `service_account_name: optional string or null`
 
@@ -2816,7 +2923,7 @@ Console session.
 
   Replaces the lifetime in seconds for access tokens minted via this rule (60-86400). Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
 
-  maximum: 86400, minimum: 60
+  minimum: 60, maximum: 86400
 
 - `workspace_id: optional string or null`
 
@@ -2836,6 +2943,10 @@ Console session.
   of that workspace (it is implicitly a member of the default workspace);
   rules carrying only the legacy `workspace_id` binding do not enforce
   this.
+
+  - `type: "federation_rule"`
+
+    default: federation_rule
 
   - `id: string`
 
@@ -2919,11 +3030,11 @@ Console session.
 
     Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+    - `type: "service_account"`
+
     - `service_account_id: string`
 
       Tagged ID of the service account to mint tokens for.
-
-    - `type: "service_account"`
 
     - `service_account_name: optional string or null`
 
@@ -2932,10 +3043,6 @@ Console session.
   - `token_lifetime_seconds: number`
 
     Lifetime in seconds of access tokens minted via this rule. Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
-
-  - `type: "federation_rule"`
-
-    default: federation_rule
 
   - `updated_at: string`
 
@@ -3037,7 +3144,7 @@ other scopes require a Console session.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -3085,6 +3192,8 @@ other scopes require a Console session.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -3121,6 +3230,18 @@ other scopes require a Console session.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
 
 - `BetaFederationRule object`
@@ -3135,6 +3256,10 @@ other scopes require a Console session.
   of that workspace (it is implicitly a member of the default workspace);
   rules carrying only the legacy `workspace_id` binding do not enforce
   this.
+
+  - `type: "federation_rule"`
+
+    default: federation_rule
 
   - `id: string`
 
@@ -3218,11 +3343,11 @@ other scopes require a Console session.
 
     Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+    - `type: "service_account"`
+
     - `service_account_id: string`
 
       Tagged ID of the service account to mint tokens for.
-
-    - `type: "service_account"`
 
     - `service_account_name: optional string or null`
 
@@ -3231,10 +3356,6 @@ other scopes require a Console session.
   - `token_lifetime_seconds: number`
 
     Lifetime in seconds of access tokens minted via this rule. Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
-
-  - `type: "federation_rule"`
-
-    default: federation_rule
 
   - `updated_at: string`
 
@@ -3338,7 +3459,7 @@ other scopes require a Console session.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -3386,6 +3507,8 @@ other scopes require a Console session.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -3422,6 +3545,18 @@ other scopes require a Console session.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Body parameters
 
 - `workspace_id: string`
@@ -3431,6 +3566,10 @@ other scopes require a Console session.
 #### Returns
 
 - `BetaFederationRuleWorkspace object`
+
+  - `type: "federation_rule_workspace"`
+
+    default: federation_rule_workspace
 
   - `created_at: string`
 
@@ -3445,10 +3584,6 @@ other scopes require a Console session.
   - `federation_rule_id: string`
 
     Tagged ID of the federation rule.
-
-  - `type: "federation_rule_workspace"`
-
-    default: federation_rule_workspace
 
   - `workspace_id: string`
 
@@ -3509,7 +3644,7 @@ rules with `applies_to_all_workspaces` or a legacy single
 
   Number of results per page.
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -3523,7 +3658,7 @@ rules with `applies_to_all_workspaces` or a legacy single
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -3571,6 +3706,8 @@ rules with `applies_to_all_workspaces` or a legacy single
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -3607,9 +3744,25 @@ rules with `applies_to_all_workspaces` or a legacy single
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
 
 - `data: array of BetaFederationRuleWorkspace`
+
+  - `type: "federation_rule_workspace"`
+
+    default: federation_rule_workspace
 
   - `created_at: string`
 
@@ -3624,10 +3777,6 @@ rules with `applies_to_all_workspaces` or a legacy single
   - `federation_rule_id: string`
 
     Tagged ID of the federation rule.
-
-  - `type: "federation_rule_workspace"`
-
-    default: federation_rule_workspace
 
   - `workspace_id: string`
 
@@ -3698,7 +3847,7 @@ Console session.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -3746,6 +3895,8 @@ Console session.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -3782,15 +3933,27 @@ Console session.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 #### Returns
-
-- `federation_rule_id: string`
-
-  Tagged ID of the federation rule.
 
 - `type: "federation_rule_workspace_deleted"`
 
   default: federation_rule_workspace_deleted
+
+- `federation_rule_id: string`
+
+  Tagged ID of the federation rule.
 
 - `workspace_id: string`
 

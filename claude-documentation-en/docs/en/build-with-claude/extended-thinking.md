@@ -5,7 +5,7 @@ description: Configure manual extended thinking with a fixed budget_tokens budge
 ---
 
 <Note>
-  For how zero data retention (ZDR) applies to this feature, see [API and data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention).
+  To learn how zero data retention (ZDR) applies to this feature, see [API and data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention).
 </Note>
 
 <Warning>
@@ -20,7 +20,7 @@ description: Configure manual extended thinking with a fixed budget_tokens budge
 
 Extended thinking in manual mode gives you direct control over how much Claude thinks. You set a thinking token budget on each request with `thinking: {type: "enabled", budget_tokens: N}`, and Claude thinks against that budget before it starts its final answer. Manual mode remains useful when your workload requires predictable latency or precise control over thinking costs. This page covers how to set and tune the budget, how manual mode interacts with interleaved thinking and prompt caching, and how to migrate to adaptive thinking.
 
-For how thinking itself works, including thinking blocks and the response shape, the `display` parameter, streaming, thinking with tool use, and encryption, see the [thinking overview](https://platform.claude.com/docs/en/build-with-claude/thinking).
+To learn how thinking itself works, including thinking blocks and the response shape, the `display` parameter, streaming, thinking with tool use, and encryption, see the [thinking overview](https://platform.claude.com/docs/en/build-with-claude/thinking).
 
 ## Supported models
 
@@ -54,7 +54,7 @@ Here is an example of using extended thinking in the Messages API:
 
   ```bash CLI
   ant messages create \
-    --transform content --format yaml <<'YAML'
+    --format yaml <<'YAML'
   model: claude-sonnet-4-6
   max_tokens: 16000
   thinking:
@@ -110,10 +110,13 @@ Here is an example of using extended thinking in the Messages API:
 
   // The response contains summarized thinking blocks and text blocks
   for (const block of response.content) {
-    if (block.type === "thinking") {
-      console.log(`\nThinking summary: ${block.thinking}`);
-    } else if (block.type === "text") {
-      console.log(`\nResponse: ${block.text}`);
+    switch (block.type) {
+      case "thinking":
+        console.log(`\nThinking summary: ${block.thinking}`);
+        break;
+      case "text":
+        console.log(`\nResponse: ${block.text}`);
+        break;
     }
   }
   ```
@@ -222,9 +225,9 @@ Here is an example of using extended thinking in the Messages API:
 
   // The response contains summarized thinking blocks and text blocks
   foreach ($response->content as $block) {
-      echo match ($block->type) {
-          'thinking' => "\nThinking summary: {$block->thinking}",
-          'text' => "\nResponse: {$block->text}",
+      echo match (true) {
+          $block instanceof \Anthropic\Messages\ThinkingBlock => "\nThinking summary: {$block->thinking}",
+          $block instanceof \Anthropic\Messages\TextBlock => "\nResponse: {$block->text}",
           default => '',
       };
   }
@@ -251,11 +254,10 @@ Here is an example of using extended thinking in the Messages API:
   # The response contains summarized thinking blocks and text blocks
   response.content.each do |block|
     case block
-    in {type: :thinking, thinking:}
-      puts "\nThinking summary: #{thinking}"
-    in {type: :text, text:}
-      puts "\nResponse: #{text}"
-    else
+    when Anthropic::Models::ThinkingBlock
+      puts "\nThinking summary: #{block.thinking}"
+    when Anthropic::Models::TextBlock
+      puts "\nResponse: #{block.text}"
     end
   end
   ```
@@ -290,7 +292,7 @@ When you are ready to move off manual budgets, see [Migrating to adaptive thinki
 
 Interleaved thinking lets Claude think between tool calls within a single assistant turn, reasoning about each tool result before deciding what to do next. For the concept, the turn structure, and how it behaves on adaptive-thinking models, see [interleaved thinking](https://platform.claude.com/docs/en/build-with-claude/thinking#interleaved-thinking) in the thinking overview. This section covers how to enable it when you use manual `type: "enabled"` thinking.
 
-On Claude Opus 4.5, Claude Sonnet 4.5, and earlier Claude 4 models (Claude Opus 4.1, Claude Opus 4, and Claude Sonnet 4), add the `interleaved-thinking-2025-05-14` [beta header](https://platform.claude.com/docs/en/api/beta-headers) to your API request.
+On Claude Opus 4.5, Claude Sonnet 4.5, and earlier Claude 4 models, add the `interleaved-thinking-2025-05-14` [beta header](https://platform.claude.com/docs/en/api/beta-headers) to your API request.
 
 The 4.6 generation splits in manual mode:
 
@@ -352,7 +354,7 @@ If your model supports only extended thinking (Claude Sonnet 4.5, Claude Opus 4.
 You need to migrate off `type: "enabled"` if:
 
 * You use Claude Opus 4.6 or Claude Sonnet 4.6, where `budget_tokens` is deprecated.
-* You are moving to Claude Opus 4.7, Claude Opus 4.8, Claude Opus 5, Claude Sonnet 5, Claude Fable 5, or Claude Mythos 5, where `type: "enabled"` returns a 400 error.
+* You use Claude 4.7 or a later model, such as Claude Opus 5.5, Claude Sonnet 5, or Claude Fable 5.1, where `type: "enabled"` returns a 400 error.
 
 The mapping is small: remove `budget_tokens`, set `thinking: {type: "adaptive"}`, and control reasoning depth with `output_config: {effort: ...}` instead of a token budget.
 

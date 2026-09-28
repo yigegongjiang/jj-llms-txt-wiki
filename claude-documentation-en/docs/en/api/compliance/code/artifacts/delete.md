@@ -1,3 +1,8 @@
+---
+title: Delete Code Artifact
+url: https://platform.claude.com/docs/en/api/compliance/code/artifacts/delete
+---
+
 # Delete Code Artifact
 
 **DELETE** `/v1/compliance/apps/code/artifacts/{artifact_id}`
@@ -23,21 +28,22 @@ Artifact.
 
 ## Returns
 
-- `id: string`
-
-  The ID of the Artifact that was deleted
-
 - `type: "code_artifact_deleted"`
 
   Constant string confirming deletion
 
   default: code_artifact_deleted
 
+- `id: string`
+
+  The ID of the Artifact that was deleted
+
 ## Example
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/code/artifacts/$ARTIFACT_ID \
     -X DELETE \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

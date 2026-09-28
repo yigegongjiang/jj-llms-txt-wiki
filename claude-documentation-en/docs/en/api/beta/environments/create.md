@@ -1,3 +1,8 @@
+---
+title: Create Environment
+url: https://platform.claude.com/docs/en/api/beta/environments/create
+---
+
 # Create Environment
 
 **POST** `/v1/environments`
@@ -12,7 +17,7 @@ Create a new environment with the specified configuration.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -60,6 +65,8 @@ Create a new environment with the specified configuration.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -96,13 +103,31 @@ Create a new environment with the specified configuration.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ## Body parameters
 
 - `name: string`
 
   Human-readable name for the environment
 
-  maxLength: 256, minLength: 1
+  minLength: 1, maxLength: 256
 
 - `config: optional BetaCloudConfigParams or BetaSelfHostedConfigParams or null`
 
@@ -156,11 +181,13 @@ Create a new environment with the specified configuration.
 
     - `packages: optional BetaPackagesParams or null`
 
-      Specify packages (and optionally their versions) available in this environment.
+      Package manager configuration. Under `limited` networking, requires `networking.allow_package_managers` to be `true`. Omit on update to preserve the existing value.
 
-      When versioning, use the version semantics relevant for the package manager, e.g. for `pip` use `package==1.0.0`. You are responsible for validating the package and version exist. Unversioned installs the latest.
+      - `type: optional "packages"`
 
-      Under `limited` networking, requires `networking.allow_package_managers` to be `true`.
+        Package configuration type
+
+        default: packages
 
       - `apt: optional array of string or null`
 
@@ -186,12 +213,6 @@ Create a new environment with the specified configuration.
 
         Python packages to install
 
-      - `type: optional "packages"`
-
-        Package configuration type
-
-        default: packages
-
   - `BetaSelfHostedConfigParams object`
 
     Request params for `self_hosted` environment configuration.
@@ -212,7 +233,7 @@ Create a new environment with the specified configuration.
 
 - `scope: optional "organization" or "account" or null`
 
-  The visibility scope for this environment. 'organization' makes the environment visible to all accounts. 'account' restricts visibility to the owning account only. Only applicable for self-hosted environments. If not specified, defaults based on organization type.
+  The visibility scope for this environment. 'organization' makes the environment visible to all accounts. 'account' restricts visibility to the owning account only. API organizations support only 'organization'; 'account' is rejected. If not specified, defaults based on organization type.
 
   - `"organization"`
 
@@ -223,6 +244,12 @@ Create a new environment with the specified configuration.
 - `BetaEnvironment object`
 
   Unified Environment resource for both cloud and self-hosted environments.
+
+  - `type: "environment"`
+
+    The type of object (always 'environment')
+
+    default: environment
 
   - `id: string`
 
@@ -240,6 +267,10 @@ Create a new environment with the specified configuration.
 
       `cloud` environment configuration.
 
+      - `type: "cloud"`
+
+        Environment type
+
       - `networking: BetaUnrestrictedNetwork or BetaLimitedNetwork`
 
         Network configuration policy.
@@ -256,6 +287,10 @@ Create a new environment with the specified configuration.
 
           Limited network access.
 
+          - `type: "limited"`
+
+            Network policy type
+
           - `allow_mcp_servers: boolean`
 
             Permits outbound access to MCP server endpoints configured on the agent, beyond those listed in the `allowed_hosts` array.
@@ -268,13 +303,15 @@ Create a new environment with the specified configuration.
 
             Specifies domains the container can reach.
 
-          - `type: "limited"`
-
-            Network policy type
-
       - `packages: BetaPackages`
 
         Package manager configuration.
+
+        - `type: optional "packages"`
+
+          Package configuration type
+
+          default: packages
 
         - `apt: array of string`
 
@@ -300,16 +337,6 @@ Create a new environment with the specified configuration.
 
           Python packages to install
 
-        - `type: optional "packages"`
-
-          Package configuration type
-
-          default: packages
-
-      - `type: "cloud"`
-
-        Environment type
-
     - `BetaSelfHostedConfig object`
 
       Configuration for self-hosted environments.
@@ -333,12 +360,6 @@ Create a new environment with the specified configuration.
   - `name: string`
 
     Human-readable name for the environment
-
-  - `type: "environment"`
-
-    The type of object (always 'environment')
-
-    default: environment
 
   - `updated_at: string`
 

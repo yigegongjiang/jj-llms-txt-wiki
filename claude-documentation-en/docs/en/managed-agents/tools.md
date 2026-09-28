@@ -2,15 +2,17 @@
 title: Tools
 url: https://platform.claude.com/docs/en/managed-agents/tools
 description: Configure tools available to your agent.
+featureMetadata:
+  topic:
+    title: Managed Agents
+    url: https://platform.claude.com/docs/en/managed-agents/overview
+  status: beta
+  betaHeader: managed-agents-2026-04-01
 ---
 
 Claude Managed Agents provides a set of built-in tools that Claude can use autonomously within a [session](https://platform.claude.com/docs/en/managed-agents/sessions). You control which tools are available by specifying them in the agent configuration.
 
 Claude Managed Agents also supports custom, user-defined tools. Your application executes these tools separately and returns the results to Claude, which uses them to continue the task. To give the agent tools from an MCP server, use the [MCP connector](https://platform.claude.com/docs/en/managed-agents/mcp-connector) instead.
-
-<Note>
-  Managed Agents API requests require the `managed-agents-2026-04-01` beta header, except memory store endpoints, which use `agent-memory-2026-07-22` instead. The SDK sets the correct beta header automatically. See [Beta headers](https://platform.claude.com/docs/en/api/beta-headers#endpoint-specific-headers).
-</Note>
 
 ## Available tools
 
@@ -31,7 +33,7 @@ When a tool output exceeds 100,000 characters (about 25,000 tokens), it is autom
 
 ## Configuring the toolset
 
-Enable the full toolset with `agent_toolset_20260401` when creating an agent. Use the `configs` array to disable specific tools or override their settings. Each config entry can also set a `permission_policy` that controls whether the tool's calls are auto-approved or require confirmation. See [Permission policies](https://platform.claude.com/docs/en/managed-agents/permission-policies) for the available policy types.
+Enable the full toolset with `agent_toolset_20260401` when creating an agent. Use the `configs` array to disable specific tools or override their settings. Each config entry can also set a `permission_policy` that controls whether the tool's calls run without confirmation, require confirmation, or are evaluated individually by the server. See [Permission policies](https://platform.claude.com/docs/en/managed-agents/permission-policies) for the available policy types.
 
 Config entries for `web_search` and `web_fetch` also accept domain filters and other web settings; see [Restrict web search and web fetch domains](https://platform.claude.com/docs/en/managed-agents/tools#restrict-web-search-and-web-fetch-domains).
 
@@ -45,7 +47,7 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
     -d @- <<'EOF'
   {
     "name": "Coding Assistant",
-    "model": "claude-opus-5",
+    "model": "claude-opus-5-5",
     "tools": [
       {
         "type": "agent_toolset_20260401",
@@ -59,22 +61,30 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
   )
   ```
 
-  ```bash CLI
-  ant beta:agents create <<'YAML'
-  name: Coding Assistant
-  model: claude-opus-5
-  tools:
-    - type: agent_toolset_20260401
-      configs:
-        - name: web_fetch
-          enabled: false
-  YAML
-  ```
+  <CodeGroupItem>
+    ```bash CLI
+    ant apply agent.md
+    ```
+
+    <File filename="agent.md">
+      ```markdown
+      ---
+      name: Coding Assistant
+      model: claude-opus-5-5
+      tools:
+        - type: agent_toolset_20260401
+          configs:
+            - name: web_fetch
+              enabled: false
+      ---
+      ```
+    </File>
+  </CodeGroupItem>
 
   ```python Python
   agent = client.beta.agents.create(
       name="Coding Assistant",
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       tools=[
           {
               "type": "agent_toolset_20260401",
@@ -89,7 +99,7 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
   ```typescript TypeScript
   const agent = await client.beta.agents.create({
     name: "Coding Assistant",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       {
         type: "agent_toolset_20260401",
@@ -105,7 +115,7 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
   var agent = await client.Beta.Agents.Create(new()
   {
       Name = "Coding Assistant",
-      Model = new("claude-opus-5"),
+      Model = new("claude-opus-5-5"),
       Tools =
       [
           new BetaManagedAgentsAgentToolset20260401Params
@@ -124,7 +134,7 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
   agent, err := client.Beta.Agents.New(ctx, anthropic.BetaAgentNewParams{
   	Name: "Coding Assistant",
   	Model: anthropic.BetaManagedAgentsModelConfigParams{
-  		ID: "claude-opus-5",
+  		ID: "claude-opus-5-5",
   	},
   	Tools: []anthropic.BetaAgentNewParamsToolUnion{{
   		OfAgentToolset20260401: &anthropic.BetaManagedAgentsAgentToolset20260401Params{
@@ -148,7 +158,7 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
 
   var agent = client.beta().agents().create(AgentCreateParams.builder()
       .name("Coding Assistant")
-      .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+      .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
       .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
           .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
           .addConfig(BetaManagedAgentsWebFetchToolConfigParams.builder()
@@ -164,7 +174,7 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
 
   $agent = $client->beta->agents->create(
       name: 'Coding Assistant',
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       tools: [
           BetaManagedAgentsAgentToolset20260401Params::with(
               type: 'agent_toolset_20260401',
@@ -179,7 +189,7 @@ Config entries for `web_search` and `web_fetch` also accept domain filters and o
   ```ruby Ruby
   agent = client.beta.agents.create(
     name: "Coding Assistant",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       {
         type: :agent_toolset_20260401,
@@ -268,7 +278,7 @@ The following request creates an agent with this toolset and prints the `configs
     -d @- <<'EOF'
   {
     "name": "Research Agent",
-    "model": "claude-opus-5",
+    "model": "claude-opus-5-5",
     "tools": [
       {
         "type": "agent_toolset_20260401",
@@ -298,33 +308,43 @@ The following request creates an agent with this toolset and prints the `configs
   jq '.tools[0].configs' <<< "$agent"
   ```
 
-  ```bash CLI
-  ant beta:agents create --transform tools.0.configs <<'YAML'
-  name: Research Agent
-  model: claude-opus-5
-  tools:
-    - type: agent_toolset_20260401
-      configs:
-        - type: web_search
-          name: web_search
-          allowed_domains: [docs.example.com, arxiv.org]
-          user_location:
-            type: approximate
-            country: US
-            timezone: America/Los_Angeles
-        - type: web_fetch
-          name: web_fetch
-          blocked_domains: [ads.example.com]
-          max_content_tokens: 50000
-  YAML
-  ```
+  <CodeGroupItem>
+    ```bash CLI
+    ant apply agent.md
+    ```
+
+    <File filename="agent.md">
+      ```markdown
+      ---
+      name: Research Agent
+      model: claude-opus-5-5
+      tools:
+        - type: agent_toolset_20260401
+          configs:
+            - type: web_search
+              name: web_search
+              allowed_domains: [docs.example.com, arxiv.org]
+              user_location:
+                type: approximate
+                country: US
+                timezone: America/Los_Angeles
+            - type: web_fetch
+              name: web_fetch
+              blocked_domains: [ads.example.com]
+              max_content_tokens: 50000
+      ---
+      ```
+    </File>
+
+    [`ant apply`](https://platform.claude.com/docs/en/cli-sdks-libraries/cli/apply) creates the agent and prints its ID, not the `configs` array.
+  </CodeGroupItem>
 
   ```python Python
   client = Anthropic()
 
   agent = client.beta.agents.create(
       name="Research Agent",
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       tools=[
           {
               "type": "agent_toolset_20260401",
@@ -358,7 +378,7 @@ The following request creates an agent with this toolset and prints the `configs
 
   const agent = await client.beta.agents.create({
     name: "Research Agent",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       {
         type: "agent_toolset_20260401",
@@ -397,7 +417,7 @@ The following request creates an agent with this toolset and prints the `configs
   var agent = await client.Beta.Agents.Create(new()
   {
       Name = "Research Agent",
-      Model = BetaManagedAgentsModel.ClaudeOpus5,
+      Model = BetaManagedAgentsModel.ClaudeOpus5_5,
       Tools =
       [
           new BetaManagedAgentsAgentToolset20260401Params
@@ -441,7 +461,7 @@ The following request creates an agent with this toolset and prints the `configs
   agent, err := client.Beta.Agents.New(ctx, anthropic.BetaAgentNewParams{
   	Name: "Research Agent",
   	Model: anthropic.BetaManagedAgentsModelConfigParams{
-  		ID: anthropic.BetaManagedAgentsModelClaudeOpus5,
+  		ID: anthropic.BetaManagedAgentsModelClaudeOpus5_5,
   	},
   	Tools: []anthropic.BetaAgentNewParamsToolUnion{{
   		OfAgentToolset20260401: &anthropic.BetaManagedAgentsAgentToolset20260401Params{
@@ -495,7 +515,7 @@ The following request creates an agent with this toolset and prints the `configs
 
       var agent = client.beta().agents().create(AgentCreateParams.builder()
           .name("Research Agent")
-          .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+          .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
           .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
               .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
               .addConfig(BetaManagedAgentsWebSearchToolConfigParams.builder()
@@ -533,7 +553,7 @@ The following request creates an agent with this toolset and prints the `configs
 
   $agent = $client->beta->agents->create(
       name: 'Research Agent',
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       tools: [
           BetaManagedAgentsAgentToolset20260401Params::with(
               type: 'agent_toolset_20260401',
@@ -566,7 +586,7 @@ The following request creates an agent with this toolset and prints the `configs
 
   agent = client.beta.agents.create(
     name: "Research Agent",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       {
         type: :agent_toolset_20260401,
@@ -669,7 +689,7 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
     -d @- <<'EOF'
   {
     "name": "Weather Agent",
-    "model": "claude-opus-5",
+    "model": "claude-opus-5-5",
     "tools": [
       {
         "type": "agent_toolset_20260401"
@@ -692,15 +712,16 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
   )
   ```
 
-  <MultiFileExample language="cli" label="CLI">
+  <CodeGroupItem>
     ```bash CLI
-    ant beta:agents create < agent.yaml
+    ant apply agent.md
     ```
 
-    <File filename="agent.yaml">
-      ```yaml
+    <File filename="agent.md">
+      ```markdown
+      ---
       name: Weather Agent
-      model: claude-opus-5
+      model: claude-opus-5-5
       tools:
         - type: agent_toolset_20260401
         - type: custom
@@ -714,14 +735,15 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
                 description: City name
             required:
               - location
+      ---
       ```
     </File>
-  </MultiFileExample>
+  </CodeGroupItem>
 
   ```python Python
   agent = client.beta.agents.create(
       name="Weather Agent",
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       tools=[
           {
               "type": "agent_toolset_20260401",
@@ -745,7 +767,7 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
   ```typescript TypeScript
   const agent = await client.beta.agents.create({
     name: "Weather Agent",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       { type: "agent_toolset_20260401" },
       {
@@ -769,7 +791,7 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
   var agent = await client.Beta.Agents.Create(new()
   {
       Name = "Weather Agent",
-      Model = new("claude-opus-5"),
+      Model = new("claude-opus-5-5"),
       Tools =
       [
           new BetaManagedAgentsAgentToolset20260401Params
@@ -800,7 +822,7 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
   agent, err := client.Beta.Agents.New(ctx, anthropic.BetaAgentNewParams{
   	Name: "Weather Agent",
   	Model: anthropic.BetaManagedAgentsModelConfigParams{
-  		ID: "claude-opus-5",
+  		ID: "claude-opus-5-5",
   	},
   	Tools: []anthropic.BetaAgentNewParamsToolUnion{{
   		OfAgentToolset20260401: &anthropic.BetaManagedAgentsAgentToolset20260401Params{
@@ -835,7 +857,7 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
 
   var agent = client.beta().agents().create(AgentCreateParams.builder()
       .name("Weather Agent")
-      .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+      .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
       .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
           .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
           .build())
@@ -862,7 +884,7 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
 
   $agent = $client->beta->agents->create(
       name: 'Weather Agent',
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       tools: [
           BetaManagedAgentsAgentToolset20260401Params::with(
               type: 'agent_toolset_20260401',
@@ -883,7 +905,7 @@ If your sessions run in a self-hosted sandbox, the environment worker can [serve
   ```ruby Ruby
   agent = client.beta.agents.create(
     name: "Weather Agent",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       {type: :agent_toolset_20260401},
       {

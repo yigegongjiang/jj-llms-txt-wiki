@@ -1,3 +1,8 @@
+---
+title: List External Keys
+url: https://platform.claude.com/docs/en/api/beta/organization/external_keys/list
+---
+
 # List External Keys
 
 **GET** `/v1/organizations/external_keys`
@@ -13,7 +18,7 @@ Results are ordered by creation time (newest first). Use the
 
   Number of results per page.
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -22,6 +27,10 @@ Results are ordered by creation time (newest first). Use the
 ## Returns
 
 - `data: array of BetaExternalKey`
+
+  - `type: "external_key"`
+
+    default: external_key
 
   - `id: string`
 
@@ -61,13 +70,13 @@ Results are ordered by creation time (newest first). Use the
 
     - `BetaAWSExternalKeyConfig object`
 
+      - `type: "aws"`
+
       - `kms_arn: string`
 
-        Full ARN of the AWS KMS key.
+        Full ARN of the AWS KMS key. On Claude Platform on AWS the key must be a single-Region key in your organization's own AWS account; cross-account keys, multi-Region keys, and alias ARNs are rejected.
 
         maxLength: 2048
-
-      - `type: "aws"`
 
       - `region: optional string or null`
 
@@ -77,17 +86,19 @@ Results are ordered by creation time (newest first). Use the
 
         **Deprecated**
 
-        IAM role ARN. Deprecated — Anthropic reaches the KMS key via a managed intermediate role; this field is ignored.
+        IAM role ARN. Deprecated — Anthropic reaches the KMS key through its own intermediate role (or, on Claude Platform on AWS, with credentials AWS issues for the Workspace); this field is ignored.
 
     - `BetaGCPExternalKeyConfig object`
+
+      - `type: "gcp"`
 
       - `key_name: string`
 
         Full resource name of the Cloud KMS key.
 
-      - `type: "gcp"`
-
     - `BetaAzureExternalKeyConfig object`
+
+      - `type: "azure"`
 
       - `key_name: string`
 
@@ -97,8 +108,6 @@ Results are ordered by creation time (newest first). Use the
 
         Azure AD tenant ID.
 
-      - `type: "azure"`
-
       - `vault_uri: string`
 
         Key Vault data-plane URI — `https://{vault-name}.vault.azure.net` or `https://{hsm-name}.managedhsm.azure.net`.
@@ -106,10 +115,6 @@ Results are ordered by creation time (newest first). Use the
       - `client_id: optional string or null`
 
         Azure AD application (client) ID. Omit to use Anthropic's multitenant app. Provide only if using a single-tenant app registration in the customer's directory.
-
-  - `type: "external_key"`
-
-    default: external_key
 
   - `updated_at: string`
 

@@ -1,3 +1,8 @@
+---
+title: Count tokens in a Message
+url: https://platform.claude.com/docs/en/api/messages/count_tokens
+---
+
 # Count tokens in a Message
 
 **POST** `/v1/messages/count_tokens`
@@ -13,6 +18,12 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 - `"anthropic-user-profile-id": optional string`
 
   The user profile ID to attribute this request to. Use when acting on behalf of a party other than your organization. Requires the `user-profiles` beta header.
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
 
 ## Body parameters
 
@@ -75,11 +86,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       - `TextBlockParam object`
 
+        - `type: "text"`
+
         - `text: string`
 
           minLength: 1
-
-        - `type: "text"`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -106,6 +117,8 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           - `CitationCharLocationParam object`
 
+            - `type: "char_location"`
+
             - `cited_text: string`
 
             - `document_index: number`
@@ -114,7 +127,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `document_title: string or null`
 
-              maxLength: 500, minLength: 1
+              minLength: 1, maxLength: 500
 
             - `end_char_index: number`
 
@@ -122,9 +135,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               minimum: 0
 
-            - `type: "char_location"`
-
           - `CitationPageLocationParam object`
+
+            - `type: "page_location"`
 
             - `cited_text: string`
 
@@ -134,7 +147,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `document_title: string or null`
 
-              maxLength: 500, minLength: 1
+              minLength: 1, maxLength: 500
 
             - `end_page_number: number`
 
@@ -142,9 +155,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               minimum: 1
 
-            - `type: "page_location"`
-
           - `CitationContentBlockLocationParam object`
+
+            - `type: "content_block_location"`
 
             - `cited_text: string`
 
@@ -158,7 +171,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `document_title: string or null`
 
-              maxLength: 500, minLength: 1
+              minLength: 1, maxLength: 500
 
             - `end_block_index: number`
 
@@ -172,9 +185,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               minimum: 0
 
-            - `type: "content_block_location"`
-
           - `CitationWebSearchResultLocationParam object`
+
+            - `type: "web_search_result_location"`
 
             - `cited_text: string`
 
@@ -182,15 +195,15 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `title: string or null`
 
-              maxLength: 512, minLength: 1
-
-            - `type: "web_search_result_location"`
+              minLength: 1, maxLength: 512
 
             - `url: string`
 
               minLength: 1
 
           - `CitationSearchResultLocationParam object`
+
+            - `type: "search_result_location"`
 
             - `cited_text: string`
 
@@ -222,13 +235,15 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `title: string or null`
 
-            - `type: "search_result_location"`
-
       - `ImageBlockParam object`
+
+        - `type: "image"`
 
         - `source: Base64ImageSource or URLImageSource or FileImageSource`
 
           - `Base64ImageSource object`
+
+            - `type: "base64"`
 
             - `data: string`
 
@@ -244,8 +259,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"image/webp"`
 
-            - `type: "base64"`
-
           - `URLImageSource object`
 
             - `type: "url"`
@@ -254,11 +267,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           - `FileImageSource object`
 
-            - `file_id: string`
-
             - `type: "file"`
 
-        - `type: "image"`
+            - `file_id: string`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -278,9 +289,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       - `DocumentBlockParam object`
 
+        - `type: "document"`
+
         - `source: Base64PDFSource or PlainTextSource or ContentBlockSource or 2 more`
 
           - `Base64PDFSource object`
+
+            - `type: "base64"`
 
             - `data: string`
 
@@ -288,17 +303,17 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `media_type: "application/pdf"`
 
-            - `type: "base64"`
-
           - `PlainTextSource object`
+
+            - `type: "text"`
 
             - `data: string`
 
             - `media_type: "text/plain"`
 
-            - `type: "text"`
-
           - `ContentBlockSource object`
+
+            - `type: "content"`
 
             - `content: string or array of ContentBlockSourceContent`
 
@@ -310,8 +325,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
                 - `ImageBlockParam object`
 
-            - `type: "content"`
-
           - `URLPDFSource object`
 
             - `type: "url"`
@@ -320,11 +333,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           - `FileDocumentSource object`
 
-            - `file_id: string`
-
             - `type: "file"`
 
-        - `type: "document"`
+            - `file_id: string`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -340,17 +351,19 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
         - `title: optional string or null`
 
-          maxLength: 500, minLength: 1
+          minLength: 1, maxLength: 500
 
       - `SearchResultBlockParam object`
 
+        - `type: "search_result"`
+
         - `content: array of TextBlockParam`
+
+          - `type: "text"`
 
           - `text: string`
 
             minLength: 1
-
-          - `type: "text"`
 
           - `cache_control: optional CacheControlEphemeral or null`
 
@@ -362,8 +375,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
         - `title: string`
 
-        - `type: "search_result"`
-
         - `cache_control: optional CacheControlEphemeral or null`
 
           Create a cache control breakpoint at this content block.
@@ -371,6 +382,8 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
         - `citations: optional CitationsConfigParam`
 
       - `ThinkingBlockParam object`
+
+        - `type: "thinking"`
 
         - `signature: string`
 
@@ -382,17 +395,17 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           The `thinking` text of this block as returned by the API.
 
-        - `type: "thinking"`
-
       - `RedactedThinkingBlockParam object`
+
+        - `type: "redacted_thinking"`
 
         - `data: string`
 
           The `data` value of this redacted thinking block, exactly as returned by the API in a previous response. Opaque and encrypted; pass it back unchanged.
 
-        - `type: "redacted_thinking"`
-
       - `ToolUseBlockParam object`
+
+        - `type: "tool_use"`
 
         - `id: string`
 
@@ -402,17 +415,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
         - `name: string`
 
-          maxLength: 200, minLength: 1
-
-        - `type: "tool_use"`
+          minLength: 1, maxLength: 200
 
         - `cache_control: optional CacheControlEphemeral or null`
 
           Create a cache control breakpoint at this content block.
 
         - `caller: optional DirectCaller or ServerToolCaller or ServerToolCaller20260120`
-
-          Tool invocation directly from the model.
 
           - `DirectCaller object`
 
@@ -424,33 +433,33 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             Tool invocation generated by a server-side tool.
 
+            - `type: "code_execution_20250825"`
+
             - `tool_id: string`
 
               pattern: ^srvtoolu_[a-zA-Z0-9_]+$
-
-            - `type: "code_execution_20250825"`
 
           - `ServerToolCaller20260120 object`
 
+            - `type: "code_execution_20260120"`
+
             - `tool_id: string`
 
               pattern: ^srvtoolu_[a-zA-Z0-9_]+$
-
-            - `type: "code_execution_20260120"`
 
         - `toolset_name: optional string or null`
 
           For a toolset member tool_use, the toolset family this member belongs to.
 
-          maxLength: 64, minLength: 1, pattern: ^[a-zA-Z0-9_-]+$
+          minLength: 1, maxLength: 64, pattern: ^[a-zA-Z0-9_-]+$
 
       - `ToolResultBlockParam object`
+
+        - `type: "tool_result"`
 
         - `tool_use_id: string`
 
           pattern: ^[a-zA-Z0-9_-]+$
-
-        - `type: "tool_result"`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -474,11 +483,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               Tool reference block that can be included in tool_result content.
 
+              - `type: "tool_reference"`
+
               - `tool_name: string`
 
-                maxLength: 256, minLength: 1, pattern: ^[a-zA-Z0-9_-]{1,256}$
-
-              - `type: "tool_reference"`
+                minLength: 1, maxLength: 256, pattern: ^[a-zA-Z0-9_-]{1,256}$
 
               - `cache_control: optional CacheControlEphemeral or null`
 
@@ -494,6 +503,8 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
               browser toolset member `tool_use`. The server renders the
               model-visible text from it; the model never sees the raw fields.
 
+              - `type: "browser_state"`
+
               - `tabs: array of BrowserStateTabEntry`
 
                 All tabs open in the browser after this call — the full inventory, not a delta. May be empty. Whenever non-empty, exactly one entry carries `active: true`.
@@ -504,7 +515,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
                   The caller-assigned identifier for this tab, unique within the inventory.
 
-                  maxLength: 4096, minLength: 1, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
+                  minLength: 1, maxLength: 4096, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
 
                 - `title: string`
 
@@ -522,8 +533,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
                   Whether this tab is the active tab after this call. Whenever `tabs` is non-empty, exactly one entry is marked `active: true`.
 
-              - `type: "browser_state"`
-
               - `cache_control: optional CacheControlEphemeral or null`
 
                 Create a cache control breakpoint at this content block.
@@ -532,7 +541,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
                 Tabs opened and download state changes during this call. "Nothing to report" is expressed by omitting the field, never by an empty list.
 
-                maxItems: 200, minItems: 1
+                minItems: 1, maxItems: 200
 
                 - `BrowserStateChangeTabOpened object`
 
@@ -544,25 +553,25 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
                   during a failed call gets no deferred `tab_opened`; it simply appears
                   in the next result's `tabs` inventory.
 
+                  - `type: "tab_opened"`
+
                   - `tab_id: string`
 
                     The `tab_id` of the opened tab, present in `tabs`.
 
-                    maxLength: 4096, minLength: 1, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
-
-                  - `type: "tab_opened"`
+                    minLength: 1, maxLength: 4096, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
 
                 - `BrowserStateChangeDownloadStarted object`
 
                   A file download that started during this call.
 
+                  - `type: "download_started"`
+
                   - `download_id: string`
 
                     The caller-assigned identifier for this download, stable across the state changes reporting it.
 
-                    maxLength: 4096, minLength: 1, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
-
-                  - `type: "download_started"`
+                    minLength: 1, maxLength: 4096, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
 
                   - `url: string`
 
@@ -577,13 +586,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
                   `download_started`, when the download finished during the call that
                   started it (at most one state change per `download_id` per result).
 
+                  - `type: "download_completed"`
+
                   - `download_id: string`
 
                     The caller-assigned identifier for this download, stable across the state changes reporting it.
 
-                    maxLength: 4096, minLength: 1, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
-
-                  - `type: "download_completed"`
+                    minLength: 1, maxLength: 4096, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
 
                   - `url: string`
 
@@ -595,7 +604,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
                     Where the executor saved the file, on the executor's filesystem. Only included when another tool in the same environment can read the file at that path.
 
-                    pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$, maxLength: 4096
+                    maxLength: 4096, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
 
                   - `size_bytes: optional number or null`
 
@@ -607,13 +616,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
                   A file download that failed — or was cancelled — during this call.
 
+                  - `type: "download_failed"`
+
                   - `download_id: string`
 
                     The caller-assigned identifier for this download, stable across the state changes reporting it.
 
-                    maxLength: 4096, minLength: 1, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
-
-                  - `type: "download_failed"`
+                    minLength: 1, maxLength: 4096, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
 
                   - `url: string`
 
@@ -625,7 +634,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
                     The failure or cancellation detail, when known.
 
-                    pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$, maxLength: 4096
+                    maxLength: 4096, pattern: ^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$
 
         - `is_error: optional boolean`
 
@@ -633,9 +642,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           For a toolset member tool_result, the toolset family of the paired tool_use.
 
-          maxLength: 64, minLength: 1, pattern: ^[a-zA-Z0-9_-]+$
+          minLength: 1, maxLength: 64, pattern: ^[a-zA-Z0-9_-]+$
 
       - `ServerToolUseBlockParam object`
+
+        - `type: "server_tool_use"`
 
         - `id: string`
 
@@ -659,15 +670,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           - `"tool_search_tool_bm25"`
 
-        - `type: "server_tool_use"`
-
         - `cache_control: optional CacheControlEphemeral or null`
 
           Create a cache control breakpoint at this content block.
 
         - `caller: optional DirectCaller or ServerToolCaller or ServerToolCaller20260120`
-
-          Tool invocation directly from the model.
 
           - `DirectCaller object`
 
@@ -681,21 +688,25 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       - `WebSearchToolResultBlockParam object`
 
+        - `type: "web_search_tool_result"`
+
         - `content: WebSearchToolResultBlockParamContent`
 
           - `WebSearchToolResultBlockItem = array of WebSearchResultBlockParam`
 
+            - `type: "web_search_result"`
+
             - `encrypted_content: string`
 
             - `title: string`
-
-            - `type: "web_search_result"`
 
             - `url: string`
 
             - `page_age: optional string or null`
 
           - `WebSearchToolRequestError object`
+
+            - `type: "web_search_tool_result_error"`
 
             - `error_code: WebSearchToolResultErrorCode`
 
@@ -711,21 +722,15 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"request_too_large"`
 
-            - `type: "web_search_tool_result_error"`
-
         - `tool_use_id: string`
 
           pattern: ^srvtoolu_[a-zA-Z0-9_]+$
-
-        - `type: "web_search_tool_result"`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
           Create a cache control breakpoint at this content block.
 
         - `caller: optional DirectCaller or ServerToolCaller or ServerToolCaller20260120`
-
-          Tool invocation directly from the model.
 
           - `DirectCaller object`
 
@@ -739,9 +744,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       - `WebFetchToolResultBlockParam object`
 
+        - `type: "web_fetch_tool_result"`
+
         - `content: WebFetchToolResultErrorBlockParam or WebFetchBlockParam`
 
           - `WebFetchToolResultErrorBlockParam object`
+
+            - `type: "web_fetch_tool_result_error"`
 
             - `error_code: WebFetchToolResultErrorCode`
 
@@ -763,13 +772,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"unavailable"`
 
-            - `type: "web_fetch_tool_result_error"`
+              - `"content_too_large"`
 
           - `WebFetchBlockParam object`
 
-            - `content: DocumentBlockParam`
-
             - `type: "web_fetch_result"`
+
+            - `content: DocumentBlockParam`
 
             - `url: string`
 
@@ -783,15 +792,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           pattern: ^srvtoolu_[a-zA-Z0-9_]+$
 
-        - `type: "web_fetch_tool_result"`
-
         - `cache_control: optional CacheControlEphemeral or null`
 
           Create a cache control breakpoint at this content block.
 
         - `caller: optional DirectCaller or ServerToolCaller or ServerToolCaller20260120`
-
-          Tool invocation directly from the model.
 
           - `DirectCaller object`
 
@@ -805,11 +810,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       - `CodeExecutionToolResultBlockParam object`
 
+        - `type: "code_execution_tool_result"`
+
         - `content: CodeExecutionToolResultBlockParamContent`
 
-          Code execution result with encrypted stdout for PFC + web_search results.
-
           - `CodeExecutionToolResultErrorParam object`
+
+            - `type: "code_execution_tool_result_error"`
 
             - `error_code: CodeExecutionToolResultErrorCode`
 
@@ -821,15 +828,15 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"execution_time_exceeded"`
 
-            - `type: "code_execution_tool_result_error"`
-
           - `CodeExecutionResultBlockParam object`
+
+            - `type: "code_execution_result"`
 
             - `content: array of CodeExecutionOutputBlockParam`
 
-              - `file_id: string`
-
               - `type: "code_execution_output"`
+
+              - `file_id: string`
 
             - `return_code: number`
 
@@ -837,17 +844,17 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `stdout: string`
 
-            - `type: "code_execution_result"`
-
           - `EncryptedCodeExecutionResultBlockParam object`
 
             Code execution result with encrypted stdout for PFC + web_search results.
 
+            - `type: "encrypted_code_execution_result"`
+
             - `content: array of CodeExecutionOutputBlockParam`
 
-              - `file_id: string`
-
               - `type: "code_execution_output"`
+
+              - `file_id: string`
 
             - `encrypted_stdout: string`
 
@@ -855,13 +862,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `stderr: string`
 
-            - `type: "encrypted_code_execution_result"`
-
         - `tool_use_id: string`
 
           pattern: ^srvtoolu_[a-zA-Z0-9_]+$
-
-        - `type: "code_execution_tool_result"`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -869,9 +872,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       - `BashCodeExecutionToolResultBlockParam object`
 
+        - `type: "bash_code_execution_tool_result"`
+
         - `content: BashCodeExecutionToolResultErrorParam or BashCodeExecutionResultBlockParam`
 
           - `BashCodeExecutionToolResultErrorParam object`
+
+            - `type: "bash_code_execution_tool_result_error"`
 
             - `error_code: BashCodeExecutionToolResultErrorCode`
 
@@ -885,15 +892,15 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"output_file_too_large"`
 
-            - `type: "bash_code_execution_tool_result_error"`
-
           - `BashCodeExecutionResultBlockParam object`
+
+            - `type: "bash_code_execution_result"`
 
             - `content: array of BashCodeExecutionOutputBlockParam`
 
-              - `file_id: string`
-
               - `type: "bash_code_execution_output"`
+
+              - `file_id: string`
 
             - `return_code: number`
 
@@ -901,13 +908,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
             - `stdout: string`
 
-            - `type: "bash_code_execution_result"`
-
         - `tool_use_id: string`
 
           pattern: ^srvtoolu_[a-zA-Z0-9_]+$
-
-        - `type: "bash_code_execution_tool_result"`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -915,9 +918,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       - `TextEditorCodeExecutionToolResultBlockParam object`
 
+        - `type: "text_editor_code_execution_tool_result"`
+
         - `content: TextEditorCodeExecutionToolResultErrorParam or TextEditorCodeExecutionViewResultBlockParam or TextEditorCodeExecutionCreateResultBlockParam or TextEditorCodeExecutionStrReplaceResultBlockParam`
 
           - `TextEditorCodeExecutionToolResultErrorParam object`
+
+            - `type: "text_editor_code_execution_tool_result_error"`
 
             - `error_code: TextEditorCodeExecutionToolResultErrorCode`
 
@@ -931,11 +938,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"file_not_found"`
 
-            - `type: "text_editor_code_execution_tool_result_error"`
-
             - `error_message: optional string or null`
 
           - `TextEditorCodeExecutionViewResultBlockParam object`
+
+            - `type: "text_editor_code_execution_view_result"`
 
             - `content: string`
 
@@ -947,8 +954,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"pdf"`
 
-            - `type: "text_editor_code_execution_view_result"`
-
             - `num_lines: optional number or null`
 
             - `start_line: optional number or null`
@@ -957,9 +962,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           - `TextEditorCodeExecutionCreateResultBlockParam object`
 
-            - `is_file_update: boolean`
-
             - `type: "text_editor_code_execution_create_result"`
+
+            - `is_file_update: boolean`
 
           - `TextEditorCodeExecutionStrReplaceResultBlockParam object`
 
@@ -979,17 +984,19 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           pattern: ^srvtoolu_[a-zA-Z0-9_]+$
 
-        - `type: "text_editor_code_execution_tool_result"`
-
         - `cache_control: optional CacheControlEphemeral or null`
 
           Create a cache control breakpoint at this content block.
 
       - `ToolSearchToolResultBlockParam object`
 
+        - `type: "tool_search_tool_result"`
+
         - `content: ToolSearchToolResultErrorParam or ToolSearchToolSearchResultBlockParam`
 
           - `ToolSearchToolResultErrorParam object`
+
+            - `type: "tool_search_tool_result_error"`
 
             - `error_code: ToolSearchToolResultErrorCode`
 
@@ -1001,31 +1008,27 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
               - `"execution_time_exceeded"`
 
-            - `type: "tool_search_tool_result_error"`
-
             - `error_message: optional string or null`
 
           - `ToolSearchToolSearchResultBlockParam object`
 
+            - `type: "tool_search_tool_search_result"`
+
             - `tool_references: array of ToolReferenceBlockParam`
+
+              - `type: "tool_reference"`
 
               - `tool_name: string`
 
-                maxLength: 256, minLength: 1, pattern: ^[a-zA-Z0-9_-]{1,256}$
-
-              - `type: "tool_reference"`
+                minLength: 1, maxLength: 256, pattern: ^[a-zA-Z0-9_-]{1,256}$
 
               - `cache_control: optional CacheControlEphemeral or null`
 
                 Create a cache control breakpoint at this content block.
 
-            - `type: "tool_search_tool_search_result"`
-
         - `tool_use_id: string`
 
           pattern: ^srvtoolu_[a-zA-Z0-9_]+$
-
-        - `type: "tool_search_tool_result"`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -1036,9 +1039,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
         A content block that represents a file to be uploaded to the container
         Files uploaded via this block will be available in the container's input directory.
 
-        - `file_id: string`
-
         - `type: "container_upload"`
+
+        - `file_id: string`
 
         - `cache_control: optional CacheControlEphemeral or null`
 
@@ -1058,11 +1061,25 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
 
-  - `"claude-sonnet-5" or "claude-fable-5" or "claude-mythos-5" or 12 more`
+  - `string`
+
+  - `"claude-fable-5-1" or "claude-opus-5-5" or "claude-mythos-5-1" or 15 more`
 
     The model that will complete your prompt.
 
     See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
+
+    - `"claude-fable-5-1"`
+
+      Frontier intelligence for ambitious tasks across coding, scientific discovery, and enterprise workflows
+
+    - `"claude-opus-5-5"`
+
+      Powerful intelligence for coding, knowledge work, and long-running agents
+
+    - `"claude-mythos-5-1"`
+
+      Our most capable model for cybersecurity and biology research, available through trusted access programs
 
     - `"claude-sonnet-5"`
 
@@ -1087,10 +1104,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
     - `"claude-opus-4-7"`
 
       Powerful intelligence for long-running agents and coding
-
-    - `"claude-mythos-preview"`
-
-      New class of intelligence, strongest in coding and cybersecurity
 
     - `"claude-opus-4-6"`
 
@@ -1124,7 +1137,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       High-performance model for agents and coding
 
-  - `string`
+    - `"claude-mythos-preview"`
+
+      **Deprecated**: Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information.
+
+      New class of intelligence, strongest in coding and cybersecurity
 
 - `cache_control: optional CacheControlEphemeral or null`
 
@@ -1136,7 +1153,9 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `effort: optional "low" or "medium" or "high" or 2 more or null`
 
-    All possible effort levels.
+    How much effort the model should put into its response. Higher effort levels may result in more thorough analysis but take longer.
+
+    Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
 
     - `"low"`
 
@@ -1152,11 +1171,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
     A schema to specify Claude's output format in responses. See [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
 
+    - `type: "json_schema"`
+
     - `schema: map[unknown]`
 
       The JSON schema of the format
-
-    - `type: "json_schema"`
 
 - `system: optional string or array of TextBlockParam`
 
@@ -1168,11 +1187,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `array of TextBlockParam`
 
+    - `type: "text"`
+
     - `text: string`
 
       minLength: 1
-
-    - `type: "text"`
 
     - `cache_control: optional CacheControlEphemeral or null`
 
@@ -1190,6 +1209,8 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `ThinkingConfigEnabled object`
 
+    - `type: "enabled"`
+
     - `budget_tokens: number`
 
       Determines how many tokens Claude can use for its internal reasoning process. Larger budgets can enable more thorough analysis for complex problems, improving response quality.
@@ -1199,8 +1220,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
       See [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for details.
 
       minimum: 1024
-
-    - `type: "enabled"`
 
     - `display: optional "summarized" or "omitted" or null`
 
@@ -1258,11 +1277,11 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
     The model will use the specified tool with `tool_choice.name`.
 
+    - `type: "tool"`
+
     - `name: string`
 
       The name of the tool to use.
-
-    - `type: "tool"`
 
     - `disable_parallel_tool_use: optional boolean`
 
@@ -1342,6 +1361,8 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `Tool object`
 
+    - `type: optional "custom" or null`
+
     - `input_schema: object`
 
       [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
@@ -1360,7 +1381,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       This is how the tool will be called by the model and in `tool_use` blocks.
 
-      maxLength: 128, minLength: 1, pattern: ^[a-zA-Z0-9_-]{1,128}$
+      minLength: 1, maxLength: 128, pattern: ^[a-zA-Z0-9_-]{1,128}$
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -1396,17 +1417,15 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       When true, guarantees schema validation on tool names and inputs
 
-    - `type: optional "custom" or null`
-
   - `ToolBash20250124 object`
+
+    - `type: "bash_20250124"`
 
     - `name: "bash"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "bash_20250124"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -1434,13 +1453,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `CodeExecutionTool20250522 object`
 
+    - `type: "code_execution_20250522"`
+
     - `name: "code_execution"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "code_execution_20250522"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -1466,13 +1485,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `CodeExecutionTool20250825 object`
 
+    - `type: "code_execution_20250825"`
+
     - `name: "code_execution"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "code_execution_20250825"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -1500,13 +1519,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
     Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
 
+    - `type: "code_execution_20260120"`
+
     - `name: "code_execution"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "code_execution_20260120"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -1534,13 +1553,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
     Code execution tool with REPL state persistence.
 
+    - `type: "code_execution_20260521"`
+
     - `name: "code_execution"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "code_execution_20260521"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -1573,28 +1592,25 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
     - `type: "browser_toolset_20260801"`
 
-    - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
-
-      - `"direct"`
-
-      - `"code_execution_20250825"`
-
-      - `"code_execution_20260120"`
-
-      - `"code_execution_20260521"`
-
     - `cache_control: optional CacheControlEphemeral or null`
 
       Create a cache control breakpoint at this content block.
 
     - `configs: optional BrowserToolsetConfigs or null`
 
-      Per-member configuration for `browser_toolset_20260801`: one
-      optional field per member tool, keyed by the member name — the same
-      name the member's `tool_use` blocks carry. Every member is an
-      accepted key, and a member's defaults apply wherever its key is
-      absent. Unknown keys are rejected: the field set is this toolset
-      version's complete member set.
+      Sparse per-member overrides, keyed by member name. Absent, null, and {} are equivalent; a member's defaults apply wherever its key is absent.
+
+      - `type: optional BrowserTypeConfig or null`
+
+        `type`'s config overrides.
+
+        - `defer_loading: optional boolean or null`
+
+          Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+
+        - `enabled: optional boolean or null`
+
+          Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
 
       - `close_tab: optional BrowserCloseTabConfig or null`
 
@@ -1932,18 +1948,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
 
-      - `type: optional BrowserTypeConfig or null`
-
-        `type`'s config overrides.
-
-        - `defer_loading: optional boolean or null`
-
-          Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
-
-        - `enabled: optional boolean or null`
-
-          Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
-
       - `wait: optional BrowserWaitConfig or null`
 
         `wait`'s config overrides.
@@ -1970,13 +1974,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `MemoryTool20250818 object`
 
+    - `type: "memory_20250818"`
+
     - `name: "memory"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "memory_20250818"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2015,28 +2019,25 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
     - `type: "computer_toolset_20260801"`
 
-    - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
-
-      - `"direct"`
-
-      - `"code_execution_20250825"`
-
-      - `"code_execution_20260120"`
-
-      - `"code_execution_20260521"`
-
     - `cache_control: optional CacheControlEphemeral or null`
 
       Create a cache control breakpoint at this content block.
 
     - `configs: optional ComputerToolsetConfigs or null`
 
-      Per-member configuration for `computer_toolset_20260801`: one
-      optional field per member tool, keyed by the member name — the same
-      name the member's `tool_use` blocks carry. Every member is an
-      accepted key, and a member's defaults apply wherever its key is
-      absent. Unknown keys are rejected: the field set is this toolset
-      version's complete member set.
+      Sparse per-member overrides, keyed by member name. Absent, null, and {} are equivalent; a member's defaults apply wherever its key is absent.
+
+      - `type: optional ComputerTypeConfig or null`
+
+        `type`'s config overrides.
+
+        - `defer_loading: optional boolean or null`
+
+          Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+
+        - `enabled: optional boolean or null`
+
+          Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
 
       - `cursor_position: optional ComputerCursorPositionConfig or null`
 
@@ -2206,18 +2207,6 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
           Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
 
-      - `type: optional ComputerTypeConfig or null`
-
-        `type`'s config overrides.
-
-        - `defer_loading: optional boolean or null`
-
-          Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
-
-        - `enabled: optional boolean or null`
-
-          Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
-
       - `wait: optional ComputerWaitConfig or null`
 
         `wait`'s config overrides.
@@ -2244,13 +2233,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `ToolTextEditor20250124 object`
 
+    - `type: "text_editor_20250124"`
+
     - `name: "str_replace_editor"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "text_editor_20250124"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2278,13 +2267,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `ToolTextEditor20250429 object`
 
+    - `type: "text_editor_20250429"`
+
     - `name: "str_replace_based_edit_tool"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "text_editor_20250429"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2312,13 +2301,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `ToolTextEditor20250728 object`
 
+    - `type: "text_editor_20250728"`
+
     - `name: "str_replace_based_edit_tool"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "text_editor_20250728"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2352,13 +2341,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `WebSearchTool20250305 object`
 
+    - `type: "web_search_20250305"`
+
     - `name: "web_search"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "web_search_20250305"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2390,7 +2379,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       Maximum number of times the tool can be used in the API request.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `strict: optional boolean`
 
@@ -2406,35 +2395,35 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
         The city of the user.
 
-        maxLength: 255, minLength: 1
+        minLength: 1, maxLength: 255
 
       - `country: optional string or null`
 
         The two letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) of the user.
 
-        maxLength: 2, minLength: 2
+        minLength: 2, maxLength: 2
 
       - `region: optional string or null`
 
         The region of the user.
 
-        maxLength: 255, minLength: 1
+        minLength: 1, maxLength: 255
 
       - `timezone: optional string or null`
 
         The [IANA timezone](https://nodatime.org/TimeZones) of the user.
 
-        maxLength: 255, minLength: 1
+        minLength: 1, maxLength: 255
 
   - `WebFetchTool20250910 object`
+
+    - `type: "web_fetch_20250910"`
 
     - `name: "web_fetch"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "web_fetch_20250910"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2470,27 +2459,113 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       Maximum number of tokens used by including web page text content in the context. The limit is approximate and does not apply to binary content such as PDFs.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `max_uses: optional number or null`
 
       Maximum number of times the tool can be used in the API request.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `strict: optional boolean`
 
       When true, guarantees schema validation on tool names and inputs
 
+    - `url_sources: optional WebFetchURLSources or null`
+
+      Which sources contribute to the set of URLs the tool may fetch. Omitted means every source.
+
+      - `client_tool_results: optional WebFetchURLSourceAll or WebFetchURLSourceNone or WebFetchURLSourceOnly or WebFetchURLSourceExcept`
+
+        Which client tools' results contribute fetchable URLs: "all", "none", or an only or except list of client tool names from tools[].
+
+        - `WebFetchURLSourceAll object`
+
+          The `url_sources` variant under which a source contributes in
+          full: every result of the tool filter's source, or all user input.
+
+          - `type: "all"`
+
+        - `WebFetchURLSourceNone object`
+
+          The `url_sources` variant under which a source contributes nothing:
+          no result of the tool filter's source, or no user input.
+
+          - `type: "none"`
+
+        - `WebFetchURLSourceOnly object`
+
+          The tool filter variant under which only the named tools' results
+          contribute.
+
+          - `type: "only"`
+
+          - `tools: array of WebFetchURLSourceToolReference`
+
+            - `type: "tool_reference"`
+
+            - `name: string`
+
+        - `WebFetchURLSourceExcept object`
+
+          The tool filter variant under which every result but the named
+          tools' contributes.
+
+          - `type: "except"`
+
+          - `tools: array of WebFetchURLSourceToolReference`
+
+            - `type: "tool_reference"`
+
+            - `name: string`
+
+      - `server_tool_results: optional WebFetchURLSourceAll or WebFetchURLSourceNone or WebFetchURLSourceOnly or WebFetchURLSourceExcept`
+
+        Which server tools' results contribute fetchable URLs: "all", "none", or an only or except list of server tool names from tools[]; only web_search and web_fetch results ever contribute.
+
+        - `WebFetchURLSourceAll object`
+
+          The `url_sources` variant under which a source contributes in
+          full: every result of the tool filter's source, or all user input.
+
+        - `WebFetchURLSourceNone object`
+
+          The `url_sources` variant under which a source contributes nothing:
+          no result of the tool filter's source, or no user input.
+
+        - `WebFetchURLSourceOnly object`
+
+          The tool filter variant under which only the named tools' results
+          contribute.
+
+        - `WebFetchURLSourceExcept object`
+
+          The tool filter variant under which every result but the named
+          tools' contributes.
+
+      - `user_input: optional WebFetchURLSourceAll or WebFetchURLSourceNone`
+
+        Whether URLs in user messages are fetchable: "all" or "none".
+
+        - `WebFetchURLSourceAll object`
+
+          The `url_sources` variant under which a source contributes in
+          full: every result of the tool filter's source, or all user input.
+
+        - `WebFetchURLSourceNone object`
+
+          The `url_sources` variant under which a source contributes nothing:
+          no result of the tool filter's source, or no user input.
+
   - `WebSearchTool20260209 object`
+
+    - `type: "web_search_20260209"`
 
     - `name: "web_search"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "web_search_20260209"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2522,7 +2597,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       Maximum number of times the tool can be used in the API request.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `strict: optional boolean`
 
@@ -2534,13 +2609,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `WebFetchTool20260209 object`
 
+    - `type: "web_fetch_20260209"`
+
     - `name: "web_fetch"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "web_fetch_20260209"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2576,29 +2651,33 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       Maximum number of tokens used by including web page text content in the context. The limit is approximate and does not apply to binary content such as PDFs.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `max_uses: optional number or null`
 
       Maximum number of times the tool can be used in the API request.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `strict: optional boolean`
 
       When true, guarantees schema validation on tool names and inputs
+
+    - `url_sources: optional WebFetchURLSources or null`
+
+      Which sources contribute to the set of URLs the tool may fetch. Omitted means every source.
 
   - `WebFetchTool20260309 object`
 
     Web fetch tool with use_cache parameter for bypassing cached content.
 
+    - `type: "web_fetch_20260309"`
+
     - `name: "web_fetch"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "web_fetch_20260309"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2634,17 +2713,21 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       Maximum number of tokens used by including web page text content in the context. The limit is approximate and does not apply to binary content such as PDFs.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `max_uses: optional number or null`
 
       Maximum number of times the tool can be used in the API request.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `strict: optional boolean`
 
       When true, guarantees schema validation on tool names and inputs
+
+    - `url_sources: optional WebFetchURLSources or null`
+
+      Which sources contribute to the set of URLs the tool may fetch. Omitted means every source.
 
     - `use_cache: optional boolean`
 
@@ -2652,13 +2735,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `WebSearchTool20260318 object`
 
+    - `type: "web_search_20260318"`
+
     - `name: "web_search"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "web_search_20260318"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2690,7 +2773,7 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       Maximum number of times the tool can be used in the API request.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `response_inclusion: optional "full" or "excluded"`
 
@@ -2710,13 +2793,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `WebFetchTool20260318 object`
 
+    - `type: "web_fetch_20260318"`
+
     - `name: "web_fetch"`
 
       Name of the tool.
 
       This is how the tool will be called by the model and in `tool_use` blocks.
-
-    - `type: "web_fetch_20260318"`
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2752,13 +2835,13 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       Maximum number of tokens used by including web page text content in the context. The limit is approximate and does not apply to binary content such as PDFs.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `max_uses: optional number or null`
 
       Maximum number of times the tool can be used in the API request.
 
-      exclusiveMinimum: 0
+      minimum: 1
 
     - `response_inclusion: optional "full" or "excluded"`
 
@@ -2772,23 +2855,27 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
       When true, guarantees schema validation on tool names and inputs
 
+    - `url_sources: optional WebFetchURLSources or null`
+
+      Which sources contribute to the set of URLs the tool may fetch. Omitted means every source.
+
     - `use_cache: optional boolean`
 
       Whether to use cached content. Set to false to bypass the cache and fetch fresh content. Only set to false when the user explicitly requests fresh content or when fetching rapidly-changing sources.
 
   - `ToolSearchToolBm25_20251119 object`
 
-    - `name: "tool_search_tool_bm25"`
-
-      Name of the tool.
-
-      This is how the tool will be called by the model and in `tool_use` blocks.
-
     - `type: "tool_search_tool_bm25_20251119" or "tool_search_tool_bm25"`
 
       - `"tool_search_tool_bm25_20251119"`
 
       - `"tool_search_tool_bm25"`
+
+    - `name: "tool_search_tool_bm25"`
+
+      Name of the tool.
+
+      This is how the tool will be called by the model and in `tool_use` blocks.
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 
@@ -2814,17 +2901,17 @@ Learn more about token counting in our [user guide](https://platform.claude.com/
 
   - `ToolSearchToolRegex20251119 object`
 
-    - `name: "tool_search_tool_regex"`
-
-      Name of the tool.
-
-      This is how the tool will be called by the model and in `tool_use` blocks.
-
     - `type: "tool_search_tool_regex_20251119" or "tool_search_tool_regex"`
 
       - `"tool_search_tool_regex_20251119"`
 
       - `"tool_search_tool_regex"`
+
+    - `name: "tool_search_tool_regex"`
+
+      Name of the tool.
+
+      This is how the tool will be called by the model and in `tool_use` blocks.
 
     - `allowed_callers: optional array of "direct" or "code_execution_20250825" or "code_execution_20260120" or "code_execution_20260521"`
 

@@ -1,3 +1,8 @@
+---
+title: Delete file
+url: https://platform.claude.com/docs/en/api/compliance/apps/chats/files/delete
+---
+
 # Delete file
 
 **DELETE** `/v1/compliance/apps/chats/files/{claude_file_id}`
@@ -17,21 +22,22 @@ operation that cannot be undone.
 
 ## Returns
 
-- `id: string`
-
-  The ID of the file that was deleted
-
 - `type: optional "claude_file_deleted"`
 
   Constant string confirming deletion
 
   default: claude_file_deleted
 
+- `id: string`
+
+  The ID of the file that was deleted
+
 ## Example
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/files/$CLAUDE_FILE_ID \
     -X DELETE \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

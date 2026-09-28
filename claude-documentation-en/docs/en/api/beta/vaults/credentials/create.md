@@ -1,3 +1,8 @@
+---
+title: Create Credential
+url: https://platform.claude.com/docs/en/api/beta/vaults/credentials/create
+---
+
 # Create Credential
 
 **POST** `/v1/vaults/{vault_id}/credentials`
@@ -8,6 +13,8 @@ Create Credential
 
 - `vault_id: string`
 
+  Identifier of the vault to create the credential in.
+
 ## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -16,7 +23,7 @@ Create Credential
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -64,6 +71,8 @@ Create Credential
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -100,15 +109,35 @@ Create Credential
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ## Body parameters
 
 - `auth: BetaManagedAgentsMCPOAuthCreateParams or BetaManagedAgentsStaticBearerCreateParams or BetaManagedAgentsEnvironmentVariableCreateParams`
 
-  Authentication details for creating a credential.
+  Authentication configuration for the credential.
 
   - `BetaManagedAgentsMCPOAuthCreateParams object`
 
     Parameters for creating an MCP OAuth credential.
+
+    - `type: "mcp_oauth"`
 
     - `access_token: string`
 
@@ -122,8 +151,6 @@ Create Credential
 
       minLength: 1, maxLength: 2047
 
-    - `type: "mcp_oauth"`
-
     - `expires_at: optional string or null`
 
       A timestamp in RFC 3339 format
@@ -132,7 +159,7 @@ Create Credential
 
     - `refresh: optional BetaManagedAgentsMCPOAuthRefreshParams or null`
 
-      OAuth refresh token parameters for creating a credential with refresh support.
+      Refresh token configuration, if the credential supports token refresh.
 
       - `client_id: string`
 
@@ -144,7 +171,7 @@ Create Credential
 
         OAuth refresh token.
 
-        minLength: 1, maxLength: 4096
+        minLength: 1, maxLength: 8192
 
       - `token_endpoint: string`
 
@@ -153,8 +180,6 @@ Create Credential
         minLength: 1, maxLength: 2047
 
       - `token_endpoint_auth: BetaManagedAgentsTokenEndpointAuthNoneParam or BetaManagedAgentsTokenEndpointAuthBasicParam or BetaManagedAgentsTokenEndpointAuthPostParam`
-
-        Token endpoint requires no client authentication.
 
         - `BetaManagedAgentsTokenEndpointAuthNoneParam object`
 
@@ -166,25 +191,25 @@ Create Credential
 
           Token endpoint uses HTTP Basic authentication with client credentials.
 
+          - `type: "client_secret_basic"`
+
           - `client_secret: string`
 
             OAuth client secret.
 
             minLength: 1, maxLength: 512
-
-          - `type: "client_secret_basic"`
 
         - `BetaManagedAgentsTokenEndpointAuthPostParam object`
 
           Token endpoint uses POST body authentication with client credentials.
 
+          - `type: "client_secret_post"`
+
           - `client_secret: string`
 
             OAuth client secret.
 
             minLength: 1, maxLength: 512
-
-          - `type: "client_secret_post"`
 
       - `resource: optional string or null`
 
@@ -202,6 +227,8 @@ Create Credential
 
     Parameters for creating a static bearer token credential.
 
+    - `type: "static_bearer"`
+
     - `token: string`
 
       Static bearer token value.
@@ -214,11 +241,11 @@ Create Credential
 
       minLength: 1, maxLength: 2047
 
-    - `type: "static_bearer"`
-
   - `BetaManagedAgentsEnvironmentVariableCreateParams object`
 
     Parameters for creating an environment variable credential.
+
+    - `type: "environment_variable"`
 
     - `networking: BetaManagedAgentsCredentialNetworkingParams`
 
@@ -234,11 +261,11 @@ Create Credential
 
         Substitute the secret only on requests to the listed hosts.
 
+        - `type: "limited"`
+
         - `allowed_hosts: array of string`
 
           Hostnames on which the secret will be substituted. Each entry is a bare hostname (`api.example.com`), an IPv4 address (`192.0.2.1`), or a `*.`-prefixed wildcard (`*.example.com`). URLs, ports, paths, and IPv6 addresses are not accepted. At most 16 entries.
-
-        - `type: "limited"`
 
     - `secret_name: string`
 
@@ -251,8 +278,6 @@ Create Credential
       Secret value. Write-only; never returned in responses.
 
       minLength: 1, maxLength: 4096
-
-    - `type: "environment_variable"`
 
     - `injection_location: optional BetaManagedAgentsInjectionLocationParams`
 
@@ -282,29 +307,31 @@ Create Credential
 
   A credential stored in a vault. Sensitive fields are never returned in responses.
 
+  - `type: "vault_credential"`
+
   - `id: string`
 
     Unique identifier for the credential.
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    When the credential was archived. Null if not archived.
 
     format: date-time
 
   - `auth: BetaManagedAgentsMCPOAuthAuthResponse or BetaManagedAgentsStaticBearerAuthResponse or BetaManagedAgentsEnvironmentVariableAuthResponse`
 
-    Authentication details for a credential.
+    Authentication configuration for this credential.
 
     - `BetaManagedAgentsMCPOAuthAuthResponse object`
 
       OAuth credential details for an MCP server.
 
+      - `type: "mcp_oauth"`
+
       - `mcp_server_url: string`
 
         URL of the MCP server this credential authenticates against.
-
-      - `type: "mcp_oauth"`
 
       - `expires_at: optional string or null`
 
@@ -314,7 +341,7 @@ Create Credential
 
       - `refresh: optional BetaManagedAgentsMCPOAuthRefreshResponse or null`
 
-        OAuth refresh token configuration returned in credential responses.
+        Refresh token configuration, if the credential supports token refresh.
 
         - `client_id: string`
 
@@ -325,8 +352,6 @@ Create Credential
           Token endpoint URL used to refresh the access token.
 
         - `token_endpoint_auth: BetaManagedAgentsTokenEndpointAuthNoneResponse or BetaManagedAgentsTokenEndpointAuthBasicResponse or BetaManagedAgentsTokenEndpointAuthPostResponse`
-
-          Token endpoint requires no client authentication.
 
           - `BetaManagedAgentsTokenEndpointAuthNoneResponse object`
 
@@ -358,15 +383,17 @@ Create Credential
 
       Static bearer token credential details for an MCP server.
 
+      - `type: "static_bearer"`
+
       - `mcp_server_url: string`
 
         URL of the MCP server this credential authenticates against.
 
-      - `type: "static_bearer"`
-
     - `BetaManagedAgentsEnvironmentVariableAuthResponse object`
 
       Environment variable credential details. The secret value is never returned.
+
+      - `type: "environment_variable"`
 
       - `injection_location: BetaManagedAgentsInjectionLocationResponse`
 
@@ -394,17 +421,15 @@ Create Credential
 
           The secret is substituted only on requests to the listed hosts.
 
+          - `type: "limited"`
+
           - `allowed_hosts: array of string`
 
             Hostnames on which the secret will be substituted. An entry matches the request host exactly; a `*.`-prefixed entry matches any subdomain of the named domain but not the domain itself.
 
-          - `type: "limited"`
-
       - `secret_name: string`
 
         Name of the environment variable.
-
-      - `type: "environment_variable"`
 
   - `created_at: string`
 
@@ -415,8 +440,6 @@ Create Credential
   - `metadata: map[string]`
 
     Arbitrary key-value metadata attached to the credential.
-
-  - `type: "vault_credential"`
 
   - `updated_at: string`
 

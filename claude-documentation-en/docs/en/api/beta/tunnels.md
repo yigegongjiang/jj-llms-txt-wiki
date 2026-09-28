@@ -1,3 +1,8 @@
+---
+title: Tunnels
+url: https://platform.claude.com/docs/en/api/beta/tunnels
+---
+
 # Tunnels
 
 ## Create Tunnel
@@ -16,7 +21,7 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -64,6 +69,8 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -100,6 +107,24 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Body parameters
 
 - `display_name: optional string or null`
@@ -114,19 +139,21 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
 
   An MCP tunnel.
 
+  - `type: "tunnel"`
+
   - `id: string`
 
     Unique identifier for the tunnel, prefixed with `tnl_`.
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was archived. Null if it is not archived.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was created.
 
     format: date-time
 
@@ -137,8 +164,6 @@ Creates a tunnel. Creation allocates a fresh hostname and provisions the tunnel;
   - `domain: string`
 
     Anthropic-assigned hostname for the tunnel. MCP server URLs whose host is a subdomain of this value are routed through the tunnel. Globally unique and never reused, even after the tunnel is archived.
-
-  - `type: "tunnel"`
 
 ### Example
 
@@ -176,6 +201,8 @@ Fetches a tunnel by ID.
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 ### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -184,7 +211,7 @@ Fetches a tunnel by ID.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -232,6 +259,8 @@ Fetches a tunnel by ID.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -268,11 +297,31 @@ Fetches a tunnel by ID.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Returns
 
 - `BetaTunnel object`
 
   An MCP tunnel.
+
+  - `type: "tunnel"`
 
   - `id: string`
 
@@ -280,13 +329,13 @@ Fetches a tunnel by ID.
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was archived. Null if it is not archived.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was created.
 
     format: date-time
 
@@ -297,8 +346,6 @@ Fetches a tunnel by ID.
   - `domain: string`
 
     Anthropic-assigned hostname for the tunnel. MCP server URLs whose host is a subdomain of this value are routed through the tunnel. Globally unique and never reused, even after the tunnel is archived.
-
-  - `type: "tunnel"`
 
 ### Example
 
@@ -354,7 +401,7 @@ Lists tunnels. Results are ordered by creation time, newest first; archived tunn
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -402,6 +449,8 @@ Lists tunnels. Results are ordered by creation time, newest first; archived tunn
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -438,11 +487,31 @@ Lists tunnels. Results are ordered by creation time, newest first; archived tunn
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Returns
 
 - `data: array of BetaTunnel`
 
   List of tunnels, ordered by created_at descending.
+
+  - `type: "tunnel"`
 
   - `id: string`
 
@@ -450,13 +519,13 @@ Lists tunnels. Results are ordered by creation time, newest first; archived tunn
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was archived. Null if it is not archived.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was created.
 
     format: date-time
 
@@ -467,8 +536,6 @@ Lists tunnels. Results are ordered by creation time, newest first; archived tunn
   - `domain: string`
 
     Anthropic-assigned hostname for the tunnel. MCP server URLs whose host is a subdomain of this value are routed through the tunnel. Globally unique and never reused, even after the tunnel is archived.
-
-  - `type: "tunnel"`
 
 - `next_page: string or null`
 
@@ -513,6 +580,8 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 ### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -521,7 +590,7 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -569,6 +638,8 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -605,11 +676,31 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Returns
 
 - `BetaTunnel object`
 
   An MCP tunnel.
+
+  - `type: "tunnel"`
 
   - `id: string`
 
@@ -617,13 +708,13 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was archived. Null if it is not archived.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was created.
 
     format: date-time
 
@@ -634,8 +725,6 @@ Archives a tunnel. Archival is irreversible: every non-archived certificate on t
   - `domain: string`
 
     Anthropic-assigned hostname for the tunnel. MCP server URLs whose host is a subdomain of this value are routed through the tunnel. Globally unique and never reused, even after the tunnel is archived.
-
-  - `type: "tunnel"`
 
 ### Example
 
@@ -672,6 +761,8 @@ Reveals a tunnel's connector token. The value is fetched live on each call; Anth
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 ### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -680,7 +771,7 @@ Reveals a tunnel's connector token. The value is fetched live on each call; Anth
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -728,6 +819,8 @@ Reveals a tunnel's connector token. The value is fetched live on each call; Anth
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -764,11 +857,31 @@ Reveals a tunnel's connector token. The value is fetched live on each call; Anth
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Returns
 
 - `BetaTunnelToken object`
 
   A tunnel's connector token.
+
+  - `type: "tunnel_token"`
 
   - `id: string`
 
@@ -777,8 +890,6 @@ Reveals a tunnel's connector token. The value is fetched live on each call; Anth
   - `tunnel_token: string`
 
     The connector token used to run the tunnel. Treat as a credential.
-
-  - `type: "tunnel_token"`
 
 ### Example
 
@@ -812,6 +923,8 @@ Rotates a tunnel's connector token. Rotation invalidates the current token for n
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 ### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -820,7 +933,7 @@ Rotates a tunnel's connector token. Rotation invalidates the current token for n
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -868,6 +981,8 @@ Rotates a tunnel's connector token. Rotation invalidates the current token for n
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -904,6 +1019,24 @@ Rotates a tunnel's connector token. Rotation invalidates the current token for n
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ### Body parameters
 
 - `reason: optional string or null`
@@ -918,6 +1051,8 @@ Rotates a tunnel's connector token. Rotation invalidates the current token for n
 
   A tunnel's connector token.
 
+  - `type: "tunnel_token"`
+
   - `id: string`
 
     Stable identifier for the current token value. Changes when the token is rotated.
@@ -925,8 +1060,6 @@ Rotates a tunnel's connector token. Rotation invalidates the current token for n
   - `tunnel_token: string`
 
     The connector token used to run the tunnel. Treat as a credential.
-
-  - `type: "tunnel_token"`
 
 ### Example
 
@@ -957,19 +1090,21 @@ curl https://api.anthropic.com/v1/tunnels/$TUNNEL_ID/rotate_token \
 
   An MCP tunnel.
 
+  - `type: "tunnel"`
+
   - `id: string`
 
     Unique identifier for the tunnel, prefixed with `tnl_`.
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was archived. Null if it is not archived.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the tunnel was created.
 
     format: date-time
 
@@ -981,13 +1116,13 @@ curl https://api.anthropic.com/v1/tunnels/$TUNNEL_ID/rotate_token \
 
     Anthropic-assigned hostname for the tunnel. MCP server URLs whose host is a subdomain of this value are routed through the tunnel. Globally unique and never reused, even after the tunnel is archived.
 
-  - `type: "tunnel"`
-
 ### Beta Tunnel Token
 
 - `BetaTunnelToken object`
 
   A tunnel's connector token.
+
+  - `type: "tunnel_token"`
 
   - `id: string`
 
@@ -996,8 +1131,6 @@ curl https://api.anthropic.com/v1/tunnels/$TUNNEL_ID/rotate_token \
   - `tunnel_token: string`
 
     The connector token used to run the tunnel. Treat as a credential.
-
-  - `type: "tunnel_token"`
 
 ## Tunnels › Certificates
 
@@ -1013,6 +1146,8 @@ Registers a public CA certificate on a tunnel. Anthropic verifies the gateway's 
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 #### Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -1021,7 +1156,7 @@ Registers a public CA certificate on a tunnel. Anthropic verifies the gateway's 
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -1069,6 +1204,8 @@ Registers a public CA certificate on a tunnel. Anthropic verifies the gateway's 
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -1105,6 +1242,24 @@ Registers a public CA certificate on a tunnel. Anthropic verifies the gateway's 
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 #### Body parameters
 
 - `ca_certificate_pem: string`
@@ -1119,25 +1274,27 @@ Registers a public CA certificate on a tunnel. Anthropic verifies the gateway's 
 
   A CA certificate attached to a tunnel.
 
+  - `type: "tunnel_certificate"`
+
   - `id: string`
 
     Unique identifier for the certificate, prefixed with `tcrt_`.
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was archived. Null if it is still in the trusted set.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was registered.
 
     format: date-time
 
   - `expires_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate expires, or `null` if it does not expire.
 
     format: date-time
 
@@ -1148,8 +1305,6 @@ Registers a public CA certificate on a tunnel. Anthropic verifies the gateway's 
   - `tunnel_id: string`
 
     ID of the tunnel the certificate is registered against.
-
-  - `type: "tunnel_certificate"`
 
 #### Example
 
@@ -1190,7 +1345,11 @@ Fetches a tunnel certificate by ID.
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 - `certificate_id: string`
+
+  ID of the certificate (`tcrt_...`).
 
 #### Headers
 
@@ -1200,7 +1359,7 @@ Fetches a tunnel certificate by ID.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -1248,6 +1407,8 @@ Fetches a tunnel certificate by ID.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -1284,11 +1445,31 @@ Fetches a tunnel certificate by ID.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 #### Returns
 
 - `BetaTunnelCertificate object`
 
   A CA certificate attached to a tunnel.
+
+  - `type: "tunnel_certificate"`
 
   - `id: string`
 
@@ -1296,19 +1477,19 @@ Fetches a tunnel certificate by ID.
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was archived. Null if it is still in the trusted set.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was registered.
 
     format: date-time
 
   - `expires_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate expires, or `null` if it does not expire.
 
     format: date-time
 
@@ -1319,8 +1500,6 @@ Fetches a tunnel certificate by ID.
   - `tunnel_id: string`
 
     ID of the tunnel the certificate is registered against.
-
-  - `type: "tunnel_certificate"`
 
 #### Example
 
@@ -1357,6 +1536,8 @@ Lists the certificates registered on a tunnel. Archived certificates are exclude
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 #### Query parameters
 
 - `include_archived: optional boolean`
@@ -1381,7 +1562,7 @@ Lists the certificates registered on a tunnel. Archived certificates are exclude
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -1429,6 +1610,8 @@ Lists the certificates registered on a tunnel. Archived certificates are exclude
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -1465,11 +1648,31 @@ Lists the certificates registered on a tunnel. Archived certificates are exclude
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 #### Returns
 
 - `data: array of BetaTunnelCertificate`
 
   List of certificates, ordered by created_at descending.
+
+  - `type: "tunnel_certificate"`
 
   - `id: string`
 
@@ -1477,19 +1680,19 @@ Lists the certificates registered on a tunnel. Archived certificates are exclude
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was archived. Null if it is still in the trusted set.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was registered.
 
     format: date-time
 
   - `expires_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate expires, or `null` if it does not expire.
 
     format: date-time
 
@@ -1500,8 +1703,6 @@ Lists the certificates registered on a tunnel. Archived certificates are exclude
   - `tunnel_id: string`
 
     ID of the tunnel the certificate is registered against.
-
-  - `type: "tunnel_certificate"`
 
 - `next_page: string or null`
 
@@ -1547,7 +1748,11 @@ Archives a tunnel certificate, removing it from the set Anthropic trusts for the
 
 - `tunnel_id: string`
 
+  ID of the tunnel (`tnl_...`).
+
 - `certificate_id: string`
+
+  ID of the certificate to archive (`tcrt_...`).
 
 #### Headers
 
@@ -1557,7 +1762,7 @@ Archives a tunnel certificate, removing it from the set Anthropic trusts for the
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -1605,6 +1810,8 @@ Archives a tunnel certificate, removing it from the set Anthropic trusts for the
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -1641,11 +1848,31 @@ Archives a tunnel certificate, removing it from the set Anthropic trusts for the
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 #### Returns
 
 - `BetaTunnelCertificate object`
 
   A CA certificate attached to a tunnel.
+
+  - `type: "tunnel_certificate"`
 
   - `id: string`
 
@@ -1653,19 +1880,19 @@ Archives a tunnel certificate, removing it from the set Anthropic trusts for the
 
   - `archived_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was archived. Null if it is still in the trusted set.
 
     format: date-time
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate was registered.
 
     format: date-time
 
   - `expires_at: string or null`
 
-    A timestamp in RFC 3339 format
+    RFC 3339 datetime string indicating when the certificate expires, or `null` if it does not expire.
 
     format: date-time
 
@@ -1676,8 +1903,6 @@ Archives a tunnel certificate, removing it from the set Anthropic trusts for the
   - `tunnel_id: string`
 
     ID of the tunnel the certificate is registered against.
-
-  - `type: "tunnel_certificate"`
 
 #### Example
 

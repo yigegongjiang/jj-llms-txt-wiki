@@ -20,7 +20,7 @@ The mode is not an API parameter. It is built entirely from documented pieces:
 
 The example is a single file. The constants control the effort level, the fan-out shape, and how often the mode refresher is re-sent. `MAX_CONCURRENT` caps how many subagents run at the same time (the PHP port is sequential and ignores it); `MAX_TOTAL_SUBTASKS` caps how many the model may queue in a single Workflow call. Splitting the two lets the model plan a large backlog without launching it all at once. The `DOC_TEST_MODE` check caps the loops to a single turn when that environment variable is set, so the automated docs harness can validate that the file compiles and finishes quickly without running the full orchestration; leave it unset when running the example yourself.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   import atexit
   import concurrent.futures
@@ -37,7 +37,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   client = anthropic.Anthropic()
 
-  MODEL = "claude-opus-5"
+  MODEL = "claude-opus-5-5"
   EFFORT = "xhigh"
 
   SYSTEM_PROMPT = "You are a helpful general-purpose agent. Answer the user's request directly."
@@ -67,7 +67,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   const client = new Anthropic();
 
-  const MODEL = "claude-opus-5";
+  const MODEL = "claude-opus-5-5";
   const EFFORT = "xhigh";
 
   const SYSTEM_PROMPT =
@@ -95,7 +95,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   AnthropicClient client = new();
 
-  const Model model = Model.ClaudeOpus5;
+  const Model model = Model.ClaudeOpus5_5;
   var effort = Effort.Xhigh;
 
   const string systemPrompt = "You are a helpful general-purpose agent. Answer the user's request directly.";
@@ -141,7 +141,7 @@ The example is a single file. The constants control the effort level, the fan-ou
   var client = anthropic.NewClient()
 
   const (
-  	modelID = anthropic.ModelClaudeOpus5
+  	modelID = anthropic.ModelClaudeOpus5_5
   	effort  = anthropic.OutputConfigEffortXhigh
 
   	systemPrompt = "You are a helpful general-purpose agent. Answer the user's request directly."
@@ -223,7 +223,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
-  static final Model MODEL = Model.CLAUDE_OPUS_5;
+  static final Model MODEL = Model.CLAUDE_OPUS_5_5;
   static final boolean DOC_TEST_MODE =
           !Objects.requireNonNullElse(System.getenv("DOC_TEST_MODE"), "").isEmpty();
   static final OutputConfig.Effort EFFORT = OutputConfig.Effort.XHIGH;
@@ -247,12 +247,11 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   ```php PHP
   use Anthropic\Client;
-  use Anthropic\Messages\TextBlock;
   use Anthropic\Messages\ToolUseBlock;
 
   $client = new Client();
 
-  const MODEL = 'claude-opus-5';
+  const MODEL = 'claude-opus-5-5';
   define('DOC_TEST_MODE', (string) getenv('DOC_TEST_MODE') !== '');
   const EFFORT = 'xhigh';
 
@@ -279,7 +278,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
   CLIENT = Anthropic::Client.new
 
-  MODEL = "claude-opus-5"
+  MODEL = "claude-opus-5-5"
   EFFORT = :xhigh
 
   SYSTEM_PROMPT = "You are a helpful general-purpose agent. Answer the user's request directly."
@@ -301,7 +300,7 @@ The example is a single file. The constants control the effort level, the fan-ou
 
 The reminders are short on purpose. They flip the mode and point at the tool description, where the heavyweight instructions live. The full text is sent once when the mode turns on, the refresher is re-sent only after several user turns, and the exit notice is sent once when the mode turns off.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   MODE_ENTER = (
       "Orchestration mode is on: optimize for the most exhaustive, correct answer rather than "
@@ -401,7 +400,7 @@ The reminders are short on purpose. They flip the mode and point at the tool des
 
 The Workflow tool carries the real behavioral contract: the opt-in rule, the standing consent that applies while the mode is on, granularity guidance for sizing the fan-out, and the quality patterns the model can reach for (a verification wave, a completeness critic, multiphase sequencing). Subagents also get a `report_findings` tool so their results come back as structured JSON instead of prose, and the bash tool is the Anthropic-defined `bash_20250124` tool run locally.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   WORKFLOW_TOOL = {
       "name": "Workflow",
@@ -887,7 +886,7 @@ The Workflow tool carries the real behavioral contract: the opt-in rule, the sta
 
 The bash handler runs the requested command with a timeout, captures combined stdout and stderr, and truncates the result so a runaway command can't flood the context window. Commands run in the directory you launch the example from, so pointing it at a project means starting it there; when `DOC_TEST_MODE` is set, the harness instead gives bash a small throwaway fixture directory that is removed on exit. There is no sandbox here: the command runs with the permissions of the process that launched the example. For clarity this example runs each call in a fresh subshell rather than maintaining the persistent session the `bash_20250124` contract describes; a production agent should back the tool with a long-lived shell so that working directory, environment, and the `restart` action behave as documented.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   # Run bash where the example was launched. In DOC_TEST_MODE the docs harness
   # points it at a throwaway fixture directory instead, removed on exit.
@@ -1413,15 +1412,15 @@ The bash handler runs the requested command with a timeout, captures combined st
   # so reshape each block to the request schema before echoing it back.
   def assistant_content_param(content)
     content.map do |block|
-      case block.type
-      when :tool_use
+      case block
+      when Anthropic::Models::ToolUseBlock
         input = parse_tool_input(block.input)
         {type: "tool_use", id: block.id, name: block.name, input: input}
-      when :text
+      when Anthropic::Models::TextBlock
         {type: "text", text: block.text}
-      when :thinking
+      when Anthropic::Models::ThinkingBlock
         {type: "thinking", thinking: block.thinking, signature: block.signature}
-      when :redacted_thinking then {type: "redacted_thinking", data: block.data}
+      when Anthropic::Models::RedactedThinkingBlock then {type: "redacted_thinking", data: block.data}
       else
         block.to_h
       end
@@ -1434,7 +1433,7 @@ The bash handler runs the requested command with a timeout, captures combined st
 
 Each workflow subtask becomes its own small agent loop with the bash tool, running at the same effort as the main loop. A per-request timeout bounds each API call so a dropped connection degrades one subagent instead of stalling the whole run.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   def run_subagent(model: str, prompt: str) -> str:
       """One subagent: a small nested agent loop with the bash tool plus report_findings.
@@ -1469,13 +1468,14 @@ Each workflow subtask becomes its own small agent loop with the bash tool, runni
           for block in response.content:
               if block.type != "tool_use":
                   continue
-              if block.name == "report_findings":
-                  report = json.dumps(block.input, indent=2)
-                  output, is_error = "Findings recorded.", False
-              elif block.name == "bash":
-                  output, is_error = handle_bash_block(block)
-              else:
-                  output, is_error = f"unknown tool: {block.name}", True
+              match block.name:
+                  case "report_findings":
+                      report = json.dumps(block.input, indent=2)
+                      output, is_error = "Findings recorded.", False
+                  case "bash":
+                      output, is_error = handle_bash_block(block)
+                  case _:
+                      output, is_error = f"unknown tool: {block.name}", True
               tool_results.append(
                   {
                       "type": "tool_result",
@@ -1535,15 +1535,18 @@ Each workflow subtask becomes its own small agent loop with the bash tool, runni
         }
         let output: string;
         let isError: boolean;
-        if (block.name === "report_findings") {
-          report = JSON.stringify(block.input, null, 2);
-          output = "Findings recorded.";
-          isError = false;
-        } else if (block.name === "bash") {
-          ({ output, isError } = await handleBashBlock(block));
-        } else {
-          output = `unknown tool: ${block.name}`;
-          isError = true;
+        switch (block.name) {
+          case "report_findings":
+            report = JSON.stringify(block.input, null, 2);
+            output = "Findings recorded.";
+            isError = false;
+            break;
+          case "bash":
+            ({ output, isError } = await handleBashBlock(block));
+            break;
+          default:
+            output = `unknown tool: ${block.name}`;
+            isError = true;
         }
         toolResults.push({
           type: "tool_result",
@@ -1832,7 +1835,7 @@ Each workflow subtask becomes its own small agent loop with the bash tool, runni
           }
       }
       foreach ($jsonBuffers as $index => $buffer) {
-          if ($buffer !== '' && $blocks[$index] instanceof ToolUseBlock) {
+          if ($buffer !== '' && $blocks[$index] instanceof \Anthropic\Messages\ToolUseBlock) {
               $decoded = json_decode($buffer, true);
               $blocks[$index] = $blocks[$index]->withInput(is_array($decoded) ? $decoded : []);
           }
@@ -1869,7 +1872,7 @@ Each workflow subtask becomes its own small agent loop with the bash tool, runni
           if ($stopReason !== 'tool_use') {
               $text = '';
               foreach ($content as $block) {
-                  if ($block instanceof TextBlock) {
+                  if ($block instanceof \Anthropic\Messages\TextBlock) {
                       $text .= $block->text;
                   }
               }
@@ -1881,7 +1884,7 @@ Each workflow subtask becomes its own small agent loop with the bash tool, runni
           $report = null;
           $toolResults = [];
           foreach ($content as $block) {
-              if (!$block instanceof ToolUseBlock) {
+              if (!$block instanceof \Anthropic\Messages\ToolUseBlock) {
                   continue;
               }
               if ($block->name === 'report_findings') {
@@ -1974,7 +1977,7 @@ Each workflow subtask becomes its own small agent loop with the bash tool, runni
 
 A fan-out that spawns dozens of subagents is expensive to restart from scratch. A small content-addressed journal makes it idempotent: before dispatching a subagent, look up the SHA-256 of its prompt in a local JSON file, and return the recorded result if one exists. Interrupt the run, rerun it, and only the subtasks that never finished are recomputed. The journal deduplicates across runs, not within a single fan-out wave; delete the journal file to start fresh.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   _journal_lock = threading.Lock()
 
@@ -2265,7 +2268,7 @@ A fan-out that spawns dozens of subagents is expensive to restart from scratch. 
 
 The fan-out accepts up to `MAX_TOTAL_SUBTASKS` prompts, runs them through the journal with at most `MAX_CONCURRENT` in flight (sequential in the PHP port), and isolates failures so one broken subagent degrades to an error string instead of ending the run. Once the first wave finishes, a second wave reuses the same subagent path to try to refute each result: every verifier re-derives the claims from the source, defaulting to refuted when uncertain. Both the original result and its verdict are returned to the orchestrator so it can weigh them together.
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   def normalize_subtasks(raw) -> list[str]:
       """Accept the subtasks input in whatever shape the model emits: an array, the array
@@ -2864,7 +2867,7 @@ The agent appends the user's message first, then any system messages that are du
     -H "content-type: application/json" \
     -d @- <<'EOF'
   {
-    "model": "claude-opus-5",
+    "model": "claude-opus-5-5",
     "max_tokens": 64000,
     "system": "You are a helpful general-purpose agent. Answer the user's request directly.",
     "output_config": {"effort": "xhigh"},
@@ -2907,7 +2910,7 @@ The agent appends the user's message first, then any system messages that are du
   # subagents is shown in the SDK tabs; the Workflow description is condensed here,
   # the SDK examples carry the full standing-consent text.
   ant messages create <<'YAML'
-  model: claude-opus-5
+  model: claude-opus-5-5
   max_tokens: 64000
   system: You are a helpful general-purpose agent. Answer the user's request directly.
   output_config: {effort: xhigh}
@@ -3024,12 +3027,13 @@ The agent appends the user's message first, then any system messages that are du
               for block in response.content:
                   if block.type != "tool_use":
                       continue
-                  if block.name == "Workflow":
-                      output, is_error = run_workflow(self.model, block.input.get("subtasks", []))
-                  elif block.name == "bash":
-                      output, is_error = handle_bash_block(block)
-                  else:
-                      output, is_error = f"unknown tool: {block.name}", True
+                  match block.name:
+                      case "Workflow":
+                          output, is_error = run_workflow(self.model, block.input.get("subtasks", []))
+                      case "bash":
+                          output, is_error = handle_bash_block(block)
+                      case _:
+                          output, is_error = f"unknown tool: {block.name}", True
                   tool_results.append(
                       {
                           "type": "tool_result",
@@ -3142,14 +3146,18 @@ The agent appends the user's message first, then any system messages that are du
           }
           let output: string;
           let isError: boolean;
-          if (block.name === "Workflow") {
-            const input = block.input as { subtasks?: unknown };
-            ({ output, isError } = await runWorkflow(this.model, input.subtasks ?? []));
-          } else if (block.name === "bash") {
-            ({ output, isError } = await handleBashBlock(block));
-          } else {
-            output = `unknown tool: ${block.name}`;
-            isError = true;
+          switch (block.name) {
+            case "Workflow": {
+              const input = block.input as { subtasks?: unknown };
+              ({ output, isError } = await runWorkflow(this.model, input.subtasks ?? []));
+              break;
+            }
+            case "bash":
+              ({ output, isError } = await handleBashBlock(block));
+              break;
+            default:
+              output = `unknown tool: ${block.name}`;
+              isError = true;
           }
           toolResults.push({
             type: "tool_result",
@@ -3642,7 +3650,7 @@ The agent appends the user's message first, then any system messages that are du
               if ($stopReason !== 'tool_use') {
                   $text = '';
                   foreach ($content as $block) {
-                      if ($block instanceof TextBlock) {
+                      if ($block instanceof \Anthropic\Messages\TextBlock) {
                           $text .= $block->text;
                       }
                   }
@@ -3656,7 +3664,7 @@ The agent appends the user's message first, then any system messages that are du
 
               $toolResults = [];
               foreach ($content as $block) {
-                  if (!$block instanceof ToolUseBlock) {
+                  if (!$block instanceof \Anthropic\Messages\ToolUseBlock) {
                       continue;
                   }
                   if ($block->name === 'Workflow') {
@@ -3820,7 +3828,7 @@ The agent appends the user's message first, then any system messages that are du
   The bash tool in this example runs model-written commands directly on your machine with no sandbox, and the fan-out runs several of those agents in parallel. Run it in a directory and environment you are comfortable exposing, and add sandboxing before adapting it for anything beyond local experimentation.
 </Warning>
 
-<CodeGroup>
+<CodeGroup exclude="shell:cURL, shell:CLI">
   ```python Python
   if __name__ == "__main__":
       task = (

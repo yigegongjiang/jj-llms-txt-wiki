@@ -1,3 +1,8 @@
+---
+title: Projects
+url: https://platform.claude.com/docs/en/api/compliance/apps/projects
+---
+
 # Projects
 
 ## List projects
@@ -39,7 +44,7 @@ are sorted chronologically (time ascending) by created_at.
 
   Maximum results (default: 20, max: 100)
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `organization_ids: optional array of string`
 
@@ -125,11 +130,7 @@ are sorted chronologically (time ascending) by created_at.
 
   - `user: object or null`
 
-    The user who created a project or project document.
-
-    Fields that reference this type are null when the creator's account has
-    been deleted or the creator is no longer a member of an organization the
-    key may read.
+    Project creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
     - `id: string`
 
@@ -157,6 +158,7 @@ are sorted chronologically (time ascending) by created_at.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -254,11 +256,7 @@ Get detailed information for a specific project.
 
 - `user: object or null`
 
-  The user who created a project or project document.
-
-  Fields that reference this type are null when the creator's account has
-  been deleted or the creator is no longer a member of an organization the
-  key may read.
+  Project creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
   - `id: string`
 
@@ -278,6 +276,7 @@ Get detailed information for a specific project.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -331,21 +330,22 @@ Project must have no attached chats - returns 409 if chats exist.
 
 ### Returns
 
-- `id: string`
-
-  The ID of the Claude project that was deleted
-
 - `type: optional "claude_project_deleted"`
 
   Constant string confirming deletion.
 
   default: claude_project_deleted
 
+- `id: string`
+
+  The ID of the Claude project that was deleted
+
 ### Example
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID \
     -X DELETE \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -418,11 +418,7 @@ curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID \
 
   - `user: object or null`
 
-    The user who created a project or project document.
-
-    Fields that reference this type are null when the creator's account has
-    been deleted or the creator is no longer a member of an organization the
-    key may read.
+    Project creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
     - `id: string`
 
@@ -480,11 +476,7 @@ curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID \
 
   - `user: object or null`
 
-    The user who created a project or project document.
-
-    Fields that reference this type are null when the creator's account has
-    been deleted or the creator is no longer a member of an organization the
-    key may read.
+    Project creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
     - `id: string`
 
@@ -506,15 +498,15 @@ curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID \
 
   Response for deleting a Claude project.
 
-  - `id: string`
-
-    The ID of the Claude project that was deleted
-
   - `type: optional "claude_project_deleted"`
 
     Constant string confirming deletion.
 
     default: claude_project_deleted
+
+  - `id: string`
+
+    The ID of the Claude project that was deleted
 
 ## Projects › Attachments
 
@@ -545,7 +537,7 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
   Maximum results (default: 20, max: 100)
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -557,13 +549,19 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
 #### Returns
 
-- `data: array of object or object`
+- `data: array of ComplianceProjectFileReference or ComplianceProjectDocReference`
 
   List of attachments sorted chronologically by created_at, tie break by id
 
   - `ComplianceProjectFileReference object`
 
     File attachment reference for compliance responses.
+
+    - `type: "project_file"`
+
+      Discriminator marking this as a binary file
+
+      default: project_file
 
     - `id: string`
 
@@ -591,15 +589,15 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
       Size in bytes of the file's preferred downloadable variant, when recorded. Null otherwise. Use the per-file `/metadata` endpoint for the authoritative value.
 
-    - `type: "project_file"`
-
-      Discriminator marking this as a binary file
-
-      default: project_file
-
   - `ComplianceProjectDocReference object`
 
     Project document attachment reference for compliance responses.
+
+    - `type: "project_doc"`
+
+      Discriminator marking this as a plain text document
+
+      default: project_doc
 
     - `id: string`
 
@@ -621,12 +619,6 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
       default: text/plain
 
-    - `type: "project_doc"`
-
-      Discriminator marking this as a plain text document
-
-      default: project_doc
-
     - `updated_at: string or null`
 
       Last-modified timestamp of the document. Reserved for future use — currently always null.
@@ -645,6 +637,7 @@ GET /v1/compliance/apps/projects/documents/{claude_proj_doc_id} endpoint.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID/attachments \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -693,7 +686,7 @@ role.
 
   Maximum results (default: 20, max: 100)
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -705,13 +698,19 @@ role.
 
 #### Returns
 
-- `data: array of object or object or object or object`
+- `data: array of ComplianceProjectUserCollaborator or ComplianceProjectGroupCollaborator or ComplianceProjectOrganizationCollaborator or ComplianceProjectOrganizationRoleCollaborator`
 
   List of collaborators sorted chronologically by granted_at, tie break by the underlying role-assignment UUID
 
   - `ComplianceProjectUserCollaborator object`
 
     An individual user granted a role on a project.
+
+    - `type: "user"`
+
+      Discriminator marking this as an individual user collaborator
+
+      default: user
 
     - `granted_at: string`
 
@@ -731,12 +730,6 @@ role.
 
       - `"viewer"`
 
-    - `type: "user"`
-
-      Discriminator marking this as an individual user collaborator
-
-      default: user
-
     - `user_id: string or null`
 
       Identifier of the user granted access (tagged ID), or null if their account has since been deleted
@@ -744,6 +737,12 @@ role.
   - `ComplianceProjectGroupCollaborator object`
 
     An RBAC group granted a role on a project.
+
+    - `type: "group"`
+
+      Discriminator marking this as a group collaborator
+
+      default: group
 
     - `granted_at: string`
 
@@ -767,15 +766,15 @@ role.
 
       - `"viewer"`
 
-    - `type: "group"`
-
-      Discriminator marking this as a group collaborator
-
-      default: group
-
   - `ComplianceProjectOrganizationCollaborator object`
 
     An entire organization granted a role on a project.
+
+    - `type: "organization"`
+
+      Discriminator marking this as an organization-wide grant
+
+      default: organization
 
     - `granted_at: string`
 
@@ -799,15 +798,15 @@ role.
 
       - `"viewer"`
 
-    - `type: "organization"`
-
-      Discriminator marking this as an organization-wide grant
-
-      default: organization
-
   - `ComplianceProjectOrganizationRoleCollaborator object`
 
     All holders of an organization-level role granted a role on a project.
+
+    - `type: "organization_role"`
+
+      Discriminator marking this as a grant to all organization members holding a specific org-level role
+
+      default: organization_role
 
     - `granted_at: string`
 
@@ -831,12 +830,6 @@ role.
 
       - `"viewer"`
 
-    - `type: "organization_role"`
-
-      Discriminator marking this as a grant to all organization members holding a specific org-level role
-
-      default: organization_role
-
 - `has_more: boolean`
 
   Whether more records exist beyond the current result set
@@ -849,6 +842,7 @@ role.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID/collaborators \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -909,11 +903,7 @@ Get detailed information for a specific project document.
 
 - `user: object or null`
 
-  The user who created a project or project document.
-
-  Fields that reference this type are null when the creator's account has
-  been deleted or the creator is no longer a member of an organization the
-  key may read.
+  Document creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
   - `id: string`
 
@@ -927,6 +917,7 @@ Get detailed information for a specific project document.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/documents/$DOCUMENT_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -1002,11 +993,7 @@ consumer can dedupe or match hashes without downloading every document.
 
 - `user: object or null`
 
-  The user who created a project or project document.
-
-  Fields that reference this type are null when the creator's account has
-  been deleted or the creator is no longer a member of an organization the
-  key may read.
+  Document creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
   - `id: string`
 
@@ -1020,6 +1007,7 @@ consumer can dedupe or match hashes without downloading every document.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/documents/$DOCUMENT_ID/metadata \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -1061,21 +1049,22 @@ Hard-deletes the project document permanently.
 
 #### Returns
 
-- `id: string`
-
-  The ID of the project document that was deleted
-
 - `type: "claude_project_document_deleted"`
 
   Constant string confirming deletion.
 
   default: claude_project_document_deleted
 
+- `id: string`
+
+  The ID of the project document that was deleted
+
 #### Example
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/documents/$DOCUMENT_ID \
     -X DELETE \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

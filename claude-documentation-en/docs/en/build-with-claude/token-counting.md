@@ -2,11 +2,18 @@
 title: Token counting
 url: https://platform.claude.com/docs/en/build-with-claude/token-counting
 description: Count the tokens in a message before you send it to Claude. Use token counts to manage rate limits and costs, make model routing decisions, and fit prompts to a target length.
+featureMetadata:
+  status: ga
+  zdr:
+    eligibility: eligible
+    note: Excludes [Covered Models](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements).
+  supportedPlatforms:
+    Claude API: ga
+    Claude Platform on AWS: ga
+    Amazon Bedrock: ga
+    Google Cloud: ga
+    Microsoft Foundry: ga
 ---
-
-## Compatibility
-- [ZDR](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention): eligible (excludes [Covered Models](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements))
-- Platforms: Claude API, Claude Platform on AWS, Amazon Bedrock, Google Cloud, Microsoft Foundry
 
 Token counting lets you determine the number of tokens in a message before you send it to Claude. This helps you make informed decisions about your prompts and usage. With token counting, you can:
 
@@ -18,7 +25,9 @@ Token counting lets you determine the number of tokens in a message before you s
 
 ## How to count message tokens
 
-The [token counting](https://platform.claude.com/docs/en/api/messages-count-tokens) endpoint accepts the same structured list of inputs for creating a message, including support for system prompts, [tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview), [images](https://platform.claude.com/docs/en/build-with-claude/vision), and [PDFs](https://platform.claude.com/docs/en/build-with-claude/pdf-support). The response contains the total number of input tokens.
+The [token counting](https://platform.claude.com/docs/en/api/messages/count_tokens) endpoint accepts the same structured list of inputs for creating a message, including support for system prompts, [tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview), [images](https://platform.claude.com/docs/en/build-with-claude/vision), and [PDFs](https://platform.claude.com/docs/en/build-with-claude/pdf-support). The response contains the total number of input tokens.
+
+This endpoint returns an `invalid_request_error` for a few inputs that the Messages API accepts: [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools) such as web search, web fetch, code execution, and tool search (every server tool except the [advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool)), the [MCP connector](https://platform.claude.com/docs/en/agents-and-tools/mcp-connector), and `image` or `document` blocks with a `url` or `file` source. Send images and PDFs as base64 to count them. For requests that use server tools or MCP servers, the Messages API response reports the tokens used in its `usage` object.
 
 <Note>
   The token count is an **estimate**. In some cases, the actual number of input tokens used when creating a message might differ by a small amount.
@@ -28,7 +37,7 @@ The [token counting](https://platform.claude.com/docs/en/api/messages-count-toke
 
 ### Supported models
 
-All [active models](https://platform.claude.com/docs/en/models/overview) support token counting, including Claude Opus 5 and Claude Sonnet 5.
+All [active models](https://platform.claude.com/docs/en/models/overview) support token counting.
 
 <Note>
   Claude 4.7 and later models and Claude Mythos Preview use a newer tokenizer. The same input text produces approximately 30 percent more tokens than on earlier models. The exact increase depends on the content and workload shape. Recount prompts against the model you plan to use rather than reusing counts measured against earlier models.
@@ -43,7 +52,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
     -H "content-type: application/json" \
     -H "anthropic-version: 2023-06-01" \
     -d '{
-      "model": "claude-opus-5",
+      "model": "claude-opus-5-5",
       "system": "You are a scientist",
       "messages": [{
         "role": "user",
@@ -54,7 +63,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
 
   ```bash CLI
   ant messages count-tokens \
-    --model claude-opus-5 \
+    --model claude-opus-5-5 \
     --system "You are a scientist" \
     --message '{role: user, content: "Hello, Claude"}'
   ```
@@ -63,7 +72,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client = anthropic.Anthropic()
 
   response = client.messages.count_tokens(
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       system="You are a scientist",
       messages=[{"role": "user", "content": "Hello, Claude"}],
   )
@@ -75,7 +84,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   const client = new Anthropic();
 
   const response = await client.messages.countTokens({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     system: "You are a scientist",
     messages: [
       {
@@ -98,7 +107,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
 
   var parameters = new MessageCountTokensParams
   {
-      Model = Model.ClaudeOpus5,
+      Model = Model.ClaudeOpus5_5,
       System = "You are a scientist",
       Messages = [new() { Role = Role.User, Content = "Hello, Claude" }]
   };
@@ -111,7 +120,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client := anthropic.NewClient()
 
   response, err := client.Messages.CountTokens(context.TODO(), anthropic.MessageCountTokensParams{
-  	Model: anthropic.ModelClaudeOpus5,
+  	Model: anthropic.ModelClaudeOpus5_5,
   	System: anthropic.MessageCountTokensParamsSystemUnion{
   		OfString: anthropic.String("You are a scientist"),
   	},
@@ -137,7 +146,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
       AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
       MessageCountTokensParams params = MessageCountTokensParams.builder()
-        .model(Model.CLAUDE_OPUS_5)
+        .model(Model.CLAUDE_OPUS_5_5)
         .system("You are a scientist")
         .addUserMessage("Hello, Claude")
         .build();
@@ -155,7 +164,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
       messages: [
           ['role' => 'user', 'content' => 'Hello, Claude']
       ],
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       system: 'You are a scientist',
   );
 
@@ -166,7 +175,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client = Anthropic::Client.new
 
   response = client.messages.count_tokens(
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     system: "You are a scientist",
     messages: [
       { role: "user", content: "Hello, Claude" }
@@ -184,7 +193,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
 ### Count tokens in messages with tools
 
 <Note>
-  [Server tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools) token counts only apply to the first sampling call.
+  Token counting supports client tools and the [advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool). Requests that include other [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools) return an error. For the advisor tool, the count covers the executor's first sampling call only.
 </Note>
 
 <CodeGroup>
@@ -194,7 +203,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
     -H "content-type: application/json" \
     -H "anthropic-version: 2023-06-01" \
     -d '{
-      "model": "claude-opus-5",
+      "model": "claude-opus-5-5",
       "tools": [
         {
           "name": "get_weather",
@@ -222,7 +231,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
 
   ```bash CLI
   ant messages count-tokens <<'YAML'
-  model: claude-opus-5
+  model: claude-opus-5-5
   tools:
     - name: get_weather
       description: Get the current weather in a given location
@@ -244,7 +253,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client = anthropic.Anthropic()
 
   response = client.messages.count_tokens(
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       tools=[
           {
               "name": "get_weather",
@@ -271,7 +280,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   const client = new Anthropic();
 
   const response = await client.messages.countTokens({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       {
         name: "get_weather",
@@ -306,7 +315,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
 
   var parameters = new MessageCountTokensParams
   {
-      Model = Model.ClaudeOpus5,
+      Model = Model.ClaudeOpus5_5,
       Tools =
       [
           new MessageCountTokensTool(new Tool()
@@ -334,7 +343,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client := anthropic.NewClient()
 
   response, err := client.Messages.CountTokens(context.TODO(), anthropic.MessageCountTokensParams{
-  	Model: anthropic.ModelClaudeOpus5,
+  	Model: anthropic.ModelClaudeOpus5_5,
   	Tools: []anthropic.MessageCountTokensToolUnionParam{
   		{OfTool: &anthropic.ToolParam{
   			Name:        "get_weather",
@@ -386,7 +395,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
         .build();
 
       MessageCountTokensParams params = MessageCountTokensParams.builder()
-        .model(Model.CLAUDE_OPUS_5)
+        .model(Model.CLAUDE_OPUS_5_5)
         .addTool(
           Tool.builder()
             .name("get_weather")
@@ -408,7 +417,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
       messages: [
           ['role' => 'user', 'content' => "What's the weather like in San Francisco?"]
       ],
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       tools: [
           [
               'name' => 'get_weather',
@@ -434,7 +443,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client = Anthropic::Client.new
 
   response = client.messages.count_tokens(
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     tools: [
       {
         name: "get_weather",
@@ -480,7 +489,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
     -H "content-type: application/json" \
     -d @- <<EOF
   {
-    "model": "claude-opus-5",
+    "model": "claude-opus-5-5",
     "messages": [
       {"role": "user", "content": [
         {"type": "image", "source": {
@@ -500,7 +509,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   curl -s "$IMAGE_URL" -o ./vision-example.jpg
 
   ant messages count-tokens <<'YAML'
-  model: claude-opus-5
+  model: claude-opus-5-5
   messages:
     - role: user
       content:
@@ -525,7 +534,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client = anthropic.Anthropic()
 
   response = client.messages.count_tokens(
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       messages=[
           {
               "role": "user",
@@ -555,7 +564,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   const imageData = Buffer.from(imageArrayBuffer).toString("base64");
 
   const response = await anthropic.messages.countTokens({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     messages: [
       {
         role: "user",
@@ -597,7 +606,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
 
   var parameters = new MessageCountTokensParams
   {
-      Model = Model.ClaudeOpus5,
+      Model = Model.ClaudeOpus5_5,
       Messages =
       [
           new()
@@ -646,7 +655,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client := anthropic.NewClient()
 
   response, err := client.Messages.CountTokens(context.TODO(), anthropic.MessageCountTokensParams{
-  	Model: anthropic.ModelClaudeOpus5,
+  	Model: anthropic.ModelClaudeOpus5_5,
   	Messages: []anthropic.MessageParam{
   		anthropic.NewUserMessage(
   			anthropic.NewImageBlockBase64("image/jpeg", imageData),
@@ -696,7 +705,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
       );
 
       MessageCountTokensParams params = MessageCountTokensParams.builder()
-        .model(Model.CLAUDE_OPUS_5)
+        .model(Model.CLAUDE_OPUS_5_5)
         .addUserMessageOfBlockParams(List.of(imageBlock, textBlock))
         .build();
 
@@ -728,7 +737,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
               ]
           ]
       ],
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
   );
   print_r($response);
   ```
@@ -746,7 +755,7 @@ All [active models](https://platform.claude.com/docs/en/models/overview) support
   client = Anthropic::Client.new
 
   response = client.messages.count_tokens(
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     messages: [
       {
         role: "user",
@@ -779,7 +788,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
 <Note>
   See [Thinking and the context window](https://platform.claude.com/docs/en/build-with-claude/thinking#thinking-and-the-context-window) for more details.
 
-  * Thinking blocks from **previous** assistant turns are ignored and **do not** count toward your input tokens
+  * Thinking blocks from **previous** assistant turns count toward your input tokens on models that [keep all prior turns](https://platform.claude.com/docs/en/build-with-claude/thinking#thinking-block-preservation-by-model); on models that keep only the last turn, the API strips them and they do **not** count
   * **Current** assistant turn thinking **does** count toward your input tokens
 </Note>
 
@@ -790,10 +799,9 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
     -H "content-type: application/json" \
     -H "anthropic-version: 2023-06-01" \
     -d '{
-      "model": "claude-sonnet-4-6",
+      "model": "claude-opus-5-5",
       "thinking": {
-        "type": "enabled",
-        "budget_tokens": 16000
+        "type": "adaptive"
       },
       "messages": [
         {
@@ -824,10 +832,9 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
 
   ```bash CLI
   ant messages count-tokens <<'YAML'
-  model: claude-sonnet-4-6
+  model: claude-opus-5-5
   thinking:
-    type: enabled
-    budget_tokens: 16000
+    type: adaptive
   messages:
     - role: user
       content: Are there an infinite number of prime numbers such that n mod 4 == 3?
@@ -849,8 +856,8 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   client = anthropic.Anthropic()
 
   response = client.messages.count_tokens(
-      model="claude-sonnet-4-6",
-      thinking={"type": "enabled", "budget_tokens": 16000},
+      model="claude-opus-5-5",
+      thinking={"type": "adaptive"},
       messages=[
           {
               "role": "user",
@@ -881,11 +888,8 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   const client = new Anthropic();
 
   const response = await client.messages.countTokens({
-    model: "claude-sonnet-4-6",
-    thinking: {
-      type: "enabled",
-      budget_tokens: 16000
-    },
+    model: "claude-opus-5-5",
+    thinking: { type: "adaptive" },
     messages: [
       {
         role: "user",
@@ -928,8 +932,8 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
 
   var parameters = new MessageCountTokensParams
   {
-      Model = Model.ClaudeSonnet4_6,
-      Thinking = new ThinkingConfigEnabled(budgetTokens: 16000),
+      Model = Model.ClaudeOpus5_5,
+      Thinking = new ThinkingConfigAdaptive(),
       Messages =
       [
           new()
@@ -975,8 +979,10 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   )
 
   response, err := client.Messages.CountTokens(context.TODO(), anthropic.MessageCountTokensParams{
-  	Model:    anthropic.ModelClaudeSonnet4_6,
-  	Thinking: anthropic.ThinkingConfigParamOfEnabled(16000),
+  	Model: anthropic.ModelClaudeOpus5_5,
+  	Thinking: anthropic.ThinkingConfigParamUnion{
+  		OfAdaptive: &anthropic.ThinkingConfigAdaptiveParam{},
+  	},
   	Messages: []anthropic.MessageParam{
   		anthropic.NewUserMessage(anthropic.NewTextBlock("Are there an infinite number of prime numbers such that n mod 4 == 3?")),
   		anthropic.NewAssistantMessage(thinkingBlock, textBlock),
@@ -995,6 +1001,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   import com.anthropic.models.messages.MessageTokensCount;
   // ...
   import com.anthropic.models.messages.ThinkingBlockParam;
+  import com.anthropic.models.messages.ThinkingConfigAdaptive;
   // ...
       AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
@@ -1017,8 +1024,8 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
       );
 
       MessageCountTokensParams params = MessageCountTokensParams.builder()
-        .model(Model.CLAUDE_SONNET_4_6)
-        .enabledThinking(16000)
+        .model(Model.CLAUDE_OPUS_5_5)
+        .thinking(ThinkingConfigAdaptive.builder().build())
         .addUserMessage("Are there an infinite number of prime numbers such that n mod 4 == 3?")
         .addAssistantMessageOfBlockParams(assistantBlocks)
         .addUserMessage("Can you write a formal proof?")
@@ -1056,11 +1063,8 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
               'content' => 'Can you write a formal proof?'
           ]
       ],
-      model: 'claude-sonnet-4-6',
-      thinking: [
-          'type' => 'enabled',
-          'budget_tokens' => 16000
-      ],
+      model: 'claude-opus-5-5',
+      thinking: ['type' => 'adaptive'],
   );
 
   echo json_encode($response);
@@ -1070,10 +1074,9 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   client = Anthropic::Client.new
 
   response = client.messages.count_tokens(
-    model: "claude-sonnet-4-6",
+    model: "claude-opus-5-5",
     thinking: {
-      type: "enabled",
-      budget_tokens: 16000
+      type: "adaptive"
     },
     messages: [
       {
@@ -1112,7 +1115,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
 ### Count tokens in messages with PDFs
 
 <Note>
-  Token counting supports PDFs with the same [PDF support limitations](https://platform.claude.com/docs/en/build-with-claude/pdf-support#pdf-support-limitations) as the Messages API.
+  Token counting supports base64-encoded PDFs with the same [PDF requirements](https://platform.claude.com/docs/en/build-with-claude/pdf-support#check-pdf-requirements) as the Messages API. This endpoint doesn't support `url` or `file` document sources.
 </Note>
 
 <CodeGroup>
@@ -1123,7 +1126,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
     -H "anthropic-version: 2023-06-01" \
     -d @- <<EOF
   {
-    "model": "claude-opus-5",
+    "model": "claude-opus-5-5",
     "messages": [{
       "role": "user",
       "content": [
@@ -1147,7 +1150,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
 
   ```bash CLI
   ant messages count-tokens <<'YAML'
-  model: claude-opus-5
+  model: claude-opus-5-5
   messages:
     - role: user
       content:
@@ -1171,7 +1174,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
       pdf_base64 = base64.standard_b64encode(pdf_file.read()).decode("utf-8")
 
   response = client.messages.count_tokens(
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       messages=[
           {
               "role": "user",
@@ -1201,7 +1204,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   const pdfBase64 = await readFile("/path/to/document.pdf", { encoding: "base64" });
 
   const response = await client.messages.countTokens({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     messages: [
       {
         role: "user",
@@ -1241,7 +1244,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
 
   var parameters = new MessageCountTokensParams
   {
-      Model = Model.ClaudeOpus5,
+      Model = Model.ClaudeOpus5_5,
       Messages =
       [
           new()
@@ -1275,7 +1278,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   pdfBase64 := base64.StdEncoding.EncodeToString(pdfBytes)
 
   response, err := client.Messages.CountTokens(context.TODO(), anthropic.MessageCountTokensParams{
-  	Model: anthropic.ModelClaudeOpus5,
+  	Model: anthropic.ModelClaudeOpus5_5,
   	Messages: []anthropic.MessageParam{
   		anthropic.NewUserMessage(
   			anthropic.NewDocumentBlock(anthropic.Base64PDFSourceParam{
@@ -1315,7 +1318,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
       );
 
       MessageCountTokensParams params = MessageCountTokensParams.builder()
-        .model(Model.CLAUDE_OPUS_5)
+        .model(Model.CLAUDE_OPUS_5_5)
         .addUserMessageOfBlockParams(List.of(documentBlock, textBlock))
         .build();
 
@@ -1348,7 +1351,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
               ]
           ]
       ],
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
   );
 
   echo json_encode($response);
@@ -1362,7 +1365,7 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
   pdf_base64 = Base64.strict_encode64(File.binread("/path/to/document.pdf"))
 
   response = client.messages.count_tokens(
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     messages: [
       {
         role: "user",
@@ -1394,12 +1397,12 @@ An embedded image block that sets [`"oversized_image": "error"`](https://platfor
 
 ***
 
-## Token counts on Claude Fable 5 and Claude Mythos 5
+## Token counts on Claude Fable and Claude Mythos models
 
-Claude Fable 5 and Claude Mythos 5 use the tokenizer introduced with Claude Opus 4.7, which produces roughly 30 percent more tokens than models before Claude Opus 4.7 for the same text. The exact increase depends on the content and workload shape. The token counting endpoint returns the count under the tokenizer of the `model` you pass, so to measure the difference for your workload, count the same request twice: once with your current model and once with `model: "claude-fable-5"` (or `"claude-mythos-5"`), and compare the two `input_tokens` values.
+Claude Fable 5.1, Claude Mythos 5.1, Claude Fable 5, and Claude Mythos 5 share the tokenizer introduced with Claude Opus 4.7. A prompt counts the same on all four, and roughly 30 percent higher than on models before Claude Opus 4.7 (the exact increase depends on the content). The token counting endpoint counts under the tokenizer of the `model` you pass. To measure the difference for your workload, count the same request twice, once with your current model and once with the model you plan to move to, and compare the two `input_tokens` values.
 
 <Note>
-  **Billing and migration:** Usage and billing on Claude Fable 5 and Claude Mythos 5 reflect this tokenizer's counts. If you're migrating from a model before Claude Opus 4.7, the same content consumes roughly 30 percent more tokens. The exact increase depends on the content and workload shape. When migrating a workload to Claude Fable 5 and Claude Mythos 5, don't reuse token counts measured on a model before Claude Opus 4.7 to estimate costs or context window fit. Count your prompts with `model: "claude-fable-5"` (or `"claude-mythos-5"`).
+  **Billing and migration:** Usage and billing on these models reflect this tokenizer's counts. When migrating from a model before Claude Opus 4.7, don't reuse token counts measured on the older model to estimate costs or context window fit. Count your prompts with the `model` ID you plan to use (for example, `"claude-fable-5-1"`).
 </Note>
 
 ***
@@ -1410,9 +1413,9 @@ Token counting is **free to use** but subject to requests per minute rate limits
 
 | Usage tier | Requests per minute (RPM) |
 | ---------- | ------------------------- |
-| Start      | 2,000                     |
-| Build      | 4,000                     |
-| Scale      | 8,000                     |
+| Start      | 5,000                     |
+| Build      | 10,000                    |
+| Scale      | 20,000                    |
 
 <Note>
   Token counting and message creation have separate and independent rate limits. Usage of one does not count against the limits of the other.
@@ -1433,7 +1436,7 @@ Token counting is **free to use** but subject to requests per minute rate limits
 ## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Count message tokens" icon="code" href="https://platform.claude.com/docs/en/api/messages-count-tokens">
+  <Card title="Count message tokens" icon="code" href="https://platform.claude.com/docs/en/api/messages/count_tokens">
     Read the full API reference for the token counting endpoint.
   </Card>
 

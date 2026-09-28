@@ -31,7 +31,7 @@ The dream produces another **output memory store**, separate from the input. The
 
 <CodeGroup>
   ```bash cURL
-  dream=$(curl -s https://api.anthropic.com/v1/dreams \
+  curl -s https://api.anthropic.com/v1/dreams \
     -H "x-api-key: $ANTHROPIC_API_KEY" \
     -H "anthropic-version: 2023-06-01" \
     -H "anthropic-beta: managed-agents-2026-04-01,dreaming-2026-04-21" \
@@ -46,13 +46,10 @@ The dream produces another **output memory store**, separate from the input. The
     "instructions": "Focus on coding-style preferences; ignore one-off debugging notes."
   }
   EOF
-  )
-  dream_id=$(jq -r '.id' <<< "$dream")
-  echo "$dream_id"  # drm_01...
   ```
 
   ```bash CLI
-  dream_id=$(ant beta:dreams create --transform id --raw-output <<YAML
+  ant beta:dreams create <<YAML
   inputs:
     - type: memory_store
       memory_store_id: $store_id
@@ -61,7 +58,6 @@ The dream produces another **output memory store**, separate from the input. The
   model: claude-opus-4-8
   instructions: Focus on coding-style preferences; ignore one-off debugging notes.
   YAML
-  )
   ```
 
   ```python Python
@@ -164,7 +160,7 @@ The dream produces another **output memory store**, separate from the input. The
   ```
 </CodeGroup>
 
-Dreaming inputs include the pre-existing memory store and an array of sessions. The selected model runs the dreaming pipeline; during the research preview `claude-opus-5`, `claude-fable-5`, `claude-opus-4-8`, `claude-opus-4-7`, `claude-sonnet-5`, and `claude-sonnet-4-6` are supported. You can optionally pass `instructions` to steer the dreaming process; see [Steer with instructions](https://platform.claude.com/docs/en/managed-agents/dreams#steer-with-instructions).
+Dreaming inputs include the pre-existing memory store and an array of sessions. The selected model runs the dreaming pipeline. During the research preview, `claude-opus-5`, `claude-fable-5`, `claude-opus-4-8`, `claude-opus-4-7`, `claude-sonnet-5`, and `claude-sonnet-4-6` are supported. You can optionally pass `instructions` to steer the dreaming process. See [Steer with instructions](https://platform.claude.com/docs/en/managed-agents/dreams#steer-with-instructions).
 
 The response is the full `dream` resource with `status: "pending"`:
 

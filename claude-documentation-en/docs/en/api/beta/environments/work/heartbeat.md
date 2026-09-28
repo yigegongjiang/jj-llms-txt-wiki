@@ -1,3 +1,8 @@
+---
+title: Record Heartbeat
+url: https://platform.claude.com/docs/en/api/beta/environments/work/heartbeat
+---
+
 # Record Heartbeat
 
 **POST** `/v1/environments/{environment_id}/work/{work_id}/heartbeat`
@@ -30,7 +35,7 @@ Record a heartbeat for a work item to maintain the lease.
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -78,6 +83,8 @@ Record a heartbeat for a work item to maintain the lease.
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -114,11 +121,29 @@ Record a heartbeat for a work item to maintain the lease.
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
 ## Returns
 
 - `BetaSelfHostedWorkHeartbeatResponse object`
 
   Response after recording a heartbeat for a work item.
+
+  - `type: "work_heartbeat"`
+
+    The type of response
+
+    default: work_heartbeat
 
   - `last_heartbeat: string`
 
@@ -145,12 +170,6 @@ Record a heartbeat for a work item to maintain the lease.
   - `ttl_seconds: number`
 
     Effective TTL applied to the lease
-
-  - `type: "work_heartbeat"`
-
-    The type of response
-
-    default: work_heartbeat
 
 ## Example
 

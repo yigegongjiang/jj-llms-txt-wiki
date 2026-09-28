@@ -1,3 +1,8 @@
+---
+title: Delete File
+url: https://platform.claude.com/docs/en/api/files/delete
+---
+
 # Delete File
 
 **DELETE** `/v1/files/{file_id}`
@@ -10,13 +15,17 @@ Delete File
 
   ID of the File.
 
+## Headers
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ## Returns
 
 - `DeletedFile object`
-
-  - `id: string`
-
-    ID of the deleted file.
 
   - `type: optional "file_deleted"`
 
@@ -25,6 +34,10 @@ Delete File
     For file deletion, this is always `"file_deleted"`.
 
     default: file_deleted
+
+  - `id: string`
+
+    ID of the deleted file.
 
 ## Example
 

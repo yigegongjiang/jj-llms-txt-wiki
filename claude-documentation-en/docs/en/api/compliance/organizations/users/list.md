@@ -1,3 +1,8 @@
+---
+title: List organization users
+url: https://platform.claude.com/docs/en/api/compliance/organizations/users/list
+---
+
 # List organization users
 
 **GET** `/v1/compliance/organizations/{org_uuid}/users`
@@ -16,7 +21,7 @@ List current user members of an organization.
 
   Maximum results (default: 500, max: 1000)
 
-  default: 500, maximum: 1000, minimum: 1
+  default: 500, minimum: 1, maximum: 1000
 
 - `page: optional string`
 
@@ -50,7 +55,7 @@ List current user members of an organization.
 
     User's current full name
 
-  - `organization_role: "admin" or "billing" or "claude_code_user" or 6 more`
+  - `organization_role: "admin" or "billing" or "claude_code_user" or 8 more`
 
     User's built-in role within the organization. This is distinct from any custom RBAC roles that may also be assigned.
 
@@ -68,6 +73,10 @@ List current user members of an organization.
 
     - `"owner"`
 
+    - `"parent_org_admin"`
+
+    - `"parent_org_owner"`
+
     - `"primary_owner"`
 
     - `"user"`
@@ -84,6 +93,7 @@ List current user members of an organization.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/organizations/$ORG_UUID/users \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

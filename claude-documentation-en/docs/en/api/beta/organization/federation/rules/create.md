@@ -1,3 +1,8 @@
+---
+title: Create Federation Rule
+url: https://platform.claude.com/docs/en/api/beta/organization/federation/rules/create
+---
+
 # Create Federation Rule
 
 **POST** `/v1/organizations/federation_rules`
@@ -28,7 +33,7 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -76,6 +81,8 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -111,6 +118,18 @@ manage rules whose `oauth_scope` is `workspace:developer` or
     - `"thinking-display-updates-2026-08-18"`
 
     - `"ce-user-management-2026-07-13"`
+
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
 
 ## Body parameters
 
@@ -148,7 +167,7 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   Slug identifier (lowercase, digits, hyphens). Unique within the organization; a duplicate name returns 409.
 
-  maxLength: 255, minLength: 1
+  minLength: 1, maxLength: 255
 
 - `oauth_scope: string`
 
@@ -160,11 +179,11 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+  - `type: "service_account"`
+
   - `service_account_id: string`
 
     Tagged ID of the service account to mint tokens for.
-
-  - `type: "service_account"`
 
   - `service_account_name: optional string or null`
 
@@ -188,7 +207,7 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
   Lifetime in seconds for access tokens minted via this rule (60-86400). Defaults to 3600 (1h). Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
 
-  maximum: 86400, minimum: 60
+  minimum: 60, maximum: 86400
 
 - `workspace_id: optional string or null`
 
@@ -208,6 +227,10 @@ manage rules whose `oauth_scope` is `workspace:developer` or
   of that workspace (it is implicitly a member of the default workspace);
   rules carrying only the legacy `workspace_id` binding do not enforce
   this.
+
+  - `type: "federation_rule"`
+
+    default: federation_rule
 
   - `id: string`
 
@@ -291,11 +314,11 @@ manage rules whose `oauth_scope` is `workspace:developer` or
 
     Identity that tokens minted via this rule act as. Currently always a `service_account` target.
 
+    - `type: "service_account"`
+
     - `service_account_id: string`
 
       Tagged ID of the service account to mint tokens for.
-
-    - `type: "service_account"`
 
     - `service_account_name: optional string or null`
 
@@ -304,10 +327,6 @@ manage rules whose `oauth_scope` is `workspace:developer` or
   - `token_lifetime_seconds: number`
 
     Lifetime in seconds of access tokens minted via this rule. Minted tokens are capped at `max(60, min(this value, 2 × remaining assertion validity))` seconds.
-
-  - `type: "federation_rule"`
-
-    default: federation_rule
 
   - `updated_at: string`
 

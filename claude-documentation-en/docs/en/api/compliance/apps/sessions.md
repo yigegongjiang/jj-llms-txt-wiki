@@ -1,3 +1,8 @@
+---
+title: Sessions
+url: https://platform.claude.com/docs/en/api/compliance/apps/sessions
+---
+
 # Sessions
 
 ## Sessions › Local
@@ -31,7 +36,7 @@ forward-only via `next_page`; there is no reverse cursor.
 
   Maximum results (default: 100, max: 500)
 
-  default: 100, maximum: 500, minimum: 1
+  default: 100, minimum: 1, maximum: 500
 
 - `page: optional string`
 
@@ -55,6 +60,10 @@ forward-only via `next_page`; there is no reverse cursor.
 
   Page of local sessions, ordered by `created_at` descending; ties are broken by a fixed server-side order. `updated_at` never participates in the ordering; the `updated_at.gte` query parameter filters on it without changing the order or the pagination cursor.
 
+  - `type: "compliance_local_session"`
+
+    default: compliance_local_session
+
   - `id: string`
 
     Local session identifier, prefixed `clls_`. Unique within the parent organization. Treat as an opaque string; the format may change without notice.
@@ -71,11 +80,13 @@ forward-only via `next_page`; there is no reverse cursor.
 
   - `product_surface: string or null`
 
-    The product the session ran in: `cowork` (Cowork in Claude Desktop on the user's machine), `claude_code` (Claude Code), `claude_science` (Claude Science), or one of `office_agents/excel`, `office_agents/powerpoint`, `office_agents/word`, and `office_agents/outlook` (Claude for Microsoft 365, by app; `office_agents` alone when the app is not identified). New values appear as coverage expands; treat unrecognized values as opaque. `null` when the surface was not recorded.
+    The product the session ran in: `cowork` (Cowork in Claude Desktop on the user's machine), `claude_code` (Claude Code), `claude_science` (Claude Science), `claude_in_chrome` (the Claude in Chrome browser extension's built-in chat), or one of `office_agents/excel`, `office_agents/powerpoint`, `office_agents/word`, and `office_agents/outlook` (Claude for Microsoft 365, by app; `office_agents` alone when the app is not identified). New values appear as coverage expands; treat unrecognized values as opaque. `null` when the surface was not recorded.
 
-  - `type: "compliance_local_session"`
+  - `truncated: boolean`
 
-    default: compliance_local_session
+    True when the session has more inference calls than the service can return for one session (100,000). The messages endpoint then returns only the session's earliest calls, up to that many, and ends before the session does; `updated_at` is a lower bound on the latest call and can differ between the list and retrieve endpoints. False for every session within that bound.
+
+    default: false
 
   - `updated_at: string`
 
@@ -107,6 +118,7 @@ forward-only via `next_page`; there is no reverse cursor.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/sessions/local \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -153,6 +165,10 @@ inference call has aged out returns 404.
 
 #### Returns
 
+- `type: "compliance_local_session"`
+
+  default: compliance_local_session
+
 - `id: string`
 
   Local session identifier, prefixed `clls_`. Unique within the parent organization. Treat as an opaque string; the format may change without notice.
@@ -169,11 +185,13 @@ inference call has aged out returns 404.
 
 - `product_surface: string or null`
 
-  The product the session ran in: `cowork` (Cowork in Claude Desktop on the user's machine), `claude_code` (Claude Code), `claude_science` (Claude Science), or one of `office_agents/excel`, `office_agents/powerpoint`, `office_agents/word`, and `office_agents/outlook` (Claude for Microsoft 365, by app; `office_agents` alone when the app is not identified). New values appear as coverage expands; treat unrecognized values as opaque. `null` when the surface was not recorded.
+  The product the session ran in: `cowork` (Cowork in Claude Desktop on the user's machine), `claude_code` (Claude Code), `claude_science` (Claude Science), `claude_in_chrome` (the Claude in Chrome browser extension's built-in chat), or one of `office_agents/excel`, `office_agents/powerpoint`, `office_agents/word`, and `office_agents/outlook` (Claude for Microsoft 365, by app; `office_agents` alone when the app is not identified). New values appear as coverage expands; treat unrecognized values as opaque. `null` when the surface was not recorded.
 
-- `type: "compliance_local_session"`
+- `truncated: boolean`
 
-  default: compliance_local_session
+  True when the session has more inference calls than the service can return for one session (100,000). The messages endpoint then returns only the session's earliest calls, up to that many, and ends before the session does; `updated_at` is a lower bound on the latest call and can differ between the list and retrieve endpoints. False for every session within that bound.
+
+  default: false
 
 - `updated_at: string`
 
@@ -201,6 +219,7 @@ inference call has aged out returns 404.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/sessions/local/$LOCAL_SESSION_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -238,6 +257,13 @@ in their place. The boundary is pinned on the walk's first page and
 honored for 24 hours: a cursor older than that is rejected with an
 explicit 400; restart the walk to read under the current boundary.
 
+On a very large session, some pages are too large to read and return a
+400; retrying does not help. If the request used `order=desc`, read the
+session oldest first from its first page instead (omit `order` and
+`page`, then follow `next_page`). Rarely, an oldest-first page returns
+this 400 too; contact Anthropic support and quote the `request-id`
+response header.
+
 #### Path parameters
 
 - `local_session_id: string`
@@ -248,11 +274,11 @@ explicit 400; restart the walk to read under the current boundary.
 
   Maximum results (default: 100, max: 1000)
 
-  default: 100, maximum: 1000, minimum: 1
+  default: 100, minimum: 1, maximum: 1000
 
 - `order: optional "asc" or "desc"`
 
-  Sort direction. `asc` (oldest-first, default) or `desc`.
+  Sort direction. `asc` (oldest-first, default) or `desc`. On very large sessions some pages are too large to read and return a 400, far more often with `desc`; read those sessions with `asc`, starting again from the first page.
 
   default: asc
 
@@ -268,13 +294,13 @@ explicit 400; restart the walk to read under the current boundary.
 
   Truncate each text item inside a tool result to at most this many bytes (cut on a code-point boundary). Pass `-1` to request the server maximum (approximately 1 MiB); larger values are clamped to it. `0` is not a valid value.
 
-  default: 10000, maximum: 2147483647, minimum: -1
+  default: 10000, minimum: -1, maximum: 2147483647
 
 - `tool_use_input_max_bytes: optional number`
 
   Truncate each tool-use input to at most this many bytes (cut on a code-point boundary so the result is valid UTF-8). Pass `-1` to request the server maximum (approximately 1 MiB); larger values are clamped to it. `0` is not a valid value.
 
-  default: 10000, maximum: 2147483647, minimum: -1
+  default: 10000, minimum: -1, maximum: 2147483647
 
 #### Headers
 
@@ -286,17 +312,25 @@ explicit 400; restart the walk to read under the current boundary.
 
   Transcript turns for this page, in call order: oldest call first by default, newest call first with `order=desc`. The messages of one call carry the call's timestamp and follow each other in transcript order; a page boundary can fall between them.
 
+  - `type: "compliance_local_session_message"`
+
+    default: compliance_local_session_message
+
   - `id: string`
 
     Message identifier, prefixed `clsm_`. Stable for as long as the message's turn is retained: identifiers of retained turns do not change as older turns age out of the organization's retention period. The `retention_elapsed` placeholder's identifier is distinct from every retained turn's and changes only when further turns age out.
 
-  - `content: array of object or object or object`
+  - `content: array of Text or ToolUse or ToolResult`
 
     Content blocks within the message, discriminated on `type` (`text` / `tool_use` / `tool_result`: the same discriminator values as the claude.ai chat-messages endpoint; the tool variants omit `integration_name` and `mcp_server_url`, and `text` carries `truncated`). Extended-thinking content is never included. The request's `system` field is never included; a presence-only marker message is emitted when it was set. The request's `tools[]` definitions are never included as transcript messages. Project-level instructions (such as CLAUDE.md files) appear in the message stream as a user-role context block and are included. Empty when `provenance.type` is `content_unavailable`.
 
     - `Text object`
 
       Text content block.
+
+      - `type: "text"`
+
+        default: text
 
       - `text: string`
 
@@ -308,13 +342,13 @@ explicit 400; restart the walk to read under the current boundary.
 
         default: false
 
-      - `type: "text"`
-
-        default: text
-
     - `ToolUse object`
 
       Tool invocation requested by the assistant.
+
+      - `type: "tool_use"`
+
+        default: tool_use
 
       - `id: string or null`
 
@@ -334,25 +368,25 @@ explicit 400; restart the walk to read under the current boundary.
 
         default: false
 
-      - `type: "tool_use"`
-
-        default: tool_use
-
     - `ToolResult object`
 
       Result returned by a tool invocation.
+
+      - `type: "tool_result"`
+
+        default: tool_result
 
       - `content: array of object`
 
         Text content returned by the tool. Non-text item types are omitted and signalled via `truncated` with an in-band item-count marker.
 
-        - `text: string`
-
-          Text returned by the tool
-
         - `type: "text"`
 
           default: text
+
+        - `text: string`
+
+          Text returned by the tool
 
       - `is_error: boolean`
 
@@ -372,10 +406,6 @@ explicit 400; restart the walk to read under the current boundary.
 
         default: false
 
-      - `type: "tool_result"`
-
-        default: tool_result
-
   - `created_at: string`
 
     When the message was recorded (RFC 3339, UTC)
@@ -386,7 +416,7 @@ explicit 400; restart the walk to read under the current boundary.
 
     The model that served this assistant turn, as reported in the `model` field of the underlying Messages API response. Null on user messages and on any assistant message whose `provenance` is set: client-asserted history and synthetic markers were not produced by a model during this session, and for unavailable content the serving model is not known.
 
-  - `provenance: object or object or object or null`
+  - `provenance: ContentUnavailable or ClientAsserted or SyntheticMarker or null`
 
     Where this turn's content came from, discriminated on `type`. Null (the common case) means verified content: on an assistant message, content Claude produced during this session; on a user message, content the user sent. `content_unavailable`: the turn's content cannot be returned and `content` is empty; `reason` says why. `client_asserted`: assistant content the client supplied as conversation history; `content` shows what the model received but its authorship is not verified; never on user-role messages. `synthetic_marker`: a transcript marker the endpoint generated rather than content either party sent during the session. Both `client_asserted` and `synthetic_marker` can result from normal request or client processing, not only client modification. Callers should tolerate unrecognized `type` values.
 
@@ -394,13 +424,13 @@ explicit 400; restart the walk to read under the current boundary.
 
       The turn's content cannot be returned; `content` is empty.
 
-      - `reason: string`
-
-        Why this turn's content cannot be returned, e.g. `not_captured` (the content was not captured for compliance retrieval), `client_aborted` (the client closed the connection or cancelled the request before the response completed, so the response was not captured for this turn; any partial output already streamed to the client is not included; assistant-role turns only), `cmek_key_revoked` (the content is encrypted under the organization's customer-managed key and that key is unavailable), `retention_elapsed` (the content lies past the organization's retention boundary; on the placeholder standing in for every pre-boundary turn), or `oversize` (the message exceeds the server's per-message size bound even after per-block truncation). Callers should tolerate unrecognized values. `not_captured` is not proof that no record was stored: content withheld by the storage layer's fail-closed access policies carries the same reason and is deliberately indistinguishable from content that was never captured.
-
       - `type: "content_unavailable"`
 
         default: content_unavailable
+
+      - `reason: string`
+
+        Why this turn's content cannot be returned, e.g. `not_captured` (the content was not captured for compliance retrieval), `client_aborted` (the client closed the connection or cancelled the request before the response completed, so the response was not captured for this turn; any partial output already streamed to the client is not included; assistant-role turns only), `cmek_key_revoked` (the content is encrypted under the organization's customer-managed key and that key is unavailable), `retention_elapsed` (the content lies past the organization's retention boundary; on the placeholder standing in for every pre-boundary turn), or `oversize` (the message exceeds the server's per-message size bound even after per-block truncation). Callers should tolerate unrecognized values. `not_captured` is not proof that no record was stored: content withheld by the storage layer's fail-closed access policies carries the same reason and is deliberately indistinguishable from content that was never captured.
 
     - `ClientAsserted object`
 
@@ -419,12 +449,14 @@ explicit 400; restart the walk to read under the current boundary.
       A transcript marker generated by the endpoint rather than sent by
       either party during the session. Marker messages indicate that the
       prompt history diverged from what was captured, that the request's
-      `system` field was present but is not shown, or that
-      prompt-carried history was suppressed because the session spans the
-      child organization's retention boundary and those turns cannot be
-      placed against it (the marker's text names the cause). Markers that
-      report a mismatch with captured history can result from normal request
-      or client processing, not only client modification.
+      `system` field was present but is not shown, or that earlier turns
+      that a request re-sent as history were withheld because they cannot
+      be dated against the child organization's data-retention period
+      (only for organizations with a finite retention period; the request's
+      new user input after its last assistant turn is not affected). The
+      marker's text names the cause. Markers that report a mismatch with
+      captured history can result from normal request or client processing,
+      not only client modification.
 
       - `type: "synthetic_marker"`
 
@@ -438,10 +470,6 @@ explicit 400; restart the walk to read under the current boundary.
 
     - `"user"`
 
-  - `type: "compliance_local_session_message"`
-
-    default: compliance_local_session_message
-
 - `next_page: string or null`
 
   Opaque pagination cursor (prefixed `page_`) for the next page. Null when there is no further page. Treat as an opaque string; the format may change without notice.
@@ -449,6 +477,10 @@ explicit 400; restart the walk to read under the current boundary.
 - `session: object`
 
   The local session the messages belong to. `user.email_address` is always null on this endpoint; the messages endpoint does not resolve email addresses.
+
+  - `type: "compliance_local_session"`
+
+    default: compliance_local_session
 
   - `id: string`
 
@@ -466,11 +498,13 @@ explicit 400; restart the walk to read under the current boundary.
 
   - `product_surface: string or null`
 
-    The product the session ran in: `cowork` (Cowork in Claude Desktop on the user's machine), `claude_code` (Claude Code), `claude_science` (Claude Science), or one of `office_agents/excel`, `office_agents/powerpoint`, `office_agents/word`, and `office_agents/outlook` (Claude for Microsoft 365, by app; `office_agents` alone when the app is not identified). New values appear as coverage expands; treat unrecognized values as opaque. `null` when the surface was not recorded.
+    The product the session ran in: `cowork` (Cowork in Claude Desktop on the user's machine), `claude_code` (Claude Code), `claude_science` (Claude Science), `claude_in_chrome` (the Claude in Chrome browser extension's built-in chat), or one of `office_agents/excel`, `office_agents/powerpoint`, `office_agents/word`, and `office_agents/outlook` (Claude for Microsoft 365, by app; `office_agents` alone when the app is not identified). New values appear as coverage expands; treat unrecognized values as opaque. `null` when the surface was not recorded.
 
-  - `type: "compliance_local_session"`
+  - `truncated: boolean`
 
-    default: compliance_local_session
+    True when the session has more inference calls than the service can return for one session (100,000). The messages endpoint then returns only the session's earliest calls, up to that many, and ends before the session does; `updated_at` is a lower bound on the latest call and can differ between the list and retrieve endpoints. False for every session within that bound.
+
+    default: false
 
   - `updated_at: string`
 
@@ -498,6 +532,7 @@ explicit 400; restart the walk to read under the current boundary.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/sessions/local/$LOCAL_SESSION_ID/messages \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -531,6 +566,7 @@ curl https://api.anthropic.com/v1/compliance/apps/sessions/local/$LOCAL_SESSION_
     "created_at": "2025-03-12T18:22:41.123456Z",
     "organization_uuid": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
     "product_surface": "cowork",
+    "truncated": true,
     "type": "compliance_local_session",
     "updated_at": "2025-03-12T18:22:41.123456Z",
     "user": {
@@ -598,7 +634,7 @@ retrieve the next page, and stop when `next_page` is null.
 
   Maximum results (default: 100, max: 500)
 
-  default: 100, maximum: 500, minimum: 1
+  default: 100, minimum: 1, maximum: 500
 
 - `organization_ids: optional array of string`
 
@@ -652,7 +688,7 @@ retrieve the next page, and stop when `next_page` is null.
 
   - `started_by_user: object or null`
 
-    A user associated with a remote session.
+    The user who initiated an agent-owned session (for example, by mentioning Claude in Slack or via a scheduled trigger). Null for user-owned sessions — where the session's `user` started it — and for agent sessions with no human initiator. For initiators no longer a member of an organization the key may read, the object is populated with `email_address` null.
 
     - `id: string`
 
@@ -674,7 +710,7 @@ retrieve the next page, and stop when `next_page` is null.
 
   - `user: object or null`
 
-    A user associated with a remote session.
+    The user who owns the session. Null for sessions owned by an automated agent rather than a user. At most one of `user` and `agent_id` is set. For users no longer a member of an organization the key may read, the object is populated with `email_address` null.
 
     - `id: string`
 
@@ -692,6 +728,7 @@ retrieve the next page, and stop when `next_page` is null.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/sessions/remote \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -757,7 +794,7 @@ malformed session identifier returns 400.
 
   Maximum results (default: 100, max: 1000)
 
-  default: 100, maximum: 1000, minimum: 1
+  default: 100, minimum: 1, maximum: 1000
 
 - `order: optional "asc" or "desc"`
 
@@ -777,13 +814,13 @@ malformed session identifier returns 400.
 
   Truncate each text item inside a tool result to at most this many bytes (cut on a code-point boundary). Pass `-1` to request the server maximum. `0` is not a valid value.
 
-  default: 10000, maximum: 2147483647, minimum: -1
+  default: 10000, minimum: -1, maximum: 2147483647
 
 - `tool_use_input_max_bytes: optional number`
 
   Truncate each tool-use input to at most this many bytes (cut on a code-point boundary so the result is valid UTF-8). Pass `-1` to request the server maximum. `0` is not a valid value.
 
-  default: 10000, maximum: 2147483647, minimum: -1
+  default: 10000, minimum: -1, maximum: 2147483647
 
 #### Headers
 
@@ -799,13 +836,17 @@ malformed session identifier returns 400.
 
     Unique identifier for the message, e.g. `csev_abc123`
 
-  - `content: array of object or object or object`
+  - `content: array of Text or ToolUse or ToolResult`
 
     Content blocks within the message
 
     - `Text object`
 
       Text content block.
+
+      - `type: "text"`
+
+        default: text
 
       - `text: string`
 
@@ -817,13 +858,13 @@ malformed session identifier returns 400.
 
         default: false
 
-      - `type: "text"`
-
-        default: text
-
     - `ToolUse object`
 
       Tool invocation requested by the assistant.
+
+      - `type: "tool_use"`
+
+        default: tool_use
 
       - `id: string or null`
 
@@ -843,25 +884,25 @@ malformed session identifier returns 400.
 
         default: false
 
-      - `type: "tool_use"`
-
-        default: tool_use
-
     - `ToolResult object`
 
       Result returned by a tool invocation.
+
+      - `type: "tool_result"`
+
+        default: tool_result
 
       - `content: array of object`
 
         Text content returned by the tool. Non-text item types are omitted.
 
-        - `text: string`
-
-          Text returned by the tool
-
         - `type: "text"`
 
           default: text
+
+        - `text: string`
+
+          Text returned by the tool
 
       - `is_error: boolean`
 
@@ -880,10 +921,6 @@ malformed session identifier returns 400.
         True when one or more text items in `content` were shortened. Pass `tool_result_max_bytes=-1` to request full content, subject to the server-side maximum.
 
         default: false
-
-      - `type: "tool_result"`
-
-        default: tool_result
 
   - `content_unavailable: boolean`
 
@@ -945,7 +982,7 @@ malformed session identifier returns 400.
 
   - `started_by_user: object or null`
 
-    A user associated with a remote session.
+    The user who initiated an agent-owned session (for example, by mentioning Claude in Slack or via a scheduled trigger). Null for user-owned sessions — where the session's `user` started it — and for agent sessions with no human initiator. For initiators no longer a member of an organization the key may read, the object is populated with `email_address` null.
 
     - `id: string`
 
@@ -967,7 +1004,7 @@ malformed session identifier returns 400.
 
   - `user: object or null`
 
-    A user associated with a remote session.
+    The user who owns the session. Null for sessions owned by an automated agent rather than a user. At most one of `user` and `agent_id` is set. For users no longer a member of an organization the key may read, the object is populated with `email_address` null.
 
     - `id: string`
 
@@ -981,6 +1018,7 @@ malformed session identifier returns 400.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/sessions/remote/$CLAUDE_REMOTE_SESSION_ID/messages \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

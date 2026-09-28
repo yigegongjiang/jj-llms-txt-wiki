@@ -1,8 +1,21 @@
+---
+title: Create Skill
+url: https://platform.claude.com/docs/en/api/skills/create
+---
+
 # Create Skill
 
 **POST** `/v1/skills`
 
 Create Skill
+
+## Headers
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
 
 ## Body parameters (form-data)
 
@@ -21,6 +34,14 @@ Create Skill
 ## Returns
 
 - `Skill object`
+
+  - `type: "skill"`
+
+    Object type.
+
+    For Skills, this is always `"skill"`.
+
+    default: skill
 
   - `id: string`
 
@@ -74,14 +95,6 @@ Create Skill
 
       - `"plugin"`
 
-  - `type: "skill"`
-
-    Object type.
-
-    For Skills, this is always `"skill"`.
-
-    default: skill
-
   - `updated_at: string`
 
     ISO 8601 timestamp of when the skill was last updated.
@@ -95,7 +108,7 @@ curl https://api.anthropic.com/v1/skills \
     -H 'Content-Type: multipart/form-data' \
     -H 'anthropic-version: 2023-06-01' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY" \
-    -F files='["Example data"]'
+    -F 'files[]=@/path/to/file'
 ```
 
 ### Response (200)

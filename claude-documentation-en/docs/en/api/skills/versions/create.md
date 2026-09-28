@@ -1,3 +1,8 @@
+---
+title: Create Skill Version
+url: https://platform.claude.com/docs/en/api/skills/versions/create
+---
+
 # Create Skill Version
 
 **POST** `/v1/skills/{skill_id}/versions`
@@ -12,6 +17,14 @@ Create Skill Version
 
   The format and length of IDs may change over time.
 
+## Headers
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ## Body parameters (form-data)
 
 - `files: array of string`
@@ -23,6 +36,14 @@ Create Skill Version
 ## Returns
 
 - `SkillVersion object`
+
+  - `type: "skill_version"`
+
+    Object type.
+
+    For Skill Versions, this is always `"skill_version"`.
+
+    default: skill_version
 
   - `id: string`
 
@@ -54,14 +75,6 @@ Create Skill Version
 
     The format and length of IDs may change over time.
 
-  - `type: "skill_version"`
-
-    Object type.
-
-    For Skill Versions, this is always `"skill_version"`.
-
-    default: skill_version
-
 ## Example
 
 ```bash
@@ -69,7 +82,7 @@ curl https://api.anthropic.com/v1/skills/$SKILL_ID/versions \
     -H 'Content-Type: multipart/form-data' \
     -H 'anthropic-version: 2023-06-01' \
     -H "X-Api-Key: $ANTHROPIC_API_KEY" \
-    -F files='["Example data"]'
+    -F 'files[]=@/path/to/file'
 ```
 
 ### Response (200)

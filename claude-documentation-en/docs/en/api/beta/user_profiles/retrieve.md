@@ -1,3 +1,8 @@
+---
+title: Get User Profile
+url: https://platform.claude.com/docs/en/api/beta/user_profiles/retrieve
+---
+
 # Get User Profile
 
 **GET** `/v1/user_profiles/{user_profile_id}`
@@ -8,6 +13,8 @@ Get User Profile
 
 - `user_profile_id: string`
 
+  The ID of the user profile to get (`uprof_...`).
+
 ## Headers
 
 - `"anthropic-beta": optional array of AnthropicBeta`
@@ -16,7 +23,7 @@ Get User Profile
 
   - `string`
 
-  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 38 more`
+  - `"message-batches-2024-09-24" or "prompt-caching-2024-07-31" or "computer-use-2024-10-22" or 45 more`
 
     - `"message-batches-2024-09-24"`
 
@@ -64,6 +71,8 @@ Get User Profile
 
     - `"user-profiles-2026-08-18"`
 
+    - `"user-profiles-2026-09-04"`
+
     - `"advisor-tool-2026-03-01"`
 
     - `"managed-agents-2026-04-01"`
@@ -100,9 +109,35 @@ Get User Profile
 
     - `"ce-user-management-2026-07-13"`
 
+    - `"mid-conversation-output-config-2026-07-01"`
+
+    - `"thinking-binding-controls-2026-08-01"`
+
+    - `"mid-conversation-system-clear-at-2026-08-21"`
+
+    - `"compact-2026-09-04"`
+
+    - `"inline-tools-2026-09-15"`
+
+    - `"mcp-client-2026-09-15"`
+
+- `"anthropic-workspace-id": optional string`
+
+  Optional header to select the Workspace for this request. The value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+
+  Only needed for credentials that can act on more than one Workspace. A credential that belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+
 ## Returns
 
 - `BetaUserProfile object`
+
+  A record of an entity that the platform serves through the API, such as an end-user of the platform's product or a company that the platform resells Claude access to.
+
+  A Messages, Message Batches or token counting request can send a profile's `id` in the `anthropic-user-profile-id` header to attribute the request to that entity.
+
+  - `type: "user_profile"`
+
+    Object type. Always `user_profile`.
 
   - `id: string`
 
@@ -110,7 +145,7 @@ Get User Profile
 
   - `created_at: string`
 
-    A timestamp in RFC 3339 format
+    When this user profile was created, in RFC 3339 format.
 
     format: date-time
 
@@ -132,41 +167,91 @@ Get User Profile
 
       - `"rejected"`
 
-  - `type: "user_profile"`
-
-    Object type. Always `user_profile`.
-
   - `updated_at: string`
 
-    A timestamp in RFC 3339 format
+    When this user profile was last modified, in RFC 3339 format. Trust-grant status changes also bump this timestamp.
 
     format: date-time
 
   - `access_type: optional "application" or "passthrough"`
 
-    How the platform uses the API on behalf of the entity this profile represents. `application`: the platform sells a product that uses the API behind the scenes, and the profile represents an individual end-user of that product. `passthrough`: the platform resells raw inference, and the profile identifies the resold-to company.
+    How the platform uses the API for this entity: `application` (default) or `passthrough`. Present under the `user-profiles-2026-08-18` and later beta headers.
 
     - `"application"`
 
+      The user profile represents an individual end-user of a product that the platform builds on the API. New profiles get this value by default.
+
     - `"passthrough"`
+
+      The user profile represents a company that the platform resells Claude access to.
 
   - `external_id: optional string or null`
 
-    Platform's own identifier for this user. Not enforced unique.
+    Platform's own identifier for this user. Not enforced unique. Present under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers; under `user-profiles-2026-09-04` the value is `external_user_details.reference_id`.
+
+  - `external_user_details: optional BetaUserProfileExternalUserDetails`
+
+    Details about the entity this profile represents, as the platform states them; not verified by Anthropic. Present under the `user-profiles-2026-09-04` beta header, with every field present and `null` until the platform supplies a value; the earlier beta headers serve `reference_id` as the top-level `external_id`, and `user-profiles-2026-08-18` serves `onboarded_at` as `external_user_onboarded_at`.
+
+    - `account_status: "active" or "suspended" or "blocked" or null`
+
+      The status of the entity's account on the platform: `active`, `suspended` or `blocked`. `null` until the platform supplies one.
+
+      - `"active"`
+
+        The platform has neither restricted nor barred the account of the entity that the user profile represents.
+
+      - `"suspended"`
+
+        The platform has restricted the account of the entity that the user profile represents and may restore it.
+
+      - `"blocked"`
+
+        The platform has barred the account of the entity that the user profile represents.
+
+    - `country: string or null`
+
+      The country the platform associates with the entity, as an ISO 3166-1 alpha-2 code. `null` until the platform supplies one.
+
+    - `email_hash: string or null`
+
+      The platform-computed hash of the entity's email address. `null` until the platform supplies one.
+
+    - `entity_type: "individual" or "business" or "non_profit" or "government" or null`
+
+      What kind of entity the profile represents: `individual`, `business`, `non_profit` or `government`. `null` until the platform supplies one.
+
+      - `"individual"`
+
+      - `"business"`
+
+      - `"non_profit"`
+
+      - `"government"`
+
+    - `name_hash: string or null`
+
+      The platform-computed hash of the entity's name. `null` until the platform supplies one.
+
+    - `onboarded_at: string or null`
+
+      When the entity opened its account with the platform, as stated by the platform, in RFC 3339 format (UTC). `null` until the platform supplies one.
+
+      format: date-time
+
+    - `reference_id: string or null`
+
+      The platform's own reference for the entity. `null` until the platform supplies one.
+
+  - `external_user_onboarded_at: optional string or null`
+
+    When the entity this profile represents opened its account with the platform, as stated by the platform, in RFC 3339 format (UTC). `null` until the platform supplies one. Present under the `user-profiles-2026-08-18` beta header; under `user-profiles-2026-09-04` the value is `external_user_details.onboarded_at`.
+
+    format: date-time
 
   - `name: optional string or null`
 
-    Real-world name of the entity this profile represents (company or individual). For a resold-to company (`access_type` `passthrough`, or `relationship` `resold` under the `user-profiles-2026-03-24` header) this is that company's name.
-
-  - `relationship: optional "external" or "resold" or "internal"`
-
-    How the entity behind a user profile relates to the platform that owns the API key. `external`: an individual end-user of the platform. `resold`: a company the platform resells Claude access to. `internal`: the platform's own usage.
-
-    - `"external"`
-
-    - `"resold"`
-
-    - `"internal"`
+    Real-world name of the entity this profile represents (company or individual). For a company the platform resells Claude access to (`access_type` `passthrough`) this is that company's name.
 
 ## Example
 
@@ -193,7 +278,16 @@ curl https://api.anthropic.com/v1/user_profiles/$USER_PROFILE_ID \
   "updated_at": "2026-03-15T10:00:00Z",
   "access_type": "application",
   "external_id": "user_12345",
-  "name": "Example User",
-  "relationship": "external"
+  "external_user_details": {
+    "account_status": "active",
+    "country": "country",
+    "email_hash": "email_hash",
+    "entity_type": "individual",
+    "name_hash": "name_hash",
+    "onboarded_at": "2019-12-27T18:11:19.117Z",
+    "reference_id": "reference_id"
+  },
+  "external_user_onboarded_at": "2024-11-02T08:15:00Z",
+  "name": "Example User"
 }
 ```

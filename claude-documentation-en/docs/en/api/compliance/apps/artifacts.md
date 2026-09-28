@@ -1,3 +1,8 @@
+---
+title: Artifacts
+url: https://platform.claude.com/docs/en/api/compliance/apps/artifacts
+---
+
 # Artifacts
 
 ## Get artifact metadata
@@ -61,6 +66,7 @@ without downloading every artifact.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/artifacts/$ARTIFACT_VERSION_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -101,6 +107,7 @@ Returns the full text content of the artifact version.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/artifacts/$ARTIFACT_VERSION_ID/content \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

@@ -2,15 +2,17 @@
 title: Define your agent
 url: https://platform.claude.com/docs/en/managed-agents/agent-setup
 description: Create a reusable, versioned agent configuration.
+featureMetadata:
+  topic:
+    title: Managed Agents
+    url: https://platform.claude.com/docs/en/managed-agents/overview
+  status: beta
+  betaHeader: managed-agents-2026-04-01
 ---
 
 An agent is a reusable, versioned configuration that defines persona and capabilities. It bundles the model, system prompt, tools, MCP servers, and skills that shape how Claude behaves during a session.
 
 Create the agent once as a reusable resource and reference it by ID each time you [start a session](https://platform.claude.com/docs/en/managed-agents/sessions). Agents are versioned and easier to manage across many sessions.
-
-<Note>
-  Managed Agents API requests require the `managed-agents-2026-04-01` beta header, except memory store endpoints, which use `agent-memory-2026-07-22` instead. The SDK sets the correct beta header automatically. See [Beta headers](https://platform.claude.com/docs/en/api/beta-headers#endpoint-specific-headers).
-</Note>
 
 ## Agent configuration fields
 
@@ -26,7 +28,7 @@ Create the agent once as a reusable resource and reference it by ID each time yo
 | `description` | A description of what the agent does.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `metadata`    | Arbitrary key-value pairs for your own tracking.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-You can also override `model`, `system`, `tools`, `mcp_servers`, and `skills` for a single session without changing the agent. An `effort` level set inside a per-session `model` override isn't applied, and because the override replaces the agent's `model` object in full, a session created with a `model` override runs at the model's default effort level; to run at a specific effort level, set `effort` on the agent and don't override `model` for that session. See [Override agent configuration for a session](https://platform.claude.com/docs/en/managed-agents/sessions#override-agent-configuration-for-a-session).
+You can also override `model`, `system`, `tools`, `mcp_servers`, and `skills` for a single session without changing the agent. A `model` override replaces the agent's `model` object in full, so the agent's own `effort` isn't carried over. To run the session at a specific effort level, set `effort` inside the override's `model` object. See [Override agent configuration for a session](https://platform.claude.com/docs/en/managed-agents/sessions#override-agent-configuration-for-a-session).
 
 ## Create an agent
 
@@ -43,7 +45,7 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
     -H "content-type: application/json" \
     -d '{
       "name": "Coding Assistant",
-      "model": "claude-opus-5",
+      "model": "claude-opus-5-5",
       "system": "You are a helpful coding agent.",
       "tools": [{"type": "agent_toolset_20260401"}]
     }')
@@ -52,29 +54,31 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   AGENT_VERSION=$(jq -r '.version' <<< "$agent")
   ```
 
-  <MultiFileExample language="cli" label="CLI">
+  <CodeGroupItem>
     ```bash CLI
-    agent=$(ant beta:agents create --format json < coding-assistant.agent.yaml)
-
-    AGENT_ID=$(jq -r '.id' <<< "$agent")
+    ant apply coding-assistant.md
     ```
 
-    <File filename="coding-assistant.agent.yaml">
-      ```yaml
+    <File filename="coding-assistant.md">
+      ```markdown
+      ---
       name: Coding Assistant
-      model:
-        id: claude-opus-5
-      system: You are a helpful coding agent.
+      model: claude-opus-5-5
       tools:
         - type: agent_toolset_20260401
+      ---
+
+      You are a helpful coding agent.
       ```
     </File>
-  </MultiFileExample>
+
+    [`ant apply`](https://platform.claude.com/docs/en/cli-sdks-libraries/cli/apply) creates the agent from `coding-assistant.md`, prints its ID, and records it in `claude-lock.json`. Commit `claude-lock.json` so the next `ant apply` updates this agent instead of creating a second one.
+  </CodeGroupItem>
 
   ```python Python
   agent = client.beta.agents.create(
       name="Coding Assistant",
-      model="claude-opus-5",
+      model="claude-opus-5-5",
       system="You are a helpful coding agent.",
       tools=[
           {"type": "agent_toolset_20260401"},
@@ -85,7 +89,7 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   ```typescript TypeScript
   const agent = await client.beta.agents.create({
     name: "Coding Assistant",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     system: "You are a helpful coding agent.",
     tools: [{ type: "agent_toolset_20260401" }],
   });
@@ -95,7 +99,7 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   var agent = await client.Beta.Agents.Create(new()
   {
       Name = "Coding Assistant",
-      Model = BetaManagedAgentsModel.ClaudeOpus5,
+      Model = BetaManagedAgentsModel.ClaudeOpus5_5,
       System = "You are a helpful coding agent.",
       Tools =
       [
@@ -111,7 +115,7 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   agent, err := client.Beta.Agents.New(ctx, anthropic.BetaAgentNewParams{
   	Name: "Coding Assistant",
   	Model: anthropic.BetaManagedAgentsModelConfigParams{
-  		ID: anthropic.BetaManagedAgentsModelClaudeOpus5,
+  		ID: anthropic.BetaManagedAgentsModelClaudeOpus5_5,
   	},
   	System: anthropic.String("You are a helpful coding agent."),
   	Tools: []anthropic.BetaAgentNewParamsToolUnion{{
@@ -129,7 +133,7 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   var agent = client.beta().agents().create(
       AgentCreateParams.builder()
           .name("Coding Assistant")
-          .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+          .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
           .system("You are a helpful coding agent.")
           .addTool(
               BetaManagedAgentsAgentToolset20260401Params.builder()
@@ -143,7 +147,7 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   ```php PHP
   $agent = $client->beta->agents->create(
       name: 'Coding Assistant',
-      model: 'claude-opus-5',
+      model: 'claude-opus-5-5',
       system: 'You are a helpful coding agent.',
       tools: [
           BetaManagedAgentsAgentToolset20260401Params::with(
@@ -156,7 +160,7 @@ The examples use curl, the `ant` CLI, or one of the SDKs. If you haven't set one
   ```ruby Ruby
   agent = client.beta.agents.create(
     name: "Coding Assistant",
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     system_: "You are a helpful coding agent.",
     tools: [{type: "agent_toolset_20260401"}]
   )
@@ -171,7 +175,7 @@ The response echoes your configuration and adds `id`, `type`, `version`, `create
   "type": "agent",
   "name": "Coding Assistant",
   "model": {
-    "id": "claude-opus-5",
+    "id": "claude-opus-5-5",
     "effort": { "type": "high" },
     "speed": "standard"
   },
@@ -199,7 +203,7 @@ The response echoes your configuration and adds `id`, `type`, `version`, `create
 The `default_config` on the toolset shows its default [permission policy](https://platform.claude.com/docs/en/managed-agents/permission-policies), `always_allow`, which applies unless you configure one.
 
 <Tip>
-  To use Claude Opus 5 or Claude Opus 4.8 with [fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode), pass `model` as an object, for example: `{"id": "claude-opus-5", "speed": "fast"}`. See the fast mode page's [supported models](https://platform.claude.com/docs/en/build-with-claude/fast-mode#supported-models).
+  To use Claude Opus 5.5, Claude Opus 5, or Claude Opus 4.8 with [fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode), pass `model` as an object, for example: `{"id": "claude-opus-5", "speed": "fast"}`. See the fast mode page's [supported models](https://platform.claude.com/docs/en/build-with-claude/fast-mode#supported-models).
 </Tip>
 
 <Tip>
@@ -210,7 +214,7 @@ The `default_config` on the toolset shows its default [permission policy](https:
 
 Like `speed` and `effort`, `inference_geo` is set through the object form of `model`: pass `model` as an object and set `inference_geo` alongside `id`. The field accepts `"us"` or `"global"`. When it's unset, each model request follows the workspace's default inference geo at the time it's served. See [Data residency](https://platform.claude.com/docs/en/manage-claude/data-residency) for the workspace-level geo controls and pricing.
 
-The following example pins an agent to US inference and prints the `inference_geo` value echoed in the response's `model` object:
+The following example pins an agent to US inference and prints the `inference_geo` value from the agent's `model` object:
 
 <CodeGroup defaultLanguage="CLI">
   ```bash cURL
@@ -221,36 +225,37 @@ The following example pins an agent to US inference and prints the `inference_ge
     -H "content-type: application/json" \
     -d '{
       "name": "Geo-pinned assistant",
-      "model": {"id": "claude-opus-5", "inference_geo": "us"},
+      "model": {"id": "claude-opus-5-5", "inference_geo": "us"},
       "system": "You are a helpful assistant."
     }')
 
   echo "Inference geo: $(jq -r '.model.inference_geo' <<< "$agent")"
   ```
 
-  <MultiFileExample language="cli" label="CLI">
+  <CodeGroupItem>
     ```bash CLI
-    agent=$(ant beta:agents create --format json < geo-pinned.agent.yaml)
-
-    echo "Inference geo: $(jq -r '.model.inference_geo' <<< "$agent")"
+    ant apply geo-pinned-assistant.md
     ```
 
-    <File filename="geo-pinned.agent.yaml">
-      ```yaml
+    <File filename="geo-pinned-assistant.md">
+      ```markdown
+      ---
       name: Geo-pinned assistant
       model:
-        id: claude-opus-5
+        id: claude-opus-5-5
         inference_geo: us
-      system: You are a helpful assistant.
+      ---
+
+      You are a helpful assistant.
       ```
     </File>
-  </MultiFileExample>
+  </CodeGroupItem>
 
   ```python Python
   agent = client.beta.agents.create(
       name="Geo-pinned assistant",
       model={
-          "id": "claude-opus-5",
+          "id": "claude-opus-5-5",
           "inference_geo": "us",
       },
       system="You are a helpful assistant.",
@@ -262,7 +267,7 @@ The following example pins an agent to US inference and prints the `inference_ge
   ```typescript TypeScript
   const agent = await client.beta.agents.create({
     name: "Geo-pinned assistant",
-    model: { id: "claude-opus-5", inference_geo: "us" },
+    model: { id: "claude-opus-5-5", inference_geo: "us" },
     system: "You are a helpful assistant.",
   });
 
@@ -275,7 +280,7 @@ The following example pins an agent to US inference and prints the `inference_ge
       Name = "Geo-pinned assistant",
       Model = new BetaManagedAgentsModelConfigParams
       {
-          ID = BetaManagedAgentsModel.ClaudeOpus5,
+          ID = BetaManagedAgentsModel.ClaudeOpus5_5,
           InferenceGeo = "us",
       },
       System = "You are a helpful assistant.",
@@ -288,7 +293,7 @@ The following example pins an agent to US inference and prints the `inference_ge
   agent, err := client.Beta.Agents.New(ctx, anthropic.BetaAgentNewParams{
   	Name: "Geo-pinned assistant",
   	Model: anthropic.BetaManagedAgentsModelConfigParams{
-  		ID:           anthropic.BetaManagedAgentsModelClaudeOpus5,
+  		ID:           anthropic.BetaManagedAgentsModelClaudeOpus5_5,
   		InferenceGeo: anthropic.String("us"),
   	},
   	System: anthropic.String("You are a helpful assistant."),
@@ -306,7 +311,7 @@ The following example pins an agent to US inference and prints the `inference_ge
           .name("Geo-pinned assistant")
           .model(
               BetaManagedAgentsModelConfigParams.builder()
-                  .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                  .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                   .inferenceGeo("us")
                   .build()
           )
@@ -321,7 +326,7 @@ The following example pins an agent to US inference and prints the `inference_ge
   $agent = $client->beta->agents->create(
       name: 'Geo-pinned assistant',
       model: BetaManagedAgentsModelConfigParams::with(
-          id: 'claude-opus-5',
+          id: 'claude-opus-5-5',
           inferenceGeo: 'us',
       ),
       system: 'You are a helpful assistant.',
@@ -333,7 +338,7 @@ The following example pins an agent to US inference and prints the `inference_ge
   ```ruby Ruby
   agent = client.beta.agents.create(
     name: "Geo-pinned assistant",
-    model: {id: "claude-opus-5", inference_geo: "us"},
+    model: {id: "claude-opus-5-5", inference_geo: "us"},
     system_: "You are a helpful assistant."
   )
 
@@ -348,6 +353,8 @@ Setting `inference_geo` on a model that doesn't support geographic inference pin
 ## Update an agent
 
 Updating an agent generates a new version when the configuration changes. The `version` field is optional: supply it for optimistic concurrency (a mismatch returns a 409), or omit it to apply the update unconditionally (last write wins). Updates to archived agents are rejected.
+
+With the CLI, edit the agent's file and run `ant apply` again; apply supplies `version` for you.
 
 <CodeGroup defaultLanguage="CLI">
   ```bash cURL
@@ -367,22 +374,24 @@ Updating an agent generates a new version when the configuration changes. The `v
   echo "New version: $(jq -r '.version' <<< "$updated_agent")"
   ```
 
-  <MultiFileExample language="cli" label="CLI">
+  <CodeGroupItem>
     ```bash CLI
-    ant beta:agents update --agent-id "$AGENT_ID" < coding-assistant.agent.yaml
+    ant apply coding-assistant.md
     ```
 
-    <File filename="coding-assistant.agent.yaml">
-      ```yaml
+    <File filename="coding-assistant.md">
+      ```markdown
+      ---
       name: Coding Assistant
-      model:
-        id: claude-opus-5
-      system: You are a helpful coding agent. Always write tests.
+      model: claude-opus-5-5
       tools:
         - type: agent_toolset_20260401
+      ---
+
+      You are a helpful coding agent. Always write tests.
       ```
     </File>
-  </MultiFileExample>
+  </CodeGroupItem>
 
   ```python Python
   updated_agent = client.beta.agents.update(
@@ -460,7 +469,7 @@ Updating an agent generates a new version when the configuration changes. The `v
 
 The preceding example supplies `version` from the create response, so the update only applies if nothing else has changed the agent since you read it. To apply an update unconditionally, omit `version` from the request:
 
-<CodeGroup defaultLanguage="cURL">
+<CodeGroup exclude="shell:CLI, python, typescript, csharp, go, java, php, ruby">
   ```bash cURL
   updated_agent=$(curl -fsSL "https://api.anthropic.com/v1/agents/$AGENT_ID" \
     -H "x-api-key: $ANTHROPIC_API_KEY" \
@@ -505,7 +514,7 @@ The preceding example supplies `version` from the create response, so the update
 
 Fetch the full version history to track how an agent has changed over time. Results are paginated, and the SDK examples fetch every page automatically.
 
-<CodeGroup defaultLanguage="CLI">
+<CodeGroup>
   ```bash cURL
   curl -fsSL "https://api.anthropic.com/v1/agents/$AGENT_ID/versions" \
     -H "x-api-key: $ANTHROPIC_API_KEY" \
@@ -571,7 +580,7 @@ Fetch the full version history to track how an agent has changed over time. Resu
 
 Archiving makes the agent read-only and cannot be undone. Existing sessions continue to run, but new sessions cannot reference the agent. The response sets `archived_at` to the archive timestamp.
 
-<CodeGroup defaultLanguage="CLI">
+<CodeGroup>
   ```bash cURL
   archived=$(curl -fsSL -X POST "https://api.anthropic.com/v1/agents/$AGENT_ID/archive" \
     -H "x-api-key: $ANTHROPIC_API_KEY" \

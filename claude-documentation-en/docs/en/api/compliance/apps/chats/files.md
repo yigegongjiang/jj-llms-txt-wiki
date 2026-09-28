@@ -1,3 +1,8 @@
+---
+title: Files
+url: https://platform.claude.com/docs/en/api/compliance/apps/chats/files
+---
+
 # Files
 
 ## Get file metadata
@@ -58,6 +63,7 @@ download the bytes.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/files/$CLAUDE_FILE_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -99,21 +105,22 @@ operation that cannot be undone.
 
 ### Returns
 
-- `id: string`
-
-  The ID of the file that was deleted
-
 - `type: optional "claude_file_deleted"`
 
   Constant string confirming deletion
 
   default: claude_file_deleted
 
+- `id: string`
+
+  The ID of the file that was deleted
+
 ### Example
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/files/$CLAUDE_FILE_ID \
     -X DELETE \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -146,6 +153,7 @@ Downloads the binary content of a file referenced in chat messages.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/files/$CLAUDE_FILE_ID/content \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -200,12 +208,12 @@ curl https://api.anthropic.com/v1/compliance/apps/chats/files/$CLAUDE_FILE_ID/co
 
   Response for deleting a compliance file.
 
-  - `id: string`
-
-    The ID of the file that was deleted
-
   - `type: optional "claude_file_deleted"`
 
     Constant string confirming deletion
 
     default: claude_file_deleted
+
+  - `id: string`
+
+    The ID of the file that was deleted

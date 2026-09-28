@@ -1,3 +1,8 @@
+---
+title: Download file content
+url: https://platform.claude.com/docs/en/api/compliance/apps/chats/files/download
+---
+
 # Download file content
 
 **GET** `/v1/compliance/apps/chats/files/{claude_file_id}/content`
@@ -18,5 +23,6 @@ Downloads the binary content of a file referenced in chat messages.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/chats/files/$CLAUDE_FILE_ID/content \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```

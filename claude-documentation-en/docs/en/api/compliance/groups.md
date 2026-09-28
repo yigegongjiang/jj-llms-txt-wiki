@@ -1,3 +1,8 @@
+---
+title: Groups
+url: https://platform.claude.com/docs/en/api/compliance/groups
+---
+
 # Groups
 
 ## List Compliance Groups
@@ -12,7 +17,7 @@ List Compliance Groups
 
   Maximum results (default: 500, max: 1000)
 
-  default: 500, maximum: 1000, minimum: 1
+  default: 500, minimum: 1, maximum: 1000
 
 - `name_prefix: optional string`
 
@@ -40,7 +45,9 @@ List Compliance Groups
 
   - `created_at: string or null`
 
-    Group creation timestamp (ISO 8601)
+    Group creation timestamp (RFC 3339)
+
+    format: date-time
 
   - `description: string`
 
@@ -60,7 +67,9 @@ List Compliance Groups
 
   - `updated_at: string or null`
 
-    Group last-updated timestamp (ISO 8601)
+    Group last-updated timestamp (RFC 3339)
+
+    format: date-time
 
 - `has_more: boolean`
 
@@ -74,6 +83,7 @@ List Compliance Groups
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/groups \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -84,7 +94,7 @@ curl https://api.anthropic.com/v1/compliance/groups \
   "data": [
     {
       "id": "rbac_group_012rppKaSVsmTo6NqRDXQXNF",
-      "created_at": "2025-03-12T18:22:41.123456",
+      "created_at": "2025-03-12T18:22:41.123456Z",
       "description": "All members of the engineering organization",
       "name": "Engineering Team",
       "roles": [
@@ -92,7 +102,7 @@ curl https://api.anthropic.com/v1/compliance/groups \
         "rbac_role_01HtCd4mFoAseWS3RnzKcwE7"
       ],
       "source_type": "scim",
-      "updated_at": "2025-03-14T09:05:17.456789"
+      "updated_at": "2025-03-14T09:05:17.456789Z"
     }
   ],
   "has_more": true,
@@ -124,7 +134,9 @@ Get Compliance Group
 
 - `created_at: string or null`
 
-  Group creation timestamp (ISO 8601)
+  Group creation timestamp (RFC 3339)
+
+  format: date-time
 
 - `description: string`
 
@@ -144,12 +156,15 @@ Get Compliance Group
 
 - `updated_at: string or null`
 
-  Group last-updated timestamp (ISO 8601)
+  Group last-updated timestamp (RFC 3339)
+
+  format: date-time
 
 ### Example
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -158,7 +173,7 @@ curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID \
 ```json
 {
   "id": "rbac_group_012rppKaSVsmTo6NqRDXQXNF",
-  "created_at": "2025-03-12T18:22:41.123456",
+  "created_at": "2025-03-12T18:22:41.123456Z",
   "description": "All members of the engineering organization",
   "name": "Engineering Team",
   "roles": [
@@ -166,7 +181,7 @@ curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID \
     "rbac_role_01HtCd4mFoAseWS3RnzKcwE7"
   ],
   "source_type": "scim",
-  "updated_at": "2025-03-14T09:05:17.456789"
+  "updated_at": "2025-03-14T09:05:17.456789Z"
 }
 ```
 
@@ -184,7 +199,9 @@ curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID \
 
   - `created_at: string or null`
 
-    Group creation timestamp (ISO 8601)
+    Group creation timestamp (RFC 3339)
+
+    format: date-time
 
   - `description: string`
 
@@ -204,7 +221,9 @@ curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID \
 
   - `updated_at: string or null`
 
-    Group last-updated timestamp (ISO 8601)
+    Group last-updated timestamp (RFC 3339)
+
+    format: date-time
 
 ### Group List Response
 
@@ -218,7 +237,9 @@ curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID \
 
   - `created_at: string or null`
 
-    Group creation timestamp (ISO 8601)
+    Group creation timestamp (RFC 3339)
+
+    format: date-time
 
   - `description: string`
 
@@ -238,7 +259,9 @@ curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID \
 
   - `updated_at: string or null`
 
-    Group last-updated timestamp (ISO 8601)
+    Group last-updated timestamp (RFC 3339)
+
+    format: date-time
 
 ## Groups › Members
 
@@ -260,7 +283,7 @@ List Compliance Group Members
 
   Maximum results (default: 500, max: 1000)
 
-  default: 500, maximum: 1000, minimum: 1
+  default: 500, minimum: 1, maximum: 1000
 
 - `page: optional string`
 
@@ -278,7 +301,9 @@ List Compliance Group Members
 
   - `created_at: string or null`
 
-    Membership creation timestamp (ISO 8601)
+    Membership creation timestamp (RFC 3339)
+
+    format: date-time
 
   - `email: string`
 
@@ -286,7 +311,9 @@ List Compliance Group Members
 
   - `updated_at: string or null`
 
-    Membership last-updated timestamp (ISO 8601)
+    Membership last-updated timestamp (RFC 3339)
+
+    format: date-time
 
   - `user_id: string`
 
@@ -304,6 +331,7 @@ List Compliance Group Members
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID/members \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -313,9 +341,9 @@ curl https://api.anthropic.com/v1/compliance/groups/$GROUP_ID/members \
 {
   "data": [
     {
-      "created_at": "2025-03-12T18:22:41.123456",
+      "created_at": "2025-03-12T18:22:41.123456Z",
       "email": "jane.doe@example.com",
-      "updated_at": "2025-03-14T09:05:17.456789",
+      "updated_at": "2025-03-14T09:05:17.456789Z",
       "user_id": "user_01WCz1FkmYMm4gnmykNKUu3Q"
     }
   ],

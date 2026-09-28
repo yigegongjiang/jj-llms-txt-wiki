@@ -1,3 +1,8 @@
+---
+title: List project collaborators
+url: https://platform.claude.com/docs/en/api/compliance/apps/projects/collaborators/list
+---
+
 # List project collaborators
 
 **GET** `/v1/compliance/apps/projects/{project_id}/collaborators`
@@ -21,7 +26,7 @@ role.
 
   Maximum results (default: 20, max: 100)
 
-  default: 20, maximum: 100, minimum: 1
+  default: 20, minimum: 1, maximum: 100
 
 - `page: optional string`
 
@@ -33,13 +38,19 @@ role.
 
 ## Returns
 
-- `data: array of object or object or object or object`
+- `data: array of ComplianceProjectUserCollaborator or ComplianceProjectGroupCollaborator or ComplianceProjectOrganizationCollaborator or ComplianceProjectOrganizationRoleCollaborator`
 
   List of collaborators sorted chronologically by granted_at, tie break by the underlying role-assignment UUID
 
   - `ComplianceProjectUserCollaborator object`
 
     An individual user granted a role on a project.
+
+    - `type: "user"`
+
+      Discriminator marking this as an individual user collaborator
+
+      default: user
 
     - `granted_at: string`
 
@@ -59,12 +70,6 @@ role.
 
       - `"viewer"`
 
-    - `type: "user"`
-
-      Discriminator marking this as an individual user collaborator
-
-      default: user
-
     - `user_id: string or null`
 
       Identifier of the user granted access (tagged ID), or null if their account has since been deleted
@@ -72,6 +77,12 @@ role.
   - `ComplianceProjectGroupCollaborator object`
 
     An RBAC group granted a role on a project.
+
+    - `type: "group"`
+
+      Discriminator marking this as a group collaborator
+
+      default: group
 
     - `granted_at: string`
 
@@ -95,15 +106,15 @@ role.
 
       - `"viewer"`
 
-    - `type: "group"`
-
-      Discriminator marking this as a group collaborator
-
-      default: group
-
   - `ComplianceProjectOrganizationCollaborator object`
 
     An entire organization granted a role on a project.
+
+    - `type: "organization"`
+
+      Discriminator marking this as an organization-wide grant
+
+      default: organization
 
     - `granted_at: string`
 
@@ -127,15 +138,15 @@ role.
 
       - `"viewer"`
 
-    - `type: "organization"`
-
-      Discriminator marking this as an organization-wide grant
-
-      default: organization
-
   - `ComplianceProjectOrganizationRoleCollaborator object`
 
     All holders of an organization-level role granted a role on a project.
+
+    - `type: "organization_role"`
+
+      Discriminator marking this as a grant to all organization members holding a specific org-level role
+
+      default: organization_role
 
     - `granted_at: string`
 
@@ -159,12 +170,6 @@ role.
 
       - `"viewer"`
 
-    - `type: "organization_role"`
-
-      Discriminator marking this as a grant to all organization members holding a specific org-level role
-
-      default: organization_role
-
 - `has_more: boolean`
 
   Whether more records exist beyond the current result set
@@ -177,6 +182,7 @@ role.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/$PROJECT_ID/collaborators \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

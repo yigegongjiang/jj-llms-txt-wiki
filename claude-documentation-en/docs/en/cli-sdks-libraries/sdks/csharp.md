@@ -7,10 +7,6 @@ description: Install and configure the Anthropic C# SDK for .NET applications wi
 The Anthropic C# SDK provides convenient access to the Claude API from applications written in C#.
 
 <Info>
-  The C# SDK is currently in beta. APIs may change between versions.
-</Info>
-
-<Info>
   For API feature documentation with code examples, see the [API reference](https://platform.claude.com/docs/en/api/overview). This page covers C#-specific SDK features and configuration.
 </Info>
 
@@ -50,7 +46,7 @@ MessageCreateParams parameters = new()
             Content = "Hello, Claude",
         },
     ],
-    Model = Model.ClaudeOpus5,
+    Model = Model.ClaudeOpus5_5,
 };
 
 var message = await client.Messages.Create(parameters);
@@ -142,7 +138,7 @@ MessageCreateParams parameters = new()
             Content = "Hello, Claude",
         },
     ],
-    Model = Model.ClaudeOpus5,
+    Model = Model.ClaudeOpus5_5,
 };
 
 await foreach (var message in client.Messages.CreateStreaming(parameters))
@@ -324,7 +320,7 @@ using ModelContextProtocol.Client;
 // Configured using the ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN and ANTHROPIC_BASE_URL environment variables
 AnthropicClient client = new();
 
-IChatClient chatClient = client.AsIChatClient("claude-opus-5")
+IChatClient chatClient = client.AsIChatClient("claude-opus-5-5")
     .AsBuilder()
     .UseFunctionInvocation()
     .Build();
@@ -447,10 +443,6 @@ The C# SDK supports the following platforms through separate NuGet packages:
 Use `AnthropicBedrockMantleClient` for new projects; `AnthropicBedrockClient` remains for existing applications using the Bedrock `InvokeModel` API.
 
 ## Semantic versioning
-
-<Warning>
-  Although this package is versioned as 10+, it's currently in beta. During the beta period, breaking changes may occur in minor or patch releases. Once the library reaches stable release, SemVer conventions will be followed more strictly. Share feedback by [filing an issue](https://github.com/anthropics/anthropic-sdk-csharp/issues/new).
-</Warning>
 
 This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backward-incompatible changes may be released as minor versions:
 

@@ -1,3 +1,8 @@
+---
+title: Get project document metadata
+url: https://platform.claude.com/docs/en/api/compliance/apps/projects/documents/metadata
+---
+
 # Get project document metadata
 
 **GET** `/v1/compliance/apps/projects/documents/{document_id}/metadata`
@@ -55,11 +60,7 @@ consumer can dedupe or match hashes without downloading every document.
 
 - `user: object or null`
 
-  The user who created a project or project document.
-
-  Fields that reference this type are null when the creator's account has
-  been deleted or the creator is no longer a member of an organization the
-  key may read.
+  Document creator information, or null if the creator's account has been deleted or the creator is no longer a member of an organization the key may read
 
   - `id: string`
 
@@ -73,6 +74,7 @@ consumer can dedupe or match hashes without downloading every document.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/projects/documents/$DOCUMENT_ID/metadata \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 

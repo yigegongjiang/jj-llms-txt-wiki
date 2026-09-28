@@ -1,3 +1,8 @@
+---
+title: Settings
+url: https://platform.claude.com/docs/en/api/compliance/organizations/settings
+---
+
 # Settings
 
 ## Get effective organization settings
@@ -11,6 +16,13 @@ enforced state after all policies are applied, which may differ from what
 is configured in the admin console. Settings an organization's
 administrators cannot change (for example, ones controlled by Anthropic
 policy or not available to the organization) are omitted from the list.
+Settings that report a compliance arrangement with Anthropic are the
+exception: the HIPAA and Access Transparency settings are always included;
+the API zero data retention setting is reported for Claude Console
+organizations, and the Claude Code zero data retention and customer-managed
+encryption keys (CMEK) settings for Claude Enterprise organizations. Each
+reports whether the arrangement is in place at the organization level; a
+retention setting on an individual workspace is not reflected.
 
 The organization must belong to the API key's organization hierarchy;
 unknown organizations and organizations outside the hierarchy return 404.
@@ -27,9 +39,17 @@ unknown organizations and organizations outside the hierarchy return 404.
 
 ### Returns
 
+- `type: optional "effective_organization_settings"`
+
+  default: effective_organization_settings
+
 - `api_keys: array of object`
 
   Compliance API keys configured for the organization hierarchy, ordered by creation time ascending. Key secret values are never included.
+
+  - `type: optional "compliance_api_key"`
+
+    default: compliance_api_key
 
   - `id: string`
 
@@ -63,23 +83,27 @@ unknown organizations and organizations outside the hierarchy return 404.
 
     format: date-time
 
-  - `type: optional "compliance_api_key"`
-
-    default: compliance_api_key
-
 - `organization_id: string`
 
-- `settings: array of object or object or object or 3 more`
+- `settings: array of Boolean or Integer or String or 3 more`
 
   - `Boolean object`
 
     A setting whose enforced value is a single true/false flag.
 
-    - `name: "ai_powered_artifacts_enabled" or "api_workbench_feedback_collection_enabled" or "artifact_connectors_enabled" or 52 more`
+    - `type: optional "boolean"`
+
+      default: boolean
+
+    - `name: "access_transparency_enabled" or "ai_powered_artifacts_enabled" or "api_workbench_feedback_collection_enabled" or 59 more`
+
+      - `"access_transparency_enabled"`
 
       - `"ai_powered_artifacts_enabled"`
 
       - `"api_workbench_feedback_collection_enabled"`
+
+      - `"api_zero_data_retention_enabled"`
 
       - `"artifact_connectors_enabled"`
 
@@ -87,11 +111,15 @@ unknown organizations and organizations outside the hierarchy return 404.
 
       - `"chat_enabled"`
 
+      - `"claude_academy_inference_enabled"`
+
       - `"claude_ai_chat_sharing_enabled"`
 
       - `"claude_ai_feedback_collection_enabled"`
 
       - `"claude_ai_integration_sharing_enabled"`
+
+      - `"claude_ai_skill_plugins_scanning_enabled"`
 
       - `"claude_code_desktop_bypass_permissions_enabled"`
 
@@ -117,6 +145,8 @@ unknown organizations and organizations outside the hierarchy return 404.
 
       - `"claude_design_enabled"`
 
+      - `"claude_enterprise_claude_code_zero_data_retention_enabled"`
+
       - `"claude_in_slack_enabled"`
 
       - `"claude_science_custom_connectors_enabled"`
@@ -134,6 +164,8 @@ unknown organizations and organizations outside the hierarchy return 404.
       - `"claude_science_scientific_model_endpoints_enabled"`
 
       - `"claude_science_ssh_hosts_enabled"`
+
+      - `"cmek_enabled"`
 
       - `"code_execution_enabled"`
 
@@ -167,6 +199,8 @@ unknown organizations and organizations outside the hierarchy return 404.
 
       - `"org_wide_skill_sharing_enabled"`
 
+      - `"project_sharing_enabled"`
+
       - `"public_projects_enabled"`
 
       - `"skill_sharing_enabled"`
@@ -189,27 +223,27 @@ unknown organizations and organizations outside the hierarchy return 404.
 
     - `value: boolean`
 
-    - `type: optional "boolean"`
-
-      default: boolean
-
   - `Integer object`
 
     A setting whose enforced value is a whole number; null means no limit
     is in force.
 
-    - `name: "account_session_duration_seconds"`
-
-    - `value: number or null`
-
     - `type: optional "integer"`
 
       default: integer
+
+    - `name: "account_session_duration_seconds"`
+
+    - `value: number or null`
 
   - `String object`
 
     A setting whose enforced value is a single string; null means no value
     is configured.
+
+    - `type: optional "string"`
+
+      default: string
 
     - `name: "claude_code_default_worker_environment_id" or "claude_code_default_worker_pool_id"`
 
@@ -219,13 +253,13 @@ unknown organizations and organizations outside the hierarchy return 404.
 
     - `value: string or null`
 
-    - `type: optional "string"`
-
-      default: string
-
   - `StringList object`
 
     A setting whose enforced value is a list of strings.
+
+    - `type: optional "string_list"`
+
+      default: string_list
 
     - `name: "allowed_invite_domains" or "disabled_admin_request_types" or "ip_allowlist_ip_ranges"`
 
@@ -237,10 +271,6 @@ unknown organizations and organizations outside the hierarchy return 404.
 
     - `value: array of string`
 
-    - `type: optional "string_list"`
-
-      default: string_list
-
   - `ProvisioningMode object`
 
     How organization members are provisioned, resolved to the enforced mode.
@@ -249,6 +279,10 @@ unknown organizations and organizations outside the hierarchy return 404.
     active: just-in-time modes require single sign-on to be enabled, and SCIM
     modes require directory sync to be enabled. Otherwise `login_only` is
     reported, regardless of any stored configuration.
+
+    - `type: optional "provisioning_mode"`
+
+      default: provisioning_mode
 
     - `value: "jit_advanced" or "jit_permissive" or "login_only" or 2 more`
 
@@ -268,10 +302,6 @@ unknown organizations and organizations outside the hierarchy return 404.
 
       default: sso_provisioning_mode
 
-    - `type: optional "provisioning_mode"`
-
-      default: provisioning_mode
-
   - `DataRetention object`
 
     The data retention periods in force, keyed by the type of data they
@@ -282,11 +312,19 @@ unknown organizations and organizations outside the hierarchy return 404.
     administrator-configured retention period is in force for that data type;
     Anthropic's service defaults may still apply.
 
-    - `value: map[object or object]`
+    - `type: optional "data_retention"`
+
+      default: data_retention
+
+    - `value: map[Fixed or Indefinite]`
 
       - `Fixed object`
 
         A fixed retention window measured from each item's last activity.
+
+        - `type: optional "fixed"`
+
+          default: fixed
 
         - `duration: number`
 
@@ -295,10 +333,6 @@ unknown organizations and organizations outside the hierarchy return 404.
           - `"day"`
 
           - `"month"`
-
-        - `type: optional "fixed"`
-
-          default: fixed
 
       - `Indefinite object`
 
@@ -312,18 +346,11 @@ unknown organizations and organizations outside the hierarchy return 404.
 
       default: data_retention_periods
 
-    - `type: optional "data_retention"`
-
-      default: data_retention
-
-- `type: optional "effective_organization_settings"`
-
-  default: effective_organization_settings
-
 ### Example
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/settings \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
 
@@ -348,7 +375,7 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
   "organization_id": "organization_id",
   "settings": [
     {
-      "name": "ai_powered_artifacts_enabled",
+      "name": "access_transparency_enabled",
       "value": true,
       "type": "boolean"
     }
@@ -368,11 +395,26 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
   Settings appear at most once each, in a fixed relative order, and values
   reflect the enforced state. A setting the organization's administrators
   cannot change — for example, one controlled by Anthropic policy or not
-  available to the organization — is omitted from the list.
+  available to the organization — is omitted from the list. Settings that
+  report a compliance arrangement with Anthropic are the exception: the
+  HIPAA and Access Transparency settings are always included; the API zero
+  data retention setting is reported for Claude Console organizations, and
+  the Claude Code zero data retention and customer-managed encryption keys
+  (CMEK) settings for Claude Enterprise organizations. Each reports whether
+  the arrangement is in place at the organization level; a retention setting
+  on an individual workspace is not reflected.
+
+  - `type: optional "effective_organization_settings"`
+
+    default: effective_organization_settings
 
   - `api_keys: array of object`
 
     Compliance API keys configured for the organization hierarchy, ordered by creation time ascending. Key secret values are never included.
+
+    - `type: optional "compliance_api_key"`
+
+      default: compliance_api_key
 
     - `id: string`
 
@@ -406,23 +448,27 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
       format: date-time
 
-    - `type: optional "compliance_api_key"`
-
-      default: compliance_api_key
-
   - `organization_id: string`
 
-  - `settings: array of object or object or object or 3 more`
+  - `settings: array of Boolean or Integer or String or 3 more`
 
     - `Boolean object`
 
       A setting whose enforced value is a single true/false flag.
 
-      - `name: "ai_powered_artifacts_enabled" or "api_workbench_feedback_collection_enabled" or "artifact_connectors_enabled" or 52 more`
+      - `type: optional "boolean"`
+
+        default: boolean
+
+      - `name: "access_transparency_enabled" or "ai_powered_artifacts_enabled" or "api_workbench_feedback_collection_enabled" or 59 more`
+
+        - `"access_transparency_enabled"`
 
         - `"ai_powered_artifacts_enabled"`
 
         - `"api_workbench_feedback_collection_enabled"`
+
+        - `"api_zero_data_retention_enabled"`
 
         - `"artifact_connectors_enabled"`
 
@@ -430,11 +476,15 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
         - `"chat_enabled"`
 
+        - `"claude_academy_inference_enabled"`
+
         - `"claude_ai_chat_sharing_enabled"`
 
         - `"claude_ai_feedback_collection_enabled"`
 
         - `"claude_ai_integration_sharing_enabled"`
+
+        - `"claude_ai_skill_plugins_scanning_enabled"`
 
         - `"claude_code_desktop_bypass_permissions_enabled"`
 
@@ -460,6 +510,8 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
         - `"claude_design_enabled"`
 
+        - `"claude_enterprise_claude_code_zero_data_retention_enabled"`
+
         - `"claude_in_slack_enabled"`
 
         - `"claude_science_custom_connectors_enabled"`
@@ -477,6 +529,8 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
         - `"claude_science_scientific_model_endpoints_enabled"`
 
         - `"claude_science_ssh_hosts_enabled"`
+
+        - `"cmek_enabled"`
 
         - `"code_execution_enabled"`
 
@@ -510,6 +564,8 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
         - `"org_wide_skill_sharing_enabled"`
 
+        - `"project_sharing_enabled"`
+
         - `"public_projects_enabled"`
 
         - `"skill_sharing_enabled"`
@@ -532,27 +588,27 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
       - `value: boolean`
 
-      - `type: optional "boolean"`
-
-        default: boolean
-
     - `Integer object`
 
       A setting whose enforced value is a whole number; null means no limit
       is in force.
 
-      - `name: "account_session_duration_seconds"`
-
-      - `value: number or null`
-
       - `type: optional "integer"`
 
         default: integer
+
+      - `name: "account_session_duration_seconds"`
+
+      - `value: number or null`
 
     - `String object`
 
       A setting whose enforced value is a single string; null means no value
       is configured.
+
+      - `type: optional "string"`
+
+        default: string
 
       - `name: "claude_code_default_worker_environment_id" or "claude_code_default_worker_pool_id"`
 
@@ -562,13 +618,13 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
       - `value: string or null`
 
-      - `type: optional "string"`
-
-        default: string
-
     - `StringList object`
 
       A setting whose enforced value is a list of strings.
+
+      - `type: optional "string_list"`
+
+        default: string_list
 
       - `name: "allowed_invite_domains" or "disabled_admin_request_types" or "ip_allowlist_ip_ranges"`
 
@@ -580,10 +636,6 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
       - `value: array of string`
 
-      - `type: optional "string_list"`
-
-        default: string_list
-
     - `ProvisioningMode object`
 
       How organization members are provisioned, resolved to the enforced mode.
@@ -592,6 +644,10 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
       active: just-in-time modes require single sign-on to be enabled, and SCIM
       modes require directory sync to be enabled. Otherwise `login_only` is
       reported, regardless of any stored configuration.
+
+      - `type: optional "provisioning_mode"`
+
+        default: provisioning_mode
 
       - `value: "jit_advanced" or "jit_permissive" or "login_only" or 2 more`
 
@@ -611,10 +667,6 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
 
         default: sso_provisioning_mode
 
-      - `type: optional "provisioning_mode"`
-
-        default: provisioning_mode
-
     - `DataRetention object`
 
       The data retention periods in force, keyed by the type of data they
@@ -625,11 +677,19 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
       administrator-configured retention period is in force for that data type;
       Anthropic's service defaults may still apply.
 
-      - `value: map[object or object]`
+      - `type: optional "data_retention"`
+
+        default: data_retention
+
+      - `value: map[Fixed or Indefinite]`
 
         - `Fixed object`
 
           A fixed retention window measured from each item's last activity.
+
+          - `type: optional "fixed"`
+
+            default: fixed
 
           - `duration: number`
 
@@ -638,10 +698,6 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
             - `"day"`
 
             - `"month"`
-
-          - `type: optional "fixed"`
-
-            default: fixed
 
         - `Indefinite object`
 
@@ -654,11 +710,3 @@ curl https://api.anthropic.com/v1/compliance/organizations/$ORGANIZATION_ID/sett
       - `name: optional "data_retention_periods"`
 
         default: data_retention_periods
-
-      - `type: optional "data_retention"`
-
-        default: data_retention
-
-  - `type: optional "effective_organization_settings"`
-
-    default: effective_organization_settings

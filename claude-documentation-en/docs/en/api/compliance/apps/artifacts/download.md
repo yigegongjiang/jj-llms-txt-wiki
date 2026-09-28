@@ -1,3 +1,8 @@
+---
+title: Download artifact content
+url: https://platform.claude.com/docs/en/api/compliance/apps/artifacts/download
+---
+
 # Download artifact content
 
 **GET** `/v1/compliance/apps/artifacts/{artifact_version_id}/content`
@@ -20,5 +25,6 @@ Returns the full text content of the artifact version.
 
 ```bash
 curl https://api.anthropic.com/v1/compliance/apps/artifacts/$ARTIFACT_VERSION_ID/content \
+    -H 'anthropic-version: 2023-06-01' \
     -H "Authorization: Bearer $ANTHROPIC_COMPLIANCE_API_KEY"
 ```
