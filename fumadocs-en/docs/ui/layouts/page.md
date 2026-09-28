@@ -163,7 +163,17 @@ return (
 
 #### Style [#style]
 
-You can choose another style for TOC, like `clerk` inspired by https://clerk.com:
+Choose another style for the TOC:
+
+<Wrapper>
+  <TOCStylePreview>
+    <TOCStyle value="normal">A track line with a thumb on active headings (default).</TOCStyle>
+    <TOCStyle value="clerk">
+      A track line following heading depth, inspired by [Clerk](https://clerk.com).
+    </TOCStyle>
+    <TOCStyle value="block">No track line, a block slides behind active headings.</TOCStyle>
+  </TOCStylePreview>
+</Wrapper>
 
 ```tsx
 import { DocsPage } from 'fumadocs-ui/layouts/<layout>/page';

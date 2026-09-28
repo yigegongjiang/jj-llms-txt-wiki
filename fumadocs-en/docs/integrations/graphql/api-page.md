@@ -237,3 +237,47 @@ export const GraphQLPage = createGraphQLPage({
   },
 });
 ```
+
+## Customise UI [#customise-ui]
+
+For customisations beyond the available options, you can install the UI into your codebase with [Fumadocs CLI](/docs/cli).
+
+### Full UI [#full-ui]
+
+The entire UI of GraphQL pages, built on [the headless layer](/docs/integrations/graphql/headless).
+
+```npm
+npx @fumadocs/cli add graphql/page
+```
+
+It installs `<GraphQLPage />` itself, your `components/api-page.tsx` is no longer needed.
+
+```tsx title="mdx-components.tsx"
+import { GraphQLPage } from '@/components/api-page'; // [!code --]
+import { GraphQLPage } from '@/components/graphql/page'; // [!code ++]
+```
+
+### Parts [#parts]
+
+Install only the pieces you want to edit, and pass them back.
+
+| Component            | Contents                                     |
+| -------------------- | -------------------------------------------- |
+| `graphql/operation`  | operations, with their arguments and example |
+| `graphql/type-docs`  | named types, with their relations and fields |
+| `graphql/schema-ui`  | the type, argument and field details         |
+| `graphql/playground` | the interactive playground                   |
+
+```tsx title="components/api-page.tsx"
+'use client';
+import { createGraphQLPage } from '@fumadocs/graphql/ui';
+import { Operation } from '@/components/graphql/operation';
+import { TypeDocs } from '@/components/graphql/type-docs';
+
+export const GraphQLPage = createGraphQLPage({
+  components: {
+    Operation,
+    TypeDocs,
+  },
+});
+```

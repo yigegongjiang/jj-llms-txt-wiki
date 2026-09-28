@@ -65,7 +65,7 @@ export const story = defineStory({
 
 ### `controls` [#controls]
 
-You can further customize on how the controls are generated:
+Controls are generated from the component props, you can specify the control nodes instead:
 
 ```tsx
 import { defineStory } from '@/lib/story';
@@ -74,17 +74,11 @@ import { GraphView } from '@/components/graph-view';
 export const story = defineStory({
   Component: GraphView,
   args: {
-    // specify the control nodes
     controls: {
       node: {
         type: 'object',
         properties: [],
       },
-    },
-
-    // or customize the generated controls
-    controls: {
-      transform: (node) => node,
     },
   },
 });

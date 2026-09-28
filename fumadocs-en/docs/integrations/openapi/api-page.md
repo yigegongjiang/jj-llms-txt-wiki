@@ -142,45 +142,67 @@ export const OpenAPIPage = createOpenAPIPage({
 
 ## Customise UI [#customise-ui]
 
-For customisations beyond the available options, you can install the UI into your codebase with Fumadocs CLI, and use it in place of the built-in renderers.
+For customisations beyond the available options, you can install the UI into your codebase with [Fumadocs CLI](/docs/cli).
+
+### Full UI [#full-ui]
+
+The entire UI of API pages, built on [the headless layer](/docs/integrations/openapi/headless).
+
+```npm
+npx @fumadocs/cli add openapi/page
+```
+
+It installs `<OpenAPIPage />` itself, your `components/api-page.tsx` is no longer needed.
+
+```tsx title="mdx-components.tsx"
+import { OpenAPIPage } from '@/components/api-page'; // [!code --]
+import { OpenAPIPage } from '@/components/openapi/page'; // [!code ++]
+```
 
 ### API Playground [#api-playground]
 
 ```npm
-npx @fumadocs/cli add fumadocs/openapi/playground
+npx @fumadocs/cli add openapi/playground
 ```
 
 ```tsx title="components/api-page.tsx"
 'use client';
 import { createOpenAPIPage } from 'fumadocs-openapi/ui';
-import PlaygroundClient from '@/components/api/playground';
-import { AuthProvider } from '@/components/api/playground/auth';
+import PlaygroundClient from '@/components/openapi/playground';
 
 export const OpenAPIPage = createOpenAPIPage({
   playground: {
-    provider: ({ children }) => <AuthProvider>{children}</AuthProvider>,
-    render: ({ path, method, operation, pathItem }) => (
-      <PlaygroundClient
-        route={path}
-        method={method}
-        operation={operation}
-        pathItem={pathItem}
-        writeOnly
-        readOnly={false}
-      />
-    ),
+    render: () => <PlaygroundClient writeOnly readOnly={false} />,
   },
 });
 ```
 
-The installed files access the runtime of API pages from `fumadocs-openapi/ui`, such as the render context. You can also use it to build your own playground from scratch.
+### Operation [#operation]
+
+The UI of operations and webhooks.
+
+```npm
+npx @fumadocs/cli add openapi/operation
+```
+
+```tsx title="components/api-page.tsx"
+'use client';
+import { createOpenAPIPage } from 'fumadocs-openapi/ui';
+import { Operation } from '@/components/openapi/operation';
+
+export const OpenAPIPage = createOpenAPIPage({
+  components: {
+    Operation,
+  },
+});
+```
 
 ### Schema UI [#schema-ui]
 
 The UI for rendering JSON schemas.
 
 ```npm
-npx @fumadocs/cli add fumadocs/api-docs/schema
+npx @fumadocs/cli add api-docs/schema
 ```
 
 ```tsx title="components/api-page.tsx"
@@ -189,8 +211,8 @@ import { createOpenAPIPage } from 'fumadocs-openapi/ui';
 import { Schema } from '@/components/api/schema';
 
 export const OpenAPIPage = createOpenAPIPage({
-  schemaUI: {
-    render: (props) => <Schema {...props} />,
+  components: {
+    SchemaUI: Schema,
   },
 });
 ```

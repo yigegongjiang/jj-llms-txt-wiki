@@ -100,6 +100,18 @@ A simple way to customize Fumadocs layouts.
 npx @fumadocs/cli customize
 ```
 
+It installs the layout into `layouts` and points the imports of your route files at it.
+
+### Shadcn UI [#shadcn-ui]
+
+On projects with a `components.json`, the CLI follows the aliases of Shadcn UI and:
+
+- installs the `shadcn` preset, so Fumadocs UI adopts your theme colors.
+- reuses the `button`, `popover` and `collapsible` in your `ui` directory, they share the API of Shadcn UI.
+- imports `cn` from your `utils` alias.
+
+Fumadocs' copies are only installed when you don't have them yet.
+
 ### Tree [#tree]
 
 Generate files tree for Fumadocs UI `Files` component, using the `tree` command from your terminal.
