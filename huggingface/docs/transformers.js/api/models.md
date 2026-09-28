@@ -2,8 +2,9 @@
 
 Definitions of all models available in Transformers.js.
 
-**Example:** Load and run an `AutoModel`.
+We also provide other `AutoModel`s (listed below), which you can use in the same way as the Python library. For example:
 
+**Example:** Load and run an `AutoModel`.
 ```javascript
 import { AutoModel, AutoTokenizer } from '@huggingface/transformers';
 
@@ -20,8 +21,6 @@ const { logits } = await model(inputs);
 // }
 ```
 
-We also provide other `AutoModel`s (listed below), which you can use in the same way as the Python library. For example:
-
 **Example:** Load and run an `AutoModelForSeq2SeqLM`.
 ```javascript
 import { AutoModelForSeq2SeqLM, AutoTokenizer } from '@huggingface/transformers';
@@ -35,426 +34,392 @@ const decoded = tokenizer.decode(outputs[0], { skip_special_tokens: true });
 // 'Ich liebe Transformatoren!'
 ```
 
-* [models](#module_models)
-    * _static_
-        * [.AutoModel](#module_models.AutoModel)
-            * [`new AutoModel()`](#new_module_models.AutoModel_new)
-            * [`.MODEL_CLASS_MAPPINGS`](#module_models.AutoModel+MODEL_CLASS_MAPPINGS) : Array.&lt;Map&gt;
-        * [.AutoModelForSequenceClassification](#module_models.AutoModelForSequenceClassification)
-            * [`new AutoModelForSequenceClassification()`](#new_module_models.AutoModelForSequenceClassification_new)
-        * [.AutoModelForTokenClassification](#module_models.AutoModelForTokenClassification)
-            * [`new AutoModelForTokenClassification()`](#new_module_models.AutoModelForTokenClassification_new)
-        * [.AutoModelForSeq2SeqLM](#module_models.AutoModelForSeq2SeqLM)
-            * [`new AutoModelForSeq2SeqLM()`](#new_module_models.AutoModelForSeq2SeqLM_new)
-        * [.AutoModelForSpeechSeq2Seq](#module_models.AutoModelForSpeechSeq2Seq)
-            * [`new AutoModelForSpeechSeq2Seq()`](#new_module_models.AutoModelForSpeechSeq2Seq_new)
-        * [.AutoModelForTextToSpectrogram](#module_models.AutoModelForTextToSpectrogram)
-            * [`new AutoModelForTextToSpectrogram()`](#new_module_models.AutoModelForTextToSpectrogram_new)
-        * [.AutoModelForTextToWaveform](#module_models.AutoModelForTextToWaveform)
-            * [`new AutoModelForTextToWaveform()`](#new_module_models.AutoModelForTextToWaveform_new)
-        * [.AutoModelForCausalLM](#module_models.AutoModelForCausalLM)
-            * [`new AutoModelForCausalLM()`](#new_module_models.AutoModelForCausalLM_new)
-        * [.AutoModelForMaskedLM](#module_models.AutoModelForMaskedLM)
-            * [`new AutoModelForMaskedLM()`](#new_module_models.AutoModelForMaskedLM_new)
-        * [.AutoModelForQuestionAnswering](#module_models.AutoModelForQuestionAnswering)
-            * [`new AutoModelForQuestionAnswering()`](#new_module_models.AutoModelForQuestionAnswering_new)
-        * [.AutoModelForVision2Seq](#module_models.AutoModelForVision2Seq)
-            * [`new AutoModelForVision2Seq()`](#new_module_models.AutoModelForVision2Seq_new)
-        * [.AutoModelForImageClassification](#module_models.AutoModelForImageClassification)
-            * [`new AutoModelForImageClassification()`](#new_module_models.AutoModelForImageClassification_new)
-        * [.AutoModelForImageSegmentation](#module_models.AutoModelForImageSegmentation)
-            * [`new AutoModelForImageSegmentation()`](#new_module_models.AutoModelForImageSegmentation_new)
-        * [.AutoModelForSemanticSegmentation](#module_models.AutoModelForSemanticSegmentation)
-            * [`new AutoModelForSemanticSegmentation()`](#new_module_models.AutoModelForSemanticSegmentation_new)
-        * [.AutoModelForUniversalSegmentation](#module_models.AutoModelForUniversalSegmentation)
-            * [`new AutoModelForUniversalSegmentation()`](#new_module_models.AutoModelForUniversalSegmentation_new)
-        * [.AutoModelForObjectDetection](#module_models.AutoModelForObjectDetection)
-            * [`new AutoModelForObjectDetection()`](#new_module_models.AutoModelForObjectDetection_new)
-        * [.AutoModelForMaskGeneration](#module_models.AutoModelForMaskGeneration)
-            * [`new AutoModelForMaskGeneration()`](#new_module_models.AutoModelForMaskGeneration_new)
-    * _inner_
-        * [~PretrainedMixin](#module_models..PretrainedMixin)
-            * _instance_
-                * [`.MODEL_CLASS_MAPPINGS`](#module_models..PretrainedMixin+MODEL_CLASS_MAPPINGS) : Array.&lt;Map&gt;
-                * [`.BASE_IF_FAIL`](#module_models..PretrainedMixin+BASE_IF_FAIL)
-            * _static_
-                * [`.supports(model_type)`](#module_models..PretrainedMixin.supports) ⇒ boolean
-                * [`.from_pretrained()`](#module_models..PretrainedMixin.from_pretrained) : Object.from_pretrained
+## On this page
 
-* * *
+**Classes** — [`AutoModel`](#module_models.AutoModel) · [`AutoModelForSequenceClassification`](#module_models.AutoModelForSequenceClassification) · [`AutoModelForTokenClassification`](#module_models.AutoModelForTokenClassification) · [`AutoModelForSeq2SeqLM`](#module_models.AutoModelForSeq2SeqLM) · [`AutoModelForSpeechSeq2Seq`](#module_models.AutoModelForSpeechSeq2Seq) · [`AutoModelForTextToSpectrogram`](#module_models.AutoModelForTextToSpectrogram) · [`AutoModelForTextToWaveform`](#module_models.AutoModelForTextToWaveform) · [`AutoModelForCausalLM`](#module_models.AutoModelForCausalLM) · [`AutoModelForMaskedLM`](#module_models.AutoModelForMaskedLM) · [`AutoModelForQuestionAnswering`](#module_models.AutoModelForQuestionAnswering) · [`AutoModelForVision2Seq`](#module_models.AutoModelForVision2Seq) · [`AutoModelForImageClassification`](#module_models.AutoModelForImageClassification) · [`AutoModelForImageSegmentation`](#module_models.AutoModelForImageSegmentation) · [`AutoModelForSemanticSegmentation`](#module_models.AutoModelForSemanticSegmentation) · [`AutoModelForUniversalSegmentation`](#module_models.AutoModelForUniversalSegmentation) · [`AutoModelForObjectDetection`](#module_models.AutoModelForObjectDetection) · [`AutoModelForZeroShotObjectDetection`](#module_models.AutoModelForZeroShotObjectDetection) · [`AutoModelForMaskGeneration`](#module_models.AutoModelForMaskGeneration) · [`AutoModelForCTC`](#module_models.AutoModelForCTC) · [`AutoModelForAudioClassification`](#module_models.AutoModelForAudioClassification) · [`AutoModelForXVector`](#module_models.AutoModelForXVector) · [`AutoModelForAudioFrameClassification`](#module_models.AutoModelForAudioFrameClassification) · [`AutoModelForDocumentQuestionAnswering`](#module_models.AutoModelForDocumentQuestionAnswering) · [`AutoModelForImageMatting`](#module_models.AutoModelForImageMatting) · [`AutoModelForImageToImage`](#module_models.AutoModelForImageToImage) · [`AutoModelForDepthEstimation`](#module_models.AutoModelForDepthEstimation) · [`AutoModelForNormalEstimation`](#module_models.AutoModelForNormalEstimation) · [`AutoModelForPoseEstimation`](#module_models.AutoModelForPoseEstimation) · [`AutoModelForImageFeatureExtraction`](#module_models.AutoModelForImageFeatureExtraction) · [`AutoModelForImageTextToText`](#module_models.AutoModelForImageTextToText) · [`AutoModelForAudioTextToText`](#module_models.AutoModelForAudioTextToText) · [`PreTrainedModel`](#module_models.PreTrainedModel)
 
-## models.AutoModel
+## Classes
+
+### AutoModel
 
 Helper class which is used to instantiate pretrained models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModel } from '@huggingface/transformers';
 
-* [.AutoModel](#module_models.AutoModel)
-    * [`new AutoModel()`](#new_module_models.AutoModel_new)
-    * [`.MODEL_CLASS_MAPPINGS`](#module_models.AutoModel+MODEL_CLASS_MAPPINGS) : Array.&lt;Map&gt;
-
-* * *
-
-### `new AutoModel()`
-
-**Example**  
-```js
 const model = await AutoModel.from_pretrained('Xenova/bert-base-uncased');
 ```
 
-* * *
-
-### `autoModel.MODEL_CLASS_MAPPINGS` : Array.&lt;Map&gt;
-
-**Kind**: instance property of [AutoModel](#module_models.AutoModel)  
-
-* * *
-
-## models.AutoModelForSequenceClassification
+### AutoModelForSequenceClassification
 
 Helper class which is used to instantiate pretrained sequence classification models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForSequenceClassification } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForSequenceClassification()`
-
-**Example**  
-```js
 const model = await AutoModelForSequenceClassification.from_pretrained('Xenova/distilbert-base-uncased-finetuned-sst-2-english');
 ```
 
-* * *
-
-## models.AutoModelForTokenClassification
+### AutoModelForTokenClassification
 
 Helper class which is used to instantiate pretrained token classification models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForTokenClassification } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForTokenClassification()`
-
-**Example**  
-```js
 const model = await AutoModelForTokenClassification.from_pretrained('Xenova/distilbert-base-multilingual-cased-ner-hrl');
 ```
 
-* * *
-
-## models.AutoModelForSeq2SeqLM
+### AutoModelForSeq2SeqLM
 
 Helper class which is used to instantiate pretrained sequence-to-sequence models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForSeq2SeqLM } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForSeq2SeqLM()`
-
-**Example**  
-```js
 const model = await AutoModelForSeq2SeqLM.from_pretrained('Xenova/t5-small');
 ```
 
-* * *
-
-## models.AutoModelForSpeechSeq2Seq
+### AutoModelForSpeechSeq2Seq
 
 Helper class which is used to instantiate pretrained sequence-to-sequence speech-to-text models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForSpeechSeq2Seq } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForSpeechSeq2Seq()`
-
-**Example**  
-```js
-const model = await AutoModelForSpeechSeq2Seq.from_pretrained('openai/whisper-tiny.en');
+const model = await AutoModelForSpeechSeq2Seq.from_pretrained('onnx-community/whisper-tiny.en');
 ```
 
-* * *
-
-## models.AutoModelForTextToSpectrogram
+### AutoModelForTextToSpectrogram
 
 Helper class which is used to instantiate pretrained sequence-to-sequence text-to-spectrogram models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForTextToSpectrogram } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForTextToSpectrogram()`
-
-**Example**  
-```js
-const model = await AutoModelForTextToSpectrogram.from_pretrained('microsoft/speecht5_tts');
+const model = await AutoModelForTextToSpectrogram.from_pretrained('Xenova/speecht5_tts');
 ```
 
-* * *
-
-## models.AutoModelForTextToWaveform
+### AutoModelForTextToWaveform
 
 Helper class which is used to instantiate pretrained text-to-waveform models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForTextToWaveform } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForTextToWaveform()`
-
-**Example**  
-```js
-const model = await AutoModelForTextToSpectrogram.from_pretrained('facebook/mms-tts-eng');
+const model = await AutoModelForTextToWaveform.from_pretrained('Xenova/mms-tts-eng');
 ```
 
-* * *
-
-## models.AutoModelForCausalLM
+### AutoModelForCausalLM
 
 Helper class which is used to instantiate pretrained causal language models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForCausalLM } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForCausalLM()`
-
-**Example**  
-```js
 const model = await AutoModelForCausalLM.from_pretrained('Xenova/gpt2');
 ```
 
-* * *
-
-## models.AutoModelForMaskedLM
+### AutoModelForMaskedLM
 
 Helper class which is used to instantiate pretrained masked language models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForMaskedLM } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForMaskedLM()`
-
-**Example**  
-```js
 const model = await AutoModelForMaskedLM.from_pretrained('Xenova/bert-base-uncased');
 ```
 
-* * *
-
-## models.AutoModelForQuestionAnswering
+### AutoModelForQuestionAnswering
 
 Helper class which is used to instantiate pretrained question answering models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForQuestionAnswering } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForQuestionAnswering()`
-
-**Example**  
-```js
 const model = await AutoModelForQuestionAnswering.from_pretrained('Xenova/distilbert-base-cased-distilled-squad');
 ```
 
-* * *
-
-## models.AutoModelForVision2Seq
+### AutoModelForVision2Seq
 
 Helper class which is used to instantiate pretrained vision-to-sequence models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForVision2Seq } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForVision2Seq()`
-
-**Example**  
-```js
 const model = await AutoModelForVision2Seq.from_pretrained('Xenova/vit-gpt2-image-captioning');
 ```
 
-* * *
-
-## models.AutoModelForImageClassification
+### AutoModelForImageClassification
 
 Helper class which is used to instantiate pretrained image classification models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForImageClassification } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForImageClassification()`
-
-**Example**  
-```js
 const model = await AutoModelForImageClassification.from_pretrained('Xenova/vit-base-patch16-224');
 ```
 
-* * *
-
-## models.AutoModelForImageSegmentation
+### AutoModelForImageSegmentation
 
 Helper class which is used to instantiate pretrained image segmentation models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForImageSegmentation } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForImageSegmentation()`
-
-**Example**  
-```js
 const model = await AutoModelForImageSegmentation.from_pretrained('Xenova/detr-resnet-50-panoptic');
 ```
 
-* * *
-
-## models.AutoModelForSemanticSegmentation
+### AutoModelForSemanticSegmentation
 
 Helper class which is used to instantiate pretrained image segmentation models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForSemanticSegmentation } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForSemanticSegmentation()`
-
-**Example**  
-```js
-const model = await AutoModelForSemanticSegmentation.from_pretrained('nvidia/segformer-b3-finetuned-cityscapes-1024-1024');
+const model = await AutoModelForSemanticSegmentation.from_pretrained('Xenova/segformer-b0-finetuned-ade-512-512');
 ```
 
-* * *
-
-## models.AutoModelForUniversalSegmentation
+### AutoModelForUniversalSegmentation
 
 Helper class which is used to instantiate pretrained universal image segmentation models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForUniversalSegmentation } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForUniversalSegmentation()`
-
-**Example**  
-```js
-const model = await AutoModelForUniversalSegmentation.from_pretrained('hf-internal-testing/tiny-random-MaskFormerForInstanceSegmentation');
+const model = await AutoModelForUniversalSegmentation.from_pretrained('Xenova/detr-resnet-50-panoptic');
 ```
 
-* * *
-
-## models.AutoModelForObjectDetection
+### AutoModelForObjectDetection
 
 Helper class which is used to instantiate pretrained object detection models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
 
-**Kind**: static class of [models](#module_models)  
+```javascript
+import { AutoModelForObjectDetection } from '@huggingface/transformers';
 
-* * *
-
-### `new AutoModelForObjectDetection()`
-
-**Example**  
-```js
 const model = await AutoModelForObjectDetection.from_pretrained('Xenova/detr-resnet-50');
 ```
 
-* * *
+### AutoModelForZeroShotObjectDetection
 
-## models.AutoModelForMaskGeneration
+Helper class which is used to instantiate pretrained zero-shot object detection models with the `from_pretrained` function.
 
-Helper class which is used to instantiate pretrained mask generation models with the `from_pretrained` function.
-The chosen model class is determined by the type specified in the model config.
+```javascript
+import { AutoModelForZeroShotObjectDetection } from '@huggingface/transformers';
 
-**Kind**: static class of [models](#module_models)  
-
-* * *
-
-### `new AutoModelForMaskGeneration()`
-
-**Example**  
-```js
-const model = await AutoModelForMaskGeneration.from_pretrained('Xenova/sam-vit-base');
+const model = await AutoModelForZeroShotObjectDetection.from_pretrained('Xenova/owlvit-base-patch32');
 ```
 
-* * *
+### AutoModelForMaskGeneration
 
-## models~PretrainedMixin
+Helper class which is used to instantiate pretrained mask generation models with the `from_pretrained` function.
 
-Base class of all AutoModels. Contains the `from_pretrained` function
-which is used to instantiate pretrained models.
+```javascript
+import { AutoModelForMaskGeneration } from '@huggingface/transformers';
 
-**Kind**: inner class of [models](#module_models)  
+const model = await AutoModelForMaskGeneration.from_pretrained('Xenova/slimsam-77-uniform');
+```
 
-* [~PretrainedMixin](#module_models..PretrainedMixin)
-    * _instance_
-        * [`.MODEL_CLASS_MAPPINGS`](#module_models..PretrainedMixin+MODEL_CLASS_MAPPINGS) : Array.&lt;Map&gt;
-        * [`.BASE_IF_FAIL`](#module_models..PretrainedMixin+BASE_IF_FAIL)
-    * _static_
-        * [`.supports(model_type)`](#module_models..PretrainedMixin.supports) ⇒ boolean
-        * [`.from_pretrained()`](#module_models..PretrainedMixin.from_pretrained) : Object.from_pretrained
+### AutoModelForCTC
 
-* * *
+Helper class which is used to instantiate pretrained connectionist temporal classification (CTC) models with the `from_pretrained` function.
 
-### `pretrainedMixin.MODEL_CLASS_MAPPINGS` : Array.&lt;Map&gt;
+```javascript
+import { AutoModelForCTC } from '@huggingface/transformers';
 
-Mapping from model type to model class.
+const model = await AutoModelForCTC.from_pretrained('Xenova/wav2vec2-base-960h');
+```
 
-**Kind**: instance property of [PretrainedMixin](#module_models..PretrainedMixin)  
+### AutoModelForAudioClassification
 
-* * *
+Helper class which is used to instantiate pretrained audio classification models with the `from_pretrained` function.
 
-### `pretrainedMixin.BASE_IF_FAIL`
+```javascript
+import { AutoModelForAudioClassification } from '@huggingface/transformers';
 
-Whether to attempt to instantiate the base class (`PretrainedModel`) if
-the model type is not found in the mapping.
+const model = await AutoModelForAudioClassification.from_pretrained('Xenova/wav2vec2-base-superb-ks');
+```
 
-**Kind**: instance property of [PretrainedMixin](#module_models..PretrainedMixin)  
+### AutoModelForXVector
 
-* * *
+Helper class which is used to instantiate pretrained speaker embedding models (X-Vector) with the `from_pretrained` function.
 
-### `PretrainedMixin.supports(model_type)` ⇒ boolean
+```javascript
+import { AutoModelForXVector } from '@huggingface/transformers';
 
-Check whether this AutoModel class supports a given model type.
+const model = await AutoModelForXVector.from_pretrained('Xenova/wavlm-base-plus-sv');
+```
 
-**Kind**: static method of [PretrainedMixin](#module_models..PretrainedMixin)  
-**Returns**: boolean - Whether this class can handle the given model type.  
+### AutoModelForAudioFrameClassification
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+Helper class which is used to instantiate pretrained audio frame (token) classification models with the `from_pretrained` function.
 
-    model_typestringThe model type from config (e.g., &#39;bert&#39;, &#39;whisper&#39;).
+```javascript
+import { AutoModelForAudioFrameClassification } from '@huggingface/transformers';
 
-      
+const model = await AutoModelForAudioFrameClassification.from_pretrained('onnx-community/pyannote-segmentation-3.0');
+```
 
-* * *
+### AutoModelForDocumentQuestionAnswering
 
-### `PretrainedMixin.from_pretrained()` : Object.from_pretrained
+Helper class which is used to instantiate pretrained document question answering models with the `from_pretrained` function.
 
-**Kind**: static method of [PretrainedMixin](#module_models..PretrainedMixin)  
+```javascript
+import { AutoModelForDocumentQuestionAnswering } from '@huggingface/transformers';
 
-* * *
+const model = await AutoModelForDocumentQuestionAnswering.from_pretrained('Xenova/donut-base-finetuned-docvqa');
+```
+
+### AutoModelForImageMatting
+
+Helper class which is used to instantiate pretrained image matting models with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForImageMatting } from '@huggingface/transformers';
+
+const model = await AutoModelForImageMatting.from_pretrained('Xenova/vitmatte-small-composition-1k');
+```
+
+### AutoModelForImageToImage
+
+Helper class which is used to instantiate pretrained image-to-image models with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForImageToImage } from '@huggingface/transformers';
+
+const model = await AutoModelForImageToImage.from_pretrained('Xenova/swin2SR-classical-sr-x2-64');
+```
+
+### AutoModelForDepthEstimation
+
+Helper class which is used to instantiate pretrained depth estimation models with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForDepthEstimation } from '@huggingface/transformers';
+
+const model = await AutoModelForDepthEstimation.from_pretrained('onnx-community/depth-anything-v2-small-ONNX');
+```
+
+### AutoModelForNormalEstimation
+
+Helper class which is used to instantiate pretrained surface-normal estimation models with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForNormalEstimation } from '@huggingface/transformers';
+
+const model = await AutoModelForNormalEstimation.from_pretrained('onnx-community/sapiens-normal-0.3b');
+```
+
+### AutoModelForPoseEstimation
+
+Helper class which is used to instantiate pretrained pose estimation models with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForPoseEstimation } from '@huggingface/transformers';
+
+const model = await AutoModelForPoseEstimation.from_pretrained('onnx-community/vitpose-base-simple');
+```
+
+### AutoModelForImageFeatureExtraction
+
+Helper class which is used to instantiate pretrained image feature extraction models with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForImageFeatureExtraction } from '@huggingface/transformers';
+
+const model = await AutoModelForImageFeatureExtraction.from_pretrained('onnx-community/dinov3-vits16-pretrain-lvd1689m-ONNX');
+```
+
+### AutoModelForImageTextToText
+
+Helper class which is used to instantiate pretrained vision-language models that map images and text to text
+(image+text-to-text) with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForImageTextToText } from '@huggingface/transformers';
+
+const model = await AutoModelForImageTextToText.from_pretrained('onnx-community/LFM2.5-VL-450M-ONNX');
+```
+
+### AutoModelForAudioTextToText
+
+Helper class which is used to instantiate pretrained audio-language models that map audio and text to text
+(audio+text-to-text) with the `from_pretrained` function.
+
+```javascript
+import { AutoModelForAudioTextToText } from '@huggingface/transformers';
+
+const model = await AutoModelForAudioTextToText.from_pretrained('onnx-community/Voxtral-Mini-4B-Realtime-2602-ONNX');
+```
+
+### PreTrainedModel
+
+A base class for pretrained models that provides the model configuration and inference sessions.
+
+#### `PreTrainedModel(model_inputs)`
+
+Runs the model with the provided inputs.
+
+**Parameters**
+
+- `model_inputs` (`Object`) — Object containing input tensors.
+
+**Returns:** `Promise`<`Object`> — Object containing output tensors.
+
+#### `PreTrainedModel.constructor(config, sessions, configs)`
+
+Create a model from configuration and inference sessions.
+
+**Parameters**
+
+- `config` ([`PretrainedConfig`](./configs#module_configs.PretrainedConfig)) — The model configuration.
+- `sessions` (`Record`<`string`, `any`>) — The inference sessions for the model.
+- `configs` (`Record`<`string`, `Object`>) — Additional configuration files (e.g., generation_config.json).
+
+#### `PreTrainedModel.dispose()`
+
+Disposes of all the ONNX sessions that were created during inference.
+
+**Returns:** `Promise`<`void[]`> — Resolves after each session has been released.
+
+#### `PreTrainedModel.from_pretrained(pretrained_model_name_or_path, options)`
+
+Instantiate one of the model classes of the library from a pretrained model.
+
+The model class to instantiate is selected based on the `model_type` property of the config object
+(either passed as an argument or loaded from `pretrained_model_name_or_path` if possible)
+
+**Parameters**
+
+- `pretrained_model_name_or_path` (`string`) — The name or path of the pretrained model. Can be either:
+  - A string, the *model ID* of a pretrained model hosted inside a model repo on huggingface.co.
+  Valid model IDs can be located at the root level, like `bert-base-uncased`, or namespaced under a
+  user or organization name, like `dbmdz/bert-base-german-cased`.
+  - A path to a *directory* containing model weights, e.g., `./my_model_directory/`.
+- `options` ([`PretrainedModelOptions`](./utils/hub#module_utils/hub.PretrainedModelOptions)) — Additional options for loading the model.
+
+**Returns:** `Promise`<[`PreTrainedModel`](./models#module_models.PreTrainedModel)> — A model instance with ready inference sessions.
+
+#### `PreTrainedModel.forward(model_inputs)`
+
+Run the model's forward pass.
+
+**Parameters**
+
+- `model_inputs` (`Object`) — The input data to the model in the format specified in the ONNX model.
+
+**Returns:** `Promise`<`Object`> — The output data from the model in the format specified in the ONNX model.
+
+#### `PreTrainedModel.generation_config` : [`GenerationConfig`](./generation/configuration_utils#module_generation/configuration_utils.GenerationConfig) | `null`
+
+Get the model's generation config, if it exists.
+
+#### `PreTrainedModel.generate(options)`
+
+Generate token sequences with a language-modeling head.
+
+**Parameters**
+
+- `options` ([`GenerationFunctionParameters`](./generation/parameters#module_generation/parameters.GenerationFunctionParameters))
+
+**Returns:** `Promise`<`ModelOutput` | [`Tensor`](./utils/tensor#module_utils/tensor.Tensor)> — The output of the model, which can contain the generated token ids, attentions, and scores.

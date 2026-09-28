@@ -26,192 +26,94 @@ module, it is useful to be able to reproduce the sequences given by a pseudo-ran
 By reusing a seed value, the same sequence should be reproducible from run to run as long as multiple
 threads or asynchronous operations are not running concurrently.
 
-* [utils/random](#module_utils/random)
-    * _static_
-        * [.Random](#module_utils/random.Random)
-            * [`new Random()`](#new_module_utils/random.Random_new)
-            * [`.seed([n])`](#module_utils/random.Random+seed)
-            * [`._int32()`](#module_utils/random.Random+_int32) ⇒ number
-            * [`.random()`](#module_utils/random.Random+random) ⇒ number
-            * [`.gauss([mu], [sigma])`](#module_utils/random.Random+gauss) ⇒ number
-            * [`.shuffle(arr)`](#module_utils/random.Random+shuffle)
-            * [`.choices(population, weights)`](#module_utils/random.Random+choices) ⇒ *
-    * _inner_
-        * [`~_weightedIndexWith(randomFn, weights)`](#module_utils/random.._weightedIndexWith) ⇒ number
+## Classes
 
-* * *
-
-## utils/random.Random
+### Random
 
 Mersenne Twister 19937 PRNG, matching Python's `random.Random` class exactly.
 
 Each instance has its own independent state, so seeding one instance does not
 affect any other instance or the global helper functions.
 
-**Kind**: static class of [utils/random](#module_utils/random)  
+```javascript
+import { random } from '@huggingface/transformers';
 
-* [.Random](#module_utils/random.Random)
-    * [`new Random()`](#new_module_utils/random.Random_new)
-    * [`.seed([n])`](#module_utils/random.Random+seed)
-    * [`._int32()`](#module_utils/random.Random+_int32) ⇒ number
-    * [`.random()`](#module_utils/random.Random+random) ⇒ number
-    * [`.gauss([mu], [sigma])`](#module_utils/random.Random+gauss) ⇒ number
-    * [`.shuffle(arr)`](#module_utils/random.Random+shuffle)
-    * [`.choices(population, weights)`](#module_utils/random.Random+choices) ⇒ *
-
-* * *
-
-### `new Random()`
-
-**Example**  
-```js
-const rng1 = new Random(42);
-const rng2 = new Random(42);
+const rng1 = new random.Random(42);
+const rng2 = new random.Random(42);
 rng1.random() === rng2.random(); // true (same seed, independent state)
 ```
 
-* * *
-
-### `random.seed([n])`
+#### `Random.seed([n])`
 
 Seeds this instance's PRNG.
 
 When called with a number, initializes the state deterministically from that value.
 When called with no arguments (or `undefined`/`null`), seeds from OS entropy
-via `crypto.getRandomValues`, matching Python's `random.seed()` behaviour.
+via `crypto.getRandomValues`, matching Python's `random.seed()` behavior.
 
-**Kind**: instance method of [Random](#module_utils/random.Random)  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `n` (`number`) _optional_ — The seed value. Omit to seed from OS entropy.
 
-    [n]numberThe seed value. Omit to seed from OS entropy.
-
-      
-
-* * *
-
-### `random._int32()` ⇒ number
-
-Generates a random unsigned 32-bit integer.
-
-Performs the "twist" step when the state buffer is exhausted,
-then applies the standard MT19937 tempering transform.
-
-**Kind**: instance method of [Random](#module_utils/random.Random)  
-**Returns**: number - A random integer in the range [0, 2^32 - 1].  
-
-* * *
-
-### `random.random()` ⇒ number
+#### `Random.random()`
 
 Generates a random floating-point number in the half-open interval [0, 1).
 
 Combines two 32-bit integers (using 53 bits of precision) to produce
 a uniformly distributed double, matching Python's `random.random()`.
 
-**Kind**: instance method of [Random](#module_utils/random.Random)  
-**Returns**: number - A random float in [0, 1).  
+**Returns:** `number` — A random float in [0, 1).
 
-* * *
-
-### `random.gauss([mu], [sigma])` ⇒ number
+#### `Random.gauss([mu], [sigma])`
 
 Generates a random number from a Gaussian (normal) distribution.
 
 Uses the Box-Muller transform with a cached spare value,
 matching Python's `random.gauss()` output for the same seed.
 
-**Kind**: instance method of [Random](#module_utils/random.Random)  
-**Returns**: number - A normally distributed random value.  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `mu` (`number`) _optional_ — defaults to `0` — The mean of the distribution.
+- `sigma` (`number`) _optional_ — defaults to `1` — The standard deviation of the distribution.
 
-    [mu]number0The mean of the distribution.
+**Returns:** `number` — A normally distributed random value.
 
-    
-    [sigma]number1The standard deviation of the distribution.
-
-      
-
-* * *
-
-### `random.shuffle(arr)`
+#### `Random.shuffle(arr)`
 
 Shuffles an array in-place using the Fisher-Yates algorithm.
 
 Uses rejection sampling via `getrandbits`-style bit masking to ensure
 a uniform distribution, matching Python's `random.shuffle()`.
 
-**Kind**: instance method of [Random](#module_utils/random.Random)  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `arr` (`any[]`) — The array to shuffle in-place.
 
-    arrArrayThe array to shuffle in-place.
-
-      
-
-* * *
-
-### `random.choices(population, weights)` ⇒ *
+#### `Random.choices(population, weights)`
 
 Selects a single element from a weighted population.
 
 Matches Python's `random.choices(population, weights=weights, k=1)[0]`
 
-**Kind**: instance method of [Random](#module_utils/random.Random)  
-**Returns**: * - A single randomly selected element from the population.  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `population` (`any[]`) — The array of items to choose from.
+- `weights` (`number[]`) — An array of non-negative weights, one per population element.
 
-    populationArrayThe array of items to choose from.
+**Returns:** `*` — A single randomly selected element from the population.
 
-    
-    weightsArrayAn array of non-negative weights, one per population element.
+## Constants
 
-      
+### `random`
 
-* * *
+The default PRNG instance, mirroring Python's module-level `random` functions.
+It shares a single global state, so if you want to generate independent sequences,
+construct your own `new random.Random(seed)` instead.
 
-## `utils/random~_weightedIndexWith(randomFn, weights)` ⇒ number
-
-Returns a random index into `weights`, where each index's probability
-is proportional to its weight. Uses a linear scan: O(n) time, O(1) memory.
-
-**Kind**: inner method of [utils/random](#module_utils/random)  
-**Returns**: number - A randomly selected index in `[0, weights.length)`.  
-
-  
-    
-      ParamTypeDescription
-    
-  
-  
-
-    randomFnfunctionA function returning a uniform random float in [0, 1).
-
-    
-    weightsArrayLike.&lt;number&gt;Non-negative weights.
-
-      
-
-* * *
+```javascript
+import { random } from '@huggingface/transformers';
+random.seed(42);
+random.random();     // 0.6394267984578837  (matches Python)
+random.gauss(0, 1);  // normal-distributed value
+random.choices(['a', 'b'], [3, 1]);  // weighted pick
+```

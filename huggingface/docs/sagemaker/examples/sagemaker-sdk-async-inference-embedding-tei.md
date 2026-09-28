@@ -1,6 +1,6 @@
 # Batch-embed a corpus with SageMaker asynchronous inference
 
-Last updated 2026-08-31
+Last updated 2026-09-22
 
 ## What asynchronous inference is
 
@@ -68,6 +68,10 @@ S3, CloudWatch, Application Auto Scaling, and the ECR repository that hosts
 the selected serving DLC.
 
 ```python
+---
+category: embeddings
+---
+
 %pip install "sagemaker>=3.0.0" datasets --upgrade --quiet
 ```
 

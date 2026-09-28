@@ -1,6 +1,6 @@
 # Serve many LoRA adapters from one endpoint with Hugging Face vLLM
 
-Written by Dario SalvatiLast updated 2026-08-31
+Written by Dario SalvatiLast updated 2026-09-22
 
 ![](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/multi-lora-adapters-vllm/cover.png)
 

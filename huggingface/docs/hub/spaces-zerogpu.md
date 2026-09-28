@@ -48,6 +48,8 @@ ZeroGPU Spaces are designed to be compatible with most PyTorch-based GPU Spaces.
     - 2.9.1  
     - 2.10.0  
     - 2.11.0  
+    - 2.12.1  
+    - 2.13.0  
 
   
 - **Python**:

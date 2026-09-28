@@ -8,7 +8,7 @@
 
 #### Defined in[[dtype.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:284](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L284)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:288](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L288)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[metadata.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:286](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L286)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:290](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L290)
 
 ___
 
@@ -37,4 +37,4 @@ If you only need the shard list, use `filepaths` on the parse result instead.
 
 #### Defined in[[weightmap.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:298](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L298)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:302](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L302)

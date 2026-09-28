@@ -6,6 +6,8 @@ If you are trying to understand when OpenEnv exposes the training loop versus di
 
 For a high-level explanation of how MCP-backed environments move through `step()`, `step_async()`, and convenience tool helpers, see the [MCP environment lifecycle](../guides/mcp-environment-lifecycle) guide.
 
+For dataset-backed environments that publish enumerable tasks and splits, see the [Task API](../guides/task-api) guide.
+
 ## Server
 
 ### Environment server primitives[[openenv.core.Message]]
@@ -84,7 +86,7 @@ Decode token IDs back to text.
 openenv.core.Transform()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L115)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L191)
 
 Transform observations to add rewards, metrics, or other modifications.
 
@@ -92,13 +94,149 @@ Transforms follow the TorchRL pattern where they take an observation
 and return a (potentially modified) observation. This allows for
 flexible reward computation and observation augmentation.
 
+#### openenv.core.TaskProvider[[openenv.core.TaskProvider]]
+
+```python
+openenv.core.TaskProvider(*args, **kwargs)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L80)
+
+Optional task discovery API for dataset-backed environments.
+
+An environment implements this protocol structurally — declare the methods on
+an [Environment](/docs/openenv/main/en/reference/core#openenv.core.Environment) subclass, without
+inheriting from `TaskProvider`. When the methods are present,
+[HTTPEnvServer](/docs/openenv/main/en/reference/core#openenv.core.HTTPEnvServer) exposes them as HTTP
+routes under `/{env_name}/…`; when they are absent, those routes return
+`501 Not Implemented`. Each method may be sync or async.
+
+Task provider methods are for metadata/discovery only and should be
+side-effect-free. They must be callable on a freshly constructed
+environment instance because HTTP compatibility routes may create a
+short-lived instance solely for task discovery.
+
+Selecting a task is not part of this protocol — pass the chosen split and
+index to `reset()` instead. See the
+[Task API guide](https://huggingface.co/docs/openenv/guides/task-api).
+
+Examples:
+
+```python
+env.list_splits()          # ["train", "test"]
+env.num_tasks("test")      # 7595
+env.get_task("test", 12)   # {"id": "test-12", "index": 12}
+env.reset(split="test", index=12)
+```
+
+#### get_task[[openenv.core.TaskProvider.get_task]]
+
+```python
+get_task(split: str, index: int)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L149)
+
+**Parameters:**
+
+split (`str`) : Task split name.
+
+index (`int`) : Task index within the split.
+
+**Returns:** `Any`
+
+The task spec at that position.
+
+**Raises:** ``IndexError``
+
+- ``IndexError`` -- If `index` is out of range for the split. The HTTP
+  route converts this to a `400 Bad Request`.
+
+Return one task spec by split and index.
+
+#### get_task_range[[openenv.core.TaskProvider.get_task_range]]
+
+```python
+get_task_range(split: str, start: typing.Optional[int] = None, stop: typing.Optional[int] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L168)
+
+**Parameters:**
+
+split (`str`) : Task split name.
+
+start (`int`, *optional*) : Inclusive start index. Defaults to the beginning of the split.
+
+stop (`int`, *optional*) : Exclusive stop index. Defaults to the end of the split.
+
+**Returns:** `list[Any]`
+
+Task specs in `[start, stop)`.
+
+Return task specs for Python slice-style range bounds.
+
+#### list_splits[[openenv.core.TaskProvider.list_splits]]
+
+```python
+list_splits()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L110)
+
+**Returns:** `list[Any]`
+
+Split descriptors. Plain strings, dicts, and Pydantic
+models are all accepted; the server normalizes each entry to
+`{"name": ..., "type": ...}`.
+
+Return task split descriptors supported by this environment.
+
+#### list_tasks[[openenv.core.TaskProvider.list_tasks]]
+
+```python
+list_tasks(split: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L121)
+
+**Parameters:**
+
+split (`str`) : Task split name.
+
+**Returns:** `list[Any]`
+
+Task specs for the split. Environments backed by very
+large or streamed splits may return a bounded preview, but
+`num_tasks` should still report the true total.
+
+Return all task specs for a split.
+
+#### num_tasks[[openenv.core.TaskProvider.num_tasks]]
+
+```python
+num_tasks(split: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L136)
+
+**Parameters:**
+
+split (`str`) : Task split name.
+
+**Returns:** `int`
+
+Number of task specs available in the split.
+
+Return the number of task specs in a split.
+
 #### openenv.core.Environment[[openenv.core.Environment]]
 
 ```python
 openenv.core.Environment(transform: typing.Optional[openenv.core.env_server.interfaces.Transform[~ObsT]] = None, rubric: typing.Optional[ForwardRef('Rubric')] = None)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L137)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L213)
 
 **Parameters:**
 
@@ -120,7 +258,7 @@ See [rfcs/004-rubrics.md](https://github.com/huggingface/OpenEnv/blob/main/rfcs/
 close()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L348)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L424)
 
 Clean up resources used by the environment.
 
@@ -133,7 +271,7 @@ Called when the environment is being destroyed or reset.
 get_metadata()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L236)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L312)
 
 **Returns:**
 
@@ -150,7 +288,7 @@ Default implementation returns basic metadata derived from class name.
 reset(seed: typing.Optional[int] = None, episode_id: typing.Optional[str] = None, **kwargs: typing.Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L186)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L262)
 
 Reset the environment and return initial observation.
 
@@ -160,7 +298,7 @@ Reset the environment and return initial observation.
 reset_async(seed: typing.Optional[int] = None, episode_id: typing.Optional[str] = None, **kwargs: typing.Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L196)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L272)
 
 Async version of reset. Default implementation calls sync reset.
 
@@ -172,7 +310,7 @@ Override to provide true async implementation.
 step(action: ~ActT, timeout_s: typing.Optional[float] = None, **kwargs: typing.Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L208)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L284)
 
 Take a step in the environment.
 
@@ -182,7 +320,7 @@ Take a step in the environment.
 step_async(action: ~ActT, timeout_s: typing.Optional[float] = None, **kwargs: typing.Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L218)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/interfaces.py#L294)
 
 Async version of step. Default implementation calls sync step.
 
@@ -347,6 +485,46 @@ openenv.core.HealthResponse(status: HealthStatus = <HealthStatus.HEALTHY: 'healt
 [Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L241)
 
 Response model for health check endpoint.
+
+#### openenv.core.ListTasksRequest[[openenv.core.ListTasksRequest]]
+
+```python
+openenv.core.ListTasksRequest(split: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L250)
+
+Request model for ORS-compatible task listing.
+
+#### openenv.core.NumTasksRequest[[openenv.core.NumTasksRequest]]
+
+```python
+openenv.core.NumTasksRequest(split: str)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L256)
+
+Request model for ORS-compatible task counts.
+
+#### openenv.core.GetTaskRequest[[openenv.core.GetTaskRequest]]
+
+```python
+openenv.core.GetTaskRequest(split: str, index: int)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L262)
+
+Request model for ORS-compatible task lookup.
+
+#### openenv.core.GetTaskRangeRequest[[openenv.core.GetTaskRangeRequest]]
+
+```python
+openenv.core.GetTaskRangeRequest(split: str, start: typing.Optional[int] = None, stop: typing.Optional[int] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/types.py#L269)
+
+Request model for ORS-compatible task range lookup.
 
 #### openenv.core.WSResetMessage[[openenv.core.WSResetMessage]]
 
@@ -527,7 +705,7 @@ Raised when the environment factory fails to create an instance.
 #### openenv.core.HTTPEnvServer[[openenv.core.HTTPEnvServer]]
 
 ```python
-openenv.core.HTTPEnvServer(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, env_name: Optional[str] = None)
+openenv.core.HTTPEnvServer(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, env_name: Optional[str] = None, state_cls: Type[State] = <class 'openenv.core.env_server.types.State'>)
 ```
 
 [Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L140)
@@ -568,7 +746,7 @@ server.register_routes(app)
 get_capacity_status()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L317)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L325)
 
 **Returns:**
 
@@ -582,7 +760,7 @@ Get the current capacity status of the server.
 get_session_info(session_id: str)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L557)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L574)
 
 **Parameters:**
 
@@ -600,7 +778,7 @@ Get information about a specific session.
 register_routes(app: FastAPI, mode: ServerMode | str = <ServerMode.SIMULATION: 'simulation'>)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L626)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L643)
 
 **Parameters:**
 
@@ -617,10 +795,10 @@ Register HTTP routes on a FastAPI application.
 #### openenv.core.create_app[[openenv.core.create_app]]
 
 ```python
-openenv.core.create_app(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], env_name: Optional[str] = None, max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, gradio_builder: Optional[Callable[..., Any]] = None, custom_tab_name: str = 'Custom', custom_tab_primary: bool = False, show_default_tab: bool = True, title_override: Optional[str] = None)
+openenv.core.create_app(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], env_name: Optional[str] = None, max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, gradio_builder: Optional[Callable[..., Any]] = None, custom_tab_name: str = 'Custom', custom_tab_primary: bool = False, show_default_tab: bool = True, title_override: Optional[str] = None, state_cls: Type[State] = <class 'openenv.core.env_server.types.State'>)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L1699)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L1771)
 
 **Parameters:**
 
@@ -646,6 +824,8 @@ show_default_tab (`bool`, *optional*, defaults to `True`) : When `False`, mount 
 
 title_override (`str`, *optional*) : If set, used as the Gradio app title instead of the default `"OpenEnv Agentic Environment: {name}"`.
 
+state_cls (`Type[State]`, *optional*, defaults to `State`) : The `State` subclass this environment reports, used for the `/state` response model and the `state` entry of `/schema`.
+
 **Returns:**
 
 `FastAPI` application instance with or without web interface and README integration.
@@ -658,10 +838,10 @@ including README integration for better user experience.
 #### openenv.core.create_fastapi_app[[openenv.core.create_fastapi_app]]
 
 ```python
-openenv.core.create_fastapi_app(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, env_name: Optional[str] = None)
+openenv.core.create_fastapi_app(env: Callable[[], Environment], action_cls: Type[Action], observation_cls: Type[Observation], max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[ConcurrencyConfig] = None, env_name: Optional[str] = None, state_cls: Type[State] = <class 'openenv.core.env_server.types.State'>)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L1790)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/http_server.py#L1868)
 
 **Parameters:**
 
@@ -676,6 +856,8 @@ max_concurrent_envs (`int`, *optional*) : Maximum concurrent WebSocket sessions.
 concurrency_config (`ConcurrencyConfig`, *optional*) : Advanced concurrency settings. Mutually exclusive with `max_concurrent_envs`.
 
 env_name (`str`, *optional*) : Optional environment name for task/split endpoints.
+
+state_cls (`Type[State]`, *optional*, defaults to `State`) : The `State` subclass this environment reports, used for the `/state` response model and the `state` entry of `/schema`.
 
 **Returns:**
 
@@ -768,7 +950,7 @@ Execute a step in the environment and update state.
 #### openenv.core.create_web_interface_app[[openenv.core.create_web_interface_app]]
 
 ```python
-openenv.core.create_web_interface_app(env: Environment, action_cls: Type[Action], observation_cls: Type[Observation], env_name: Optional[str] = None, max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[Any] = None, gradio_builder: Optional[Callable[..., Any]] = None, custom_tab_name: str = 'Custom', custom_tab_primary: bool = False, show_default_tab: bool = True, title_override: Optional[str] = None)
+openenv.core.create_web_interface_app(env: Environment, action_cls: Type[Action], observation_cls: Type[Observation], env_name: Optional[str] = None, max_concurrent_envs: Optional[int] = None, concurrency_config: Optional[Any] = None, gradio_builder: Optional[Callable[..., Any]] = None, custom_tab_name: str = 'Custom', custom_tab_primary: bool = False, show_default_tab: bool = True, title_override: Optional[str] = None, state_cls: Type[State] = <class 'openenv.core.env_server.types.State'>)
 ```
 
 [Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/web_interface.py#L425)
@@ -797,6 +979,8 @@ show_default_tab : When False, the auto-generated Playground tab is not rendered
 
 title_override : If set, used verbatim as the Gradio app/browser-tab title instead of the default `"OpenEnv Agentic Environment: &amp;lcub;name}"`.
 
+state_cls : The State subclass this environment reports. Used for the /state response model and the state entry of /schema. Defaults to State.
+
 **Returns:**
 
 FastAPI application instance with web interface
@@ -811,7 +995,7 @@ Create a FastAPI application with web interface for the given environment.
 openenv.core.deserialize_action(action_data: typing.Dict[str, typing.Any], action_cls: typing.Type[openenv.core.env_server.types.Action])
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L42)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L43)
 
 **Parameters:**
 
@@ -843,7 +1027,7 @@ use deserialize_action_with_preprocessing().
 openenv.core.deserialize_action_with_preprocessing(action_data: typing.Dict[str, typing.Any], action_cls: typing.Type[openenv.core.env_server.types.Action])
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L73)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L74)
 
 **Parameters:**
 
@@ -862,6 +1046,7 @@ action_cls (`type`) : The Action subclass to instantiate.
 Convert JSON dict to Action instance with preprocessing for special types.
 
 This version handles common type conversions needed for web interfaces:
+- Converting JSON string arguments to dict for MCP call_tool actions
 - Converting lists/strings to tensors for 'tokens' field
 - Converting string action_id to int
 - Other custom preprocessing as needed
@@ -872,7 +1057,7 @@ This version handles common type conversions needed for web interfaces:
 openenv.core.serialize_observation(observation: Observation)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L137)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_server/serialization.py#L147)
 
 **Parameters:**
 
@@ -947,7 +1132,7 @@ Register multiple GET endpoints from configuration.
 openenv.core.EnvClient(base_url: Optional[str] = None, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, max_message_size_mb: float = 100.0, websocket_ping_interval_s: Optional[float] = 20.0, websocket_ping_timeout_s: Optional[float] = 20.0, provider: Optional['ContainerProvider | RuntimeProvider'] = None, mode: Optional[str] = None)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L238)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L267)
 
 Async environment client for persistent sessions.
 
@@ -993,7 +1178,7 @@ with env:
 from_docker_image(image: str, provider: Optional['ContainerProvider'] = None, **kwargs: Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L629)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L759)
 
 **Parameters:**
 
@@ -1033,7 +1218,7 @@ result = env.reset()
 from_env(repo_id: str, use_docker: bool = True, provider: Optional['ContainerProvider | RuntimeProvider'] = None, **provider_kwargs: Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L749)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L879)
 
 **Parameters:**
 
@@ -1082,7 +1267,7 @@ env = await MyEnv.from_env(
 new_session()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L412)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L465)
 
 **Returns:** `EnvClient`
 
@@ -1101,7 +1286,7 @@ surfaced as a connection error.
 sync()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L952)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/env_client.py#L1146)
 
 **Returns:**
 
@@ -1362,7 +1547,7 @@ to make code more readable.
 openenv.core.ToolCall(id: str, name: str, args: dict[str, Any])
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L33)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L106)
 
 A single tool/function call returned by the model.
 
@@ -1372,7 +1557,7 @@ A single tool/function call returned by the model.
 openenv.core.LLMResponse(content: str, tool_calls: list[ToolCall] = <factory>)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L42)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L115)
 
 Normalized response from an LLM, with optional tool calls.
 
@@ -1382,23 +1567,23 @@ Normalized response from an LLM, with optional tool calls.
 to_message_dict()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L48)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L121)
 
 Convert to an OpenAI-format assistant message dict.
 
 #### openenv.core.LLMClient[[openenv.core.LLMClient]]
 
 ```python
-openenv.core.LLMClient(endpoint: str, port: int)
+openenv.core.LLMClient(endpoint: str, port: int | None)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L66)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L139)
 
 **Parameters:**
 
-endpoint (`str`) : The base URL of the LLM service (e.g. "http://localhost").
+endpoint (`str`) : The `http(s)` base URL of the LLM service (e.g. "http://localhost"). May include a port and a path (e.g. "http://localhost:8000/v1"). Credentials, query strings and fragments are rejected.
 
-port (`int`) : The port the service listens on.
+port (`int` or `None`) : The port the service listens on. Appended to `endpoint` when the URL does not name one; must match the URL's port when both are given.
 
 Abstract base for LLM endpoint clients.
 
@@ -1410,7 +1595,7 @@ Subclass and implement `complete()` for your protocol.
 complete(prompt: str, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L82)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L158)
 
 **Parameters:**
 
@@ -1430,7 +1615,7 @@ Send a prompt, return the text response.
 complete_with_tools(messages: list[dict[str, Any]], tools: list[dict[str, Any]], **kwargs: Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L97)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L173)
 
 **Parameters:**
 
@@ -1452,16 +1637,16 @@ Tools use MCP tool definitions; they are converted internally.
 #### openenv.core.OpenAIClient[[openenv.core.OpenAIClient]]
 
 ```python
-openenv.core.OpenAIClient(endpoint: str, port: int, model: str, api_key: str | None = None, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 256, use_max_completion_tokens: bool = False)
+openenv.core.OpenAIClient(endpoint: str, port: int | None, model: str, api_key: str | None = None, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 256, use_max_completion_tokens: bool = False)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L129)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L205)
 
 **Parameters:**
 
-endpoint (`str`) : The base URL (e.g. "http://localhost").
+endpoint (`str`) : The base URL (e.g. "http://localhost"). May include a port and a path (e.g. "http://localhost:8000/v1"). The `/v1` API prefix is appended when the URL has no path; a URL with a path is used as-is.
 
-port (`int`) : The port number.
+port (`int` or `None`) : The port number, appended when `endpoint` does not name one; must match the URL's port when both are given.
 
 model (`str`) : Model name to pass to the API.
 
@@ -1486,7 +1671,7 @@ or any endpoint that speaks the OpenAI chat completions format.
 complete(prompt: str, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L193)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L272)
 
 **Parameters:**
 
@@ -1503,16 +1688,16 @@ Send a chat completion request.
 #### openenv.core.AnthropicClient[[openenv.core.AnthropicClient]]
 
 ```python
-openenv.core.AnthropicClient(endpoint: str, port: int, model: str, api_key: str | None = None, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 256)
+openenv.core.AnthropicClient(endpoint: str, port: int | None, model: str, api_key: str | None = None, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 256)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L242)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L321)
 
 **Parameters:**
 
-endpoint (`str`) : The base URL (e.g. `https://api.anthropic.com`).
+endpoint (`str`) : The base URL (e.g. `https://api.anthropic.com`). May include a port.
 
-port (`int`) : The port number.
+port (`int` or `None`) : The port number, appended when `endpoint` does not name one; must match the URL's port when both are given.
 
 model (`str`) : Model name (e.g. "claude-sonnet-4-20250514").
 
@@ -1534,7 +1719,7 @@ Requires the `anthropic` package (lazy-imported at construction time).
 openenv.core.create_llm_client(provider: str, model: str, api_key: str, system_prompt: str | None = None, temperature: float = 0.0, max_tokens: int = 4096)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L359)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/llm_client.py#L439)
 
 **Parameters:**
 
@@ -2013,10 +2198,10 @@ Contains the JSON-RPC response from the MCP server.
 #### openenv.core.MCPClientBase[[openenv.core.MCPClientBase]]
 
 ```python
-openenv.core.MCPClientBase(base_url: str, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, websocket_ping_interval_s: typing.Optional[float] = 20.0, websocket_ping_timeout_s: typing.Optional[float] = 20.0, provider: typing.Optional[typing.Any] = None, mode: typing.Optional[str] = None)
+openenv.core.MCPClientBase(base_url: str, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, websocket_ping_interval_s: typing.Optional[float] = 20.0, websocket_ping_timeout_s: typing.Optional[float] = 20.0, provider: typing.Optional[typing.Any] = None, mode: typing.Optional[str] = None, max_message_size_mb: float = 100.0)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L94)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L95)
 
 **Parameters:**
 
@@ -2028,26 +2213,13 @@ This class provides the common `list_tools()` method for discovering
 available tools from an MCP-enabled environment. Subclasses implement
 specific interaction patterns (tool-calling or CodeAct).
 
-#### close[[openenv.core.MCPClientBase.close]]
-
-```python
-close()
-```
-
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L342)
-
-Close client resources.
-
-In production MCP mode, this also closes the server-side persistent
-MCP session (best effort) before closing websocket/provider resources.
-
 #### list_tools[[openenv.core.MCPClientBase.list_tools]]
 
 ```python
 list_tools(use_cache: bool = True)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L219)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L271)
 
 **Parameters:**
 
@@ -2070,10 +2242,10 @@ for tool in tools:
 #### openenv.core.MCPToolClient[[openenv.core.MCPToolClient]]
 
 ```python
-openenv.core.MCPToolClient(base_url: str, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, websocket_ping_interval_s: typing.Optional[float] = 20.0, websocket_ping_timeout_s: typing.Optional[float] = 20.0, provider: typing.Optional[typing.Any] = None, mode: typing.Optional[str] = None)
+openenv.core.MCPToolClient(base_url: str, connect_timeout_s: float = 10.0, message_timeout_s: float = 60.0, websocket_ping_interval_s: typing.Optional[float] = 20.0, websocket_ping_timeout_s: typing.Optional[float] = 20.0, provider: typing.Optional[typing.Any] = None, mode: typing.Optional[str] = None, max_message_size_mb: float = 100.0)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L372)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L438)
 
 Async client for tool-calling style MCP interactions.
 
@@ -2123,7 +2295,7 @@ with env:
 call_tool(name: str, **kwargs: typing.Any)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L417)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L483)
 
 **Parameters:**
 
@@ -2161,7 +2333,7 @@ print(result)  # "Hello, Claude!"
 get_tool(name: str)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L493)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L559)
 
 **Parameters:**
 
@@ -2188,7 +2360,7 @@ if tool:
 has_tool(name: str)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L519)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/mcp_client.py#L585)
 
 **Parameters:**
 
@@ -3893,3 +4065,194 @@ Poll the /health endpoint until the sandbox is ready.
 
 Uses a longer default timeout (120s) than local Docker providers
 because Modal sandboxes may have cold-start latency.
+
+#### openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider[[openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider]]
+
+```python
+openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider(image: Optional[str] = None, env_vars: Optional[Dict[str, str]] = None, api_key: Optional[str] = None, domain: Optional[str] = None, timeout: int = 3600, metadata: Optional[Dict[str, str]] = None, secure: Optional[bool] = None, cmd: Optional[str] = None, working_directory: Optional[str] = None, surface_server_logs: bool = False, cpu_count: int = 2, memory_mb: int = 1024, template_name: Optional[str] = None, on_build_logs: Optional[Callable[[Any], None]] = None, _adapter: Any = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/novita_provider.py#L518)
+
+Container provider that runs environments in Novita AI sandboxes.
+
+`start_container` accepts either form of source:
+
+- A Docker/OCI registry reference (e.g. `"ghcr.io/org/env:tag"`), which is
+  the form the `ContainerProvider` contract specifies. The SDK resolves it
+  into a Novita template internally and caches it by image fingerprint.
+- A `"template:&amp;lt;id>"` reference returned by
+  `image_from_dockerfile`, which builds a template from a local
+  Dockerfile.
+
+`image_from_dockerfile` rewrites the Dockerfile for Novita's template
+parser, which does not accept multi-stage build definitions. The rewrite is
+mechanical and preserves the build's meaning: BuildKit `--mount` flags are
+stripped, `ARG`/``--platform` in `FROM` lines are resolved, and a
+two-stage build whose stages share one base image is replayed as a single
+stage (see *_prepare_dockerfile*). A Dockerfile that does not fit those
+rules raises *ValueError* with the registry route as the alternative.
+
+The environment runs untrusted code, so the provider is secure by default: it
+enforces https/wss transport (S1) and never surfaces raw sandbox output
+unless `surface_server_logs=True` (S4).
+
+Only one sandbox is active per provider: calling `start_container` again
+before `stop_container()`/`close()` raises `RuntimeError`` rather than
+orphaning the running sandbox.
+
+Examples:
+
+```python
+# From a pre-built registry image
+with NovitaSandboxProvider(image="ghcr.io/org/echo-env:latest") as provider:
+    base_url = provider.start_container()
+    provider.wait_for_ready(base_url)
+
+# From a local Dockerfile (builds a template on first use)
+image = NovitaSandboxProvider.image_from_dockerfile(
+    "envs/echo_env/server/Dockerfile"
+)
+with NovitaSandboxProvider(image=image) as provider:
+    base_url = provider.start_container()
+# sandbox killed on exit
+```
+
+#### close[[openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider.close]]
+
+```python
+close()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/novita_provider.py#L1092)
+
+Stop the active sandbox and release provider-held resources.
+
+Overrides the base no-op so a caller holding a bare `ContainerProvider`
+reference can release the sandbox polymorphically (also invoked on
+context-manager exit). The Novita client is stateless HTTP per call, so
+this is equivalent to `stop_container()`.
+
+#### image_from_dockerfile[[openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider.image_from_dockerfile]]
+
+```python
+image_from_dockerfile(dockerfile_path: str, context_dir: Optional[str] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/novita_provider.py#L570)
+
+**Parameters:**
+
+dockerfile_path (*str*) : Path to the Dockerfile on disk.
+
+context_dir (*str*, *optional*) : Build context directory, used to resolve relative `COPY` sources. Defaults to the Dockerfile's grandparent directory, matching the *openenv init* convention where Dockerfiles live in *&amp;lt;env>/server/Dockerfile* and the build context is *&amp;lt;env>/*.
+
+**Returns:** `*str*`
+
+A *"template:&amp;lt;abs_path>"* reference to pass to
+*start_container* or the constructor's *image*.
+
+**Raises:** `FileNotFoundError` or `ValueError`
+
+- `FileNotFoundError` -- If *dockerfile_path* does not exist.
+- `ValueError` -- If *context_dir* does not exist, if COPY sources cannot
+  be found under the resolved context directory, or if the
+  Dockerfile cannot be expressed as a Novita template (see
+  *_prepare_dockerfile*).
+
+Validate a Dockerfile and return a `template:` reference for
+`start_container`.
+
+Eagerly validates the Dockerfile (existence, COPY sources) and stores
+the rewritten content in an internal registry. The Novita template is
+built later, inside `start_container`, by the adapter's
+`build_template` — building needs credentials and network, which this
+class-level helper deliberately does not.
+
+The rewrite compensates for Novita's Dockerfile parser, which rejects
+multi-stage build definitions (the layout every in-repo OpenEnv
+environment uses). BuildKit `--mount` flags are stripped, `ARG` and
+`--platform` in `FROM` lines are resolved, and a two-stage build
+whose stages share one base image is replayed as a single stage.
+
+Examples:
+
+```python
+image = NovitaSandboxProvider.image_from_dockerfile(
+    "envs/echo_env/server/Dockerfile"
+)
+provider = NovitaSandboxProvider(image=image)
+base_url = provider.start_container()
+```
+
+#### start_container[[openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider.start_container]]
+
+```python
+start_container(image: Optional[str] = None, port: Optional[int] = None, env_vars: Optional[Dict[str, str]] = None, **kwargs: Any)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/novita_provider.py#L873)
+
+**Parameters:**
+
+image (*str*, *optional*) : Either a registry image reference (e.g. *"ghcr.io/org/env:latest"*) or a *"template:&amp;lt;path>"* reference returned by [*~image_from_dockerfile*]. May be omitted when supplied to the constructor.
+
+port (*int*, *optional*) : Must be *None* or *8000*. Novita exposes port 8000 on the sandbox host; other ports raise *ValueError*.
+
+env_vars (*dict*, *optional*) : Environment variables forwarded to the sandbox, overriding the constructor's.
+
+- ****kwargs** : *cmd* (*str*) to override the server command. For a registry OCI image, pass the command explicitly together with any runtime environment the image needs: Novita may not be able to restore the image's `ENV` while converting it to a template. For example, the tbench2 image requires:  `cmd="cd /app/env && PYTHONPATH=/app/env " "/app/.venv/bin/python -m uvicorn server.app:app " "--host 0.0.0.0 --port 8000"`  and any additional values can be supplied through `env_vars`. The provider runs this command as `root` for a registry image; a `template:&amp;lt;id>` keeps the template's configured user. Prefer `NovitaSandboxProvider.image_from_dockerfile(...)` when a local Dockerfile is available; its build preserves the environment and startup configuration in the generated template. Unknown options raise *ValueError* so typos cannot silently change sandbox behavior.
+
+**Returns:** `*str*`
+
+HTTPS sandbox URL for the exposed port (base_url).
+
+**Raises:** `RuntimeError` or `ValueError`
+
+- `RuntimeError` -- If a sandbox is already active on this provider.
+- `ValueError` -- If no image is available, the port is unsupported, or an
+  unknown option is passed.
+
+Create a Novita sandbox and start an OpenEnv server inside it.
+
+#### stop_container[[openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider.stop_container]]
+
+```python
+stop_container()
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/novita_provider.py#L1072)
+
+Kill the active Novita sandbox.
+
+`kill()` permanently removes the sandbox: it cannot be resumed or
+reconnected, and any snapshot must have been taken beforehand.
+
+#### wait_for_ready[[openenv.core.containers.runtime.novita_provider.NovitaSandboxProvider.wait_for_ready]]
+
+```python
+wait_for_ready(base_url: str, timeout_s: float = 120.0)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/core/containers/runtime/novita_provider.py#L1160)
+
+**Parameters:**
+
+base_url (`str`) : Sandbox URL returned by `start_container()`.
+
+timeout_s (`float`, *optional*, defaults to `120.0`) : Maximum seconds to wait.
+
+**Raises:** ``TimeoutError`` or ``RuntimeError``
+
+- ``TimeoutError`` -- If the sandbox doesn't become ready in time.
+- ``RuntimeError`` -- If the server process died (detected via PID check).
+
+Poll the /health endpoint until the sandbox is ready.
+
+Uses a longer default timeout (120s) than local Docker providers because
+a Novita sandbox is created from an image that may need to be resolved
+and built on first use.
+
+A `200` on `/health` proves HTTP reachability but **not** that the
+exposed sandbox host proxies the `/ws` WebSocket upgrade `EnvClient`
+needs; that requires a real `wss://` round-trip (RFC 002 invariant 2).

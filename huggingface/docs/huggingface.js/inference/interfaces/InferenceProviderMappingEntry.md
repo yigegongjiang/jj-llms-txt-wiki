@@ -8,7 +8,7 @@
 
 #### Defined in[[adapter.defined-in]]
 
-[inference/src/types.ts:103](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L103)
+[inference/src/types.ts:105](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L105)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[adapterweightspath.defined-in]]
 
-[inference/src/types.ts:104](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L104)
+[inference/src/types.ts:106](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L106)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in[[hfmodelid.defined-in]]
 
-[inference/src/types.ts:105](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L105)
+[inference/src/types.ts:107](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L107)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in[[provider.defined-in]]
 
-[inference/src/types.ts:106](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L106)
+[inference/src/types.ts:108](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L108)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in[[providerid.defined-in]]
 
-[inference/src/types.ts:107](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L107)
+[inference/src/types.ts:109](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L109)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in[[status.defined-in]]
 
-[inference/src/types.ts:108](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L108)
+[inference/src/types.ts:110](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L110)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in[[task.defined-in]]
 
-[inference/src/types.ts:109](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L109)
+[inference/src/types.ts:111](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L111)
 
 ___
 
@@ -78,4 +78,4 @@ ___
 
 #### Defined in[[type.defined-in]]
 
-[inference/src/types.ts:110](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L110)
+[inference/src/types.ts:112](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L112)

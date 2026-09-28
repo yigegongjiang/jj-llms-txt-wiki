@@ -63,7 +63,7 @@ ___
 
 #### Defined in[[authmethod.defined-in]]
 
-[inference/src/types.ts:161](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L161)
+[inference/src/types.ts:163](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L163)
 
 ___
 
@@ -195,7 +195,7 @@ ___
 
 #### Defined in[[inferenceprovider.defined-in]]
 
-[inference/src/types.ts:71](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L71)
+[inference/src/types.ts:72](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L72)
 
 ___
 
@@ -205,7 +205,7 @@ ___
 
 #### Defined in[[inferenceproviderorpolicy.defined-in]]
 
-[inference/src/types.ts:73](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L73)
+[inference/src/types.ts:74](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L74)
 
 ___
 
@@ -247,7 +247,7 @@ ___
 
 #### Defined in[[outputtype.defined-in]]
 
-[inference/src/types.ts:175](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L175)
+[inference/src/types.ts:177](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L177)
 
 ___
 
@@ -267,7 +267,7 @@ ___
 
 #### Defined in[[requestargs.defined-in]]
 
-[inference/src/types.ts:148](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L148)
+[inference/src/types.ts:150](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L150)
 
 ___
 
@@ -457,7 +457,7 @@ ___
 
 ### INFERENCE\_PROVIDERS
 
-• `Const` **INFERENCE\_PROVIDERS**: readonly [``"baseten"``, ``"cerebras"``, ``"cohere"``, ``"deepinfra"``, ``"fal-ai"``, ``"featherless-ai"``, ``"fireworks-ai"``, ``"groq"``, ``"hf-inference"``, ``"novita"``, ``"nscale"``, ``"openai"``, ``"ovhcloud"``, ``"publicai"``, ``"replicate"``, ``"scaleway"``, ``"together"``, ``"wavespeed"``, ``"zai-org"``]
+• `Const` **INFERENCE\_PROVIDERS**: readonly [``"baseten"``, ``"cerebras"``, ``"cohere"``, ``"deepinfra"``, ``"fal-ai"``, ``"featherless-ai"``, ``"fireworks-ai"``, ``"groq"``, ``"hf-inference"``, ``"humain-ai"``, ``"novita"``, ``"nscale"``, ``"openai"``, ``"ovhcloud"``, ``"publicai"``, ``"replicate"``, ``"scaleway"``, ``"together"``, ``"wavespeed"``, ``"zai-org"``]
 
 #### Defined in[[inferenceproviders.defined-in]]
 
@@ -471,7 +471,7 @@ ___
 
 #### Defined in[[providers.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:58](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L58)
+[inference/src/lib/getProviderHelper.ts:59](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L59)
 
 ___
 
@@ -485,17 +485,17 @@ Whenever possible, InferenceProvider should == org namespace
 
 #### Defined in[[providershuborgs.defined-in]]
 
-[inference/src/types.ts:80](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L80)
+[inference/src/types.ts:81](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L81)
 
 ___
 
 ### PROVIDERS\_OR\_POLICIES
 
-• `Const` **PROVIDERS\_OR\_POLICIES**: readonly [``"baseten"``, ``"cerebras"``, ``"cohere"``, ``"deepinfra"``, ``"fal-ai"``, ``"featherless-ai"``, ``"fireworks-ai"``, ``"groq"``, ``"hf-inference"``, ``"novita"``, ``"nscale"``, ``"openai"``, ``"ovhcloud"``, ``"publicai"``, ``"replicate"``, ``"scaleway"``, ``"together"``, ``"wavespeed"``, ``"zai-org"``, ``"auto"``]
+• `Const` **PROVIDERS\_OR\_POLICIES**: readonly [``"baseten"``, ``"cerebras"``, ``"cohere"``, ``"deepinfra"``, ``"fal-ai"``, ``"featherless-ai"``, ``"fireworks-ai"``, ``"groq"``, ``"hf-inference"``, ``"humain-ai"``, ``"novita"``, ``"nscale"``, ``"openai"``, ``"ovhcloud"``, ``"publicai"``, ``"replicate"``, ``"scaleway"``, ``"together"``, ``"wavespeed"``, ``"zai-org"``, ``"auto"``]
 
 #### Defined in[[providersorpolicies.defined-in]]
 
-[inference/src/types.ts:69](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L69)
+[inference/src/types.ts:70](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L70)
 
 ## Functions
 
@@ -696,7 +696,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"text-to-image"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -705,7 +705,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:189](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L189)
+[inference/src/lib/getProviderHelper.ts:195](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L195)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ConversationalTaskHelper` & `TaskProviderHelper`
 
@@ -713,7 +713,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"conversational"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -722,7 +722,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:193](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L193)
+[inference/src/lib/getProviderHelper.ts:199](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L199)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextGenerationTaskHelper` & `TaskProviderHelper`
 
@@ -730,7 +730,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"text-generation"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -739,7 +739,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:197](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L197)
+[inference/src/lib/getProviderHelper.ts:203](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L203)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextToSpeechTaskHelper` & `TaskProviderHelper`
 
@@ -747,7 +747,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"text-to-speech"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -756,7 +756,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:201](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L201)
+[inference/src/lib/getProviderHelper.ts:207](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L207)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextToAudioTaskHelper` & `TaskProviderHelper`
 
@@ -764,7 +764,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"text-to-audio"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -773,7 +773,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:205](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L205)
+[inference/src/lib/getProviderHelper.ts:211](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L211)
 
 ▸ **getProviderHelper**(`provider`, `task`): `AutomaticSpeechRecognitionTaskHelper` & `TaskProviderHelper`
 
@@ -781,7 +781,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"automatic-speech-recognition"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -790,7 +790,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:209](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L209)
+[inference/src/lib/getProviderHelper.ts:215](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L215)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextToVideoTaskHelper` & `TaskProviderHelper`
 
@@ -798,7 +798,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"text-to-video"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -807,7 +807,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:213](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L213)
+[inference/src/lib/getProviderHelper.ts:219](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L219)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TextClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -815,7 +815,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"text-classification"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -824,7 +824,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:217](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L217)
+[inference/src/lib/getProviderHelper.ts:223](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L223)
 
 ▸ **getProviderHelper**(`provider`, `task`): `QuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -832,7 +832,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"question-answering"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -841,7 +841,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:221](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L221)
+[inference/src/lib/getProviderHelper.ts:227](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L227)
 
 ▸ **getProviderHelper**(`provider`, `task`): `AudioClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -849,7 +849,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"audio-classification"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -858,7 +858,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:225](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L225)
+[inference/src/lib/getProviderHelper.ts:231](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L231)
 
 ▸ **getProviderHelper**(`provider`, `task`): `AudioToAudioTaskHelper` & `TaskProviderHelper`
 
@@ -866,7 +866,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"audio-to-audio"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -875,7 +875,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:229](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L229)
+[inference/src/lib/getProviderHelper.ts:235](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L235)
 
 ▸ **getProviderHelper**(`provider`, `task`): `FillMaskTaskHelper` & `TaskProviderHelper`
 
@@ -883,7 +883,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"fill-mask"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -892,7 +892,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:233](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L233)
+[inference/src/lib/getProviderHelper.ts:239](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L239)
 
 ▸ **getProviderHelper**(`provider`, `task`): `FeatureExtractionTaskHelper` & `TaskProviderHelper`
 
@@ -900,7 +900,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"feature-extraction"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -909,7 +909,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:237](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L237)
+[inference/src/lib/getProviderHelper.ts:243](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L243)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -917,7 +917,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"image-classification"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -926,7 +926,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:241](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L241)
+[inference/src/lib/getProviderHelper.ts:247](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L247)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageSegmentationTaskHelper` & `TaskProviderHelper`
 
@@ -934,7 +934,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"image-segmentation"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -943,7 +943,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:245](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L245)
+[inference/src/lib/getProviderHelper.ts:251](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L251)
 
 ▸ **getProviderHelper**(`provider`, `task`): `DocumentQuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -951,7 +951,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"document-question-answering"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -960,7 +960,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:249](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L249)
+[inference/src/lib/getProviderHelper.ts:255](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L255)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageToTextTaskHelper` & `TaskProviderHelper`
 
@@ -968,7 +968,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"image-to-text"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -977,7 +977,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:253](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L253)
+[inference/src/lib/getProviderHelper.ts:259](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L259)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ObjectDetectionTaskHelper` & `TaskProviderHelper`
 
@@ -985,7 +985,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"object-detection"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -994,7 +994,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:257](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L257)
+[inference/src/lib/getProviderHelper.ts:263](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L263)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ZeroShotImageClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1002,7 +1002,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"zero-shot-image-classification"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1011,7 +1011,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:261](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L261)
+[inference/src/lib/getProviderHelper.ts:267](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L267)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ZeroShotClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1019,7 +1019,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"zero-shot-classification"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1028,7 +1028,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:265](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L265)
+[inference/src/lib/getProviderHelper.ts:271](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L271)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageToImageTaskHelper` & `TaskProviderHelper`
 
@@ -1036,7 +1036,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"image-to-image"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1045,7 +1045,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:269](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L269)
+[inference/src/lib/getProviderHelper.ts:275](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L275)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageToVideoTaskHelper` & `TaskProviderHelper`
 
@@ -1053,7 +1053,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"image-to-video"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1062,7 +1062,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:273](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L273)
+[inference/src/lib/getProviderHelper.ts:279](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L279)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageTextToImageTaskHelper` & `TaskProviderHelper`
 
@@ -1070,7 +1070,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"image-text-to-image"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1079,7 +1079,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:277](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L277)
+[inference/src/lib/getProviderHelper.ts:283](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L283)
 
 ▸ **getProviderHelper**(`provider`, `task`): `ImageTextToVideoTaskHelper` & `TaskProviderHelper`
 
@@ -1087,7 +1087,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"image-text-to-video"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1096,7 +1096,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:281](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L281)
+[inference/src/lib/getProviderHelper.ts:287](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L287)
 
 ▸ **getProviderHelper**(`provider`, `task`): `SentenceSimilarityTaskHelper` & `TaskProviderHelper`
 
@@ -1104,7 +1104,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"sentence-similarity"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1113,7 +1113,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:285](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L285)
+[inference/src/lib/getProviderHelper.ts:291](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L291)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TableQuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -1121,7 +1121,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"table-question-answering"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1130,7 +1130,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:289](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L289)
+[inference/src/lib/getProviderHelper.ts:295](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L295)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TabularClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1138,7 +1138,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"tabular-classification"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1147,7 +1147,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:293](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L293)
+[inference/src/lib/getProviderHelper.ts:299](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L299)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TabularRegressionTaskHelper` & `TaskProviderHelper`
 
@@ -1155,7 +1155,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"tabular-regression"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1164,7 +1164,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:297](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L297)
+[inference/src/lib/getProviderHelper.ts:303](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L303)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TokenClassificationTaskHelper` & `TaskProviderHelper`
 
@@ -1172,7 +1172,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"token-classification"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1181,7 +1181,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:301](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L301)
+[inference/src/lib/getProviderHelper.ts:307](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L307)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TranslationTaskHelper` & `TaskProviderHelper`
 
@@ -1189,7 +1189,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"translation"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1198,7 +1198,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:305](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L305)
+[inference/src/lib/getProviderHelper.ts:311](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L311)
 
 ▸ **getProviderHelper**(`provider`, `task`): `SummarizationTaskHelper` & `TaskProviderHelper`
 
@@ -1206,7 +1206,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"summarization"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1215,7 +1215,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:309](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L309)
+[inference/src/lib/getProviderHelper.ts:315](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L315)
 
 ▸ **getProviderHelper**(`provider`, `task`): `VisualQuestionAnsweringTaskHelper` & `TaskProviderHelper`
 
@@ -1223,7 +1223,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | ``"visual-question-answering"`` |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1232,7 +1232,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:313](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L313)
+[inference/src/lib/getProviderHelper.ts:319](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L319)
 
 ▸ **getProviderHelper**(`provider`, `task`): `TaskProviderHelper`
 
@@ -1240,7 +1240,7 @@ Get provider helper instance by name and task
 
 | Name | Type |
 | :------ | :------ |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `task` | `undefined` \| [`InferenceTask`](modules#inferencetask) |
 
 #### Returns[[getproviderhelper.returns]]
@@ -1249,7 +1249,7 @@ Get provider helper instance by name and task
 
 #### Defined in[[getproviderhelper.defined-in]]
 
-[inference/src/lib/getProviderHelper.ts:317](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L317)
+[inference/src/lib/getProviderHelper.ts:323](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/lib/getProviderHelper.ts#L323)
 
 ___
 

@@ -1,16 +1,17 @@
 # Building a Next.js AI Chatbot with Vercel AI SDK
 
-In this tutorial, we'll build an in-browser AI chatbot using Next.js, Transformers.js, and the Vercel AI SDK v6. The chatbot runs entirely client-side with WebGPU acceleration &mdash; and supports tool calling with human approval.
+In this tutorial, we'll build an in-browser AI chatbot using Next.js, Transformers.js, and the Vercel AI SDK v6. The chatbot runs entirely client-side with WebGPU acceleration and supports tool calling with human approval.
 
 Useful links:
+
 - [Source code](https://github.com/huggingface/transformers.js-examples/tree/main/next-vercel-ai-sdk-v6-tool-calling)
 - [`@browser-ai/transformers-js` docs](https://www.browser-ai.dev/docs/ai-sdk-v6/transformers-js)
 - [Vercel AI SDK docs](https://ai-sdk.dev/)
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/) version 18+
-- [npm](https://www.npmjs.com/) version 9+
+- [Node.js](https://nodejs.org/en/) version 20+
+- [npm](https://www.npmjs.com/) version 10+
 - A browser with WebGPU support (Chrome 113+, Edge 113+, or Firefox/Safari with flags enabled)
 
 ## Step 1: Create the project
@@ -30,7 +31,7 @@ npm install ai @ai-sdk/react @browser-ai/transformers-js @huggingface/transforme
 
 ## Step 2: Configure Next.js for browser inference
 
-Transformers.js uses ONNX Runtime under the hood for both browser and server-side (Node.js) inference.  In our case we only need the browser runtime so we can tell Next.js to exclude the Node.js-specific packages when bundling for the browser. Update `next.config.ts`
+Transformers.js uses ONNX Runtime under the hood for both browser and server-side (Node.js) inference. In this case, we only need the browser runtime, so we can tell Next.js to exclude Node.js-specific packages when bundling for the browser. Update `next.config.ts`:
 
 ```typescript
 import type { NextConfig } from "next";
@@ -53,7 +54,7 @@ export default nextConfig;
 
 ## Step 3: Create the Web Worker
 
-Running model inference on the main thread would block the UI. The `@browser-ai/transformers-js` package provides a ready-made worker handler that handles all the complexity for you.
+Running model inference on the main thread would block the UI. The `@browser-ai/transformers-js` package provides a ready-made worker handler for model loading, inference, streaming, and main-thread communication.
 
 Create `src/app/worker.ts`:
 
@@ -66,7 +67,7 @@ self.onmessage = (msg: MessageEvent) => {
 };
 ```
 
-That's it &mdash; the handler takes care of model loading, inference, streaming, and communication with the main thread.
+That's it: the handler takes care of model loading, inference, streaming, and communication with the main thread.
 
 ## Step 4: Define the model configuration
 
@@ -75,7 +76,7 @@ Create `src/app/models.ts` to define which models are available. These are ONNX-
 ```typescript
 import { WorkerLoadOptions } from "@browser-ai/transformers-js";
 
-export interface ModelConfig extends Omit {
+export interface ModelConfig extends Omit<WorkerLoadOptions, "modelId"> {
   id: string;
   name: string;
   supportsWorker?: boolean;
@@ -99,7 +100,7 @@ export const MODELS: ModelConfig[] = [
 ];
 ```
 
-For tool calling, use reasoning models like Qwen3 which handle multi-step reasoning well, or fine-tuned model specifically for tool-calling capabilities. The `supportsWorker` flag controls whether the model is loaded in a Web Worker for better performance.
+For tool calling, use reasoning models like Qwen3 which handle multi-step reasoning well, or a model fine-tuned specifically for tool calling. The `supportsWorker` flag controls whether the model is loaded in a Web Worker for better performance.
 
 ## Step 5: Define tools
 
@@ -179,10 +180,10 @@ import { MODELS } from "./models";
 import { createTools } from "./tools";
 
 export class TransformersChatTransport
-  implements ChatTransport
+  implements ChatTransport<TransformersUIMessage>
 {
   private model: TransformersJSLanguageModel;
-  private tools: ReturnType;
+  private tools: ReturnType<typeof createTools>;
 
   constructor() {
     const config = MODELS[0];
@@ -209,11 +210,11 @@ export class TransformersChatTransport
       trigger: "submit-message" | "submit-tool-result" | "regenerate-message";
       messageId: string | undefined;
     } & ChatRequestOptions,
-  ): Promise> {
+  ): Promise<ReadableStream<UIMessageChunk>> {
     const { messages, abortSignal } = options;
     const prompt = await convertToModelMessages(messages);
 
-    return createUIMessageStream({
+    return createUIMessageStream<TransformersUIMessage>({
       execute: async ({ writer }) => {
         // Track download progress if the model hasn't been downloaded yet
         let downloadProgressId: string | undefined;
@@ -267,13 +268,14 @@ export class TransformersChatTransport
     });
   }
 
-  async reconnectToStream(): Promise | null> {
+  async reconnectToStream(): Promise<ReadableStream<UIMessageChunk> | null> {
     return null;
   }
 }
 ```
 
 Key parts of the transport:
+
 - **Availability check**: Determines if the model needs downloading before inference.
 - **Progress streaming**: Sends download progress as custom data parts (`data-modelDownloadProgress`) that the UI can render as a progress bar.
 - **Tool support**: Passes the tools to `streamText()` so the model can call them.
@@ -301,7 +303,7 @@ export default function ChatPage() {
     status,
     stop,
     addToolApprovalResponse,
-  } = useChat({
+  } = useChat<TransformersUIMessage>({
     transport: new TransformersChatTransport(),
     experimental_throttle: 75,
     // Automatically resumes after tool approval responses are submitted
@@ -317,27 +319,27 @@ export default function ChatPage() {
   };
 
   return (
-    
-      AI Chatbot
+    <div style={{ maxWidth: 600, margin: "0 auto", padding: 24 }}>
+      <h1>AI Chatbot</h1>
 
-      
+      <div>
         {messages.map((message) => (
-          
-            {message.role === "user" ? "You" : "Assistant"}:
+          <div key={message.id} style={{ marginBottom: 16 }}>
+            <strong>{message.role === "user" ? "You" : "Assistant"}:</strong>
             {message.parts.map((part, i) => {
               switch (part.type) {
                 case "text":
-                  return {part.text};
+                  return <p key={i}>{part.text}</p>;
 
                 case "data-modelDownloadProgress":
                   if (!part.data.message) return null;
                   return (
-                    
-                      {part.data.message}
+                    <div key={i}>
+                      <p>{part.data.message}</p>
                       {part.data.status === "downloading" && (
-                        
+                        <progress value={part.data.progress} max={100} />
                       )}
-                    
+                    </div>
                   );
 
                 default:
@@ -348,63 +350,66 @@ export default function ChatPage() {
                       "approval" in part
                     ) {
                       return (
-                        
-                          Tool {part.type.replace("tool-", "")} wants to run.
-                          
+                        <div key={i} style={{ border: "1px solid #ccc", padding: 8 }}>
+                          <p>Tool <strong>{part.type.replace("tool-", "")}</strong> wants to run.</p>
+                          <button onClick={() =>
                             addToolApprovalResponse({ id: part.approval!.id, approved: true })
                           }>
                             Approve
-                          
-                          
+                          </button>
+                          <button onClick={() =>
                             addToolApprovalResponse({
                               id: part.approval!.id, approved: false,
                               reason: "User denied",
                             })
                           }>
                             Deny
-                          
-                        
+                          </button>
+                        </div>
                       );
                     }
                     if ("output" in part && part.output) {
                       return (
-                        
+                        <pre key={i} style={{ background: "#f5f5f5", padding: 8 }}>
                           {JSON.stringify(part.output, null, 2)}
-                        
+                        </pre>
                       );
                     }
                   }
                   return null;
               }
             })}
-          
+          </div>
         ))}
-      
+      </div>
 
-      {status === "submitted" && Thinking...}
+      {status === "submitted" && <p><em>Thinking...</em></p>}
 
-      
-         setInput(e.target.value)}
+      <form onSubmit={handleSubmit}>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Ask something..."
           style={{ width: "100%", padding: 8 }}
         />
-        
+        <div style={{ marginTop: 8 }}>
           {status === "streaming" ? (
-            Stop
+            <button type="button" onClick={stop}>Stop</button>
           ) : (
-            Send
+            <button type="submit" disabled={!input.trim()}>Send</button>
           )}
-        
-      
-    
+        </div>
+      </form>
+    </div>
   );
 }
 ```
 
 The component renders message parts based on their `type`:
-- `text` &mdash; standard text output from the model.
-- `data-modelDownloadProgress` &mdash; custom data parts sent by the transport during model download.
-- `tool-*` &mdash; tool call parts with states like `approval-requested`, `output-available`, etc.
+
+- `text`: standard text output from the model.
+- `data-modelDownloadProgress`: custom data parts sent by the transport during model download.
+- `tool-*`: tool call parts with states like `approval-requested`, `output-available`, etc.
 
 The `sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses` option tells `useChat` to automatically resume generation after the user responds to a tool approval request.
 
@@ -425,7 +430,7 @@ Try prompts like:
 
 ## Next steps
 
-- Add more models and a model selector &mdash; see the [full example source](https://github.com/huggingface/transformers.js-examples/tree/main/next-vercel-ai-sdk-v6-tool-calling) for a multi-model implementation with Zustand state management.
+- Add more models and a model selector; see the [full example source](https://github.com/huggingface/transformers.js-examples/tree/main/next-vercel-ai-sdk-v6-tool-calling) for a multi-model implementation with Zustand state management.
 - Add a browser compatibility check with `doesBrowserSupportTransformersJS()` and fall back to a server-side route if WebGPU is unavailable.
 - Explore the [Vercel AI SDK agents documentation](https://ai-sdk.dev/docs/agents/overview) for more complex agent patterns.
 - See the [Vercel AI SDK guide](../integrations/vercel-ai-sdk) for a reference of all supported features (embeddings, vision, transcription, etc.).

@@ -1,337 +1,210 @@
 # tokenizers
 
-Tokenization utilities
+Tokenizers turn text into the integer ids a model understands, and
+decode model output back into strings. Use `AutoTokenizer.from_pretrained()`
+to load the right implementation for a model ID — the class is chosen from
+the tokenizer's `tokenizer_config.json`.
 
-* [tokenizers](#module_tokenizers)
-    * _static_
-        * [.PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)
-            * [`new PreTrainedTokenizer(tokenizerJSON, tokenizerConfig)`](#new_module_tokenizers.PreTrainedTokenizer_new)
-            * _instance_
-                * [`.convert_tokens_to_ids(tokens)`](#module_tokenizers.PreTrainedTokenizer+convert_tokens_to_ids) ⇒ any
-                * [`._call(text, [options])`](#module_tokenizers.PreTrainedTokenizer+_call) ⇒ BatchEncoding.&lt;BatchEncodingItem.&lt;TText, TReturnTensor&gt;&gt;
-                * [`._encode_text(text)`](#module_tokenizers.PreTrainedTokenizer+_encode_text) ⇒ Array | null
-                * [`.tokenize(text, options)`](#module_tokenizers.PreTrainedTokenizer+tokenize) ⇒ Array
-                * [`.encode(text, options)`](#module_tokenizers.PreTrainedTokenizer+encode) ⇒ Array
-                * [`.batch_decode(batch, decode_args)`](#module_tokenizers.PreTrainedTokenizer+batch_decode) ⇒ Array
-                * [`.decode(token_ids, [decode_args])`](#module_tokenizers.PreTrainedTokenizer+decode) ⇒ string
-                * [`.decode_single(token_ids, decode_args)`](#module_tokenizers.PreTrainedTokenizer+decode_single) ⇒ string
-                * [`.get_chat_template(options)`](#module_tokenizers.PreTrainedTokenizer+get_chat_template) ⇒ string
-                * [`.apply_chat_template(conversation, [options])`](#module_tokenizers.PreTrainedTokenizer+apply_chat_template) ⇒ ApplyChatTemplateReturn.&lt;TTokenize, TReturnTensor, TReturnDict&gt;
-            * _static_
-                * [`.from_pretrained(pretrained_model_name_or_path, options)`](#module_tokenizers.PreTrainedTokenizer.from_pretrained) ⇒ Promise.&lt;PreTrainedTokenizer&gt;
-        * [`.loadTokenizer(pretrained_model_name_or_path, options)`](#module_tokenizers.loadTokenizer) ⇒ Promise.&lt;Array&gt;
-        * [`.prepareTensorForDecode(tensor)`](#module_tokenizers.prepareTensorForDecode) ⇒ Array
-        * [`._build_translation_inputs(self, raw_inputs, tokenizer_options, generate_kwargs)`](#module_tokenizers._build_translation_inputs) ⇒ Object
-    * _inner_
-        * [`~PretrainedTokenizerOptions`](#module_tokenizers..PretrainedTokenizerOptions) : [PretrainedOptions](#PretrainedOptions)
-        * [`~TextContent`](#module_tokenizers..TextContent) : Object
-        * [`~ImageContent`](#module_tokenizers..ImageContent) : Object
-        * [`~MessageContent`](#module_tokenizers..MessageContent) : TextContent | ImageContent | Object
-        * [`~Message`](#module_tokenizers..Message) : Object
-        * [`~BatchEncodingArrayItem`](#module_tokenizers..BatchEncodingArrayItem) : any
-        * [`~BatchEncodingItem`](#module_tokenizers..BatchEncodingItem) : any
-        * [`~BatchEncoding`](#module_tokenizers..BatchEncoding) : Object
-        * [`~TokenizerCallOptions`](#module_tokenizers..TokenizerCallOptions) : Object
-        * [`~PreTrainedTokenizerCallback`](#module_tokenizers..PreTrainedTokenizerCallback) : function
-        * [`~ApplyChatTemplateOptions`](#module_tokenizers..ApplyChatTemplateOptions) : Object
-        * [`~ApplyChatTemplateReturn`](#module_tokenizers..ApplyChatTemplateReturn) : any
+For chat-trained models, `tokenizer.apply_chat_template()` renders an
+OpenAI-style message list into the model's native prompt format.
 
-* * *
+## Classes
 
-## tokenizers.PreTrainedTokenizer
+### AutoTokenizer
 
-**Kind**: static class of [tokenizers](#module_tokenizers)  
+Helper class which is used to instantiate pretrained tokenizers with the `from_pretrained` function.
+The chosen tokenizer class is determined by the type specified in the tokenizer config.
 
-* [.PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)
-    * [`new PreTrainedTokenizer(tokenizerJSON, tokenizerConfig)`](#new_module_tokenizers.PreTrainedTokenizer_new)
-    * _instance_
-        * [`.convert_tokens_to_ids(tokens)`](#module_tokenizers.PreTrainedTokenizer+convert_tokens_to_ids) ⇒ any
-        * [`._call(text, [options])`](#module_tokenizers.PreTrainedTokenizer+_call) ⇒ BatchEncoding.&lt;BatchEncodingItem.&lt;TText, TReturnTensor&gt;&gt;
-        * [`._encode_text(text)`](#module_tokenizers.PreTrainedTokenizer+_encode_text) ⇒ Array | null
-        * [`.tokenize(text, options)`](#module_tokenizers.PreTrainedTokenizer+tokenize) ⇒ Array
-        * [`.encode(text, options)`](#module_tokenizers.PreTrainedTokenizer+encode) ⇒ Array
-        * [`.batch_decode(batch, decode_args)`](#module_tokenizers.PreTrainedTokenizer+batch_decode) ⇒ Array
-        * [`.decode(token_ids, [decode_args])`](#module_tokenizers.PreTrainedTokenizer+decode) ⇒ string
-        * [`.decode_single(token_ids, decode_args)`](#module_tokenizers.PreTrainedTokenizer+decode_single) ⇒ string
-        * [`.get_chat_template(options)`](#module_tokenizers.PreTrainedTokenizer+get_chat_template) ⇒ string
-        * [`.apply_chat_template(conversation, [options])`](#module_tokenizers.PreTrainedTokenizer+apply_chat_template) ⇒ ApplyChatTemplateReturn.&lt;TTokenize, TReturnTensor, TReturnDict&gt;
-    * _static_
-        * [`.from_pretrained(pretrained_model_name_or_path, options)`](#module_tokenizers.PreTrainedTokenizer.from_pretrained) ⇒ Promise.&lt;PreTrainedTokenizer&gt;
+**Example:** Create an `AutoTokenizer` and use it to tokenize a sentence.
+This will automatically detect the tokenizer type based on the tokenizer class defined in `tokenizer_config.json`.
 
-* * *
+```javascript
+import { AutoTokenizer } from '@huggingface/transformers';
 
-### `new PreTrainedTokenizer(tokenizerJSON, tokenizerConfig)`
+const tokenizer = await AutoTokenizer.from_pretrained('Xenova/bert-base-uncased');
+const { input_ids } = await tokenizer('I love transformers!');
+// Tensor {
+//   data: BigInt64Array(6) [101n, 1045n, 2293n, 19081n, 999n, 102n],
+//   dims: [1, 6],
+//   type: 'int64',
+//   size: 6,
+// }
+```
 
-Create a new PreTrainedTokenizer instance.
+#### `AutoTokenizer.from_pretrained(pretrained_model_name_or_path, options)`
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+Instantiate one of the tokenizer classes of the library from a pretrained model.
 
-    tokenizerJSONObjectThe JSON of the tokenizer.
+The tokenizer class to instantiate is selected based on the `tokenizer_class` property of the config object
+(either passed as an argument or loaded from `pretrained_model_name_or_path` if possible)
 
-    
-    tokenizerConfigObjectThe config of the tokenizer.
+**Parameters**
 
-      
+- `pretrained_model_name_or_path` (`string`) — The name or path of the pretrained model. Can be either:
+  - A string, the *model id* of a pretrained tokenizer hosted inside a model repo on huggingface.co.
+  Valid model ids can be located at the root-level, like `bert-base-uncased`, or namespaced under a
+  user or organization name, like `dbmdz/bert-base-german-cased`.
+  - A path to a *directory* containing tokenizer files, e.g., `./my_model_directory/`.
+- `options` ([`PretrainedTokenizerOptions`](./tokenizers#module_tokenizers.PretrainedTokenizerOptions)) — Additional options for loading the tokenizer.
 
-* * *
+**Returns:** `Promise`<[`PreTrainedTokenizer`](./tokenizers#module_tokenizers.PreTrainedTokenizer)> — The loaded tokenizer.
 
-### `preTrainedTokenizer.convert_tokens_to_ids(tokens)` ⇒ any
+### PreTrainedTokenizer
 
-Converts a token string (or a sequence of tokens) into a single integer id (or a sequence of ids), using the vocabulary.
+`PreTrainedTokenizer` is the base class for all tokenizers in Transformers.js.
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: any - The token id or list of token ids.  
-
-  
-    
-      ParamTypeDescription
-    
-  
-  
-
-    tokensTOne or several token(s) to convert to token id(s).
-
-      
-
-* * *
-
-### `preTrainedTokenizer._call(text, [options])` ⇒ BatchEncoding.&lt;BatchEncodingItem.&lt;TText, TReturnTensor&gt;&gt;
+#### `PreTrainedTokenizer(text, [options])`
 
 Encode/tokenize the given text(s).
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: BatchEncoding.&lt;BatchEncodingItem.&lt;TText, TReturnTensor&gt;&gt; - Object to be passed to the model.  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `text` (`string` | `string[]`) — The text to tokenize.
+- `options` ([`TokenizerCallOptions`](./tokenizers#module_tokenizers.TokenizerCallOptions)<`string` | `string[]`, `boolean`>) _optional_ — Additional tokenization options.
 
-    textTTextThe text to tokenize.
+**Returns:** [`BatchEncoding`](./tokenizers#module_tokenizers.BatchEncoding)<[`BatchEncodingItem`](./tokenizers#module_tokenizers.BatchEncodingItem)<`string` | `string[]`, `boolean`>> — Object to be passed to the model.
 
-    
-    [options]TokenizerCallOptions.&lt;TText, TReturnTensor&gt;Additional tokenization options.
+#### `PreTrainedTokenizer.constructor(tokenizerJSON, tokenizerConfig)`
 
-      
+Create a new PreTrainedTokenizer instance.
 
-* * *
+**Parameters**
 
-### `preTrainedTokenizer._encode_text(text)` ⇒ Array | null
+- `tokenizerJSON` (`Object`) — The JSON of the tokenizer.
+- `tokenizerConfig` (`Object`) — The config of the tokenizer.
 
-Encodes a single text using the preprocessor pipeline of the tokenizer.
+#### `PreTrainedTokenizer.from_pretrained(pretrained_model_name_or_path, options)`
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: Array | null - The encoded tokens.  
+Loads a pretrained tokenizer from the given `pretrained_model_name_or_path`.
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+**Parameters**
 
-    textstring | nullThe text to encode.
+- `pretrained_model_name_or_path` (`string`) — The path to the pretrained tokenizer.
+- `options` ([`PretrainedTokenizerOptions`](./tokenizers#module_tokenizers.PretrainedTokenizerOptions)) — Additional options for loading the tokenizer.
 
-      
+**Returns:** `Promise`<[`PreTrainedTokenizer`](./tokenizers#module_tokenizers.PreTrainedTokenizer)> — A new instance of the `PreTrainedTokenizer` class.
 
-* * *
+**Throws**
 
-### `preTrainedTokenizer.tokenize(text, options)` ⇒ Array
+- `Error` — Throws an error if the tokenizer.json or tokenizer_config.json files are not found in the `pretrained_model_name_or_path`.
+
+#### `PreTrainedTokenizer.convert_tokens_to_ids(tokens)`
+
+Converts a token string (or a sequence of tokens) into a single integer id (or a sequence of ids), using the vocabulary.
+
+**Parameters**
+
+- `tokens` (`string` | `string[]`) — One or several token(s) to convert to token id(s).
+
+**Returns:** `number` | `number[]` — The token id or list of token ids.
+
+#### `PreTrainedTokenizer.tokenize(text, options)`
 
 Converts a string into a sequence of tokens.
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: Array - The list of tokens.  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `text` (`string`) — The sequence to be encoded.
+- `options` (`Object`) — An optional object containing the following properties:
+  - `pair` (`string` | `null`) _optional_ — A second sequence to be encoded with the first.
+  - `add_special_tokens` (`boolean`) _optional_ — defaults to `false` — Whether or not to add the special tokens associated with the corresponding model.
 
-    textstringThe sequence to be encoded.
+**Returns:** `string[]` — The list of tokens.
 
-    
-    optionsObjectAn optional object containing the following properties:
-
-    
-    [options.pair]string | nullA second sequence to be encoded with the first.
-
-    
-    [options.add_special_tokens]booleanfalseWhether or not to add the special tokens associated with the corresponding model.
-
-      
-
-* * *
-
-### `preTrainedTokenizer.encode(text, options)` ⇒ Array
+#### `PreTrainedTokenizer.encode(text, options)`
 
 Encodes a single text or a pair of texts using the model's tokenizer.
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: Array - An array of token IDs representing the encoded text(s).  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `text` (`string`) — The text to encode.
+- `options` (`Object`) — An optional object containing the following properties:
+  - `text_pair` (`string` | `null`) _optional_ — defaults to `null` — The optional second text to encode.
+  - `add_special_tokens` (`boolean`) _optional_ — defaults to `true` — Whether or not to add the special tokens associated with the corresponding model.
+  - `return_token_type_ids` (`boolean` | `null`) _optional_ — defaults to `null` — Whether to return token_type_ids.
 
-    textstringThe text to encode.
+**Returns:** `number[]` — An array of token IDs representing the encoded text(s).
 
-    
-    optionsObjectAn optional object containing the following properties:
-
-    
-    [options.text_pair]string | nullnullThe optional second text to encode.
-
-    
-    [options.add_special_tokens]booleantrueWhether or not to add the special tokens associated with the corresponding model.
-
-    
-    [options.return_token_type_ids]boolean | nullWhether to return token_type_ids.
-
-      
-
-* * *
-
-### `preTrainedTokenizer.batch_decode(batch, decode_args)` ⇒ Array
+#### `PreTrainedTokenizer.batch_decode(batch, decode_args)`
 
 Decode a batch of tokenized sequences.
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: Array - List of decoded sequences.  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `batch` (`number[][]` | [`Tensor`](./utils/tensor#module_utils/tensor.Tensor)) — List/Tensor of tokenized input sequences.
+- `decode_args` (`Object`) — (Optional) Object with decoding arguments.
 
-    batchArray | TensorList/Tensor of tokenized input sequences.
+**Returns:** `string[]` — List of decoded sequences.
 
-    
-    decode_argsObject(Optional) Object with decoding arguments.
-
-      
-
-* * *
-
-### `preTrainedTokenizer.decode(token_ids, [decode_args])` ⇒ string
+#### `PreTrainedTokenizer.decode(token_ids, [decode_args])`
 
 Decodes a sequence of token IDs back to a string.
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: string - The decoded string.  
-**Throws**:
+**Parameters**
 
-- Error If `token_ids` is not a non-empty array of integers.
+- `token_ids` (`number[]` | `bigint[]` | [`Tensor`](./utils/tensor#module_utils/tensor.Tensor)) — List/Tensor of token IDs to decode.
+- `decode_args` (`Object`) _optional_ — defaults to `{}`
+  - `skip_special_tokens` (`boolean`) _optional_ — defaults to `false` — If true, special tokens are removed from the output string.
+  - `clean_up_tokenization_spaces` (`boolean`) _optional_ — defaults to `true` — If true, spaces before punctuation and abbreviated forms are removed.
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+**Returns:** `string` — The decoded string.
 
-    token_idsArray | Array | TensorList/Tensor of token IDs to decode.
+**Throws**
 
-    
-    [decode_args]Object{}
-    
-    [decode_args.skip_special_tokens]booleanfalseIf true, special tokens are removed from the output string.
+- `Error` — If `token_ids` is not a non-empty array of integers.
 
-    
-    [decode_args.clean_up_tokenization_spaces]booleantrueIf true, spaces before punctuations and abbreviated forms are removed.
-
-      
-
-* * *
-
-### `preTrainedTokenizer.decode_single(token_ids, decode_args)` ⇒ string
+#### `PreTrainedTokenizer.decode_single(token_ids, decode_args)`
 
 Decode a single list of token ids to a string.
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: string - The decoded string  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `token_ids` (`number[]` | `bigint[]`) — List of token ids to decode
+- `decode_args` (`Object`) — Optional arguments for decoding
+  - `skip_special_tokens` (`boolean`) _optional_ — defaults to `false` — Whether to skip special tokens during decoding
+  - `clean_up_tokenization_spaces` (`boolean` | `null`) _optional_ — defaults to `null` — Whether to clean up tokenization spaces during decoding.
+    If null, the value is set to `this.decoder.cleanup` if it exists, falling back to `this.clean_up_tokenization_spaces` if it exists, falling back to `true`.
 
-    token_idsArray | ArrayList of token ids to decode
+**Returns:** `string` — The decoded string
 
-    
-    decode_argsObjectOptional arguments for decoding
-
-    
-    [decode_args.skip_special_tokens]booleanfalseWhether to skip special tokens during decoding
-
-    
-    [decode_args.clean_up_tokenization_spaces]boolean | nullWhether to clean up tokenization spaces during decoding.
-If null, the value is set to this.decoder.cleanup if it exists, falling back to this.clean_up_tokenization_spaces if it exists, falling back to true.
-
-      
-
-* * *
-
-### `preTrainedTokenizer.get_chat_template(options)` ⇒ string
+#### `PreTrainedTokenizer.get_chat_template(options)`
 
 Retrieve the chat template string used for tokenizing chat messages. This template is used
 internally by the `apply_chat_template` method and can also be used externally to retrieve the model's chat
 template for better generation tracking.
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: string - The chat template string.  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `options` (`Object`) — An optional object containing the following properties:
+  - `chat_template` (`string` | `null`) _optional_ — defaults to `null` — A Jinja template or the name of a template to use for this conversion.
+    It is usually not necessary to pass anything to this argument,
+    as the model's template will be used by default.
+  - `tools` (`Object[]`) _optional_ — defaults to `null` — A list of tools (callable functions) that will be accessible to the model. If the template does not
+    support function calling, this argument will have no effect. Each tool should be passed as a JSON Schema,
+    giving the name, description and argument types for the tool. See our
+    [chat templating guide](https://huggingface.co/docs/transformers/main/en/chat_templating#automated-function-conversion-for-tool-use)
+    for more information.
 
-    optionsObjectAn optional object containing the following properties:
+**Returns:** `string` — The chat template string.
 
-    
-    [options.chat_template]string | nullnullA Jinja template or the name of a template to use for this conversion.
-It is usually not necessary to pass anything to this argument,
-as the model&#39;s template will be used by default.
-
-    
-    [options.tools]ArrayA list of tools (callable functions) that will be accessible to the model. If the template does not
-support function calling, this argument will have no effect. Each tool should be passed as a JSON Schema,
-giving the name, description and argument types for the tool. See our
-chat templating guide
-for more information.
-
-      
-
-* * *
-
-### `preTrainedTokenizer.apply_chat_template(conversation, [options])` ⇒ ApplyChatTemplateReturn.&lt;TTokenize, TReturnTensor, TReturnDict&gt;
+#### `PreTrainedTokenizer.apply_chat_template(conversation, [options])`
 
 Converts a list of message objects with `"role"` and `"content"` keys to a list of token
 ids. This method is intended for use with chat models, and will read the tokenizer's chat_template attribute to
 determine the format and control tokens to use when converting.
 
-See [here](https://huggingface.co/docs/transformers/chat_templating) for more information.
+See the [chat templating guide](https://huggingface.co/docs/transformers/chat_templating) for more information.
+
+**Parameters**
+
+- `conversation` ([`Message`](./tokenizers#module_tokenizers.Message)[]) — A list of message objects with `"role"` and `"content"` keys,
+  representing the chat history so far.
+- `options` ([`ApplyChatTemplateOptions`](./tokenizers#module_tokenizers.ApplyChatTemplateOptions)<`boolean`, `boolean`, `boolean`>) _optional_ — Options controlling
+  template rendering and tokenization.
+
+**Returns:** [`ApplyChatTemplateReturn`](./tokenizers#module_tokenizers.ApplyChatTemplateReturn)<`boolean`, `boolean`, `boolean`> — The tokenized output.
 
 **Example:** Applying a chat template to a conversation.
-
 ```javascript
 import { AutoTokenizer } from "@huggingface/transformers";
 
@@ -344,383 +217,112 @@ const chat = [
 ]
 
 const text = tokenizer.apply_chat_template(chat, { tokenize: false });
-// "[INST] Hello, how are you? [/INST]I'm doing great. How can I help you today? [INST] I'd like to show off how chat templating works! [/INST]"
+// "<s>[INST] Hello, how are you? [/INST]I'm doing great. How can I help you today?</s> [INST] I'd like to show off how chat templating works! [/INST]"
 
 const input_ids = tokenizer.apply_chat_template(chat, { tokenize: true, return_tensor: false });
 // [1, 733, 16289, 28793, 22557, 28725, 910, 460, 368, 28804, 733, 28748, 16289, 28793, 28737, 28742, 28719, 2548, 1598, 28723, 1602, 541, 315, 1316, 368, 3154, 28804, 2, 28705, 733, 16289, 28793, 315, 28742, 28715, 737, 298, 1347, 805, 910, 10706, 5752, 1077, 3791, 28808, 733, 28748, 16289, 28793]
 ```
 
-**Kind**: instance method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: ApplyChatTemplateReturn.&lt;TTokenize, TReturnTensor, TReturnDict&gt; - The tokenized output.  
+## Type Definitions
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+### PretrainedTokenizerOptions
 
-    conversationArrayA list of message objects with &quot;role&quot; and &quot;content&quot; keys,
-representing the chat history so far.
+_Type:_ [`PretrainedOptions`](./utils/hub#module_utils/hub.PretrainedOptions)
 
-    
-    [options]ObjectAn optional object containing the following properties:
+### TextContent
 
-    
-    [options.chat_template]string | nullnullA Jinja template to use for this conversion. If
-this is not passed, the model&#39;s chat template will be used instead.
-
-    
-    [options.tools]ArrayA list of tools (callable functions) that will be accessible to the model. If the template does not
-support function calling, this argument will have no effect. Each tool should be passed as a JSON Schema,
-giving the name, description and argument types for the tool. See our
-chat templating guide
-for more information.
-
-    
-    [options.documents]Array.&lt;Record&gt;A list of dicts representing documents that will be accessible to the model if it is performing RAG
-(retrieval-augmented generation). If the template does not support RAG, this argument will have no
-effect. We recommend that each document should be a dict containing &quot;title&quot; and &quot;text&quot; keys. Please
-see the RAG section of the chat templating guide
-for examples of passing documents with chat templates.
-
-    
-    [options.add_generation_prompt]booleanfalseWhether to end the prompt with the token(s) that indicate
-the start of an assistant message. This is useful when you want to generate a response from the model.
-Note that this argument will be passed to the chat template, and so it must be supported in the
-template for this argument to have any effect.
-
-    
-    [options.tokenize]TTokenizetrueWhether to tokenize the output. If false, the output will be a string.
-
-    
-    [options.padding]booleanfalseWhether to pad sequences to the maximum length. Has no effect if tokenize is false.
-
-    
-    [options.truncation]booleanfalseWhether to truncate sequences to the maximum length. Has no effect if tokenize is false.
-
-    
-    [options.max_length]number | nullMaximum length (in tokens) to use for padding or truncation. Has no effect if tokenize is false.
-If not specified, the tokenizer&#39;s max_length attribute will be used as a default.
-
-    
-    [options.return_tensor]TReturnTensortrueWhether to return the output as a Tensor or an Array. Has no effect if tokenize is false.
-
-    
-    [options.return_dict]TReturnDicttrueWhether to return a dictionary with named outputs. Has no effect if tokenize is false.
-
-    
-    [options.tokenizer_kwargs]Object{}Additional options to pass to the tokenizer.
-
-      
-
-* * *
-
-### `PreTrainedTokenizer.from_pretrained(pretrained_model_name_or_path, options)` ⇒ Promise.&lt;PreTrainedTokenizer&gt;
-
-Loads a pre-trained tokenizer from the given `pretrained_model_name_or_path`.
-
-**Kind**: static method of [PreTrainedTokenizer](#module_tokenizers.PreTrainedTokenizer)  
-**Returns**: Promise.&lt;PreTrainedTokenizer&gt; - A new instance of the `PreTrainedTokenizer` class.  
-**Throws**:
-
-- Error Throws an error if the tokenizer.json or tokenizer_config.json files are not found in the `pretrained_model_name_or_path`.
-
-  
-    
-      ParamTypeDescription
-    
-  
-  
-
-    pretrained_model_name_or_pathstringThe path to the pre-trained tokenizer.
-
-    
-    optionsPretrainedTokenizerOptionsAdditional options for loading the tokenizer.
-
-      
-
-* * *
-
-## `tokenizers.loadTokenizer(pretrained_model_name_or_path, options)` ⇒ Promise.&lt;Array&gt;
-
-Loads a tokenizer from the specified path.
-
-**Kind**: static method of [tokenizers](#module_tokenizers)  
-**Returns**: Promise.&lt;Array&gt; - A promise that resolves with information about the loaded tokenizer.  
-
-  
-    
-      ParamTypeDescription
-    
-  
-  
-
-    pretrained_model_name_or_pathstringThe path to the tokenizer directory.
-
-    
-    optionsPretrainedTokenizerOptionsAdditional options for loading the tokenizer.
-
-      
-
-* * *
-
-## `tokenizers.prepareTensorForDecode(tensor)` ⇒ Array
-
-Helper function to convert a tensor to a list before decoding.
-
-**Kind**: static method of [tokenizers](#module_tokenizers)  
-**Returns**: Array - The tensor as a list.  
-
-  
-    
-      ParamTypeDescription
-    
-  
-  
-
-    tensorTensorThe tensor to convert.
-
-      
-
-* * *
-
-## `tokenizers._build_translation_inputs(self, raw_inputs, tokenizer_options, generate_kwargs)` ⇒ Object
-
-Helper function to build translation inputs for an `NllbTokenizer` or `M2M100Tokenizer`.
-
-**Kind**: static method of [tokenizers](#module_tokenizers)  
-**Returns**: Object - Object to be passed to the model.  
-
-  
-    
-      ParamTypeDescription
-    
-  
-  
-
-    selfPreTrainedTokenizerThe tokenizer instance.
-
-    
-    raw_inputsstring | ArrayThe text to tokenize.
-
-    
-    tokenizer_optionsObjectOptions to be sent to the tokenizer
-
-    
-    generate_kwargsObjectGeneration options.
-
-      
-
-* * *
-
-## `tokenizers~PretrainedTokenizerOptions` : [PretrainedOptions](#PretrainedOptions)
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
-
-* * *
-
-## `tokenizers~TextContent` : Object
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
 **Properties**
 
-  
-    
-      NameTypeDescription
-    
-  
-  
+- `type` (`'text'`) — The type of content (must be 'text').
+- `text` (`string`) — The text content.
 
-    type&#x27;text&#x27;The type of content (must be &#39;text&#39;).
+### ImageContent
 
-    
-    textstringThe text content.
-
-      
-
-* * *
-
-## `tokenizers~ImageContent` : Object
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
 **Properties**
 
-  
-    
-      NameTypeDescription
-    
-  
-  
+- `type` (`'image'`) — The type of content (must be 'image').
+- `image` (`string` | [`RawImage`](./utils/image#module_utils/image.RawImage)) _optional_ — Optional URL or instance of the image.
 
-    type&#x27;image&#x27;The type of content (must be &#39;image&#39;).
+  Note: This works for SmolVLM. Qwen2VL and Idefics3 have different implementations.
 
-    
-    [image]string | RawImageOptional URL or instance of the image.
-Note: This works for SmolVLM. Qwen2VL and Idefics3 have different implementations.
+### MessageContent
 
-      
+A single content block inside a chat message. Extend the union to add
+custom types (e.g. `AudioContent`) when targeting a specific model.
 
-* * *
+_Type:_ [`TextContent`](./tokenizers#module_tokenizers.TextContent) | [`ImageContent`](./tokenizers#module_tokenizers.ImageContent) | `{ type: string & {}, [key: string]: any }`
 
-## `tokenizers~MessageContent` : TextContent | ImageContent | Object
+### Message
 
-Base type for message content. This is a discriminated union that can be extended with additional content types.
-Example: `@typedef {TextContent | ImageContent | AudioContent} MessageContent`
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
-
-* * *
-
-## `tokenizers~Message` : Object
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
 **Properties**
 
-  
-    
-      NameTypeDescription
-    
-  
-  
+- `role` (`'user'` | `'assistant'` | `'system'` | `string` & `{}`) — The role of the message.
+- `content` (`string` | [`MessageContent`](./tokenizers#module_tokenizers.MessageContent)[]) — The content of the message. Can be a simple string or an array of content objects.
 
-    role&#x27;user&#x27; | &#x27;assistant&#x27; | &#x27;system&#x27; | stringThe role of the message.
+### BatchEncodingArrayItem
 
-    
-    contentstring | ArrayThe content of the message. Can be a simple string or an array of content objects.
+_Type:_ `number[]` | `number[][]`
 
-      
+### BatchEncodingItem
 
-* * *
+_Type:_ [`Tensor`](./utils/tensor#module_utils/tensor.Tensor) | [`BatchEncodingArrayItem`](./tokenizers#module_tokenizers.BatchEncodingArrayItem)<`string` | `string[]`>
 
-## `tokenizers~BatchEncodingArrayItem` : any
+### BatchEncoding
 
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
+The object returned from `tokenizer(text)`. The fields are a `Tensor` by
+default, or an `Array` when `return_tensor: false` is passed.
 
-* * *
-
-## `tokenizers~BatchEncodingItem` : any
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
-
-* * *
-
-## `tokenizers~BatchEncoding` : Object
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
 **Properties**
 
-  
-    
-      NameTypeDescription
-    
-  
-  
+- `input_ids` (`any`) — Token ids to be fed to the model.
+- `attention_mask` (`any`) — Mask indicating which tokens should be attended to (1) versus padded (0).
+- `token_type_ids` (`any`) _optional_ — Segment ids, present only for tokenizers that distinguish sequence A vs B (e.g. BERT).
 
-    input_idsTItemList of token ids to be fed to a model.
+### TokenizerCallOptions
 
-    
-    attention_maskTItemList of indices specifying which tokens should be attended to by the model.
+Options passed to `tokenizer(text, options)`.
 
-    
-    [token_type_ids]TItemList of token type ids to be fed to a model.
-
-      
-
-* * *
-
-## `tokenizers~TokenizerCallOptions` : Object
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
 **Properties**
 
-  
-    
-      NameTypeDefaultDescription
-    
-  
-  
+- `text_pair` (`string` | `null` | `string[]`) _optional_ — defaults to `null` — Optional second sequence to be encoded. Must match the shape of `text` — string when `text` is a string, array when `text` is an array.
+- `padding` (`boolean` | `'max_length'`) _optional_ — defaults to `false` — Whether to pad the input sequences.
+- `add_special_tokens` (`boolean`) _optional_ — defaults to `true` — Whether or not to add the special tokens associated with the corresponding model.
+- `truncation` (`boolean` | `null`) _optional_ — defaults to `null` — Whether to truncate the input sequences.
+- `max_length` (`number` | `null`) _optional_ — defaults to `null` — Maximum length of the returned list and optionally padding length.
+- `return_tensor` (`boolean`) _optional_ — defaults to `true` — Whether to return the results as Tensors or arrays.
+- `return_token_type_ids` (`boolean` | `null`) _optional_ — defaults to `null` — Whether to return the token type ids.
 
-    [text_pair]anyOptional second sequence to be encoded. If set, must be the same type as text.
+### ApplyChatTemplateOptions
 
-    
-    [padding]boolean | &#x27;max_length&#x27;falseWhether to pad the input sequences.
-
-    
-    [add_special_tokens]booleantrueWhether or not to add the special tokens associated with the corresponding model.
-
-    
-    [truncation]boolean | nullWhether to truncate the input sequences.
-
-    
-    [max_length]number | nullMaximum length of the returned list and optionally padding length.
-
-    
-    [return_tensor]TReturnTensortrueWhether to return the results as Tensors or arrays.
-
-    
-    [return_token_type_ids]boolean | nullWhether to return the token type ids.
-
-      
-
-* * *
-
-## `tokenizers~PreTrainedTokenizerCallback` : function
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
-
-* * *
-
-## `tokenizers~ApplyChatTemplateOptions` : Object
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
 **Properties**
 
-  
-    
-      NameTypeDefaultDescription
-    
-  
-  
+- `chat_template` (`string` | `null`) _optional_ — defaults to `null` — A Jinja template to use for this conversion. If omitted, the model's chat template is used.
+- `tools` (`Object[]` | `null`) _optional_ — defaults to `null` — JSON Schema tool definitions exposed to templates that support function calling.
+  See the [chat templating guide](https://huggingface.co/docs/transformers/main/en/chat_templating#automated-function-conversion-for-tool-use).
+- `documents` (`Record`<`string`, `string`>[] | `null`) _optional_ — defaults to `null` — Documents exposed to templates that support retrieval-augmented generation.
+  See the [RAG section](https://huggingface.co/docs/transformers/main/en/chat_templating#arguments-for-RAG) of the chat templating guide.
+- `add_generation_prompt` (`boolean`) _optional_ — defaults to `false` — Whether to end the prompt with the token(s) that indicate the start of an assistant message.
+  The template must support this argument for it to have any effect.
+- `tokenize` (`boolean`) _optional_ — defaults to `true` — Whether to tokenize the output. If false, the output will be a string.
+- `padding` (`boolean`) _optional_ — defaults to `false` — Whether to pad sequences to the maximum length. Has no effect if tokenize is false.
+- `truncation` (`boolean`) _optional_ — defaults to `false` — Whether to truncate sequences to the maximum length. Has no effect if tokenize is false.
+- `max_length` (`number` | `null`) _optional_ — defaults to `null` — Maximum length (in tokens) to use for padding or truncation. If omitted, the tokenizer's `max_length` is used.
+  Has no effect if tokenize is false.
+- `return_tensor` (`boolean`) _optional_ — defaults to `true` — Whether to return the output as a Tensor or an Array. Has no effect if tokenize is false.
+- `return_dict` (`boolean`) _optional_ — defaults to `true` — Whether to return a dictionary with named outputs. Has no effect if tokenize is false.
+- `tokenizer_kwargs` (`Object`) _optional_ — defaults to `{}` — Additional options to pass to the tokenizer.
 
-    [chat_template]string | nullnullA Jinja template to use for this conversion.
+### ApplyChatTemplateReturn
 
-    
-    [tools]Array | nullA list of tools (callable functions) that will be accessible to the model.
+_Type:_ `string` | [`BatchEncodingItem`](./tokenizers#module_tokenizers.BatchEncodingItem)<`string`, `boolean`> | [`BatchEncoding`](./tokenizers#module_tokenizers.BatchEncoding)<[`BatchEncodingItem`](./tokenizers#module_tokenizers.BatchEncodingItem)<`string`, `boolean`>>
 
-    
-    [documents]Array.&lt;Record&gt; | nullDocuments that will be accessible to the model.
+## Callbacks
 
-    
-    [add_generation_prompt]booleanfalseWhether to end the prompt with the token(s) that indicate the start of an assistant message.
+### PreTrainedTokenizerCallback
 
-    
-    [tokenize]TTokenizetrueWhether to tokenize the output. If false, the output will be a string.
+**Parameters**
 
-    
-    [padding]booleanfalseWhether to pad sequences to the maximum length. Has no effect if tokenize is false.
+- `text` (`string` | `string[]`)
+- `options` ([`TokenizerCallOptions`](./tokenizers#module_tokenizers.TokenizerCallOptions)<`string` | `string[]`, `boolean`>) _optional_
 
-    
-    [truncation]booleanfalseWhether to truncate sequences to the maximum length. Has no effect if tokenize is false.
-
-    
-    [max_length]number | nullMaximum length (in tokens) to use for padding or truncation. Has no effect if tokenize is false.
-
-    
-    [return_tensor]TReturnTensortrueWhether to return the output as a Tensor or an Array. Has no effect if tokenize is false.
-
-    
-    [return_dict]TReturnDicttrueWhether to return a dictionary with named outputs. Has no effect if tokenize is false.
-
-    
-    [tokenizer_kwargs]Object{}Additional options to pass to the tokenizer.
-
-      
-
-* * *
-
-## `tokenizers~ApplyChatTemplateReturn` : any
-
-**Kind**: inner typedef of [tokenizers](#module_tokenizers)  
-
-* * *
+**Returns:** [`BatchEncoding`](./tokenizers#module_tokenizers.BatchEncoding)<[`BatchEncodingItem`](./tokenizers#module_tokenizers.BatchEncodingItem)<`string` | `string[]`, `boolean`>>

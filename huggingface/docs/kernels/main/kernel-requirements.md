@@ -18,7 +18,7 @@ maintain an older `model`-type kernel repository.
 
 `kernels` only loads kernels from a curated set of trusted publishers by
 default. Loading from any other publisher raises an error unless the caller
-opts in with `trust_remote_code=True`:
+opts in with `trust_remote_code=True` or explicitly allowlists the repository:
 
 ```python
 # Trusted publisher: works without opt-in.
@@ -26,7 +26,17 @@ get_kernel("kernels-community/activation", version=1)
 
 # Untrusted publisher: must opt in explicitly.
 get_kernel("some-other-org/my-kernel", version=1, trust_remote_code=True)
+
+# Allow only specific repositories from untrusted publishers.
+get_kernel(
+    "some-other-org/my-kernel",
+    version=1,
+    trust_remote_code=["some-other-org/my-kernel"],
+)
 ```
+
+The repository IDs in the allowlist must match exactly. Other repositories
+from the same publisher remain subject to the default trust check.
 
 The Hub also exposes a `trustedKernelPublisher` flag on the kernel API and
 displays a corresponding badge in the UI.
@@ -69,6 +79,12 @@ metadata. Currently the following top-level keys are supported:
 - `name` (`str`, required): then name of the kernel. Replacing dashes
   by underscores should result in the module name of the kernel.
 - `version` (`int`, required): the kernel version number.
+- `kernels-minver` (`str`, optional): the minimum version of the `kernels`
+  Python library required to load the kernel (e.g. `"0.17.0"`). This key is
+  determined by the kernel builder from the features that the kernel uses,
+  it is not set by kernel authors. The `kernels` library raises an error when
+  loading a kernel that requires a newer version than the one that is
+  installed.
 - `license` (`str`, required): the kernel license in. Refer to the
   list of [supported license identifiers](https://huggingface.co/docs/hub/repositories-licenses).
 - `upstream` (`str`, optional): Git-compatible URL (passable to `git clone`)
@@ -282,8 +298,8 @@ fail on the build variants that were not rebuilt.
 
 ### Exceptions
 
-A version bump is not needed when every existing build variant is
-replaced by the new build:
+For the following types of kernels, some API changes do not require
+bumping the version:
 
 - Python-only (noarch) kernels, e.g. `torch-cuda`. All build variants get
   updated, so this issue does not exist.
@@ -293,6 +309,11 @@ replaced by the new build:
     versions.
   - Torch stable ABI kernels, as long as the CUDA versions that get built
     overlap with the current build variants.
+
+In the following cases no version bump is required for these types of kernels:
+
+- Adding new functions/methods/classes.
+- Adding new arguments with default values to a function/method/constructor, as long as the default values do not change previous behavior.
 
 ## Native Python module
 

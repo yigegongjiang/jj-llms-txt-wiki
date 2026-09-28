@@ -8,7 +8,7 @@
 
 #### Defined in[[authmethod.defined-in]]
 
-[inference/src/types.ts:169](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L169)
+[inference/src/types.ts:171](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L171)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[model.defined-in]]
 
-[inference/src/types.ts:170](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L170)
+[inference/src/types.ts:172](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L172)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in[[task.defined-in]]
 
-[inference/src/types.ts:171](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L171)
+[inference/src/types.ts:173](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L173)
 
 ___
 
@@ -52,4 +52,4 @@ ___
 
 #### Defined in[[urltransform.defined-in]]
 
-[inference/src/types.ts:172](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L172)
+[inference/src/types.ts:174](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L174)

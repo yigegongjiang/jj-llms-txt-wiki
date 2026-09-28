@@ -8,7 +8,7 @@
 
 #### Defined in[[accesstoken.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:16](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L16)
+[packages/hub/src/utils/XetBlob.ts:92](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L92)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in[[casurl.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:17](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L17)
+[packages/hub/src/utils/XetBlob.ts:93](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L93)
 
 ___
 
@@ -28,4 +28,4 @@ ___
 
 #### Defined in[[exp.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:18](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L18)
+[packages/hub/src/utils/XetBlob.ts:94](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L94)

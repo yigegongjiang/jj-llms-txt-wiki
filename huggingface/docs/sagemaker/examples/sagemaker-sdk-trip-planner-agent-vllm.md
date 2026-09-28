@@ -1,6 +1,6 @@
 # Build a reasoning trip-planning agent on Amazon SageMaker AI with Hugging Face vLLM
 
-Written by Dario SalvatiLast updated 2026-08-31
+Written by Dario SalvatiLast updated 2026-09-22
 
 ![](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/trip-planner-agent-vllm/cover.png)
 

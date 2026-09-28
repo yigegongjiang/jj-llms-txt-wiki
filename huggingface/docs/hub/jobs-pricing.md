@@ -13,7 +13,9 @@ If a running Job starts to fail, it will be automatically suspended and the bill
 
 ## Pricing
 
-Jobs are billed per minute based on the hardware used. Below are the available hardware options and their pricing.
+Jobs are billed per minute based on the hardware used. For example, 10 billable minutes on `a10g-small` costs approximately $0.17 in hardware charges.
+
+To manage spending, [set a timeout](#set-timeout-limits), [cancel a Job](#cancel-irrelevant-jobs), or [view your current usage](#view-current-compute-usage).
 
 ### CPU
 
@@ -90,12 +92,12 @@ In this case the Job runs under the organization account, and you can see it in 
 If your organization has [Resource Groups](./security-resource-groups) set up, you can attribute job costs to a specific resource group. To do so:
 
 1. You must be a member of the resource group.
-2. Pass the resource group's ID as the `namespace` when running the job.
+2. Pass the organization that owns the resource group as the `namespace`, and the resource group's ID as `resource_group_id`. Both are required: a resource group is only taken into account for Jobs billed to its organization.
 
 You can find the resource group's ID in your organization's Resource Groups settings page.
 
 ```bash
-hf jobs run --namespace <resource-group-id> ...
+hf jobs run --namespace my-org-name --resource-group-id <resource-group-id> ...
 ```
 
 In Python:
@@ -105,9 +107,12 @@ In Python:
 >>> run_job(
 ...     image="python:3.12",
 ...     command=["python", "-c", "print('Hello!')"],
-...     namespace="<resource-group-id>",
+...     namespace="my-org-name",
+...     resource_group_id="<resource-group-id>",
 ... )
 ```
+
+Organization and Resource Group admins can set [monthly spending limits](./security-resource-groups#spend-limits) for Jobs billed to the group.
 
 ### View current compute usage
 

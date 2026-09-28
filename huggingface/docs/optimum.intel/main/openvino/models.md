@@ -102,6 +102,7 @@ Here is the list of the supported architectures :
 - MiniCPM3
 - MiniCPM-o
 - MiniCPM-V
+- MiniCPM-V 4.5
 - Mistral
 - Mistral 3
 - Mixtral
@@ -134,9 +135,10 @@ Here is the list of the supported architectures :
 - Qwen3MoE
 - Qwen3-VL (including Qwen3-VL-Embedding)
 - Qwen3-Omni-MoE
-- Qwen3.5
-- Qwen3.5-MoE
-- Qwen3.6
+- Qwen3.5 (including its Multi-Token Prediction head)
+- Qwen3.5-MoE (including its Multi-Token Prediction head)
+- Qwen3.6 (including its Multi-Token Prediction head)
+- Qwen3.8-27B (including its Multi-Token Prediction head)
 - Qwen3-Next
 - RemBERT
 - ResNet
@@ -181,8 +183,10 @@ Here is the list of the supported architectures :
 - Sana
 - SanaSprint
 - LTX
-- LTX2
+- LTX-2
+- LTX-2.3
 - Qwen-Image
+- Qwen-Image-2.1
 - Z-Image
 
 ## [Timm](https://huggingface.co/docs/timm/index)
@@ -201,6 +205,9 @@ Here is the list of the supported architectures :
 ## [Qwen3-ASR](https://github.com/QwenLM/Qwen3-ASR)
 - All Qwen3-ASR models (automatic-speech-recognition)
 
+## [Qwen3-TTS](https://huggingface.co/collections/Qwen/qwen3-tts)
+- All Qwen3-TTS Base, CustomVoice and VoiceDesign models (text-to-speech)
+
 ## [FunASR](https://github.com/modelscope/FunASR)
 - Fun-ASR-Nano (automatic-speech-recognition)
 
@@ -213,6 +220,10 @@ Here is the list of the supported architectures :
 - Qwen3.5-*-DFlash
 - Qwen3.6-*-DFlash
 - Qwen3-Coder-30B-A3B-DFlash
+- gemma-4-31B-it-DFlash
+
+## [DeepSpec DFlash](https://github.com/deepseek-ai/DeepSpec)
+- dflash_qwen3_*
 
 ## [Ouro](https://huggingface.co/ByteDance/Ouro-1.4B)
 - Ouro-1.4B

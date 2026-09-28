@@ -4,6 +4,7 @@
 
 - [HubApiError](classes/HubApiError)
 - [InvalidApiResponseFormatError](classes/InvalidApiResponseFormatError)
+- [JsonStreamParseError](classes/JsonStreamParseError)
 - [SafetensorParseError](classes/SafetensorParseError)
 - [\_\_internal\_XetBlob](classes/_internal_XetBlob)
 
@@ -17,6 +18,7 @@
 - [CommitData](interfaces/CommitData)
 - [CommitDeletedEntry](interfaces/CommitDeletedEntry)
 - [CommitEditFile](interfaces/CommitEditFile)
+- [CommitEditFileParams](interfaces/CommitEditFileParams)
 - [CommitFile](interfaces/CommitFile)
 - [CommitInfo](interfaces/CommitInfo)
 - [CommitOutput](interfaces/CommitOutput)
@@ -31,6 +33,7 @@
 - [JobVolume](interfaces/JobVolume)
 - [LfsPathInfo](interfaces/LfsPathInfo)
 - [ListFileEntry](interfaces/ListFileEntry)
+- [MlxQuantizationConfig](interfaces/MlxQuantizationConfig)
 - [ModelConfig](interfaces/ModelConfig)
 - [ModelDerivedFields](interfaces/ModelDerivedFields)
 - [ModelEntry](interfaces/ModelEntry)
@@ -135,7 +138,44 @@ ___
 
 #### Defined in[[dtype.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:246](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L246)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:250](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L250)
+
+___
+
+### JsonStreamEvent
+
+Ƭ **JsonStreamEvent**: \{ `type`: ``"startObject"``  } \| \{ `type`: ``"endObject"``  } \| \{ `type`: ``"startArray"``  } \| \{ `type`: ``"endArray"``  } \| \{ `key`: `string` ; `type`: ``"key"``  } \| \{ `type`: ``"value"`` ; `value`: `string` \| `number` \| `boolean` \| ``null``  }
+
+Minimal, dependency-free, incremental (SAX-style) JSON parser.
+
+`JSON.parse` requires the whole document in memory twice (the source string + the resulting
+object tree), which makes it unusable for documents that are large but whose *interesting*
+content is tiny — e.g. a `model.safetensors.index.json` of a big MoE, where the 60 MB
+`weight_map` only exists to tell us the ~100 distinct shard filenames.
+
+This parser instead emits a flat event stream as bytes arrive, so the consumer can keep only
+what it cares about and let everything else be garbage collected. Memory usage is bounded by
+the size of the largest individual token (string / number), not by the size of the document.
+
+The implementation is a resumable state machine: any token may be split across chunk
+boundaries (including multi-byte UTF-8 sequences and `\uXXXX` escapes).
+
+Strictness: the accepted grammar is RFC 8259 (same as `JSON.parse`), minus a few checks that
+would cost a lot for little benefit here — notably number *shapes* are validated by `Number()`
+rather than by the state machine, so a handful of inputs `JSON.parse` rejects are accepted.
+Everything `JSON.parse` accepts is accepted, with identical values.
+
+**`Example`**
+
+```ts
+for await (const event of streamJson(blob.stream())) {
+  if (event.type === "key") { ... }
+}
+```
+
+#### Defined in[[jsonstreamevent.defined-in]]
+
+[packages/hub/src/utils/streamJson.ts:27](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/streamJson.ts#L27)
 
 ___
 
@@ -229,7 +269,7 @@ ___
 
 #### Defined in[[safetensorsfileheader.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:279](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L279)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:283](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L283)
 
 ___
 
@@ -239,7 +279,7 @@ ___
 
 #### Defined in[[safetensorsparsefromrepo.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:303](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L303)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:307](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L307)
 
 ___
 
@@ -249,7 +289,7 @@ ___
 
 #### Defined in[[safetensorsshardedheaders.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:301](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L301)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:305](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L305)
 
 ___
 
@@ -289,7 +329,7 @@ ___
 
 #### Defined in[[tensorname.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:245](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L245)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:249](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L249)
 
 ___
 
@@ -329,7 +369,7 @@ ___
 
 #### Defined in[[defaultrevision.defined-in]]
 
-[packages/hub/src/lib/snapshot-download.ts:12](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/snapshot-download.ts#L12)
+[packages/hub/src/lib/snapshot-download.ts:13](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/snapshot-download.ts#L13)
 
 ___
 
@@ -411,7 +451,7 @@ ___
 
 #### Defined in[[regexcommithash.defined-in]]
 
-[packages/hub/src/lib/download-file-to-cache-dir.ts:15](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/download-file-to-cache-dir.ts#L15)
+[packages/hub/src/lib/download-file-to-cache-dir.ts:16](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/download-file-to-cache-dir.ts#L16)
 
 ___
 
@@ -521,6 +561,37 @@ progress (0-1)
 #### Defined in[[internalsha256.defined-in]]
 
 [packages/hub/src/utils/sha256.ts:72](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/sha256.ts#L72)
+
+___
+
+### assertSafeShardFilename
+
+▸ **assertSafeShardFilename**(`filename`): `void`
+
+`weight_map` filenames come from a repo file, so they're attacker-controlled: they must stay
+relative paths inside the index's own directory.
+
+A literal `includes("..")` check isn't enough, because the URL the filename ends up in is parsed
+by the WHATWG URL parser *after* the check, and that parser percent-decodes dot segments:
+`%2e%2e` (or `.%2e`, `%2E%2E`, …) is a `..` segment for it, so it escapes the repo — and with a
+credential attached, the request lands authorized on another repo's `resolve` URL.
+
+So decode before validating (repeatedly, to catch `%252e%252e`), and reject anything that isn't a
+plain relative path.
+
+#### Parameters[[assertsafeshardfilename.parameters]]
+
+| Name | Type |
+| :------ | :------ |
+| `filename` | `string` |
+
+#### Returns[[assertsafeshardfilename.returns]]
+
+`void`
+
+#### Defined in[[assertsafeshardfilename.defined-in]]
+
+[packages/hub/src/lib/parse-safetensors-metadata.ts:453](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L453)
 
 ___
 
@@ -659,7 +730,7 @@ skipping bookkeeping tensors.
 
 #### Defined in[[computenumofparamsbydtypesinglefile.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:908](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L908)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:1207](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L1207)
 
 ___
 
@@ -1201,7 +1272,7 @@ the symlink to the blob object
 
 #### Defined in[[downloadfiletocachedir.defined-in]]
 
-[packages/hub/src/lib/download-file-to-cache-dir.ts:45](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/download-file-to-cache-dir.ts#L45)
+[packages/hub/src/lib/download-file-to-cache-dir.ts:46](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/download-file-to-cache-dir.ts#L46)
 
 ___
 
@@ -1224,6 +1295,29 @@ Duplicate a job (re-run with the same spec).
 #### Defined in[[duplicatejob.defined-in]]
 
 [packages/hub/src/lib/jobs/duplicate-job.ts:10](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/jobs/duplicate-job.ts#L10)
+
+___
+
+### encodeShardFilename
+
+▸ **encodeShardFilename**(`filename`): `string`
+
+Defense in depth: the download URL is built by string interpolation, so encode each path segment
+of the (already validated) filename rather than trusting it to be URL-safe.
+
+#### Parameters[[encodeshardfilename.parameters]]
+
+| Name | Type |
+| :------ | :------ |
+| `filename` | `string` |
+
+#### Returns[[encodeshardfilename.returns]]
+
+`string`
+
+#### Defined in[[encodeshardfilename.defined-in]]
+
+[packages/hub/src/lib/parse-safetensors-metadata.ts:512](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L512)
 
 ___
 
@@ -1328,7 +1422,7 @@ ___
 
 ### getQuantizationMultiplier
 
-▸ **getQuantizationMultiplier**(`tensorName`, `dtype`, `quantConfig?`, `expertDtype?`): `number`
+▸ **getQuantizationMultiplier**(`tensorName`, `dtype`, `quantConfig?`, `expertDtype?`, `mlxQuantizedModules?`): `number`
 
 Gets the parameter multiplier for a quantized tensor based on quantization method.
 
@@ -1342,6 +1436,7 @@ May be fractional — see `packingFactor`.
 | `dtype` | [`Dtype`](modules#dtype) |
 | `quantConfig?` | [`QuantizationConfig`](interfaces/QuantizationConfig) |
 | `expertDtype?` | `string` |
+| `mlxQuantizedModules?` | `ReadonlySet`\<`string`\> |
 
 #### Returns[[getquantizationmultiplier.returns]]
 
@@ -1349,7 +1444,7 @@ May be fractional — see `packingFactor`.
 
 #### Defined in[[getquantizationmultiplier.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:811](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L811)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:1095](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L1095)
 
 ___
 
@@ -1416,13 +1511,13 @@ no SyntaxError from attacker-controlled patterns in config.json).
 
 #### Defined in[[globmatch.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:715](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L715)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:989](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L989)
 
 ___
 
 ### isQuantizedTensor
 
-▸ **isQuantizedTensor**(`tensorName`, `quantConfig?`): `boolean`
+▸ **isQuantizedTensor**(`tensorName`, `quantConfig?`, `mlxQuantizedModules?`): `boolean`
 
 Determines if a tensor is quantized based on quantization config and tensor name.
 
@@ -1436,6 +1531,7 @@ pattern contains a `*` we fall back to proper glob matching for flexibility.
 | :------ | :------ |
 | `tensorName` | `string` |
 | `quantConfig?` | [`QuantizationConfig`](interfaces/QuantizationConfig) |
+| `mlxQuantizedModules?` | `ReadonlySet`\<`string`\> |
 
 #### Returns[[isquantizedtensor.returns]]
 
@@ -1443,7 +1539,7 @@ pattern contains a `*` we fall back to proper glob matching for flexibility.
 
 #### Defined in[[isquantizedtensor.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:751](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L751)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:1025](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L1025)
 
 ___
 
@@ -1681,7 +1777,7 @@ treat targets using any other regex syntax as non-matching.
 
 #### Defined in[[matchescompressedtensorstarget.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:783](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L783)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:1067](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L1067)
 
 ___
 
@@ -1864,7 +1960,7 @@ on Hugging Face using smart range requests to extract its metadata.
 
 #### Defined in[[parsesafetensorsmetadata.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:522](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L522)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:599](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L599)
 
 ▸ **parseSafetensorsMetadata**(`params`): `Promise`\<[`SafetensorsParseFromRepo`](modules#safetensorsparsefromrepo)\>
 
@@ -1880,7 +1976,7 @@ on Hugging Face using smart range requests to extract its metadata.
 
 #### Defined in[[parsesafetensorsmetadata.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:552](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L552)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:629](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L629)
 
 ___
 
@@ -1925,7 +2021,7 @@ computed count when we have one (a no-op for well-formed files, where the two ag
 
 #### Defined in[[parsetotalparameters.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:483](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L483)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:560](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L560)
 
 ___
 
@@ -2187,7 +2283,7 @@ It uses internally [downloadFileToCacheDir](modules#downloadfiletocachedir).
 
 #### Defined in[[snapshotdownload.defined-in]]
 
-[packages/hub/src/lib/snapshot-download.ts:19](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/snapshot-download.ts#L19)
+[packages/hub/src/lib/snapshot-download.ts:20](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/snapshot-download.ts#L20)
 
 ___
 
@@ -2286,6 +2382,29 @@ Returns an async iterable of metric chunks.
 
 ___
 
+### streamJson
+
+▸ **streamJson**(`source`, `options?`): `AsyncGenerator`\<[`JsonStreamEvent`](modules#jsonstreamevent), `void`, `undefined`\>
+
+#### Parameters[[streamjson.parameters]]
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `source` | `ReadableStream`\<`Uint8Array`\<`ArrayBufferLike`\>\> \| `AsyncIterable`\<`Uint8Array`\<`ArrayBufferLike`\>, `any`, `any`\> | - |
+| `options?` | `Object` | - |
+| `options.maxDepth?` | `number` | Maximum object/array nesting depth. **`Default`** ```ts 1_000 ``` |
+| `options.maxTokenLength?` | `number` | Maximum length, in characters, of a single string / number token. **`Default`** ```ts 16_000_000 ``` |
+
+#### Returns[[streamjson.returns]]
+
+`AsyncGenerator`\<[`JsonStreamEvent`](modules#jsonstreamevent), `void`, `undefined`\>
+
+#### Defined in[[streamjson.defined-in]]
+
+[packages/hub/src/utils/streamJson.ts:123](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/streamJson.ts#L123)
+
+___
+
 ### suspendScheduledJob
 
 ▸ **suspendScheduledJob**(`params`): `Promise`\<`void`\>
@@ -2316,7 +2435,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `params` | \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `commitDescription?`: `string` ; `commitTitle?`: `string` ; `fetch?`: (`input`: URL \| RequestInfo, `init?`: `RequestInit`) => `Promise`\<`Response`\>(`input`: `string` \| `URL` \| `Request`, `init?`: `RequestInit`) => `Promise`\<`Response`\> ; `file`: `URL` \| `File` \| \{ `content`: [`ContentSource`](modules#contentsource) ; `path`: `string`  } ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `parentCommit?`: `string` ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\> |
+| `params` | \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `commitDescription?`: `string` ; `commitTitle?`: `string` ; `fetch?`: (`input`: URL \| RequestInfo, `init?`: `RequestInit`) => `Promise`\<`Response`\>(`input`: `string` \| `URL` \| `Request`, `init?`: `RequestInit`) => `Promise`\<`Response`\> ; `file`: `URL` \| [`CommitEditFileParams`](interfaces/CommitEditFileParams) \| `File` \| \{ `content`: [`ContentSource`](modules#contentsource) ; `path`: `string`  } ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `parentCommit?`: `string` ; `rangeEditCache?`: [`RangeEditCache`](modules#rangeeditcache) ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\> |
 
 #### Returns[[uploadfile.returns]]
 
@@ -2324,7 +2443,7 @@ ___
 
 #### Defined in[[uploadfile.defined-in]]
 
-[packages/hub/src/lib/upload-file.ts:5](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/upload-file.ts#L5)
+[packages/hub/src/lib/upload-file.ts:39](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/upload-file.ts#L39)
 
 ___
 
@@ -2336,7 +2455,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `params` | \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `commitDescription?`: `string` ; `commitTitle?`: `string` ; `fetch?`: (`input`: URL \| RequestInfo, `init?`: `RequestInit`) => `Promise`\<`Response`\>(`input`: `string` \| `URL` \| `Request`, `init?`: `RequestInit`) => `Promise`\<`Response`\> ; `files`: (`URL` \| `File` \| \{ `content`: [`ContentSource`](modules#contentsource) ; `path`: `string`  })[] ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `maxFolderDepth?`: `number` ; `parentCommit?`: `string` ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\> |
+| `params` | \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `commitDescription?`: `string` ; `commitTitle?`: `string` ; `fetch?`: (`input`: URL \| RequestInfo, `init?`: `RequestInit`) => `Promise`\<`Response`\>(`input`: `string` \| `URL` \| `Request`, `init?`: `RequestInit`) => `Promise`\<`Response`\> ; `files`: (`URL` \| [`CommitEditFileParams`](interfaces/CommitEditFileParams) \| `File` \| \{ `content`: [`ContentSource`](modules#contentsource) ; `path`: `string`  })[] ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `maxFolderDepth?`: `number` ; `parentCommit?`: `string` ; `rangeEditCache?`: [`RangeEditCache`](modules#rangeeditcache) ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\> |
 
 #### Returns[[uploadfiles.returns]]
 
@@ -2344,7 +2463,7 @@ ___
 
 #### Defined in[[uploadfiles.defined-in]]
 
-[packages/hub/src/lib/upload-files.ts:5](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/upload-files.ts#L5)
+[packages/hub/src/lib/upload-files.ts:6](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/upload-files.ts#L6)
 
 ___
 
@@ -2361,7 +2480,7 @@ Set useWebWorkers to true in order to have progress events for hashing for model
 
 | Name | Type |
 | :------ | :------ |
-| `params` | \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `commitDescription?`: `string` ; `commitTitle?`: `string` ; `files`: (`URL` \| `File` \| \{ `content`: [`ContentSource`](modules#contentsource) ; `path`: `string`  })[] ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `maxFolderDepth?`: `number` ; `parentCommit?`: `string` ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\> |
+| `params` | \{ `abortSignal?`: `AbortSignal` ; `branch?`: `string` ; `commitDescription?`: `string` ; `commitTitle?`: `string` ; `files`: (`URL` \| [`CommitEditFileParams`](interfaces/CommitEditFileParams) \| `File` \| \{ `content`: [`ContentSource`](modules#contentsource) ; `path`: `string`  })[] ; `hubUrl?`: `string` ; `isPullRequest?`: `boolean` ; `maxFolderDepth?`: `number` ; `parentCommit?`: `string` ; `rangeEditCache?`: [`RangeEditCache`](modules#rangeeditcache) ; `repo`: [`RepoDesignation`](modules#repodesignation) ; `useWebWorkers?`: `boolean` \| \{ `minSize?`: `number` ; `poolSize?`: `number`  } ; `useXet?`: `boolean`  } & `Partial`\<`CredentialsParams`\> |
 
 #### Returns[[uploadfileswithprogress.returns]]
 
@@ -2369,7 +2488,7 @@ Set useWebWorkers to true in order to have progress events for hashing for model
 
 #### Defined in[[uploadfileswithprogress.defined-in]]
 
-[packages/hub/src/lib/upload-files-with-progress.ts:20](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/upload-files-with-progress.ts#L20)
+[packages/hub/src/lib/upload-files-with-progress.ts:21](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/upload-files-with-progress.ts#L21)
 
 ___
 
@@ -2397,7 +2516,7 @@ legitimately disagree (padding), so offsets are the only ground truth the format
 
 #### Defined in[[validatetensorentry.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:201](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L201)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:205](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L205)
 
 ___
 

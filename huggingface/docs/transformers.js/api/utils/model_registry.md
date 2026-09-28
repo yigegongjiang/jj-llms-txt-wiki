@@ -79,7 +79,7 @@ const output = await generator(
   [{ role: "user", content: "What is the capital of France?" }],
   { max_new_tokens: 256, do_sample: false },
 );
-console.log(output[0].generated_text.at(-1).content); // ...\n\nThe capital of France is **Paris**.
+console.log(output[0].generated_text.at(-1).content); // <think>...</think>\n\nThe capital of France is **Paris**.
 
 // Check if the model is cached (should be true now)
 cached = await ModelRegistry.is_cached(modelId, options);
@@ -99,233 +99,112 @@ cached = await ModelRegistry.is_cached(modelId, options);
 console.log(cached); // false
 ```
 
-* [utils/model_registry](#module_utils/model_registry)
-    * [.ModelRegistry](#module_utils/model_registry.ModelRegistry)
-        * [`.get_files(modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_files) ⇒ Promise.&lt;Array&gt;
-        * [`.get_pipeline_files(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_pipeline_files) ⇒ Promise.&lt;Array&gt;
-        * [`.get_model_files(modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_model_files) ⇒ Promise.&lt;Array&gt;
-        * [`.get_tokenizer_files(modelId)`](#module_utils/model_registry.ModelRegistry.get_tokenizer_files) ⇒ Promise.&lt;Array&gt;
-        * [`.get_processor_files(modelId)`](#module_utils/model_registry.ModelRegistry.get_processor_files) ⇒ Promise.&lt;Array&gt;
-        * [`.get_available_dtypes(modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_available_dtypes) ⇒ Promise.&lt;Array&gt;
-        * [`.is_cached(modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_cached) ⇒ Promise.&lt;boolean&gt;
-        * [`.is_cached_files(modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_cached_files) ⇒ [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult)
-        * [`.is_pipeline_cached(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_pipeline_cached) ⇒ Promise.&lt;boolean&gt;
-        * [`.is_pipeline_cached_files(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_pipeline_cached_files) ⇒ [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult)
-        * [`.get_file_metadata(path_or_repo_id, filename, [options])`](#module_utils/model_registry.ModelRegistry.get_file_metadata) ⇒ Promise.&lt;{exists: boolean, size: number, contentType: string, fromCache: boolean}&gt;
-        * [`.clear_cache(modelId, [options])`](#module_utils/model_registry.ModelRegistry.clear_cache) ⇒ [Promise.&lt;CacheClearResult&gt;](#CacheClearResult)
-        * [`.clear_pipeline_cache(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.clear_pipeline_cache) ⇒ [Promise.&lt;CacheClearResult&gt;](#CacheClearResult)
+## Classes
 
-* * *
-
-## utils/model_registry.ModelRegistry
+### ModelRegistry
 
 Static class for cache and file management operations.
 
-**Kind**: static class of [utils/model_registry](#module_utils/model_registry)  
-
-* [.ModelRegistry](#module_utils/model_registry.ModelRegistry)
-    * [`.get_files(modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_files) ⇒ Promise.&lt;Array&gt;
-    * [`.get_pipeline_files(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_pipeline_files) ⇒ Promise.&lt;Array&gt;
-    * [`.get_model_files(modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_model_files) ⇒ Promise.&lt;Array&gt;
-    * [`.get_tokenizer_files(modelId)`](#module_utils/model_registry.ModelRegistry.get_tokenizer_files) ⇒ Promise.&lt;Array&gt;
-    * [`.get_processor_files(modelId)`](#module_utils/model_registry.ModelRegistry.get_processor_files) ⇒ Promise.&lt;Array&gt;
-    * [`.get_available_dtypes(modelId, [options])`](#module_utils/model_registry.ModelRegistry.get_available_dtypes) ⇒ Promise.&lt;Array&gt;
-    * [`.is_cached(modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_cached) ⇒ Promise.&lt;boolean&gt;
-    * [`.is_cached_files(modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_cached_files) ⇒ [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult)
-    * [`.is_pipeline_cached(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_pipeline_cached) ⇒ Promise.&lt;boolean&gt;
-    * [`.is_pipeline_cached_files(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.is_pipeline_cached_files) ⇒ [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult)
-    * [`.get_file_metadata(path_or_repo_id, filename, [options])`](#module_utils/model_registry.ModelRegistry.get_file_metadata) ⇒ Promise.&lt;{exists: boolean, size: number, contentType: string, fromCache: boolean}&gt;
-    * [`.clear_cache(modelId, [options])`](#module_utils/model_registry.ModelRegistry.clear_cache) ⇒ [Promise.&lt;CacheClearResult&gt;](#CacheClearResult)
-    * [`.clear_pipeline_cache(task, modelId, [options])`](#module_utils/model_registry.ModelRegistry.clear_pipeline_cache) ⇒ [Promise.&lt;CacheClearResult&gt;](#CacheClearResult)
-
-* * *
-
-### `ModelRegistry.get_files(modelId, [options])` ⇒ Promise.&lt;Array&gt;
+#### `ModelRegistry.get_files(modelId, [options])`
 
 Get all files (model, tokenizer, processor) needed for a model.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;Array&gt; - Array of file paths  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `modelId` (`string`) — The model id (e.g., "onnx-community/bert-base-uncased-ONNX")
+- `options` (`Object`) _optional_ — Optional parameters
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — defaults to `null` — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — defaults to `null` — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — defaults to `null` — Override device
+  - `model_file_name` (`string`) _optional_ — defaults to `null` — Override the model file name (excluding .onnx suffix)
+  - `include_tokenizer` (`boolean`) _optional_ — defaults to `true` — Whether to check for tokenizer files
+  - `include_processor` (`boolean`) _optional_ — defaults to `true` — Whether to check for processor files
 
-    modelIdstringThe model id (e.g., &quot;onnx-community/bert-base-uncased-ONNX&quot;)
+**Returns:** `Promise`<`string[]`> — Array of file paths
 
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-    
-    [options.model_file_name]stringnullOverride the model file name (excluding .onnx suffix)
-
-    
-    [options.include_tokenizer]booleantrueWhether to check for tokenizer files
-
-    
-    [options.include_processor]booleantrueWhether to check for processor files
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const files = await ModelRegistry.get_files('onnx-community/gpt2-ONNX');
 console.log(files); // ['config.json', 'tokenizer.json', 'onnx/model_q4.onnx', ...]
 ```
 
-* * *
-
-### `ModelRegistry.get_pipeline_files(task, modelId, [options])` ⇒ Promise.&lt;Array&gt;
+#### `ModelRegistry.get_pipeline_files(task, modelId, [options])`
 
 Get all files needed for a specific pipeline task.
 Automatically determines which components are needed based on the task.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;Array&gt; - Array of file paths  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `task` (`string`) — The pipeline task (e.g., "text-generation", "background-removal")
+- `modelId` (`string`) — The model id (e.g., "onnx-community/bert-base-uncased-ONNX")
+- `options` (`Object`) _optional_ — Optional parameters
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — defaults to `null` — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — defaults to `null` — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — defaults to `null` — Override device
+  - `model_file_name` (`string`) _optional_ — defaults to `null` — Override the model file name (excluding .onnx suffix)
 
-    taskstringThe pipeline task (e.g., &quot;text-generation&quot;, &quot;background-removal&quot;)
+**Returns:** `Promise`<`string[]`> — Array of file paths
 
-    
-    modelIdstringThe model id (e.g., &quot;onnx-community/bert-base-uncased-ONNX&quot;)
-
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-    
-    [options.model_file_name]stringnullOverride the model file name (excluding .onnx suffix)
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const files = await ModelRegistry.get_pipeline_files('text-generation', 'onnx-community/gpt2-ONNX');
 console.log(files); // ['config.json', 'tokenizer.json', 'onnx/model_q4.onnx', ...]
 ```
 
-* * *
-
-### `ModelRegistry.get_model_files(modelId, [options])` ⇒ Promise.&lt;Array&gt;
+#### `ModelRegistry.get_model_files(modelId, [options])`
 
 Get model files needed for a specific model.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;Array&gt; - Array of model file paths  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `modelId` (`string`) — The model id
+- `options` (`Object`) _optional_ — Optional parameters
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — defaults to `null` — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — defaults to `null` — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — defaults to `null` — Override device
+  - `model_file_name` (`string`) _optional_ — defaults to `null` — Override the model file name (excluding .onnx suffix)
 
-    modelIdstringThe model id
+**Returns:** `Promise`<`string[]`> — Array of model file paths
 
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-    
-    [options.model_file_name]stringnullOverride the model file name (excluding .onnx suffix)
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const files = await ModelRegistry.get_model_files('onnx-community/bert-base-uncased-ONNX');
 console.log(files); // ['config.json', 'onnx/model_q4.onnx', 'generation_config.json']
 ```
 
-* * *
-
-### `ModelRegistry.get_tokenizer_files(modelId)` ⇒ Promise.&lt;Array&gt;
+#### `ModelRegistry.get_tokenizer_files(modelId)`
 
 Get tokenizer files needed for a specific model.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;Array&gt; - Array of tokenizer file paths  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `modelId` (`string`) — The model id
 
-    modelIdstringThe model id
+**Returns:** `Promise`<`string[]`> — Array of tokenizer file paths
 
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const files = await ModelRegistry.get_tokenizer_files('onnx-community/gpt2-ONNX');
 console.log(files); // ['tokenizer.json', 'tokenizer_config.json']
 ```
 
-* * *
-
-### `ModelRegistry.get_processor_files(modelId)` ⇒ Promise.&lt;Array&gt;
+#### `ModelRegistry.get_processor_files(modelId)`
 
 Get processor files needed for a specific model.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;Array&gt; - Array of processor file paths  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `modelId` (`string`) — The model id
 
-    modelIdstringThe model id
+**Returns:** `Promise`<`string[]`> — Array of processor file paths
 
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const files = await ModelRegistry.get_processor_files('onnx-community/vit-base-patch16-224-ONNX');
 console.log(files); // ['preprocessor_config.json']
 ```
 
-* * *
-
-### `ModelRegistry.get_available_dtypes(modelId, [options])` ⇒ Promise.&lt;Array&gt;
+#### `ModelRegistry.get_available_dtypes(modelId, [options])`
 
 Detects which quantization levels (dtypes) are available for a model
 by checking which ONNX files exist on the hub or locally.
@@ -333,363 +212,197 @@ by checking which ONNX files exist on the hub or locally.
 A dtype is considered available if all required model session files
 exist for that dtype.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;Array&gt; - Array of available dtype strings (e.g., ['fp32', 'fp16', 'q4', 'q8'])  
+An empty array means the model is accessible but has no complete set of ONNX files for any dtype.
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+**Parameters**
 
-    modelIdstringThe model id (e.g., &quot;onnx-community/all-MiniLM-L6-v2-ONNX&quot;)
+- `modelId` (`string`) — The model id (e.g., "onnx-community/all-MiniLM-L6-v2-ONNX")
+- `options` (`Object`) _optional_ — Optional parameters
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — defaults to `null` — Pre-loaded config
+  - `model_file_name` (`string`) _optional_ — defaults to `null` — Override the model file name (excluding .onnx suffix)
+  - `revision` (`string`) _optional_ — defaults to `'main'` — Model revision
+  - `cache_dir` (`string`) _optional_ — defaults to `null` — Custom cache directory
+  - `local_files_only` (`boolean`) _optional_ — defaults to `false` — Only check local files
 
-    
-    [options]ObjectOptional parameters
+**Returns:** `Promise`<`string[]`> — Array of available dtype strings (e.g., ['fp32', 'fp16', 'q4', 'q8']). Empty if the model has no ONNX files.
 
-    
-    [options.config]PretrainedConfigPre-loaded config
+**Throws**
 
-    
-    [options.model_file_name]stringnullOverride the model file name (excluding .onnx suffix)
+- `ModelFileNotFoundError` — If the model is missing or inaccessible. The Hub returns 401 for nonexistent repositories.
+- `Error` — On network or server failures.
 
-    
-    [options.revision]string&quot;&#x27;main&#x27;&quot;Model revision
-
-    
-    [options.cache_dir]stringnullCustom cache directory
-
-    
-    [options.local_files_only]booleanfalseOnly check local files
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const dtypes = await ModelRegistry.get_available_dtypes('onnx-community/all-MiniLM-L6-v2-ONNX');
 console.log(dtypes); // ['fp32', 'fp16', 'int8', 'uint8', 'q8', 'q4']
 ```
 
-* * *
-
-### `ModelRegistry.is_cached(modelId, [options])` ⇒ Promise.&lt;boolean&gt;
+#### `ModelRegistry.is_cached(modelId, [options])`
 
 Quickly checks if a model is fully cached by verifying `config.json` is present,
 then confirming all required files are cached.
 Returns a plain boolean — use `is_cached_files` if you need per-file detail.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;boolean&gt; - Whether all required files are cached  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `modelId` (`string`) — The model id
+- `options` (`Object`) _optional_ — Optional parameters
+  - `cache_dir` (`string`) _optional_ — Custom cache directory
+  - `revision` (`string`) _optional_ — Model revision (default: 'main')
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — defaults to `null` — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — defaults to `null` — Override device
 
-    modelIdstringThe model id
+**Returns:** `Promise`<`boolean`> — Whether all required files are cached
 
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.cache_dir]stringCustom cache directory
-
-    
-    [options.revision]stringModel revision (default: &#39;main&#39;)
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const cached = await ModelRegistry.is_cached('onnx-community/bert-base-uncased-ONNX');
 console.log(cached); // true or false
 ```
 
-* * *
-
-### `ModelRegistry.is_cached_files(modelId, [options])` ⇒ [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult)
+#### `ModelRegistry.is_cached_files(modelId, [options])`
 
 Checks if all files for a given model are already cached, with per-file detail.
 Automatically determines which files are needed using get_files().
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult) - Object with allCached boolean and files array with cache status  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `modelId` (`string`) — The model id
+- `options` (`Object`) _optional_ — Optional parameters
+  - `cache_dir` (`string`) _optional_ — Custom cache directory
+  - `revision` (`string`) _optional_ — Model revision (default: 'main')
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — defaults to `null` — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — defaults to `null` — Override device
 
-    modelIdstringThe model id
+**Returns:** `Promise`<`CacheCheckResult`> — Object with allCached boolean and files array with cache status
 
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.cache_dir]stringCustom cache directory
-
-    
-    [options.revision]stringModel revision (default: &#39;main&#39;)
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const status = await ModelRegistry.is_cached_files('onnx-community/bert-base-uncased-ONNX');
 console.log(status.allCached); // true or false
 console.log(status.files); // [{ file: 'config.json', cached: true }, ...]
 ```
 
-* * *
-
-### `ModelRegistry.is_pipeline_cached(task, modelId, [options])` ⇒ Promise.&lt;boolean&gt;
+#### `ModelRegistry.is_pipeline_cached(task, modelId, [options])`
 
 Quickly checks if all files for a specific pipeline task are cached by verifying
 `config.json` is present, then confirming all required files are cached.
 Returns a plain boolean — use `is_pipeline_cached_files` if you need per-file detail.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;boolean&gt; - Whether all required files are cached  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `task` (`string`) — The pipeline task (e.g., "text-generation", "background-removal")
+- `modelId` (`string`) — The model id
+- `options` (`Object`) _optional_ — Optional parameters
+  - `cache_dir` (`string`) _optional_ — Custom cache directory
+  - `revision` (`string`) _optional_ — Model revision (default: 'main')
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — defaults to `null` — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — defaults to `null` — Override device
 
-    taskstringThe pipeline task (e.g., &quot;text-generation&quot;, &quot;background-removal&quot;)
+**Returns:** `Promise`<`boolean`> — Whether all required files are cached
 
-    
-    modelIdstringThe model id
-
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.cache_dir]stringCustom cache directory
-
-    
-    [options.revision]stringModel revision (default: &#39;main&#39;)
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const cached = await ModelRegistry.is_pipeline_cached('text-generation', 'onnx-community/gpt2-ONNX');
 console.log(cached); // true or false
 ```
 
-* * *
-
-### `ModelRegistry.is_pipeline_cached_files(task, modelId, [options])` ⇒ [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult)
+#### `ModelRegistry.is_pipeline_cached_files(task, modelId, [options])`
 
 Checks if all files for a specific pipeline task are already cached, with per-file detail.
 Automatically determines which components are needed based on the task.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: [Promise.&lt;CacheCheckResult&gt;](#CacheCheckResult) - Object with allCached boolean and files array with cache status  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `task` (`string`) — The pipeline task (e.g., "text-generation", "background-removal")
+- `modelId` (`string`) — The model id
+- `options` (`Object`) _optional_ — Optional parameters
+  - `cache_dir` (`string`) _optional_ — Custom cache directory
+  - `revision` (`string`) _optional_ — Model revision (default: 'main')
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — defaults to `null` — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — defaults to `null` — Override device
 
-    taskstringThe pipeline task (e.g., &quot;text-generation&quot;, &quot;background-removal&quot;)
+**Returns:** `Promise`<`CacheCheckResult`> — Object with allCached boolean and files array with cache status
 
-    
-    modelIdstringThe model id
-
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.cache_dir]stringCustom cache directory
-
-    
-    [options.revision]stringModel revision (default: &#39;main&#39;)
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const status = await ModelRegistry.is_pipeline_cached_files('text-generation', 'onnx-community/gpt2-ONNX');
 console.log(status.allCached); // true or false
 console.log(status.files); // [{ file: 'config.json', cached: true }, ...]
 ```
 
-* * *
-
-### `ModelRegistry.get_file_metadata(path_or_repo_id, filename, [options])` ⇒ Promise.&lt;{exists: boolean, size: number, contentType: string, fromCache: boolean}&gt;
+#### `ModelRegistry.get_file_metadata(path_or_repo_id, filename, [options])`
 
 Get metadata for a specific file without downloading it.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: Promise.&lt;{exists: boolean, size: number, contentType: string, fromCache: boolean}&gt; - File metadata  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `path_or_repo_id` (`string`) — Model id or path
+- `filename` (`string`) — The file name
+- `options` ([`PretrainedOptions`](./hub#module_utils/hub.PretrainedOptions)) _optional_ — Optional parameters
 
-    path_or_repo_idstringModel id or path
+**Returns:** `Promise`<`{ exists: boolean, size?: number, contentType?: string, fromCache?: boolean }`> — File metadata. `exists: false` means the file was not found.
 
-    
-    filenamestringThe file name
+**Throws**
 
-    
-    [options]PretrainedOptionsOptional parameters
+- `ModelFileNotFoundError` — If the file is missing or inaccessible. The Hub returns 401 for nonexistent repositories.
+- `Error` — On network or server failures.
 
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const metadata = await ModelRegistry.get_file_metadata('onnx-community/gpt2-ONNX', 'config.json');
 console.log(metadata.exists, metadata.size); // true, 665
 ```
 
-* * *
-
-### `ModelRegistry.clear_cache(modelId, [options])` ⇒ [Promise.&lt;CacheClearResult&gt;](#CacheClearResult)
+#### `ModelRegistry.clear_cache(modelId, [options])`
 
 Clears all cached files for a given model.
 Automatically determines which files are needed and removes them from the cache.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: [Promise.&lt;CacheClearResult&gt;](#CacheClearResult) - Object with deletion statistics and file status  
+**Parameters**
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+- `modelId` (`string`) — The model id (e.g., "onnx-community/gpt2-ONNX")
+- `options` (`Object`) _optional_ — Optional parameters
+  - `cache_dir` (`string`) _optional_ — Custom cache directory
+  - `revision` (`string`) _optional_ — Model revision (default: 'main')
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — Override device
+  - `include_tokenizer` (`boolean`) _optional_ — defaults to `true` — Whether to clear tokenizer files
+  - `include_processor` (`boolean`) _optional_ — defaults to `true` — Whether to clear processor files
 
-    modelIdstringThe model id (e.g., &quot;onnx-community/gpt2-ONNX&quot;)
+**Returns:** `Promise`<`CacheClearResult`> — Object with deletion statistics and file status
 
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.cache_dir]stringCustom cache directory
-
-    
-    [options.revision]stringModel revision (default: &#39;main&#39;)
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-    
-    [options.include_tokenizer]booleantrueWhether to clear tokenizer files
-
-    
-    [options.include_processor]booleantrueWhether to clear processor files
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const result = await ModelRegistry.clear_cache('onnx-community/bert-base-uncased-ONNX');
 console.log(`Deleted ${result.filesDeleted} of ${result.filesCached} cached files`);
 ```
 
-* * *
-
-### `ModelRegistry.clear_pipeline_cache(task, modelId, [options])` ⇒ [Promise.&lt;CacheClearResult&gt;](#CacheClearResult)
+#### `ModelRegistry.clear_pipeline_cache(task, modelId, [options])`
 
 Clears all cached files for a specific pipeline task.
 Automatically determines which components are needed based on the task.
 
-**Kind**: static method of [ModelRegistry](#module_utils/model_registry.ModelRegistry)  
-**Returns**: [Promise.&lt;CacheClearResult&gt;](#CacheClearResult) - Object with deletion statistics and file status  
+**Parameters**
 
-  
-    
-      ParamTypeDescription
-    
-  
-  
+- `task` (`string`) — The pipeline task (e.g., "text-generation", "image-classification")
+- `modelId` (`string`) — The model id (e.g., "onnx-community/gpt2-ONNX")
+- `options` (`Object`) _optional_ — Optional parameters
+  - `cache_dir` (`string`) _optional_ — Custom cache directory
+  - `revision` (`string`) _optional_ — Model revision (default: 'main')
+  - `config` ([`PretrainedConfig`](../configs#module_configs.PretrainedConfig)) _optional_ — Pre-loaded config
+  - `dtype` ([`DataType`](../transformers#module_transformers.DataType) | `Record`<`string`, [`DataType`](../transformers#module_transformers.DataType)>) _optional_ — Override dtype
+  - `device` ([`DeviceType`](../transformers#module_transformers.DeviceType) | `Record`<`string`, [`DeviceType`](../transformers#module_transformers.DeviceType)>) _optional_ — Override device
 
-    taskstringThe pipeline task (e.g., &quot;text-generation&quot;, &quot;image-classification&quot;)
+**Returns:** `Promise`<`CacheClearResult`> — Object with deletion statistics and file status
 
-    
-    modelIdstringThe model id (e.g., &quot;onnx-community/gpt2-ONNX&quot;)
-
-    
-    [options]ObjectOptional parameters
-
-    
-    [options.cache_dir]stringCustom cache directory
-
-    
-    [options.revision]stringModel revision (default: &#39;main&#39;)
-
-    
-    [options.config]PretrainedConfigPre-loaded config
-
-    
-    [options.dtype]DataType | Record.&lt;string, DataType&gt;Override dtype
-
-    
-    [options.device]DeviceType | Record.&lt;string, DeviceType&gt;Override device
-
-      
-
-**Example**  
-```js
+**Example:**
+```javascript
 const result = await ModelRegistry.clear_pipeline_cache('text-generation', 'onnx-community/gpt2-ONNX');
 console.log(`Deleted ${result.filesDeleted} of ${result.filesCached} cached files`);
 ```
-
-* * *

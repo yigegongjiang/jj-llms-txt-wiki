@@ -30,7 +30,7 @@ Blob.constructor
 
 #### Defined in[[constructor.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:312](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L312)
+[packages/hub/src/utils/XetBlob.ts:388](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L388)
 
 ## Properties
 
@@ -40,7 +40,7 @@ Blob.constructor
 
 #### Defined in[[reconstructioninfopromise.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:377](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L377)
+[packages/hub/src/utils/XetBlob.ts:453](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L453)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in[[accesstoken.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:301](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L301)
+[packages/hub/src/utils/XetBlob.ts:377](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L377)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in[[end.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:306](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L306)
+[packages/hub/src/utils/XetBlob.ts:382](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L382)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in[[fetch.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:300](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L300)
+[packages/hub/src/utils/XetBlob.ts:376](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L376)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in[[hash.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:304](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L304)
+[packages/hub/src/utils/XetBlob.ts:380](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L380)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in[[internallogging.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:307](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L307)
+[packages/hub/src/utils/XetBlob.ts:383](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L383)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in[[listener.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:309](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L309)
+[packages/hub/src/utils/XetBlob.ts:385](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L385)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in[[paralleldownloads.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:310](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L310)
+[packages/hub/src/utils/XetBlob.ts:386](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L386)
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 #### Defined in[[reconstructioninfo.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:308](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L308)
+[packages/hub/src/utils/XetBlob.ts:384](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L384)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in[[reconstructionurl.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:303](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L303)
+[packages/hub/src/utils/XetBlob.ts:379](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L379)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in[[refreshurl.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:302](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L302)
+[packages/hub/src/utils/XetBlob.ts:378](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L378)
 
 ___
 
@@ -180,7 +180,7 @@ ___
 
 #### Defined in[[start.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:305](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L305)
+[packages/hub/src/utils/XetBlob.ts:381](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L381)
 
 ___
 
@@ -214,7 +214,7 @@ Blob.size
 
 #### Defined in[[size.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:335](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L335)
+[packages/hub/src/utils/XetBlob.ts:411](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L411)
 
 ## Methods
 
@@ -228,7 +228,7 @@ Blob.size
 
 #### Defined in[[clone.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:339](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L339)
+[packages/hub/src/utils/XetBlob.ts:415](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L415)
 
 ___
 
@@ -242,7 +242,7 @@ ___
 
 #### Defined in[[fetch.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:414](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L414)
+[packages/hub/src/utils/XetBlob.ts:490](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L490)
 
 ___
 
@@ -256,7 +256,7 @@ ___
 
 #### Defined in[[loadreconstructioninfo.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:379](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L379)
+[packages/hub/src/utils/XetBlob.ts:455](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L455)
 
 ___
 
@@ -274,7 +274,7 @@ Blob.arrayBuffer
 
 #### Defined in[[arraybuffer.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:1321](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1321)
+[packages/hub/src/utils/XetBlob.ts:1397](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1397)
 
 ___
 
@@ -308,7 +308,7 @@ ___
 
 #### Defined in[[response.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:1341](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1341)
+[packages/hub/src/utils/XetBlob.ts:1417](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1417)
 
 ___
 
@@ -333,7 +333,7 @@ Blob.slice
 
 #### Defined in[[slice.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:360](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L360)
+[packages/hub/src/utils/XetBlob.ts:436](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L436)
 
 ___
 
@@ -351,7 +351,7 @@ Blob.stream
 
 #### Defined in[[stream.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:1347](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1347)
+[packages/hub/src/utils/XetBlob.ts:1423](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1423)
 
 ___
 
@@ -369,4 +369,4 @@ Blob.text
 
 #### Defined in[[text.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:1337](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1337)
+[packages/hub/src/utils/XetBlob.ts:1413](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L1413)

@@ -1,14 +1,12 @@
 # Jobs Overview
 
-Run compute jobs on Hugging Face infrastructure with a familiar UV & Docker-like interface!
+Hugging Face Jobs runs your code on remote CPUs and GPUs. Use it to [train models](./jobs-training), run inference over datasets, or [process data](./jobs-large-datasets).
 
-UV & Docker-like CLI uv,run,ps,logs,stats,inspect Any Hardware CPUs to A100s &amp; TPUs Run Anything UV, Docker, HF Spaces &amp; more Pay-as-you-go Pay only for seconds used
+A Job runs a command in an environment on the hardware you choose. You can follow its status and logs from the terminal or on the Hub.
 
-The Hugging Face Hub provides compute for AI and data workflows via Jobs.
+[Start with the Quickstart](./jobs-quickstart) to run your first CPU and GPU Jobs, or [browse examples](./jobs-examples) for a workload to adapt.
 
-Jobs runs on Hugging Face infrastructure and aim at providing AI builders, Data engineers, developers and AI agents an easy access to cloud infrastructure to run their workloads. They are ideal to fine tune AI models and run inference with GPUs, but also for data ingestion and processing as well.
-
-A job is defined with a command to run (e.g. a UV or python command), a hardware flavor (CPU, GPU, TPU), and optionally a Docker image from Hugging Face Spaces or Docker Hub. Many jobs can run in parallel, which is useful e.g. for parameter tuning or parallel inference and data processing.
+UV & Docker-like CLI uv,run,ps,logs,stats,inspect CPUs &amp; GPUs Choose hardware for your workload Run your code Python scripts &amp; Docker images Pay-as-you-go Pay for the compute you use
 
 ## Run Jobs from anywhere
 
@@ -20,19 +18,25 @@ There are multiple tools you can use to run jobs:
 
 ## Run any workload
 
-The `hf` Jobs CLI and the `huggingface_hub` Python client offer a UV-like interface to run Python workloads. UV installs the required Python dependencies and run the Python script in one single command. Python dependencies may also be defined in a self-contained UV script, and in this case there is no need to specify anything but the UV script to run the Job.
+### Python scripts
+
+Use `hf jobs uv run` to run a Python script remotely. Specify its dependencies using `--with` or in a [script header](https://docs.astral.sh/uv/guides/scripts/#declaring-script-dependencies). Jobs uses uv to install those dependencies before running your code.
 
 ```diff
 - uv run <script.py>
 + hf jobs uv run <script.py>
 ```
 
-More generally, Hugging Face Jobs supports any workload based on Docker and a command. Jobs offers a Docker-like interface to rub Jobs, where you can specify a Docker image from Hugging Face Spaces or Docker Hub, as well as the command to run. Docker provides the ability to package ready-to-use environments as Docker images that are shared by the community or custom made. Therefore you may choose or define your Docker image based on what your workloads need (e.g. python, torch, vllm) and run any command. This is more advanced than using UV but provides more flexibility.
+### Docker images
+
+Use `hf jobs run` with a Docker image and the command to run. The image provides the tools and libraries your workload needs, whether you're using Python or another language. Choose an [existing image](./jobs-images), use one built from a [Docker Space](./spaces-sdks-docker), or build your own.
 
 ```diff
 - docker run <image> <command>
 + hf jobs run <image> <command>
 ```
+
+Many Jobs can run in parallel, for tasks such as parameter tuning, inference and data processing.
 
 ## Automate Jobs
 

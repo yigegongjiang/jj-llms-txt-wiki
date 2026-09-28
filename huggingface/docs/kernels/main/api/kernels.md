@@ -7,10 +7,10 @@
 #### kernels.get_kernel[[kernels.get_kernel]]
 
 ```python
-kernels.get_kernel(repo_id: str, revision: str | None = None, version: int | None = None, backend: str | None = None, user_agent: str | dict | None = None, trust_remote_code: bool | list[str] = False)
+kernels.get_kernel(repo_id: str, revision: str | None = None, version: int | None = None, backend: str | None = None, user_agent: str | dict | None = None, trust_remote_code: bool | list[str] = False, check_arch: bool = True)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L87)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L103)
 
 **Parameters:**
 
@@ -24,7 +24,9 @@ backend (*str*, *optional*) : The backend to load the kernel for. Can only be *c
 
 user_agent (*Union[str, dict]*, *optional*) : The *user_agent* info to pass to *snapshot_download()* for internal telemetry.
 
-trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of strings will be used to verify signing identities in a future release; for now it emits a warning and falls back to the default trust check.
+trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of repository IDs allows only those repositories in addition to repositories from trusted organisations.
+
+check_arch (*bool*, *optional*, defaults to *True*) : Whether to check that the kernel build supports the architecture (e.g. CUDA compute capability) of the current device. Kernels can support more architectures than they declare (e.g. through a Triton fallback), *check_arch=False* skips the check for such kernels.
 
 **Returns:** `*ModuleType*`
 
@@ -54,7 +56,7 @@ result = activation.relu(out, x)
 kernels.get_local_kernel(repo_path: Path, backend: str | None = None, trust_remote_code: bool | list[str] = False, user_agent: str | dict | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L157)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L185)
 
 **Parameters:**
 
@@ -64,7 +66,7 @@ backend (*str*, *optional*) : The backend to load the kernel for. Can only be *c
 
 user_agent (*Union[str, dict]*, *optional*) : The *user_agent* info to pass to *snapshot_download()* for internal telemetry.
 
-trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of strings will be used to verify signing identities in a future release; for now it emits a warning and falls back to the default trust check.
+trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of repository IDs allows only those repositories in addition to repositories from trusted organisations.
 
 **Returns:** `*ModuleType*`
 
@@ -79,10 +81,10 @@ If the kernel has any (transitive) dependencies, they will be downloaded.
 #### kernels.has_kernel[[kernels.has_kernel]]
 
 ```python
-kernels.has_kernel(repo_id: str, revision: str | None = None, version: int | None = None, backend: str | None = None, trust_remote_code: bool | list[str] = False)
+kernels.has_kernel(repo_id: str, revision: str | None = None, version: int | None = None, backend: str | None = None, trust_remote_code: bool | list[str] = False, check_arch: bool = True)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L210)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L239)
 
 **Parameters:**
 
@@ -94,7 +96,9 @@ version (*int*, *optional*) : The kernel version to download. Cannot be used tog
 
 backend (*str*, *optional*) : The backend to load the kernel for. Can only be *cpu* or the backend that Torch is compiled for. The backend will be detected automatically if not provided.
 
-trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of strings will be used to verify signing identities in a future release; for now it emits a warning and falls back to the default trust check.
+trust_remote_code (*bool | list[str]*, *optional*, defaults to *False*) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of repository IDs allows only those repositories in addition to repositories from trusted organisations.
+
+check_arch (*bool*, *optional*, defaults to *True*) : Whether to check that the kernel build supports the architecture (e.g. CUDA compute capability) of the current device. Kernels can support more architectures than they declare (e.g. through a Triton fallback), *check_arch=False* skips the check for such kernels.
 
 **Returns:** `*bool*`
 
@@ -155,7 +159,7 @@ for decision in get_kernel_variants("kernels-community/activation", version=1):
 kernels.get_loaded_kernels()
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/importer.py#L45)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/importer.py#L43)
 
 **Returns:** `list[LoadedKernel]`
 
@@ -185,7 +189,7 @@ for loaded in get_loaded_kernels():
 kernels.load_kernel(repo_id: str, lockfile: pathlib.Path | None, backend: str | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L270)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L311)
 
 **Parameters:**
 
@@ -214,7 +218,7 @@ If `lockfile` is not specified, the lockfile will be loaded from the caller's pa
 kernels.get_locked_kernel(repo_id: str, lockfile: pathlib.Path | None, trust_remote_code: bool | list[str] = False, user_agent: str | dict | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L313)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/load.py#L356)
 
 **Parameters:**
 
@@ -240,22 +244,22 @@ Get a kernel using a lock file.
 kernels.LoadedKernel(metadata: Metadata, module: module, repo_info: kernels.hf_hub.RepoInfo | None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/importer.py#L14)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/importer.py#L12)
 
 This dataclass provides information about a loaded kernel:
 
 - `metadata` (`Metadata`): kernel metadata.
 - `module` (`ModuleType`): the imported kernel module.
-- `repo_info` (`kernels.hf_hub.RepoInfo | None`): populated only for
-  kernels loaded via `get_kernel`. Loaders that work from a local path
-  (`get_local_kernel`) or a lockfile (`get_locked_kernel`, `load_kernel`)
-  leave this as `None`.
+- `repo_info` (`kernels.hf_hub.RepoInfo | None`): populated whenever the
+  Hub repository the kernel came from is known.
 
 The metadata includes the following properties that describe a kernel:
 
 - `id` (`str`): kernel identifier that is unique to the kernel version + backend.
 - `name` (`str`): the name of the kernel.
 - `version` (`int`): the version of the kernel.
+- `kernels_minver` (`Version | None`): the minimum `kernels` library
+  version required to load the kernel.
 - `license` (`str`): the license of the kernel.
 - `upstream` (`str | None`): the original upstream repository of the kernel.
 - `source` (`str | None`): the kernel-builder formatted source repository.
@@ -267,14 +271,14 @@ The metadata includes the following properties that describe a kernel:
 #### kernels.RepoInfo[[kernels.RepoInfo]]
 
 ```python
-kernels.RepoInfo(repo_id: str, revision: str)
+kernels.RepoInfo(repo_id: str, revision: Oid)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/hf_hub.py#L81)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/hf_hub.py#L83)
 
 This dataclass stores the origin of the kernel.
 
 The following fields are available:
 
 - `repo_id` (`str`): the Hub repository containing the kernel.
-- `revision` (`str`): the specific revision of the kernel.
+- `revision` (`Oid`): the commit of the kernel.

@@ -14,7 +14,7 @@
 
 #### Defined in[[args.defined-in]]
 
-[inference/src/types.ts:178](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L178)
+[inference/src/types.ts:180](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L180)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in[[mapping.defined-in]]
 
-[inference/src/types.ts:180](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L180)
+[inference/src/types.ts:182](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L182)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in[[model.defined-in]]
 
-[inference/src/types.ts:179](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L179)
+[inference/src/types.ts:181](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L181)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in[[outputtype.defined-in]]
 
-[inference/src/types.ts:182](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L182)
+[inference/src/types.ts:184](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L184)
 
 ___
 
@@ -54,4 +54,4 @@ ___
 
 #### Defined in[[task.defined-in]]
 
-[inference/src/types.ts:181](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L181)
+[inference/src/types.ts:183](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L183)

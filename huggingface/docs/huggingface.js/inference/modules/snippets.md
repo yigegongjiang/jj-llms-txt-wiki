@@ -21,7 +21,7 @@
 | Name | Type |
 | :------ | :------ |
 | `model` | `ModelDataMinimal` |
-| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
+| `provider` | ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"`` |
 | `inferenceProviderMapping?` | [`InferenceProviderMappingEntry`](../interfaces/InferenceProviderMappingEntry) |
 | `opts?` | `Record`\<`string`, `unknown`\> |
 
@@ -31,4 +31,4 @@
 
 #### Defined in[[getinferencesnippets.defined-in]]
 
-[inference/src/snippets/getInferenceSnippets.ts:421](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/snippets/getInferenceSnippets.ts#L421)
+[inference/src/snippets/getInferenceSnippets.ts:417](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/snippets/getInferenceSnippets.ts#L417)

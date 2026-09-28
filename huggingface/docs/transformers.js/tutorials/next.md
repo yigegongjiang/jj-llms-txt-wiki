@@ -9,12 +9,12 @@ The final product will look something like this:
 Useful links:
 
 - Demo site: [client-side](https://huggingface.co/spaces/Xenova/next-example-app) or [server-side](https://huggingface.co/spaces/Xenova/next-server-example-app)
-- Source code: [client-side](https://github.com/huggingface/transformers.js/tree/main/examples/next-client) or [server-side](https://github.com/huggingface/transformers.js/tree/main/examples/next-server)
+- Source code: [client-side](https://github.com/huggingface/transformers.js-examples/tree/main/next-client) or [server-side](https://github.com/huggingface/transformers.js-examples/tree/main/next-server)
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/) version 18+
-- [npm](https://www.npmjs.com/) version 9+
+- [Node.js](https://nodejs.org/en/) version 20+
+- [npm](https://www.npmjs.com/) version 10+
 
 ## Client-side inference
 
@@ -184,21 +184,25 @@ const onMessageReceived = (e) => {
 Finally, we can add a simple UI to the `Home` component, consisting of an input textbox and a preformatted text element to display the classification result:
 
 ```jsx
+<main className="flex min-h-screen flex-col items-center justify-center p-12">
+  <h1 className="text-5xl font-bold mb-2 text-center">Transformers.js</h1>
+  <h2 className="text-2xl mb-4 text-center">Next.js template</h2>
 
-  Transformers.js
-  Next.js template
-
-   {
+  <input
+    className="w-full max-w-xs p-2 border border-gray-300 rounded mb-4"
+    type="text"
+    placeholder="Enter text here"
+    onInput={(e) => {
       classify(e.target.value);
     }}
   />
 
   {ready !== null && (
-    
+    <pre className="bg-gray-100 p-2 rounded">
       {!ready || !result ? "Loading..." : JSON.stringify(result, null, 2)}
-    
+    </pre>
   )}
-
+</main>
 ```
 
 You can now run your application using the following command:
@@ -211,7 +215,7 @@ Visit the URL shown in the terminal (e.g., [http://localhost:3000/](http://local
 
 ### (Optional) Step 4: Build and deploy
 
-To build your application, simply run:
+To build your application, run:
 
 ```bash
 npm run build
@@ -225,7 +229,7 @@ For this demo, we will deploy our application as a static [Hugging Face Space](h
 2. Click the "Create space" button at the bottom of the page.
 3. Go to "Files" &rarr; "Add file" &rarr; "Upload files". Drag the files from the `out` folder into the upload box and click "Upload". After they have uploaded, scroll down to the button and click "Commit changes to main".
 
-**That's it!** Your application should now be live at `https://huggingface.co/spaces//`!
+**That's it!** Your application should now be live at `https://huggingface.co/spaces/<your-username>/<your-space-name>`!
 
 ## Server-side inference
 
@@ -370,22 +374,26 @@ export default function Home() {
     setResult(json);
   };
   return (
-    
-      Transformers.js
-      
+    <main className="flex min-h-screen flex-col items-center justify-center p-12">
+      <h1 className="text-5xl font-bold mb-2 text-center">Transformers.js</h1>
+      <h2 className="text-2xl mb-4 text-center">
         Next.js template (server-side)
-      
-       {
+      </h2>
+      <input
+        type="text"
+        className="w-full max-w-xs p-2 border border-gray-300 rounded mb-4"
+        placeholder="Enter text here"
+        onInput={(e) => {
           classify(e.target.value);
         }}
       />
 
       {ready !== null && (
-        
+        <pre className="bg-gray-100 p-2 rounded">
           {!ready || !result ? "Loading..." : JSON.stringify(result, null, 2)}
-        
+        </pre>
       )}
-    
+    </main>
   );
 }
 ```
@@ -402,7 +410,7 @@ Visit the URL shown in the terminal (e.g., [http://localhost:3000/](http://local
 
 For this demo, we will build and deploy our application to [Hugging Face Spaces](https://huggingface.co/docs/hub/spaces). If you haven't already, you can create a free Hugging Face account [here](https://huggingface.co/join).
 
-1. Create a new `Dockerfile` in your project's root folder. You can use our [example Dockerfile](https://github.com/huggingface/transformers.js/blob/main/examples/next-server/Dockerfile) as a template.
+1. Create a new `Dockerfile` in your project's root folder. You can use our [example Dockerfile](https://github.com/huggingface/transformers.js-examples/blob/main/next-server/Dockerfile) as a template.
 2. Visit [https://huggingface.co/new-space](https://huggingface.co/new-space) and fill in the form. Remember to select "Docker" as the space type (you can choose the "Blank" Docker template).
 3. Click the "Create space" button at the bottom of the page.
 4. Go to "Files" &rarr; "Add file" &rarr; "Upload files". Drag the files from your project folder (excluding `node_modules` and `.next`, if present) into the upload box and click "Upload". After they have uploaded, scroll down to the button and click "Commit changes to main".
@@ -419,4 +427,4 @@ For this demo, we will build and deploy our application to [Hugging Face Spaces]
    ---
    ```
 
-**That's it!** Your application should now be live at `https://huggingface.co/spaces//`!
+**That's it!** Your application should now be live at `https://huggingface.co/spaces/<your-username>/<your-space-name>`!

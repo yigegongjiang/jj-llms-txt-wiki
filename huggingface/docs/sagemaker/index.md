@@ -1,81 +1,83 @@
 # Hugging Face on AWS
 
-![cover](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/cover.png)
+Hugging Face partners with Amazon Web Services (AWS) to democratize artificial intelligence, enabling developers to seamlessly build, train, and deploy state-of-the-art machine learning models on AWS cloud infrastructure. This collaboration gives developers access to a growing catalog of pre-trained models and datasets from the Hugging Face Hub, through Hugging Face open-source libraries, across a broad spectrum of AWS services and hardware platforms.
 
-Hugging Face partners with Amazon Web Services (AWS) to democratize artificial intelligence (AI), enabling developers to seamlessly build, train, and deploy state-of-the-art machine learning models using AWS's robust cloud infrastructure. ​
+We build new experiences to train and deploy Hugging Face models, whether you use AWS AI platforms such as Amazon SageMaker AI and AWS Bedrock, or AWS compute services such as Elastic Container Service (ECS), Elastic Kubernetes Service (EKS), and Amazon Elastic Compute Cloud (EC2). We also develop tools to simplify the adoption of custom AI accelerators like AWS Inferentia and AWS Trainium, designed to enhance the performance and cost-efficiency of machine learning workloads.
 
-This collaboration aims to offer developers access to an everyday growing catalog of pre-trained models and dataset from the Hugging Face Hub, using Hugging Face open-source libraries across a broad spectrum of AWS services and hardware platforms.
+Whether you are building a first prototype or operating production workloads, you can choose the level of infrastructure control that fits your application.
 
-We build new experiences for developers to seamlessly train and deploy Hugging Face models whether they use AWS AI platforms such as Amazon SageMaker AI and AWS Bedrock, or AWS Compute services such as Elastic Container Service (ECS), Elastic Kubernetes Service (EKS), and virtual servers on Amazon Elastic Compute Cloud (EC2).
+## Where to start
 
-We develop new tools to simplify the adoption of custom AI accelerators like AWS Inferentia and AWS Trainium, designed to enhance the performance and cost-efficiency of machine learning workloads.
+Choose from the following options to quickly get started:
 
-By combining Hugging Face's open-source models and libraries with AWS's scalable and secure cloud services, developers can more easily and affordably incorporate advanced AI capabilities into their applications.
+  
+    Quickstart
+    Deploy and test a Hugging Face model with SageMaker JumpStart.
+    Deploy a model →
+  
+  
+    Choose a service
+    Compare SageMaker AI, Bedrock, AWS compute, and Inference Endpoints.
+    Compare options →
+  
+  
+    SageMaker SDK
+    Deploy any Hub model to a managed endpoint from Python.
+    Start from Python →
+  
 
-> [!NOTE]
-> These docs and examples use the [SageMaker Python SDK v3](https://github.com/aws/sagemaker-python-sdk), which introduces a new framework-agnostic API built around `ModelBuilder` (inference) and `ModelTrainer` (training), replacing the v2 `HuggingFaceModel` and `HuggingFace` classes. Install it with `pip install "sagemaker>=3.0.0"`.
+## Choose your path
 
-## Deploy models on AWS
+For a more in-depth exploration of the different options, choose from the following paths:
 
-Deploying Hugging Face models on AWS is streamlined through various services, each suited for different deployment scenarios. Here's how you can deploy your models using AWS and Hugging Face offerings.
+  
+    Amazon SageMaker AI
+    Train, fine-tune, and deploy models with managed jobs and endpoints. Use the Python SDK for programmatic workflows or JumpStart for a guided deployment.
+    
+      Deploy →
+      Train →
+      JumpStart →
+    
+  
+  
+    Amazon Bedrock
+    Combine JumpStart models with the managed Bedrock APIs and features such as Agents, Knowledge Bases, Guardrails, and Model Evaluation.
+    Deploy with Bedrock →
+  
+  
+    AWS compute
+    Run Hugging Face DLCs on Amazon EC2, ECS, or EKS when you need direct control over networking, orchestration, and infrastructure.
+    Explore EC2, ECS, and EKS →
+  
+  
+    Hugging Face Inference Endpoints
+    Deploy models on AWS infrastructure through a fully managed Hugging Face service, optimized for cost and throughput, without managing the serving stack yourself.
+    Create an Inference Endpoint →
+  
 
-You can deploy any Hugging Face Model on AWS with:
-- [Amazon Sagemaker SDK](#deploy-with-sagemaker-sdk)
-- [Amazon Sagemaker Jumpstart](#deploy-with-sagemaker-jumpstart)
-- [AWS Bedrock](#deploy-with-aws-bedrock)
-- [Hugging Face Inference Endpoints](#deploy-with-hugging-face-inference-endpoints)
-- [ECS, EKS, and EC2](#deploy-with-ecs-eks-and-ec2)
+## Explore the documentation
 
-### Deploy with Sagemaker SDK
+Explore containers, agent workflows, guides, and end-to-end examples for building with Hugging Face on AWS.
 
-Amazon SageMaker is a fully managed AWS service for building, training, and deploying machine learning models at scale. The SageMaker SDK simplifies interacting with SageMaker programmatically. Amazon SageMaker SDK provides a seamless integration specifically designed for Hugging Face models, simplifying the deployment process of managed endpoints. With this integration, you can quickly deploy pre-trained Hugging Face models or your own fine-tuned models directly into SageMaker-managed endpoints, significantly reducing setup complexity and time to production.
+  
+    Deep Learning Containers
+    What the DLCs are, how they work, and which images are available.
+  
+  
+    Agents
+    Connect agent harnesses to AWS-hosted models and manage SageMaker with skills.
+  
+  
+    Guides
+    Follow task-oriented training and deployment tutorials.
+  
+  
+    Examples
+    Explore complete notebooks for real workloads.
+  
 
-[Sagemaker SDK Quickstart](https://huggingface.co/docs/sagemaker/main/en/tutorials/sagemaker-sdk/sagemaker-sdk-quickstart)
+## Reference
 
-### Deploy with Sagemaker Jumpstart
-
-Amazon SageMaker JumpStart is a curated model catalog from which you can deploy a model with just a few clicks. We maintain a Hugging Face section in the catalog that will let you self-host the most famous open models in your VPC with performant default configurations, powered under the hood by [Hugging Face Deep Learning Catalogs (DLCs)](https://huggingface.co/docs/sagemaker/main/en/dlcs/introduction).
-
-[Sagemaker Jumpstart Quickstart](https://huggingface.co/docs/sagemaker/main/en/tutorials/jumpstart/jumpstart-quickstart)
-
-### Deploy with AWS Bedrock
-
-Amazon Bedrock enables developers to easily build and scale generative AI applications through a single API. With Bedrock Marketplace, you can now combine the ease of use of SageMaker JumpStart with the fully managed infrastructure of Amazon Bedrock, including compatibility with high-level APIs such as Agents, Knowledge Bases, Guardrails and Model Evaluations.
-
-[AWS Bedrock Quickstart](https://huggingface.co/docs/sagemaker/main/en/tutorials/bedrock/bedrock-quickstart)
-
-### Deploy with Hugging Face Inference Endpoints
-
-Hugging Face Inference Endpoints allow you to deploy models hosted directly by Hugging Face, fully managed and optimized for performance. It's ideal for quick deployment and scalable inference workloads.
-
-[Hugging Face Inference Endpoints Quickstart](https://huggingface.co/docs/inference-endpoints/guides/create_endpoint).
-
-### Deploy with ECS, EKS, and EC2
-
-Hugging Face provides Inference Deep Learning Containers (DLCs) to AWS users, optimized environments preconfigured with Hugging Face libraries for inference, natively integrated in SageMaker SDK and JumpStart. However, the HF DLCs can also be used across other AWS services like ECS, EKS, and EC2.
-
-AWS Elastic Container Service (ECS), Elastic Kubernetes Service (EKS), and Elastic Compute Cloud (EC2) allow you to leverage DLCs directly.
-
-[EC2, ECS and EKS Quickstart](https://huggingface.co/docs/sagemaker/main/en/tutorials/compute-services/compute-services-quickstart)
-
-## Train models on AWS
-
-Training Hugging Face models on AWS is streamlined through various services. Here's how you can fine-tune your models using AWS and Hugging Face offerings.
-
-You can fine-tune any Hugging Face Model on AWS with:
-- [Amazon Sagemaker SDK](#train-with-sagemaker-sdk)
-- [ECS, EKS, and EC2](#train-with-ecs-eks-and-ec2)
-
-### Train with Sagemaker SDK
-
-Amazon SageMaker is a fully managed AWS service for building, training, and deploying machine learning models at scale. The SageMaker SDK simplifies interacting with SageMaker programmatically. Amazon SageMaker SDK provides a seamless integration specifically designed for Hugging Face models, simplifying the training job management. With this integration, you can quickly create your own fine-tuned models, significantly reducing setup complexity and time to production.
-
-[Sagemaker SDK Quickstart](https://huggingface.co/docs/sagemaker/main/en/tutorials/sagemaker-sdk/sagemaker-sdk-quickstart)
-
-### Train with ECS, EKS, and EC2
-
-Hugging Face provides Training Deep Learning Containers (DLCs) to AWS users, optimized environments preconfigured with Hugging Face libraries for training, natively integrated in SageMaker SDK. However, the HF DLCs can also be used across other AWS services like ECS, EKS, and EC2.
-
-AWS Elastic Container Service (ECS), Elastic Kubernetes Service (EKS), and Elastic Compute Cloud (EC2) allow you to leverage DLCs directly.
-
-[EC2, ECS and EKS Quickstart](https://huggingface.co/docs/sagemaker/main/en/tutorials/compute-services/compute-services-quickstart)
+- [Deep Learning Containers](./get-started/dlcs)
+- [Inference Toolkit API](./reference/inference-toolkit)
+- [Resources](./reference/resources)

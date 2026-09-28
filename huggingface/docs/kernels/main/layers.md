@@ -27,6 +27,23 @@ The decorator does not change the behavior of the class -- it annotates
 the class with the given name (here `SiluAndMul`). The [kernelize()](/docs/kernels/main/en/api/layers#kernels.kernelize) function
 described below uses this name to look up kernels for the layer.
 
+Sometimes you only want to kernelize a layer depending on some state inside
+that layer. For instance, an MLP layer could support multiple activations, but
+a kernel that you want to register only supports one particular activation. In
+such cases, you can add a condition to a `use_kernel_forward_from_hub` decorator.
+The layer will then only be kernelized when the condition holds. The condition
+must be a callable that takes the instantiated layer and returns a `bool`. For
+example:
+
+```python
+@use_kernel_forward_from_hub(
+    "SwiGLUMLP",
+    condition=lambda module: module.config.hidden_act == "silu",
+)
+class MyMLP(nn.Module):
+    ...
+```
+
 ### External layers
 
 An existing layer that does not (yet) have the [use_kernel_forward_from_hub()](/docs/kernels/main/en/api/layers#kernels.use_kernel_forward_from_hub)
@@ -211,6 +228,24 @@ with use_kernel_mapping(kernel_layer_mapping):
 
 This ensures that the mapping is not active anymore outside the
 `with`-scope.
+
+### Attributing Hub requests
+
+Libraries and applications can identify the Hub requests made while loading a
+layer by passing optional user-agent metadata to [LayerRepository](/docs/kernels/main/en/api/layers#kernels.LayerRepository):
+
+```python
+layer_repo = LayerRepository(
+    repo_id="kernels-community/activation",
+    layer_name="SiluAndMul",
+    version=1,
+    user_agent={"my-library": "1.0.0"},
+)
+```
+
+`user_agent` accepts either a string or a dictionary. If it is omitted, no
+application-specific metadata is added. Setting `HF_HUB_DISABLE_TELEMETRY=1`
+disables user-agent telemetry, including metadata supplied this way.
 
 If the layer is stateless (it does not use member variables in its forward _or_ it was
 originally a function that was converted into a kernel layer with

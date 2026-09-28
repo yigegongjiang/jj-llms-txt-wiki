@@ -10,7 +10,7 @@ Concurrency controller tick interval, for tests and benchmarks.
 
 #### Defined in[[controllertickms.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:69](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L69)
+[packages/hub/src/utils/XetBlob.ts:145](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L145)
 
 ___
 
@@ -28,7 +28,7 @@ Ceiling for the auto-tuned number of concurrent xorb requests.
 
 #### Defined in[[maxconcurrency.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:55](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L55)
+[packages/hub/src/utils/XetBlob.ts:131](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L131)
 
 ___
 
@@ -46,7 +46,7 @@ derived from the file's reconstruction: 3x the largest xorb fetch, clamped to [6
 
 #### Defined in[[maxinflightbytes.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:61](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L61)
+[packages/hub/src/utils/XetBlob.ts:137](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L137)
 
 ___
 
@@ -72,4 +72,4 @@ Instrumentation callback for tests and benchmarks, called once per download.
 
 #### Defined in[[onstat.defined-in]]
 
-[packages/hub/src/utils/XetBlob.ts:65](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L65)
+[packages/hub/src/utils/XetBlob.ts:141](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/utils/XetBlob.ts#L141)

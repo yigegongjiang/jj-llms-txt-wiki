@@ -50,7 +50,7 @@ Instantiate a pretrained model from a pre-trained model configuration.
 reshape(batch_size: int, sequence_length: int, height: int = None, width: int = None)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L974)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L973)
 
 **Parameters:**
 
@@ -1177,10 +1177,10 @@ Example of feature extraction using `transformers.pipelines`:
 #### optimum.intel.OVStableDiffusionPipeline[[optimum.intel.OVStableDiffusionPipeline]]
 
 ```python
-optimum.intel.OVStableDiffusionPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
+optimum.intel.OVStableDiffusionPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, vision_encoder: typing.Optional[openvino.Model] = None, text_encoder_i2i: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, processor: typing.Optional[typing.Any] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L1802)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L2176)
 
 OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDiffusionPipeline](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion#diffusers.StableDiffusionPipeline).
 
@@ -1190,17 +1190,17 @@ OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDif
 forward(*args, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1014)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1013)
 
 ### OVStableDiffusionXLPipeline[[optimum.intel.OVStableDiffusionXLPipeline]]
 
 #### optimum.intel.OVStableDiffusionXLPipeline[[optimum.intel.OVStableDiffusionXLPipeline]]
 
 ```python
-optimum.intel.OVStableDiffusionXLPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
+optimum.intel.OVStableDiffusionXLPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, vision_encoder: typing.Optional[openvino.Model] = None, text_encoder_i2i: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, processor: typing.Optional[typing.Any] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L1836)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L2210)
 
 OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDiffusionXLPipeline](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLPipeline).
 
@@ -1210,17 +1210,17 @@ OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDif
 forward(*args, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1014)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1013)
 
 ### OVLatentConsistencyModelPipeline[[optimum.intel.OVLatentConsistencyModelPipeline]]
 
 #### optimum.intel.OVLatentConsistencyModelPipeline[[optimum.intel.OVLatentConsistencyModelPipeline]]
 
 ```python
-optimum.intel.OVLatentConsistencyModelPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
+optimum.intel.OVLatentConsistencyModelPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, vision_encoder: typing.Optional[openvino.Model] = None, text_encoder_i2i: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, processor: typing.Optional[typing.Any] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L1937)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L2311)
 
 OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.LatentConsistencyModelPipeline](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/latent_consistency#diffusers.LatentConsistencyModelPipeline).
 
@@ -1230,7 +1230,7 @@ OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.LatentCon
 forward(*args, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1014)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1013)
 
 ## Image-to-image
 
@@ -1239,10 +1239,10 @@ forward(*args, **kwargs)
 #### optimum.intel.OVStableDiffusionImg2ImgPipeline[[optimum.intel.OVStableDiffusionImg2ImgPipeline]]
 
 ```python
-optimum.intel.OVStableDiffusionImg2ImgPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
+optimum.intel.OVStableDiffusionImg2ImgPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, vision_encoder: typing.Optional[openvino.Model] = None, text_encoder_i2i: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, processor: typing.Optional[typing.Any] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L1812)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L2186)
 
 OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDiffusionImg2ImgPipeline](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion_img2img#diffusers.StableDiffusionImg2ImgPipeline).
 
@@ -1252,17 +1252,17 @@ OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDif
 forward(*args, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1014)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1013)
 
 ### OVStableDiffusionXLImg2ImgPipeline[[optimum.intel.OVStableDiffusionXLImg2ImgPipeline]]
 
 #### optimum.intel.OVStableDiffusionXLImg2ImgPipeline[[optimum.intel.OVStableDiffusionXLImg2ImgPipeline]]
 
 ```python
-optimum.intel.OVStableDiffusionXLImg2ImgPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
+optimum.intel.OVStableDiffusionXLImg2ImgPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, vision_encoder: typing.Optional[openvino.Model] = None, text_encoder_i2i: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, processor: typing.Optional[typing.Any] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L1859)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L2233)
 
 OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDiffusionXLImg2ImgPipeline](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLImg2ImgPipeline).
 
@@ -1272,7 +1272,7 @@ OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDif
 forward(*args, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1014)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1013)
 
 ## Inpainting
 
@@ -1281,10 +1281,10 @@ forward(*args, **kwargs)
 #### optimum.intel.OVStableDiffusionInpaintPipeline[[optimum.intel.OVStableDiffusionInpaintPipeline]]
 
 ```python
-optimum.intel.OVStableDiffusionInpaintPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
+optimum.intel.OVStableDiffusionInpaintPipeline(scheduler: SchedulerMixin, unet: typing.Optional[openvino.Model] = None, vae_decoder: typing.Optional[openvino.Model] = None, vae_encoder: typing.Optional[openvino.Model] = None, text_encoder: typing.Optional[openvino.Model] = None, text_encoder_2: typing.Optional[openvino.Model] = None, text_encoder_3: typing.Optional[openvino.Model] = None, transformer: typing.Optional[openvino.Model] = None, vision_encoder: typing.Optional[openvino.Model] = None, text_encoder_i2i: typing.Optional[openvino.Model] = None, connectors: typing.Optional[openvino.Model] = None, audio_vae_decoder: typing.Optional[openvino.Model] = None, vocoder: typing.Optional[openvino.Model] = None, tokenizer: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_2: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, tokenizer_3: typing.Optional[transformers.models.clip.tokenization_clip.CLIPTokenizer] = None, feature_extractor: typing.Optional[transformers.models.clip.image_processing_clip.CLIPImageProcessor] = None, processor: typing.Optional[typing.Any] = None, force_zeros_for_empty_prompt: bool = True, requires_aesthetics_score: bool = False, add_watermarker: typing.Optional[bool] = None, device: str = 'CPU', compile: bool = True, compile_only: bool = False, dynamic_shapes: bool = True, ov_config: typing.Optional[typing.Dict[str, str]] = None, model_save_dir: typing.Union[str, pathlib.Path, optimum.intel.openvino.utils.TemporaryDirectory, NoneType] = None, quantization_config: typing.Union[optimum.intel.openvino.configuration.OVWeightQuantizationConfig, typing.Dict, NoneType] = None, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L1824)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_diffusion.py#L2198)
 
 OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDiffusionInpaintPipeline](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion_inpaint#diffusers.StableDiffusionInpaintPipeline).
 
@@ -1294,4 +1294,4 @@ OpenVINO-powered stable diffusion pipeline corresponding to [diffusers.StableDif
 forward(*args, **kwargs)
 ```
 
-[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1014)
+[Source](https://github.com/huggingface/optimum-intel/blob/main/optimum/intel/openvino/modeling_base.py#L1013)

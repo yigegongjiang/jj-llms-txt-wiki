@@ -114,7 +114,7 @@ The OpenEnv community has built a catalog of ready-to-run environments that cove
     
     
       Web Search
-      Web search environment for RL research with configurable grids, partial observability, and customizable rewards.
+      Web search environment that lets agents query Google Search through the Serper.dev API and receive formatted results.
       
         📄 Docs
         🤗 HF
@@ -229,6 +229,13 @@ The OpenEnv community has built a catalog of ready-to-run environments that cove
       
     
     
+      ThinkingBox
+      Evaluation-only adapter for public ThinkingBox-Bench and user-supplied ThinkingBox scenarios, preserving isolated MCP tools, simulated users, and native state and side-effect grading.
+      
+        📄 Docs
+      
+    
+    
       Unity
       OpenEnv wrapper for Unity ML-Agents environments, providing access to Unity's RL environments through HTTP/WebSocket interfaces.
       
@@ -279,6 +286,13 @@ The OpenEnv community has built a catalog of ready-to-run environments that cove
         📄 Docs
       
     
+    
+      QED Math
+      qed_math_env serves math problems and grades submitted proofs with an LLM rubric (0–7 scale, normalized rewards), with process-based answer verification and multi-attempt feedback. Ported from QED-Nano.
+      
+        📄 Docs
+      
+    
   
 
 > [!TIP]
@@ -301,3 +315,10 @@ The OpenEnv community has built a catalog of ready-to-run environments that cove
       
         📄 Docs
         🤗 HF
+      
+    
+    
+      Harbor
+      Serve Harbor tasks across agent harnesses and sandboxes, with captured traces for evaluation and exact-token training.
+      
+        📄 Docs

@@ -8,7 +8,7 @@
 
 #### Defined in[[accesstoken.defined-in]]
 
-[inference/src/types.ts:164](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L164)
+[inference/src/types.ts:166](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L166)
 
 ___
 
@@ -18,4 +18,4 @@ ___
 
 #### Defined in[[authmethod.defined-in]]
 
-[inference/src/types.ts:165](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L165)
+[inference/src/types.ts:167](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L167)

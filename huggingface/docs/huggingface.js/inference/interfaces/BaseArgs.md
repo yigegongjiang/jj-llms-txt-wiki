@@ -14,7 +14,7 @@ You can also pass an external Inference provider's key if you intend to call a c
 
 #### Defined in[[accesstoken.defined-in]]
 
-[inference/src/types.ts:121](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L121)
+[inference/src/types.ts:123](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L123)
 
 ___
 
@@ -28,7 +28,7 @@ If not specified, will call the default router.huggingface.co Inference Provider
 
 #### Defined in[[endpointurl.defined-in]]
 
-[inference/src/types.ts:138](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L138)
+[inference/src/types.ts:140](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L140)
 
 ___
 
@@ -45,13 +45,13 @@ Use the `endpointUrl` parameter instead.
 
 #### Defined in[[model.defined-in]]
 
-[inference/src/types.ts:131](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L131)
+[inference/src/types.ts:133](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L133)
 
 ___
 
 ### provider
 
-• `Optional` **provider**: ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"``
+• `Optional` **provider**: ``"baseten"`` \| ``"cerebras"`` \| ``"cohere"`` \| ``"deepinfra"`` \| ``"fal-ai"`` \| ``"featherless-ai"`` \| ``"fireworks-ai"`` \| ``"groq"`` \| ``"hf-inference"`` \| ``"humain-ai"`` \| ``"novita"`` \| ``"nscale"`` \| ``"openai"`` \| ``"ovhcloud"`` \| ``"publicai"`` \| ``"replicate"`` \| ``"scaleway"`` \| ``"together"`` \| ``"wavespeed"`` \| ``"zai-org"`` \| ``"auto"``
 
 Set an Inference provider to run this model on.
 
@@ -59,4 +59,4 @@ Defaults to "auto" i.e. the first of the providers available for the model, sort
 
 #### Defined in[[provider.defined-in]]
 
-[inference/src/types.ts:145](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L145)
+[inference/src/types.ts:147](https://github.com/huggingface/huggingface.js/blob/main/packages/inference/src/types.ts#L147)

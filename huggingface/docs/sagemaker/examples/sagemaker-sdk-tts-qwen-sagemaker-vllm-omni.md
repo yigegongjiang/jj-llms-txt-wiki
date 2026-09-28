@@ -1,6 +1,6 @@
 # Deploy Qwen3-TTS for ad voiceovers on Amazon SageMaker AI
 
-Written by Enrique Hernández CalabrésLast updated 2026-08-31
+Written by Enrique Hernández CalabrésLast updated 2026-09-22
 
 ![](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/sagemaker/notebooks/sagemaker-sdk/tts-qwen-sagemaker-vllm-omni/cover.png)
 

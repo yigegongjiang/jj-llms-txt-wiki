@@ -32,7 +32,7 @@ Error.constructor
 
 #### Defined in[[constructor.defined-in]]
 
-[packages/hub/src/lib/parse-safetensors-metadata.ts:189](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L189)
+[packages/hub/src/lib/parse-safetensors-metadata.ts:193](https://github.com/huggingface/huggingface.js/blob/main/packages/hub/src/lib/parse-safetensors-metadata.ts#L193)
 
 ## Properties
 

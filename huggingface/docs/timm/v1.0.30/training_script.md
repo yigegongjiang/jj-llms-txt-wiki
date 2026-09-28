@@ -1,0 +1,124 @@
+# Scripts
+
+A train, validation, inference, and checkpoint cleaning script included in the github root folder. Scripts are not currently packaged in the pip release.
+
+The training and validation scripts evolved from early versions of the [PyTorch Imagenet Examples](https://github.com/pytorch/examples). I have added significant functionality over time, including CUDA specific performance enhancements based on
+[NVIDIA's APEX Examples](https://github.com/NVIDIA/apex/tree/master/examples).
+
+## Training Script
+
+The variety of training args is large and not all combinations of options (or even options) have been fully tested. For the training dataset folder, specify the folder to the base that contains a `train` and `validation` folder.
+
+To train an SE-ResNet34 on ImageNet, locally distributed, 4 GPUs, one process per GPU w/ cosine schedule, random-erasing prob of 50% and per-pixel random value:
+
+```bash
+./distributed_train.sh 4 --data-dir /data/imagenet --model seresnet34 --sched cosine --epochs 150 --warmup-epochs 5 --lr 0.4 --reprob 0.5 --remode pixel --batch-size 256 --amp -j 4
+```
+
+    It is recommended to use PyTorch 1.9+ w/ PyTorch native AMP and DDP instead of APEX AMP. --amp defaults to native AMP as of timm ver 0.4.3.  --apex-amp will force use of APEX components if they are installed.
+
+## Validation / Inference Scripts
+
+Validation and inference scripts are similar in usage. One outputs metrics on a validation set and the other outputs topk class ids in a csv. Specify the folder containing validation images, not the base as in training script. 
+
+To validate with the model's pretrained weights (if they exist):
+
+```bash
+python validate.py --data-dir /imagenet/validation/ --model seresnext26_32x4d --pretrained
+```
+
+To run inference from a checkpoint:
+
+```bash
+python inference.py --data-dir /imagenet/validation/ --model mobilenetv3_large_100 --checkpoint ./output/train/model_best.pth.tar
+```
+
+## Training Examples
+
+### Multi-label classification
+
+Use `--task multilabel` for images with multiple independent labels. The target column contains a list of positive, zero-based class IDs; `--num-classes` sets the vocabulary size. Labels are converted to float multi-hot targets before batching, and empty lists represent images with no positive labels. Datasets that instead store a dense multi-hot vector of length `--num-classes` (bool, int, or float values in `[0, 1]`) pass `--target-format multihot`; the vector is used as-is, so soft values train directly with BCE and are binarized at 0.5 for the evaluation metrics. Class maps for multi-hot targets must be keyed by source class index. Without the flag every list is read as class indices, since an integer multi-hot vector is indistinguishable from an index list.
+
+The [plant pathology dataset](https://huggingface.co/datasets/timm/plant-pathology-2021) provides this format: an `image` column and a `labels` column containing a sequence of `ClassLabel` values. Its six classes are `complex`, `frog_eye_leaf_spot`, `healthy`, `powdery_mildew`, `rust`, and `scab`. For example, `[5, 1, 0]` becomes `[1, 1, 0, 0, 0, 1]`.
+
+```bash
+python train.py --dataset hfds/timm/plant-pathology-2021 \
+  --task multilabel --target-key labels --num-classes 6 \
+  --model resnet50 --pretrained --batch-size 32 --epochs 30 \
+  --opt adamw --lr 1e-4 --weight-decay 0.01 --amp
+
+python validate.py --dataset hfds/timm/plant-pathology-2021 \
+  --task multilabel --target-key labels --num-classes 6 \
+  --model resnet50 --checkpoint ./output/train/<experiment>/model_best.pth.tar
+```
+
+`hfids/timm/plant-pathology-2021` supports streaming with the same target format. Multi-label targets are supported by the Hugging Face `hfds` and `hfids` readers, and by WebDataset (`wds`) shards that store a list of class IDs in each sample's `.json` sidecar under the field named by `--target-key` (without `--target-key` the `.cls` file supplies a single class index). The folder and tar readers yield single class indices.
+
+Datasets that store one binary field per label, such as [Wake Vision](https://www.tensorflow.org/datasets/catalog/wake_vision), can pass a comma separated list of field names instead: `--target-key person,depiction,body_part`. Each field becomes one class in the order listed, values greater than zero count as positive, and `--num-classes` must equal the number of fields. Multi-field keys define their own format, so `--target-format` stays at its default. This works for the `hfds`, `hfids`, and `tfds` readers, and for WebDataset when the fields are in the `.json` sidecar. Fields nested in sub-dicts are addressed with `/`, for example `--input-key input --target-key output/pollen_output,output/wasps_output` for the TFDS `bee_dataset`; single target keys accept the same paths, and a literal field name containing `/` (such as TFDS `image/filename`) takes precedence over a path. Standard and NaFlex loaders support multi-label targets, including mixup and cutmix; NaFlex training currently requires a map-style dataset such as `hfds`.
+
+The task trains with binary cross-entropy with logits. Smoothing defaults to zero for multi-label training; setting `--smoothing s` moves each binary target to `target * (1 - s) + 0.5 * s`, applied by Mixup/CutMix when they are active and by the loss otherwise. Existing `--bce-pos-weight`, `--bce-sum`, and `--bce-target-thresh` options also apply. Distillation and JSD loss are not supported by this task.
+
+Validation reports BCE loss, `map` (mean average precision), `micro_f1`, `macro_f1`, and `sample_f1`. Metrics are percentages and use the complete validation set, including predictions gathered across distributed ranks. Ordered distributed sampler padding is excluded. Exact mAP retains predictions on CPU until evaluation finishes, so its memory use scales with the number of examples and classes. Classes without positives contribute zero AP; F1 values with a zero denominator are zero.
+
+`--eval-metric map` is the default for checkpoint selection and scheduling. F1 uses a sigmoid probability threshold of 0.5, configurable with `--multilabel-threshold`; mAP is independent of this threshold. Model outputs remain logits, so apply sigmoid for independent class probabilities when using the trained model.
+
+### EfficientNet-B2 with RandAugment - 80.4 top-1, 95.1 top-5
+
+These params are for dual Titan RTX cards with NVIDIA Apex installed:
+
+```bash
+./distributed_train.sh 2 --data-dir /imagenet/ --model efficientnet_b2 -b 128 --sched step --epochs 450 --decay-epochs 2.4 --decay-rate .97 --opt rmsproptf --opt-eps .001 -j 8 --warmup-lr 1e-6 --weight-decay 1e-5 --drop 0.3 --drop-path 0.2 --model-ema --model-ema-decay 0.9999 --aa rand-m9-mstd0.5 --remode pixel --reprob 0.2 --amp --lr .016
+```
+
+### MixNet-XL with RandAugment - 80.5 top-1, 94.9 top-5
+
+This params are for dual Titan RTX cards with NVIDIA Apex installed:
+
+```bash
+./distributed_train.sh 2 --data-dir /imagenet/ --model mixnet_xl -b 128 --sched step --epochs 450 --decay-epochs 2.4 --decay-rate .969 --opt rmsproptf --opt-eps .001 -j 8 --warmup-lr 1e-6 --weight-decay 1e-5 --drop 0.3 --drop-path 0.2 --model-ema --model-ema-decay 0.9999 --aa rand-m9-mstd0.5 --remode pixel --reprob 0.3 --amp --lr .016 --dist-bn reduce
+```
+
+### SE-ResNeXt-26-D and SE-ResNeXt-26-T
+
+These hparams (or similar) work well for a wide range of ResNet architecture, generally a good idea to increase the epoch # as the model size increases... ie approx 180-200 for ResNe(X)t50, and 220+ for larger. Increase batch size and LR proportionally for better GPUs or with AMP enabled. These params were for 2 1080Ti cards:
+
+```bash
+./distributed_train.sh 2 --data-dir /imagenet/ --model seresnext26t_32x4d --lr 0.1 --warmup-epochs 5 --epochs 160 --weight-decay 1e-4 --sched cosine --reprob 0.4 --remode pixel -b 112
+```
+### EfficientNet-B3 with RandAugment - 81.5 top-1, 95.7 top-5
+
+The training of this model started with the same command line as EfficientNet-B2 w/ RA above. After almost three weeks of training the process crashed. The results weren't looking amazing so I resumed the training several times with tweaks to a few params (increase RE prob, decrease rand-aug, increase ema-decay). Nothing looked great. I ended up averaging the best checkpoints from all restarts. The result is mediocre at default res/crop but oddly performs much better with a full image test crop of 1.0. 
+
+### EfficientNet-B0 with RandAugment - 77.7 top-1, 95.3 top-5
+
+[Michael Klachko](https://github.com/michaelklachko) achieved these results with the command line for B2 adapted for larger batch size, with the recommended B0 dropout rate of 0.2.
+
+```bash
+./distributed_train.sh 2 --data-dir /imagenet/ --model efficientnet_b0 -b 384 --sched step --epochs 450 --decay-epochs 2.4 --decay-rate .97 --opt rmsproptf --opt-eps .001 -j 8 --warmup-lr 1e-6 --weight-decay 1e-5 --drop 0.2 --drop-path 0.2 --model-ema --model-ema-decay 0.9999 --aa rand-m9-mstd0.5 --remode pixel --reprob 0.2 --amp --lr .048
+```
+### ResNet50 with JSD loss and RandAugment (clean + 2x RA augs) - 79.04 top-1, 94.39 top-5
+
+Trained on two older 1080Ti cards, this took a while. Only slightly, non statistically better ImageNet validation result than my first good AugMix training of 78.99. However, these weights are more robust on tests with ImageNetV2, ImageNet-Sketch, etc. Unlike my first AugMix runs, I've enabled SplitBatchNorm, disabled random erasing on the clean split, and cranked up random erasing prob on the 2 augmented paths.
+
+```bash
+./distributed_train.sh 2 --data-dir /imagenet -b 64 --model resnet50 --sched cosine --epochs 200 --lr 0.05 --amp --remode pixel --reprob 0.6 --aug-splits 3 --aa rand-m9-mstd0.5-inc1 --resplit --split-bn --jsd --dist-bn reduce
+```
+### EfficientNet-ES (EdgeTPU-Small) with RandAugment - 78.066 top-1, 93.926 top-5
+
+Trained by [Andrew Lavin](https://github.com/andravin) with 8 V100 cards. Model EMA was not used, final checkpoint is the average of 8 best checkpoints during training.
+
+```bash
+./distributed_train.sh 8 --data-dir /imagenet --model efficientnet_es -b 128 --sched step --epochs 450 --decay-epochs 2.4 --decay-rate .97 --opt rmsproptf --opt-eps .001 -j 8 --warmup-lr 1e-6 --weight-decay 1e-5 --drop 0.2 --drop-path 0.2  --aa rand-m9-mstd0.5 --remode pixel --reprob 0.2 --amp --lr .064
+```
+### MobileNetV3-Large-100 - 75.766 top-1, 92,542 top-5
+
+```bash
+./distributed_train.sh 2 /--data-dir imagenet/ --model mobilenetv3_large_100 -b 512 --sched step --epochs 600 --decay-epochs 2.4 --decay-rate .973 --opt rmsproptf --opt-eps .001 -j 7 --warmup-lr 1e-6 --weight-decay 1e-5 --drop 0.2 --drop-path 0.2 --model-ema --model-ema-decay 0.9999 --aa rand-m9-mstd0.5 --remode pixel --reprob 0.2 --amp --lr .064 --lr-noise 0.42 0.9
+```
+
+### ResNeXt-50 32x4d w/ RandAugment - 79.762 top-1, 94.60 top-5
+These params will also work well for SE-ResNeXt-50 and SK-ResNeXt-50 and likely 101. I used them for the SK-ResNeXt-50 32x4d that I trained with 2 GPU using a slightly higher LR per effective batch size (lr=0.18, b=192 per GPU). The cmd line below are tuned for 8 GPU training.
+
+```bash
+./distributed_train.sh 8 --data-dir /imagenet --model resnext50_32x4d --lr 0.6 --warmup-epochs 5 --epochs 240 --weight-decay 1e-4 --sched cosine --reprob 0.4 --recount 3 --remode pixel --aa rand-m7-mstd0.5-inc1 -b 192 -j 6 --amp --dist-bn reduce
+```

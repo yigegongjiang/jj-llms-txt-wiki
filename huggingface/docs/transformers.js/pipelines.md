@@ -2,7 +2,7 @@
 
 Just like the [transformers Python library](https://github.com/huggingface/transformers), Transformers.js provides users with a simple way to leverage the power of transformers. The `pipeline()` function is the easiest and fastest way to use a pretrained model for inference.
 
-For the full list of available tasks/pipelines, check out [this table](#available-tasks).
+For the full list of available tasks and pipelines, see [this table](#available-tasks).
 
 ## The basics
 
@@ -16,7 +16,7 @@ const classifier = await pipeline("sentiment-analysis");
 
 When running for the first time, the `pipeline` will download and cache the default pretrained model associated with the task. This can take a while, but subsequent calls will be much faster.
 
-By default, models will be downloaded from the [Hugging Face Hub](https://huggingface.co/models) and stored in [browser cache](https://developer.mozilla.org/en-US/docs/Web/API/Cache), but there are ways to specify custom models and cache locations. For more information see [here](./custom_usage).
+By default, models will be downloaded from the [Hugging Face Hub](https://huggingface.co/models) and stored in [browser cache](https://developer.mozilla.org/en-US/docs/Web/API/Cache), but there are ways to specify custom models and cache locations. For more information, see the [custom usage guide](./custom_usage).
 
 You can now use the classifier on your target text by calling it as a function:
 
@@ -73,7 +73,7 @@ const result = await transcriber(
 
 We offer a variety of options to control how models are loaded from the Hugging Face Hub (or locally).
 By default, when running in-browser, a _quantized_ version of the model is used, which is smaller and faster,
-but usually less accurate. To override this behaviour (i.e., use the unquantized model), you can use a custom
+but usually less accurate. To override this behavior (i.e., use the unquantized model), you can use a custom
 `PretrainedOptions` object as the third parameter to the `pipeline` function:
 
 ```javascript
@@ -83,7 +83,7 @@ const pipe = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", {
 });
 ```
 
-Check out the section on [quantization](./guides/dtypes) to learn more.
+See the section on [quantization](./guides/dtypes) to learn more.
 
 You can also specify which revision of the model to use, by passing a `revision` parameter.
 Since the Hugging Face Hub uses a git-based versioning system, you can use any valid git revision specifier (e.g., branch name or commit hash).
@@ -98,9 +98,9 @@ const transcriber = await pipeline(
 );
 ```
 
-For the full list of options, check out the [PretrainedOptions](./api/utils/hub#module_utils/hub..PretrainedOptions) documentation.
+For the full list of options, see the [PretrainedOptions](./api/utils/hub#module_utils/hub.PretrainedOptions) documentation.
 
-### Running
+### Runtime parameters
 
 Many pipelines have additional options that you can specify. For example, when using a model that does multilingual translation, you can specify the source and target languages like this:
 
@@ -126,7 +126,7 @@ const result2 = await translator(result[0].translation_text, {
 // [ { translation_text: 'I like to walk my dog.' } ]
 ```
 
-When using models that support auto-regressive generation, you can specify generation parameters like the number of new tokens, sampling methods, temperature, repetition penalty, and much more. For a full list of available parameters, see to the [GenerationConfig](./api/utils/generation#module_utils/generation.GenerationConfig) class.
+When using models that support auto-regressive generation, you can specify generation parameters like the number of new tokens, sampling methods, temperature, and repetition penalty. For a full list of available parameters, see the [GenerationConfig](./api/generation/configuration_utils#module_generation/configuration_utils.GenerationConfig) class.
 
 For example, to generate a poem using `LaMini-Flan-T5-783M`, you can do:
 
@@ -200,7 +200,12 @@ Click to view the console output
 Here's a simple implementation of the quick sort algorithm in Python:
 ```python
 def quick_sort(arr):
-    if len(arr)  pivot]
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
     return quick_sort(left) + middle + quick_sort(right)
 # Example usage:
 arr = [3, 6, 8, 10, 1, 2]
@@ -214,7 +219,7 @@ print(sorted_arr)
 - **Recursive Sorting**: The subarrays are sorted recursively using `quick_sort`.
 This approach ensures that each recursive call reduces the problem size by half until it reaches a base case.
 
-This streaming feature allows you to process the output as it is generated, rather than waiting for the entire output to be generated before processing it.
+Streaming lets you process output as it is generated, instead of waiting for the complete output before processing it.
 
 For more information on the available options for each pipeline, refer to the [API Reference](./api/pipelines).
 If you would like more control over the inference process, you can use the [`AutoModel`](./api/models), [`AutoTokenizer`](./api/tokenizers), or [`AutoProcessor`](./api/processors) classes instead.

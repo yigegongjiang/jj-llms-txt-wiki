@@ -24,7 +24,7 @@ $ openenv init my_game_env
 $ openenv init my_env --output-dir /path/to/projects
 ```
 
-## `openenv import`
+## `openenv import`[[openenv.cli.commands.import_env]]
 
 Import a supported third-party source environment into a generated OpenEnv
 wrapper package. The command detects the source format from the directory
@@ -45,12 +45,15 @@ openenv import path/to/source --name my_env --output-dir ./envs
 openenv import path/to/source --name my_env --output-dir ./envs --env-class MyEnv
 ```
 
-```{eval-rst}
-.. automodule:: openenv.cli.commands.import_env
-   :members:
-   :undoc-members:
-   :show-inheritance:
+#### openenv.cli.commands.import_env[[openenv.cli.commands.import_env]]
+
+```python
+openenv.cli.commands.import_env(source: Annotated[str, typer.Argument(help='Local source repository or directory to import')], name: Annotated[str, typer.Option('--name', '-n', help='Name for the generated OpenEnv package')], output_dir: Annotated[str, typer.Option('--output-dir', '-o', help='Directory where the generated package will be created')], env_class: Annotated[str | None, typer.Option('--env-class', help='Environment class name or module:Class when detection is ambiguous')] = None, source_type: Annotated[str | None, typer.Option('--type', help="Optional source type override, such as 'ors'")] = None)
 ```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/cli/commands/import_env.py#L58)
+
+Deterministically import a third-party environment into OpenEnv.
 
 ## `openenv build`[[openenv.cli.commands.build]]
 
@@ -92,38 +95,35 @@ $ openenv build envs/echo_env
 #### openenv.cli.commands.validate[[openenv.cli.commands.validate]]
 
 ```python
-openenv.cli.commands.validate(target: Annotated = None, url: Annotated = None, json_output: Annotated = False, timeout: Annotated = 5.0, verbose: Annotated = False)
+openenv.cli.commands.validate(target: Annotated = None, url: Annotated = None, level: Annotated = 'semantic', skip_build: Annotated = False, policy_version: Annotated = 'v1', json_output: Annotated = False, output: Annotated = None, timeout: Annotated = 5.0)
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/cli/commands/validate.py#L30)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/cli/commands/validate.py#L90)
 
-Validate local environments and running OpenEnv servers.
+Validate a local package or a running OpenEnv server.
 
-Local validation checks if an environment is properly configured with:
-- Required files (pyproject.toml, openenv.yaml, server/app.py, etc.)
-- Docker deployment support
-- uv run server capability
-- python -m module execution
+Local validation detects the package format by its well-known file (the
+formats this build can parse; currently `openenv.yaml`), parses it into the
+normalized manifest, runs the applicable graders up to the requested level,
+applies the severity policy, and emits a report.
 
-Runtime validation checks if a live OpenEnv server conforms to the
-versioned runtime API contract and returns a criteria-based JSON report.
+Exit codes: 0 pass/warn · 1 fail · 2 unrecognized/unsupported package · 3
+internal error.
 
 Examples:
 
 ```bash
-# Validate current directory (recommended)
-$ cd my_env
-$ openenv validate
+# Validate the current directory up to the semantic level
+openenv validate
 
-# Validate a running environment and return JSON criteria
-$ openenv validate --url http://localhost:8000
-$ openenv validate https://my-env.hf.space
+# Fast inner loop: static checks only, no image build
+openenv validate envs/echo_env --level static --skip-build
 
-# Validate with detailed output
-$ openenv validate --verbose
+# Machine-readable report
+openenv validate envs/echo_env --json
 
-# Validate specific environment
-$ openenv validate envs/echo_env
+# Probe a running server (legacy runtime probe)
+openenv validate --url http://localhost:8000
 ```
 
 ## `openenv push`[[openenv.cli.commands.push]]
@@ -304,6 +304,43 @@ openenv.cli.commands.skills.skills_preview()
 
 Print generated SKILL.md content.
 
+## `openenv collect`[[openenv.cli.commands.collect]]
+
+Collect rollouts from a running environment with a teacher model and write
+them as an SFT-ready `results.jsonl`. The teacher can be a hosted provider
+(`--provider openai|anthropic`) or any self-hosted OpenAI-compatible server
+such as vLLM, TGI or Ollama via `--llm-endpoint`.
+
+```bash
+# Scripted teacher, no API key needed
+openenv collect openspiel:tic_tac_toe --base-url http://localhost:8001 \
+    --output-dir ./rollouts -n 10 --provider scripted
+
+# Self-hosted model (vLLM serving on port 8000)
+openenv collect reasoning_gym:chain_sum --base-url http://localhost:8001 \
+    --output-dir ./rollouts -n 50 \
+    --llm-endpoint http://localhost:8000 --model Qwen/Qwen3-1.7B
+```
+
+`--llm-endpoint` takes a full base URL. `/v1` is appended when the URL has no
+path, so `http://localhost:8000` and `http://localhost:8000/v1` are equivalent;
+a URL with a path (for example a gateway prefix) is used as-is. `--llm-port` is
+only needed when the URL does not include a port; it has no default, so
+`--llm-endpoint http://localhost` means port 80 (earlier releases assumed 8000).
+The resolved endpoint is printed when the run starts. Only `http(s)` URLs are
+accepted, and credentials, query strings and fragments in the URL are rejected:
+pass the key through `OPENAI_API_KEY` instead.
+
+#### openenv.cli.commands.collect[[openenv.cli.commands.collect]]
+
+```python
+openenv.cli.commands.collect(env: Annotated[str, typer.Argument(help="Env spec in 'family:variant' form (e.g. openspiel:tic_tac_toe).")], base_url: Annotated[str, typer.Option('--base-url', help='Env server URL (local Docker or Hugging Face Space).')], output_dir: Annotated[Path, typer.Option('--output-dir', '-o', help='Directory to write results.jsonl + metadata.json.')], num_episodes: Annotated[int, typer.Option('--num-episodes', '-n', help='Number of episodes to collect.')] = 10, max_turns: Annotated[int, typer.Option('--max-turns', help='Max tool/model turns per episode.')] = 9, episode_id_prefix: Annotated[str, typer.Option('--episode-id-prefix', help='Prefix for serialized episode ids.')] = 'ep', resume: Annotated[bool, typer.Option('--resume/--no-resume', help='Skip episodes already present in results.jsonl.')] = True, provider: Annotated[str, typer.Option('--provider', help='Teacher provider: scripted | openai | anthropic.')] = 'scripted', model: Annotated[str | None, typer.Option('--model', help='Model id (required when provider != scripted).')] = None, llm_endpoint: Annotated[str | None, typer.Option('--llm-endpoint', help='Base URL of a self-hosted OpenAI-compatible server (vLLM/TGI/Ollama), e.g. http://localhost:8000. /v1 is appended when the URL has no path; a URL with a path is used as-is.')] = None, llm_port: Annotated[int | None, typer.Option('--llm-port', help='Port appended to --llm-endpoint when the URL does not include one. No default: earlier releases assumed 8000.')] = None, temperature: Annotated[float, typer.Option('--temperature', help='Sampling temperature.')] = 0.2, max_tokens: Annotated[int, typer.Option('--max-tokens', help='Max completion tokens.')] = 200, keep_losses: Annotated[bool, typer.Option('--keep-losses', help='Keep losing rollouts (default: filter rollouts with reward < 0).')] = False, push_to_hub: Annotated[str | None, typer.Option('--push-to-hub', '-H', help="Destination dataset repo id ('user/name'). Uploads after collect.")] = None, private: Annotated[bool, typer.Option('--private', help='Create the Hub dataset repo as private.')] = False, commit_message: Annotated[str | None, typer.Option('--commit-message', help='Commit message for the Hub upload.')] = None, dataset_config: Annotated[str | None, typer.Option('--dataset-config', help='JSON string of dataset config for envs that support it (e.g. reasoning_gym). Example: \'{"min_terms": 2, "max_terms": 3}\'')] = None, system_prompt: Annotated[str | None, typer.Option('--system-prompt', help='Custom system prompt for the teacher model.')] = None)
+```
+
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/cli/commands/collect.py#L228)
+
+Collect rollouts from a deployed OpenEnv environment.
+
 # API Reference
 
 ## Entry point[[openenv.cli.__main__.main]]
@@ -314,7 +351,7 @@ Print generated SKILL.md content.
 openenv.cli.__main__.main()
 ```
 
-[Source](https://github.com/huggingface/openenv/blob/main/openenv/cli/__main__.py#L66)
+[Source](https://github.com/huggingface/openenv/blob/main/openenv/cli/__main__.py#L75)
 
 Main entry point for the CLI.
 

@@ -1,6 +1,6 @@
 # Improve tool calling with GRPO on Amazon SageMaker
 
-Last updated 2026-08-31
+Last updated 2026-09-22
 
 In this notebook, you'll fine-tune **`HuggingFaceTB/SmolLM3-3B`** to produce better single-turn tool calls. The training signal is fully verifiable: instead of asking another model to judge the answer, we compare the model's generated tool call with the ground-truth call from the dataset.
 

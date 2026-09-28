@@ -7,14 +7,16 @@
 #### kernels.use_kernel_forward_from_hub[[kernels.use_kernel_forward_from_hub]]
 
 ```python
-kernels.use_kernel_forward_from_hub(layer_name: str)
+kernels.use_kernel_forward_from_hub(layer_name: str, condition: Callable[['nn.Module'], bool] | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L298)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L318)
 
 **Parameters:**
 
 layer_name (`str`) : The name of the layer to use for kernel lookup in registered mappings.
+
+condition (`Callable[["nn.Module"], bool]`, *optional*) : Additional condition that is checked during kernelization. The callable is passed the module instance and is evaluated for every instance of the layer when [kernelize()](/docs/kernels/main/en/api/layers#kernels.kernelize) is called. If it returns `False`, kernelization is skipped for that instance.
 
 **Returns:** `Callable`
 
@@ -76,7 +78,7 @@ class LayerUsingIdentity(nn.Module):
 kernels.use_kernel_func_from_hub(func_name: str)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L206)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L204)
 
 **Parameters:**
 
@@ -135,7 +137,7 @@ model = MyModel()
 kernels.use_kernelized_func(*args: Callable)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L370)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L395)
 
 **Parameters:**
 
@@ -180,10 +182,16 @@ model = LayerUsingIdentity()
 #### kernels.replace_kernel_forward_from_hub[[kernels.replace_kernel_forward_from_hub]]
 
 ```python
-kernels.replace_kernel_forward_from_hub(layer_name: str)
+kernels.replace_kernel_forward_from_hub(layer_name: str, condition: Callable[['nn.Module'], bool] | None = None)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L275)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L286)
+
+**Parameters:**
+
+layer_name (`str`) : The name of the layer to use for kernel lookup in registered mappings.
+
+condition (`Callable[["nn.Module"], bool]`, *optional*) : Additional condition that is checked during kernelization. The callable is passed the module instance and is evaluated for every instance of the layer when [kernelize()](/docs/kernels/main/en/api/layers#kernels.kernelize) is called. If it returns `False`, kernelization is skipped for that instance.
 
 Function that prepares a layer class to use kernels from the Hugging Face Hub.
 
@@ -210,7 +218,7 @@ replace_kernel_forward_from_hub(nn.LayerNorm, "LayerNorm")
 kernels.use_kernel_mapping(mapping: dict[str, dict[Device | str, RepositoryProtocol | dict[Mode, RepositoryProtocol]]], inherit_mapping: bool = True)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L17)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L20)
 
 **Parameters:**
 
@@ -272,7 +280,7 @@ with use_kernel_mapping(mapping):
 kernels.register_kernel_mapping(mapping: dict[str, dict[Device | str, RepositoryProtocol | dict[Mode, RepositoryProtocol]]], inherit_mapping: bool = True)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L97)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L100)
 
 **Parameters:**
 
@@ -331,7 +339,7 @@ register_kernel_mapping(advanced_mapping)
 kernels.kernelize(model: 'nn.Module', mode: Mode, device: str | 'torch.device' | None = None, use_fallback: bool = True)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L175)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/kernelize.py#L178)
 
 **Parameters:**
 
@@ -572,7 +580,7 @@ are used for inference *with* `torch.compile`.
 kernels.FuncRepository(repo_id: str, func_name: str, revision: str | None = None, version: int | None = None, trust_remote_code: bool | list[str] = False)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L35)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L36)
 
 **Parameters:**
 
@@ -614,7 +622,7 @@ layer_repo_versioned = FuncRepository(
 #### kernels.LayerRepository[[kernels.LayerRepository]]
 
 ```python
-kernels.LayerRepository(repo_id: str, layer_name: str, revision: str | None = None, version: int | None = None, trust_remote_code: bool | list[str] = False)
+kernels.LayerRepository(repo_id: str, layer_name: str, revision: str | None = None, version: int | None = None, trust_remote_code: bool | list[str] = False, user_agent: str | dict | None = None)
 ```
 
 [Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L42)
@@ -629,7 +637,9 @@ revision (`str`, *optional*) : The specific revision (branch, tag, or commit) to
 
 version (`int`, *optional*) : The kernel version to download. Cannot be used together with `revision`. Either `version` or `revision` must be specified.
 
-trust_remote_code (`bool | list[str]`, *optional*, defaults to `False`) : Whether to allow loading kernels from untrusted organisations. A list of signing identities can be provided for future verification support; until then it warns and falls back to the default trust check.
+trust_remote_code (`bool | list[str]`, *optional*, defaults to `False`) : Whether to allow loading kernels from untrusted organisations. When `False`, only kernels from trusted organisations are allowed. When `True`, all repositories are allowed. A list of repository IDs allows only those repositories in addition to repositories from trusted organisations.
+
+user_agent (`Union[str, dict]`, *optional*) : Optional application metadata to include in the user-agent for Hub requests.
 
 Repository and name of a layer for kernel mapping.
 
@@ -653,7 +663,7 @@ layer_repo = LayerRepository(
 kernels.LocalFuncRepository(repo_path: Path, func_name: str)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L145)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L144)
 
 **Parameters:**
 
@@ -688,7 +698,7 @@ layer_repo = LocalFuncRepository(
 kernels.LocalLayerRepository(repo_path: Path, layer_name: str)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L139)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L144)
 
 **Parameters:**
 
@@ -719,7 +729,7 @@ layer_repo = LocalLayerRepository(
 kernels.LockedFuncRepository(repo_id: str, lockfile: pathlib.Path | None = None, func_name: str, trust_remote_code: bool | list[str] = False)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L265)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/func.py#L262)
 
 **Parameters:**
 
@@ -748,7 +758,7 @@ are locked inside a project.
 kernels.LockedLayerRepository(repo_id: str, lockfile: Path | None = None, layer_name: str, trust_remote_code: bool | list[str] = False)
 ```
 
-[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L190)
+[Source](https://github.com/huggingface/kernels/blob/main/kernels/src/kernels/layer/layer.py#L195)
 
 Repository and name of a layer.
 

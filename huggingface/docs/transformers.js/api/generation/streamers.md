@@ -1,109 +1,79 @@
 # generation/streamers
 
-* [generation/streamers](#module_generation/streamers)
-    * [.TextStreamer](#module_generation/streamers.TextStreamer)
-        * [`new TextStreamer(tokenizer, options)`](#new_module_generation/streamers.TextStreamer_new)
-        * [`.put(value)`](#module_generation/streamers.TextStreamer+put)
-        * [`.end()`](#module_generation/streamers.TextStreamer+end)
-        * [`.on_finalized_text(text, stream_end)`](#module_generation/streamers.TextStreamer+on_finalized_text)
-    * [.WhisperTextStreamer](#module_generation/streamers.WhisperTextStreamer)
-        * [`new WhisperTextStreamer(tokenizer, options)`](#new_module_generation/streamers.WhisperTextStreamer_new)
-        * [`.put(value)`](#module_generation/streamers.WhisperTextStreamer+put)
+Streamers for surfacing generated tokens as they are produced.
 
-* * *
+Pass a `TextStreamer` (or `WhisperTextStreamer` for audio transcription) via
+the `streamer` argument of `generate()` to receive decoded text as tokens
+are emitted — useful for chat UIs and incremental transcription.
 
-## generation/streamers.TextStreamer
+**Example:** Stream generated text to stdout
+```javascript
+import { pipeline, TextStreamer } from '@huggingface/transformers';
+
+const generator = await pipeline('text-generation', 'onnx-community/Qwen3-0.6B-ONNX');
+const streamer = new TextStreamer(generator.tokenizer, {
+  skip_prompt: true,
+  callback_function: (text) => process.stdout.write(text),
+});
+await generator('Tell me a joke about JavaScript.', { max_new_tokens: 64, streamer });
+```
+
+## Classes
+
+### BaseStreamer
+
+Abstract base class for output streamers.
+
+#### `BaseStreamer.put(value)`
+
+Function that is called by `.generate()` to push new tokens
+
+**Parameters**
+
+- `value` (`bigint[][]`)
+
+#### `BaseStreamer.end()`
+
+Function that is called by `.generate()` to signal the end of generation
+
+### TextStreamer
 
 Simple text streamer that prints the token(s) to stdout as soon as entire words are formed.
 
-**Kind**: static class of [generation/streamers](#module_generation/streamers)  
+#### `TextStreamer.constructor(tokenizer, options)`
 
-* [.TextStreamer](#module_generation/streamers.TextStreamer)
-    * [`new TextStreamer(tokenizer, options)`](#new_module_generation/streamers.TextStreamer_new)
-    * [`.put(value)`](#module_generation/streamers.TextStreamer+put)
-    * [`.end()`](#module_generation/streamers.TextStreamer+end)
-    * [`.on_finalized_text(text, stream_end)`](#module_generation/streamers.TextStreamer+on_finalized_text)
+**Parameters**
 
-* * *
+- `tokenizer` ([`PreTrainedTokenizer`](../tokenizers#module_tokenizers.PreTrainedTokenizer))
+- `options` (`Object`)
+  - `skip_prompt` (`boolean`) _optional_ — defaults to `false` — Whether to skip the prompt tokens
+  - `skip_special_tokens` (`boolean`) _optional_ — defaults to `true` — Whether to skip special tokens when decoding
+  - `callback_function` (`function(string): void`) _optional_ — defaults to `null` — Function to call when a piece of text is ready to display
+  - `token_callback_function` (`function(bigint[]): void`) _optional_ — defaults to `null` — Function to call when a new token is generated
+  - `decode_kwargs` (`Object`) _optional_ — defaults to `{}` — Additional keyword arguments to pass to the tokenizer's decode method
 
-### `new TextStreamer(tokenizer, options)`
-
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
-
-    tokenizerPreTrainedTokenizer
-    
-    optionsObject
-    
-    [options.skip_prompt]booleanfalseWhether to skip the prompt tokens
-
-    
-    [options.skip_special_tokens]booleantrueWhether to skip special tokens when decoding
-
-    
-    [options.callback_function]functionFunction to call when a piece of text is ready to display
-
-    
-    [options.token_callback_function]functionFunction to call when a new token is generated
-
-    
-    [options.decode_kwargs]Object{}Additional keyword arguments to pass to the tokenizer&#39;s decode method
-
-      
-
-* * *
-
-### `textStreamer.put(value)`
+#### `TextStreamer.put(value)`
 
 Receives tokens, decodes them, and prints them to stdout as soon as they form entire words.
 
-**Kind**: instance method of [TextStreamer](#module_generation/streamers.TextStreamer)  
+**Parameters**
 
-  
-    
-      ParamType
-    
-  
-  
+- `value` (`bigint[][]`)
 
-    valueArray
-      
-
-* * *
-
-### `textStreamer.end()`
+#### `TextStreamer.end()`
 
 Flushes any remaining cache and prints a newline to stdout.
 
-**Kind**: instance method of [TextStreamer](#module_generation/streamers.TextStreamer)  
-
-* * *
-
-### `textStreamer.on_finalized_text(text, stream_end)`
+#### `TextStreamer.on_finalized_text(text, stream_end)`
 
 Prints the new text to stdout. If the stream is ending, also prints a newline.
 
-**Kind**: instance method of [TextStreamer](#module_generation/streamers.TextStreamer)  
+**Parameters**
 
-  
-    
-      ParamType
-    
-  
-  
+- `text` (`string`)
+- `stream_end` (`boolean`)
 
-    textstring
-    
-    stream_endboolean
-      
-
-* * *
-
-## generation/streamers.WhisperTextStreamer
+### WhisperTextStreamer
 
 Utility class to handle streaming of tokens generated by whisper speech-to-text models.
 Callback functions are invoked when each of the following events occur:
@@ -112,69 +82,24 @@ Callback functions are invoked when each of the following events occur:
  - A chunk ends (on_chunk_end)
  - The stream is finalized (on_finalize)
 
-**Kind**: static class of [generation/streamers](#module_generation/streamers)  
+#### `WhisperTextStreamer.constructor(tokenizer, options)`
 
-* [.WhisperTextStreamer](#module_generation/streamers.WhisperTextStreamer)
-    * [`new WhisperTextStreamer(tokenizer, options)`](#new_module_generation/streamers.WhisperTextStreamer_new)
-    * [`.put(value)`](#module_generation/streamers.WhisperTextStreamer+put)
+**Parameters**
 
-* * *
+- `tokenizer` (`WhisperTokenizer`)
+- `options` (`Object`)
+  - `skip_prompt` (`boolean`) _optional_ — defaults to `false` — Whether to skip the prompt tokens
+  - `callback_function` (`function(string): void`) _optional_ — defaults to `null` — Function to call when a piece of text is ready to display
+  - `token_callback_function` (`function(bigint[]): void`) _optional_ — defaults to `null` — Function to call when a new token is generated
+  - `on_chunk_start` (`function(number): void`) _optional_ — defaults to `null` — Function to call when a new chunk starts
+  - `on_chunk_end` (`function(number): void`) _optional_ — defaults to `null` — Function to call when a chunk ends
+  - `on_finalize` (`function(): void`) _optional_ — defaults to `null` — Function to call when the stream is finalized
+  - `time_precision` (`number`) _optional_ — defaults to `0.02` — Precision of the timestamps
+  - `skip_special_tokens` (`boolean`) _optional_ — defaults to `true` — Whether to skip special tokens when decoding
+  - `decode_kwargs` (`Object`) _optional_ — defaults to `{}` — Additional keyword arguments to pass to the tokenizer's decode method
 
-### `new WhisperTextStreamer(tokenizer, options)`
+#### `WhisperTextStreamer.put(value)`
 
-  
-    
-      ParamTypeDefaultDescription
-    
-  
-  
+**Parameters**
 
-    tokenizerWhisperTokenizer
-    
-    optionsObject
-    
-    [options.skip_prompt]booleanfalseWhether to skip the prompt tokens
-
-    
-    [options.callback_function]functionFunction to call when a piece of text is ready to display
-
-    
-    [options.token_callback_function]functionFunction to call when a new token is generated
-
-    
-    [options.on_chunk_start]functionFunction to call when a new chunk starts
-
-    
-    [options.on_chunk_end]functionFunction to call when a chunk ends
-
-    
-    [options.on_finalize]functionFunction to call when the stream is finalized
-
-    
-    [options.time_precision]number0.02Precision of the timestamps
-
-    
-    [options.skip_special_tokens]booleantrueWhether to skip special tokens when decoding
-
-    
-    [options.decode_kwargs]Object{}Additional keyword arguments to pass to the tokenizer&#39;s decode method
-
-      
-
-* * *
-
-### `whisperTextStreamer.put(value)`
-
-**Kind**: instance method of [WhisperTextStreamer](#module_generation/streamers.WhisperTextStreamer)  
-
-  
-    
-      ParamType
-    
-  
-  
-
-    valueArray
-      
-
-* * *
+- `value` (`bigint[][]`)
